@@ -83,12 +83,18 @@ namespace Triggernometry.Utilities
                         DisposeXivProcHandle();
                     }
                 }
-                foreach (var action in _xivProcUpdatedActions.Values)
-                {
-                    try { action.Invoke(); }
-                    catch (Exception ex) { plug.UnfilteredAddToLog(DebugLevelEnum.Error, ex.ToString()); }
-                }
+                OnXivProcUpdated();
                 _xivProcHandle = OpenProcess(PROCESS_ALL_ACCESS, false, _xivProcId);
+            }
+        }
+
+        internal static void OnXivProcUpdated()
+        {
+            Triggernometry.FFXIV.GameLanguage.ScanOffsets();
+            foreach (var action in _xivProcUpdatedActions.Values)
+            {
+                try { action.Invoke(); }
+                catch (Exception ex) { plug.UnfilteredAddToLog(DebugLevelEnum.Error, ex.ToString()); }
             }
         }
 

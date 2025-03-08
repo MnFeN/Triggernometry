@@ -771,9 +771,19 @@ namespace Triggernometry
                             val = PluginBridges.BridgeFFXIV.GetGameVersion();
                             found = true;
                         }
+                        else if (x == "_ffxivlanguage")
+                        {
+                            val = GameLanguage.Language.ToString();
+                            found = true;
+                        }
+                        else if (x == "_ffxivlanguageid")
+                        {
+                            val = I18n.ThingToString((int)GameLanguage.Language);
+                            found = true;
+                        }
                         else if (x == "_ffxivisglobal")
                         {
-                            val = PluginBridges.BridgeFFXIV.GetMyself().GetValue("name").ToString().Contains(" ") ? "1" : "0";
+                            val = (byte)GameLanguage.Language <= 3 ? "1" : "0";
                             found = true;
                         }
                         else if (x == "_ffxivincombat") // game status
