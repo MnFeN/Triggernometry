@@ -126,6 +126,14 @@ namespace Triggernometry
                     TranslateSecondaryControl(path, tsic);
                 }
             }
+            else if (tsi is ToolStripComboBox cbx)
+            {
+                for (int i = 0; i < cbx.Items.Count; i++)
+                {
+                    string o = cbx.Items[i].ToString();
+                    cbx.Items[i] = GetLocalizationFor(path + "/" + cbx.Name + "[" + o + "]", o);
+                }
+            }
         }
 
         internal static string GetLocalizationFor(string path, string current)
