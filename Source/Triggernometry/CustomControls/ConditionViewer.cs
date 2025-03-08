@@ -23,6 +23,7 @@ namespace Triggernometry.CustomControls
         private bool Changing { get; set; } = false;
         private Color disabledNodeColor;
         internal RealPlugin plug;
+        internal Trigger ParentTrigger;
 
         private bool _PanelStateFromOption;
         private bool PanelStateFromOption
@@ -761,6 +762,7 @@ namespace Triggernometry.CustomControls
             ctxPaste.Enabled = (btnAddCondition.Enabled == true && System.Windows.Forms.Clipboard.ContainsText() == true);
             ctxPasteOver.Enabled = ctxPaste.Enabled;
             TreeNode selectedNode = trvNodes.SelectedNode;
+            ctxTest.Enabled = selectedNode != null;
             ctxExpandAll.Enabled = selectedNode != null && selectedNode.Tag is ConditionGroup;
             ctxCollapseAll.Enabled = ctxExpandAll.Enabled;
         }
@@ -965,6 +967,32 @@ namespace Triggernometry.CustomControls
         private void btnProperties_CheckedChanged(object sender, EventArgs e)
         {
             PanelStateFromOption = btnProperties.Checked;
+        }
+
+        private void testStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode selectedNode = trvNodes.SelectedNode;
+            Context fakectx = new Context { plug = RealPlugin.plug, trig = ParentTrigger };
+            if (selectedNode.Tag is ConditionGroup group)
+            {
+                string result = group.CheckCondition(fakectx, null, null) ? "True" : "False";
+                MessageBox.Show(result, "Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (selectedNode.Tag is ConditionSingle condition)
+            {
+                string result = condition.CheckCondition(fakectx, null, null) ? "True" : "False";
+                string GetExprResult(Func<string> func)
+                {
+                    try { return func(); }
+                    catch (Exception ex)
+                    {
+                        return "[Error] " + ex.Message;
+                    }
+                }
+                string left = "L = \"" + GetExprResult(() => condition.GetExpressionResultL(fakectx, null, null)) + "\"";
+                string right = "R = \"" + GetExprResult(() => condition.GetExpressionResultR(fakectx, null, null)) + "\"";
+                MessageBox.Show($"{result}\n{left}\n{right}", "Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void expandAllStripMenuItem_Click(object sender, EventArgs e)

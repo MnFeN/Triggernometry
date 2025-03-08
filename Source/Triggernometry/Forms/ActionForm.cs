@@ -108,7 +108,18 @@ namespace Triggernometry.Forms
             }
         }
 
-        internal Trigger ParentTrigger = null;
+        private Trigger _parentTrigger;
+        internal Trigger ParentTrigger
+        { 
+            get => _parentTrigger;
+            set
+            {
+                _parentTrigger = value;
+                actionViewer1.trig = value;
+                cndCondition.ParentTrigger = value;
+                cndLoopCondition.ParentTrigger = value;
+            }
+        }
 
         internal static ImageConverter ic = new ImageConverter();
 
@@ -145,7 +156,6 @@ namespace Triggernometry.Forms
             txtSendKeysLink.Tag = I18n.DoNotTranslate;
             txtObsWebsocketLink.Tag = I18n.DoNotTranslate;
             RestoredSavedDimensions();
-            actionViewer1.trig = ParentTrigger;
             actionViewer1.plug = plug;
             actionViewer1.tts = tts;
             actionViewer1.wmp = wmp;

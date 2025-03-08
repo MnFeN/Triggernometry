@@ -248,6 +248,24 @@ namespace Triggernometry
             return cs;
         }
 
+        internal string GetExpressionResultL(Context ctx, Context.LoggerDelegate logger, object o)
+            => GetExpressionResult(ExpressionL ?? "", ExpressionTypeL, ctx, logger, o);
+        internal string GetExpressionResultR(Context ctx, Context.LoggerDelegate logger, object o)
+            => GetExpressionResult(ExpressionR ?? "", ExpressionTypeR, ctx, logger, o);
+
+        private string GetExpressionResult(string expr, ExprTypeEnum exprType, Context ctx, Context.LoggerDelegate logger, object o)
+        {
+            switch (exprType)
+            {
+                case ExprTypeEnum.Numeric:
+                    return I18n.ThingToString(ctx.EvaluateNumericExpression(logger, o, expr));
+                case ExprTypeEnum.String:
+                    return ctx.EvaluateStringExpression(logger, o, expr);
+                default:
+                    throw new Exception($"Invalid expression type: {exprType}");
+            }
+        }
+
         internal override bool CheckCondition(Context ctx, Context.LoggerDelegate logger, object o)
         {
             try
@@ -256,26 +274,8 @@ namespace Triggernometry
                 {
                     return false;
                 }
-                string lval = "", rval = "";
-                switch (ExpressionTypeL)
-                {
-                    case ExprTypeEnum.Numeric:
-                        
-                        lval = I18n.ThingToString(ctx.EvaluateNumericExpression(logger, o, ExpressionL));
-                        break;
-                    case ExprTypeEnum.String:
-                        lval = ctx.EvaluateStringExpression(logger, o, ExpressionL);
-                        break;
-                }
-                switch (ExpressionTypeR)
-                {
-                    case ExprTypeEnum.Numeric:
-                        rval = I18n.ThingToString(ctx.EvaluateNumericExpression(logger, o, ExpressionR));
-                        break;
-                    case ExprTypeEnum.String:
-                        rval = ctx.EvaluateStringExpression(logger, o, ExpressionR);
-                        break;
-                }
+                string lval = GetExpressionResultL(ctx, logger, o);
+                string rval = GetExpressionResultR(ctx, logger, o);
                 switch (ConditionType)
                 {
                     case CndTypeEnum.NumericEqual:

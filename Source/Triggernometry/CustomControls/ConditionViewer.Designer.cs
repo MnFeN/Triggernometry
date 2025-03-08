@@ -63,6 +63,7 @@
             this.ctxPaste = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxPasteOver = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.ctxTest = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -414,6 +415,7 @@
             this.ctxPaste,
             this.ctxPasteOver,
             this.toolStripSeparator2,
+            this.ctxTest,
             this.ctxExpandAll,
             this.ctxCollapseAll,
             this.toolStripSeparator3,
@@ -485,6 +487,13 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(198, 6);
+            // 
+            // ctxTest
+            // 
+            this.ctxTest.Name = "ctxTest";
+            this.ctxTest.Size = new System.Drawing.Size(201, 22);
+            this.ctxTest.Text = "Test Condition";
+            this.ctxTest.Click += new System.EventHandler(this.testStripMenuItem_Click);
             // 
             // ctxExpandAll
             // 
@@ -601,6 +610,7 @@
         private System.Windows.Forms.ToolStripMenuItem ctxPaste;
         private System.Windows.Forms.ToolStripMenuItem ctxPasteOver;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem ctxTest;
         private System.Windows.Forms.ToolStripMenuItem ctxExpandAll;
         private System.Windows.Forms.ToolStripMenuItem ctxCollapseAll;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
