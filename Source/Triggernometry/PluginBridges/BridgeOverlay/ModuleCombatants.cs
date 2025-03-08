@@ -11,7 +11,12 @@ namespace Triggernometry.PluginBridges
     [OverlayModule]
     internal static class ModuleCombatants
     {
-        public static bool Ready;
+        /// <summary>
+        /// true: Ready <br />
+        /// false: Not ready <br />
+        /// null: Before initialization
+        /// </summary>
+        public static bool? Ready;
         private static object _combatantMemoryManager;
 
         private static MethodInfo _getCombatantListMethod;
@@ -45,8 +50,26 @@ namespace Triggernometry.PluginBridges
                 _getCombatantListMethod = _combatantMemoryManager.GetType().GetMethod("GetCombatantList", BindingFlags.Public | BindingFlags.Instance)
                     ?? throw new ReflectionNotFoundException("CombatantMemoryManager.GetCombatantList");
 
-                _currentCombatantMemory = _combatantMemoryManager.GetType().GetField("memory", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(_combatantMemoryManager)
+                var _currentCombatantMemoryField = _combatantMemoryManager.GetType().GetField("memory", BindingFlags.NonPublic | BindingFlags.Instance)
                     ?? throw new ReflectionNotFoundException("CombatantMemoryManager.memory");
+                
+                _currentCombatantMemory = _currentCombatantMemoryField.GetValue(_combatantMemoryManager);
+                if (_currentCombatantMemory == null) // OverlayPlugin is still scanning memory
+                {
+                    Ready = false;
+                    RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
+                        "internal/BridgeOverlay/moduleCombatantsNotReady",
+                        "OverlayPlugin combatant memory is not ready. Could not retrieve entities via OverlayPlugin yet, will retry later."));
+                    return;
+                }
+                if (Ready == false) // previously not ready (has generated the warning above)
+                {
+                    RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
+                        "internal/BridgeOverlay/moduleCombatantsReady", 
+                        "OverlayPlugin combatant memory is ready."));
+                }
+                Ready = true;
+
                 var combatantMemoryType = _currentCombatantMemory.GetType().BaseType;
                 _memoryField = combatantMemoryType.GetField("memory", BindingFlags.NonPublic | BindingFlags.Instance)
                     ?? throw new ReflectionNotFoundException("CombatantMemory.memory");
@@ -58,13 +81,6 @@ namespace Triggernometry.PluginBridges
                     ?? throw new ReflectionNotFoundException("CombatantMemory.combatantSize");
                 _getMobFromByteArrayMethod = combatantMemoryType.GetMethod("GetMobFromByteArray", BindingFlags.NonPublic | BindingFlags.Instance)
                     ?? throw new ReflectionNotFoundException("CombatantMemory.GetMobFromByteArray");
-            }
-            catch (ReflectionNotFoundException ex)
-            {
-                // _currentCombatantMemory could be null before OverlayPlugin finishes its initialization
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, ex.Message);
-                Ready = false;
-                return;
             }
             catch (Exception ex)
             {
@@ -98,16 +114,14 @@ namespace Triggernometry.PluginBridges
         /// <returns>Empty if Overlay is not ready.</returns>
         internal static IEnumerable<FFXIV.Entity> InternalGetEntities()
         {
-            if (BridgeOverlay.Ready && !ModuleCombatants.Ready)
+            if (!BridgeOverlay.Ready) yield break;
+            if (BridgeOverlay.Ready && ModuleCombatants.Ready == false)
             {
-                try { ModuleCombatants.Initialize(); } catch { }
-            }
-            if (!Ready)
-            {
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
-                    "internal/BridgeOverlay/moduleCombatantsNotReady",
-                    "OverlayPlugin not ready when trying to get entities, will retry later."));
-                yield break;
+                ModuleCombatants.Initialize();
+                if (ModuleCombatants.Ready == false)
+                {
+                    yield break;
+                }
             }
 
             var seen = new HashSet<uint>();

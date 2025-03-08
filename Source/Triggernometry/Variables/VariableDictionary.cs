@@ -288,7 +288,7 @@ namespace Triggernometry.Variables
         }
 
         public static VariableDictionary BuildTemp(string expression)
-        {   // in expressions: ${?d: a:1, b:2, c:3 [xxx][xxx]}
+        {   // in expressions: ${?d: a=1, b=2, c=3 [xxx][xxx]}
             string[] pairs = Context.SplitArguments(expression);
             VariableDictionary vd = new VariableDictionary();
             foreach (string pair in pairs)

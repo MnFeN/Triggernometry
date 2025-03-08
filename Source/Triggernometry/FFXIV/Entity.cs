@@ -18,7 +18,7 @@ namespace Triggernometry.FFXIV
         public virtual PluginSource PluginSource { get; set; } = PluginSource.None;
 
         public virtual IntPtr Address { get; set; }
-        public virtual string Name { get; set; }
+        public virtual string Name { get; set; } = "";
         public virtual uint ID { get; set; }
         public virtual uint BNpcID { get; set; }
         public virtual uint OwnerID { get; set; }
@@ -159,6 +159,7 @@ namespace Triggernometry.FFXIV
         // to-do: sortings
         public static IEnumerable<Entity> GetFilteredEntities(string expr)
         {
+            expr = expr.Trim();
             // only given a single id (10123456)
             if (uint.TryParse(expr, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint id))
             {
@@ -166,10 +167,9 @@ namespace Triggernometry.FFXIV
                 return entity != null ? new Entity[] { entity } : new Entity[0];
             }
             // only given a single name
-            if (entityNameGuess.IsMatch(expr))
+            if (!ValidEntityPropNames.Contains(expr) && entityNameGuess.IsMatch(expr))
             {
-                var entities = GetEntities().Where(e => e.Name == expr.Trim());
-                if (entities.Count() >= 1) return entities;
+                return GetEntities().Where(e => e.Name == expr);
             }
             // given an expression (x > 100 && y < 100 && type = 1)
             List<Func<Entity, string>> funcTokens = EntityLexer(expr);
@@ -226,7 +226,7 @@ namespace Triggernometry.FFXIV
                     }
                 }
                 // entity methods (with args)
-                else if (LegalEntityMethodNames.Contains(token) && i + 1 < rawTokens.Count && rawTokens[i + 1] == "(")
+                else if (ValidEntityMethodNames.Contains(token) && i + 1 < rawTokens.Count && rawTokens[i + 1] == "(")
                 {
                     int depth = 1;
                     bool paired = false;
@@ -381,14 +381,14 @@ namespace Triggernometry.FFXIV
         /// Aliases are included, such as "H" and "Heading" are both for Entity.Heading. <br />
         /// Job-related properties or method names (with arguments) are not included.
         /// </summary>
-        internal static readonly HashSet<string> LegalEntityPropNames
+        internal static readonly HashSet<string> ValidEntityPropNames
             = new HashSet<string>(_propAccessors.Keys, StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// All "method" names that could be used to query a "method" (with arguments). <br />
         /// Aliases are included. <br />
         /// </summary>
-        internal static readonly HashSet<string> LegalEntityMethodNames
+        internal static readonly HashSet<string> ValidEntityMethodNames
             = new HashSet<string>(_methodAccessors.Keys, StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
@@ -396,9 +396,9 @@ namespace Triggernometry.FFXIV
         /// Aliases are NOT included.
         /// </summary>
         internal static readonly HashSet<string> RecommendedEntityPropNames
-            = new HashSet<string>(LegalEntityPropNames.Except(new string[] {
+            = new HashSet<string>(ValidEntityPropNames.Except(new string[] {
                 "Exist", "PluginSource", "EffectiveDistance",
-                "PosX", "PosY", "PosZ", "XY", "PosXY", "XYZ", "Pos", "H",
+                "PosX", "PosY", "PosZ", "XY", "PosXY", "XYZ", "Pos",
                 "HP", "MP", "CP", "GP",
                 "WorldID", "WorldName",
                 "CastPosX", "CastPosY", "CastPosZ", "CastPos",
@@ -462,7 +462,7 @@ namespace Triggernometry.FFXIV
         public string QueryProperty(string rawExpression)
         {
             var propName = rawExpression;
-            var args = new string[0];
+            string[] args = null;
             var leftIdx = rawExpression.IndexOf('(');
             if (leftIdx > 0 && propName.EndsWith(")"))
             {
@@ -552,35 +552,4 @@ namespace Triggernometry.FFXIV
     }
     
     #endregion Enums
-}
-
-public static class ToDataStringExtension // put it here for now
-{
-    public static string ToDataString(this object prop)
-    {
-        if (prop == null) return "";
-        switch (prop)
-        {
-            case string s:
-                return s;
-            case bool b:
-                return b ? "1" : "0";
-            case Enum e:
-                return e.ToString();
-            case Vector2 v2:
-                return $"{I18n.ThingToString(v2.X)}, {I18n.ThingToString(v2.Y)}";
-            case Vector3 v3:
-                return $"{I18n.ThingToString(v3.X)}, {I18n.ThingToString(v3.Y)}, {I18n.ThingToString(v3.Z)}";
-            case float f:
-                return I18n.ThingToString(f);
-            case double d:
-                return I18n.ThingToString(d);
-            case IFormattable formattable:
-                return formattable.ToString(null, CultureInfo.InvariantCulture);
-            case IEnumerable data:
-                return string.Join(", ", data.Cast<object>().Select(x => x.ToDataString()));
-            default:
-                return prop.ToString();
-        }
-    }
 }

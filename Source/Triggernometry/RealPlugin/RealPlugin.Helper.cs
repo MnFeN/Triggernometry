@@ -248,4 +248,79 @@ namespace Triggernometry
         }
 
     }
+
+    public static class Extensions
+    {
+
+        public static string ToDataString(this object prop)
+        {
+            if (prop == null) return "";
+            switch (prop)
+            {
+                case string s:
+                    return s;
+                case bool b:
+                    return b ? "1" : "0";
+                case Enum e:
+                    return e.ToString();
+                case Vector2 v2:
+                    return $"{I18n.ThingToString(v2.X)}, {I18n.ThingToString(v2.Y)}";
+                case Vector3 v3:
+                    return $"{I18n.ThingToString(v3.X)}, {I18n.ThingToString(v3.Y)}, {I18n.ThingToString(v3.Z)}";
+                case float f:
+                    try
+                    {
+                        return I18n.ThingToString(f);
+                    }
+                    catch (Exception)
+                    {
+                        RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, $"float ({f}) => decimal failed");
+                        return f.ToString();
+                    }
+                case double d:
+                    try
+                    {
+                        return I18n.ThingToString(d);
+                    }
+                    catch (Exception)
+                    {
+                        RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, $"double ({d}) => decimal failed");
+                        return d.ToString();
+                    }
+                case IFormattable formattable:
+                    return formattable.ToString(null, CultureInfo.InvariantCulture);
+                case IEnumerable data:
+                    return string.Join(", ", data.Cast<object>().Select(x => x.ToDataString()));
+                default:
+                    return prop.ToString();
+            }
+        }
+
+        public static T FromDataString<T>(this string input)
+            => (T)input.FromDataString(typeof(T));
+
+        public static object FromDataString(this string input, Type targetType)
+        {
+            if (targetType == typeof(string))
+                return input;
+
+            if (targetType.IsEnum)
+                return Enum.Parse(targetType, input, true);
+
+            if (targetType == typeof(Guid))
+                return Guid.Parse(input);
+
+            // Nullable<T>
+            Type underlyingType = Nullable.GetUnderlyingType(targetType);
+            if (underlyingType != null)
+            {
+                if (string.IsNullOrEmpty(input))
+                    return null;
+                return Convert.ChangeType(input, underlyingType);
+            }
+
+            return Convert.ChangeType(input, targetType, CultureInfo.InvariantCulture);
+        }
+
+    }
 }

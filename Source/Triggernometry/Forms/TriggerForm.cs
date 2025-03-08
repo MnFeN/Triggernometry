@@ -136,6 +136,7 @@ namespace Triggernometry.Forms
             SettingsFromTrigger(trig);
             fakectx.plug = plug;
             fakectx.trig = trig;
+            cndCondition.ParentTrigger = trig;
             foreach (Action action in Actions)
             {
                 action.ParentTrigger = trig;  // should be already set, but just in case

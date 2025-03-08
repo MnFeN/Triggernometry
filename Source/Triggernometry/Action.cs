@@ -476,16 +476,13 @@ namespace Triggernometry
                 {
                     return true;
                 }
-                switch (plug._obs.CheckRunningState())
+                var state = plug._obs.CheckRunningState();
+                if (state != ObsController.ObsRunningState.Running)
                 {
-                    case ObsController.ObsRunningState.NotRunningFirstlyFound:
+                    if (state == ObsController.ObsRunningState.NotRunningFirstlyFound)
                         AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/obsnotrunning",
                             "OBS is not running and the OBS action cannot be performed."));
                         return null;
-                    case ObsController.ObsRunningState.NotRunning:
-                        return null;
-                    case ObsController.ObsRunningState.Running:
-                        break;
                 }
                 try
                 {
@@ -498,9 +495,9 @@ namespace Triggernometry
                 {
                     AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/obsconnecterror", 
                         "Error connecting to OBS WebSocket: {0}", ex.Message));
+                    return false;
                 }
             }
-            return false;
         }
 
         internal bool LiveSplitConnector(Context ctx)
@@ -1555,7 +1552,7 @@ namespace Triggernometry
             {
                 return;
             }
-            plug.UnfilteredAddToLog(level, message);
+            plug.UnfilteredAddToLog(level, message, this);
         }
 
         private VariableList GetListVariable(VariableStore vs, string varname, bool createNew)

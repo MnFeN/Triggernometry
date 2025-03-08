@@ -837,6 +837,7 @@
     <TranslationEntry Key="ExportForm/btnSelectionToClipboard" Translation="复制所选" />
     <TranslationEntry Key="ExportForm/cbxFormat[HTML encoded]" Translation="HTML 编码的 XML" />
     <TranslationEntry Key="ExportForm/cbxFormat[Plain]" Translation="纯文本 XML" />
+    <TranslationEntry Key="ExportForm/cbxFormat[Plain (no leading spaces)]" Translation="纯文本 XML（移除前导空格）" />
     <TranslationEntry Key="ExportForm/ctxCopy" Translation="复制" />
     <TranslationEntry Key="ExportForm/ctxEverythingToClipboard" Translation="复制所有" />
     <TranslationEntry Key="ExportForm/ctxSaveToFile" Translation="保存到文件" />
@@ -1238,7 +1239,8 @@
     <TranslationEntry Key="internal/BenchmarkForm/resultexception" Translation="编译基准测试结果时发生异常" />
     <TranslationEntry Key="internal/BridgeOverlay/failInit" Translation="OverlayPlugin 插件相关功能初始化失败：{0}" />
     <TranslationEntry Key="internal/BridgeOverlay/failInitModule" Translation="OverlayPlugin 相关模块 {1} 初始化失败：{0}" />
-    <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="尝试获取实体时，OverlayPlugin 实体模块尚未准备好，稍后重试。" />
+    <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="OverlayPlugin 实体内存扫描未就绪，暂未通过 OverlayPlugin 获取实体，稍后重试。" />
+    <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin 实体内存扫描已就绪。" />
     <TranslationEntry Key="internal/BridgeOverlay/reflectionNotFound" Translation="初始化 OverlayPlugin 相关功能时，反射获取 {0} 失败。" />
     <TranslationEntry Key="internal/ColorSelector/sample" Translation="示例" />
     <TranslationEntry Key="internal/ConditionGroup/and" Translation="全部条件为真（与）" />
@@ -1302,7 +1304,7 @@
     <TranslationEntry Key="internal/Context/infiniteClipboardError" Translation="剪贴板内容包含文本 ${{_clipboard}}，会导致展开表达式时出现无限循环" />
     <TranslationEntry Key="internal/Context/infiniteRepeatError" Translation="Repeat 函数中，循环模式下新字符串 ({0}) 不能包含旧字符串 ({1})。表达式：({2})" />
     <TranslationEntry Key="internal/Context/invalidValueError" Translation="{0} 中，{1} ({2}) 不合法。表达式：({3})" />
-    <TranslationEntry Key="internal/Context/noEntity" Translation="获取实体 ({0}) 失败。触发器：({1})" />
+    <TranslationEntry Key="internal/Context/noEntity" Translation="检索的实体不存在：({0})。触发器：({1})" />
     <TranslationEntry Key="internal/Context/parseTypeError" Translation="{0} ({1}) 无法解析为{2}。表达式：({3})" />
     <TranslationEntry Key="internal/Context/ternaryexpressionerror" Translation="无法解析三元表达式：({0}) &#xD;&#xA;条件：({1}); &#xD;&#xA;True 表达式：({2}); &#xD;&#xA;False 表达式：({3})" />
     <TranslationEntry Key="internal/ExportForm/exception" Translation="异常" />

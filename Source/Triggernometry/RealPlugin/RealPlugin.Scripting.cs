@@ -11,7 +11,7 @@ namespace Triggernometry
     {
         internal Interpreter scripting;
         internal bool scriptingInited = false;
-        internal Dictionary<string, object> scriptingStorage = new Dictionary<string, object>();
+        internal Dictionary<string, object> scriptingStorage = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         private List<Configuration.APIUsage> DefaultAPIUsages = Interpreter.SecurityAPIs.Select(name => new Configuration.APIUsage
         {
             Name = name,

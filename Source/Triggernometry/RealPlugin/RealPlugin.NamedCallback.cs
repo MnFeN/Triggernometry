@@ -27,7 +27,7 @@ namespace Triggernometry
         }
 
         internal Dictionary<int, NamedCallback> callbacksById = new Dictionary<int, NamedCallback>();
-        internal Dictionary<string, List<NamedCallback>> callbacksByName = new Dictionary<string, List<NamedCallback>>();
+        internal Dictionary<string, List<NamedCallback>> callbacksByName = new Dictionary<string, List<NamedCallback>>(StringComparer.OrdinalIgnoreCase);
 
         public void InvokeNamedCallback(string name, string val)
         {

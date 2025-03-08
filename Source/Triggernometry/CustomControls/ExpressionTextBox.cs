@@ -148,7 +148,7 @@ namespace Triggernometry.CustomControls
         // Name, X, Job, Role, etc.
         public static List<string> XivEntityProps = new List<string> { 
             "HasStatus(statusId)", "StatusTimer(statusId)", "StatusStack(statusId)",
-        }.Concat(FFXIV.Entity.LegalEntityPropNames).Concat(FFXIV.Job.LegalJobPropNames).ToList();
+        }.Concat(FFXIV.Entity.ValidEntityPropNames).Concat(FFXIV.Job.LegalJobPropNames).ToList();
         
         // Job, Role, etc.
         public static List<string> XivJobProps = FFXIV.Job.LegalJobPropNames.ToList();
@@ -451,26 +451,9 @@ namespace Triggernometry.CustomControls
         {
             if (AutocompleteActive() == true)
             {
-                string ac = GetChosenAutocomplete().Substring(CurrentMatch.Length);
-                int pIndex = ac.IndexOf('(');
-                int bIndex = ac.IndexOf("[");
-
-                if (pIndex >= 0)
-                {
-                    textBox1.Paste(ac.Substring(0, pIndex) + "()");
-                    textBox1.SelectionStart--;
+                ApplyAutoComplete();
                 }
-                else if (bIndex >= 0)
-                {
-                    textBox1.Paste(ac.Substring(0, bIndex) + "]");
-                    textBox1.SelectionStart--;
-                    textBox1.Paste("[");
-                    // trigger the TextChanged event with the correct cursor position
                 }
-                else
-                    textBox1.Paste(ac);
-            }
-        }
 
         private void ListBox1_MouseDown(object sender, EventArgs e)
         {
@@ -565,6 +548,42 @@ namespace Triggernometry.CustomControls
                 e.Handled = true;
                 if (AutocompleteActive() == true)
                 {
+                    ApplyAutoComplete();
+                }
+                else if (OnEnterKeyHit != null)
+                {
+                    OnEnterKeyHit();
+                }
+                else
+                {
+                    if (!textBox1.Multiline) // switch to multiline mode
+                    {
+                        ToggleExpand();
+                    }
+                    else // input linebreaks (+ indent), instead of closing the form
+                    {
+                        int currentPosition = textBox1.SelectionStart;
+                        int currentLineIndex = textBox1.GetLineFromCharIndex(currentPosition);
+                        int lineStartIndex = textBox1.GetFirstCharIndexOfCurrentLine();
+                        string currentLineText = textBox1.Text.Substring(lineStartIndex, currentPosition - lineStartIndex);
+
+                        string indent = new string(currentLineText.TakeWhile(c => c == ' ' || c == '　').ToArray());
+                        textBox1.Paste(Environment.NewLine + indent);
+                    }
+                }
+            }
+            else if (e.KeyChar == Convert.ToChar(Keys.Escape))
+            {
+                HideAutocomplete();
+            }
+            else if (char.IsControl(e.KeyChar) == true)
+            {
+                HideAutocomplete();
+            }
+        }
+
+        private void ApplyAutoComplete()
+        {
                     string ac = GetChosenAutocomplete();
                     int cursorPos = textBox1.SelectionStart;
 
@@ -621,37 +640,6 @@ namespace Triggernometry.CustomControls
                     else
                         textBox1.Paste(ac);
                 }
-                else if (OnEnterKeyHit != null)
-                {
-                    OnEnterKeyHit();
-                }
-                else
-                {
-                    if (!textBox1.Multiline) // switch to multiline mode
-                    {
-                        ToggleExpand();
-                    }
-                    else // input linebreaks (+ indent), instead of closing the form
-                    {
-                        int currentPosition = textBox1.SelectionStart;
-                        int currentLineIndex = textBox1.GetLineFromCharIndex(currentPosition);
-                        int lineStartIndex = textBox1.GetFirstCharIndexOfCurrentLine();
-                        string currentLineText = textBox1.Text.Substring(lineStartIndex, currentPosition - lineStartIndex);
-
-                        string indent = new string(currentLineText.TakeWhile(c => c == ' ' || c == '　').ToArray());
-                        textBox1.Paste(Environment.NewLine + indent);
-                    }
-                }
-            }
-            else if (e.KeyChar == Convert.ToChar(Keys.Escape))
-            {
-                HideAutocomplete();
-            }
-            else if (char.IsControl(e.KeyChar) == true)
-            {
-                HideAutocomplete();
-            }
-        }
 
         private static Regex reCaptureGroups = new Regex(@"\$\{(?<capture>[\p{L}\d_]+?)\}");
         /// <summary> Check if the pure alphanumeric ${...} expressions are all capture groups or special variables (like _since) </summary>
@@ -1199,7 +1187,7 @@ namespace Triggernometry.CustomControls
         {
             using (Graphics g = textBox1.CreateGraphics())
             {
-                SizeF size = g.MeasureString(textBox1.Text + "\n1", textBox1.Font); // add one more line
+                SizeF size = g.MeasureString(textBox1.Text + "\n\n1", textBox1.Font); // add 2 more lines
                 textBox1.Height = (int)size.Height;
             }
         }
@@ -1435,6 +1423,7 @@ namespace Triggernometry.CustomControls
             {
                 const int WM_LBUTTONDOWN = 0x0201;
                 const int WM_LBUTTONDBLCLK = 0x0203;
+                const int WM_PASTE = 0x302;
 
                 if (m.Msg == WM_LBUTTONDBLCLK)
                 {
@@ -1489,7 +1478,16 @@ namespace Triggernometry.CustomControls
                         return;
                     }
                 }
-
+                if (m.Msg == WM_PASTE)
+                {
+                    string clipboardText = Clipboard.GetText();
+                    if (!Multiline && clipboardText.Contains("\n"))
+                    {
+                        ExpTextBox?.ToggleExpand();
+                        this.BeginInvoke(new System.Action(() => this.Paste()));
+                        return;
+                    }
+                }
                 base.WndProc(ref m);
             }
 

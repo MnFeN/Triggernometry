@@ -68,6 +68,7 @@ namespace Triggernometry
         public void Dispose()
         {
             Disconnect();
+            ObsProc = null;
             if (authRespReceived != null)
             {
                 authRespReceived.Dispose();
@@ -75,29 +76,45 @@ namespace Triggernometry
             }
         }
 
-        private Process _obsProc;
+        private Process _obsProc = null;
+        private Process ObsProc 
+        {
+            get => _obsProc;
+            set
+            { 
+                _obsProc?.Dispose();
+                _obsProc = value;
+            }
+        }
         private DateTime _lastChecked;
         private bool _complaintAboutNotRunning = false;
         internal ObsRunningState CheckRunningState()
         {
-            if (_obsProc?.HasExited == false)
+            if (ObsProc?.HasExited == false)
             {
+                _complaintAboutNotRunning = false;
                 return ObsRunningState.Running;
             }
             else
             {
-                _obsProc = null;
-                _complaintAboutNotRunning = false;
+                ObsProc = null;
             }
             if (DateTime.Now - _lastChecked > TimeSpan.FromSeconds(5))
             {
                 _lastChecked = DateTime.Now;
-                _obsProc = Process.GetProcessesByName("obs64").FirstOrDefault()
-                        ?? Process.GetProcessesByName("obs32").FirstOrDefault();
+                ObsProc = Process.GetProcessesByName("obs64").FirstOrDefault()
+                       ?? Process.GetProcessesByName("obs32").FirstOrDefault();
             }
-            return _obsProc != null ? ObsRunningState.Running
-                                    : _complaintAboutNotRunning ? ObsRunningState.NotRunning
-                                                                : ObsRunningState.NotRunningFirstlyFound;
+            if (ObsProc != null) return ObsRunningState.Running;
+            if (!_complaintAboutNotRunning)
+            {
+                _complaintAboutNotRunning = true;
+                return ObsRunningState.NotRunningFirstlyFound;
+            }
+            else
+            {
+                return ObsRunningState.NotRunning;
+            }
         }
 
         internal enum ObsRunningState 
