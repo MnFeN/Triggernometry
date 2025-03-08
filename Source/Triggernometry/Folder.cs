@@ -406,6 +406,12 @@ namespace Triggernometry
             }
         }
 
+        public void RecursiveApplyOnTriggers(Action<Trigger> action)
+        {
+            Triggers.ForEach(t => action(t));
+            Folders.ForEach(f => f.RecursiveApplyOnTriggers(action));
+        }
+
     }
 
 }

@@ -145,6 +145,7 @@ namespace Triggernometry.Forms
             txtSendKeysLink.Tag = I18n.DoNotTranslate;
             txtObsWebsocketLink.Tag = I18n.DoNotTranslate;
             RestoredSavedDimensions();
+            actionViewer1.trig = ParentTrigger;
             actionViewer1.plug = plug;
             actionViewer1.tts = tts;
             actionViewer1.wmp = wmp;
@@ -2742,7 +2743,10 @@ namespace Triggernometry.Forms
             }
             catch (Exception ex)
             {
-                plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ActionForm/exteditorfailed", "Couldn't launch external editor due to exception: {0}", ex.Message));
+                plug.FilteredAddToLog(
+                    RealPlugin.DebugLevelEnum.Error, 
+                    I18n.Translate("internal/ActionForm/exteditorfailed", "Couldn't launch external editor due to exception: {0}", ex.Message),
+                    this.ParentTrigger);
             }
         }
 
@@ -2755,7 +2759,10 @@ namespace Triggernometry.Forms
             }
             catch (Exception ex)
             {
-                plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ActionForm/tempfiledeletefailed", "Couldn't process temporary file {0} due to exception: {1}", EditorTempFn, ex.Message));
+                plug.FilteredAddToLog(
+                    RealPlugin.DebugLevelEnum.Error, 
+                    I18n.Translate("internal/ActionForm/tempfiledeletefailed", "Couldn't process temporary file {0} due to exception: {1}", EditorTempFn, ex.Message),
+                    this.ParentTrigger);
             }
             btnScriptExternalEditor.Enabled = true;
             expExecScriptCode.Enabled = true;

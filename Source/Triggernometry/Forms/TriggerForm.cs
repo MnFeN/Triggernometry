@@ -138,7 +138,7 @@ namespace Triggernometry.Forms
             fakectx.trig = trig;
             foreach (Action action in Actions)
             {
-                action.ParentTrigger = trig;
+                action.ParentTrigger = trig;  // should be already set, but just in case
             }
 
             if (readOnly) SetReadOnly();
@@ -152,13 +152,27 @@ namespace Triggernometry.Forms
             txtRegexp.TextChanged += (s, e) => ExpressionTextBox.CurrentTriggerRegexStr = txtRegexp.Text;
             Shown += (s, e) => ExpressionTextBox.CurrentTriggerRegexStr = txtRegexp.Text;
             Closed += (s, e) => ExpressionTextBox.CurrentTriggerRegexStr = "";
+
+            Shown += (s, e) => {
+                // if any log from this action was last double-clicked in the LogForm
+                if (this.trig != null && trig == InternalLog.RecordedAction?.ParentTrigger)
+                {
+                    int idx = trig.Actions?.IndexOf(InternalLog.RecordedAction) ?? -1;
+                    if (idx >= 0 && idx < actionViewer1.dgvActions.Rows.Count)
+                    {
+                        actionViewer1.dgvActions.ClearSelection();
+                        actionViewer1.dgvActions.Rows[idx].Selected = true;
+                        actionViewer1.dgvActions.FirstDisplayedScrollingRowIndex = idx;
+                    }
+                }
+            };
         }
 
         private void CloseTree(TreeNode tn)
         {
-            if (tn.Tag is Folder)
+            if (tn.Tag is Folder folder)
             { 
-                tn.ImageIndex = (int)CustomControls.UserInterface.GetImageIndexForClosedFolder((Folder)tn.Tag);
+                tn.ImageIndex = (int)CustomControls.UserInterface.GetImageIndexForClosedFolder(folder);
                 tn.SelectedImageIndex = tn.ImageIndex;
             }
             foreach (TreeNode tc in tn.Nodes)

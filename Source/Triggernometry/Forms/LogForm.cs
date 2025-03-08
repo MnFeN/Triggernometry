@@ -35,6 +35,8 @@ namespace Triggernometry.Forms
                 dgvLog.CellFormatting += DgvLog_CellFormatting;
             }
             rexSearch.OnEnterKeyHit += RexSearch_OnEnter;
+            dgvLog.CellMouseClick += DgvLog_CellMouseClick;
+            dgvLog.CellMouseDoubleClick += DgvLog_CellMouseDoubleClick;
         }
 
         private void RexSearch_OnEnter()
@@ -78,6 +80,7 @@ namespace Triggernometry.Forms
 
         private void DgvLog_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
+            if (e.RowIndex < 0) return;
             InternalLog il = virtualData[e.RowIndex];
             switch (e.ColumnIndex)
             {
@@ -129,7 +132,6 @@ namespace Triggernometry.Forms
                 {
                     logData.AddRange(queue);
                 }
-                
             }
             logData.Sort((a, b) => b.Timestamp.CompareTo(a.Timestamp));
             if (dgvLog.VirtualMode == true)
@@ -213,6 +215,49 @@ namespace Triggernometry.Forms
             dgvLog.Rows.AddRange(rows.ToArray());
             dgvLog.ClearSelection();
             lblStatus.Text = I18n.Translate("internal/LogForm/displaying", "Displaying {0} out of {1}", p1.Count, logData.Count);
+        }
+
+        private DateTime lastDoubleClickTime = DateTime.MinValue;
+        private InternalLog lastDoubleClickedLog = null;
+        // double click on a log entry to jump to and select the trigger
+        private void DgvLog_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.Button != MouseButtons.Left)
+                return;
+            InternalLog log = virtualData[e.RowIndex];
+            if (log.SourceAction != null)
+            {
+                InternalLog.RecordedAction = log.SourceAction;
+            }
+            if (log.SourceTrigger != null)
+            {
+                var root = log.SourceTrigger.Repo == null ? plug.ui.treeView1.Nodes[0] : plug.ui.treeView1.Nodes[1];
+                TreeNode node = RealPlugin.plug.LocateNodeHostingTrigger(root, log.SourceTrigger);
+                if (node != null)
+                {
+                    lastDoubleClickedLog = log;
+                    lastDoubleClickTime = DateTime.Now;
+                    System.Media.SystemSounds.Asterisk.Play();
+                    RealPlugin.plug.ui.LocateTreeNode(node);
+                    return;
+                }
+            }
+            System.Media.SystemSounds.Hand.Play();
+        }
+
+        // triple click on a log entry to jump to and edit the trigger
+        private void DgvLog_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.Button != MouseButtons.Left)
+                return;
+
+            InternalLog currentLog = virtualData[e.RowIndex];
+            if (currentLog == lastDoubleClickedLog && (DateTime.Now - lastDoubleClickTime).TotalMilliseconds < SystemInformation.DoubleClickTime)
+            {
+                RealPlugin.plug.ui.btnEdit_Click(null, null);
+                lastDoubleClickTime = DateTime.MinValue;
+                lastDoubleClickedLog = null;
+            }
         }
 
         private void selectionToClipboardToolStripMenuItem_Click(object sender, EventArgs e)

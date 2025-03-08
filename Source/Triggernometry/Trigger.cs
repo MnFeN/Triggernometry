@@ -652,7 +652,7 @@ namespace Triggernometry
             {
                 return;
             }
-            p.UnfilteredAddToLog(level, message);
+            p.UnfilteredAddToLog(level, message, this);
         }
 
         internal void DeferredFire(RealPlugin p, Context ctx, RealPlugin.MutexInformation mi, RealPlugin.MutexTicket m)
@@ -818,9 +818,10 @@ namespace Triggernometry
                      select tx;
             foreach (Action a in ix)
             {
-                Action b = new Action();
-                a.CopySettingsTo(b);
-                t.Actions.Add(b);
+                Action newAction = new Action();
+                a.CopySettingsTo(newAction);
+                newAction.ParentTrigger = t;
+                t.Actions.Add(newAction);
             }
             t._Condition = (ConditionGroup)_Condition.Duplicate();
             t._IsReadme = _IsReadme;
@@ -838,6 +839,11 @@ namespace Triggernometry
             t._EditAutofireAllowCondition = _EditAutofireAllowCondition;
             t._Description = _Description;
             t._TestInput = _TestInput;
+        }
+
+        internal void SetActionsParent()
+        {
+            Actions.ForEach(a => a.ParentTrigger = this);
         }
 
     }

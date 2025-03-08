@@ -38,9 +38,22 @@ namespace Triggernometry
             ui?.ClearErrorCount();
         }
 
-        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg)
+        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig = null)
+            => UnfilteredAddToLog(level, msg, trig, null);
+
+        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, Action action)
+            => UnfilteredAddToLog(level, msg, action?.ParentTrigger, action);
+
+        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig, Action action)
         {
-            InternalLog il = new InternalLog() { Timestamp = DateTime.Now, Level = level, Message = msg };
+            InternalLog il = new InternalLog() 
+            { 
+                Timestamp = DateTime.Now, 
+                Level = level, 
+                Message = msg,
+                SourceTrigger = trig,
+                SourceAction = action
+            };
             if (DisableLogging == false && System.Diagnostics.Debugger.IsAttached == true)
             {
                 System.Diagnostics.Debug.WriteLine(il.ToString());
@@ -60,13 +73,19 @@ namespace Triggernometry
             }
         }
 
-        public void FilteredAddToLog(DebugLevelEnum level, string msg)
+        public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig = null)
+            => FilteredAddToLog(level, msg, trig, null);
+
+        public void FilteredAddToLog(DebugLevelEnum level, string msg, Action action)
+            => FilteredAddToLog(level, msg, action?.ParentTrigger, action);
+
+        public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig, Action action)
         {
             if (cfg != null && level > cfg.DebugLevel)
             {
                 return;
             }
-            UnfilteredAddToLog(level, msg);
+            UnfilteredAddToLog(level, msg, trig, action);
         }
 
     }

@@ -13,6 +13,9 @@ namespace Triggernometry
         public DateTime Timestamp { get; set; }
         public RealPlugin.DebugLevelEnum Level { get; set; }
         public string Message { get; set; }
+        public Trigger SourceTrigger { get; set; }
+        public Action SourceAction { get; set; }
+        internal static Action RecordedAction { get; set; }
 
         public override string ToString()
         {

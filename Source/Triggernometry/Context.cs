@@ -2273,8 +2273,8 @@ namespace Triggernometry
                                 {
                                     RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
                                         "internal/Context/noEntity",
-                                        "Failed to find entity: {0}. Trigger: ({1})",
-                                        x, trig?.FullPath ?? "null"));
+                                        "The queried entity does not exist: {0}. Trigger: ({1})",
+                                        x, trig?.FullPath ?? "null"), trig);
                                 }
                                 else val = string.Join(", ", entity.QueryProperties(prop));
                             }
@@ -2568,7 +2568,10 @@ namespace Triggernometry
                 }
                 else if (plug != null)
                 {
-                    plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Context/expansion", "Variable expansion from '{0}' to '{1}'", expr, newexpr));
+                    plug.FilteredAddToLog(
+                        RealPlugin.DebugLevelEnum.Verbose,
+                        I18n.Translate("internal/Context/expansion", "Variable expansion from '{0}' to '{1}'", expr, newexpr),
+                        this.trig);
                 }
             }
             return newexpr;

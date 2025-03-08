@@ -61,7 +61,10 @@ namespace Triggernometry
                 XmlSerializer xs = new XmlSerializer(typeof(TriggernometryExport));
                 using (MemoryStream ms = new MemoryStream(UTF8Encoding.UTF8.GetBytes(src)))
                 {
-                    return (TriggernometryExport)xs.Deserialize(ms);
+                    var result = (TriggernometryExport)xs.Deserialize(ms);
+                    result.ExportedFolder?.RecursiveApplyOnTriggers(t => t.SetActionsParent());
+                    result.ExportedTrigger?.SetActionsParent();
+                    return result;
                 }
             }
             catch (Exception)

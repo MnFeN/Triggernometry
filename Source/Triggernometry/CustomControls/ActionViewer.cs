@@ -554,7 +554,10 @@ namespace Triggernometry.CustomControls
             }
             catch (Exception ex)
             {
-                plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/TriggerForm/actioncopyfail", "Action copy failed due to exception: {0}", ex.Message));
+                plug.FilteredAddToLog(
+                    RealPlugin.DebugLevelEnum.Error, 
+                    I18n.Translate("internal/TriggerForm/actioncopyfail", "Action copy failed due to exception: {0}", ex.Message),
+                    this.trig);
             }
         }
 
@@ -576,6 +579,7 @@ namespace Triggernometry.CustomControls
                     using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(data)))
                     {
                         Action.ActionBundle ab = (Action.ActionBundle)xs.Deserialize(ms);
+                        ab.Actions.ForEach(a => a.ParentTrigger = trig);
                         int idx = 0;
                         if (dgvActions.SelectedRows.Count > 0)
                         {
@@ -623,6 +627,7 @@ namespace Triggernometry.CustomControls
                     using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(data)))
                     {
                         Action cx = (Action)xs.Deserialize(ms);
+                        cx.ParentTrigger = trig;
                         int idx = 0;
                         if (dgvActions.SelectedRows.Count > 0)
                         {
@@ -652,7 +657,10 @@ namespace Triggernometry.CustomControls
             }
             catch (Exception ex)
             {
-                plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/TriggerForm/actionpastefail", "Action paste failed due to exception: {0}", ex.Message));
+                plug.FilteredAddToLog(
+                    RealPlugin.DebugLevelEnum.Error, 
+                    I18n.Translate("internal/TriggerForm/actionpastefail", "Action paste failed due to exception: {0}", ex.Message),
+                    this.trig);
             }
         }
 

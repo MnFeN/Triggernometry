@@ -353,14 +353,15 @@ namespace Triggernometry.CustomControls
             {
                 foreach (Trigger t in plug.Triggers)
                 {
-                    foreach (Action a in t.Actions)
+                    t.SetActionsParent();
+                    foreach (Action a in t.Actions) // old properties
                     {
                         if (a.Conditions != null)
                         {
                             a.Conditions = null;
                         }
                     }
-                    if (t.Conditions != null)
+                    if (t.Conditions != null)  // old properties
                     {
                         t.Conditions = null;
                     }
