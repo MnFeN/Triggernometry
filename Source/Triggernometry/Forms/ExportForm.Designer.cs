@@ -146,9 +146,10 @@
             this.cbxFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxFormat.Items.AddRange(new object[] {
             "Plain",
+            "Plain (no leading spaces)",
             "HTML encoded"});
             this.cbxFormat.Name = "cbxFormat";
-            this.cbxFormat.Size = new System.Drawing.Size(121, 25);
+            this.cbxFormat.Size = new System.Drawing.Size(200, 25);
             this.cbxFormat.SelectedIndexChanged += new System.EventHandler(this.cbxFormat_SelectedIndexChanged);
             // 
             // toolStripSeparator1

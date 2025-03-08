@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Triggernometry.Forms
 {
@@ -72,6 +73,10 @@ namespace Triggernometry.Forms
                     rtbExportResults.Text = ShownText;
                     break;
                 case 1:
+                    Regex regexLeadingSpaces = new Regex(@"^[ \t]+", RegexOptions.Multiline | RegexOptions.Compiled);
+                    rtbExportResults.Text = regexLeadingSpaces.Replace(ShownText, "");
+                    break;
+                case 2:
                     rtbExportResults.Text = WebUtility.HtmlEncode(ShownText);
                     break;
             }
