@@ -2023,6 +2023,17 @@ namespace Triggernometry
                                             }
                                         }
                                         break;
+                                    case "dictreplace": // dictreplace(old1 = new1, old2 = new2, ...)
+                                        {
+                                            val = funcval;
+                                            string[] pairs = SplitArguments(funcarg);
+                                            foreach (string pair in pairs)
+                                            {
+                                                string[] kv = SplitArguments(pair, separator: "="); 
+                                                val = val.Replace(kv[0], kv[1]);
+                                            }
+                                        }
+                                        break;
                                     case "substring": // substring(startindex, length) or substring(startindex)
                                         {
                                             if (argc != 1 && argc != 2) { throw ArgCountError(funcname, "1-2", argc, x); }

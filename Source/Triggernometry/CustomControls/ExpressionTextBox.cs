@@ -75,7 +75,7 @@ namespace Triggernometry.CustomControls
             "_ffxivparty[x]", "_party[x]", "_ffxiventity[x]", "_entity[x]", "_ffxivplayer", "_me", "_me.id",
             "_job[jobid/jobName/jobAbbrev]", "_tm2id[markType]", "_targetmarker2id[markType]", "_wm[markType]", "_waymark[markType]",
             "_ffxivtime", "_ET", "_ETprecise", "_ffxivpartyorder", "_ffxivprocid", "_ffxivprocname", "_ffxivzoneid",
-            "_ffxivversion", "_ffxivincombat", "_ffxivisglobal", "_ffxivlanguage",
+            "_ffxivversion", "_ffxivincombat", "_ffxivisglobal", "_ffxivlanguage", "_ffxivlanguageid",
             "_env[x]", "_const[x]", "_config[x]", "_storage[x]", "_actionhistory[i/previous]",
             "_this", "_idx", "_col", "_row", "_col[i]", "_row[i]", "_colrl[...]", "_rowcl[...]", "_key", "_val",
             "_loopiterator", "_i",
@@ -90,7 +90,7 @@ namespace Triggernometry.CustomControls
             "indexof(str)", "lastindexof(str)", "i(str)", "indicesof(str, joiner=',', slices='::')",
             "padleft(char, len)", "padright(char, len)", "chr(separator=',')", "ord(joiner=',')",
             "trim()", "trim(char, char, ...)", "trimleft()", "trimleft(char, char, ...)", "trimright()", "trimright(char, char, ...)",
-            "repeat(times, joiner=',')", "replace(oldStr, newStr='', isLooped=false)",
+            "repeat(times, joiner=',')", "replace(oldStr, newStr='', isLooped=false)", "dictreplace(old1 = new1, old2 = new2, ...)",
             "format(type, format)", "compare(str, ignorecase=true)", "versioncompare(tgtVersion)",
             "contain(str)", "ifcontain(str, t, f)", "equal(str)", "ifequal(str, t, f)",
             "startwith(str)", "ifstartwith(str, t, f)", "endwith(str)", "ifendwith(str, t, f)",
@@ -452,8 +452,8 @@ namespace Triggernometry.CustomControls
             if (AutocompleteActive() == true)
             {
                 ApplyAutoComplete();
-                }
-                }
+            }
+        }
 
         private void ListBox1_MouseDown(object sender, EventArgs e)
         {
@@ -584,62 +584,62 @@ namespace Triggernometry.CustomControls
 
         private void ApplyAutoComplete()
         {
-                    string ac = GetChosenAutocomplete();
-                    int cursorPos = textBox1.SelectionStart;
+            string ac = GetChosenAutocomplete();
+            int cursorPos = textBox1.SelectionStart;
 
-                    // remove the existing part to fix the capitalization typos
-                    if (CurrentMatch.Length > 0 && cursorPos >= CurrentMatch.Length)
-                    {
-                        textBox1.Text = textBox1.Text.Remove(cursorPos - CurrentMatch.Length, CurrentMatch.Length);
-                        textBox1.SelectionStart = cursorPos - CurrentMatch.Length;
-                    }
+            // remove the existing part to fix the capitalization typos
+            if (CurrentMatch.Length > 0 && cursorPos >= CurrentMatch.Length)
+            {
+                textBox1.Text = textBox1.Text.Remove(cursorPos - CurrentMatch.Length, CurrentMatch.Length);
+                textBox1.SelectionStart = cursorPos - CurrentMatch.Length;
+            }
 
-                    /* To do: 
-                     * close () [] {} automatically and 
-                     * moves the cursor to the correct position
-                    string currentSuffix = suffix;
-                    if (currentSuffix == "matchPrefix")
-                    {   // variable prefix or regex group (could not decide previously)
-                        currentSuffix = (ac.EndsWith(":")) ? "" : "}";
-                    }
-                    // remove the existing suffix (e.g. "${_const[xxx]}" / "${_const[xxx]" => "${_const[xxx")
-                    int cursorPos = textBox1.SelectionStart;
-                    string strAfterCursor = textBox1.Text.Substring(cursorPos);
-                    if (strAfterCursor.Length >= 2 && strAfterCursor.Substring(0, 2) == currentSuffix)
-                    {
-                        textBox1.Text = textBox1.Text.Remove(cursorPos, 2);
-                        textBox1.SelectionStart = cursorPos;
-                    }
-                    else if (strAfterCursor.Length >= 1 && currentSuffix.Length >= 1
-                        && strAfterCursor.Substring(0, 1) == currentSuffix.Substring(0, 1))
-                    {
-                        textBox1.Text = textBox1.Text.Remove(cursorPos, 1);
-                        textBox1.SelectionStart = cursorPos;
-                    }
+            /* To do: 
+             * close () [] {} automatically and 
+             * moves the cursor to the correct position
+            string currentSuffix = suffix;
+            if (currentSuffix == "matchPrefix")
+            {   // variable prefix or regex group (could not decide previously)
+                currentSuffix = (ac.EndsWith(":")) ? "" : "}";
+            }
+            // remove the existing suffix (e.g. "${_const[xxx]}" / "${_const[xxx]" => "${_const[xxx")
+            int cursorPos = textBox1.SelectionStart;
+            string strAfterCursor = textBox1.Text.Substring(cursorPos);
+            if (strAfterCursor.Length >= 2 && strAfterCursor.Substring(0, 2) == currentSuffix)
+            {
+                textBox1.Text = textBox1.Text.Remove(cursorPos, 2);
+                textBox1.SelectionStart = cursorPos;
+            }
+            else if (strAfterCursor.Length >= 1 && currentSuffix.Length >= 1
+                && strAfterCursor.Substring(0, 1) == currentSuffix.Substring(0, 1))
+            {
+                textBox1.Text = textBox1.Text.Remove(cursorPos, 1);
+                textBox1.SelectionStart = cursorPos;
+            }
 
-                    ac += currentSuffix;
-                    textBox1.Paste(ac);
-                    */
+            ac += currentSuffix;
+            textBox1.Paste(ac);
+            */
 
-                    // when the autofilled string contains '(' or '[', e.g. method(arg1, arg2)
-                    // remove the parameters, and trigger the TextChanged event with the correct cursor position
-                    int pIndex = ac.IndexOf('(');
-                    int bIndex = ac.IndexOf("[");
-                    if (pIndex >= 0)
-                    {
-                        textBox1.Paste(ac.Substring(0, pIndex) + ")");
-                        textBox1.SelectionStart--;
-                        textBox1.Paste("(");
-                    }
-                    else if (bIndex >= 0)
-                    {
-                        textBox1.Paste(ac.Substring(0, bIndex) + "]");
-                        textBox1.SelectionStart--;
-                        textBox1.Paste("[");
-                    }
-                    else
-                        textBox1.Paste(ac);
-                }
+            // when the autofilled string contains '(' or '[', e.g. method(arg1, arg2)
+            // remove the parameters, and trigger the TextChanged event with the correct cursor position
+            int pIndex = ac.IndexOf('(');
+            int bIndex = ac.IndexOf("[");
+            if (pIndex >= 0)
+            {
+                textBox1.Paste(ac.Substring(0, pIndex) + ")");
+                textBox1.SelectionStart--;
+                textBox1.Paste("(");
+            }
+            else if (bIndex >= 0)
+            {
+                textBox1.Paste(ac.Substring(0, bIndex) + "]");
+                textBox1.SelectionStart--;
+                textBox1.Paste("[");
+            }
+            else
+                textBox1.Paste(ac);
+        }
 
         private static Regex reCaptureGroups = new Regex(@"\$\{(?<capture>[\p{L}\d_]+?)\}");
         /// <summary> Check if the pure alphanumeric ${...} expressions are all capture groups or special variables (like _since) </summary>
