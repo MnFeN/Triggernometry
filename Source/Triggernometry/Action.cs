@@ -4454,7 +4454,33 @@ namespace Triggernometry
                 {
                     foreach (string hdr in headers)
                     {
-                        httpWebRequest.Headers.Add(hdr);
+                        var sepIndex = hdr.IndexOf(':');
+                        if (sepIndex > 0)
+                        {
+                            var key = hdr.Substring(0, sepIndex).Trim();
+                            var value = hdr.Substring(sepIndex + 1).Trim();
+                            switch (key.ToLower())
+                            {
+                                case "content-type":
+                                    httpWebRequest.ContentType = value;
+                                    break;
+                                case "user-agent":
+                                    httpWebRequest.UserAgent = value;
+                                    break;
+                                case "accept":
+                                    httpWebRequest.Accept = value;
+                                    break;
+                                case "referer":
+                                    httpWebRequest.Referer = value;
+                                    break;
+                                case "host":
+                                    httpWebRequest.Host = value;
+                                    break;
+                                default:
+                                    httpWebRequest.Headers.Add(key, value);
+                                    break;
+                            }
+                        }
                     }
                 }
                 switch (method)
