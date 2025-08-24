@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Triggernometry.Utilities;
 
 namespace Triggernometry
 {
@@ -28,7 +29,8 @@ namespace Triggernometry
             }
             catch (Exception ex)
             {
-                FilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Plugin/iniscripterror", "Error when initializing scripting - try changing plugin load order: {0}", ex.Message));
+                FilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Plugin/iniscripterror", 
+                    "Error when initializing scripting - try changing plugin load order: {0}", ex.FullMessage()));
             }
         }
 
@@ -51,5 +53,17 @@ namespace Triggernometry
             }
         }
 
+        public object InvokeStorageCallback(string name, IEnumerable<string> args)
+        {
+            if (!plug.scriptingStorage.TryGetValue(name, out var obj))
+                throw new ArgumentException($"未找到回调函数：{name}");
+
+            if (!(obj is Delegate callback))
+                throw new ArgumentException($"存储的对象 {name} 不是 Delegate 类型");
+
+            return callback.RawInvoke(args?.ToArray());
+        }
+
     }
+
 }

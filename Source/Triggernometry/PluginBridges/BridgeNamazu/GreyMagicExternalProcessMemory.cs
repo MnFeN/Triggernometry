@@ -1,0 +1,254 @@
+﻿using System;
+using System.CodeDom.Compiler;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace Triggernometry.PluginBridges.BridgeNamazu
+{
+    /// <summary>
+    /// Wrapper for GreyMagic.ExternalProcessMemory
+    /// </summary>
+    public class GreyMagicExternalProcessMemory : GreyMagicMemoryBase
+    {
+        private readonly dynamic _externalMem;
+        public object RawMemory => _externalMem;
+
+        public GreyMagicExternalProcessMemory(object memory) : base(memory)
+        {
+            _externalMem = memory ?? throw new ArgumentNullException(nameof(memory));
+        }
+
+        // ExternalProcessMemory-specific properties
+        public dynamic Patches => _externalMem.Patches;
+        public bool CacheEnabled => _externalMem.CacheEnabled;
+        public bool IsThreadOpen => _externalMem.IsThreadOpen;
+        
+        /*
+        // Frame lock management
+        public FrameLock AcquireFrame(bool isHardLock)
+            => _externalMem.AcquireFrame(isHardLock);
+        public FrameLock AcquireFrame()
+            => _externalMem.AcquireFrame();
+        public FrameLockRelease ReleaseFrame(bool reacquireAsHardLock)
+            => _externalMem.ReleaseFrame(reacquireAsHardLock);
+        public FrameLockRelease ReleaseFrame()
+            => _externalMem.ReleaseFrame();
+
+        // Remote memory allocation
+        public AllocatedMemory CreateAllocatedMemory(int bytes)
+            => _externalMem.CreateAllocatedMemory(bytes);
+        */
+
+        public object GetLock() => _externalMem.GetLock();
+
+        /*
+        // Cache management
+        public ExternalReadCache SaveCacheState()
+            => _externalMem.SaveCacheState();
+        public ExternalReadCache TemporaryCacheState(bool enabledTemporarily)
+            => _externalMem.TemporaryCacheState(enabledTemporarily);
+        */
+        public void ClearCache() => _externalMem.ClearCache();
+        public void DisableCache() => _externalMem.DisableCache();
+        public void EnableCache() => _externalMem.EnableCache();
+
+        // Injected calls
+        public T CallInjected64<T>(IntPtr address, params object[] args) where T : struct
+            => WrapInjectedCall(() => (T)_externalMem.CallInjected64<T>(address, args));
+
+        public void CallInjected64(IntPtr address, params object[] args)
+            => _ = CallInjected64<IntPtr>(address, args);
+
+        public T CallInjected64ROP<T>(IntPtr address, params object[] args) where T : struct
+            => WrapInjectedCall(() => (T)_externalMem.CallInjected64ROP<T>(address, args));
+
+        public void CallInjected64ROP(IntPtr address, params object[] args)
+            => _ = CallInjected64ROP<IntPtr>(address, args);
+
+        private T WrapInjectedCall<T>(Func<T> func)
+        {
+            try
+            {
+                return func();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message?.Contains("Process must have frozen or gotten out of sync: InjectionFinishedEvent was never fired") == true)
+                {
+                    MessageBox.Show($"调用函数时游戏崩溃。这可能是由于以下原因：\n\n" +
+                        $"  1. 你上次关闭游戏后重新开启了游戏，但未重启 ACT；\n" +
+                        $"  2. 你开启了冲突的卫月插件。（注：绘图类插件没有已知冲突）\n\n" +
+                        $"建议重启 ACT 以防再次崩溃。\n\n" +
+                        $"详细信息：\n{ex}",
+                        "鲶鱼精邮差扩展", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                throw;
+            }
+        }
+
+        public void ClearCallCache()
+            => _externalMem.ClearCallCache();
+
+        public void CallVirtualFunction(IntPtr objAddress, int vFuncIndex, params object[] args)
+            => CallVirtualFunction<IntPtr>(objAddress, vFuncIndex, args);
+
+        public T CallVirtualFunction<T>(IntPtr objAddress, int vFuncIndex, params object[] args) where T : struct
+        {
+            IntPtr vTablePtr = Read<IntPtr>(objAddress);
+            IntPtr vFuncPtr = Read<IntPtr>(vTablePtr + 8 * vFuncIndex);
+            return CallInjected64<T>(vFuncPtr, new object[] { objAddress }.Concat(args).ToArray());
+        }
+
+        public void ExecuteWithLock(System.Action action)
+        {
+            bool lockTaken = false;
+            object assmLock = _externalMem.Executor.AssemblyLock;
+            try
+            {
+                Monitor.Enter(assmLock, ref lockTaken);
+                action();
+            }
+            finally
+            {
+                if (lockTaken) Monitor.Exit(assmLock);
+            }
+        }
+
+        public T ExecuteWithLock<T>(Func<T> function)
+        {
+            bool lockTaken = false;
+            object assmLock = _externalMem.Executor.AssemblyLock;
+            try
+            {
+                Monitor.Enter(assmLock, ref lockTaken);
+                return function();
+            }
+            finally
+            {
+                if (lockTaken) Monitor.Exit(assmLock);
+            }
+        }
+
+        public void WithAllocatedString(string text, Encoding encoding, Action<IntPtr> action)
+        {
+            IntPtr stringPtr = IntPtr.Zero;
+            try
+            {
+                int byteCount = encoding.GetByteCount(text) + encoding.GetByteCount("\0") + 10;
+                stringPtr = AllocateMemory(byteCount);
+                WriteString(stringPtr, text, encoding);
+                action(stringPtr);
+            }
+            finally
+            {
+                if (stringPtr != IntPtr.Zero) FreeMemory(stringPtr);
+            }
+        }
+
+        public T WithAllocatedString<T>(string text, Encoding encoding, Func<IntPtr, T> func)
+        {
+            IntPtr stringPtr = IntPtr.Zero;
+            try
+            {
+                int byteCount = encoding.GetByteCount(text) + encoding.GetByteCount("\0") + 10;
+                stringPtr = AllocateMemory(byteCount);
+                WriteString(stringPtr, text, encoding);
+                return func(stringPtr);
+            }
+            finally
+            {
+                if (stringPtr != IntPtr.Zero) FreeMemory(stringPtr);
+            }
+        }
+
+        public void WithAllocatedString2(string text1, string text2, Encoding encoding, Action<IntPtr, IntPtr> action)
+        {
+            IntPtr stringPtr1 = IntPtr.Zero;
+            IntPtr stringPtr2 = IntPtr.Zero;
+            try
+            {
+                int byteCount1 = encoding.GetByteCount(text1) + encoding.GetByteCount("\0") + 10;
+                int byteCount2 = encoding.GetByteCount(text2) + encoding.GetByteCount("\0") + 10;
+                stringPtr1 = AllocateMemory(byteCount1);
+                stringPtr2 = AllocateMemory(byteCount2);
+                WriteString(stringPtr1, text1, encoding);
+                WriteString(stringPtr2, text2, encoding);
+                action(stringPtr1, stringPtr2);
+            }
+            finally
+            {
+                if (stringPtr1 != IntPtr.Zero) FreeMemory(stringPtr1);
+                if (stringPtr2 != IntPtr.Zero) FreeMemory(stringPtr2);
+            }
+        }
+
+        public T WithAllocatedString2<T>(string text1, string text2, Encoding encoding, Func<IntPtr, IntPtr, T> func)
+        {
+            IntPtr stringPtr1 = IntPtr.Zero;
+            IntPtr stringPtr2 = IntPtr.Zero;
+            try
+            {
+                int byteCount1 = encoding.GetByteCount(text1) + encoding.GetByteCount("\0") + 10;
+                int byteCount2 = encoding.GetByteCount(text2) + encoding.GetByteCount("\0") + 10;
+                stringPtr1 = AllocateMemory(byteCount1);
+                stringPtr2 = AllocateMemory(byteCount2);
+                WriteString(stringPtr1, text1, encoding);
+                WriteString(stringPtr2, text2, encoding);
+                return func(stringPtr1, stringPtr2);
+            }
+            finally
+            {
+                if (stringPtr1 != IntPtr.Zero) FreeMemory(stringPtr1);
+                if (stringPtr2 != IntPtr.Zero) FreeMemory(stringPtr2);
+            }
+        }
+
+        public void WithAllocatedStrings(Encoding encoding, Action<IntPtr[]> action, params string[] texts)
+        {
+            var ptrs = new IntPtr[texts.Length];
+            try
+            {
+                for (int i = 0; i < texts.Length; i++)
+                {
+                    int byteCount = encoding.GetByteCount(texts[i]) + encoding.GetByteCount("\0") + 10;
+                    ptrs[i] = AllocateMemory(byteCount);
+                    WriteString(ptrs[i], texts[i], encoding);
+                }
+                action(ptrs);
+            }
+            finally
+            {
+                foreach (var ptr in ptrs)
+                {
+                    if (ptr != IntPtr.Zero) FreeMemory(ptr);
+                }
+            }
+        }
+
+        public T WithAllocatedStrings<T>(Encoding encoding, Func<IntPtr[], T> func, params string[] texts)
+        {
+            var ptrs = new IntPtr[texts.Length];
+            try
+            {
+                for (int i = 0; i < texts.Length; i++)
+                {
+                    int byteCount = encoding.GetByteCount(texts[i]) + encoding.GetByteCount("\0") + 10;
+                    ptrs[i] = AllocateMemory(byteCount);
+                    WriteString(ptrs[i], texts[i], encoding);
+                }
+                return func(ptrs);
+            }
+            finally
+            {
+                foreach (var ptr in ptrs)
+                {
+                    if (ptr != IntPtr.Zero) FreeMemory(ptr);
+                }
+            }
+        }
+
+    }
+}

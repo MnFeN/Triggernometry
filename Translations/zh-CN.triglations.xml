@@ -393,7 +393,7 @@
     <TranslationEntry Key="ActionForm/lblAuraName" Translation="名称" />
     <TranslationEntry Key="ActionForm/lblAuraOp" Translation="操作" />
     <TranslationEntry Key="ActionForm/lblAuraOpacity" Translation="不透明度" />
-    <TranslationEntry Key="ActionForm/lblAuraTtl" Translation="显示时长" />
+    <TranslationEntry Key="ActionForm/lblAuraTtl" Translation="存续条件 (>0)" />
     <TranslationEntry Key="ActionForm/lblAuraWidth" Translation="宽度" />
     <TranslationEntry Key="ActionForm/lblAuraX" Translation="X 坐标" />
     <TranslationEntry Key="ActionForm/lblAuraY" Translation="Y 坐标" />
@@ -490,7 +490,7 @@
     <TranslationEntry Key="ActionForm/lblTextAuraOp" Translation="操作" />
     <TranslationEntry Key="ActionForm/lblTextAuraOpacity" Translation="不透明度" />
     <TranslationEntry Key="ActionForm/lblTextAuraText" Translation="文本" />
-    <TranslationEntry Key="ActionForm/lblTextAuraTtlExp" Translation="显示时长" />
+    <TranslationEntry Key="ActionForm/lblTextAuraTtlExp" Translation="存续条件 (>0)" />
     <TranslationEntry Key="ActionForm/lblTextAuraUpdValues" Translation="更新间隔 (20 ms)" />
     <TranslationEntry Key="ActionForm/lblTextAuraWidth" Translation="宽度" />
     <TranslationEntry Key="ActionForm/lblTextAuraX" Translation="X 坐标" />
@@ -1057,7 +1057,7 @@
     <TranslationEntry Key="internal/Action/desctablegetallentities01" Translation="将所有 FF14 实体的 ({3}) 属性存入{1}表格 ({0})" />
     <TranslationEntry Key="internal/Action/desctablegetallentities10" Translation="将所有 ({2}) 的 FF14 实体的全部属性存入{1}表格 ({0})" />
     <TranslationEntry Key="internal/Action/desctablegetallentities11" Translation="将所有 ({2}) 的 FF14 实体的 ({3}) 属性存入{1}表格 ({0})" />
-    <TranslationEntry Key="internal/Action/desctableinsertline" Translation="将文本 ({4}) 以 ({5}) 拆分，并插入为在{1}表格 ({0}) 的第 ({3}) {2}" />
+    <TranslationEntry Key="internal/Action/desctableinsertline" Translation="将文本 ({4}) 以 ({5}) 拆分，并插入为{1}表格 ({0}) 的第 ({3}) {2}" />
     <TranslationEntry Key="internal/Action/desctableinsertlineraw" Translation="将{5}表达式 ({4}) 以首字符拆分，并插入为{1}表格 ({0}) 的第 ({3}) {2}" />
     <TranslationEntry Key="internal/Action/desctableremoveline" Translation="移除{1}表格 ({0}) 的第 ({3}) {2}" />
     <TranslationEntry Key="internal/Action/desctableresizecol" Translation="宽 ({0}) " />
@@ -1118,7 +1118,7 @@
     <TranslationEntry Key="internal/Action/disabledfolderwithid" Translation="禁用分组 ({0}, id: {1})" />
     <TranslationEntry Key="internal/Action/dynamicexprerror" Translation="动态表达式 ({0}) 在当前动作中无法使用。总表达式：({1})" />
     <TranslationEntry Key="internal/Action/enabledfolderwithid" Translation="启用分组 ({0}, id: {1})" />
-    <TranslationEntry Key="internal/Action/exception" Translation="动作异常：{0}  &#xD;&#xA;动作：{1}  &#xD;&#xA;触发器：{2}{3}" />
+    <TranslationEntry Key="internal/Action/exception" Translation="动作异常：{0}  &#xD;&#xA;动作：{1}  &#xD;&#xA;触发器：{2}&#xD;&#xA;{3}" />
     <TranslationEntry Key="internal/Action/executingaction" Translation="在进程 {1} 执行操作 '{0}'" />
     <TranslationEntry Key="internal/Action/filelistset" Translation="从文件 ({1}) 读取内容到{2}列表 ({0})" />
     <TranslationEntry Key="internal/Action/filescalarset" Translation="从文件 ({1}) 读取内容到{2}标量 ({0})" />
@@ -1240,7 +1240,7 @@
     <TranslationEntry Key="internal/BridgeOverlay/failInit" Translation="OverlayPlugin 插件相关功能初始化失败：{0}" />
     <TranslationEntry Key="internal/BridgeOverlay/failInitModule" Translation="OverlayPlugin 相关模块 {1} 初始化失败：{0}" />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="OverlayPlugin 实体内存扫描未就绪，暂未通过 OverlayPlugin 获取实体，稍后重试。" />
-    <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin 实体内存扫描已就绪。" />
+    <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin 实体内存扫描已就绪。如果前面有几条“未就绪”的警告，可忽略。" />
     <TranslationEntry Key="internal/BridgeOverlay/reflectionNotFound" Translation="初始化 OverlayPlugin 相关功能时，反射获取 {0} 失败。" />
     <TranslationEntry Key="internal/ColorSelector/sample" Translation="示例" />
     <TranslationEntry Key="internal/ConditionGroup/and" Translation="全部条件为真（与）" />

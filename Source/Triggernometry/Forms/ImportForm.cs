@@ -239,6 +239,8 @@ namespace Triggernometry.Forms
 
         private void TryImportText()
         {
+            importData = MlmDecryption.TryDecrypt(importData);
+
             string starting = importData.Length > 100 ? importData.Substring(0, 100) : importData;
             starting = starting.TrimStart();
             bool isHtml;

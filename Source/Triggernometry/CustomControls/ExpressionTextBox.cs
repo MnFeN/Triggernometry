@@ -9,6 +9,9 @@ using Triggernometry.Variables;
 using System.Runtime.InteropServices;
 using System.Globalization;
 using System.ComponentModel;
+using System.Linq.Expressions;
+using Triggernometry.Forms;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.CustomControls
 {
@@ -55,7 +58,7 @@ namespace Triggernometry.CustomControls
 
         public static List<string> prefixes = new List<string>() // right after "${"
         {
-            "numeric:", "n:", "string:", "s:", "func:", "f:", "if:",
+            "numeric:", "n:", "string:", "s:", "func:", "f:", "sfunc:", "if:",
             "var:", "pvar:", "evar:", "epvar:", "v:", "pv:", "ev:", "epv:",
             "lvar:", "plvar:", "elvar:", "eplvar:", "l:", "pl:", "el:", "epl:",
             "tvar:", "ptvar:", "etvar:", "eptvar:", "t:", "pt:", "et:", "ept:",
@@ -83,8 +86,8 @@ namespace Triggernometry.CustomControls
 
         public static List<string> funcs = new List<string>()
         {
-            "toupper", "tolower", "tofullwidth", "tohalfwidth", "toblackchar(combineDigits=false)", "towhitechar", "length",
-            "dec2hex", "dec2hex2", "dec2hex4", "dec2hex8", "float2hex", "double2hex",
+            "toupper", "tolower", "tofullwidth", "tohalfwidth", "toblackchar(combineDigits=false)", "towhitechar", "tosimpcn", "totradcn",
+            "length", "dec2hex", "dec2hex2", "dec2hex4", "dec2hex8", "float2hex", "double2hex",
             "hex2dec", "hex2float", "hex2double", "parsedmg",
             "substring(index)", "substring(index, len)", "slice(slices)", "pick(index, separator=',')",
             "indexof(str)", "lastindexof(str)", "i(str)", "indicesof(str, joiner=',', slices='::')",
@@ -129,8 +132,8 @@ namespace Triggernometry.CustomControls
         {
             "size", "length", "ekey(key)", "evalue(value)", "ifekey(key, t, f)", "ifevalue(value, t, f)",
             "keyof(value)", "keysof(value, joiner=',')",
-            "joinall(kvjoiner='=', pairjoiner=',')",
-            "joinkeys(joiner=',')", "joinvalues(joiner=',')",
+            "joinall(kvjoiner='=', pairjoiner=',')", "joinall(kvjoiner='=', pairjoiner=',', selectedKeys...)",
+            "joinkeys(joiner=',')", "joinvalues(joiner=',')", "joinvalues(joiner=',', selectedKeys...)",
             "sumkeys", "sum", "count(value)",
             "max(type='n')", "min(type='n')", "maxkey(type='n')", "minkey(type='n')",
         };
@@ -160,6 +163,84 @@ namespace Triggernometry.CustomControls
             "System.IO", "System.Net", "System.Reflection", "System.Runtime", "System.Security", "System.Web",
         };
 
+        // sfunc:FuncName(type argName, ...) : returnType
+        static readonly Dictionary<Type, string> typeAliases = new Dictionary<Type, string>
+        {
+            { typeof(void), "void" },
+            { typeof(bool), "bool" },
+            { typeof(byte), "byte" },
+            { typeof(sbyte), "sbyte" },
+            { typeof(char), "char" },
+            { typeof(decimal), "decimal" },
+            { typeof(double), "double" },
+            { typeof(float), "float" },
+            { typeof(int), "int" },
+            { typeof(uint), "uint" },
+            { typeof(long), "long" },
+            { typeof(ulong), "ulong" },
+            { typeof(object), "object" },
+            { typeof(short), "short" },
+            { typeof(ushort), "ushort" },
+            { typeof(string), "string" }
+        };
+
+        static string GetFriendlyTypeName(Type type) // ignore types like List<> that could not be invoked by string expressions
+        {
+            // Nullable
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                var innerType = type.GetGenericArguments()[0];
+                return GetFriendlyTypeName(innerType) + "?";
+            }
+
+            return typeAliases.TryGetValue(type, out string typeName) ? typeName : type.Name;
+        }
+
+        public static List<string> GetStorageFuncDescs()
+        {
+            var result = new List<string>();
+            var delegates = RealPlugin.plug.scriptingStorage.Where(p => p.Value is Delegate);
+
+            foreach (var kv in delegates)
+            {
+                var name = kv.Key;
+                var del = (Delegate)kv.Value;
+                var method = del.Method;
+                var parameters = method.GetParameters();
+
+                var paramStrs = parameters.Select(p =>
+                {
+                    // type
+                    string param;
+                    if (p.GetCustomAttributes(typeof(ParamArrayAttribute), false).Any())
+                    {
+                        param = "params " + GetFriendlyTypeName(p.ParameterType.GetElementType()) + "[]";
+                    }
+                    else
+                    {
+                        param = GetFriendlyTypeName(p.ParameterType);
+                    }
+                    // name
+                    param += $" {p.Name}";
+
+                    // default value
+                    if (p.HasDefaultValue)
+                    {
+                        param += $"= {p.DefaultValue.ToDataString()}";
+                    }
+
+                    return param;
+                }).ToArray();
+
+                string paramList = string.Join(", ", paramStrs);
+                string returnType = GetFriendlyTypeName(method.ReturnType);
+
+                string sig = $"{name}({paramList}) : {returnType}";
+                result.Add(sig);
+            }
+
+            return result;
+        }
         #endregion
 
         public enum SupportedExpressionTypeEnum
@@ -307,6 +388,10 @@ namespace Triggernometry.CustomControls
             = new Regex(@"[$¤]\{(?<prefix>[^[$}:.]*)$", RegexOptions.Compiled);
         public static readonly Regex rexFunc
             = new Regex(@"[$¤]\{f(?:unc)?:(?<funcid>[^(:]*)$", RegexOptions.Compiled);
+        public static readonly Regex rexStorageFunc
+            = new Regex(@"[$¤]\{sfunc:(?<funcid>[^(}]*)$", RegexOptions.Compiled);
+        public static readonly Regex rexEnvironment
+            = new Regex(@"[$¤]\{env:(?<key>[^}]*)$", RegexOptions.Compiled);
         public static readonly Regex rexVarName
             = new Regex(@"[$¤]\{(?<e>e?)(?<persist>p?)(?<type>[vltd]|text|image|callback|storage)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[]*)$", RegexOptions.Compiled);
         public static readonly Regex rexColHeader
@@ -354,7 +439,6 @@ namespace Triggernometry.CustomControls
         public ExpressionTextBox()
         {
             InitializeComponent();
-            ctx = new Context();
             fakectx = new Context();
             fakectx.testByPlaceholder = true;
             ResetTooltip();            
@@ -562,12 +646,20 @@ namespace Triggernometry.CustomControls
                     }
                     else // input linebreaks (+ indent), instead of closing the form
                     {
+                        // Delete selected text, if any
+                        if (textBox1.SelectionLength > 0)
+                            textBox1.Paste("");
+
+                        // Get the start index of the current line
                         int currentPosition = textBox1.SelectionStart;
                         int currentLineIndex = textBox1.GetLineFromCharIndex(currentPosition);
-                        int lineStartIndex = textBox1.GetFirstCharIndexOfCurrentLine();
-                        string currentLineText = textBox1.Text.Substring(lineStartIndex, currentPosition - lineStartIndex);
+                        int lineStartIndex = textBox1.GetFirstCharIndexFromLine(currentLineIndex);
+                        if (lineStartIndex < 0) lineStartIndex = 0;
 
-                        string indent = new string(currentLineText.TakeWhile(c => c == ' ' || c == '　').ToArray());
+                        // Get indentation (leading spaces or full-width spaces) and add to the new line
+                        int length = Math.Max(0, currentPosition - lineStartIndex);
+                        string currentLineText = textBox1.Text.Substring(lineStartIndex, length);
+                        string indent = new string(currentLineText.TakeWhile(c => char.IsWhiteSpace(c)).ToArray());
                         textBox1.Paste(Environment.NewLine + indent);
                     }
                 }
@@ -729,7 +821,7 @@ namespace Triggernometry.CustomControls
                     Color color = Color.Empty;
                     try
                     {
-                        string rawColor = ctx.ExpandVariables(null, null, false, textBox1.Text);
+                        string rawColor = fakectx.ExpandVariables(null, null, false, textBox1.Text);
                         color = ParseColor(rawColor, Color.Empty);
                     }
                     catch { color = Color.Empty; }
@@ -797,6 +889,23 @@ namespace Triggernometry.CustomControls
             if (m.Success)
             {
                 matchedStrings = GetAutocompleteSuggestions(funcs, m.Groups["funcid"].Value);
+                if (matchedStrings.Count() > 0)
+                {
+                    CurrentMatch = m.Groups["funcid"].Value;
+                    ShowAutocomplete(matchedStrings);
+                }
+                else
+                {
+                    HideAutocomplete();
+                }
+                return;
+            }
+
+            // match storage functions: "sfunc:xxx()"
+            m = rexStorageFunc.Match(temp);
+            if (m.Success)
+            {
+                matchedStrings = GetAutocompleteSuggestions(GetStorageFuncDescs(), m.Groups["funcid"].Value);
                 if (matchedStrings.Count() > 0)
                 {
                     CurrentMatch = m.Groups["funcid"].Value;
@@ -974,6 +1083,37 @@ namespace Triggernometry.CustomControls
                 {
                     CurrentMatch = m.Groups["key"].Value;
                     suffix = "]}";
+                    ShowAutocomplete(matchedStrings);
+                }
+                else
+                {
+                    HideAutocomplete();
+                }
+                return;
+            }
+
+            // match folder environment variable names: (${env:...})
+            m = rexEnvironment.Match(temp);
+            if (m.Success)
+            {
+                var key = m.Groups["key"].Value;
+                var form = this.FindForm();
+                Trigger trig = null;
+                if (form is TriggerForm tf)
+                {
+                    trig = tf.trig;
+                }
+                else if (form is ActionForm af)
+                {
+                    trig = af.ParentTrigger;
+                }
+
+                var envKeys = trig?.Parent?.RecursiveGetEnvironmentVariables()?.Keys?.ToList() ?? new List<string>();
+                matchedStrings = GetAutocompleteSuggestions(envKeys, key);
+                if (matchedStrings.Count() > 0)
+                {
+                    CurrentMatch = key;
+                    suffix = "}";
                     ShowAutocomplete(matchedStrings);
                 }
                 else
@@ -1214,18 +1354,31 @@ namespace Triggernometry.CustomControls
 
         #region Color
         private static Regex regexHexColor = new Regex(@"^#? *(?<rgb>[\dA-Fa-f]{3}|[\dA-Fa-f]{6})$");
-        private static Regex regexNumColor = new Regex(@"^(?<r>\d+(?:.\d+)?) *, *(?<g>\d+(?:.\d+)?) *, *(?<b>\d+(?:.\d+)?)$");
+        private static Regex regexNumColor = new Regex(@"^(?<r>\d+(?:\.\d+)?) *, *(?<g>\d+(?:\.\d+)?) *, *(?<b>\d+(?:\.\d+)?)$");
 
         /// <summary>
-        /// Parse a user-input raw color string to a Color. <br />
-        /// Input could be: <br />
-        /// · Color names: white <br />
+        /// Parse a user-input raw color string to a <see cref="Color" />. <br /><br />
+        /// If parsing fails, return the given default color. <br /><br />
+        /// Input could be: <br /><br />
+        /// · <see cref="Color" /> names: white <br />
         /// · RGB: 192, 0, 18 <br />
         /// · Hex value: #acf / #aaccff / acf / aaccff <br />
         /// </summary>
         /// <param name="defaultColor">The default color returned if the string is invalid.</param>
-        /// <returns>The representing Color</returns>
+        /// <returns>The representing <see cref="Color" /></returns>
         public static Color ParseColor(string rawColor, Color defaultColor)
+            => TryParseColor(rawColor) ?? defaultColor;
+
+        /// <summary>
+        /// Parse a user-input raw color string to a <see cref="Color" />. <br /><br />
+        /// Input could be: <br /><br />
+        /// · Color names: white <br />
+        /// · RGB: 192, 0, 18 <br />
+        /// · Hex value: #acf / #aaccff / acf / aaccff <br />
+        /// </summary>
+        /// <param name="defaultColor">The default <see cref="Color" /> returned if the string is invalid.</param>
+        /// <returns>The representing <see cref="Color" /></returns>
+        public static Color? TryParseColor(string rawColor)
         {
             rawColor = rawColor.Trim();
 
@@ -1258,7 +1411,7 @@ namespace Triggernometry.CustomControls
                     g = (int)Math.Round(double.Parse(numMatch.Groups["g"].Value, CultureInfo.InvariantCulture));
                     b = (int)Math.Round(double.Parse(numMatch.Groups["b"].Value, CultureInfo.InvariantCulture));
                 }
-                else return defaultColor;
+                else return null;
             }
 
             return Color.FromArgb(r < 0 ? 0 : r > 255 ? 255 : r,
@@ -1266,7 +1419,7 @@ namespace Triggernometry.CustomControls
                                   b < 0 ? 0 : b > 255 ? 255 : b);
         }
 
-        public static string ColorToString(Color color, Color defaultColor)
+        public static string ColorToString(Color color, Color? defaultColor = null)
         {
             if (color == Color.Empty || color == defaultColor)
             {
@@ -1634,7 +1787,8 @@ namespace Triggernometry.CustomControls
 
             private static Dictionary<char, char> _leftBracketChars = new Dictionary<char, char> {
                 { '(',  ')'  }, { '[',  ']'  }, { '{',  '}'  },
-                { '【', '】' }, { '《', '》' }, { '（', '）' },
+                { '（', '）' }, { '［', '］' }, { '｛', '｝' }, 
+                { '【', '】' }, { '《', '》' }, { '<',  '>'  },
                 { '“',  '”'  }, { '‘',  '’'  }, { '「', '」' },
                 { '\"', '\"' }, { '\'', '\'' }, // too complicated to determine if a " or ' is left/right, so always consider it as left for now
             };
@@ -1783,6 +1937,20 @@ namespace Triggernometry.CustomControls
                         case Keys.A:
                             SelectNextOuterBracket();
                             ExpTextBox?.HideAutocomplete();
+                            break;
+                        // Ctrl + Shift + C (in regex textboxes): named capture group (?<name>xxx)
+                        case Keys.C:
+                            if (ExpTextBox?.ExpressionType == SupportedExpressionTypeEnum.Regex)
+                            {
+                                if (shouldWrap)
+                                    InsertStringOnBothSides("(?<", $">{SelectedText})");
+                                else
+                                    InsertStringOnBothSides("(?<", ">)");
+                            }
+                            else
+                            {
+                                handled = false;
+                            }
                             break;
                         default:
                             handled = false;

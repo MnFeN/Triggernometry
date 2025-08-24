@@ -185,11 +185,12 @@ namespace Triggernometry.PluginBridges
 
         #region Actions
 
-        public static CheckBox chkLogAllNetwork => (CheckBox)ScanControl(GetWrappedPlugin().TabPage, "chkLogAllNetwork");
-        public static CheckBox chkUseDeucalion => (CheckBox)ScanControl(GetWrappedPlugin().TabPage, "chkUseDeucalion");
+        public static CheckBox chkLogAllNetwork => (CheckBox)ScanControl(GetWrappedPlugin()?.TabPage, "chkLogAllNetwork");
+        public static CheckBox chkUseDeucalion => (CheckBox)ScanControl(GetWrappedPlugin()?.TabPage, "chkUseDeucalion");
 
         private static Control ScanControl(Control parent, string name)
         {
+            if (parent == null) return null;
             foreach (Control ctrl in parent.Controls)
             {
                 if (ctrl.Name == name)
@@ -720,19 +721,15 @@ namespace Triggernometry.PluginBridges
             {
                 get
                 {
-                    var statuses = new List<Status>();
-                    if (_entity.NetworkBuffs is Array networkBuffs) // NetworkBuff[30]
+                    if (_entity.NetworkBuffs is Array networkBuffs)
                     {
-                        foreach (Status status in networkBuffs.Cast<dynamic>().Select(e => (Status)new XivStatus(e, this)))
-                        {
-                            if (status.StatusID != 0)
-                            {
-                                statuses.Add(status);
-                            }
-                            else break;
-                        }
+                        return networkBuffs
+                            .Cast<dynamic>()
+                            .Where(rawBuff => (rawBuff?.BuffID ?? 0) != 0)
+                            .Select(rawBuff => (Status)new XivStatus(rawBuff, this))
+                            .ToList();
                     }
-                    return statuses;
+                    return new List<Status>();
                 }
             }
             public override bool IsCasting => _entity.IsCasting;

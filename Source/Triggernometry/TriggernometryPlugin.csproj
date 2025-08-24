@@ -66,6 +66,7 @@
     <Reference Include="Microsoft.CodeAnalysis.Scripting, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Scripting.Common.4.1.0\lib\netstandard2.0\Microsoft.CodeAnalysis.Scripting.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
@@ -176,22 +177,40 @@
     <Compile Include="Aura\Renderer\Winforms.cs" />
     <Compile Include="Aura\Renderer\RendererBase.cs" />
     <Compile Include="Aura\Renderer\Scarborough.cs" />
+    <Compile Include="Context\Context.cs" />
+    <Compile Include="Context\ContextOld.cs" />
     <Compile Include="CustomControls\ActionEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CustomControls\ActionEditor.Designer.cs">
       <DependentUpon>ActionEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\PartyListPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FFXIV\GameLanguage.cs" />
     <Compile Include="FFXIV\Status.cs" />
     <Compile Include="FFXIV\Entity.cs" />
     <Compile Include="FFXIV\JobList.cs" />
     <Compile Include="FFXIV\Job.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Vfx\StaticVfx.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Vfx\ActorVfx.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Vfx\Vfx.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Vfx\_VfxList.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Vfx\_VfxStruct.cs" />
+    <Compile Include="Forms\GameConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GameConfigForm.Designer.cs">
+      <DependentUpon>GameConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SimpleInputForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\SimpleInputForm.Designer.cs">
       <DependentUpon>SimpleInputForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MlmDecryption.cs" />
     <Compile Include="CustomControls\ActionViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -231,6 +250,7 @@
     <Compile Include="CustomControls\Toast.Designer.cs">
       <DependentUpon>Toast.cs</DependentUpon>
     </Compile>
+    <Compile Include="Debug.cs" />
     <Compile Include="CustomControls\TriggerEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -396,10 +416,36 @@
     <Compile Include="Forms\MemoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Memory.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\NamazuConfig.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\InstanceAfkTimerModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\CameraModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\EnvironmentEffectModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\AbilityRangeCheckModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\MovementModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\PictoACTModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\UseActionModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\ExecuteCommandModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\VfxModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\_ModuleBase.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\EntityModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\ShowTextGimmickHintModule.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\QuitInstanceModule.cs" />
+    <Compile Include="Utilities\DataStringHelper.cs" />
+    <Compile Include="Utilities\Math\EquationHelper.cs" />
+    <Compile Include="Utilities\Math\IsoscelesTriangle.cs" />
+    <Compile Include="Utilities\Math\Polygon.cs" />
+    <Compile Include="Utilities\Memory.cs" />
     <Compile Include="ObsController.cs" />
     <Compile Include="LiveSplitController.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\GreyMagicExternalProcessMemory.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\BridgeNamazu.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\NamazuPlugin.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\NamazuScanner.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\GreyMagicMemoryBase.cs" />
+    <Compile Include="PluginBridges\BridgeOverlay\ModuleAtkStageMemory.cs" />
+    <Compile Include="PluginBridges\BridgeOverlay\ModuleAlliance.cs" />
+    <Compile Include="PluginBridges\BridgeOverlay\ModuleEvents.cs" />
     <Compile Include="PluginBridges\BridgeOverlay\ModuleInCombat.cs" />
     <Compile Include="PluginBridges\BridgeOverlay\ModuleCombatants.cs" />
     <Compile Include="PluginBridges\BridgeOverlay\BridgeOverlay.cs" />
@@ -412,6 +458,7 @@
     <Compile Include="RealPlugin\RealPlugin.ActionQueue.cs" />
     <Compile Include="RealPlugin\RealPlugin.Aura.cs" />
     <Compile Include="RealPlugin\RealPlugin.Audio.cs" />
+    <Compile Include="RealPlugin\RealPlugin.CN.cs" />
     <Compile Include="RealPlugin\RealPlugin.Update.cs" />
     <Compile Include="RealPlugin\RealPlugin.NamedCallback.cs" />
     <Compile Include="Scarborough\OverrideHelper.cs" />
@@ -491,6 +538,10 @@
     <Compile Include="CustomControls\UserInterface.Designer.cs">
       <DependentUpon>UserInterface.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\Math\PolarCoord.cs" />
+    <Compile Include="Utilities\Math\XIVCoord.cs" />
+    <Compile Include="Utilities\Math\CartesianCoord.cs" />
+    <Compile Include="Utilities\MultiLineRawArgs.cs" />
     <Compile Include="Variables\Variable.cs" />
     <Compile Include="Variables\VariableScalar.cs" />
     <Compile Include="Variables\VariableDictionary.cs" />
@@ -580,7 +631,7 @@
     <Compile Include="WebsocketSharp\WebSocketException.cs" />
     <Compile Include="WebsocketSharp\WebSocketFrame.cs" />
     <Compile Include="WebsocketSharp\WebSocketState.cs" />
-    <Compile Include="Utilities.cs" />
+    <Compile Include="Utilities\WindowsUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CustomControls\ActionEditor.resx">

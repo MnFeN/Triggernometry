@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Triggernometry.FFXIV;
 using Triggernometry.Utilities;
 using Triggernometry.PluginBridges;
+using System.Reflection;
 
 namespace Triggernometry
 {
@@ -648,8 +649,7 @@ namespace Triggernometry
             Match m, mx;
             string newexpr = expr;
             newexpr = ReplaceLineBreak(newexpr); // replace back after parsed
-
-            int i = 1;
+            int i = 1; // not used
             while (true)
             {
                 m = rex.Match(newexpr);
@@ -732,11 +732,7 @@ namespace Triggernometry
                         }
                         else if (x == "_ffxivplayer" || x == "_me")
                         {
-                            VariableDictionary vc = PluginBridges.BridgeFFXIV.GetMyself();
-                            if (vc != null)
-                            {
-                                val = vc.GetValue("name").ToString();
-                            }
+                            val = PluginBridges.BridgeFFXIV.GetMyself().GetValue("name").ToString();
                             found = true;
                         }
                         else if (x == "_ffxivzoneid")
@@ -1007,6 +1003,23 @@ namespace Triggernometry
                                         val = item.ToString();
                                 }
                             }
+                            found = true;
+                        }
+                        else if (x.StartsWith("sfunc:") || /*old*/x.StartsWith("storage:")) 
+                        {
+                            var key = x.Substring(x.IndexOf(":") + 1).Trim();
+                            if (x.StartsWith("storage:"))
+                            {
+                                plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, "Use \"${sfunc:...}\" instead of \"${storage:...}\".");
+                            }
+                            var idx = key.IndexOf("(");
+                            string[] args = new string[0];
+                            if (idx >= 1 && idx <= key.Length - 2 && key[key.Length - 1] == ')')
+                            {
+                                args = SplitArguments(key.Substring(idx + 1, key.Length - idx - 2));
+                                key = key.Substring(0, idx);
+                            }
+                            val = RealPlugin.plug.InvokeStorageCallback(key, args).ToDataString();
                             found = true;
                         }
                         else if (x.StartsWith("_job[")) // ${_job[jobid].prop} or ${_job[Name].prop}
@@ -1402,23 +1415,43 @@ namespace Triggernometry
                                         }
                                         break;
                                     case "joinkeys":
-                                    case "joinvalues":
-                                        if (argc > 1) { throw ArgCountError(gprop, "0-1", argc, x); }
+                                        if (argc > 1) throw ArgCountError(gprop, "0-1", argc, x);
                                         lock (store.Dict)
                                         {
                                             VariableDictionary vd = GetDictVariable(store, gname, false);
                                             string joiner = GetArgument(args, 0, ",");
-                                            val = (gprop == "joinkeys") ? vd.JoinKeys(joiner) : vd.JoinValues(joiner);
+                                            val = vd.JoinKeys(joiner);
+                                        }
+                                        break;
+                                    case "joinvalues":
+                                        lock (store.Dict)
+                                        {
+                                            VariableDictionary vd = GetDictVariable(store, gname, false);
+                                            string joiner = GetArgument(args, 0, ",");
+                                            if (argc <= 1)
+                                            {
+                                                val = vd.JoinValues(joiner);
+                                            }
+                                            else // argc > 1: joinvalues(string joiner, params string[] keys)
+                                            {
+                                                val = vd.JoinValues(joiner, args.Skip(1));
+                                            }
                                         }
                                         break;
                                     case "joinall":
-                                        if (argc > 2) { throw ArgCountError(gprop, "0-2", argc, x); }
                                         lock (store.Dict)
                                         {
                                             VariableDictionary vd = GetDictVariable(store, gname, false);
                                             string kvjoiner = GetArgument(args, 0, "=");
                                             string pairjoiner = GetArgument(args, 1, ",");
-                                            val = vd.JoinAll(kvjoiner, pairjoiner);
+                                            if (argc <= 2)
+                                            {
+                                                val = vd.JoinAll(kvjoiner, pairjoiner);
+                                            }
+                                            else
+                                            {
+                                                val = vd.JoinAll(kvjoiner, pairjoiner, args.Skip(2));
+                                            }
                                         }
                                         break;
                                     case "sumkeys":
@@ -1777,16 +1810,15 @@ namespace Triggernometry
                         {
                             string envVarName = x.Substring(4);
                             Folder f = trig?.Parent;
-                            string envVarValue = "";
                             while (f != null)
                             {
-                                if (f.EnvironmentVariables.TryGetValue(envVarName, out envVarValue))
+                                if (f.EnvironmentVariables.TryGetValue(envVarName, out var value))
                                 {
+                                    val = value;
                                     break;
                                 }
                                 f = f.Parent;
                             }
-                            val = envVarValue;
                             found = true;
                         }
                         else if (x.StartsWith("numeric:") || x.StartsWith("n:"))
@@ -1834,6 +1866,16 @@ namespace Triggernometry
                                     case "tolower": val = funcval.ToLower(); break;
                                     case "tofullwidth": val = ToFullWidth(funcval); break;
                                     case "tohalfwidth": val = ToHalfWidth(funcval); break;
+                                    case "tosimpcn":
+                                    case "totradcn":
+                                        {
+                                            var strConv = funcname == "tosimpcn" ? Microsoft.VisualBasic.VbStrConv.SimplifiedChinese 
+                                                                                 : Microsoft.VisualBasic.VbStrConv.TraditionalChinese;
+                                            var lines = funcval.Split(new char[] { LINEBREAK_PLACEHOLDER })
+                                                               .Select(s => Microsoft.VisualBasic.Strings.StrConv(s, strConv, 0));
+                                            val = string.Join(LINEBREAK_PLACEHOLDER.ToString(), lines);
+                                        }
+                                        break;
                                     case "toxivchar": // old name
                                     case "toblackchar":
                                         {
@@ -2131,9 +2173,9 @@ namespace Triggernometry
                                         break;
                                     case "versioncompare": // ${f:versioncompare(1.2.0.0):1.1.8.0} = -1
                                         if (argc != 1) { throw ArgCountError(funcname, "1", argc, x); }
-                                        Version srcVersion = Version.TryParse(funcval, out Version v) 
+                                        Version srcVersion = Version.TryParse(funcval, out Version v)
                                             ? v : throw ParseTypeError(I18n.TranslateWord("string"), funcval, I18n.TranslateWord("version"), x);
-                                        Version tgtVersion = Version.TryParse(args[0], out v) 
+                                        Version tgtVersion = Version.TryParse(args[0], out v)
                                             ? v : throw ParseTypeError(I18n.TranslateWord("string"), args[0], I18n.TranslateWord("version"), x);
                                         val = I18n.ThingToString(srcVersion.CompareTo(tgtVersion));
                                         break;
@@ -2279,7 +2321,7 @@ namespace Triggernometry
                                 if (isParty && int.TryParse(key, out int partyIdx) && partyIdx >= 1 && partyIdx <= 8)
                                 {   // ffxivparty[n]
                                     string hexID = PluginBridges.BridgeFFXIV.GetPartyMember(partyIdx).GetValue("id").ToString();
-                                    entity = FFXIV.Entity.GetEntityByID(hexID);
+                                    entity = hexID == "" ? BridgeFFXIV.XivEntity.NullEntity() : FFXIV.Entity.GetEntityByID(hexID);
                                 }
                                 else
                                 {
@@ -2289,22 +2331,26 @@ namespace Triggernometry
                                         entities = entities.Where(e => e.InParty);
                                     }
                                     entity = entities.FirstOrDefault();
-                                    }
-                                if (entity == null)
-                                {
-                                    RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
-                                        "internal/Context/noEntity",
-                                        "The queried entity does not exist: {0}. Trigger: ({1})",
-                                        x, trig?.FullPath ?? "null"), trig);
                                 }
-                                else val = string.Join(", ", entity.QueryProperties(prop));
+                                if (entity?.Exist != true)
+                                {
+                                    if (!prop.Equals("exist", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
+                                            "internal/Context/noEntity",
+                                            "The queried entity does not exist: {0}. Trigger: ({1})",
+                                            x, trig?.FullPath ?? "null"), trig);
+                                    }
+                                    entity = FFXIV.Entity.NullEntity();
+                                }
+                                val = string.Join(", ", entity.QueryProperties(prop));
                             }
                             found = true;
                         }
                         else if (x.StartsWith("_me.")) // ${_me.prop}
                         {
                             string prop = Trim(x.Substring(4));
-                            if (prop.ToLower() == "id")
+                            if (prop.ToLower() == "id" && !string.IsNullOrWhiteSpace(BridgeFFXIV.PlayerHexId))
                             {
                                 val = BridgeFFXIV.PlayerHexId;
                             }
@@ -2312,7 +2358,7 @@ namespace Triggernometry
                             {
                                 val = string.Join(", ", FFXIV.Entity.GetMyself().QueryProperties(prop));
                             }
-                            }
+                        }
                         else if (x.StartsWith("_tgt.")) // ${_tgt.prop}
                         {   // just for simplifying the expression ${_entity[${_me.targetid}].prop}
                             string prop = Trim(x.Substring(5));
@@ -2535,6 +2581,7 @@ namespace Triggernometry
                         }
                     }
                 }
+                val = ReplaceLineBreak(val);
                 newexpr = newexpr.Substring(0, m.Index) + val + newexpr.Substring(m.Index + m.Length);
                 i++;
             };

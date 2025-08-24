@@ -80,6 +80,8 @@ namespace Triggernometry
             return null;
         }
 
+        private Dictionary<string, string> _missingTranslations = new Dictionary<string, string>();
+
         public string Translate(string key, string text, params object[] args)
         {
             if (IsDefault == true)
@@ -94,6 +96,13 @@ namespace Triggernometry
                 string data = TranslationsLookup[key];
                 return String.Format(data, args);
             }
+            //start
+            if (!string.IsNullOrEmpty(text) && !_missingTranslations.ContainsKey(key))
+            {
+                _missingTranslations[key] = text;
+                //RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, $"Missing translation recorded: \"{key}\" => \"{text}\"");
+            }
+            //end
             switch (MissingKeyHandling)
             {
                 case MissingHandlingEnum.DefaultString:
@@ -111,6 +120,17 @@ namespace Triggernometry
                     return key;
             }
             return String.Format(text, args);
+        }
+
+        internal List<TranslationEntry> ExportMissingTranslations()
+        {
+            var sortedKeys = _missingTranslations.Keys.ToList();
+            sortedKeys.Sort();
+
+            return sortedKeys.Select(key => new TranslationEntry {
+                Key = key,
+                Translation = _missingTranslations[key]
+            }).ToList();
         }
 
     }

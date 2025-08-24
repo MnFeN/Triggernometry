@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace Triggernometry.Forms
 {
-
+    
     public partial class ExportForm : MemoryForm<ExportForm>
     {
 
@@ -27,15 +26,16 @@ namespace Triggernometry.Forms
             set
             {
                 _ShownText = value;
+                cbxFormat.SelectedIndex = _PrevFormatIndex;
                 UpdateDisplay();
             }
         }
 
+        private static int _PrevFormatIndex = 0;
 
         public ExportForm()
         {
             InitializeComponent();
-            cbxFormat.SelectedIndex = 0;
             RestoredSavedDimensions();
         }
 
@@ -62,6 +62,7 @@ namespace Triggernometry.Forms
 
         private void cbxFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _PrevFormatIndex = cbxFormat.SelectedIndex;
             UpdateDisplay();
         }
 
@@ -73,8 +74,16 @@ namespace Triggernometry.Forms
                     rtbExportResults.Text = ShownText;
                     break;
                 case 1:
-                    Regex regexLeadingSpaces = new Regex(@"^[ \t]+", RegexOptions.Multiline | RegexOptions.Compiled);
-                    rtbExportResults.Text = regexLeadingSpaces.Replace(ShownText, "");
+                    var sb = new StringBuilder(ShownText.Length);
+                    using (var reader = new StringReader(ShownText))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            sb.AppendLine(line.TrimStart());
+                        }
+                    }
+                    rtbExportResults.Text = sb.ToString();
                     break;
                 case 2:
                     rtbExportResults.Text = WebUtility.HtmlEncode(ShownText);

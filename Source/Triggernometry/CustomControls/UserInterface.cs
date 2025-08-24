@@ -313,6 +313,7 @@ namespace Triggernometry.CustomControls
             }
         }
 
+        /* 移除默认逻辑
         internal void SetupToasts()
         {
             if (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Undefined)
@@ -331,7 +332,18 @@ namespace Triggernometry.CustomControls
                 tx.ToastType = Toast.ToastTypeEnum.YesNo;
                 QueueToast(tx);
             }
+        }*/
+
+        // start
+        internal void SetupToasts()
+        {
+            if (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Undefined)
+            {
+                cfg.UpdateNotifications = Configuration.UpdateNotificationsEnum.Yes;
+                plug.CheckForUpdates();
+            }
         }
+        // end
 
         internal void ComplainAboutReload()
         {
@@ -794,7 +806,7 @@ namespace Triggernometry.CustomControls
                 ctxFire.Visible = true;
                 ctxFireAllowCondition.Visible = true;
                 ctxCollapse.Visible = true;
-                ctxExpand.Visible = true;
+                ctxExpand.Visible = !(folder != null && folder.Repo != null && folder._DisableRemoteExpand);
                 ctxImport.Visible = true;
                 ctxExport.Visible = true;
                 ctxCopy.Visible = true;
@@ -2101,6 +2113,215 @@ namespace Triggernometry.CustomControls
             {
                 treeView1.ExpandAll();
             }
+        }
+
+        private static readonly List<string> _legalRepoPrefixes = new List<string> {
+            "https://github.com/paissaheavyindustries/Triggernometry",
+            "https://vip.123pan.cn/1824544011/"
+        };
+
+        public void AddRepo(Repository r, bool shouldUpdate)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new System.Action(() => AddRepo(r, shouldUpdate)));
+                return;
+            }
+            if (!_legalRepoPrefixes.Any(prefix => r.Address.StartsWith(prefix)))
+            {
+                plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
+                    I18n.IsChineseEnvironment
+                    ? $"正在尝试添加的远程仓库地址 {r.Address} 未在信任列表内，你需要手动添加此远程仓库。"
+                    : $"The repository address {r.Address} you are trying to add is not a trusted address and needs to be added manually."
+                );
+                return;
+            }
+
+            RepositoryFolder rfo = (RepositoryFolder)treeView1.Nodes[1].Tag;
+            TreeNode tn = rfo.Repositories
+                .Where(repo => repo.Address == r.Address)
+                .Select(repo => treeView1.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == repo))
+                .FirstOrDefault();
+
+            if (tn != null)
+            {
+                Repository existingRepo = (Repository)tn.Tag;
+                existingRepo.Name = r.Name;
+                // existingRepo.Enabled = r.Enabled;
+                existingRepo.AllowProcessLaunch = r.AllowProcessLaunch;
+                existingRepo.AllowScriptExecution = r.AllowScriptExecution;
+                existingRepo.AllowDiskOperations = r.AllowDiskOperations;
+                existingRepo.AllowWindowMessages = r.AllowWindowMessages;
+                existingRepo.AllowObsControl = r.AllowObsControl;
+                existingRepo.KeepLocalBackup = r.KeepLocalBackup;
+                existingRepo.UpdatePolicy = r.UpdatePolicy;
+                existingRepo.AudioOutput = r.AudioOutput;
+
+                tn.Text = existingRepo.Name;
+                tn.Checked = existingRepo.Enabled;
+                tn.ImageIndex = (int)ImageIndices.RemoteRepoUnavailable;
+                tn.SelectedImageIndex = tn.ImageIndex;
+            }
+            else
+            {
+                tn = new TreeNode
+                {
+                    Text = r.Name,
+                    Tag = r,
+                    Checked = r.Enabled,
+                    ImageIndex = (int)ImageIndices.RemoteRepoUnavailable
+                };
+                tn.SelectedImageIndex = tn.ImageIndex;
+                rfo.Repositories.Add(r);
+                r.Parent = rfo;
+                treeView1.Nodes[1].Nodes.Add(tn);
+                treeView1.Nodes[1].Expand();
+            }
+            RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true);
+            treeView1.Sort();
+            if (shouldUpdate)
+            {
+                ForceUpdateRepository(tn);
+            }
+        }
+
+        public void AddRepos(IEnumerable<Repository> repos, bool shouldUpdate)
+        {
+            foreach (Repository r in repos)
+            {
+                AddRepo(r, shouldUpdate);
+            }
+        }
+
+        public void RemoveRepo(string partialUrl)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new System.Action(() => RemoveRepo(partialUrl)));
+                return;
+            }
+            partialUrl = partialUrl.Trim().ToLower();
+            RepositoryFolder rfo = (RepositoryFolder)treeView1.Nodes[1].Tag;
+            var nodes = rfo.Repositories
+                .Where(repo => repo.Address.ToLower().Contains(partialUrl))
+                .Select(repo => treeView1.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == repo))
+                .ToList();
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                var tn = nodes[i];
+                if (tn == null) continue;
+                Repository r = (Repository)tn.Tag;
+                r.Enabled = false;
+                rfo.Repositories.Remove(r);
+                treeView1.Nodes[1].Nodes.Remove(tn);
+            }
+        }
+
+        public void AddDefaultRepoCN(bool shouldUpdate = false)
+        {
+            Repository selfTest = new Repository
+            {
+                Enabled = true,
+                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/SelfTest.xml",
+                AllowProcessLaunch = true,
+                AllowScriptExecution = true,
+                KeepLocalBackup = true,
+                Name = "[工具] 问题自检工具箱 + 使用教程　　有问题请自行在此解决",
+                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+            };
+            Repository utils = new Repository
+            {
+                Enabled = true,
+                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/Utils.xml",
+                AllowProcessLaunch = true,
+                AllowScriptExecution = true,
+                KeepLocalBackup = true,
+                Name = "[工具] 运行支持库",
+                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+            };
+            Repository s7a = new Repository
+            {
+                Enabled = true,
+                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/S7a.xml",
+                AllowProcessLaunch = true,
+                AllowScriptExecution = true,
+                KeepLocalBackup = true,
+                Name = "7.0 M1-4 阿卡狄亚轻量级",
+                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+            };
+            Repository s7b = new Repository
+            {
+                Enabled = true,
+                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/S7b.xml",
+                AllowProcessLaunch = true,
+                AllowScriptExecution = true,
+                KeepLocalBackup = true,
+                Name = "7.2 M5-8 阿卡狄亚中量级",
+                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+            };
+            Repository ex7 = new Repository
+            {
+                Enabled = true,
+                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/Ex7.xml",
+                AllowProcessLaunch = true,
+                AllowScriptExecution = true,
+                KeepLocalBackup = true,
+                Name = "7.X 极神",
+                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+            };
+            Repository temp = new Repository
+            {
+                Enabled = true,
+                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/temp.xml",
+                AllowProcessLaunch = true,
+                AllowScriptExecution = true,
+                KeepLocalBackup = true,
+                Name = "临时推送",
+                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+            };
+            Repository u7a = new Repository
+            {
+                Enabled = true,
+                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/U7a.xml",
+                AllowProcessLaunch = true,
+                AllowScriptExecution = true,
+                KeepLocalBackup = true,
+                Name = "7.1 绝伊甸",
+                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+            };
+            Repository field = new Repository
+            {
+                Enabled = true,
+                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/field.xml",
+                AllowProcessLaunch = true,
+                AllowScriptExecution = true,
+                KeepLocalBackup = true,
+                Name = "特殊场景探索",
+                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+            };
+            RemoveRepo("vip.123pan.cn/1824544011/Remote_Triggers/AdvWm.xml");
+            AddRepos(new List<Repository> { selfTest, utils, s7a, s7b, ex7, temp, u7a, field }, false);
+        }
+
+        public void AddMoreRepoCN(bool shouldUpdate = true)
+        {
         }
 
         private void btnOptions_DropDownOpening(object sender, EventArgs e)

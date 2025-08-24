@@ -43,6 +43,13 @@ namespace Triggernometry
 
         internal void CheckForUpdates(bool isManual = false)
         {
+            // start
+            if (I18n.IsChineseEnvironment)
+            {
+                CheckForUpdatesBuiltinCN(isManual);
+                return;
+            }
+            // end
             switch (cfg.UpdateCheckMethod)
             {
                 case Configuration.UpdateCheckMethodEnum.ACT:
@@ -267,7 +274,89 @@ namespace Triggernometry
                 }
             });
         }
+        // start
+        private static readonly string _updateRemotePathCN = "https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/";
 
+        public void CheckForUpdatesBuiltinCN(bool isManual = false)
+        {
+            Task.Run(() =>
+            {
+                Version localVersion, remoteVersion;
+                try
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string versionString = client.GetStringAsync(_updateRemotePathCN + "version").GetAwaiter().GetResult();
+                        remoteVersion = Version.Parse(versionString.Trim());
+                        localVersion = Assembly.GetExecutingAssembly().GetName().Version;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    plug.FilteredAddToLog(DebugLevelEnum.Error, "Triggernometry 更新检查失败：" + ex.ToString());
+                    return;
+                }
+                if (remoteVersion > localVersion)
+                {
+                    plug.FilteredAddToLog(DebugLevelEnum.Warning, $"Triggernometry 已发布新版本 {remoteVersion}，当前版本 {localVersion}。");
+                    string filePath = Path.Combine(pluginPath, $"{pluginName}.dll");
+                    /*
+                    Toast t = new Toast
+                    {
+                        ToastText = $"Triggernometry 更新检查：本地已有版本 {localVersion} 低于远程版本 {remoteVersion}。是否后台开始更新插件及汉化文件？（更新不影响当前使用）",
+                        ToastType = Toast.ToastTypeEnum.YesNo
+                    };
+                    t.OnYes += (_, __) => UpdatePluginCN(filePath, localVersion, remoteVersion);
+                    ui.QueueToast(t);
+                    */
+                    UpdatePluginCN(filePath, localVersion, remoteVersion);
+                }
+                else
+                {
+                    string info = $"Triggernometry 更新检查：本地已有版本 {localVersion} 不低于远程版本 {remoteVersion}，无需更新。";
+                    plug.FilteredAddToLog(DebugLevelEnum.Info, info);
+                    if (isManual)
+                    {
+                        ui.QueueToast(new Toast { ToastText = info, ToastType = Toast.ToastTypeEnum.OK });
+                    }
+                }
+            });
+        }
+
+        private void UpdatePluginCN(string filePath, Version localVersion, Version remoteVersion)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    string tmpPath = filePath + ".tmp";
+                    using (HttpClient client = new HttpClient())
+                    {
+                        byte[] fileBytes = await client.GetByteArrayAsync(_updateRemotePathCN + "Triggernometry.dll");
+                        File.WriteAllBytes(tmpPath, fileBytes);
+                    }
+                    if (File.Exists(filePath))
+                    {
+                        string backupPath = $"{filePath}.{localVersion}.backup";
+                        if (File.Exists(backupPath))
+                            File.Delete(backupPath);
+                        File.Move(filePath, backupPath);
+                    }
+                    File.Move(tmpPath, filePath);
+                    UpdateTranslationCN(isManual: false);
+                    ui.QueueToast(new Toast
+                    {
+                        ToastText = $"Triggernometry 插件已从 {localVersion} 更新至 {remoteVersion}，重启后生效。",
+                        ToastType = Toast.ToastTypeEnum.OK
+                    });
+                }
+                catch (Exception ex)
+                {
+                    FilteredAddToLog(DebugLevelEnum.Error, $"Triggernometry 插件更新失败：{ex.Message}");
+                }
+            });
+        }
+        // end
         private void AutoUpdatePromptResult(CustomControls.Toast t, bool result)
         {
             if (result == true)
@@ -275,6 +364,90 @@ namespace Triggernometry
                 System.Diagnostics.Process.Start(updateDownloadUrl);
             }
         }
+        // start
+        public void UpdateTranslationCN(bool isManual = false)
+        {
+            string fileName = "zh-CN.triglations.xml";
+            string localPath = Path.Combine(pluginPath, fileName);
+            string remotePath = _updateRemotePathCN + fileName;
+            Task.Run(async () =>
+            {
+                try
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        var fileBytes = await client.GetByteArrayAsync(remotePath);
+                        File.WriteAllBytes(localPath, fileBytes);
+                        UnfilteredAddToLog(DebugLevelEnum.Info, "已更新汉化文件。");
+                    }
+                    if (!isManual) return;
+                    ui.QueueToast(new Toast
+                    {
+                        ToastText = $"已更新汉化文件，重启以应用更新。",
+                        ToastType = CustomControls.Toast.ToastTypeEnum.OK
+                    });
+                }
+                catch (Exception ex)
+                {
+                    UnfilteredAddToLog(DebugLevelEnum.Error, "更新汉化文件失败：" + ex.Message);
+                }
+            });
+        }
+
+        public void UpdatePostNamazu(string remoteVersion)
+        {
+            var plug = RealPlugin.InstanceHook(null, "PostNamazu.PostNamazu");
+            var localVersion = plug.FileVersion;
+            if (localVersion == null)
+            {
+                ui.QueueToast(new Toast
+                {
+                    ToastText = $"未找到鲶鱼精邮差插件。",
+                    ToastType = Toast.ToastTypeEnum.OK
+                });
+                return;
+            }
+            if (new Version(localVersion) >= new Version(remoteVersion))
+            {
+                ui.QueueToast(new Toast
+                {
+                    ToastText = $"鲶鱼精邮差插件本地版本 {localVersion} 不低于远程版本 {remoteVersion}，无需更新。",
+                    ToastType = Toast.ToastTypeEnum.OK
+                });
+                return;
+            }
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var filePath = plug.PluginFile.FullName;
+                    string tmpPath = filePath + ".tmp";
+                    using (HttpClient client = new HttpClient())
+                    {
+                        byte[] fileBytes = await client.GetByteArrayAsync(_updateRemotePathCN + "PostNamazu.dll");
+                        File.WriteAllBytes(tmpPath, fileBytes);
+                    }
+                    if (File.Exists(filePath))
+                    {
+                        string backupPath = $"{filePath}.{localVersion}.backup";
+                        if (File.Exists(backupPath))
+                            File.Delete(backupPath);
+                        File.Move(filePath, backupPath);
+                    }
+                    File.Move(tmpPath, filePath);
+                    ui.QueueToast(new Toast
+                    {
+                        ToastText = $"鲶鱼精邮差插件已从 {localVersion} 更新至 {remoteVersion}，重启后生效。",
+                        ToastType = Toast.ToastTypeEnum.OK
+                    });
+                }
+                catch (Exception ex)
+                {
+                    FilteredAddToLog(DebugLevelEnum.Error, $"鲶鱼精邮差插件插件更新失败：{ex.Message}");
+                }
+            });
+        }
+        // end
 
         #endregion
 

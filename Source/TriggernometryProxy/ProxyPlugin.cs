@@ -532,7 +532,8 @@ namespace TriggernometryProxy
             }
         }
 
-        public static ActPluginData GetPluginDataByName(string name) => GetPluginDataByType(name); // for backward compatibility
+        [Obsolete("Use GetPluginDataByType instead.")]
+        public static ActPluginData GetPluginDataByName(string name) => GetPluginDataByType(name);
         public static ActPluginData GetPluginDataByType(string name)
         {
             foreach (var plugin in ActGlobals.oFormActMain.ActPlugins)
@@ -557,21 +558,8 @@ namespace TriggernometryProxy
             return null;
         }
 
-        public static List<string> GetMethodsDesc(object obj) // debug
-        {
-            List<string> results = new List<string>();
-            Type type = obj.GetType();
-            MethodInfo[] methods = type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (MethodInfo method in methods)
-            {
-                if (method.Name.StartsWith("get_") || method.Name.StartsWith("set_") || method.Name.StartsWith("add_") || method.Name.StartsWith("remove_"))
-                    continue;
-                string s = $"{method.ReturnType.Name} {method.Name}({string.Join(", ", method.GetParameters().Select(p => $"{p.ParameterType.Name} {p.Name}"))})";
-                results.Add(s);
-            }
-            return results;
-        }
-
     }
 
 }
+
+

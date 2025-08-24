@@ -1752,21 +1752,46 @@ namespace Triggernometry.Forms
 
         private void expTextForeColor_TextChanged(object sender, EventArgs e)
         {
-            colorSelector1._textColor = ExpressionTextBox.ParseColor(fakectx.EvaluateStringExpression(null, fakectx, expTextForeColor.Text), Color.Black);
+            try
+            {
+                colorSelector1._textColor = ExpressionTextBox.ParseColor(
+                    fakectx.EvaluateStringExpression(null, fakectx, expTextForeColor.Text), Color.Black);
+            }
+            catch 
+            {
+                colorSelector1._textColor = Color.Black;
+            }
             colorSelector1.Invalidate();
         }
 
         private void expTextBackColor_TextChanged(object sender, EventArgs e)
         {
-            colorSelector1._backgroundColor = ExpressionTextBox.ParseColor(fakectx.EvaluateStringExpression(null, fakectx, expTextBackColor.Text), Color.Transparent);
+            try
+            {
+                colorSelector1._backgroundColor = ExpressionTextBox.ParseColor(
+                    fakectx.EvaluateStringExpression(null, fakectx, expTextBackColor.Text), Color.Transparent);
+            }
+            catch
+            {
+                colorSelector1._backgroundColor = Color.Transparent;
+            }
             colorSelector1.Invalidate();
         }
 
         private void expTextOutlineColor_TextChanged(object sender, EventArgs e)
         {
-            colorSelector1._textOutlineColor = ExpressionTextBox.ParseColor(fakectx.EvaluateStringExpression(null, fakectx, expTextOutlineColor.Text), Color.Empty);
+            try
+            {
+                colorSelector1._textOutlineColor = ExpressionTextBox.ParseColor(
+                    fakectx.EvaluateStringExpression(null, fakectx, expTextOutlineColor.Text), Color.Empty);
+            }
+            catch
+            {
+                colorSelector1._textOutlineColor = Color.Empty;
+            }
             colorSelector1.Invalidate();
         }
+
 
         private void colorSelector1_ColorChanged(object sender, ColorChangedEventArgs e)
         {

@@ -585,26 +585,9 @@ namespace Triggernometry.Utilities
         public static IntPtr GetCameraAddress()
         {
             byte[] moduleData = ReadModuleData(XivProc);
-            try
-            {
-                int relativeAddress = ScanPoint(moduleData, "4C 8D 35 * * * * 48 8B 09", false) ?? throw ScanNotFoundException("camaraAddress7.0");
-                IntPtr pointerValue = Read<IntPtr>(XivProc.Handle, XivBaseAddress + relativeAddress);
-                return pointerValue;
-            }
-            catch
-            {
-                ScanPattern pattern = new ScanPattern(              // svr2kos2@github
-                    "48 83 c4 28 " +                                // add rsp, 28
-                    "e9 ?? ?? ?? ?? " +                             // jmp xxxxxxxx
-                    "cc cc cc cc cc cc cc cc cc cc cc cc cc " +     // int 3 * 13
-                    "48 8d 0d ");                                   // lea
-                int lea = ScanPoint(moduleData, pattern) - 0x76 ?? throw ScanNotFoundException("camaraAddress6.0");
-                int relativeOffset = BytesToStructure<int>(moduleData, lea + 0x3);
-                var absoluteAddress = IntPtr.Add(XivBaseAddress, lea + relativeOffset + 7);
-
-                IntPtr pointerValue = Read<IntPtr>(XivProc.Handle, absoluteAddress);
-                return pointerValue;
-            }
+            int relativeAddress = ScanPoint(moduleData, "4C 8D 35 * * * * 48 8B 09", false) ?? throw ScanNotFoundException("camaraAddress");
+            IntPtr pointerValue = Read<IntPtr>(XivProc.Handle, XivBaseAddress + relativeAddress);
+            return pointerValue;
         }
     }
 }

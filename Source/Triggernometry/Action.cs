@@ -17,6 +17,7 @@ using CsvHelper;
 using System.Globalization;
 using Triggernometry.Utilities;
 using static Triggernometry.RealPlugin;
+using System.Reflection;
 
 namespace Triggernometry
 {
@@ -478,11 +479,11 @@ namespace Triggernometry
                 }
                 var state = plug._obs.CheckRunningState();
                 if (state != ObsController.ObsRunningState.Running)
-                {
+                { 
                     if (state == ObsController.ObsRunningState.NotRunningFirstlyFound)
                         AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/obsnotrunning",
                             "OBS is not running and the OBS action cannot be performed."));
-                        return null;
+                    return null;
                 }
                 try
                 {
@@ -1240,7 +1241,7 @@ namespace Triggernometry
                             break;
                         case TableVariableOpEnum.GetAllEntities:
                             {
-                                bool hasFilter = string.IsNullOrWhiteSpace(_TableVariableY);
+                                bool hasFilter = !string.IsNullOrWhiteSpace(_TableVariableY);
                                 bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(_TableVariableX);
                                 string keySuffix = (hasFilter ? "1" : "0") + (hasSpecifiedProps ? "1" : "0");
                                 string key = $"internal/Action/desctablegetallentities{keySuffix}"; //...00, ...01, ...10, ...11
@@ -3159,6 +3160,12 @@ namespace Triggernometry
                     #region Implementation - Play speech
                     case ActionTypeEnum.UseTTS:
                         {
+                            /* to-do: cactbot-like ÎÄ±¾ÏÔÊ¾
+                            if (plug.cfg.GenerateTTSEventLog)
+                            {
+                                plug.LogLineQueuer(this._UseTTSTextExpression, "", LogEvent.SourceEnum.ACT);
+                            }
+                            */
                             ctx.ttshook(ctx, this);
                         }
                         break;
@@ -4167,29 +4174,21 @@ namespace Triggernometry
             }
             catch (Exception ex)
             {
+                if (_ActionType == ActionTypeEnum.NamedCallback)
+                {
+                    if (ex is TargetInvocationException tiex && tiex.InnerException != null)
+                        ex = tiex.InnerException;
+                }
                 string triggerPath = qa?.ctx?.trig?.FullPath ?? "(null)";
                 string actionDesc = "";
                 try { actionDesc = GetDescription(ctx); } catch { }
                 actionDesc = (actionDesc.Length > 300) ? (actionDesc.Substring(0, 297) + "...") : actionDesc;
-                bool showDetail = _ActionType == ActionTypeEnum.ExecuteScript || _ActionType == ActionTypeEnum.NamedCallback || plug.cfg.DeveloperMode;
-                string exDesc1 = ex.Message; // type and message
-                string exDesc2 = ""; // inner and stack
-                if (showDetail)
-                {
-                    exDesc1 = ex.GetType().FullName + ": " + exDesc1;
-                    exDesc2 = Environment.NewLine;
-                    if (ex.InnerException != null)
-                    {
-                        exDesc2 += Environment.NewLine + " ---> " + ex.InnerException.ToString();
-                    }
-                    if (ex.StackTrace != null)
-                    {
-                        exDesc2 += Environment.NewLine + ex.StackTrace;
-                    }
-                }
+                bool showDetail = true; // _ActionType == ActionTypeEnum.ExecuteScript || _ActionType == ActionTypeEnum.NamedCallback || plug.cfg.DeveloperMode;
+                string detail = showDetail ? ex.FullMessage() : ""; // inner and stack
+                
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/exception",
                     "Action exception: {0}  \nIn action: {1}  \nIn trigger: {2}{3}",
-                    exDesc1, actionDesc, triggerPath, exDesc2));
+                    ex.Message, actionDesc, triggerPath, detail));
             }
         }
 

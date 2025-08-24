@@ -114,8 +114,8 @@ namespace Triggernometry
         private static RealPlugin _plug;
         public static RealPlugin plug
         {
-            get 
-            { 
+            get
+            {
                 if (_plug == null)
                     _plug = new RealPlugin();
                 return _plug;
@@ -222,14 +222,7 @@ namespace Triggernometry
 
         public void GenericExceptionHandler(string msg, Exception ex)
         {
-            string text = msg + ": " + Environment.NewLine + Environment.NewLine + ex.Message + " " + ex.StackTrace;
-            var inner = ex.InnerException;
-            while (inner != null)
-            {
-                text += "\n---------\nInner: " + inner.Message;
-                text += "\n " + inner.StackTrace;
-                inner = inner.InnerException;
-        }
+            string text = msg + ": " + Environment.NewLine + Environment.NewLine + ex.FullMessage();
             MessageBox.Show(ui, text, I18n.Translate("internal/Plugin/exception", "Exception"), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
@@ -300,10 +293,15 @@ namespace Triggernometry
                 BackupConfiguration();
                 FixDuplicateFolderReferences(null, cfg, null);
                 PluginBridges.BridgeFFXIV.cfg = cfg;
+                // start
+                /*
                 if (cfg.Language != null)
                 {
                     ChangeLanguage(cfg.Language);
                 }
+                */
+                ChangeLanguage("简体中文 (zh-CN)");
+                // end
                 exwhere = I18n.Translate("internal/Plugin/iniactui", "setting up ACT ui");
                 mytp = pluginScreenSpace;
                 pluginScreenSpace.Text = "Triggernometry";
@@ -342,6 +340,7 @@ namespace Triggernometry
                     ui.pnlWelcome.Visible = false;
                     ui.btnOptions.Enabled = true;
                 }
+                FixConfigurationOnStartCN(); // start
                 if (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes)
                 {
                     exwhere = I18n.Translate("internal/Plugin/iniupdates", "checking for updates");
@@ -399,6 +398,12 @@ namespace Triggernometry
                 }
                 pluginStatusText.Text = I18n.Translate("internal/Plugin/iniready", "Ready");
                 FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/inited", "Initialized"));
+                // start
+                if (I18n.IsChineseEnvironment)
+                {
+                    ui.AddDefaultRepoCN();
+                }
+                // end
                 Task tx = new Task(() =>
                 {
                     AllRepositoryUpdates(true);
@@ -410,7 +415,7 @@ namespace Triggernometry
             {
                 pluginStatusText.Text = I18n.Translate("internal/Plugin/inierror", "Error while {0} ({1})", exwhere, ex.ToString());
             }
-        }        
+        }
 
         private void ShowProgress(int progress, string state)
         {
@@ -510,7 +515,7 @@ namespace Triggernometry
             }
         }
 
-        internal void LogLineQueuer(string text, string zone, LogEvent.SourceEnum src)
+        public void LogLineQueuer(string text, string zone, LogEvent.SourceEnum src)
         {
             LogEvent le = new LogEvent();
             le.Text = text;
@@ -770,10 +775,12 @@ namespace Triggernometry
             }
         }
 
-        public void ZoneChangeDelegate(uint ZoneID, string ZoneName) // BridgeFFXIV.SubscribeToZoneChanged()
+        /// <summary> Invoked by <see cref="Triggernometry.PluginBridges.BridgeFFXIV.SubscribeToZoneChanged" /></summary>
+        public void ZoneChangeDelegate(uint ZoneID, string ZoneName) 
         {
             PluginBridges.BridgeFFXIV.ZoneID = ZoneID;
-            // to-do: Memory.UpdateOffset1B(); // async  
+            PluginBridges.BridgeFFXIV.UpdateState(); // fix player id, etc. after travelling to a new server
+            FFXIV.Entity.UpdateMySnapshot();
             ZoneChanged(currentZone);
         }
 

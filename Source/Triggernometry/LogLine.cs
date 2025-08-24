@@ -12,9 +12,13 @@ namespace Triggernometry
 
         public enum SourceEnum
         {
+            /// <summary> Parsed ACT Log </summary>
             Log,
+            /// <summary> Network Log </summary>
             NetworkFFXIV,
+            /// <summary> ACT event </summary>
             ACT,
+            /// <summary> Endpoint </summary>
             Endpoint
         }
 

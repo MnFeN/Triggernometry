@@ -24,6 +24,8 @@ namespace Triggernometry.CustomControls
         public TreeViewEx()
         {
             InitializeComponent();
+            this.BeforeExpand += TreeViewEx_BeforeExpand;
+            this.BeforeCheck += TreeViewEx_BeforeCheck;
         }
 
         protected override void WndProc(ref Message m)
@@ -40,6 +42,24 @@ namespace Triggernometry.CustomControls
                 }
             }
             base.WndProc(ref m);
+        }
+
+        private void TreeViewEx_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node.Tag is Folder folder && folder.Repo != null && folder._DisableRemoteExpand)
+            {
+                MessageBox.Show("你无需浏览此分组。", "远程触发器", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+            }
+        }
+
+        private void TreeViewEx_BeforeCheck(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node.Tag is Folder folder && folder.Repo != null && folder._DisableRemoteToggle)
+            {
+                MessageBox.Show("你无需修改此分组。", "远程触发器", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+            }
         }
 
     }

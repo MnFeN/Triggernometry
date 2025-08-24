@@ -108,7 +108,7 @@ namespace Triggernometry
 
         private void LoadLanguages()
         {
-            {
+            /*{
                 string[] files = Directory.GetFiles(path, "*.triglations.xml", SearchOption.TopDirectoryOnly);
                 foreach (string file in files)
                 {
@@ -118,9 +118,9 @@ namespace Triggernometry
                         I18n.AddLanguage(l);
                     }
                 }
-            }
-            if (path != pluginPath)
-            {
+            }*/
+            //if (path != pluginPath)
+            //{
                 string[] files = Directory.GetFiles(pluginPath, "*.triglations.xml", SearchOption.TopDirectoryOnly);
                 foreach (string file in files)
                 {
@@ -130,7 +130,7 @@ namespace Triggernometry
                         I18n.AddLanguage(l);
                     }
                 }
-            }
+            //}
         }
 
         /*private void CombobulateTranslations()

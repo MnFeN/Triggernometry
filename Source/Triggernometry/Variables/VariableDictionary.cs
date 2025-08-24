@@ -256,10 +256,24 @@ namespace Triggernometry.Variables
             return String.Join(joiner, Values.Values.Select(v => v.ToString()));
         }
 
+        public string JoinValues(string joiner, IEnumerable<string> keys)
+        {
+            return String.Join(joiner, keys.Select(k => Values.TryGetValue(k, out Variable v) ? v.ToString() : ""));
+        }
+
+        public string JoinValues(string joiner, params string[] keys) => JoinValues(joiner, keys);
+
         public string JoinAll(string kvJoiner, string pairJoiner)
         {
-            return String.Join(pairJoiner, Values.Select(pair => pair.Key + kvJoiner + pair.Value.ToString()));
+            return String.Join(pairJoiner, Values.Select(pair => $"{pair.Key}{kvJoiner}{pair.Value}"));
         }
+
+        public string JoinAll(string kvJoiner, string pairJoiner, IEnumerable<string> keys)
+        {
+            return String.Join(pairJoiner, keys.Select(k => Values.TryGetValue(k, out Variable v) ? $"{k}{kvJoiner}{v}" : ""));
+        }
+
+        public string JoinAll(string kvJoiner, string pairJoiner, params string[] keys) => JoinAll(kvJoiner, pairJoiner, keys);
 
         public void Merge(VariableDictionary sourceDict, bool overwriteExistingKeys = true)
         {

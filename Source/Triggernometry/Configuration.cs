@@ -10,7 +10,7 @@ using Triggernometry.Variables;
 namespace Triggernometry
 {
 
-    public class Configuration
+    public partial class Configuration
     {
         // Configuration Form
 

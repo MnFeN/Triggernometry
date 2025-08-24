@@ -128,7 +128,7 @@ namespace Triggernometry.PluginBridges
             byte[] source = memory.GetByteArray(charmapAddress, ptrSize * numMemoryCombatants);
             if (source == null || source.Length == 0)
                 yield break;
-
+            
             for (int i = 0; i < numMemoryCombatants; i++)
             {
                 IntPtr p = GetPointerFromSource(source, i);
@@ -239,6 +239,10 @@ namespace Triggernometry.PluginBridges
             {
                 get
                 {
+                    // 临时的：用 FFXIV 解析插件获取
+                    //var xivEntity = BridgeFFXIV.InternalGetEntityByID(ID);
+                    //return xivEntity.Statuses;
+                    // Overlay 现在有 bug！（修了？）
                     if (_entity.Effects is IEnumerable<dynamic> opEffects)
                         return opEffects.Select(e => (Status)new OpStatus(e, this)).ToList();
                     else return new List<Status>();

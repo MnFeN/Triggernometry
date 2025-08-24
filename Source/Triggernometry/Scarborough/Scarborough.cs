@@ -328,7 +328,7 @@ namespace Scarborough
                 existing.Top = si.EvaluateNumericExpression(si.ctx, si.InitYExpression);
                 existing.Width = si.EvaluateNumericExpression(si.ctx, si.InitWExpression);
                 existing.Height = si.EvaluateNumericExpression(si.ctx, si.InitHExpression);
-                existing.Opacity = si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
+                existing.Opacity = string.IsNullOrWhiteSpace(si.InitOExpression) ? 100 : si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
                 existing.UpdateXExpression = si.UpdateXExpression;
                 existing.UpdateYExpression = si.UpdateYExpression;
                 existing.UpdateWExpression = si.UpdateWExpression;
@@ -354,7 +354,7 @@ namespace Scarborough
                 si.Top = si.EvaluateNumericExpression(si.ctx, si.InitYExpression);
                 si.Width = si.EvaluateNumericExpression(si.ctx, si.InitWExpression);
                 si.Height = si.EvaluateNumericExpression(si.ctx, si.InitHExpression);
-                si.Opacity = si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
+                si.Opacity = string.IsNullOrWhiteSpace(si.InitOExpression) ? 100 : si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
                 imageitems[id] = si;
             }
         }
@@ -369,7 +369,7 @@ namespace Scarborough
                 existing.Top = si.EvaluateNumericExpression(si.ctx, si.InitYExpression);
                 existing.Width = si.EvaluateNumericExpression(si.ctx, si.InitWExpression);
                 existing.Height = si.EvaluateNumericExpression(si.ctx, si.InitHExpression);
-                existing.Opacity = si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
+                existing.Opacity = string.IsNullOrWhiteSpace(si.InitOExpression) ? 100 : si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
                 existing.UpdateXExpression = si.UpdateXExpression;
                 existing.UpdateYExpression = si.UpdateYExpression;
                 existing.UpdateWExpression = si.UpdateWExpression;
@@ -397,7 +397,7 @@ namespace Scarborough
                 si.Top = si.EvaluateNumericExpression(si.ctx, si.InitYExpression);
                 si.Width = si.EvaluateNumericExpression(si.ctx, si.InitWExpression);
                 si.Height = si.EvaluateNumericExpression(si.ctx, si.InitHExpression);
-                si.Opacity = si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
+                si.Opacity = string.IsNullOrWhiteSpace(si.InitOExpression) ? 100 : si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
                 si.Text = si.EvaluateStringExpression(si.ctx, si.TextExpression);
                 si.NeedFont = true;
                 textitems[id] = si;

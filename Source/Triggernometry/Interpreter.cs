@@ -443,14 +443,14 @@ namespace Triggernometry
                         {
                             g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error, I18n.Translate(
                                     "internal/Interpreter/scriptExecutionError",
-                                    "Error occurred during script execution: \n{0}", ex.ToString()));
+                                    "Error occurred during script execution: \n{0}", ex.FullMessage()));
                         }
                     }
                     catch (Exception ex)
                     {
                         g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error, I18n.Translate(
                                     "internal/Interpreter/scriptExecutionError",
-                                    "Error occurred during script execution: \n{0}", ex.ToString()));
+                                    "Error occurred during script execution: \n{0}", ex.FullMessage()));
                     }
                 }
                 else

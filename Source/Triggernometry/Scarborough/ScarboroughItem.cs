@@ -175,15 +175,15 @@ namespace Scarborough
 
         public bool GenericLogic()
         {
-            if (UpdateXExpression != null && UpdateXExpression.Length > 0)
+            if (!string.IsNullOrWhiteSpace(UpdateXExpression))
             {
                 Left = EvaluateNumericExpression(ctx, UpdateXExpression);
             }
-            if (UpdateYExpression != null && UpdateYExpression.Length > 0)
+            if (!string.IsNullOrWhiteSpace(UpdateYExpression))
             {
                 Top = EvaluateNumericExpression(ctx, UpdateYExpression);
             }
-            if (UpdateWExpression != null && UpdateWExpression.Length > 0)
+            if (!string.IsNullOrWhiteSpace(UpdateWExpression))
             {
                 int newval = EvaluateNumericExpression(ctx, UpdateWExpression);
                 if (newval < 0)
@@ -192,7 +192,7 @@ namespace Scarborough
                 }
                 Width = newval;
             }
-            if (UpdateHExpression != null && UpdateHExpression.Length > 0)
+            if (!string.IsNullOrWhiteSpace(UpdateHExpression))
             {
                 int newval = EvaluateNumericExpression(ctx, UpdateHExpression);
                 if (newval < 0)
@@ -201,7 +201,7 @@ namespace Scarborough
                 }
                 Height = newval;
             }
-            if (UpdateOExpression != null && UpdateOExpression.Length > 0)
+            if (!string.IsNullOrWhiteSpace(UpdateOExpression))
             {
                 int newval = EvaluateNumericExpression(ctx, UpdateOExpression);
                 if (newval < 0)
@@ -214,7 +214,7 @@ namespace Scarborough
                 }
                 Opacity = newval;
             }
-            if (TTLExpression != null && TTLExpression.Length > 0)
+            if (!string.IsNullOrWhiteSpace(TTLExpression))
             {
                 if (EvaluateNumericExpression(ctx, TTLExpression) < 0)
                 {

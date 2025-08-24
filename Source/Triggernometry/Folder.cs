@@ -150,22 +150,28 @@ namespace Triggernometry
         [XmlAttribute]
         public Guid Id { get; set; }
 
-        internal bool _ReadOnly { get; set; } = false;
+        internal bool _ReadOnly = false;
         [XmlAttribute]
         public string ReadOnly
         {
-            get
-            {
-                if (_ReadOnly == false)
-                {
-                    return null;
-                }
-                return _ReadOnly.ToString();
-            }
-            set
-            {
-                _ReadOnly = Boolean.Parse(value);
-            }
+            get => _ReadOnly == false ? null : _ReadOnly.ToString();
+            set => _ReadOnly = Boolean.Parse(value);
+        }
+
+        internal bool _DisableRemoteExpand = false;
+        [XmlAttribute]
+        public string DisableRemoteExpand
+        {
+            get => _DisableRemoteExpand == false ? null : _DisableRemoteExpand.ToString();
+            set => _DisableRemoteExpand = Boolean.Parse(value);
+        }
+
+        internal bool _DisableRemoteToggle = false;
+        [XmlAttribute]
+        public string DisableRemoteToggle
+        {
+            get => _DisableRemoteToggle == false ? null : _DisableRemoteToggle.ToString();
+            set => _DisableRemoteToggle = Boolean.Parse(value);
         }
 
         [XmlAttribute]
@@ -256,7 +262,7 @@ namespace Triggernometry
         internal Repository Repo { get; set; } = null;
 
         [XmlIgnore]
-        public Dictionary<string, string> EnvironmentVariables { get; private set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> EnvironmentVariables { get; private set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         private string _rawEnvironmentVariables = null;
 
@@ -269,6 +275,19 @@ namespace Triggernometry
                 _rawEnvironmentVariables = value;
                 ParseRawEnvironmentVariables();
             }
+        }
+
+        public Dictionary<string, string> RecursiveGetEnvironmentVariables()
+        {
+            var dict = new Dictionary<string, string>(EnvironmentVariables, StringComparer.OrdinalIgnoreCase);
+            for (var parent = Parent; parent != null; parent = parent.Parent)
+            {
+                foreach (var kv in parent.EnvironmentVariables)
+                {
+                    if (!dict.ContainsKey(kv.Key)) dict[kv.Key] = kv.Value;
+                }
+            }
+            return dict;
         }
 
         public Folder()

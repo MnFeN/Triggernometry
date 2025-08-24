@@ -41,6 +41,8 @@ namespace Triggernometry
             }
             foreach (NamedCallback nc in cbs)
             {
+                nc.Invoke(val);
+                /*
                 try
                 {
                     nc.Invoke(val);
@@ -55,6 +57,7 @@ namespace Triggernometry
                     FilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/NamedCallback/exception",
                         "Exception occurred when invoking named callback {0}:\n {1}", name, inner.ToString()));
                 }
+                 */
             }
         }
 
