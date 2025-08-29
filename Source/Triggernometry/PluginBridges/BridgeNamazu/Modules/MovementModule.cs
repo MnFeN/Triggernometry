@@ -12,7 +12,6 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             ScanMethod = () => 
             {
-                // MoveSpeedPtr 是基址，默认值 6.0f，xref 都是 lea
                 MoveSpeedPtr = Scanner.TryScanMultiple(new[] {
                     "48 8D 0D * * * * E8 ? ? ? ? 84 C0 75 4F", // 7.0
                     "48 8D 0D * * * * 4C 8B CF 48 89 5C 24 ? 48 8B D3" // 7.0
