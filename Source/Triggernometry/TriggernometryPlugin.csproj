@@ -424,7 +424,6 @@
     <Compile Include="PluginBridges\BridgeNamazu\Modules\MovementModule.cs" />
     <Compile Include="PluginBridges\BridgeNamazu\Modules\PictoACTModule.cs" />
     <Compile Include="PluginBridges\BridgeNamazu\Modules\UseActionModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\ExecuteCommandModule.cs" />
     <Compile Include="PluginBridges\BridgeNamazu\Modules\VfxModule.cs" />
     <Compile Include="PluginBridges\BridgeNamazu\Modules\_ModuleBase.cs" />
     <Compile Include="PluginBridges\BridgeNamazu\Modules\EntityModule.cs" />

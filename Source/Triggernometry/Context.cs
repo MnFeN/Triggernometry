@@ -33,7 +33,7 @@ namespace Triggernometry
             = new Regex(@"\$\{(?<id>[^${}]*)\}", RegexOptions.Compiled);
         /// <summary> Regex matching: ¤{id} </summary>
         internal static Regex rox
-            = new Regex(@"¤\{[^${}]*\}", RegexOptions.Compiled);
+            = new Regex(@"¤\{[^}]*\}", RegexOptions.Compiled);
         /// <summary> Regex matching: $num (e.g. $1, $20) </summary>
         internal static Regex rexNum
             = new Regex(@"\$(?<id>[0-9]+)", RegexOptions.Compiled);
