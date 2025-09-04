@@ -1723,7 +1723,7 @@ namespace Triggernometry.CustomControls
                 else if (type == SupportedExpressionTypeEnum.String || type == SupportedExpressionTypeEnum.Color
                       || type == SupportedExpressionTypeEnum.Regex) // To do: better logic for regexes
                 {
-                    HashSet<char> separators = new HashSet<char>("^$¤{}[](),.:;=|/\\'\"，。？！、：；（）《》「」『』【】“”‘’…" + Context.LINEBREAK_PLACEHOLDER);
+                    HashSet<char> separators = new HashSet<char>("^$¤{}[]()<>,.:;=|/\\'\"，。？！、：；（）《》「」『』【】“”‘’…" + Context.LINEBREAK_PLACEHOLDER);
                     if (type == SupportedExpressionTypeEnum.Regex)
                         separators.ExceptWith(".");
                     if (!separators.Contains(currentChar))
