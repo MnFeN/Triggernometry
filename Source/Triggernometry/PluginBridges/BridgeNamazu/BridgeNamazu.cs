@@ -125,13 +125,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
         }
 
         public static T GetModule<T>() where T : ModuleBase
-        {
-            if (!_modules.TryGetValue(typeof(T), out var module))
-            {
-                throw new Exception($"[鲶鱼精邮差扩展] 模块 {typeof(T).Name} 未注册或未初始化。");
-            }
-            return (T)module;
-        }
+            => (T)GetModule(typeof(T));
 
         public static void Log(string msg) => ((dynamic)NamazuPlugin.PluginUI).Log(msg);
 

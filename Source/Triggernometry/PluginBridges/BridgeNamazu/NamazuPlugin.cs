@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu
@@ -10,6 +12,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
     public class NamazuPlugin
     {
         private readonly dynamic _plugin;
+        public object CommandModule => GetOriginalModuleByName("Command");
+        public object MarkModule => GetOriginalModuleByName("Mark");
+        public object NormalCommandModule => GetOriginalModuleByName("NormalCommand");
+        public object PresetModule => GetOriginalModuleByName("Preset");
+        public object QueueModule => GetOriginalModuleByName("Queue");
+        public object SendKeyModule => GetOriginalModuleByName("SendKey");
+        public object WayMarkModule => GetOriginalModuleByName("WayMark");
 
         private GreyMagicExternalProcessMemory _Memory;
         public GreyMagicExternalProcessMemory Memory
@@ -54,11 +63,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
             _getNamazuUi = () => fi.GetValue(_plugin);
         }
 
-        // Actions
-        // public T GetModuleInstance<T>() where T : NamazuModule
-        public static dynamic GetModuleInstance(string moduleName)
+        public object GetOriginalModuleByName(string moduleName)
         {
-            throw new NotImplementedException();
+            var modulesField = _plugin.GetType().GetField("Modules", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception($"[鲶鱼精邮差扩展] 未找到 Modules 列表。");
+            var modules = modulesField.GetValue(_plugin) as IList
+                ?? throw new Exception($"[鲶鱼精邮差扩展] Modules 实例不是列表。");
+            return modules.Cast<object>().FirstOrDefault(m => m.GetType().Name.Equals(moduleName, StringComparison.OrdinalIgnoreCase));
         }
 
         public Dictionary<string, bool> ActionEnabled => _plugin.ActionEnabled;
@@ -69,7 +80,6 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
         /// <summary>
         /// Force an action to be executed, bypassing the user config checks.
         /// </summary>
-        /// <returns>If the user allows the action to be executed.</returns>
         public void DoActionForce(string command, string payload, string moduleName = null)
         {
             if (moduleName == null && !_commandToModuleNames.TryGetValue(command, out moduleName))

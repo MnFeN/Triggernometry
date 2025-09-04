@@ -193,6 +193,7 @@
     <Compile Include="FFXIV\Entity.cs" />
     <Compile Include="FFXIV\JobList.cs" />
     <Compile Include="FFXIV\Job.cs" />
+    <Compile Include="PluginBridges\BridgeNamazu\Modules\ExecuteCommandModule.cs" />
     <Compile Include="PluginBridges\BridgeNamazu\Vfx\StaticVfx.cs" />
     <Compile Include="PluginBridges\BridgeNamazu\Vfx\ActorVfx.cs" />
     <Compile Include="PluginBridges\BridgeNamazu\Vfx\Vfx.cs" />
