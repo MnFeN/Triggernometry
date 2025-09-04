@@ -74,18 +74,9 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
             {
                 return func();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.Message.Contains("InjectionFinishedEvent was never fired"))
             {
-                if (ex.Message?.Contains("Process must have frozen or gotten out of sync: InjectionFinishedEvent was never fired") == true)
-                {
-                    MessageBox.Show($"调用函数时游戏崩溃。这可能是由于以下原因：\n\n" +
-                        $"  1. 你上次关闭游戏后重新开启了游戏，但未重启 ACT；\n" +
-                        $"  2. 你开启了冲突的卫月插件。（注：绘图类插件没有已知冲突）\n\n" +
-                        $"建议重启 ACT 以防再次崩溃。\n\n" +
-                        $"详细信息：\n{ex}",
-                        "鲶鱼精邮差扩展", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                throw;
+                throw new Exception($"调用函数时游戏无响应，疑似崩溃，可能是开启了冲突的卫月插件等原因所致。建议重启 ACT 以防再次崩溃。\n\n", ex);
             }
         }
 

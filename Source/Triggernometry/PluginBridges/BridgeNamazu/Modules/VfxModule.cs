@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
@@ -241,13 +242,31 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             vfx.ScheduleRemove(t);
         }
 
+        byte[] staticVfxCreateBytesDebug;
+        DateTime lastRead;
+
         public StaticVfx StaticVfxCreate(string fullPath, string tag = Vfx.Vfx.DefaultTag)
         {
             CheckIfAnyZeroPtr(StaticVfxCreatePtr, StaticVfxRunPtr, StaticVfxRemovePtr);
             const string pool = "Client.System.Scheduler.Instance.VfxObject";
             var vfxPtr = Memory.WithAllocatedString2(fullPath, pool, Encoding.UTF8, 
                 (fullPathPtr, poolPtr) => {
-                    return Memory.CallInjected64<IntPtr>(StaticVfxCreatePtr, fullPathPtr, poolPtr);
+                    try
+                    {
+                        // debug：为什么会炸游戏
+                        if (staticVfxCreateBytesDebug == null || (DateTime.Now - lastRead).TotalSeconds > 3)
+                        {
+                            staticVfxCreateBytesDebug = Memory.ReadBytes(StaticVfxCreatePtr, 30);
+                            lastRead = DateTime.Now;
+                        }
+                        return Memory.CallInjected64<IntPtr>(StaticVfxCreatePtr, fullPathPtr, poolPtr);
+                    }
+                    catch
+                    {
+                        string hexDump = string.Join(" ", staticVfxCreateBytesDebug.Select(b => $"{b:X2}"));
+                        RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, $"[Debug] 反馈错误请复制这几条完整信息：StaticVfxCreate {hexDump}");
+                        throw;
+                    }
                 }
             );
             var vfx = new StaticVfx()
