@@ -14,6 +14,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public IntPtr GetStatusIndexPtr;
         public IntPtr RemoveStatusPtr;
 
+        /// <summary> 实体初始坐标相对于实体地址的偏移。</summary>
+        public Func<int> DefaultPosOffset = () => 0x10;
         /// <summary> 实体 ID 相对于实体地址的偏移。</summary>
         public Func<int> IdOffset = () => Plugin.IsCN ? 0x74 : 0x78; // 6.0 / 7.3
         /// <summary> 实体坐标相对于实体地址的偏移。</summary>
@@ -99,6 +101,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             }
         }
 
+        [CallbackMethod("SetDefaultPos")]
+        internal void CbSetDefaultPos(string cmd)
+        {
+            CheckBeforeExecution(cmd);
+            var (objectPtr, x, y, z) = ParseArgs<IntPtr, float, float, float>(cmd);
+            Memory.ExecuteWithLock(() => SetDefaultPos(objectPtr, x, y, z));
+        }
+
         [CallbackMethod("SetPos", tag: "Kairos")]
         internal void CbSetPos(string cmd)
         {
@@ -122,6 +132,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var objectPtr = Triggernometry.FFXIV.Entity.GetMyself().Address;
             var (x, y, z) = ParseArgs<float, float, float>(cmd);
             Memory.ExecuteWithLock(() => SetPos(objectPtr, x, y, z));
+        }
+
+        [CallbackMethod("SetDefaultHeading")]
+        internal void CbSetDefaultHeading(string cmd)
+        {
+            CheckBeforeExecution(cmd);
+            var (objectPtr, heading) = ParseArgs<IntPtr, float>(cmd);
+            Memory.ExecuteWithLock(() => SetDefaultHeading(objectPtr, heading));
         }
 
         [CallbackMethod("SetHeading")]
@@ -227,7 +245,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             Vector3 pos = new Vector3(x, z, y); // 注意 Y Z 轴交换
             IntPtr modelAddress = Memory.Read<IntPtr>(objectAddress + ModelOffset());
             Memory.Write(objectAddress + PosOffset(), pos);
-            Memory.Write(modelAddress + ModelPosOffset(), pos);
+            if (modelAddress != IntPtr.Zero)
+                Memory.Write(modelAddress + ModelPosOffset(), pos);
+        }
+
+        public void SetDefaultPos(IntPtr objectAddress, float x, float y, float z)
+        {
+            Vector3 pos = new Vector3(x, z, y); // 注意 Y Z 轴交换
+            Memory.Write(objectAddress + DefaultPosOffset(), pos);
         }
 
         public void SetModelRelPos(IntPtr objectAddress, float dx, float dy, float dz)
@@ -243,6 +268,11 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             // 四元数
             Memory.Write(modelAddress + ModelPosOffset() + 0x14, (float)Math.Sin(h / 2));
             Memory.Write(modelAddress + ModelPosOffset() + 0x1C, (float)Math.Cos(h / 2));
+        }
+
+        public void SetDefaultHeading(IntPtr objectAddress, float h)
+        {
+            Memory.Write(objectAddress + DefaultPosOffset() + 0x10, h);
         }
 
         public void Target(IntPtr address, bool hard = true, bool soft = true)
