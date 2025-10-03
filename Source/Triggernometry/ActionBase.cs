@@ -283,6 +283,15 @@ namespace Triggernometry
             }
         }
 
+        /// <summary> A string tag used in trigger/folder actions to interrupt specific actions. </summary>
+        private string _Tag { get; set; } = null;
+        [XmlAttribute]
+        public string Tag
+        {
+            get => string.IsNullOrWhiteSpace(_Tag) ? _Tag : null;
+            set => _Tag = value;
+        }
+
         private string Capitalize(string str)
         {
             if (str == null)

@@ -265,6 +265,15 @@ namespace Triggernometry
             }
         }
 
+        /// <summary> A string tag used in trigger/folder actions to interrupt specific actions. </summary>
+        internal string _Tag { get; set; } = null;
+        [XmlAttribute]
+        public string Tag
+        {
+            get => string.IsNullOrWhiteSpace(_Tag) ? _Tag : null;
+            set => _Tag = value;
+        }
+
         internal ConditionGroup _Condition = new ConditionGroup { Enabled = false };
         public ConditionGroup Condition
         {
@@ -595,7 +604,10 @@ namespace Triggernometry
                                     temp += I18n.Translate("internal/Action/desctrigcancel", "cancel all actions queued from trigger ({0})", t.Name);
                                     break;
                                 case TriggerOpEnum.CancelAllTrigger:
-                                    temp += I18n.Translate("internal/Action/desctrigcancelall", "cancel all actions queued from all triggers");
+                                    if (string.IsNullOrWhiteSpace(_TriggerActionTag))
+                                        temp += I18n.Translate("internal/Action/desctrigcancelall", "cancel all actions queued from all triggers");
+                                    else
+                                        temp += I18n.Translate("internal/Action/desctrigcancelregex", "cancel all actions matching regex {0}", _TriggerActionTag);
                                     break;
                                 case TriggerOpEnum.FireTrigger:
 
@@ -3961,8 +3973,11 @@ namespace Triggernometry
                                 switch (_TriggerOp)
                                 {
                                     case TriggerOpEnum.CancelAllTrigger:
-                                        plug.ClearActionQueue();
-                                        break;
+                                        if (string.IsNullOrWhiteSpace(_TriggerActionTag))
+                                            plug.ClearActionQueue();
+                                        else
+                                            plug.CancelAllQueuedActionsMatchingTag(_TriggerActionTag);
+                                            break;
                                     case TriggerOpEnum.CancelTrigger:
                                         plug.CancelAllQueuedActionsFromTrigger(t);
                                         break;
@@ -4298,6 +4313,7 @@ namespace Triggernometry
             a._TriggerOp = _TriggerOp;
             a._TriggerText = _TriggerText;
             a._TriggerZone = _TriggerZone;
+            a._TriggerActionTag = _TriggerActionTag;
             a._TriggerForceType = _TriggerForceType;
             a._AuraOp = _AuraOp;
             a._AuraName = _AuraName;

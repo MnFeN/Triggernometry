@@ -409,6 +409,7 @@ namespace Triggernometry.Forms
                 cbxTriggerOp.SelectedIndex = 0;
                 expTriggerText.Expression = "";
                 expTriggerZone.Expression = "";
+                expTriggerActionTag.Expression = "";
                 cbxAuraOp.SelectedIndex = 0;
                 cbxAuraDisplay.SelectedIndex = 0;
                 expAuraName.Expression = "";
@@ -624,6 +625,7 @@ namespace Triggernometry.Forms
                 cbxFolderOp.SelectedIndex = (int)a._FolderOp;
                 expTriggerZone.Expression = a._TriggerZone;
                 expTriggerText.Expression = a._TriggerText;
+                expTriggerActionTag.Expression = a._TriggerActionTag;
                 cbxAuraOp.SelectedIndex = (int)a._AuraOp;
                 switch (a._AuraImageMode)
                 {
@@ -918,6 +920,7 @@ namespace Triggernometry.Forms
             }
             a._TriggerForceType = newval;
             a._TriggerText = expTriggerText.Expression;
+            a._TriggerActionTag = expTriggerActionTag.Expression;
             a._TriggerZone = expTriggerZone.Expression;
             a._AuraOp = (Action.AuraOpEnum)cbxAuraOp.SelectedIndex;
             switch (cbxAuraDisplay.SelectedIndex)
@@ -1190,6 +1193,7 @@ namespace Triggernometry.Forms
         {
             expTriggerText.Enabled = (cbxTriggerOp.SelectedIndex == 0 && cbxFiringOptions.CheckedIndices.Contains(0) == false);
             expTriggerZone.Enabled = (cbxTriggerOp.SelectedIndex == 0 && cbxFiringOptions.CheckedIndices.Contains(0) == false);
+            expTriggerActionTag.Enabled = cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.CancelAllTrigger;
             cbxFiringOptions.Enabled = (cbxTriggerOp.SelectedIndex == 0);
             trvTrigger.Enabled = (cbxTriggerOp.SelectedIndex != 4);
         }
@@ -2078,6 +2082,11 @@ namespace Triggernometry.Forms
         private void expTriggerText_EnabledChanged(object sender, EventArgs e)
         {
             lblTriggerText.Enabled = expTriggerText.Enabled;
+        }
+
+        private void expTriggerActionTag_EnabledChanged(object sender, EventArgs e)
+        {
+            lblTriggerActionTag.Enabled = expTriggerActionTag.Enabled;
         }
 
         private void expTriggerZone_EnabledChanged(object sender, EventArgs e)

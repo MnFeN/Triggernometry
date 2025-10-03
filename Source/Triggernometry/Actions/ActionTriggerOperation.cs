@@ -218,9 +218,21 @@ namespace Triggernometry.Actions
         }
 
         /// <summary>
-        /// Trigger force firing flags
+        /// Action tag (to interrupt actions)
         /// </summary>
         [ActionAttribute(ordernum: 6)]
+        internal string _ActionTag { get; set; } = "";
+        [XmlAttribute]
+        public string ActionTag
+        {
+            get => string.IsNullOrWhiteSpace(_ActionTag) ? null : _ActionTag;
+            set => _ActionTag = value;
+        }
+
+        /// <summary>
+        /// Trigger force firing flags
+        /// </summary>
+        [ActionAttribute(ordernum: 7)]
         private ForceEnum _Force { get; set; } = ForceEnum.NoSkip;
         [XmlAttribute]
         public string Force
@@ -317,7 +329,10 @@ namespace Triggernometry.Actions
                     case OperationEnum.CancelTrigger:
                         return I18n.Translate("internal/Action/desctrigcancel", "cancel all actions queued from trigger ({0})", t.Name);                        
                     case OperationEnum.CancelAllTrigger:
-                        return I18n.Translate("internal/Action/desctrigcancelall", "cancel all actions queued from all triggers");                        
+                        if (string.IsNullOrWhiteSpace(_ActionTag))
+                            return I18n.Translate("internal/Action/desctrigcancelall", "cancel all actions queued from all triggers");
+                        else
+                            return I18n.Translate("internal/Action/desctrigcancelregex", "cancel all actions matching regex {0}", _ActionTag);
                     case OperationEnum.FireTrigger:
                         string temp = I18n.Translate("internal/Action/desctrigfire", "fire trigger ({0})", t.Name);
                         List<string> ex = new List<string>();
@@ -383,7 +398,10 @@ namespace Triggernometry.Actions
                 switch (_Operation)
                 {
                     case OperationEnum.CancelAllTrigger:
-                        ctx.plug.ClearActionQueue();
+                        if (string.IsNullOrWhiteSpace(_ActionTag))
+                            RealPlugin.plug.ClearActionQueue();
+                        else
+                            RealPlugin.plug.CancelAllQueuedActionsMatchingTag(_ActionTag);
                         break;
                     case OperationEnum.CancelTrigger:
                         ctx.plug.CancelAllQueuedActionsFromTrigger(t);

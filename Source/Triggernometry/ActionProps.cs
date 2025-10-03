@@ -3101,6 +3101,14 @@ namespace Triggernometry
             }
         }
 
+        internal string _TriggerActionTag = "";
+        [XmlAttribute]
+        public string TriggerActionTag
+        {
+            get => string.IsNullOrWhiteSpace(_TriggerActionTag) ? null : _TriggerActionTag;
+            set => _TriggerActionTag = value;
+        }
+
         [XmlIgnore]
         internal TriggerForceTypeEnum _TriggerForceType { get; set; } = TriggerForceTypeEnum.NoSkip;
         [XmlAttribute]

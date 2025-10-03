@@ -123,7 +123,30 @@ namespace Triggernometry
                     ActionUpdateEvent.Set();
                 }
             }
-            t.AddToLog(this, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/queuedactscancelled", "{0} queued action(s) from trigger '{1}' cancelled", remd, t.LogName));
+            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/queuedactscancelled", "{0} queued action(s) from trigger '{1}' cancelled", remd, t.LogName));
+        }
+
+        internal void CancelAllQueuedActionsMatchingTag(string tagRegex)
+        {
+            if (string.IsNullOrWhiteSpace(tagRegex))
+                throw new ArgumentException($"tagRegex should not be empty");
+            int count;
+            lock (ActionQueue)
+            {
+                var regex = new Regex(tagRegex);
+                var matchedActions = ActionQueue.Where(qa => regex.Match(qa.act?.Tag ?? "").Success).ToList();
+                if (matchedActions.Count > 0)
+                {
+                    foreach (QueuedAction qa in matchedActions)
+                    {
+                        ActionQueue.Remove(qa);
+                    }
+                    ActionQueue.Sort();
+                    ActionUpdateEvent.Set();
+                }
+                count = matchedActions.Count;
+            }
+            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/queuedactscancelledtag", "{0} queued action(s) matching '{1}' cancelled", count, tagRegex));
         }
 
         internal Action QueueActions(Context ctx, DateTime startingFrom, IEnumerable<Action> actions, bool sequential, RealPlugin.MutexInformation mtx, Context.LoggerDelegate logger)

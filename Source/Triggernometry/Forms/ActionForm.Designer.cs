@@ -383,6 +383,8 @@ namespace Triggernometry.Forms
             this.lblTrigger = new System.Windows.Forms.Label();
             this.expTriggerText = new Triggernometry.CustomControls.ExpressionTextBox();
             this.lblTriggerText = new System.Windows.Forms.Label();
+            this.expTriggerActionTag = new Triggernometry.CustomControls.ExpressionTextBox();
+            this.lblTriggerActionTag = new System.Windows.Forms.Label();
             this.lblTriggerOp = new System.Windows.Forms.Label();
             this.cbxTriggerOp = new System.Windows.Forms.ComboBox();
             this.trvTrigger = new System.Windows.Forms.TreeView();
@@ -5698,18 +5700,20 @@ namespace Triggernometry.Forms
             this.tableLayoutPanel10.ColumnCount = 2;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel10.Controls.Add(this.lblTriggerZoneType, 0, 2);
-            this.tableLayoutPanel10.Controls.Add(this.cbxTriggerZoneType, 1, 2);
-            this.tableLayoutPanel10.Controls.Add(this.lblFiringOptions, 0, 4);
-            this.tableLayoutPanel10.Controls.Add(this.expTriggerZone, 1, 3);
-            this.tableLayoutPanel10.Controls.Add(this.lblTriggerZone, 0, 3);
-            this.tableLayoutPanel10.Controls.Add(this.lblTrigger, 0, 6);
-            this.tableLayoutPanel10.Controls.Add(this.expTriggerText, 1, 1);
-            this.tableLayoutPanel10.Controls.Add(this.lblTriggerText, 0, 1);
             this.tableLayoutPanel10.Controls.Add(this.lblTriggerOp, 0, 0);
             this.tableLayoutPanel10.Controls.Add(this.cbxTriggerOp, 1, 0);
+            this.tableLayoutPanel10.Controls.Add(this.lblTriggerText, 0, 1);
+            this.tableLayoutPanel10.Controls.Add(this.expTriggerText, 1, 1);
+            this.tableLayoutPanel10.Controls.Add(this.lblTriggerZoneType, 0, 2);
+            this.tableLayoutPanel10.Controls.Add(this.cbxTriggerZoneType, 1, 2);
+            this.tableLayoutPanel10.Controls.Add(this.lblTriggerZone, 0, 3);
+            this.tableLayoutPanel10.Controls.Add(this.expTriggerZone, 1, 3);
+            this.tableLayoutPanel10.Controls.Add(this.lblTriggerActionTag, 0, 4);
+            this.tableLayoutPanel10.Controls.Add(this.expTriggerActionTag, 1, 4);
+            this.tableLayoutPanel10.Controls.Add(this.lblFiringOptions, 0, 5);
+            this.tableLayoutPanel10.Controls.Add(this.cbxFiringOptions, 1, 5);
+            this.tableLayoutPanel10.Controls.Add(this.lblTrigger, 0, 6);
             this.tableLayoutPanel10.Controls.Add(this.trvTrigger, 1, 6);
-            this.tableLayoutPanel10.Controls.Add(this.cbxFiringOptions, 1, 4);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel10.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
@@ -5718,8 +5722,8 @@ namespace Triggernometry.Forms
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel10.Size = new System.Drawing.Size(742, 414);
@@ -5830,6 +5834,33 @@ namespace Triggernometry.Forms
             this.lblTriggerText.TabIndex = 28;
             this.lblTriggerText.Text = "Event text for firing";
             this.lblTriggerText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // expTriggerActionTag
+            // 
+            this.expTriggerActionTag.AutocompleteAvailable = true;
+            this.expTriggerActionTag.AutofillType = Triggernometry.CustomControls.ExpressionTextBox.AutofillTypeEnum.None;
+            this.expTriggerActionTag.AutoSize = true;
+            this.expTriggerActionTag.Dock = System.Windows.Forms.DockStyle.Top;
+            this.expTriggerActionTag.Expression = "";
+            this.expTriggerActionTag.ExpressionType = Triggernometry.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.String;
+            this.expTriggerActionTag.IsPersistent = false;
+            this.expTriggerActionTag.Location = new System.Drawing.Point(104, 30);
+            this.expTriggerActionTag.Name = "expTriggerActionTag";
+            this.expTriggerActionTag.ReadOnly = false;
+            this.expTriggerActionTag.Size = new System.Drawing.Size(635, 20);
+            this.expTriggerActionTag.TabIndex = 16;
+            this.expTriggerActionTag.EnabledChanged += new System.EventHandler(this.expTriggerActionTag_EnabledChanged);
+            // 
+            // lblTriggerActionTag
+            // 
+            this.lblTriggerActionTag.AutoSize = true;
+            this.lblTriggerActionTag.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTriggerActionTag.Location = new System.Drawing.Point(3, 27);
+            this.lblTriggerActionTag.Name = "lblTriggerActionTag";
+            this.lblTriggerActionTag.Size = new System.Drawing.Size(95, 26);
+            this.lblTriggerActionTag.TabIndex = 28;
+            this.lblTriggerActionTag.Text = "Action Tag Regex";
+            this.lblTriggerActionTag.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblTriggerOp
             // 
@@ -6863,6 +6894,8 @@ namespace Triggernometry.Forms
         private System.Windows.Forms.Label lblTrigger;
         private CustomControls.ExpressionTextBox expTriggerText;
         private System.Windows.Forms.Label lblTriggerText;
+        private CustomControls.ExpressionTextBox expTriggerActionTag;
+        private System.Windows.Forms.Label lblTriggerActionTag;
         private System.Windows.Forms.Label lblTriggerOp;
         private System.Windows.Forms.ComboBox cbxTriggerOp;
         private CustomControls.ExpressionTextBox expTriggerZone;
