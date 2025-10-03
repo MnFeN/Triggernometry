@@ -24,10 +24,9 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     "E8 * * * * 80 7B 1D 01", nameof(GetUiModulePtr));
                 // FFXIVClientStructs/FFXIV/Client/UI/RaptureAtkModule.cs
                 ShowTextGimmickHintPtr = Scanner.TryScanMultiple(new string[] {
-                    "48 ?? ?? 0F 84 ?? ?? ?? ?? 4C ?? ?? 49 89 5B ?? 49 89 73", // 7.0
-                    "44 8B CB 41 B0 ? 48 8B D0 48 8B CF E8 * * * * E9", // 7.3
-                    "44 8B CB 45 33 C0 48 8B D0 48 8B CF E8 * * * * E9", // 7.3
                     "48 85 D2 0F 84 ?? ?? ?? ?? 4C 8B DC 49 89 6B ?? 56", // 7.3 原始
+                    "44 8B CB 45 33 C0 48 8B D0 48 8B CF E8 * * * * E9", // 7.3
+                    "44 8B CB 41 B0 01 48 8B D0 48 8B CF E8 * * * * E9", // 7.3 备用签名
                 }, nameof(ShowTextGimmickHintPtr));
             };
         }

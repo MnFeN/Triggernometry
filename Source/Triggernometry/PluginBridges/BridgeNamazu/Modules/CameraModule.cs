@@ -143,21 +143,21 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             }
         }
 
-        public Dictionary<string, int> OffsetsCN = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        public Dictionary<string, int> OffsetsCN = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase) // 7.3
         {
-            { "Distance", 0x114 },
-            { "MinDistance", 0x118 },
-            { "MaxDistance", 0x11C },
-            { "FoV", 0x120 },
-            { "MinFoV", 0x124 },
-            { "MaxFoV", 0x128 },
-            { "AngleH", 0x130 }, // 这个角度似乎不是底层的数值，手动修改（增加或减少）时，改变量的绝对值 dθ 会变为 max(dθ - pi/40, 0)
-            { "AngleV", 0x134 }, // 上 -pi/2   下 pi/2
-            { "MinAngleV", 0x148 },
-            { "MaxAngleV", 0x14C },
+            { "Distance", 0x124 },
+            { "MinDistance", 0x128 },
+            { "MaxDistance", 0x12C },
+            { "FoV", 0x130 },
+            { "MinFoV", 0x134 },
+            { "MaxFoV", 0x138 },
+            { "AngleH", 0x140 }, // 这个角度似乎不是底层的数值，手动修改（增加或减少）时，改变量的绝对值 dθ 会变为 max(dθ - pi/40, 0)
+            { "AngleV", 0x144 }, // 上 -pi/2   下 pi/2
+            { "MinAngleV", 0x158 },
+            { "MaxAngleV", 0x15C },
         };
 
-        public Dictionary<string, int> OffsetsGlobal = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        public Dictionary<string, int> OffsetsGlobal = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)  // 7.3
         {
             { "Distance", 0x124 },
             { "MinDistance", 0x128 },

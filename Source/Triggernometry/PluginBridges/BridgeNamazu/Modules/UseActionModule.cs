@@ -19,8 +19,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 UseActionPtr = Scanner.TryScan(
                     "E8 * * * * B0 01 EB B6", nameof(UseActionPtr));
                 UseActionLocationPtr = Scanner.TryScanMultiple(new string[] {
-                    "E8 * * * * 41 3A C5 0F 85", // 7.0
-                    "E8 * * * * 40 3A C7 0F 85", // 7.3 多了一个参数 国服同步之后需要改
+                    "E8 * * * * 40 3A C7 0F 85", // 7.3
                 }, nameof(UseActionLocationPtr));
                 ActionManagerPtr = Scanner.TryScan(
                     "48 8D 0D * * * * F3 0F 10 13", nameof(ActionManagerPtr));
@@ -79,14 +78,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             {
                 posPtr = Memory.AllocateMemory(0x10);
                 Memory.Write(posPtr, new Vector3(x, z, y));
-                if (Plugin.IsCN)
-                {
-                    result = Memory.CallInjected64<bool>(UseActionLocationPtr, ActionManagerPtr, (byte)actionType, actionId, targetId, posPtr, extraParam);
-                }
-                else
-                {
-                    result = Memory.CallInjected64<bool>(UseActionLocationPtr, ActionManagerPtr, (byte)actionType, actionId, targetId, posPtr, extraParam, /*unknown bool*/(byte)0);
-                }
+                result = Memory.CallInjected64<bool>(UseActionLocationPtr, ActionManagerPtr, 
+                    (byte)actionType, actionId, targetId, posPtr, extraParam, /*unknown bool*/(byte)0);
             }
             finally
             {
