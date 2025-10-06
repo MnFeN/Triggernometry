@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Costura;
+// using Costura;
 using System.Drawing;
 using System.Threading;
 using System.Diagnostics;
@@ -33,7 +33,7 @@ namespace TriggernometryProxy
         
         public ProxyPlugin()
         {
-            CosturaUtility.Initialize();
+            // CosturaUtility.Initialize();
         }
 
         public int RegisterNamedCallback(string name, CustomCallbackDelegate callback, object o, string registrant)

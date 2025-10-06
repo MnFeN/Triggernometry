@@ -1,791 +1,101 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CA86FD05-FB30-4923-BB27-638CA9CBAFCD}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Triggernometry</RootNamespace>
-    <AssemblyName>TriggernometryPlugin</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe</StartProgram>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe</StartProgram>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="CsvHelper, Version=27.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>..\packages\CsvHelper.27.2.1\lib\net45\CsvHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.4.1.0\lib\netstandard2.0\Microsoft.CodeAnalysis.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.4.1.0\lib\netstandard2.0\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp.Scripting, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Scripting.4.1.0\lib\netstandard2.0\Microsoft.CodeAnalysis.CSharp.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.Scripting, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Scripting.Common.4.1.0\lib\netstandard2.0\Microsoft.CodeAnalysis.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Collections.Immutable, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.5.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reflection.Metadata, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reflection.Metadata.5.0.0\lib\net461\System.Reflection.Metadata.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Speech" />
-    <Reference Include="System.Text.Encoding.CodePages, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encoding.CodePages.4.5.1\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Text.Json, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Text.Json.8.0.4\lib\net462\System.Text.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ActionBase.cs" />
-    <Compile Include="ActionProps.cs" />
-    <Compile Include="Actions\ActionActInteraction.cs" />
-    <Compile Include="Actions\ActionBeep.cs" />
-    <Compile Include="Actions\ActionDiscordWebhook.cs" />
-    <Compile Include="Actions\ActionDiskOperation.cs" />
-    <Compile Include="Actions\ActionExecuteScript.cs" />
-    <Compile Include="Actions\ActionFolderOperation.cs" />
-    <Compile Include="Actions\ActionJsonRequest.cs" />
-    <Compile Include="Actions\ActionKeypress.cs" />
-    <Compile Include="Actions\ActionLaunchProcess.cs" />
-    <Compile Include="Actions\ActionLiveSplitControl.cs" />
-    <Compile Include="Actions\ActionLogMessage.cs" />
-    <Compile Include="Actions\ActionLoop.cs" />
-    <Compile Include="Actions\ActionMessageBox.cs" />
-    <Compile Include="Actions\ActionMouse.cs" />
-    <Compile Include="Actions\ActionMutex.cs" />
-    <Compile Include="Actions\ActionNamedCallback.cs" />
-    <Compile Include="Actions\ActionObsControl.cs" />
-    <Compile Include="Actions\ActionOverlayImage.cs" />
-    <Compile Include="Actions\ActionOverlayText.cs" />
-    <Compile Include="Actions\ActionPlaceholder.cs" />
-    <Compile Include="Actions\ActionPlaySound.cs" />
-    <Compile Include="Actions\ActionPlaySpeech.cs" />
-    <Compile Include="Actions\ActionRepository.cs" />
-    <Compile Include="Actions\ActionVariableDict.cs" />
-    <Compile Include="Actions\ActionVariableList.cs" />
-    <Compile Include="Actions\ActionVariableScalar.cs" />
-    <Compile Include="Actions\ActionTriggerOperation.cs" />
-    <Compile Include="Actions\ActionVariableTable.cs" />
-    <Compile Include="Actions\ActionWindowMessage.cs" />
-    <Compile Include="Aura\Aura.cs" />
-    <Compile Include="Aura\AuraImage.cs" />
-    <Compile Include="Aura\AuraText.cs" />
-    <Compile Include="Aura\Manager.cs" />
-    <Compile Include="Aura\Renderer\Winforms.cs" />
-    <Compile Include="Aura\Renderer\RendererBase.cs" />
-    <Compile Include="Aura\Renderer\Scarborough.cs" />
-    <Compile Include="Context\Context.cs" />
-    <Compile Include="Context\ContextOld.cs" />
-    <Compile Include="CustomControls\ActionEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\ActionEditor.Designer.cs">
-      <DependentUpon>ActionEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\PartyListPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FFXIV\GameLanguage.cs" />
-    <Compile Include="FFXIV\Status.cs" />
-    <Compile Include="FFXIV\Entity.cs" />
-    <Compile Include="FFXIV\JobList.cs" />
-    <Compile Include="FFXIV\Job.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\ExecuteCommandModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Vfx\StaticVfx.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Vfx\ActorVfx.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Vfx\Vfx.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Vfx\_VfxList.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Vfx\_VfxStruct.cs" />
-    <Compile Include="Forms\GameConfigForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\GameConfigForm.Designer.cs">
-      <DependentUpon>GameConfigForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SimpleInputForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SimpleInputForm.Designer.cs">
-      <DependentUpon>SimpleInputForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MlmDecryption.cs" />
-    <Compile Include="CustomControls\ActionViewer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\ActionViewer.Designer.cs">
-      <DependentUpon>ActionViewer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\ConditionViewer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\ConditionViewer.Designer.cs">
-      <DependentUpon>ConditionViewer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\MenuButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControls\MenuButton.Designer.cs">
-      <DependentUpon>MenuButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\PersistenceSwitch.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\PersistenceSwitch.Designer.cs">
-      <DependentUpon>PersistenceSwitch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\PrettyCaption.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\PrettyCaption.Designer.cs">
-      <DependentUpon>PrettyCaption.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\ReadonlyRichTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControls\Toast.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\Toast.Designer.cs">
-      <DependentUpon>Toast.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Debug.cs" />
-    <Compile Include="CustomControls\TriggerEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\TriggerEditor.Designer.cs">
-      <DependentUpon>TriggerEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Endpoint.cs" />
-    <Compile Include="Forms\AboutForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AboutForm.Designer.cs">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Action.cs" />
-    <Compile Include="Forms\ActionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForm.Designer.cs">
-      <DependentUpon>ActionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\AuraContainerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AuraContainerForm.Designer.cs">
-      <DependentUpon>AuraContainerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\AuraDesignForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AuraDesignForm.Designer.cs">
-      <DependentUpon>AuraDesignForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\AutoCompleteForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AutoCompleteForm.Designer.cs">
-      <DependentUpon>AutoCompleteForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\BenchmarkForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BenchmarkForm.Designer.cs">
-      <DependentUpon>BenchmarkForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\BenchmarkProgressForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BenchmarkProgressForm.Designer.cs">
-      <DependentUpon>BenchmarkProgressForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\ClickthroughPictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControls\ClickthroughPictureBox.Designer.cs">
-      <DependentUpon>ClickthroughPictureBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\ColorSelector.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\ColorSelector.Designer.cs">
-      <DependentUpon>ColorSelector.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Condition.cs" />
-    <Compile Include="ConditionComponent.cs" />
-    <Compile Include="ConditionGroup.cs" />
-    <Compile Include="ConditionSingle.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="Forms\ConfigurationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigurationForm.Designer.cs">
-      <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Context.cs" />
-    <Compile Include="CustomControls\DataGridViewEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControls\DataGridViewEx.Designer.cs">
-      <DependentUpon>DataGridViewEx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ConfigurationForm2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigurationForm2.Designer.cs">
-      <DependentUpon>ConfigurationForm2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ExportForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ExportForm.Designer.cs">
-      <DependentUpon>ExportForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\ExpressionTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\ExpressionTextBox.Designer.cs">
-      <DependentUpon>ExpressionTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Folder.cs" />
-    <Compile Include="Forms\FolderForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FolderForm.Designer.cs">
-      <DependentUpon>FolderForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportForm.Designer.cs">
-      <DependentUpon>ImportForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\KeyListenForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\KeyListenForm.Designer.cs">
-      <DependentUpon>KeyListenForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\LogForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\LogForm.Designer.cs">
-      <DependentUpon>LogForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\RepositoryListForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\RepositoryListForm.Designer.cs">
-      <DependentUpon>RepositoryListForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SearchForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SearchForm.Designer.cs">
-      <DependentUpon>SearchForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SubstitutionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SubstitutionForm.Designer.cs">
-      <DependentUpon>SubstitutionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\TriggerForm2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\TriggerForm2.Designer.cs">
-      <DependentUpon>TriggerForm2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\VariableEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\VariableEditorForm.Designer.cs">
-      <DependentUpon>VariableEditorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="I18n.cs" />
-    <Compile Include="InternalLog.cs" />
-    <Compile Include="Interpreter.cs" />
-    <Compile Include="FFXIV\Job_old.cs" />
-    <Compile Include="JsonPath\JsonPath.cs" />
-    <Compile Include="JsonPath\Public.cs" />
-    <Compile Include="Language.cs" />
-    <Compile Include="LogLine.cs" />
-    <Compile Include="MathParser.cs" />
-    <Compile Include="Forms\MemoryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PluginBridges\BridgeNamazu\NamazuConfig.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\InstanceAfkTimerModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\CameraModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\EnvironmentEffectModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\AbilityRangeCheckModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\MovementModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\PictoACTModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\UseActionModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\VfxModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\_ModuleBase.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\EntityModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\ShowTextGimmickHintModule.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\Modules\QuitInstanceModule.cs" />
-    <Compile Include="Utilities\DataStringHelper.cs" />
-    <Compile Include="Utilities\Math\EquationHelper.cs" />
-    <Compile Include="Utilities\Math\IsoscelesTriangle.cs" />
-    <Compile Include="Utilities\Math\Polygon.cs" />
-    <Compile Include="Utilities\Memory.cs" />
-    <Compile Include="ObsController.cs" />
-    <Compile Include="LiveSplitController.cs" />
-    <Compile Include="Parser.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\GreyMagicExternalProcessMemory.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\BridgeNamazu.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\NamazuPlugin.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\NamazuScanner.cs" />
-    <Compile Include="PluginBridges\BridgeNamazu\GreyMagicMemoryBase.cs" />
-    <Compile Include="PluginBridges\BridgeOverlay\ModuleAtkStageMemory.cs" />
-    <Compile Include="PluginBridges\BridgeOverlay\ModuleAlliance.cs" />
-    <Compile Include="PluginBridges\BridgeOverlay\ModuleEvents.cs" />
-    <Compile Include="PluginBridges\BridgeOverlay\ModuleInCombat.cs" />
-    <Compile Include="PluginBridges\BridgeOverlay\ModuleCombatants.cs" />
-    <Compile Include="PluginBridges\BridgeOverlay\BridgeOverlay.cs" />
-    <Compile Include="RealPlugin\RealPlugin.Helper.cs" />
-    <Compile Include="RealPlugin\RealPlugin.Config.cs" />
-    <Compile Include="RealPlugin\RealPlugin.Scripting.cs" />
-    <Compile Include="RealPlugin\RealPlugin.I18n.cs" />
-    <Compile Include="RealPlugin\RealPlugin.Trigger.cs" />
-    <Compile Include="RealPlugin\RealPlugin.InternalLog.cs" />
-    <Compile Include="RealPlugin\RealPlugin.ActionQueue.cs" />
-    <Compile Include="RealPlugin\RealPlugin.Aura.cs" />
-    <Compile Include="RealPlugin\RealPlugin.Audio.cs" />
-    <Compile Include="RealPlugin\RealPlugin.CN.cs" />
-    <Compile Include="RealPlugin\RealPlugin.Update.cs" />
-    <Compile Include="RealPlugin\RealPlugin.NamedCallback.cs" />
-    <Compile Include="Scarborough\OverrideHelper.cs" />
-    <Compile Include="PluginBridges\BridgeFFXIV.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="RealPlugin\RealPlugin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="Forms\RepositoryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\RepositoryForm.Designer.cs">
-      <DependentUpon>RepositoryForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\SplitButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Forms\TestInputForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\TestInputForm.Designer.cs">
-      <DependentUpon>TestInputForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\TreeViewEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControls\TreeViewEx.Designer.cs">
-      <DependentUpon>TreeViewEx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RepositoryFolder.cs" />
-    <Compile Include="RepositoryList.cs" />
-    <Compile Include="Scarborough\Color.cs" />
-    <Compile Include="Scarborough\CrosshairStyle.cs" />
-    <Compile Include="Scarborough\DwmApi.cs" />
-    <Compile Include="Scarborough\DwmApi.Types.cs" />
-    <Compile Include="Scarborough\DynamicImport.cs" />
-    <Compile Include="Scarborough\Font.cs" />
-    <Compile Include="Scarborough\Geometry.cs" />
-    <Compile Include="Scarborough\Graphics.cs" />
-    <Compile Include="Scarborough\Graphics.Primitives.cs" />
-    <Compile Include="Scarborough\GraphicsWindow.cs" />
-    <Compile Include="Scarborough\GraphicsWindow.EventArgs.cs" />
-    <Compile Include="Scarborough\IBrush.cs" />
-    <Compile Include="Scarborough\Image.cs" />
-    <Compile Include="Scarborough\ImagePixelFormats.cs" />
-    <Compile Include="Scarborough\LinearGradientBrush.cs" />
-    <Compile Include="Scarborough\OverlayWindow.cs" />
-    <Compile Include="Scarborough\OverlayWindow.EventArgs.cs" />
-    <Compile Include="Scarborough\Scarborough.cs" />
-    <Compile Include="Scarborough\ScarboroughImage.cs" />
-    <Compile Include="Scarborough\ScarboroughItem.cs" />
-    <Compile Include="Scarborough\ScarboroughText.cs" />
-    <Compile Include="Scarborough\Scene.cs" />
-    <Compile Include="Scarborough\SolidBrush.cs" />
-    <Compile Include="Scarborough\StickyWindow.cs" />
-    <Compile Include="Scarborough\User32.cs" />
-    <Compile Include="Scarborough\User32.Types.cs" />
-    <Compile Include="Scarborough\WindowBounds.cs" />
-    <Compile Include="Scarborough\WindowHelper.cs" />
-    <Compile Include="Scarborough\ThrowHelper.cs" />
-    <Compile Include="SerializableDictionary.cs" />
-    <Compile Include="Trigger.cs" />
-    <Compile Include="Forms\TriggerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\TriggerForm.Designer.cs">
-      <DependentUpon>TriggerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TriggernometryExport.cs" />
-    <Compile Include="CustomControls\UserInterface.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\UserInterface.Designer.cs">
-      <DependentUpon>UserInterface.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Utilities\Math\PolarCoord.cs" />
-    <Compile Include="Utilities\Math\XIVCoord.cs" />
-    <Compile Include="Utilities\Math\CartesianCoord.cs" />
-    <Compile Include="Utilities\MultiLineRawArgs.cs" />
-    <Compile Include="Variables\Variable.cs" />
-    <Compile Include="Variables\VariableScalar.cs" />
-    <Compile Include="Variables\VariableDictionary.cs" />
-    <Compile Include="Forms\StateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\StateForm.Designer.cs">
-      <DependentUpon>StateForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Variables\VariableList.cs" />
-    <Compile Include="Variables\VariableStore.cs" />
-    <Compile Include="Variables\VariableTable.cs" />
-    <Compile Include="WebsocketSharp\ByteOrder.cs" />
-    <Compile Include="WebsocketSharp\CloseEventArgs.cs" />
-    <Compile Include="WebsocketSharp\CloseStatusCode.cs" />
-    <Compile Include="WebsocketSharp\CompressionMethod.cs" />
-    <Compile Include="WebsocketSharp\ErrorEventArgs.cs" />
-    <Compile Include="WebsocketSharp\Ext.cs" />
-    <Compile Include="WebsocketSharp\Fin.cs" />
-    <Compile Include="WebsocketSharp\HttpBase.cs" />
-    <Compile Include="WebsocketSharp\HttpRequest.cs" />
-    <Compile Include="WebsocketSharp\HttpResponse.cs" />
-    <Compile Include="WebsocketSharp\LogData.cs" />
-    <Compile Include="WebsocketSharp\Logger.cs" />
-    <Compile Include="WebsocketSharp\LogLevel.cs" />
-    <Compile Include="WebsocketSharp\Mask.cs" />
-    <Compile Include="WebsocketSharp\MessageEventArgs.cs" />
-    <Compile Include="WebsocketSharp\Net\AuthenticationBase.cs" />
-    <Compile Include="WebsocketSharp\Net\AuthenticationChallenge.cs" />
-    <Compile Include="WebsocketSharp\Net\AuthenticationResponse.cs" />
-    <Compile Include="WebsocketSharp\Net\AuthenticationSchemes.cs" />
-    <Compile Include="WebsocketSharp\Net\Chunk.cs" />
-    <Compile Include="WebsocketSharp\Net\ChunkedRequestStream.cs" />
-    <Compile Include="WebsocketSharp\Net\ChunkStream.cs" />
-    <Compile Include="WebsocketSharp\Net\ClientSslConfiguration.cs" />
-    <Compile Include="WebsocketSharp\Net\Cookie.cs" />
-    <Compile Include="WebsocketSharp\Net\CookieCollection.cs" />
-    <Compile Include="WebsocketSharp\Net\CookieException.cs" />
-    <Compile Include="WebsocketSharp\Net\EndPointListener.cs" />
-    <Compile Include="WebsocketSharp\Net\EndPointManager.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpBasicIdentity.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpConnection.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpDigestIdentity.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpHeaderInfo.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpHeaderType.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpListener.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpListenerAsyncResult.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpListenerContext.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpListenerException.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpListenerPrefix.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpListenerPrefixCollection.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpListenerRequest.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpListenerResponse.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpRequestHeader.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpResponseHeader.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpStatusCode.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpStreamAsyncResult.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpUtility.cs" />
-    <Compile Include="WebsocketSharp\Net\HttpVersion.cs" />
-    <Compile Include="WebsocketSharp\Net\InputChunkState.cs" />
-    <Compile Include="WebsocketSharp\Net\InputState.cs" />
-    <Compile Include="WebsocketSharp\Net\LineState.cs" />
-    <Compile Include="WebsocketSharp\Net\NetworkCredential.cs" />
-    <Compile Include="WebsocketSharp\Net\QueryStringCollection.cs" />
-    <Compile Include="WebsocketSharp\Net\ReadBufferState.cs" />
-    <Compile Include="WebsocketSharp\Net\RequestStream.cs" />
-    <Compile Include="WebsocketSharp\Net\ResponseStream.cs" />
-    <Compile Include="WebsocketSharp\Net\ServerSslConfiguration.cs" />
-    <Compile Include="WebsocketSharp\Net\WebHeaderCollection.cs" />
-    <Compile Include="WebsocketSharp\Net\Websockets\HttpListenerWebSocketContext.cs" />
-    <Compile Include="WebsocketSharp\Net\Websockets\TcpListenerWebSocketContext.cs" />
-    <Compile Include="WebsocketSharp\Net\Websockets\WebSocketContext.cs" />
-    <Compile Include="WebsocketSharp\Opcode.cs" />
-    <Compile Include="WebsocketSharp\PayloadData.cs" />
-    <Compile Include="WebsocketSharp\Rsv.cs" />
-    <Compile Include="WebsocketSharp\Server\HttpRequestEventArgs.cs" />
-    <Compile Include="WebsocketSharp\Server\HttpServer.cs" />
-    <Compile Include="WebsocketSharp\Server\IWebSocketSession.cs" />
-    <Compile Include="WebsocketSharp\Server\ServerState.cs" />
-    <Compile Include="WebsocketSharp\Server\WebSocketBehavior.cs" />
-    <Compile Include="WebsocketSharp\Server\WebSocketServer.cs" />
-    <Compile Include="WebsocketSharp\Server\WebSocketServiceHost.cs" />
-    <Compile Include="WebsocketSharp\Server\WebSocketServiceHost`1.cs" />
-    <Compile Include="WebsocketSharp\Server\WebSocketServiceManager.cs" />
-    <Compile Include="WebsocketSharp\Server\WebSocketSessionManager.cs" />
-    <Compile Include="WebsocketSharp\WebSocket.cs" />
-    <Compile Include="WebsocketSharp\WebSocketException.cs" />
-    <Compile Include="WebsocketSharp\WebSocketFrame.cs" />
-    <Compile Include="WebsocketSharp\WebSocketState.cs" />
-    <Compile Include="Utilities\WindowsUtils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CustomControls\ActionEditor.resx">
-      <DependentUpon>ActionEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\ActionViewer.resx">
-      <DependentUpon>ActionViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\ConditionViewer.resx">
-      <DependentUpon>ConditionViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\PersistenceSwitch.resx">
-      <DependentUpon>PersistenceSwitch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\PrettyCaption.resx">
-      <DependentUpon>PrettyCaption.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\Toast.resx">
-      <DependentUpon>Toast.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\TriggerEditor.resx">
-      <DependentUpon>TriggerEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AboutForm.resx">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForm.resx">
-      <DependentUpon>ActionForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AuraContainerForm.resx">
-      <DependentUpon>AuraContainerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AuraDesignForm.resx">
-      <DependentUpon>AuraDesignForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AutoCompleteForm.resx">
-      <DependentUpon>AutoCompleteForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BenchmarkForm.resx">
-      <DependentUpon>BenchmarkForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BenchmarkProgressForm.resx">
-      <DependentUpon>BenchmarkProgressForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\ColorSelector.resx">
-      <DependentUpon>ColorSelector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ConfigurationForm.resx">
-      <DependentUpon>ConfigurationForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ConfigurationForm2.resx">
-      <DependentUpon>ConfigurationForm2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ExportForm.resx">
-      <DependentUpon>ExportForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\ExpressionTextBox.resx">
-      <DependentUpon>ExpressionTextBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FolderForm.resx">
-      <DependentUpon>FolderForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportForm.resx">
-      <DependentUpon>ImportForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\KeyListenForm.resx">
-      <DependentUpon>KeyListenForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LogForm.resx">
-      <DependentUpon>LogForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\RepositoryListForm.resx">
-      <DependentUpon>RepositoryListForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SearchForm.resx">
-      <DependentUpon>SearchForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SubstitutionForm.resx">
-      <DependentUpon>SubstitutionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TriggerForm2.resx">
-      <DependentUpon>TriggerForm2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VariableEditorForm.resx">
-      <DependentUpon>VariableEditorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\RepositoryForm.resx">
-      <DependentUpon>RepositoryForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TestInputForm.resx">
-      <DependentUpon>TestInputForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TriggerForm.resx">
-      <DependentUpon>TriggerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\UserInterface.resx">
-      <DependentUpon>UserInterface.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StateForm.resx">
-      <DependentUpon>StateForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="WMPLib">
-      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="newtranslations.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <None Include="readme.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.targets'))" />
-    <Error Condition="!Exists('..\packages\System.Text.Json.6.0.3\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.3\build\System.Text.Json.targets'))" />
-  </Target>
-  <Import Project="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.targets" Condition="Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.targets')" />
-  <Import Project="..\packages\System.Text.Json.6.0.3\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.3\build\System.Text.Json.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Platform>AnyCPU</Platform>
+		<ProjectGuid>{CA86FD05-FB30-4923-BB27-638CA9CBAFCD}</ProjectGuid>
+		<OutputType>Library</OutputType>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<RootNamespace>Triggernometry</RootNamespace>
+		<AssemblyName>TriggernometryPlugin</AssemblyName>
+		<TargetFramework>net481</TargetFramework>
+		<FileAlignment>512</FileAlignment>
+		<NuGetPackageImportStamp>
+		</NuGetPackageImportStamp>
+		<TargetFrameworkProfile />
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+		<OutputPath>bin\Release\</OutputPath>
+		<DefineConstants>TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<StartAction>Program</StartAction>
+		<StartProgram>C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe</StartProgram>
+		<SignAssembly>false</SignAssembly>
+		<AssemblyOriginatorKeyFile>
+		</AssemblyOriginatorKeyFile>
+		<UseWindowsForms>true</UseWindowsForms>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="CsvHelper" Version="33.1.0"/>
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.9">
+			<Private>True</Private>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.14.0"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.14.0"/>
+		<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0"/>
+		<PackageReference Include="SharpDX" Version="4.2.0">
+			<SpecificVersion>False</SpecificVersion>
+			<Private>True</Private>
+			<EmbedInteropTypes>False</EmbedInteropTypes>
+		</PackageReference>
+		<PackageReference Include="SharpDX.Direct2D1" Version="4.2.0">
+			<SpecificVersion>False</SpecificVersion>
+			<Private>True</Private>
+		</PackageReference>
+		<PackageReference Include="SharpDX.Direct3D11" Version="4.2.0">
+			<SpecificVersion>False</SpecificVersion>
+			<Private>True</Private>
+		</PackageReference>
+		<PackageReference Include="SharpDX.DXGI" Version="4.2.0">
+			<SpecificVersion>False</SpecificVersion>
+			<Private>True</Private>
+		</PackageReference>
+		<PackageReference Include="System.Collections.Immutable" Version="9.0.9" >
+			<Private>True</Private>
+		</PackageReference>
+		<PackageReference Include="System.Net.Http" Version="4.3.4" />
+		<PackageReference Include="System.Reflection.Metadata" Version="9.0.9" />
+		<PackageReference Include="System.Speech" Version="9.0.9" />
+		<PackageReference Include="System.Text.Json" Version="9.0.9">
+			<Private>True</Private>
+		</PackageReference>
+		<PackageReference Include="System.ValueTuple" Version="4.6.1"/>
+		<Reference Include="System.Web.Extensions"/>
+	</ItemGroup>
+	<ItemGroup>
+		<COMReference Include="WMPLib">
+			<Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+			<VersionMajor>1</VersionMajor>
+			<VersionMinor>0</VersionMinor>
+			<Lcid>0</Lcid>
+			<WrapperTool>tlbimp</WrapperTool>
+			<Isolated>False</Isolated>
+			<EmbedInteropTypes>True</EmbedInteropTypes>
+		</COMReference>
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Resources\" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="newtranslations.txt" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="app.config" />
+		<None Include="readme.md" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Aura/Renderer/SharpDXRenderer.cs" />
+		<Compile Remove="Aura/Renderer/WinformsRenderer.cs" />
+		<Compile Remove="Forms/testi.cs" />
+		<Compile Remove="Forms/testi.Designer.cs" />
+		<Compile Remove="Forms/testi2.cs" />
+		<Compile Remove="Forms/testi2.Designer.cs" />
+		<Compile Remove="Forms/testi3.cs" />
+		<Compile Remove="Forms/testi3.Designer.cs" />
+	</ItemGroup>
 </Project>
