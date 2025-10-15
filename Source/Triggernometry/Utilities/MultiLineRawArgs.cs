@@ -30,6 +30,23 @@ namespace Triggernometry.Utilities
             }
         }
 
+        /// <summary>
+        /// Duplicate constructor.
+        /// </summary>
+        public MultiLineRawArgs(MultiLineRawArgs src)
+        {
+            if (src == null)
+                throw new ArgumentNullException(nameof(src));
+            _originalData = src._originalData;
+            _data = new Dictionary<string, string>(src._data, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public string this[string key]
+        {
+            get => _data.TryGetValue(key, out string value) ? value : null;
+            set => _data[key] = value;
+        }
+
         /// <summary> 尝试查找 key 对应的值，大小写不敏感。</summary>
         public bool TryGet(string key, out string value) => _data.TryGetValue(key, out value);
         /// <summary> 依次尝试查找多个 key 别名对应的值，大小写不敏感。</summary>
@@ -56,6 +73,24 @@ namespace Triggernometry.Utilities
             ? value
             : throw new KeyNotFoundException($"None of the keys '{string.Join("', '", keys)}' were found.");
 
-        public override string ToString() => _originalData;
+        public void Set(string key, object value)
+        {
+            _data[key] = value.ToDataString();
+        }
+
+        public override string ToString()
+        {
+            return string.Join("\n", _data.Select(kv => $"{kv.Key}: {kv.Value}"));
+        }
+
+        public MultiLineRawArgs Duplicate()
+        {
+            var newData = new Dictionary<string, string>(_data, StringComparer.OrdinalIgnoreCase);
+            var copy = (MultiLineRawArgs)MemberwiseClone();
+            typeof(MultiLineRawArgs)
+                .GetField("_data", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .SetValue(copy, newData);
+            return copy;
+        }
     }
 }

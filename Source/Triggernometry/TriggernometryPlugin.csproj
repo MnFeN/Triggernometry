@@ -29,15 +29,15 @@
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="CsvHelper" Version="33.1.0"/>
+		<PackageReference Include="CsvHelper" Version="33.1.0" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.9">
 			<Private>True</Private>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.14.0"/>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0"/>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0"/>
-		<PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.14.0"/>
-		<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0"/>
+		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.14.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.14.0" />
+		<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
 		<PackageReference Include="SharpDX" Version="4.2.0">
 			<SpecificVersion>False</SpecificVersion>
 			<Private>True</Private>
@@ -55,7 +55,7 @@
 			<SpecificVersion>False</SpecificVersion>
 			<Private>True</Private>
 		</PackageReference>
-		<PackageReference Include="System.Collections.Immutable" Version="9.0.9" >
+		<PackageReference Include="System.Collections.Immutable" Version="9.0.9">
 			<Private>True</Private>
 		</PackageReference>
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
@@ -64,8 +64,8 @@
 		<PackageReference Include="System.Text.Json" Version="9.0.9">
 			<Private>True</Private>
 		</PackageReference>
-		<PackageReference Include="System.ValueTuple" Version="4.6.1"/>
-		<Reference Include="System.Web.Extensions"/>
+		<PackageReference Include="System.ValueTuple" Version="4.6.1" />
+		<Reference Include="System.Web.Extensions" />
 	</ItemGroup>
 	<ItemGroup>
 		<COMReference Include="WMPLib">

@@ -5,11 +5,12 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Triggernometry;
+using Triggernometry.PluginBridges.BridgeNamazu.Vfx;
 using Triggernometry.Utilities;
 using Triggernometry.Utilities.Math;
-using Triggernometry.PluginBridges.BridgeNamazu.Vfx;
 using static System.Math;
 using static Triggernometry.Utilities.DataStringHelper;
 
@@ -27,6 +28,12 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         static readonly Regex SplitMultiLineCmds = new Regex(@"(\r\n|\n|\r)\s*---\s*(?:\r\n|\n|\r)", RegexOptions.Compiled);
 
+        // 管理延迟创建阶段的任务（只到 Execute 前）
+        private static readonly Dictionary<string, List<CancellationTokenSource>> _delayTasks =
+            new Dictionary<string, List<CancellationTokenSource>>(StringComparer.OrdinalIgnoreCase);
+        private static readonly object _delayLock = new object();
+
+
         [CallbackMethod("PictoACT")]
         public void CbPictoACT(string rawCommands)
         {
@@ -39,33 +46,70 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 try
                 {
                     var data = new MultiLineRawArgs(rawCommand.Trim());
-
-                    // 判断是否需要延迟执行
-                    double delay;
-                    if (data.TryGet("Delay", out string rawDelay) && (delay = rawDelay.FromDataString<double>()) > 0)
-                    {
-                        Task.Run(async () =>
-                        {
-                            await Task.Delay(TimeSpan.FromSeconds(delay)).ConfigureAwait(false);
-                            try
-                            {
-                                Execute(data);
-                            }
-                            catch (Exception ex)
-                            {
-                                ErrorLog($"[PictoACT] 执行绘制指令时出现错误：\n{ex}\n\n原始指令：\n{rawCommand}");
-                            }
-                        });
-                    }
-                    else
-                    {
-                        Execute(data);
-                    }
+                    ExecuteWithDelayControl(data);
                 }
                 catch (Exception ex)
                 {
                     ErrorLog($"[PictoACT] 执行绘制指令时出现错误：\n{ex}\n\n原始指令：\n{rawCommand}");
                 }
+            }
+        }
+
+        private void ExecuteWithDelayControl(MultiLineRawArgs data)
+        {
+            // 判断是否需要延迟执行
+            double delay;
+            if (data.TryGet("Delay", out string rawDelay) &&
+                (delay = rawDelay.FromDataString<double>()) > 0)
+            {
+                string tag = ParseTag(data);
+                var cts = new CancellationTokenSource();
+
+                // 注册任务
+                lock (_delayLock)
+                {
+                    if (!_delayTasks.TryGetValue(tag, out var list))
+                    {
+                        list = new List<CancellationTokenSource>();
+                        _delayTasks[tag] = list;
+                    }
+                    list.Add(cts);
+                }
+
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(delay), cts.Token).ConfigureAwait(false);
+                        if (cts.IsCancellationRequested) return;
+                        Execute(data);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // 被主动取消，不记录日志
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorLog($"[PictoACT] 执行绘制指令时出现错误：\n{ex}\n\n指令内容：\n{data}");
+                    }
+                    finally
+                    {
+                        // 清理已完成任务
+                        lock (_delayLock)
+                        {
+                            if (_delayTasks.TryGetValue(tag, out var list))
+                            {
+                                list.Remove(cts);
+                                if (list.Count == 0)
+                                    _delayTasks.Remove(tag);
+                            }
+                        }
+                    }
+                });
+            }
+            else
+            {
+                Execute(data);
             }
         }
 
@@ -87,10 +131,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         private void Execute(MultiLineRawArgs data)
         {
             // 提取共通参数
-            string action = data.TryGet("Action", out action) ? action.Trim() : "";
+            string action = data.TryGet("Action", out action) ? action.Trim() : null;
             bool shouldLog = data.TryGet("Log", out string rawLog) && rawLog.FromDataString<bool>(); // default false
-            switch (action.ToUpper())
+            switch (action?.ToUpper())
             {
+                case "CREATE":
+                case null:
+                    CreateVfx(data, shouldLog);
+                    break;
                 case "MODIFY":
                 case "CHANGE":
                     ModifyVfxs(data, shouldLog);
@@ -104,40 +152,48 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 case "∆": // u2206 Increment
                     IsoscelesTriangulate(data, shouldLog);
                     break;
-                default:
-                    CreateVfx(data, shouldLog);
+                case "EXAFLARE":
+                case "地火":
+                    ExaFlare(data, shouldLog);
                     break;
+                default:
+                    throw new ArgumentException($"[PictoACT] 未知的 Action：{action}");
             }
         }
 
-        private void CreateVfx(MultiLineRawArgs data, bool shouldLog)
+        private Vfx.Vfx CreateVfx(MultiLineRawArgs data, bool shouldLog)
         {
             ParseTypeAndPath(data, out VfxType vfxType, out string vfxPath, out bool isActor);
             if (isActor)
             {
-                if (GetConfig<bool>("ActorVfx") == false) return;
-                CreateActorVfx(data, vfxType, vfxPath, shouldLog);
+                if (GetConfig<bool>("ActorVfx") == false) 
+                    return null;
+                return CreateActorVfx(data, vfxType, vfxPath, shouldLog);
             }
-            else if (_staticCommandTemplates.TryGetValue(vfxType, out _))
-            {
-                if (GetConfig<bool>("StaticVfx") == false) return;
-                CreateStaticVfx(data, vfxType, vfxPath, shouldLog);
-            }
+            
+            // static
+            if (GetConfig<bool>("StaticVfx") == false)
+                return null;
+
+            if (!_staticCommandTemplates.TryGetValue(vfxType, out _))
+                throw new ArgumentException($"[PictoACT] 不支持的 VfxType: {vfxType}");
+
+            return CreateStaticVfx(data, vfxType, vfxPath, shouldLog);
         }
 
-        private void CreateActorVfx(MultiLineRawArgs data, VfxType vfxType, string vfxPath, bool shouldLog)
+        private ActorVfx CreateActorVfx(MultiLineRawArgs data, VfxType vfxType, string vfxPath, bool shouldLog)
         {
             string tag = ParseTag(data);
             throw new NotImplementedException("[PictoACT] 此回调暂时不支持 Actor VFX。");
         }
 
-        private void CreateStaticVfx(MultiLineRawArgs data, VfxType vfxType, string vfxPath, bool shouldLog)
+        private StaticVfx CreateStaticVfx(MultiLineRawArgs data, VfxType vfxType, string vfxPath, bool shouldLog)
         {
             string tag = ParseTag(data);
             // 创建并运行
             var vfx = StaticVfx.Create(vfxPath, tag);
             vfx.Run();
-            
+
             // 设置 vfx 参数并更新
 
             // to-do：这里才设置初始几何参数，如果在创建和设置之间有其他动作异步 Modify 时调用初始参数就会出问题
@@ -154,6 +210,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             {
                 vfx.ScheduleRemove(rawTime.FromDataString<double>());
             }
+            return vfx;
         }
 
         private void IsoscelesTriangulate(MultiLineRawArgs data, bool shouldLog)
@@ -197,10 +254,80 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 transformer(vfx);
                 vfx.Scales = new Vector3(tri.ScaleX, tri.ScaleY, 1f) * 1.414f;
                 colorModifier?.Invoke(vfx);
-                
+
                 if (shouldUpdate) vfx.Update();
                 // 如果提供了时间参数，则安排移除
                 if (t > 0) vfx.ScheduleRemove(t);
+            }
+        }
+
+        private void ExaFlare(MultiLineRawArgs data, bool shouldLog)
+        {
+            if (GetConfig<bool>("StaticVfx") == false) return; // ignored
+
+            // staticvfx 类型
+            ParseTypeAndPath(data, out VfxType vfxType, out string vfxPath, out bool isActor);
+            if (isActor)
+                throw new ArgumentException("[PictoACT] 地火模式不能设置 ActorVfx");
+            if (!_staticCommandTemplates.ContainsKey(vfxType))
+                throw new ArgumentException($"[PictoACT] 不支持的 VfxType: {vfxType}");
+
+            // 地火特有的参数
+            var n = data.Get("n", "count").FromDataString<int>();
+            var d = data.Get("d", "distance").FromDataString<float>();
+            var dt = data.Get("dt").FromDataString<float>();
+            _ = data.TryGet("color2", out string color2);
+            var colorDelay = data.TryGet("colorDelay", out string rawColorDelay) ? rawColorDelay.FromDataString<float>() : 0f;
+            // 地火需要修改、检查的参数
+            var delay0 = data.TryGet("Delay0", out string rawDelay) ? rawDelay.FromDataString<float>() : 0f;
+            var t = data.Get("Time", "t").FromDataString<float>();
+            var pos0 = TryParsePos(data, out XIVCoord pos) ? pos : new CartesianCoord(0, 0, 0);
+            for (var i = 0; i < n; i++)
+            {
+                var newData = new MultiLineRawArgs(data);
+                newData.Set("Action", "Create");
+
+                // 修改时间
+                var newDelay = delay0 + i * dt;
+                if (newDelay < 0)
+                {
+                    // 第一个可能产生负延迟，直接将时间点提前
+                    var newT = t + newDelay;
+                    newDelay = 0;
+                    newData.Set("time", newT);
+                    newData.Set("t", newT);
+                }
+                newData.Set("delay", newDelay);
+                
+                // 修改相对位置
+                var newPos = pos0 + new CartesianCoord(0, -i * d, 0);
+                newData.Set("Pos", ((Vector3)newPos).ToDataString());
+
+                ExecuteWithDelayControl(newData);
+                /* to-do: 获取生成的 vfx，修改颜色
+                // 创建 vfx
+                var vfx = (StaticVfx)CreateVfx(newData, shouldLog);
+                
+                // 修改颜色
+                if (color2 != null && colorDelay > 0)
+                {
+                    if (vfx.Removed) return;
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(colorDelay)).ConfigureAwait(false);
+                        try
+                        {
+                            newData["color"] = color2;
+                            ColorModifier(data, isCreate: false)(vfx);
+                            vfx.Update();
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorLog($"[PictoACT] 修改颜色时出错：\n{ex}");
+                        }
+                    });
+                }
+                 */
             }
         }
 
@@ -224,31 +351,31 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     throw new ArgumentException($"[PictoACT] Modify 动作指定的 Vfx 类型 {type} 无效。");
             }
             // 提取过滤器
-            Func<Vfx.Vfx, bool> filter = ParseFilter(data);
+            var filter = ParseFilter(data);
             // 执行更新
             if (isActor)
             {
                 if (GetConfig<bool>("ActorVfx") == false) return;
-                var vfxs = ActorVfx.Storage.Values.Where(filter).ToList();
+                var vfxs = ActorVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList();
                 var modifiers = ParseActorVfxModifiers(data, false);
                 foreach (var vfx in vfxs)
                 {
                     foreach (var mod in modifiers)
                     {
-                        mod((ActorVfx)vfx);
+                        mod(vfx);
                     }
                 }
             }
             else
             {
                 if (GetConfig<bool>("StaticVfx") == false) return;
-                var vfxs = StaticVfx.Storage.Values.Where(filter).ToList();
+                var vfxs = StaticVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList();
                 var modifiers = ParseStaticVfxModifiers(data, false);
                 foreach (var vfx in vfxs)
                 {
                     foreach (var mod in modifiers)
                     {
-                        mod((StaticVfx)vfx);
+                        mod(vfx);
                     }
                 }
             }
@@ -256,6 +383,22 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         private void RemoveVfxs(MultiLineRawArgs data, bool shouldLog)
         {
+            // 先中断匹配 Tag / Regex 的延迟创建任务
+            var tagFilter = ParseFilter(data);
+            lock (_delayLock)
+            {
+                var matched = _delayTasks.Keys.Where(tagFilter).ToList();
+                foreach (var key in matched)
+                {
+                    foreach (var cts in _delayTasks[key].ToList()) // ToList 防止修改集合
+                    {
+                        cts.Cancel();
+                    }
+                    _delayTasks.Remove(key);
+                }
+            }
+            
+            // 然后中断正在运行的 Vfx
             // 判断类型
             _ = data.TryGet("Type", out string type);
             bool isActor, isStatic;
@@ -280,12 +423,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     throw new ArgumentException($"[PictoACT] Remove 动作指定的 Vfx 类型 {type} 无效。");
             }
             // 提取过滤器
-            Func<Vfx.Vfx, bool> filter = ParseFilter(data);
+            var filter = ParseFilter(data);
+            
             // 执行移除
             if (isActor && GetConfig<bool>("ActorVfx") != false)
-                ActorVfx.Storage.Values.Where(filter).ToList().ForEach(vfx => vfx.TryRemove());
+                ActorVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => vfx.TryRemove());
             if (isStatic && GetConfig<bool>("StaticVfx") != false)
-                StaticVfx.Storage.Values.Where(filter).ToList().ForEach(vfx => vfx.TryRemove());
+                StaticVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => vfx.TryRemove());
         }
 
         private void ParseTypeAndPath(MultiLineRawArgs data, out VfxType vfxType, out string vfxPath, out bool isActor)
@@ -334,16 +478,16 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             return data.TryGet("Tag", out string tag) ? tag : Vfx.Vfx.DefaultTag;
         }
 
-        private Func<Vfx.Vfx, bool> ParseFilter(MultiLineRawArgs data)
+        private Func<string, bool> ParseFilter(MultiLineRawArgs data)
         {
             if (data.TryGet("Tag", out string tag))
             {
-                return (vfx) => string.Equals(vfx.Tag, tag, StringComparison.OrdinalIgnoreCase);
+                return (str) => string.Equals(str, tag, StringComparison.OrdinalIgnoreCase);
             }
             if (data.TryGet("Regex", out string regex))
             {
                 var re = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
-                return vfx => vfx.Tag != null && re.IsMatch(vfx.Tag);
+                return str => str != null && re.IsMatch(str);
             }
             else
                 return vfx => true; // 不提供时不过滤
@@ -372,10 +516,10 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             var hasPos = TryParsePos(data, out XIVCoord pos);
             var hasAngle = TryParseAngles(data, out Vector3? angles);
-            var hasRotation = TryParseRotation(data, out double? rotation); 
+            var hasRotation = TryParseRotation(data, out double? rotation);
             var hasCenter = TryParseCenter(data, out XIVCoord center);
             var hasFlip = TryParseFlip(data, out bool? keepX, out bool? keepY);
-            if (!(isCreate || hasPos || hasAngle || hasCenter || hasRotation || hasFlip)) 
+            if (!(isCreate || hasPos || hasAngle || hasCenter || hasRotation || hasFlip))
                 return;
             var transformer = LinearTransformer(isCreate, pos, angles, center, rotation, keepX, keepY);
             output.Add(transformer);
@@ -580,7 +724,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
     }
 
     public enum VfxType
-    { 
+    {
         LockOn,
         Channeling,
         CastVfx,

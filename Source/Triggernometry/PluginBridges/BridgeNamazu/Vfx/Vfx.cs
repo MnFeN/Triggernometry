@@ -12,6 +12,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         public IntPtr Ptr { get; set; }
         public string Path { get; set; }
         public string Tag { get; set; }
+        public bool Removed { get; set; } = false;
 
         public const string DefaultTag = "Auto";
         public static VfxModule Module => BridgeNamazu.GetModule<VfxModule>();
@@ -24,9 +25,9 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             {
                 Task.Run(async () =>
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(duration)).ConfigureAwait(false);
                     try
                     {
+                        await Task.Delay(TimeSpan.FromSeconds(duration)).ConfigureAwait(false);
                         TryRemove();
                     }
                     catch (Exception ex)
@@ -37,12 +38,20 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             }
         }
 
-        public void Update() => Flag |= 0x2;
+        public void Update()
+        { 
+            if (Removed) return;
+            Flag |= 0x2;
+        }
 
         public byte Flag
         {
             get => Memory.Read<byte>(Ptr + 0x38);
-            set => Memory.Write(Ptr + 0x38, value);
+            set
+            {
+                if (Removed) return;
+                Memory.Write(Ptr + 0x38, value);
+            }
         }
 
         public Vector3 Pos
@@ -54,6 +63,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             }
             set
             {
+                if (Removed) return;
                 Memory.Write(Ptr + 0x50, new Vector3(value.X, value.Z, value.Y));
             }
         }
@@ -94,6 +104,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             }
             set
             {
+                if (Removed) return;
                 var q = Quaternion.CreateFromYawPitchRoll(value.Z, value.Y, value.X); // θy, θx, θ
                 Memory.Write(Ptr + 0x60, new Vector4(q.X, q.Z, q.Y, q.W));
             }
@@ -108,6 +119,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             }
             set
             {
+                if (Removed) return;
                 Memory.Write(Ptr + 0x70, new Vector3(value.X, value.Z, value.Y));
             }
         }
@@ -115,38 +127,63 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         public uint ActorVfxSource
         {
             get => Memory.Read<uint>(Ptr + 0x128);
-            set => Memory.Write(Ptr + 0x128, value);
+            set
+            {
+                if (Removed) return;
+                Memory.Write(Ptr + 0x128, value);
+            }
         }
 
         public uint ActorVfxTarget
         {
             get => Memory.Read<uint>(Ptr + 0x130);
-            set => Memory.Write(Ptr + 0x130, value);
+            set
+            {
+                if (Removed) return;
+                Memory.Write(Ptr + 0x130, value);
+            }
         }
 
         public uint StaticVfxSource
         {
             get => Memory.Read<uint>(Ptr + 0x1B8);
-            set => Memory.Write(Ptr + 0x1B8, value);
+            set
+            {
+                if (Removed) return;
+                Memory.Write(Ptr + 0x1B8, value);
+            }
         }
 
         public uint StaticVfxTarget
         {
             get => Memory.Read<uint>(Ptr + 0x1C0);
-            set => Memory.Write(Ptr + 0x1C0, value);
+            set
+            {
+                if (Removed) return;
+                Memory.Write(Ptr + 0x1C0, value);
+            }
         }
 
         public float Speed
         {
-            get => Memory.Read<uint>(Ptr + 0x250);
-            set => Memory.Write(Ptr + 0x250, value);
+            get => Memory.Read<float>(Ptr + 0x250);
+            set
+            {
+                if (Removed) return;
+                Memory.Write(Ptr + 0x250, value);
+            }
         }
 
         public Vector4 Color
         {
             get => Memory.Read<Vector4>(Ptr + 0x260);
-            set => Memory.Write(Ptr + 0x260, value);
+            set
+            {
+                if (Removed) return;
+                Memory.Write(Ptr + 0x260, value);
+            }
         }
+
 
     }
 }

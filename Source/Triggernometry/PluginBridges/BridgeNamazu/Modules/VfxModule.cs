@@ -186,6 +186,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 {
                     try
                     {
+                        vfx.Removed = true;
                         Memory.CallInjected64(ActorVfxRemovePtr, vfxPtr, /*(char)*/(ushort)1);
                     }
                     finally
@@ -303,6 +304,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 {
                     try
                     {
+                        vfx.Removed = true;
                         Memory.CallInjected64<IntPtr>(StaticVfxRemovePtr, vfxPtr);
                     }
                     finally
