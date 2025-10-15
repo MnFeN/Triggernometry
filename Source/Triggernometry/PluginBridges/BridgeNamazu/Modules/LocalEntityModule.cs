@@ -20,7 +20,7 @@ public class LocalEntityModule : ModuleBase
     public IntPtr DeleteObjectByIndexFuncPtr;
 
     // FFXIVClientStructs/FFXIV/Client/Game/Character/Character.CharacterSetupContainer
-    public int CharacterSetupContainerOffset;
+    public Func<int> CharacterSetupContainerOffset;
 
     // FFXIVClientStructs/FFXIV/Client/Game/Character/CharacterSetupContainer
     public IntPtr CopyFromCharacterFuncPtr;
@@ -37,7 +37,7 @@ public class LocalEntityModule : ModuleBase
             GetObjectByIndexFuncPtr = Scanner.TryScan("E8 * * * * 4C 8B C0 4D 85 C0", nameof(GetObjectByIndexFuncPtr));
             DeleteObjectByIndexFuncPtr = Scanner.TryScan("E8 * * * * C6 43 49 00", nameof(DeleteObjectByIndexFuncPtr));
 
-            CharacterSetupContainerOffset = 0x1B00;
+            CharacterSetupContainerOffset = () => 0x1B00;
 
             CopyFromCharacterFuncPtr = Scanner.TryScan("E8 * * * * 8B 87 ?? ?? ?? ?? 85 C0 74 ?? 83 F8", nameof(CopyFromCharacterFuncPtr));
             SetupBNpcFuncPtr = Scanner.TryScan("E8 * * * * 45 0F B6 86 ?? ?? ?? ?? 48 8D 8F", nameof(SetupBNpcFuncPtr));
@@ -61,13 +61,13 @@ public class LocalEntityModule : ModuleBase
 
     public IntPtr CopyFromCharacter(IntPtr targetPtr, IntPtr sourcePtr, CopyFlags flags)
     {
-        var characterSetupContainerPtr = targetPtr + CharacterSetupContainerOffset;
+        var characterSetupContainerPtr = targetPtr + CharacterSetupContainerOffset();
         return Memory.CallInjected64<IntPtr>(CopyFromCharacterFuncPtr, characterSetupContainerPtr, sourcePtr, (uint)flags);
     }
 
     public void SetupBNpc(IntPtr targetPtr, uint bNpcBaseId, uint bNpcNameId = 0)
     {
-        var characterSetupContainerPtr = targetPtr + CharacterSetupContainerOffset;
+        var characterSetupContainerPtr = targetPtr + CharacterSetupContainerOffset();
         Memory.CallInjected64(SetupBNpcFuncPtr, characterSetupContainerPtr, bNpcBaseId, bNpcNameId);
     }
 
