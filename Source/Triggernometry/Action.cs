@@ -1764,23 +1764,32 @@ namespace Triggernometry
                     case ActionTypeEnum.SystemBeep:
                         {
                             double freq = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _SystemBeepFreqExpression);
-                            if (freq < 37.0)
-                            {
-                                freq = 37.0;
-                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqlo", "Beep frequency below limit, capping to {0}", freq));
-                            }
-                            if (freq > 32767.0)
-                            {
-                                freq = 32767.0;
-                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqhi", "Beep frequency above limit, capping to {0} ", freq));
-                            }
                             double len = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _SystemBeepLengthExpression);
                             if (len < 0.0)
                             {
                                 len = 0.0;
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beeplengthlo", "Beep length below limit, capping to {0}", len));
                             }
-                            Console.Beep((int)Math.Ceiling(freq), (int)Math.Ceiling(len));
+
+                            bool useLegacy = true;
+                            if (!useLegacy)
+                            {
+                                Triggernometry.Utilities.Audio.WaveGenerator.PlaySyncBeep((int)Math.Ceiling(freq), (int)Math.Ceiling(len));
+                            }
+                            else
+                            {
+                                if (freq < 37.0)
+                                {
+                                    freq = 37.0;
+                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqlo", "Beep frequency below limit, capping to {0}", freq));
+                                }
+                                if (freq > 32767.0)
+                                {
+                                    freq = 32767.0;
+                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqhi", "Beep frequency above limit, capping to {0} ", freq));
+                                }
+                                Console.Beep((int)Math.Ceiling(freq), (int)Math.Ceiling(len));
+                            }
                         }
                         break;
                     #endregion
