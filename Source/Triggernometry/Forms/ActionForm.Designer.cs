@@ -2202,12 +2202,12 @@ namespace Triggernometry.Forms
             this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel14.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
-            this.tableLayoutPanel14.RowCount = 4;
+            this.tableLayoutPanel14.RowCount = 5;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel14.Size = new System.Drawing.Size(742, 127);
             this.tableLayoutPanel14.TabIndex = 0;
             // 
@@ -5723,144 +5723,11 @@ namespace Triggernometry.Forms
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel10.Size = new System.Drawing.Size(742, 414);
             this.tableLayoutPanel10.TabIndex = 0;
-            // 
-            // lblTriggerZoneType
-            // 
-            this.lblTriggerZoneType.AutoSize = true;
-            this.lblTriggerZoneType.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTriggerZoneType.Location = new System.Drawing.Point(3, 53);
-            this.lblTriggerZoneType.Name = "lblTriggerZoneType";
-            this.lblTriggerZoneType.Size = new System.Drawing.Size(95, 27);
-            this.lblTriggerZoneType.TabIndex = 0;
-            this.lblTriggerZoneType.Text = "Zone type";
-            this.lblTriggerZoneType.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // cbxTriggerZoneType
-            // 
-            this.cbxTriggerZoneType.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cbxTriggerZoneType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbxTriggerZoneType.FormattingEnabled = true;
-            this.cbxTriggerZoneType.Items.AddRange(new object[] {
-            "Zone name",
-            "FFXIV zone ID"});
-            this.cbxTriggerZoneType.Location = new System.Drawing.Point(104, 56);
-            this.cbxTriggerZoneType.Name = "cbxTriggerZoneType";
-            this.cbxTriggerZoneType.Size = new System.Drawing.Size(635, 21);
-            this.cbxTriggerZoneType.TabIndex = 1;
-            this.cbxTriggerZoneType.TabStop = false;
-            this.cbxTriggerZoneType.SelectedIndexChanged += new System.EventHandler(this.cbxZoneType_SelectedIndexChanged);
-            // 
-            // lblFiringOptions
-            // 
-            this.lblFiringOptions.AutoSize = true;
-            this.lblFiringOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblFiringOptions.Location = new System.Drawing.Point(3, 109);
-            this.lblFiringOptions.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.lblFiringOptions.Name = "lblFiringOptions";
-            this.lblFiringOptions.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.lblFiringOptions.Size = new System.Drawing.Size(95, 17);
-            this.lblFiringOptions.TabIndex = 2;
-            this.lblFiringOptions.Text = "Firing options";
-            this.lblFiringOptions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // expTriggerZone
-            // 
-            this.expTriggerZone.AutocompleteAvailable = true;
-            this.expTriggerZone.AutofillType = Triggernometry.CustomControls.ExpressionTextBox.AutofillTypeEnum.None;
-            this.expTriggerZone.AutoSize = true;
-            this.expTriggerZone.Dock = System.Windows.Forms.DockStyle.Top;
-            this.expTriggerZone.Expression = "";
-            this.expTriggerZone.ExpressionType = Triggernometry.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.String;
-            this.expTriggerZone.IsPersistent = false;
-            this.expTriggerZone.Location = new System.Drawing.Point(104, 83);
-            this.expTriggerZone.Name = "expTriggerZone";
-            this.expTriggerZone.ReadOnly = false;
-            this.expTriggerZone.Size = new System.Drawing.Size(635, 20);
-            this.expTriggerZone.TabIndex = 25;
-            this.expTriggerZone.EnabledChanged += new System.EventHandler(this.expTriggerZone_EnabledChanged);
-            // 
-            // lblTriggerZone
-            // 
-            this.lblTriggerZone.AutoSize = true;
-            this.lblTriggerZone.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTriggerZone.Location = new System.Drawing.Point(3, 80);
-            this.lblTriggerZone.Name = "lblTriggerZone";
-            this.lblTriggerZone.Size = new System.Drawing.Size(95, 26);
-            this.lblTriggerZone.TabIndex = 26;
-            this.lblTriggerZone.Text = "Zone name";
-            this.lblTriggerZone.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblTrigger
-            // 
-            this.lblTrigger.AutoSize = true;
-            this.lblTrigger.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTrigger.Location = new System.Drawing.Point(3, 164);
-            this.lblTrigger.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.lblTrigger.Name = "lblTrigger";
-            this.lblTrigger.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.lblTrigger.Size = new System.Drawing.Size(95, 17);
-            this.lblTrigger.TabIndex = 27;
-            this.lblTrigger.Text = "Trigger";
-            this.lblTrigger.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // expTriggerText
-            // 
-            this.expTriggerText.AutocompleteAvailable = true;
-            this.expTriggerText.AutofillType = Triggernometry.CustomControls.ExpressionTextBox.AutofillTypeEnum.None;
-            this.expTriggerText.AutoSize = true;
-            this.expTriggerText.Dock = System.Windows.Forms.DockStyle.Top;
-            this.expTriggerText.Expression = "";
-            this.expTriggerText.ExpressionType = Triggernometry.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.String;
-            this.expTriggerText.IsPersistent = false;
-            this.expTriggerText.Location = new System.Drawing.Point(104, 30);
-            this.expTriggerText.Name = "expTriggerText";
-            this.expTriggerText.ReadOnly = false;
-            this.expTriggerText.Size = new System.Drawing.Size(635, 20);
-            this.expTriggerText.TabIndex = 16;
-            this.expTriggerText.EnabledChanged += new System.EventHandler(this.expTriggerText_EnabledChanged);
-            // 
-            // lblTriggerText
-            // 
-            this.lblTriggerText.AutoSize = true;
-            this.lblTriggerText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTriggerText.Location = new System.Drawing.Point(3, 27);
-            this.lblTriggerText.Name = "lblTriggerText";
-            this.lblTriggerText.Size = new System.Drawing.Size(95, 26);
-            this.lblTriggerText.TabIndex = 28;
-            this.lblTriggerText.Text = "Event text for firing";
-            this.lblTriggerText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // expTriggerActionTag
-            // 
-            this.expTriggerActionTag.AutocompleteAvailable = true;
-            this.expTriggerActionTag.AutofillType = Triggernometry.CustomControls.ExpressionTextBox.AutofillTypeEnum.None;
-            this.expTriggerActionTag.AutoSize = true;
-            this.expTriggerActionTag.Dock = System.Windows.Forms.DockStyle.Top;
-            this.expTriggerActionTag.Expression = "";
-            this.expTriggerActionTag.ExpressionType = Triggernometry.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.String;
-            this.expTriggerActionTag.IsPersistent = false;
-            this.expTriggerActionTag.Location = new System.Drawing.Point(104, 30);
-            this.expTriggerActionTag.Name = "expTriggerActionTag";
-            this.expTriggerActionTag.ReadOnly = false;
-            this.expTriggerActionTag.Size = new System.Drawing.Size(635, 20);
-            this.expTriggerActionTag.TabIndex = 16;
-            this.expTriggerActionTag.EnabledChanged += new System.EventHandler(this.expTriggerActionTag_EnabledChanged);
-            // 
-            // lblTriggerActionTag
-            // 
-            this.lblTriggerActionTag.AutoSize = true;
-            this.lblTriggerActionTag.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTriggerActionTag.Location = new System.Drawing.Point(3, 27);
-            this.lblTriggerActionTag.Name = "lblTriggerActionTag";
-            this.lblTriggerActionTag.Size = new System.Drawing.Size(95, 26);
-            this.lblTriggerActionTag.TabIndex = 28;
-            this.lblTriggerActionTag.Text = "Action Tag Regex";
-            this.lblTriggerActionTag.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblTriggerOp
             // 
@@ -5891,6 +5758,156 @@ namespace Triggernometry.Forms
             this.cbxTriggerOp.TabStop = false;
             this.cbxTriggerOp.SelectedIndexChanged += new System.EventHandler(this.cbxTriggerOp_SelectedIndexChanged);
             // 
+            // lblTriggerText
+            // 
+            this.lblTriggerText.AutoSize = true;
+            this.lblTriggerText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTriggerText.Location = new System.Drawing.Point(3, 27);
+            this.lblTriggerText.Name = "lblTriggerText";
+            this.lblTriggerText.Size = new System.Drawing.Size(95, 26);
+            this.lblTriggerText.TabIndex = 28;
+            this.lblTriggerText.Text = "Event text for firing";
+            this.lblTriggerText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // expTriggerText
+            // 
+            this.expTriggerText.AutocompleteAvailable = true;
+            this.expTriggerText.AutofillType = Triggernometry.CustomControls.ExpressionTextBox.AutofillTypeEnum.None;
+            this.expTriggerText.AutoSize = true;
+            this.expTriggerText.Dock = System.Windows.Forms.DockStyle.Top;
+            this.expTriggerText.Expression = "";
+            this.expTriggerText.ExpressionType = Triggernometry.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.String;
+            this.expTriggerText.IsPersistent = false;
+            this.expTriggerText.Location = new System.Drawing.Point(104, 30);
+            this.expTriggerText.Name = "expTriggerText";
+            this.expTriggerText.ReadOnly = false;
+            this.expTriggerText.Size = new System.Drawing.Size(635, 20);
+            this.expTriggerText.TabIndex = 16;
+            this.expTriggerText.EnabledChanged += new System.EventHandler(this.expTriggerText_EnabledChanged);
+            // 
+            // lblTriggerZoneType
+            // 
+            this.lblTriggerZoneType.AutoSize = true;
+            this.lblTriggerZoneType.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTriggerZoneType.Location = new System.Drawing.Point(3, 53);
+            this.lblTriggerZoneType.Name = "lblTriggerZoneType";
+            this.lblTriggerZoneType.Size = new System.Drawing.Size(95, 27);
+            this.lblTriggerZoneType.TabIndex = 0;
+            this.lblTriggerZoneType.Text = "Zone type";
+            this.lblTriggerZoneType.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbxTriggerZoneType
+            // 
+            this.cbxTriggerZoneType.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cbxTriggerZoneType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbxTriggerZoneType.FormattingEnabled = true;
+            this.cbxTriggerZoneType.Items.AddRange(new object[] {
+            "Zone name",
+            "FFXIV zone ID"});
+            this.cbxTriggerZoneType.Location = new System.Drawing.Point(104, 56);
+            this.cbxTriggerZoneType.Name = "cbxTriggerZoneType";
+            this.cbxTriggerZoneType.Size = new System.Drawing.Size(635, 21);
+            this.cbxTriggerZoneType.TabIndex = 1;
+            this.cbxTriggerZoneType.TabStop = false;
+            this.cbxTriggerZoneType.SelectedIndexChanged += new System.EventHandler(this.cbxZoneType_SelectedIndexChanged);
+            // 
+            // lblTriggerZone
+            // 
+            this.lblTriggerZone.AutoSize = true;
+            this.lblTriggerZone.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTriggerZone.Location = new System.Drawing.Point(3, 80);
+            this.lblTriggerZone.Name = "lblTriggerZone";
+            this.lblTriggerZone.Size = new System.Drawing.Size(95, 26);
+            this.lblTriggerZone.TabIndex = 26;
+            this.lblTriggerZone.Text = "Zone name";
+            this.lblTriggerZone.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // expTriggerZone
+            // 
+            this.expTriggerZone.AutocompleteAvailable = true;
+            this.expTriggerZone.AutofillType = Triggernometry.CustomControls.ExpressionTextBox.AutofillTypeEnum.None;
+            this.expTriggerZone.AutoSize = true;
+            this.expTriggerZone.Dock = System.Windows.Forms.DockStyle.Top;
+            this.expTriggerZone.Expression = "";
+            this.expTriggerZone.ExpressionType = Triggernometry.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.String;
+            this.expTriggerZone.IsPersistent = false;
+            this.expTriggerZone.Location = new System.Drawing.Point(104, 83);
+            this.expTriggerZone.Name = "expTriggerZone";
+            this.expTriggerZone.ReadOnly = false;
+            this.expTriggerZone.Size = new System.Drawing.Size(635, 20);
+            this.expTriggerZone.TabIndex = 25;
+            this.expTriggerZone.EnabledChanged += new System.EventHandler(this.expTriggerZone_EnabledChanged);
+            // 
+            // lblTriggerActionTag
+            // 
+            this.lblTriggerActionTag.AutoSize = true;
+            this.lblTriggerActionTag.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTriggerActionTag.Name = "lblTriggerActionTag";
+            this.lblTriggerActionTag.TabIndex = 28;
+            this.lblTriggerActionTag.Text = "Action Tag";
+            this.lblTriggerActionTag.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // expTriggerActionTag
+            // 
+            this.expTriggerActionTag.AutocompleteAvailable = true;
+            this.expTriggerActionTag.AutofillType = Triggernometry.CustomControls.ExpressionTextBox.AutofillTypeEnum.None;
+            this.expTriggerActionTag.AutoSize = true;
+            this.expTriggerActionTag.Dock = System.Windows.Forms.DockStyle.Top;
+            this.expTriggerActionTag.Expression = "";
+            this.expTriggerActionTag.ExpressionType = Triggernometry.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.String;
+            this.expTriggerActionTag.IsPersistent = false;
+            this.expTriggerActionTag.Location = new System.Drawing.Point(104, 30);
+            this.expTriggerActionTag.Name = "expTriggerActionTag";
+            this.expTriggerActionTag.ReadOnly = false;
+            this.expTriggerActionTag.Size = new System.Drawing.Size(635, 20);
+            this.expTriggerActionTag.TabIndex = 16;
+            this.expTriggerActionTag.EnabledChanged += new System.EventHandler(this.expTriggerActionTag_EnabledChanged);
+            // 
+            // lblFiringOptions
+            // 
+            this.lblFiringOptions.AutoSize = true;
+            this.lblFiringOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblFiringOptions.Location = new System.Drawing.Point(3, 109);
+            this.lblFiringOptions.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.lblFiringOptions.Name = "lblFiringOptions";
+            this.lblFiringOptions.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.lblFiringOptions.Size = new System.Drawing.Size(95, 17);
+            this.lblFiringOptions.TabIndex = 2;
+            this.lblFiringOptions.Text = "Firing options";
+            this.lblFiringOptions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbxFiringOptions
+            // 
+            this.cbxFiringOptions.CheckOnClick = true;
+            this.cbxFiringOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cbxFiringOptions.FormattingEnabled = true;
+            this.cbxFiringOptions.Items.AddRange(new object[] {
+            "Ignore regular expression",
+            "Ignore conditions",
+            "Ignore refire delay",
+            "Ignore parent folder restrictions",
+            "Ignore enabled/disabled status"});
+            this.cbxFiringOptions.Location = new System.Drawing.Point(104, 109);
+            this.cbxFiringOptions.Name = "cbxFiringOptions";
+            this.cbxFiringOptions.Size = new System.Drawing.Size(635, 49);
+            this.cbxFiringOptions.TabIndex = 32;
+            this.cbxFiringOptions.TabStop = false;
+            this.cbxFiringOptions.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.cbxFiringOptions_ItemCheck);
+            this.cbxFiringOptions.EnabledChanged += new System.EventHandler(this.cbxFiringOptions_EnabledChanged);
+            // 
+            // lblTrigger
+            // 
+            this.lblTrigger.AutoSize = true;
+            this.lblTrigger.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTrigger.Location = new System.Drawing.Point(3, 164);
+            this.lblTrigger.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.lblTrigger.Name = "lblTrigger";
+            this.lblTrigger.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.lblTrigger.Size = new System.Drawing.Size(95, 17);
+            this.lblTrigger.TabIndex = 27;
+            this.lblTrigger.Text = "Trigger";
+            this.lblTrigger.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // trvTrigger
             // 
             this.trvTrigger.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -5907,26 +5924,6 @@ namespace Triggernometry.Forms
             this.trvTrigger.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvTrigger_BeforeExpand);
             this.trvTrigger.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvTrigger_BeforeSelect);
             this.trvTrigger.EnabledChanged += new System.EventHandler(this.trvTrigger_EnabledChanged);
-            // 
-            // cbxFiringOptions
-            // 
-            this.cbxFiringOptions.CheckOnClick = true;
-            this.cbxFiringOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cbxFiringOptions.FormattingEnabled = true;
-            this.cbxFiringOptions.Items.AddRange(new object[] {
-            "Ignore regular expression",
-            "Ignore conditions",
-            "Ignore refire delay",
-            "Ignore parent folder restrictions",
-            "Ignore enabled/disabled status"});
-            this.cbxFiringOptions.Location = new System.Drawing.Point(104, 109);
-            this.cbxFiringOptions.Name = "cbxFiringOptions";
-            this.tableLayoutPanel10.SetRowSpan(this.cbxFiringOptions, 2);
-            this.cbxFiringOptions.Size = new System.Drawing.Size(635, 49);
-            this.cbxFiringOptions.TabIndex = 32;
-            this.cbxFiringOptions.TabStop = false;
-            this.cbxFiringOptions.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.cbxFiringOptions_ItemCheck);
-            this.cbxFiringOptions.EnabledChanged += new System.EventHandler(this.cbxFiringOptions_EnabledChanged);
             // 
             // tabFolderOperation
             // 
@@ -5955,9 +5952,6 @@ namespace Triggernometry.Forms
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel12.Size = new System.Drawing.Size(742, 414);
             this.tableLayoutPanel12.TabIndex = 0;
             // 
