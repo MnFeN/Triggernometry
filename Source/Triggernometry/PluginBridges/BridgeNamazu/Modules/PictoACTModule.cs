@@ -55,7 +55,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             }
         }
 
-        private void ExecuteWithDelayControl(MultiLineRawArgs data)
+        private void ExecuteWithDelayControl(MultiLineRawArgs data, Action<StaticVfx> createModifier = null)
         {
             // 判断是否需要延迟执行
             double delay;
@@ -82,7 +82,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     {
                         await Task.Delay(TimeSpan.FromSeconds(delay), cts.Token).ConfigureAwait(false);
                         if (cts.IsCancellationRequested) return;
-                        Execute(data);
+                        Execute(data, createModifier);
                     }
                     catch (OperationCanceledException)
                     {
@@ -109,7 +109,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             }
             else
             {
-                Execute(data);
+                Execute(data, createModifier);
             }
         }
 
@@ -128,7 +128,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             { VfxType.StaticVfx, "{0}" },
         };
 
-        private void Execute(MultiLineRawArgs data)
+        private void Execute(MultiLineRawArgs data, Action<StaticVfx> createModifier = null)
         {
             // 提取共通参数
             string action = data.TryGet("Action", out action) ? action.Trim() : null;
@@ -137,7 +137,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             {
                 case "CREATE":
                 case null:
-                    CreateVfx(data, shouldLog);
+                    CreateVfx(data, shouldLog, createModifier);
                     break;
                 case "MODIFY":
                 case "CHANGE":
@@ -161,7 +161,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             }
         }
 
-        private Vfx.Vfx CreateVfx(MultiLineRawArgs data, bool shouldLog)
+        private Vfx.Vfx CreateVfx(MultiLineRawArgs data, bool shouldLog, Action<StaticVfx> createModifier = null)
         {
             ParseTypeAndPath(data, out VfxType vfxType, out string vfxPath, out bool isActor);
             if (isActor)
@@ -178,7 +178,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             if (!_staticCommandTemplates.TryGetValue(vfxType, out _))
                 throw new ArgumentException($"[PictoACT] 不支持的 VfxType: {vfxType}");
 
-            return CreateStaticVfx(data, vfxType, vfxPath, shouldLog);
+            return CreateStaticVfx(data, vfxType, vfxPath, shouldLog, createModifier);
         }
 
         private ActorVfx CreateActorVfx(MultiLineRawArgs data, VfxType vfxType, string vfxPath, bool shouldLog)
@@ -187,7 +187,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             throw new NotImplementedException("[PictoACT] 此回调暂时不支持 Actor VFX。");
         }
 
-        private StaticVfx CreateStaticVfx(MultiLineRawArgs data, VfxType vfxType, string vfxPath, bool shouldLog)
+        private StaticVfx CreateStaticVfx(MultiLineRawArgs data, VfxType vfxType, string vfxPath, bool shouldLog, Action<StaticVfx> createModifier = null)
         {
             string tag = ParseTag(data);
             // 创建并运行
@@ -209,6 +209,11 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             if (rawTime != null)
             {
                 vfx.ScheduleRemove(rawTime.FromDataString<double>());
+            }
+            // 额外的修饰（目前用于延迟执行额外操作）
+            if (createModifier != null)
+            {
+                createModifier(vfx);
             }
             return vfx;
         }
@@ -274,21 +279,25 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
             // 地火特有的参数
             var n = data.Get("n", "count").FromDataString<int>();
-            var d = data.Get("d", "distance").FromDataString<float>();
+            var dPos = data.TryGet("dpos", out string dPosRaw) ? XIVCoord.ParseRawData(dPosRaw) : null;
+            var dθ = data.TryGet(out string dθRaw, "dθ", "dTheta") ? dθRaw.FromDataString<double>() : (double?)null;
             var dt = data.Get("dt").FromDataString<float>();
             _ = data.TryGet("color2", out string color2);
             var colorDelay = data.TryGet("colorDelay", out string rawColorDelay) ? rawColorDelay.FromDataString<float>() : 0f;
+            var n0 = data.TryGet("n0", out string rawN0) ? rawN0.FromDataString<float>() : 0; // 初始地火在给定位置 = 0，在给定位置的下一个 = 1，...
+
             // 地火需要修改、检查的参数
             var delay0 = data.TryGet("Delay0", out string rawDelay) ? rawDelay.FromDataString<float>() : 0f;
             var t = data.Get("Time", "t").FromDataString<float>();
             var pos0 = TryParsePos(data, out XIVCoord pos) ? pos : new CartesianCoord(0, 0, 0);
-            for (var i = 0; i < n; i++)
+            var θ0 = TryParseRotation(data, out double? θ) ? θ : -PI;
+            for (var step = 0; step < n; step++)
             {
                 var newData = new MultiLineRawArgs(data);
                 newData.Set("Action", "Create");
 
                 // 修改时间
-                var newDelay = delay0 + i * dt;
+                var newDelay = delay0 + step * dt;
                 if (newDelay < 0)
                 {
                     // 第一个可能产生负延迟，直接将时间点提前
@@ -298,36 +307,50 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     newData.Set("t", newT);
                 }
                 newData.Set("delay", newDelay);
-                
-                // 修改相对位置
-                var newPos = pos0 + new CartesianCoord(0, -i * d, 0);
-                newData.Set("Pos", ((Vector3)newPos).ToDataString());
 
-                ExecuteWithDelayControl(newData);
-                /* to-do: 获取生成的 vfx，修改颜色
-                // 创建 vfx
-                var vfx = (StaticVfx)CreateVfx(newData, shouldLog);
-                
-                // 修改颜色
+                // 修改相对位置
+                if (dPos != null)
+                {
+                    var newPos = pos0 + (n0 + step) * dPos;
+                    newData.Set("Pos", ((Vector3)newPos).ToDataString());
+                }
+
+                // 修改相对角度
+                if (dθ != null)
+                {
+                    var newθ = θ0 + (n0 + step) * dθ.Value;
+                    newData.Set("θ", newθ.ToDataString());
+                    newData.Set("theta", newθ.ToDataString());
+                }
+
+                Action<StaticVfx> asyncColorModifier = null;
+
+                // 构造延迟颜色修改逻辑
                 if (color2 != null && colorDelay > 0)
                 {
-                    if (vfx.Removed) return;
-                    Task.Run(async () =>
+                    var newData2 = new MultiLineRawArgs(newData);
+                    newData2["color"] = color2;
+                    var colorModifier = ColorModifier(newData2, isCreate: false);
+
+                    asyncColorModifier = vfx =>
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(colorDelay)).ConfigureAwait(false);
-                        try
+                        Task.Run(async () =>
                         {
-                            newData["color"] = color2;
-                            ColorModifier(data, isCreate: false)(vfx);
-                            vfx.Update();
-                        }
-                        catch (Exception ex)
-                        {
-                            ErrorLog($"[PictoACT] 修改颜色时出错：\n{ex}");
-                        }
-                    });
+                            await Task.Delay(TimeSpan.FromSeconds(colorDelay)).ConfigureAwait(false);
+                            try
+                            {
+                                colorModifier(vfx);
+                                vfx.Update();
+                            }
+                            catch (Exception ex)
+                            {
+                                ErrorLog($"[PictoACT] 修改颜色时出错：\n{ex}");
+                            }
+                        });
+                    };
                 }
-                 */
+
+                ExecuteWithDelayControl(newData, asyncColorModifier);
             }
         }
 
