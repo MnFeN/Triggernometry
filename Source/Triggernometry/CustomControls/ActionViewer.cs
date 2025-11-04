@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
 using Triggernometry.Forms;
 
 namespace Triggernometry.CustomControls
@@ -155,11 +150,11 @@ namespace Triggernometry.CustomControls
         {
             if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control)
             {
-                CopySelectedAction();
+                CopySelectedActions();
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control)
             {
-                PasteSelectedAction();
+                PasteSelectedActions();
             }
             else if (e.KeyCode == Keys.Delete)
             {
@@ -510,46 +505,15 @@ namespace Triggernometry.CustomControls
             Actions[e.RowIndex]._Enabled = (Actions[e.RowIndex]._Enabled == false);
         }
 
-        private string ExportActionSelection()
-        {
-            string data = "";
-            object toSerialize = null;
-            XmlSerializer xs;
-            if (dgvActions.SelectedRows.Count > 1)
-            {
-                Action.ActionBundle ab = new Action.ActionBundle();
-                ab.Actions.AddRange(SelectedActions());
-                ab.Actions.Sort((a, b) => a.OrderNumber.CompareTo(b.OrderNumber));
-                toSerialize = ab;
-                xs = new XmlSerializer(typeof(Action.ActionBundle));
-            }
-            else
-            {
-                int idx = dgvActions.SelectedRows[0].Index;
-                toSerialize = Actions[idx];
-                xs = new XmlSerializer(typeof(Action));
-            }
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");            
-            using (MemoryStream ms = new MemoryStream())
-            {
-                xs.Serialize(ms, toSerialize, ns);
-                ms.Position = 0;
-                using (StreamReader sr = new StreamReader(ms))
-                {
-                    data = sr.ReadToEnd();
-                }
-            }
-            return data;
-        }
-
-        private void CopySelectedAction()
+        private void CopySelectedActions()
         {
             try
             {
                 if (btnRemoveAction.Enabled == true)
                 {
-                    System.Windows.Forms.Clipboard.SetText(ExportActionSelection());
+                    var selectedActions = SelectedActions();
+                    var xmlData = Action.ActionBundle.ActionsToXml(selectedActions);
+                    System.Windows.Forms.Clipboard.SetText(xmlData);
                 }
             }
             catch (Exception ex)
@@ -561,7 +525,7 @@ namespace Triggernometry.CustomControls
             }
         }
 
-        private void PasteSelectedAction()
+        private void PasteSelectedActions()
         {
             if (OkToPasteAction() == false)
             {
@@ -571,94 +535,50 @@ namespace Triggernometry.CustomControls
             string data = System.Windows.Forms.Clipboard.GetText(TextDataFormat.UnicodeText);
             try
             {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(data);
-                if (doc.DocumentElement.Name == "ActionBundle")
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(Action.ActionBundle));
-                    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(data)))
-                    {
-                        Action.ActionBundle ab = (Action.ActionBundle)xs.Deserialize(ms);
-                        ab.Actions.ForEach(a => a.ParentTrigger = trig);
-                        int idx = 0;
-                        if (dgvActions.SelectedRows.Count > 0)
-                        {
-                            idx = dgvActions.SelectedRows[dgvActions.SelectedRows.Count - 1].Index;
-                            Action origo = Actions[idx];
-                            int i = 1;
-                            foreach (Action a in ab.Actions)
-                            {
-                                a.OrderNumber = origo.OrderNumber + i++;
-                            }
-                            foreach (Action c in Actions)
-                            {
-                                if (c.OrderNumber > origo.OrderNumber)
-                                {
-                                    int newidx = origo.OrderNumber + i++;
-                                    c.OrderNumber = newidx;
-                                }
-                            }
-                            Actions.AddRange(ab.Actions);
-                            Actions.Sort((a, b) => a.OrderNumber.CompareTo(b.OrderNumber));
-                        }
-                        else
-                        {
-                            var actions = from ix in ab.Actions orderby ix.OrderNumber ascending select ix;
-                            int i = 1;
-                            foreach (Action a in actions)
-                            {
-                                a.OrderNumber = i++;
-                                Actions.Add(a);
-                            }
-                        }
-                        dgvActions.RowCount = Actions.Count;
-                        dgvActions.ClearSelection();
-                        foreach (Action a in ab.Actions)
-                        {
-                            dgvActions.Rows[Actions.IndexOf(a)].Selected = true;
-                        }
-                        dgvActions.Invalidate();
-                    }
+                // Parse the XML and collect the actions into a list
+                List<Action> pastedActions = Action.ActionBundle.XmlToActions(data);
+                if ((pastedActions?.Count ?? 0) == 0) return;
 
+                // Set ParentTrigger for all pasted actions
+                pastedActions.ForEach(a => a.ParentTrigger = trig);
+
+                // Decide insert index:
+                // If there are selected rows: insert after the last selected row
+                // If nothing is selected: insert at the top (index 0)
+                int insertIndex = dgvActions.SelectedRows.Cast<DataGridViewRow>().Select(r => r.Index).DefaultIfEmpty(-1).Max() + 1;
+
+                // Insert/append all new actions at the determined position
+                foreach (var act in pastedActions)
+                {
+                    Actions.Insert(insertIndex++, act);
                 }
-                else
-                { 
-                    XmlSerializer xs = new XmlSerializer(typeof(Action));
-                    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(data)))
-                    {
-                        Action cx = (Action)xs.Deserialize(ms);
-                        cx.ParentTrigger = trig;
-                        int idx = 0;
-                        if (dgvActions.SelectedRows.Count > 0)
-                        {
-                            idx = dgvActions.SelectedRows[dgvActions.SelectedRows.Count - 1].Index;
-                            Action origo = Actions[idx];
-                            cx.OrderNumber = origo.OrderNumber + 1;
-                            foreach (Action c in Actions)
-                            {
-                                if (c.OrderNumber >= cx.OrderNumber)
-                                {
-                                    c.OrderNumber++;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            cx.OrderNumber = 1;
-                        }
-                        Actions.Insert(cx.OrderNumber - 1, cx);
-                        dgvActions.RowCount = Actions.Count;
-                        dgvActions.ClearSelection(); 
-                        dgvActions.Rows[Actions.IndexOf(cx)].Selected = true;
-                        dgvActions.Invalidate();
-                    }
+
+                // Re-number all current Actions consecutively (1..N)
+                for (int i = 0; i < Actions.Count; i++)
+                {
+                    Actions[i].OrderNumber = i + 1;
                 }
+
+                // Update UI: row count, selection, refresh
+                dgvActions.SuspendLayout();
+                dgvActions.RowCount = Actions.Count;
+                dgvActions.ClearSelection();
+                foreach (var pastedAction in pastedActions)
+                {
+                    int idx = Actions.IndexOf(pastedAction);
+                    if (idx >= 0)
+                        dgvActions.Rows[idx].Selected = true;
+                }
+                dgvActions.ResumeLayout();
+                dgvActions.Invalidate();
+
                 OnActionsUpdated();
             }
             catch (Exception ex)
             {
+                System.Media.SystemSounds.Exclamation.Play();
                 plug.FilteredAddToLog(
-                    RealPlugin.DebugLevelEnum.Error, 
+                    RealPlugin.DebugLevelEnum.Warning, 
                     I18n.Translate("internal/TriggerForm/actionpastefail", "Action paste failed due to exception: {0}", ex.Message),
                     this.trig);
             }
@@ -706,12 +626,12 @@ namespace Triggernometry.CustomControls
 
         private void ctxCopyAction_Click(object sender, EventArgs e)
         {
-            CopySelectedAction();
+            CopySelectedActions();
         }
 
         private void ctxPasteAction_Click(object sender, EventArgs e)
         {
-            PasteSelectedAction();
+            PasteSelectedActions();
         }
 
         private void ctxMoveUp_Click(object sender, EventArgs e)

@@ -1,23 +1,24 @@
+using CsvHelper;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using System.Web.Script.Serialization;
-using WMPLib;
-using System.Threading;
-using System.Windows.Forms;
-using System.Net;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using Triggernometry.Variables;
-using CsvHelper;
-using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Script.Serialization;
+using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 using Triggernometry.Utilities;
+using Triggernometry.Variables;
+using WMPLib;
 using static Triggernometry.RealPlugin;
-using System.Reflection;
 
 namespace Triggernometry
 {
@@ -39,6 +40,71 @@ namespace Triggernometry
         {
 
             public List<Action> Actions { get; set; } = new List<Action>();
+
+            /// <summary>
+            /// Serializes a list of <see cref="Action"/> into an XML string. <br />
+            /// Multiple <see cref="Action"/>s are wrapped in a <see cref="ActionBundle"/>; <br />
+            /// A single <see cref="Action"/> is serialized as a single <see cref="Action"/>. <br />
+            /// Returns an empty string for null or empty input.
+            /// </summary>
+            internal static string ActionsToXml(List<Action> actions)
+            {
+                if (actions == null || actions.Count == 0) return string.Empty;
+
+                object toSerialize;
+                XmlSerializer xs;
+
+                if (actions.Count > 1)
+                {
+                    var ab = new ActionBundle();
+                    ab.Actions.AddRange(actions);
+                    ab.Actions.Sort((a, b) => a.OrderNumber.CompareTo(b.OrderNumber));
+                    toSerialize = ab;
+                    xs = new XmlSerializer(typeof(ActionBundle));
+                }
+                else // single Action
+                {
+                    toSerialize = actions[0];
+                    xs = new XmlSerializer(typeof(Action));
+                }
+
+                var ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                using (var sw = new StringWriter())
+                {
+                    xs.Serialize(sw, toSerialize, ns);
+                    return sw.ToString();
+                }
+            }
+
+            /// <summary>
+            /// Deserializes XML containing either an <see cref="ActionBundle"/> or a single <see cref="Action"/>, <br />
+            /// and returns a <see cref="List{Action}"/> of <see cref="Action"/> in its original order.
+            /// </summary>
+            internal static List<Action> XmlToActions(string xmlData)
+            {
+                var result = new List<Action>();
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xmlData);
+                using (var sr = new StringReader(xmlData))
+                {
+                    if (xmlDoc.DocumentElement.Name == "ActionBundle")
+                    {
+                        var bundleSerializer = new XmlSerializer(typeof(ActionBundle));
+                        var bundle = (ActionBundle)bundleSerializer.Deserialize(sr);
+                        if (bundle?.Actions != null)
+                            result.AddRange(bundle.Actions);
+                    }
+                    else // single Action
+                    {
+                        var actionSerializer = new XmlSerializer(typeof(Action));
+                        var a = (Action)actionSerializer.Deserialize(sr);
+                        if (a != null)
+                            result.Add(a);
+                    }
+                }
+                return result;
+            }
 
         }
 
