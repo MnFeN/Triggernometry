@@ -36,32 +36,111 @@ namespace Triggernometry
             return o;
         }
 
+        public static string Reflect<T>() => Reflect(typeof(T));
+
+        public static string Reflect(this Type type)
+        {
+            if (type == null) return "Type is null";
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"Reflecting Type: {type.FullName}");
+
+            // Fields
+            sb.AppendLine();
+            sb.AppendLine("Fields:");
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                             .Where(f => !f.IsDefined(typeof(CompilerGeneratedAttribute), false));
+            foreach (var f in fields)
+            {
+                sb.AppendLine($"  {f.Name} : {f.FieldType.Name};");
+            }
+
+            // Properties
+            sb.AppendLine();
+            sb.AppendLine("Properties:");
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                                 .Where(p => !p.IsDefined(typeof(CompilerGeneratedAttribute), false));
+            foreach (var p in properties)
+            {
+                sb.AppendLine($"  {p.Name} : {p.PropertyType.Name};");
+            }
+
+            // Methods
+            sb.AppendLine();
+            sb.AppendLine("Methods:");
+            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                              .Where(m => !m.IsDefined(typeof(CompilerGeneratedAttribute), false) && !m.IsSpecialName);
+            foreach (var m in methods)
+            {
+                string parameters = string.Join(", ", m.GetParameters().Select(p => $"{p.ParameterType.Name} {p.Name}"));
+                sb.AppendLine($"  {m.Name} : {m.ReturnType.Name} ({parameters});");
+            }
+
+            // Nested Types
+            var nestedTypes = type.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic);
+            if (nestedTypes.Length > 0)
+            {
+                sb.AppendLine();
+                sb.AppendLine("Nested Types:");
+                foreach (var nt in nestedTypes)
+                    sb.AppendLine($"  {nt.FullName}");
+            }
+
+            return sb.ToString();
+        }
+
         public static string Reflect(this object obj)
         {
             if (obj == null) return "Object is null";
 
             Type type = obj.GetType();
-            List<string> result = new List<string> { $"Reflecting: {type.Name}" };
+            var sb = new StringBuilder();
+            sb.AppendLine($"Reflecting: {type.Name}");
 
-            result.Add($"\nFields:");
+            // Fields
+            sb.AppendLine();
+            sb.AppendLine("Fields:");
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-                             .Where(f => !f.IsDefined(typeof(CompilerGeneratedAttribute), false))
-                             .Select(f => $"  {f.Name} : {f.FieldType.Name} = {f.GetValue(obj)};");
-            result.AddRange(fields);
+                             .Where(f => !f.IsDefined(typeof(CompilerGeneratedAttribute), false));
+            foreach (var f in fields)
+            {
+                object value;
+                try { value = f.GetValue(obj); }
+                catch { value = "[inaccessible]"; }
+                sb.AppendLine($"  {f.Name} : {f.FieldType.Name} = {value};");
+            }
 
-            result.Add($"\nProperties:");
+            // Properties
+            sb.AppendLine();
+            sb.AppendLine("Properties:");
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-                                 .Where(p => !p.IsDefined(typeof(CompilerGeneratedAttribute), false))
-                                 .Select(p => $"  {p.Name} : {p.PropertyType.Name} = {(p.GetIndexParameters().Length == 0 ? p.GetValue(obj) : "[Indexed Property]")};");
-            result.AddRange(properties);
+                                 .Where(p => !p.IsDefined(typeof(CompilerGeneratedAttribute), false));
+            foreach (var p in properties)
+            {
+                object value;
+                try
+                {
+                    value = p.GetIndexParameters().Length == 0 ? p.GetValue(obj) : "[Indexed Property]";
+                }
+                catch
+                {
+                    value = "[inaccessible]";
+                }
+                sb.AppendLine($"  {p.Name} : {p.PropertyType.Name} = {value};");
+            }
 
-            result.Add($"\nMethods:");
+            // Methods
+            sb.AppendLine();
+            sb.AppendLine("Methods:");
             var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-                              .Where(m => !m.IsDefined(typeof(CompilerGeneratedAttribute), false) && !m.IsSpecialName)
-                              .Select(m => $"  {m.Name} : {m.ReturnType.Name} ({string.Join(", ", m.GetParameters().Select(p => $"{p.ParameterType.Name} {p.Name}"))});");
-            result.AddRange(methods);
+                              .Where(m => !m.IsDefined(typeof(CompilerGeneratedAttribute), false) && !m.IsSpecialName);
+            foreach (var m in methods)
+            {
+                string parameters = string.Join(", ", m.GetParameters().Select(p => $"{p.ParameterType.Name} {p.Name}"));
+                sb.AppendLine($"  {m.Name} : {m.ReturnType.Name} ({parameters});");
+            }
 
-            return string.Join(Environment.NewLine, result);
+            return sb.ToString();
         }
 
         public static T Method<T>(this object o, string name, params object[] args)
