@@ -114,7 +114,7 @@ namespace Triggernometry.Forms
             public double Speed { get; set; }
             public static string PreviousSpeed { get; set; }
             public string RawData { get; set; }
-            public Trigger Trig { get; } = new Trigger { _Source = Trigger.TriggerSourceEnum.None };
+            public Trigger Trig { get; } = new Trigger { Source = Trigger.TriggerSourceEnum.None };
 
             private List<(Logline, string)> _warnings = new List<(Logline, string)>();
 

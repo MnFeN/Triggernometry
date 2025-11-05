@@ -1486,7 +1486,7 @@
     <TranslationEntry Key="internal/Plugin/reposavedlocal" Translation="已向下列地址保存仓库 {0} 的本地备份：{1}" />
     <TranslationEntry Key="internal/Plugin/reposavelocalexception" Translation="由于下列异常，仓库 {0} 的本地备份无法保存：{1}" />
     <TranslationEntry Key="internal/Plugin/reposavinglocal" Translation="正向下列地址保存仓库 {0} 的本地备份：{1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="从下列地址更新仓库 {0}： {1}" />
+    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="[{2}/{3}] 从下列地址更新仓库 {0}： {1}" />
     <TranslationEntry Key="internal/Plugin/repoupdatecomplete" Translation="仓库更新完成" />
     <TranslationEntry Key="internal/Plugin/repoupdateexception" Translation="由于下列异常，仓库 {0} 无法更新：{1}" />
     <TranslationEntry Key="internal/Plugin/repoupdates" Translation="即将更新 {0} 个仓库" />

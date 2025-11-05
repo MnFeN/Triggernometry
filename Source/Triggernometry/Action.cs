@@ -1616,7 +1616,7 @@ namespace Triggernometry
         {
             if (_DebugLevel == RealPlugin.DebugLevelEnum.Inherit)
             {
-                return ctx.trig?.GetDebugLevel(plug) ?? DebugLevelEnum.Verbose;
+                return ctx?.trig?.GetDebugLevel(plug) ?? DebugLevelEnum.Verbose;
             }
             else
             {
@@ -4234,7 +4234,7 @@ namespace Triggernometry
                                     continuing = true;
                                 }
                                 DateTime curTime = DateTime.Now;
-                                Action lastAction = plug.QueueActions(ctx, curTime, LoopActions, ctx.trig._Sequential, qa?.mutex, ActionContextLogger);
+                                Action lastAction = plug.QueueActions(ctx, curTime, LoopActions, ctx.trig.Sequential, qa?.mutex, ActionContextLogger);
                                 lastAction.LoopAction = this;
                                 if (continuing == true)
                                 {

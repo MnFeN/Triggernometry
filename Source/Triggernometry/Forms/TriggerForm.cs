@@ -217,53 +217,53 @@ namespace Triggernometry.Forms
 
             txtName.Text = t.Name ?? "";
             txtRegexp.Text = t.RegularExpression ?? "";
-            txtDescription.Text = t._Description;
-            txtEvent.Text = t._TestInput;
-            cbxRefireOption1.SelectedIndex = (int)t._PrevActions;
-            cbxRefireOption2.SelectedIndex = (int)t._PrevActionsRefire;
-            cbxScheduleFrom.SelectedIndex = (int)t._Scheduling;
-            cbxRefireWithinPeriod.SelectedIndex = (int)t._PeriodRefire;
-            cbxTriggerSource.SelectedIndex = (int)t._Source;
-            expRefirePeriod.Expression = t._RefirePeriodExpression;
-            cbxEditAutofire.Checked = t._EditAutofire;
-            cbxEditAutofireAllowCondition.Checked = t._EditAutofireAllowCondition;
-            cbxSequential.Checked = t._Sequential;
-            cbxLoggingLevel.SelectedIndex = (int)t._DebugLevel;
+            txtDescription.Text = t.Description;
+            txtEvent.Text = t.TestInput;
+            cbxRefireOption1.SelectedIndex = (int)t.PrevActions;
+            cbxRefireOption2.SelectedIndex = (int)t.PrevActionsRefire;
+            cbxScheduleFrom.SelectedIndex = (int)t.Scheduling;
+            cbxRefireWithinPeriod.SelectedIndex = (int)t.PeriodRefire;
+            cbxTriggerSource.SelectedIndex = (int)t.Source;
+            expRefirePeriod.Expression = t.RefirePeriodExpression;
+            cbxEditAutofire.Checked = t.EditAutofire;
+            cbxEditAutofireAllowCondition.Checked = t.EditAutofireAllowCondition;
+            cbxSequential.Checked = t.Sequential;
+            cbxLoggingLevel.SelectedIndex = (int)t.DebugLevel;
             foreach (Action action in t.Actions.OrderBy(a => a.OrderNumber))
             {
                 Action newAction = new Action();
                 action.CopySettingsTo(newAction);
                 Actions.Add(newAction);
             }
-            cndCondition.ConditionToEdit = (ConditionGroup)t._Condition?.Duplicate() ?? new ConditionGroup
+            cndCondition.ConditionToEdit = (ConditionGroup)t.Condition?.Duplicate() ?? new ConditionGroup
             {
                 Grouping = CndGroupingEnum.Or,
                 Enabled = false
             };
-            expMutexName.Expression = t._MutexToCapture;
-            chkReadmeTrigger.Checked = t._IsReadme;
+            expMutexName.Expression = t.MutexToCapture;
+            chkReadmeTrigger.Checked = t.IsReadme;
         }
 
         internal void SettingsToTrigger(Trigger t)
         {
             t.Name = txtName.Text;
             t.RegularExpression = txtRegexp.Text;
-            t._Description = txtDescription.Text;
-            t._TestInput = txtEvent.Text;
-            t._EditAutofire = cbxEditAutofire.Checked;
-            t._EditAutofireAllowCondition = cbxEditAutofireAllowCondition.Checked;
-            t._Sequential = cbxSequential.Checked;
-            t._PrevActions = (Trigger.PrevActionsEnum)cbxRefireOption1.SelectedIndex;
-            t._PrevActionsRefire = (Trigger.RefireEnum)cbxRefireOption2.SelectedIndex;
-            t._Scheduling = (Trigger.SchedulingEnum)cbxScheduleFrom.SelectedIndex;
-            t._PeriodRefire = (Trigger.RefireEnum)cbxRefireWithinPeriod.SelectedIndex; 
-            t._Source = (Trigger.TriggerSourceEnum)cbxTriggerSource.SelectedIndex;
-            t._RefirePeriodExpression = expRefirePeriod.Expression;
-            t._DebugLevel = (RealPlugin.DebugLevelEnum)cbxLoggingLevel.SelectedIndex;
+            t.Description = txtDescription.Text;
+            t.TestInput = txtEvent.Text;
+            t.EditAutofire = cbxEditAutofire.Checked;
+            t.EditAutofireAllowCondition = cbxEditAutofireAllowCondition.Checked;
+            t.Sequential = cbxSequential.Checked;
+            t.PrevActions = (Trigger.PrevActionsEnum)cbxRefireOption1.SelectedIndex;
+            t.PrevActionsRefire = (Trigger.RefireEnum)cbxRefireOption2.SelectedIndex;
+            t.Scheduling = (Trigger.SchedulingEnum)cbxScheduleFrom.SelectedIndex;
+            t.PeriodRefire = (Trigger.RefireEnum)cbxRefireWithinPeriod.SelectedIndex; 
+            t.Source = (Trigger.TriggerSourceEnum)cbxTriggerSource.SelectedIndex;
+            t.RefirePeriodExpression = expRefirePeriod.Expression;
+            t.DebugLevel = (RealPlugin.DebugLevelEnum)cbxLoggingLevel.SelectedIndex;
             t.Actions = Actions.OrderBy(tx => tx.OrderNumber).ToList();
-            t._Condition = cndCondition.ConditionToEdit;
-            t._MutexToCapture = expMutexName.Expression;
-            t._IsReadme = chkReadmeTrigger.Checked;
+            t.Condition = cndCondition.ConditionToEdit;
+            t.MutexToCapture = expMutexName.Expression;
+            t.IsReadme = chkReadmeTrigger.Checked;
         }
 
         private void TriggerForm_Shown(object sender, EventArgs e)

@@ -464,9 +464,9 @@ namespace Triggernometry.CustomControls
                 tx.Parent = parentfolder;
                 parentnode.Nodes.Add(tn);
                 plug.AddTrigger(tx, tx.Parent.ParentsEnabled());
-                if (tx._Condition != null)
+                if (tx.Condition != null)
                 {
-                    ConditionGroup.RebuildParentage(tx._Condition);
+                    ConditionGroup.RebuildParentage(tx.Condition);
                 }
                 foreach (Action a in tx.Actions)
                 {
@@ -547,9 +547,9 @@ namespace Triggernometry.CustomControls
                     t.ZoneBlocked = (t.PassesZoneRestriction(plug.currentZone) == false);
                     plug.AddTrigger(t, t.Parent.ParentsEnabled());
                     RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true);
-                    if (t._EditAutofire == true)
+                    if (t.EditAutofire == true)
                     {
-                        if (t._EditAutofireAllowCondition)
+                        if (t.EditAutofireAllowCondition)
                             ForceFireTrigger(t, Action.TriggerForceTypeEnum.SkipExceptConditions);
                         else
                             ForceFireTrigger(t, Action.TriggerForceTypeEnum.SkipAll);
@@ -647,7 +647,7 @@ namespace Triggernometry.CustomControls
                 bool readMe = t.Repo != null && treeView1.SelectedNode.ImageIndex == (int)ImageIndices.Readme;
                 using (Forms.TriggerForm tf = new Forms.TriggerForm(t, readOnly, readMe))
                 {
-                    Trigger.TriggerSourceEnum oldSource = t._Source;
+                    Trigger.TriggerSourceEnum oldSource = t.Source;
                     tf.imgs = imageList1;
                     tf.trv = treeView1;
                     tf.Text = readMe 
@@ -660,14 +660,14 @@ namespace Triggernometry.CustomControls
                         lock (t) // verified
                         {
                             tf.SettingsToTrigger(t);
-                            if (oldSource != t._Source)
+                            if (oldSource != t.Source)
                             {
-                                plug.SourceChange(t, oldSource, t._Source);
+                                plug.SourceChange(t, oldSource, t.Source);
                             }
                         }
-                        if (t._EditAutofire == true)
+                        if (t.EditAutofire == true)
                         {
-                            if (t._EditAutofireAllowCondition)
+                            if (t.EditAutofireAllowCondition)
                                 ForceFireTrigger(t, Action.TriggerForceTypeEnum.SkipExceptConditions);
                             else
                                 ForceFireTrigger(t, Action.TriggerForceTypeEnum.SkipAll);
@@ -2374,16 +2374,16 @@ namespace Triggernometry.CustomControls
             ctx.ttshook = plug.TtsPlaybackSmart;
             ctx.triggered = DateTime.UtcNow;
             ctx.force = force;
-            if ((t._TestInput?.Length ?? 0) == 0)
+            if ((t.TestInput?.Length ?? 0) == 0)
             {
                 t.Fire(plug, ctx, null);
             }
             else
             {
-                string[] lines = ctx.EvaluateStringExpression(t.TriggerContextLogger, plug, t._TestInput).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                string[] lines = ctx.EvaluateStringExpression(t.TriggerContextLogger, plug, t.TestInput).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
                 force = Action.TriggerForceTypeEnum.SkipActive | Action.TriggerForceTypeEnum.SkipRefire | Action.TriggerForceTypeEnum.SkipParent;
                 LogEvent.SourceEnum source;
-                switch (t._Source)
+                switch (t.Source)
                 {
                     case Trigger.TriggerSourceEnum.ACT:
                         source = LogEvent.SourceEnum.ACT;

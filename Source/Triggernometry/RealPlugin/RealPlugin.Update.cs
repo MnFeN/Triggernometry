@@ -472,7 +472,7 @@ namespace Triggernometry
                 {
                     if (singleUpdate == true)
                     {
-                        trans = I18n.Translate("internal/Plugin/repoupdate", "Updating repository {0} at {1}", r.Name, r.Address);
+                        trans = I18n.Translate("internal/Plugin/repoupdate", "[{2}/{3}] Updating repository {0} at {1}", r.Name, r.Address, 1, 1);
                         FilteredAddToLog(DebugLevelEnum.Verbose, trans);
                         r.AddToLog(trans);
                         ShowProgress(-1, trans);
@@ -602,14 +602,14 @@ namespace Triggernometry
                 {
                     return;
                 }
-                string updateTrans = I18n.Translate("internal/Plugin/repoupdate", "Updating repository {0} at {1}", r.Name, r.Address);
-                FilteredAddToLog(DebugLevelEnum.Verbose, updateTrans);
-                r.AddToLog(updateTrans);
+                trans = I18n.Translate("internal/Plugin/repoupdate", "[{2}/{3}] Updating repository {0} at {1}", r.Name, r.Address, completed + 1, total);
+                FilteredAddToLog(DebugLevelEnum.Verbose, trans);
+                r.AddToLog(trans);
                 await RepositoryUpdate(r, false, isStartup);
                 lock (progressLock)
                 {
                     completed++;
-                    ShowProgress((int)Math.Floor(100.0 * completed / total), $"正在更新仓库 {completed} / {total}");
+                    ShowProgress((int)Math.Floor(100.0 * completed / total), trans);
                 }
             }));
             await Task.WhenAll(tasks);
@@ -762,7 +762,7 @@ namespace Triggernometry
             //{
             AddTrigger(t, parentenable);
             //}
-            if (t._IsReadme == true && t.Enabled == true)
+            if (t.IsReadme == true && t.Enabled == true)
             {
                 r.ReadmeTriggers.Add(t);
             }

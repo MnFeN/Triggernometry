@@ -21,7 +21,7 @@ namespace Triggernometry
                 Triggers.Add(t);
                 if (t.Enabled == true && parentenable == true)
                 {
-                    switch (t._Source)
+                    switch (t.Source)
                     {
                         case Trigger.TriggerSourceEnum.Log:
                             lock (ActiveTextTriggers)
@@ -123,7 +123,7 @@ namespace Triggernometry
         {
             lock (Triggers)
             {
-                switch (t._Source)
+                switch (t.Source)
                 {
                     case Trigger.TriggerSourceEnum.Log:
                         lock (ActiveTextTriggers)
@@ -170,7 +170,7 @@ namespace Triggernometry
 
         internal void TriggerEnabled(Trigger t)
         {
-            switch (t._Source)
+            switch (t.Source)
             {
                 case Trigger.TriggerSourceEnum.Log:
                     lock (ActiveTextTriggers)
@@ -223,7 +223,7 @@ namespace Triggernometry
 
         internal void TriggerDisabled(Trigger t)
         {
-            switch (t._Source)
+            switch (t.Source)
             {
                 case Trigger.TriggerSourceEnum.Log:
                     lock (ActiveTextTriggers)
@@ -318,7 +318,7 @@ namespace Triggernometry
                 }
                 if ((force & Action.TriggerForceTypeEnum.SkipRefire) == 0)
                 {
-                    if (t._PeriodRefire == Trigger.RefireEnum.Deny && DateTime.Now < t.RefireDelayedUntil)
+                    if (t.PeriodRefire == Trigger.RefireEnum.Deny && DateTime.Now < t.RefireDelayedUntil)
                     {
                         t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrefirefail", "Trigger '{0}' refire delayed until {1}", t.LogName, FormatDateTime(t.RefireDelayedUntil)));
                         return;
@@ -332,12 +332,12 @@ namespace Triggernometry
                 ctx.ttshook = TtsPlaybackSmart;
                 if ((force & Action.TriggerForceTypeEnum.SkipRegexp) == 0)
                 {
-                    foreach (int idx in t.rex.GetGroupNumbers())
+                    foreach (int idx in t.regexCache.GetGroupNumbers())
                     {
                         ctx.numgroups.Add(m.Groups[idx].Value);
                         t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnumgroup", "Trigger '{0}' numbered group {1}: {2}", t.LogName, idx, m.Groups[idx].Value));
                     }
-                    foreach (string sdx in t.rex.GetGroupNames())
+                    foreach (string sdx in t.regexCache.GetGroupNames())
                     {
                         ctx.namedgroups[sdx] = m.Groups[sdx].Value;
                         t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnamedgroup", "Trigger '{0}' named group '{1}': {2}", t.LogName, sdx, m.Groups[sdx].Value));

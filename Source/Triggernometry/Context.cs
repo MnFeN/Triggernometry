@@ -2601,47 +2601,22 @@ namespace Triggernometry
             // replace back linebreaks
             newexpr = newexpr.Replace(LINEBREAK_PLACEHOLDER.ToString(), Environment.NewLine);
 
-            if (trig != null)
+            // log expansions: ${...} => ...
+            if (newexpr != expr && 
+                plug?.cfg?.LogVariableExpansions == true &&
+                trig?.GetDebugLevel(plug) >= RealPlugin.DebugLevelEnum.Verbose) // should not be Inherit here
             {
-                if (trig._DebugLevel == RealPlugin.DebugLevelEnum.Inherit)
+                var log = I18n.Translate("internal/Context/expansion", "Variable expansion from '{0}' to '{1}'", expr, newexpr);
+                if (logger != null)
                 {
-                    if (plug != null)
-                    {
-                        if (plug.cfg.DebugLevel < RealPlugin.DebugLevelEnum.Verbose)
-                        {
-                            return newexpr;
-                        }
-                    }
+                    logger(o, log);
                 }
                 else
                 {
-                    if (trig._DebugLevel < RealPlugin.DebugLevelEnum.Verbose)
-                    {
-                        return newexpr;
-                    }
+                    plug?.FilteredAddToLog(RealPlugin.DebugLevelEnum.Verbose, log, trig);
                 }
             }
-            if (plug != null)
-            {
-                if (plug.cfg.LogVariableExpansions == false)
-                {
-                    return newexpr;
-                }
-            }
-            if (newexpr.CompareTo(expr) != 0)
-            {
-                if (logger != null)
-                {
-                    logger(o, I18n.Translate("internal/Context/expansion", "Variable expansion from '{0}' to '{1}'", expr, newexpr));
-                }
-                else if (plug != null)
-                {
-                    plug.FilteredAddToLog(
-                        RealPlugin.DebugLevelEnum.Verbose,
-                        I18n.Translate("internal/Context/expansion", "Variable expansion from '{0}' to '{1}'", expr, newexpr),
-                        this.trig);
-                }
-            }
+            
             return newexpr;
         }
 

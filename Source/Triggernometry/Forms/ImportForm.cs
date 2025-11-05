@@ -524,11 +524,10 @@ namespace Triggernometry.Forms
             t.RegularExpression = regex;
             t.Name = t.RegularExpression;
             t.Enabled = active;
-            t._PrevActions = Trigger.PrevActionsEnum.Keep;
-            t._PrevActionsRefire = Trigger.RefireEnum.Allow;
-            t._Scheduling = Trigger.SchedulingEnum.FromFire;
-            t._PeriodRefire = Trigger.RefireEnum.Allow;
-            t._RefirePeriodExpression = "";
+            t.PrevActions = Trigger.PrevActionsEnum.Keep;
+            t.PrevActionsRefire = Trigger.RefireEnum.Allow;
+            t.Scheduling = Trigger.SchedulingEnum.FromFire;
+            t.PeriodRefire = Trigger.RefireEnum.Allow;
             string tag = "";
             if (tabbed == true)
             {

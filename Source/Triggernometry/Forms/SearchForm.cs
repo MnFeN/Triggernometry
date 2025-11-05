@@ -176,14 +176,14 @@ namespace Triggernometry.Forms
                 }
                 if ((filter & SearchFilterEnum.TriggerDescription) != 0)
                 {
-                    if (RegexMatches(rex, t._Description) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggerdesc", "Trigger description"), Match = tn });
+                    if (RegexMatches(rex, t.Description) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggerdesc", "Trigger description"), Match = tn });
                 }
                 if ((filter & SearchFilterEnum.TriggerCondition) != 0)
                 {
-                    if (ConditionMatches(rex, t._Condition) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggercond", "Trigger condition"), Match = tn });
+                    if (ConditionMatches(rex, t.Condition) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggercond", "Trigger condition"), Match = tn });
                 }
                 if ((filter & SearchFilterEnum.TriggerRegex) != 0)
-                {
+                {   // use the cached trigger regex instead?
                     if (RegexMatches(rex, t.RegularExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggerregex", "Trigger regular expression"), Match = tn });
                 }
                 int i = 1;

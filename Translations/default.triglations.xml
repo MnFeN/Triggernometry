@@ -1486,7 +1486,7 @@
     <TranslationEntry Key="internal/Plugin/reposavedlocal" Translation="Saved local backup of repository {0} in {1}" />
     <TranslationEntry Key="internal/Plugin/reposavelocalexception" Translation="Couldn't save local backup of repository {0} due to exception: {1}" />
     <TranslationEntry Key="internal/Plugin/reposavinglocal" Translation="Saving local backup of repository {0} in {1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="Updating repository {0} at {1}" />
+    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="[{2}/{3}] Updating repository {0} at {1}" />
     <TranslationEntry Key="internal/Plugin/repoupdatecomplete" Translation="Repository update complete" />
     <TranslationEntry Key="internal/Plugin/repoupdateexception" Translation="Couldn't update repository {0} due to exception: {1}" />
     <TranslationEntry Key="internal/Plugin/repoupdates" Translation="Going to update {0} repositories" />

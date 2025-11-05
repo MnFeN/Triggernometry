@@ -141,7 +141,7 @@ namespace Triggernometry.Actions
                     continuing = true;
                 }
                 DateTime curTime = DateTime.Now;
-                Action lastAction = ctx.plug.QueueActions(ctx, curTime, null /* todo Actions proper type */, ctx.trig._Sequential, ai?.mutex, ActionContextLogger);
+                Action lastAction = ctx.plug.QueueActions(ctx, curTime, null /* todo Actions proper type */, ctx.trig.Sequential, ai?.mutex, ActionContextLogger);
                 lastAction.LoopAction = null; // todo supposed to be a reference to this action
                 if (continuing == true)
                 {

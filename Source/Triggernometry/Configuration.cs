@@ -469,7 +469,7 @@ namespace Triggernometry
 
         // Default Settings
 
-        public Trigger TemplateTrigger = new Trigger() { Enabled = true, Conditions = null, _Condition = new ConditionGroup() { Grouping = ConditionGroup.CndGroupingEnum.Or, Enabled = false } };
+        public Trigger TemplateTrigger = new Trigger() { Enabled = true, Conditions = null, Condition = new ConditionGroup() { Grouping = ConditionGroup.CndGroupingEnum.Or, Enabled = false } };
 
         [XmlAttribute]
         public bool UseTemplateTrigger { get; set; } = false;

@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Triggernometry
 {
@@ -13,371 +13,31 @@ namespace Triggernometry
     public class Trigger
     {
 
-        public enum PrevActionsEnum
-        {
-            Keep,
-            Interrupt
-        }
+        #region Properties - Basic
 
-        public enum RefireEnum
-        {
-            Allow,
-            Deny
-        }
+        [XmlIgnore]
+        public Folder Parent { get; set; }
 
-        public enum SchedulingEnum
-        {
-            FromFire,
-            FromLastAction,
-            FromRefirePeriod
-        }
-
-        internal Folder Parent { get; set; }
-
-        internal bool ZoneBlocked { get; set; } = false;
+        [XmlIgnore]
+        public bool ZoneBlocked { get; set; } = false;
 
         [XmlAttribute]
-        public bool Enabled { get; set; }		
-        public List<Action> Actions { get; set; }
-
-        public enum TriggerSourceEnum
-        {
-            Log,
-            FFXIVNetwork,
-            None,
-            ACT,
-            Endpoint
-        }
-
-        internal TriggerSourceEnum _Source { get; set; } = TriggerSourceEnum.Log;
-        [XmlAttribute]
-        public string Source
-        {
-            get
-            {
-                if (_Source != TriggerSourceEnum.Log)
-                {
-                    return _Source.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Source = (TriggerSourceEnum)Enum.Parse(typeof(TriggerSourceEnum), value);
-            }
-        }
-
-        internal ConditionGroup _Condition = new ConditionGroup { Enabled = false };
-        public ConditionGroup Condition
-        {
-            get => _Condition.Children.Count == 0 && !_Condition.Enabled ? null : _Condition;
-            set => _Condition = value;
-        }
-
-        internal bool _Sequential { get; set; } = false;
-        [XmlAttribute]
-        public string Sequential
-        {
-            get
-            {
-                if (_Sequential == false)
-                {
-                    return null;
-                }
-                return _Sequential.ToString();
-            }
-            set
-            {
-                _Sequential = Boolean.Parse(value);
-            }
-        }
-
-        internal bool _IsReadme { get; set; } = false;
-        [XmlAttribute]
-        public string IsReadme
-        {
-            get
-            {
-                if (_IsReadme == false)
-                {
-                    return null;
-                }
-                return _IsReadme.ToString();
-            }
-            set
-            {
-                _IsReadme = Boolean.Parse(value);
-            }
-        }
+        public bool Enabled { get; set; }
 
         [XmlAttribute]
-        public string Name { get; set; } = "";
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        internal string LogName
-        {
-            get
-            {
-                return Name + " (" + (Repo != null ? "@" : "") + Id + ")";
-            }
-        }
-
-        [XmlAttribute]
-        public Guid Id { get; set; }
-
-        internal Repository Repo { get; set; } = null;
-
-        internal Regex rex;
-
-        private string _RegularExpression;
-        [XmlAttribute]
-        public string RegularExpression
-        {
-            get
-            {
-                return _RegularExpression;
-            }
-            set
-            {
-                string temp = RealPlugin.UnserializeInvalidXmlCharacters(value);
-                if (_RegularExpression != temp)
-                {
-                    _RegularExpression = temp;
-                    if (value.Trim().Length == 0)
-                    {
-                        rex = null;
-                        return;
-                    }
-                    try
-                    {
-                        rex = new Regex(_RegularExpression);
-                    }
-                    catch (Exception)
-                    {
-                        rex = null;
-                    }
-                }
-            }
-        }
-
-        internal RealPlugin.DebugLevelEnum _DebugLevel { get; set; } = RealPlugin.DebugLevelEnum.Inherit;
-        [XmlAttribute]
-        public string DebugLevel
-        {
-            get
-            {
-                if (_DebugLevel != RealPlugin.DebugLevelEnum.Inherit)
-                {
-                    return _DebugLevel.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _DebugLevel = (RealPlugin.DebugLevelEnum)Enum.Parse(typeof(RealPlugin.DebugLevelEnum), value);
-            }
-        }
-
-        internal PrevActionsEnum _PrevActions { get; set; } = PrevActionsEnum.Keep;
-        [XmlAttribute]
-        public string PrevActions
-        {
-            get
-            {
-                if (_PrevActions != PrevActionsEnum.Keep)
-                {
-                    return _PrevActions.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _PrevActions = (PrevActionsEnum)Enum.Parse(typeof(PrevActionsEnum), value);
-            }
-        }
-
-        internal RefireEnum _PrevActionsRefire { get; set; } = RefireEnum.Allow;
-        [XmlAttribute]
-        public string PrevActionsRefire
-        {
-            get
-            {
-                if (_PrevActionsRefire != RefireEnum.Allow)
-                {
-                    return _PrevActionsRefire.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _PrevActionsRefire = (RefireEnum)Enum.Parse(typeof(RefireEnum), value);
-            }
-        }
-
-        internal SchedulingEnum _Scheduling { get; set; } = SchedulingEnum.FromFire;
-        [XmlAttribute]
-        public string Scheduling
-        {
-            get
-            {
-                if (_Scheduling != SchedulingEnum.FromFire)
-                {
-                    return _Scheduling.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Scheduling = (SchedulingEnum)Enum.Parse(typeof(SchedulingEnum), value);
-            }
-        }
-
-        internal RefireEnum _PeriodRefire { get; set; } = RefireEnum.Allow;
-        [XmlAttribute]
-        public string PeriodRefire
-        {
-            get
-            {
-                if (_PeriodRefire != RefireEnum.Allow)
-                {
-                    return _PeriodRefire.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _PeriodRefire = (RefireEnum)Enum.Parse(typeof(RefireEnum), value);
-            }
-        }
-
-        internal string _RefirePeriodExpression { get; set; } = "0";
-        [XmlAttribute]
-        public string RefirePeriodExpression
-        {
-            get
-            {
-                if (_RefirePeriodExpression == "0" || _RefirePeriodExpression == "")
-                {
-                    return null;
-                }
-                return _RefirePeriodExpression;
-            }
-            set
-            {
-                _RefirePeriodExpression = value;
-            }
-        }
-
-        internal string _MutexToCapture { get; set; } = "";
-        [XmlAttribute]
-        public string MutexToCapture
-        {
-            get
-            {
-                if (_MutexToCapture == "")
-                {
-                    return null;
-                }
-                return _MutexToCapture;
-            }
-            set
-            {
-                _MutexToCapture = value;
-            }
-        }
-
-        internal bool _EditAutofire { get; set; } = false;
-        [XmlAttribute]
-        public string EditAutofire
-        {
-            get
-            {
-                if (_EditAutofire == false)
-                {
-                    return null;
-                }
-                return _EditAutofire.ToString();
-            }
-            set
-            {
-                _EditAutofire = Boolean.Parse(value);
-            }
-        }
-        internal bool _EditAutofireAllowCondition { get; set; } = false;
-        [XmlAttribute]
-        public string EditAutofireAllowCondition
-        {
-            get
-            {
-                if (_EditAutofireAllowCondition == false)
-                {
-                    return null;
-                }
-                return _EditAutofireAllowCondition.ToString();
-            }
-            set
-            {
-                _EditAutofireAllowCondition = Boolean.Parse(value);
-            }
-        }
-
-        internal string _TestInput;
-        [XmlAttribute]
-        public string TestInput
-        {
-            get
-            {
-                if (_TestInput == "")
-                {
-                    return null;
-                }
-                return _TestInput;
-            }
-            set
-            {
-                _TestInput = value;
-            }
-        }
-
-        internal string _Description;
-        [XmlAttribute]
-        public string Description
-        {
-            get
-            {
-                if (_Description == "")
-                {
-                    return null;
-                }
-                return _Description;
-            }
-            set
-            {
-                _Description = value;
-            }
-        }
+        [XmlIgnore]
+        public Repository Repo { get; set; } = null;
 
         private DateTime LastFired { get; set; }
         internal DateTime RefireDelayedUntil { get; set; }
 
-        internal string FullPath
+        [XmlIgnore]
+        public string LogName => $"{Name} ({(Repo != null ? "@" : "")}{Id})";
+
+        [XmlIgnore]
+        public string FullPath
         {
             get
             {
@@ -395,8 +55,325 @@ namespace Triggernometry
             }
         }
 
+        #endregion Properties - Basic
+
+
+        #region Properties - General Settings
+
+        /// <summary>
+        /// The name of the trigger.
+        /// </summary>
+        [XmlAttribute]
+        public string Name { get; set; } = "";
+
+        internal Regex regexCache;
+
+        private string _regularExpression = "";
+
+        /// <summary>
+        /// The regular expression pattern used by this trigger to match log lines.
+        /// </summary>
+        [XmlIgnore]
+        public string RegularExpression
+        {
+            get => _regularExpression;
+            set
+            {
+                var newExpr = RealPlugin.UnserializeInvalidXmlCharacters(value);
+                if (_regularExpression != newExpr)
+                {
+                    _regularExpression = newExpr;
+
+                    if (string.IsNullOrWhiteSpace(newExpr))
+                    {
+                        regexCache = null;
+                        return;
+                    }
+                    try
+                    {
+                        regexCache = new Regex(_regularExpression);
+                    }
+                    catch
+                    {
+                        regexCache = null;
+                    }
+                }
+            }
+        }
+
+        [XmlAttribute("RegularExpression")]
+        public string Xml_RegularExpression
+        {
+            get => string.IsNullOrWhiteSpace(RegularExpression) ? null : RegularExpression;
+            set => RegularExpression = value;
+        }
+
+        #endregion Properties - General Settings
+
+
+        #region Properties - Actions/Conditions
+
+        /// <summary>
+        /// The list of actions executed when this trigger is fired.
+        /// </summary>
+        public List<Action> Actions { get; set; } = new List<Action>();
+
+        /// <summary>
+        /// The condition group that determines whether this trigger should execute.
+        /// </summary>
+        [XmlIgnore]
+        public ConditionGroup Condition { get; set; } = new ConditionGroup { Enabled = false };
+
+        [XmlElement("Condition")]
+        public ConditionGroup Xml_Condition
+        {
+            get => Condition.Children.Count == 0 && !Condition.Enabled ? null : Condition;
+            set => Condition = value;
+        }
+
+        #endregion Properties - Actions/Conditions
+
+
+        #region Properties - Scheduling
+
+        /// <summary>
+        /// Defines the possible sources from which a trigger can be activated, such as ACT Log, Network, etc.
+        /// </summary>
+        public enum TriggerSourceEnum
+        {
+            /// <summary> Parsed ACT Log Lines. </summary>
+            Log,
+            /// <summary> FFXIV Network Log Lines. </summary>
+            FFXIVNetwork,
+            None,
+            /// <summary> ACT Events. </summary>
+            ACT,
+            /// <summary> Triggernometry Endpoint. </summary>
+            Endpoint
+        }
+
+        /// <summary>
+        /// Specifies the source of the trigger's input, such as ACT Log, Network, etc.
+        /// </summary>
+        [XmlIgnore]
+        public TriggerSourceEnum Source { get; set; } = TriggerSourceEnum.Log;
+
+        [XmlAttribute("Source")]
+        public string Xml_Source
+        {
+            get => Source != TriggerSourceEnum.Log ? Source.ToString() : null;
+            set => Source = Enum.TryParse(value, out TriggerSourceEnum e) ? e : TriggerSourceEnum.Log;
+        }
+
+        public enum PrevActionsEnum
+        {
+            Keep,
+            Interrupt
+        }
+
+        /// <summary>
+        /// Specifies whether actions already queued from this trigger should keep executing when it refires.
+        /// </summary>
+        [XmlIgnore]
+        public PrevActionsEnum PrevActions { get; set; } = PrevActionsEnum.Keep;
+
+        [XmlAttribute("PrevActions")]
+        public string Xml_PrevActions
+        {
+            get => PrevActions != PrevActionsEnum.Keep ? PrevActions.ToString() : null;
+            set => PrevActions = Enum.TryParse(value, out PrevActionsEnum e) ? e : PrevActionsEnum.Keep;
+        }
+
+        public enum RefireEnum
+        {
+            Allow,
+            Deny
+        }
+
+        /// <summary>
+        /// Determines whether the trigger is allowed to refire when an action from it is already queued.
+        /// </summary>
+        [XmlIgnore]
+        public RefireEnum PrevActionsRefire { get; set; } = RefireEnum.Allow;
+
+        [XmlAttribute("PrevActionsRefire")]
+        public string Xml_PrevActionsRefire
+        {
+            get => PrevActionsRefire != RefireEnum.Allow ? PrevActionsRefire.ToString() : null;
+            set => PrevActionsRefire = Enum.TryParse(value, out RefireEnum e) ? e : RefireEnum.Allow;
+        }
+
+        public enum SchedulingEnum
+        {
+            FromFire,
+            FromLastAction,
+            FromRefirePeriod
+        }
+
+        /// <summary>
+        /// Specifies the scheduling mode used by the trigger.
+        /// </summary>
+        [XmlIgnore]
+        public SchedulingEnum Scheduling { get; set; } = SchedulingEnum.FromFire;
+
+        [XmlAttribute("Scheduling")]
+        public string Xml_Scheduling
+        {
+            get => Scheduling != SchedulingEnum.FromFire ? Scheduling.ToString() : null;
+            set => Scheduling = Enum.TryParse(value, out SchedulingEnum e) ? e : SchedulingEnum.FromFire;
+        }
+
+        /// <summary>
+        /// Determines whether the trigger is allowed to refire during its refire period.
+        /// </summary>
+        [XmlIgnore]
+        public RefireEnum PeriodRefire { get; set; } = RefireEnum.Allow;
+
+        [XmlAttribute("PeriodRefire")]
+        public string Xml_PeriodRefire
+        {
+            get => PeriodRefire != RefireEnum.Allow ? PeriodRefire.ToString() : null;
+            set => PeriodRefire = Enum.TryParse(value, out RefireEnum e) ? e : RefireEnum.Allow;
+        }
+
+        /// <summary>
+        /// Specifies the expression that determines the refire period of the trigger.
+        /// </summary>
+        [XmlIgnore]
+        public string RefirePeriodExpression { get; set; } = "0";
+
+        [XmlAttribute("RefirePeriodExpression")]
+        public string Xml_RefirePeriodExpression
+        {
+            get => string.IsNullOrWhiteSpace(RefirePeriodExpression) || RefirePeriodExpression == "0"
+                ? null
+                : RefirePeriodExpression;
+            set => RefirePeriodExpression = value;
+        }
+
+        /// <summary>
+        /// Specifies the mutex name that this trigger should capture when executed.
+        /// </summary>
+        [XmlIgnore]
+        public string MutexToCapture { get; set; }
+
+        [XmlAttribute("MutexToCapture")]
+        public string Xml_MutexToCapture
+        {
+            get => string.IsNullOrWhiteSpace(MutexToCapture) ? null : MutexToCapture;
+            set => MutexToCapture = value;
+        }
+
+        /// <summary>
+        /// Determines whether the trigger should automatically fire after being saved.
+        /// </summary>
+        [XmlIgnore]
+        public bool EditAutofire { get; set; }
+
+        [XmlAttribute("EditAutofire")]
+        public string Xml_EditAutofire
+        {
+            get => EditAutofire ? bool.TrueString : null;
+            set => EditAutofire = bool.TryParse(value, out var result) && result;
+        }
+
+        /// <summary>
+        /// Determines whether the trigger should respect its conditions when auto-fired after being saved.
+        /// </summary>
+        [XmlIgnore]
+        public bool EditAutofireAllowCondition { get; set; }
+
+        [XmlAttribute("EditAutofireAllowCondition")]
+        public string Xml_EditAutofireAllowCondition
+        {
+            get => EditAutofireAllowCondition ? bool.TrueString : null;
+            set => EditAutofireAllowCondition = bool.TryParse(value, out var result) && result;
+        }
+
+        /// <summary>
+        /// Determines whether the actions in this trigger are executed sequentially.
+        /// </summary>
+        [XmlIgnore]
+        public bool Sequential { get; set; } = false;
+
+        [XmlAttribute("Sequential")]
+        public string Xml_Sequential
+        {
+            get => Sequential ? bool.TrueString : null;
+            set => Sequential = bool.TryParse(value, out var result) && result;
+        }
+
+        #endregion Properties - Scheduling
+
+
+        #region Properties - Debugging
+
+        /// <summary>
+        /// The <see cref="RealPlugin.DebugLevelEnum"/> applied to this trigger.
+        /// If set to <see cref="RealPlugin.DebugLevelEnum.Inherit"/>, the trigger uses the plugin's global debug level.
+        /// </summary>
+        [XmlIgnore]
+        public RealPlugin.DebugLevelEnum DebugLevel { get; set; } = RealPlugin.DebugLevelEnum.Inherit;
+
+        [XmlAttribute("DebugLevel")]
+        public string Xml_DebugLevel
+        {
+            get => DebugLevel != RealPlugin.DebugLevelEnum.Inherit ? DebugLevel.ToString() : null;
+            set => DebugLevel = Enum.TryParse(value, out RealPlugin.DebugLevelEnum e) ? e : RealPlugin.DebugLevelEnum.Inherit;
+        }
+
+        /// <summary> 
+        /// Simulated log lines used when force-firing the trigger, one entry per line.
+        /// </summary>
+        [XmlIgnore]
+        public string TestInput { get; set; }
+
+        [XmlAttribute("TestInput")]
+        public string Xml_TestInput
+        {
+            get => string.IsNullOrWhiteSpace(TestInput) ? null : TestInput;
+            set => TestInput = value;
+        }
+
+        #endregion Properties - Debugging
+
+
+        #region Properties - Description
+
+        /// <summary> 
+        /// Description text associated with this trigger. 
+        /// </summary>
+        [XmlIgnore]
+        public string Description { get; set; }
+
+        [XmlAttribute("Description")]
+        public string Xml_Description
+        {
+            get => string.IsNullOrWhiteSpace(Description) ? null : Description;
+            set => Description = value;
+        }
+
+        /// <summary>
+        /// Specifies that this trigger's description serves as the readme for repositories.
+        /// </summary>
+        /// <summary>
+        /// Indicates whether this trigger serves as a readme or informational entry rather than an active trigger.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsReadme { get; set; } = false;
+
+        [XmlAttribute("IsReadme")]
+        public string Xml_IsReadme
+        {
+            get => IsReadme ? IsReadme.ToString() : null;
+            set => IsReadme = bool.TryParse(value, out var result) && result;
+        }
+
+        #endregion Properties - Description
+
+
         #region Old condition to new condition converter
-        private EventList<Condition> _Conditions;
+        private EventList<Condition> _Conditions = new EventList<Triggernometry.Condition>();
         public EventList<Condition> Conditions
         {
             get
@@ -415,14 +392,14 @@ namespace Triggernometry
 
         private void _Conditions_ItemAdded(object sender, EventListArgs<Condition> e)
         {
-            if (_Condition == null)
+            if (Condition == null)
             {
-                _Condition = new ConditionGroup();
-                _Condition.Grouping = ConditionGroup.CndGroupingEnum.And;
-                _Condition.Enabled = true;
+                Condition = new ConditionGroup();
+                Condition.Grouping = ConditionGroup.CndGroupingEnum.And;
+                Condition.Enabled = true;
             }
             Condition cx = e.Item;
-            _Condition.AddChild(cx.ConvertToConditionSingle());
+            Condition.AddChild(cx.ConvertToConditionSingle());
             _Conditions.Remove(e.Item);
         }
 
@@ -548,76 +525,52 @@ namespace Triggernometry
 
 
         #region Old property conversions
-        [XmlAttribute]
-        public string AllowRefire
+
+        [Obsolete("Old XML alias, kept for backward compatibility.")]
+        [XmlAttribute("AllowRefire")]
+        public string Xml_AllowRefire
         {
-            get
-            {
-                return null;
-            }
-            set
-            {
-                if (value == "true")
-                {
-                    _PrevActionsRefire = RefireEnum.Allow;
-                }
-                else
-                {
-                    _PrevActionsRefire = RefireEnum.Deny;
-                }
-            }
+            get => null; // Legacy field, not serialized in new versions
+            set => PrevActionsRefire = bool.TryParse(value, out var result) && result ? RefireEnum.Allow : RefireEnum.Deny;
         }
 
-        [XmlAttribute]
-        public string RefireDelayed
+        [Obsolete("Old XML alias, kept for backward compatibility.")]
+        [XmlAttribute("RefireDelayed")]
+        public string Xml_RefireDelayed
         {
-            get
-            {
-                return null;
-            }
-            set
-            {
-                if (value == "true")
-                {
-                    _PeriodRefire = RefireEnum.Deny;
-                }
-                else
-                {
-                    _PeriodRefire = RefireEnum.Allow;
-                }
-            }
+            get => null;
+            set => PeriodRefire = bool.TryParse(value, out var result) && result ? RefireEnum.Deny : RefireEnum.Allow;
         }
 
-        [XmlAttribute]
-        public string RefireDelayExpression
+        [Obsolete("Old XML alias, kept for backward compatibility.")]
+        [XmlAttribute("RefireDelayExpression")]
+        public string Xml_RefireDelayExpression
         {
-            get
-            {
-                return null;
-            }
-            set
-            {
-                _RefirePeriodExpression = value;
-            }
+            get => null;
+            set => RefirePeriodExpression = value;
         }
+
         #endregion
 
         public Trigger()
         {
-            Actions = new List<Action>();
-            Conditions = new EventList<Triggernometry.Condition>();
-            Id = Guid.NewGuid();
         }
 
-        internal Match CheckMatch(string input)
+        /// <summary>
+        /// Attempts to match the given input string against the trigger's regular expression.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Match"/> object if the trigger has a non-empty valid regex and matches successfully; otherwise, <c>null</c>.
+        /// </returns>
+        public Match CheckMatch(string input)
         {
-			if (rex == null)
+			if (regexCache == null)
 			{
 				return null;
 			}		
             try
             {
-                Match m = rex.Match(input);
+                Match m = regexCache.Match(input);
                 if (m.Success == true)
                 {
                     return m;
@@ -629,11 +582,14 @@ namespace Triggernometry
             return null;
         }
 
+        /// <summary>
+        /// Returns the effective debug level for this trigger, resolving inheritance from the plugin if needed.
+        /// </summary>
         internal RealPlugin.DebugLevelEnum GetDebugLevel(RealPlugin p)
         {
-            if (_DebugLevel == RealPlugin.DebugLevelEnum.Inherit)
+            if (DebugLevel == RealPlugin.DebugLevelEnum.Inherit)
             {
-                if (p.cfg != null)
+                if (p?.cfg != null)
                 {
                     return p.cfg.DebugLevel;
                 }
@@ -642,9 +598,12 @@ namespace Triggernometry
                     return RealPlugin.DebugLevelEnum.Verbose;
                 }
             }
-            return _DebugLevel;
+            return DebugLevel;
         }
 
+        /// <summary>
+        /// Adds a log entry for this trigger if the specified debug level is within the effective debug level threshold.
+        /// </summary>
         internal void AddToLog(RealPlugin p, RealPlugin.DebugLevelEnum level, string message)
         {
             RealPlugin.DebugLevelEnum dx = GetDebugLevel(p);
@@ -672,25 +631,25 @@ namespace Triggernometry
             return Parent.PassesZoneRestriction(zone);
         }
 
-        internal void QueueActions(Context ctx, DateTime curtime, RealPlugin.MutexInformation mtx)
+        public void QueueActions(Context ctx, DateTime curtime, RealPlugin.MutexInformation mtx)
         {
             //System.Diagnostics.Debug.WriteLine("### queuing actions for " + ctx.ToString());
-            RealPlugin.plug.QueueActions(ctx, curtime, Actions, _Sequential, mtx, TriggerContextLogger);
+            RealPlugin.plug.QueueActions(ctx, curtime, Actions, Sequential, mtx, TriggerContextLogger);
         }
 
-        internal bool Fire(RealPlugin p, Context ctx, RealPlugin.MutexInformation mtx)
+        public bool Fire(RealPlugin p, Context ctx, RealPlugin.MutexInformation mtx)
 		{
             try
             {
-                if (mtx == null && _MutexToCapture != "")
+                if (mtx == null && !string.IsNullOrWhiteSpace(MutexToCapture))
                 {
-                    string mn = ctx.EvaluateStringExpression(TriggerContextLogger, p, _MutexToCapture);
+                    string mn = ctx.EvaluateStringExpression(TriggerContextLogger, p, MutexToCapture);
                     RealPlugin.MutexInformation mi = ctx.plug.GetMutex(mn);
                     RealPlugin.MutexTicket m = mi.QueueForAcquisition(ctx);
                     Task t = new Task(() => {
                         using (m)
                         {                            
-                            DeferredFire(ctx.plug, ctx, mi, m);                            
+                            DeferredFire(ctx.plug, ctx, mi, m);
                         }
                     });
                     t.Start();
@@ -698,9 +657,9 @@ namespace Triggernometry
                 }
                 if ((ctx.force & Action.TriggerForceTypeEnum.SkipConditions) == 0)
                 {
-                    if (_Condition != null && _Condition.Enabled == true)
+                    if (Condition != null && Condition.Enabled == true)
                     {
-                        if (_Condition.CheckCondition(ctx, TriggerContextLogger, ctx.plug) == false)
+                        if (Condition.CheckCondition(ctx, TriggerContextLogger, ctx.plug) == false)
                         {
                             AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/trignotfired", "Trigger '{0}' not fired, condition not met", LogName));
                             return false;
@@ -709,9 +668,9 @@ namespace Triggernometry
                 }
                 DateTime prevLastFired = LastFired;
                 LastFired = DateTime.Now;
-                if (_PeriodRefire == RefireEnum.Deny)
+                if (PeriodRefire == RefireEnum.Deny)
                 {
-                    RefireDelayedUntil = LastFired.AddMilliseconds(ctx.EvaluateNumericExpression(TriggerContextLogger, p, _RefirePeriodExpression));
+                    RefireDelayedUntil = LastFired.AddMilliseconds(ctx.EvaluateNumericExpression(TriggerContextLogger, p, RefirePeriodExpression));
                     AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/delayingrefire", "Delaying trigger '{0}' refire to {1}", LogName, RefireDelayedUntil));
                 }
                 else
@@ -719,7 +678,7 @@ namespace Triggernometry
                     RefireDelayedUntil = DateTime.MinValue;
                 }
                 DateTime curtime = DateTime.Now;
-                if (_Scheduling == SchedulingEnum.FromLastAction)
+                if (Scheduling == SchedulingEnum.FromLastAction)
                 {
                     // get the last queued action as curTime
                     lock (ctx.plug.ActionQueue)
@@ -735,16 +694,16 @@ namespace Triggernometry
                         }
                     }
                 }
-                else if (_Scheduling == SchedulingEnum.FromRefirePeriod)
+                else if (Scheduling == SchedulingEnum.FromRefirePeriod)
                 {
-                    curtime = prevLastFired.AddMilliseconds(ctx.EvaluateNumericExpression(TriggerContextLogger, p, _RefirePeriodExpression));
+                    curtime = prevLastFired.AddMilliseconds(ctx.EvaluateNumericExpression(TriggerContextLogger, p, RefirePeriodExpression));
                     if (curtime < LastFired)
                     {
                         curtime = LastFired;
                         AddToLog(p, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Trigger/beforelastfired", "Current time is before last fired for trigger '{0}'", LogName));
                     }
                 }
-                if (_PrevActions == PrevActionsEnum.Interrupt)
+                if (PrevActions == PrevActionsEnum.Interrupt)
                 {
                     int exx = 0;
                     lock (ctx.plug.ActionQueue)
@@ -765,7 +724,7 @@ namespace Triggernometry
                     }
                     if (exx > 0)
                     {
-                        if (_PrevActionsRefire == RefireEnum.Deny)
+                        if (PrevActionsRefire == RefireEnum.Deny)
                         {
                             AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/removefromqueuenorefire", "Removed {0} instance(s) of trigger '{1}' actions from queue, refire denied", exx, LogName));
                             return false;
@@ -776,7 +735,7 @@ namespace Triggernometry
                         }
                     }
                 }
-                else if (_PrevActionsRefire == RefireEnum.Deny)
+                else if (PrevActionsRefire == RefireEnum.Deny)
                 {
                     int exx = 0;
                     lock (ctx.plug.ActionQueue)
@@ -807,38 +766,44 @@ namespace Triggernometry
             AddToLog((RealPlugin)o, RealPlugin.DebugLevelEnum.Verbose, msg);
         }
 
-        internal void CopySettingsTo(Trigger t)
+        public void CopySettingsTo(Trigger t)
         {
-            t._Source = _Source;
-            t._Sequential = _Sequential;
             t.Enabled = Enabled;
+            t.Name = Name;
+            t.Id = Id;
+            t.RegularExpression = RegularExpression;
+
+            // ─── Properties - Actions/Conditions ────────────────
             t.Actions.Clear();
-            var ix = from tx in Actions
-                     orderby tx.OrderNumber ascending
-                     select tx;
-            foreach (Action a in ix)
+            foreach (var a in Actions.OrderBy(x => x.OrderNumber))
             {
-                Action newAction = new Action();
+                var newAction = new Action();
                 a.CopySettingsTo(newAction);
                 newAction.ParentTrigger = t;
                 t.Actions.Add(newAction);
             }
-            t._Condition = (ConditionGroup)_Condition.Duplicate();
-            t._IsReadme = _IsReadme;
-            t.Name = Name;
-            t.Id = Id;
-            t._RegularExpression = _RegularExpression;
-            t._DebugLevel = _DebugLevel;
-            t._PrevActions = _PrevActions;
-            t._PrevActionsRefire = _PrevActionsRefire;
-            t._Scheduling = _Scheduling;
-            t._PeriodRefire = _PeriodRefire;
-            t._RefirePeriodExpression = _RefirePeriodExpression;
-            t._MutexToCapture = _MutexToCapture;
-            t._EditAutofire = _EditAutofire;
-            t._EditAutofireAllowCondition = _EditAutofireAllowCondition;
-            t._Description = _Description;
-            t._TestInput = _TestInput;
+            t.Condition = (ConditionGroup)Condition.Duplicate();
+
+            // ─── Properties - Scheduling ────────────────────────
+            t.Source = Source;
+            t.Tag = Tag;
+            t.Sequential = Sequential;
+            t.PrevActions = PrevActions;
+            t.PrevActionsRefire = PrevActionsRefire;
+            t.Scheduling = Scheduling;
+            t.PeriodRefire = PeriodRefire;
+            t.RefirePeriodExpression = RefirePeriodExpression;
+            t.MutexToCapture = MutexToCapture;
+            t.EditAutofire = EditAutofire;
+            t.EditAutofireAllowCondition = EditAutofireAllowCondition;
+
+            // ─── Properties - Debugging ─────────────────────────
+            t.DebugLevel = DebugLevel;
+            t.TestInput = TestInput;
+
+            // ─── Properties - Description ───────────────────────
+            t.Description = Description;
+            t.IsReadme = IsReadme;
         }
 
         internal void SetActionsParent()
