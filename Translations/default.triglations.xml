@@ -463,7 +463,7 @@
     <TranslationEntry Key="ActionForm/lblObsPassword" Translation="Password" />
     <TranslationEntry Key="ActionForm/lblObsSceneName" Translation="Scene name" />
     <TranslationEntry Key="ActionForm/lblObsSourceName" Translation="Source name" />
-    <TranslationEntry Key="ActionForm/lblObsWebsocketInfo" Translation="If you are using OBS v27 or older, you will have to install the OBS WebSocket plugin to use OBS remote control features. There is a simple installer available at:" />
+    <TranslationEntry Key="ActionForm/lblObsWebsocketInfo" Translation="If the endpoint or password fields are left empty, the values defined in Trigger Configuration - Constants will be used automatically:&#xD;&#xA;- Endpoint: ws://(OBSWebsocketEndpoint):(OBSWebsocketPort)&#xD;&#xA;- Password: (OBSWebsocketPassword)&#xD;&#xA;&#xD;&#xA;If you are using OBS v27 or older, you will have to install the OBS WebSocket plugin to use OBS remote control features. There is a simple installer available at:" />
     <TranslationEntry Key="ActionForm/lblPlaceholderNoParams" Translation="This action has no configurable parameters." />
     <TranslationEntry Key="ActionForm/lblProcessName" Translation="Process to launch" />
     <TranslationEntry Key="ActionForm/lblProcessParameters" Translation="Command line parameters" />

@@ -463,7 +463,7 @@
     <TranslationEntry Key="ActionForm/lblObsPassword" Translation="密码" />
     <TranslationEntry Key="ActionForm/lblObsSceneName" Translation="场景名称" />
     <TranslationEntry Key="ActionForm/lblObsSourceName" Translation="源名称" />
-    <TranslationEntry Key="ActionForm/lblObsWebsocketInfo" Translation="如果你使用的是 OBS v27 或更早的版本，则必须安装 OBS WebSocket 插件。 有一个简单的安装程序：" />
+    <TranslationEntry Key="ActionForm/lblObsWebsocketInfo" Translation="终端或密码可以留空，留空时会自动应用触发器配置 - 常量中的值：&#xD;&#xA;- 终端：ws://(OBSWebsocketEndpoint):(OBSWebsocketPort)&#xD;&#xA;- 密码：(OBSWebsocketPassword)&#xD;&#xA;&#xD;&#xA;如果你使用的是 OBS v27 或更早的版本，则必须安装 OBS WebSocket 插件。 有一个简单的安装程序：" />
     <TranslationEntry Key="ActionForm/lblPlaceholderNoParams" Translation="此动作无需参数。" />
     <TranslationEntry Key="ActionForm/lblProcessName" Translation="程序路径" />
     <TranslationEntry Key="ActionForm/lblProcessParameters" Translation="命令行参数" />

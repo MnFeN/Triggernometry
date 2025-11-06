@@ -1950,13 +1950,13 @@ namespace Triggernometry
             }
         }
 
-        internal string _OBSEndPoint = @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}";
+        internal string _OBSEndPoint = "";
         [XmlAttribute]
         public string OBSEndPoint
         {
             get
             {
-                if (_OBSEndPoint == @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}")
+                if (string.IsNullOrWhiteSpace(_OBSEndPoint))
                 {
                     return null;
                 }
@@ -1968,13 +1968,13 @@ namespace Triggernometry
             }
         }
 
-        internal string _OBSPassword = @"${_const[OBSWebsocketPassword]}";
+        internal string _OBSPassword = "";
         [XmlAttribute]
         public string OBSPassword
         {
             get
             {
-                if (_OBSPassword == @"${_const[OBSWebsocketPassword]}")
+                if (string.IsNullOrWhiteSpace(_OBSPassword))
                 {
                     return null;
                 }

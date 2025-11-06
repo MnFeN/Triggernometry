@@ -5556,9 +5556,7 @@ namespace Triggernometry.Forms
             this.lblObsWebsocketInfo.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
             this.lblObsWebsocketInfo.Size = new System.Drawing.Size(629, 46);
             this.lblObsWebsocketInfo.TabIndex = 39;
-            this.lblObsWebsocketInfo.Text = "If you are using OBS v27 or older, you will have to install the OBS WebSocket plu" +
-    "gin to use OBS remote control features. There is a simple installer available at" +
-    ":";
+            this.lblObsWebsocketInfo.Text = "If the endpoint or password fields are left empty, the values defined in Trigger Configuration - Constants will be used automatically:\r\n- Endpoint: ws://(OBSWebsocketEndpoint):(OBSWebsocketPort)\r\n- Password: (OBSWebsocketPassword)\r\n\r\nIf you are using OBS v27 or older, you will have to install the OBS WebSocket plugin to use OBS remote control features. There is a simple installer available at:";
             // 
             // txtObsWebsocketLink
             // 

@@ -162,11 +162,14 @@ namespace Triggernometry
                 }
                 else
                 {
-                    throw new ArgumentException(I18n.Translate("internal/Action/obsauthpassword", "OBS WebSocket authentication required, you must provide a password"));
+                    RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/obsauthpassword", 
+                        "OBS WebSocket authentication required, you must provide a password"));
+                    return;
                 }
             }
             identify.eventSubscriptions = 0;
-            SendRequestJson(new JavaScriptSerializer().Serialize(new Message { op = (int) OpCode.Identify, d = identify }));
+            var json = new JavaScriptSerializer().Serialize(new Message { op = (int)OpCode.Identify, d = identify });
+            SendRequestJson(json);
         }
 
         private void WSConnection_OnMessage(object sender, MessageEventArgs e)

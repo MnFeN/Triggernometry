@@ -3086,8 +3086,30 @@ namespace Triggernometry
                         ObsController obsController = plug._obs;
                         if (obsController != null)
                         {
-                            string endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _OBSEndPoint);
-                            string password = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _OBSPassword);
+                            string endpoint = "";
+                            if (!string.IsNullOrWhiteSpace(_OBSEndPoint))
+                            {
+                                endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _OBSEndPoint);
+                            }
+                            else
+                            {
+                                var constants = RealPlugin.plug.cfg.Constants;
+                                if (constants.TryGetValue("OBSWebsocketEndpoint", out var e) && constants.TryGetValue("OBSWebsocketPort", out var p))
+                                    endpoint = $"ws://{e}:{p}";
+                            }
+
+                            string password = "";
+                            if (!string.IsNullOrWhiteSpace(_OBSPassword))
+                            {
+                                password = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _OBSPassword);
+                            }
+                            else
+                            {
+                                var constants = RealPlugin.plug.cfg.Constants;
+                                if (constants.TryGetValue("OBSWebsocketPassword", out var pw))
+                                    password = pw.ToString();
+                            }
+
                             lock (obsController)
                             {
                                 if (ObsConnector(ctx, endpoint, password) != true)
