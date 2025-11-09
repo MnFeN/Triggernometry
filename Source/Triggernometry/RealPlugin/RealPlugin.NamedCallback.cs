@@ -84,7 +84,7 @@ namespace Triggernometry
         }
 
         // used in scripts
-        public int RegisterNamedCallback(string name, Delegate callback, object o, bool allowDuplicatedName = false, string registrant = "Triggernometry Script")
+        public int RegisterNamedCallback(string name, Delegate callback, object o = null, bool allowDuplicatedName = false, string registrant = "Triggernometry Script")
         {
             if (!allowDuplicatedName)
             {

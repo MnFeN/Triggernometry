@@ -403,6 +403,7 @@ namespace Triggernometry
                 {
                     ui.AddDefaultRepoCN();
                 }
+                RegisterNamedCallback("UploadText", (Action<object, string>)UploadTextHelper.UploadTextCallback, registrant: nameof(RealPlugin));
                 // end
                 Task tx = new Task(() =>
                 {
