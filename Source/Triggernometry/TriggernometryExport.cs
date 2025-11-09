@@ -62,7 +62,7 @@ namespace Triggernometry
                 using (MemoryStream ms = new MemoryStream(UTF8Encoding.UTF8.GetBytes(src)))
                 {
                     var result = (TriggernometryExport)xs.Deserialize(ms);
-                    result.ExportedFolder?.RecursiveApplyOnTriggers(t => t.SetActionsParent());
+                    result.ExportedFolder?.RecursiveGetTriggers()?.ToList().ForEach(t => t.SetActionsParent());
                     result.ExportedTrigger?.SetActionsParent();
                     return result;
                 }

@@ -165,6 +165,19 @@ namespace Triggernometry
             set => Source = Enum.TryParse(value, out TriggerSourceEnum e) ? e : TriggerSourceEnum.Log;
         }
 
+        /// <summary> 
+        /// A string tag used in trigger/folder actions to interrupt specific actions. 
+        /// </summary>
+        [XmlIgnore]
+        public string Tag { get; set; }
+
+        [XmlAttribute("Tag")]
+        public string Xml_Tag
+        {
+            get => string.IsNullOrWhiteSpace(Tag) ? null : Tag;
+            set => Tag = value;
+        }
+
         public enum PrevActionsEnum
         {
             Keep,

@@ -2,14 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
 using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Speech.Synthesis;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Speech.Synthesis;
-using System.Threading;
+using static Triggernometry.RealPlugin;
 
 namespace Triggernometry.CustomControls
 {
@@ -1181,7 +1180,11 @@ namespace Triggernometry.CustomControls
 
         internal void clearActionQueueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            plug.ClearActionQueue();
+            var removedCount = plug.CancelQueuedActions();
+            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                "internal/Action/trigcancelall",
+                "All {0} queued action(s) cancelled",
+                removedCount));
         }
 
         internal void enabledToolStripMenuItem_Click(object sender, EventArgs e)

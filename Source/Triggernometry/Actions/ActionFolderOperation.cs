@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
@@ -150,8 +151,13 @@ namespace Triggernometry.Actions
                         break;
                     case OperationEnum.CancelTriggers:
                         {
-                            CancelAllTriggersInFolder(f, ctx);
-                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfolder", "Cancelled all triggers in folder ({0})", f.Name));
+                            var triggersInFolder = new HashSet<Trigger>(f.RecursiveGetTriggers());
+                            int removed = RealPlugin.plug.CancelQueuedActions(
+                                _qa => _qa?.ctx?.trig != null && triggersInFolder.Contains(_qa.ctx.trig)
+                            );
+                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfolder",
+                                "Cancelled {1} queued action(s) from {2} triggers in folder ({0})",
+                                f.Name, removed, triggersInFolder.Count));
                         }
                         break;
                 }

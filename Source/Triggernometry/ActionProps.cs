@@ -3101,12 +3101,12 @@ namespace Triggernometry
             }
         }
 
-        internal string _TriggerActionTag = "";
+        internal string _TriggerTagRegex = "";
         [XmlAttribute]
-        public string TriggerActionTag
+        public string TriggerTagRegex
         {
-            get => string.IsNullOrWhiteSpace(_TriggerActionTag) ? null : _TriggerActionTag;
-            set => _TriggerActionTag = value;
+            get => string.IsNullOrWhiteSpace(_TriggerTagRegex) ? null : _TriggerTagRegex;
+            set => _TriggerTagRegex = value;
         }
 
         [XmlIgnore]

@@ -374,6 +374,7 @@ namespace Triggernometry.Forms
                 expWindowTitle.Expression = "";
                 expKeypress.Expression = "";
                 cbxActionType.SelectedIndex = 0;
+                expTag.Expression = "";
                 cbxRefireOption1.SelectedIndex = 1;
                 cbxRefireOption2.SelectedIndex = 1;
                 expExecutionDelay.Expression = "0";
@@ -409,7 +410,7 @@ namespace Triggernometry.Forms
                 cbxTriggerOp.SelectedIndex = 0;
                 expTriggerText.Expression = "";
                 expTriggerZone.Expression = "";
-                expTriggerActionTag.Expression = "";
+                expTriggerTagRegex.Expression = "";
                 cbxAuraOp.SelectedIndex = 0;
                 cbxAuraDisplay.SelectedIndex = 0;
                 expAuraName.Expression = "";
@@ -431,15 +432,15 @@ namespace Triggernometry.Forms
                 expDiscordUrl.Expression = "";
                 cbxDiscordTts.Checked = false;
                 cbxObsOpType.SelectedIndex = 0;
-                expObsEndpoint.Expression = "ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}";
-                expObsPassword.Expression = "${_const[OBSWebsocketPassword]}";
+                expObsEndpoint.Expression = "";
+                expObsPassword.Expression = "";
                 expObsSceneName.Expression = "";
                 expObsSourceName.Expression = "";
                 expObsJSONPayload.Expression = "";
                 cbxLsOpType.SelectedIndex = 0;
                 expLSCustPayload.Expression = "";
                 cbxTextAuraOp.SelectedIndex = 0;
-                cbxTextAuraAlignment.SelectedIndex = 4;
+                cbxTextAuraAlignment.SelectedIndex = (int)TextAuraAlignmentEnum.MiddleCenter;
                 expTextAuraName.Expression = "";
                 expTextAuraText.Expression = "";
                 expTextAuraXIni.Expression = "";
@@ -554,6 +555,7 @@ namespace Triggernometry.Forms
             {
                 ParentTrigger = a.ParentTrigger;
                 cbxActionType.SelectedIndex = (int)a._ActionType;
+                expTag.Expression = a.Tag;
                 cbxRefireOption1.SelectedIndex = (a._RefireInterrupt == true ? 0 : 1);
                 cbxRefireOption2.SelectedIndex = (a._RefireRequeue == true ? 1 : 0);
                 expExecutionDelay.Expression = a._ExecutionDelayExpression;
@@ -625,7 +627,7 @@ namespace Triggernometry.Forms
                 cbxFolderOp.SelectedIndex = (int)a._FolderOp;
                 expTriggerZone.Expression = a._TriggerZone;
                 expTriggerText.Expression = a._TriggerText;
-                expTriggerActionTag.Expression = a._TriggerActionTag;
+                expTriggerTagRegex.Expression = a._TriggerTagRegex;
                 cbxAuraOp.SelectedIndex = (int)a._AuraOp;
                 switch (a._AuraImageMode)
                 {
@@ -841,6 +843,7 @@ namespace Triggernometry.Forms
         {
             a.ParentTrigger = ParentTrigger;
             a._ActionType = (Action.ActionTypeEnum)cbxActionType.SelectedIndex;
+            a.Tag = expTag.Expression;
             a._RefireInterrupt = (cbxRefireOption1.SelectedIndex == 0);
             a._RefireRequeue = (cbxRefireOption2.SelectedIndex == 1);
             a._ExecutionDelayExpression = expExecutionDelay.Expression;
@@ -920,7 +923,7 @@ namespace Triggernometry.Forms
             }
             a._TriggerForceType = newval;
             a._TriggerText = expTriggerText.Expression;
-            a._TriggerActionTag = expTriggerActionTag.Expression;
+            a._TriggerTagRegex = expTriggerTagRegex.Expression;
             a._TriggerZone = expTriggerZone.Expression;
             a._AuraOp = (Action.AuraOpEnum)cbxAuraOp.SelectedIndex;
             switch (cbxAuraDisplay.SelectedIndex)
@@ -1193,7 +1196,8 @@ namespace Triggernometry.Forms
         {
             expTriggerText.Enabled = (cbxTriggerOp.SelectedIndex == 0 && cbxFiringOptions.CheckedIndices.Contains(0) == false);
             expTriggerZone.Enabled = (cbxTriggerOp.SelectedIndex == 0 && cbxFiringOptions.CheckedIndices.Contains(0) == false);
-            expTriggerActionTag.Enabled = cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.CancelAllTrigger;
+            expTriggerTagRegex.Enabled = cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.CancelAllTrigger
+                                       || cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.CancelTrigger;
             cbxFiringOptions.Enabled = (cbxTriggerOp.SelectedIndex == 0);
             trvTrigger.Enabled = (cbxTriggerOp.SelectedIndex != 4);
         }
@@ -2086,7 +2090,7 @@ namespace Triggernometry.Forms
 
         private void expTriggerActionTag_EnabledChanged(object sender, EventArgs e)
         {
-            lblTriggerActionTag.Enabled = expTriggerActionTag.Enabled;
+            lblTriggerTagRegex.Enabled = expTriggerTagRegex.Enabled;
         }
 
         private void expTriggerZone_EnabledChanged(object sender, EventArgs e)

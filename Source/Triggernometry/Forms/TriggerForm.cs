@@ -196,6 +196,7 @@ namespace Triggernometry.Forms
             txtDescription.ReadOnly = true;
             txtEvent.ReadOnly = true;
             cbxTriggerSource.Enabled = false;
+            expTag.Enabled = false;
             cbxRefireOption1.Enabled = false;
             cbxRefireOption2.Enabled = false;
             cbxScheduleFrom.Enabled = false;
@@ -220,6 +221,7 @@ namespace Triggernometry.Forms
             txtDescription.Text = t.Description;
             txtEvent.Text = t.TestInput;
             cbxRefireOption1.SelectedIndex = (int)t.PrevActions;
+            expTag.Expression = t.Tag;
             cbxRefireOption2.SelectedIndex = (int)t.PrevActionsRefire;
             cbxScheduleFrom.SelectedIndex = (int)t.Scheduling;
             cbxRefireWithinPeriod.SelectedIndex = (int)t.PeriodRefire;
@@ -258,6 +260,7 @@ namespace Triggernometry.Forms
             t.Scheduling = (Trigger.SchedulingEnum)cbxScheduleFrom.SelectedIndex;
             t.PeriodRefire = (Trigger.RefireEnum)cbxRefireWithinPeriod.SelectedIndex; 
             t.Source = (Trigger.TriggerSourceEnum)cbxTriggerSource.SelectedIndex;
+            t.Tag = expTag.Expression;
             t.RefirePeriodExpression = expRefirePeriod.Expression;
             t.DebugLevel = (RealPlugin.DebugLevelEnum)cbxLoggingLevel.SelectedIndex;
             t.Actions = Actions.OrderBy(tx => tx.OrderNumber).ToList();

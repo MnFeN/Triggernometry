@@ -425,10 +425,20 @@ namespace Triggernometry
             }
         }
 
-        public void RecursiveApplyOnTriggers(Action<Trigger> action)
+        /// <summary>
+        /// Recursively enumerates all <see cref="Trigger"/> instances contained in this folder and its subfolders. <br/>
+        /// Each trigger in the current folder is yielded first, followed by triggers from all nested folders.
+        /// </summary>
+        public IEnumerable<Trigger> RecursiveGetTriggers()
         {
-            Triggers.ForEach(t => action(t));
-            Folders.ForEach(f => f.RecursiveApplyOnTriggers(action));
+            foreach (var t in Triggers)
+                yield return t;
+
+            foreach (var sub in Folders)
+            {
+                foreach (var t in sub.RecursiveGetTriggers())
+                    yield return t;
+            }
         }
 
     }

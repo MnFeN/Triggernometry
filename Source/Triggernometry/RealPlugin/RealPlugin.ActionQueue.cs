@@ -63,6 +63,15 @@ namespace Triggernometry
             internal Context ctx { get; set; }
             internal bool releaseMutex { get; set; } = false;
 
+            /// <summary>
+            /// The effective tag text used by the action,  
+            /// with expressions evaluated when the action is queued. <br />
+            /// If this action’s <see cref="Action.Tag"/> is not specified, or evaluates to a whitespace-string,   
+            /// the <see cref="Trigger.Tag"/> from the parent trigger will be used instead. <br />
+            /// Empty if no tag is specified anywhere.
+            /// </summary>
+            internal string ParsedTag { get; set; } = "";
+
             public QueuedAction(DateTime when, Int64 ordinal, MutexInformation mtx, Action act, Context ctx, bool releaseMutex)
             {
                 this.when = when;
@@ -71,6 +80,17 @@ namespace Triggernometry
                 this.act = act;
                 this.ctx = ctx;
                 this.releaseMutex = releaseMutex;
+                var actionTag = ctx.EvaluateStringExpression(null, ctx, act.Tag);
+                if (!string.IsNullOrWhiteSpace(actionTag))
+                {
+                    ParsedTag = actionTag;
+                }
+                else
+                {
+                    var triggerTag = ctx.EvaluateStringExpression(null, ctx, ctx?.trig?.Tag);
+                    if (!string.IsNullOrWhiteSpace(triggerTag))
+                        ParsedTag = triggerTag;
+                }
             }
 
             public int CompareTo(object o)
@@ -94,66 +114,49 @@ namespace Triggernometry
 
         }
 
-        internal void ClearActionQueue()
-        {
-            lock (ActionQueue) // verified
-            {
-                ActionQueue.Clear();
-            }
-        }
+        /// <summary>
+        /// Remove queued actions from the global action queue based on the specified filter. <br/>
+        /// If <paramref name="filter"/> is <c>null</c>, all queued actions are cleared. <br/>
+        /// If any actions are removed, the action queue is re-sorted and the update event is signaled.
+        /// </summary>
+        /// <param name="filter">
+        /// Select which queued actions to remove. <br/>
+        /// If <c>null</c>, all actions will be removed.
+        /// </param>
+        /// <returns>The number of queued actions removed from the queue.</returns>
 
-        internal void CancelAllQueuedActionsFromTrigger(Trigger t)
+        internal int CancelQueuedActions(Func<QueuedAction, bool> filter = null)
         {
-            int remd = 0;
+            int removedCount = 0;
             lock (ActionQueue)
             {
-                var ix = from ax in ActionQueue
-                         where ax.ctx.trig == t
-                         select ax;
-                if (ix.Count() > 0)
+                if (filter == null)
                 {
-                    List<QueuedAction> rems = new List<QueuedAction>();
-                    rems.AddRange(ix);
-                    foreach (QueuedAction qa in rems)
-                    {
-                        ActionQueue.Remove(qa);
-                        remd++;
-                    }
-                    ActionQueue.Sort();
-                    ActionUpdateEvent.Set();
+                    removedCount = ActionQueue.Count;
+                    ActionQueue.Clear();
                 }
-            }
-            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/queuedactscancelled", "{0} queued action(s) from trigger '{1}' cancelled", remd, t.LogName));
-        }
-
-        internal void CancelAllQueuedActionsMatchingTag(string tagRegex)
-        {
-            if (string.IsNullOrWhiteSpace(tagRegex))
-                throw new ArgumentException($"tagRegex should not be empty");
-            int count;
-            lock (ActionQueue)
-            {
-                var regex = new Regex(tagRegex);
-                var matchedActions = ActionQueue.Where(qa => regex.Match(qa.act?.Tag ?? "").Success).ToList();
-                if (matchedActions.Count > 0)
+                else
                 {
-                    foreach (QueuedAction qa in matchedActions)
+                    var toRemove = ActionQueue.Where(filter).ToList();
+                    removedCount = toRemove.Count;
+                    if (removedCount > 0)
                     {
-                        ActionQueue.Remove(qa);
+                        foreach (var qa in toRemove)
+                            ActionQueue.Remove(qa);
+                        ActionQueue.Sort();
                     }
-                    ActionQueue.Sort();
-                    ActionUpdateEvent.Set();
                 }
-                count = matchedActions.Count;
+                if (removedCount > 0)
+                    ActionUpdateEvent.Set();
             }
-            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/queuedactscancelledtag", "{0} queued action(s) matching '{1}' cancelled", count, tagRegex));
+            return removedCount;
         }
 
         internal Action QueueActions(Context ctx, DateTime startingFrom, IEnumerable<Action> actions, bool sequential, RealPlugin.MutexInformation mtx, Context.LoggerDelegate logger)
         {
             Action lastAction = null;
             var sortedActions = actions.OrderBy(a => a.OrderNumber);
-            var finalAction = sortedActions.LastOrDefault();
+            var finalAction = sortedActions.LastOrDefault(); // _Enabled?
             if (sequential == false)
             {
                 foreach (Action action in sortedActions)

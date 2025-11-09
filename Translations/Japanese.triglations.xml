@@ -482,6 +482,7 @@
     <TranslationEntry Key="ActionForm/lblSpeechRate" Translation="読み上げの速度 (-10 ... +10)" />
     <TranslationEntry Key="ActionForm/lblSpeechRouting" Translation="Audio output method" />
     <TranslationEntry Key="ActionForm/lblSpeechVolume" Translation="読み上げる音声のボリューム (0 ... 100 %)" />
+    <TranslationEntry Key="ActionForm/lblTag" Translation="Tag" />
     <TranslationEntry Key="ActionForm/lblTextAuraAlignment" Translation="テキストの配置" />
     <TranslationEntry Key="ActionForm/lblTextAuraFont" Translation="フォント" />
     <TranslationEntry Key="ActionForm/lblTextAuraHeight" Translation="高さ" />
@@ -501,6 +502,7 @@
     <TranslationEntry Key="ActionForm/lblTextOutlineColor" Translation="Outline" />
     <TranslationEntry Key="ActionForm/lblTextToSay" Translation="読み上げるテキスト" />
     <TranslationEntry Key="ActionForm/lblTrigger" Translation="トリガー" />
+    <TranslationEntry Key="ActionForm/lblTriggerTagRegex" Translation="Tag Regex" />
     <TranslationEntry Key="ActionForm/lblTriggerOp" Translation="操作" />
     <TranslationEntry Key="ActionForm/lblTriggerText" Translation="実行するイベントのテキスト" />
     <TranslationEntry Key="ActionForm/lblTriggerZone" Translation="実行するゾーン名" />
@@ -922,7 +924,7 @@
     <TranslationEntry Key="internal/Action/beepfreqlo" Translation="Beep frequency below limit, capping to {0}" />
     <TranslationEntry Key="internal/Action/beeplengthlo" Translation="Beep length below limit, capping to {0}" />
     <TranslationEntry Key="internal/Action/callbackinvoke" Translation="Invoking named callback ({0}) with parameter ({1})" />		  
-    <TranslationEntry Key="internal/Action/cancelfolder" Translation="Cancelled all trigger actions in folder ({0})" />
+    <TranslationEntry Key="internal/Action/cancelfolder" Translation="Cancelled {1} queued action(s) from {2} triggers in folder ({0})" />
     <TranslationEntry Key="internal/Action/changetagtestmode" Translation="Action '{0}' test mode" />
     <TranslationEntry Key="internal/Action/changetagtrigaction" Translation="Trigger '{0}' action '{1}'" />
     <TranslationEntry Key="internal/Action/descactcombatend" Translation="End ACT encounter" />
@@ -1080,8 +1082,10 @@
     <TranslationEntry Key="internal/Action/desctextauradeact" Translation="テキストオーバーレイ ({0}) を無効化" />
     <TranslationEntry Key="internal/Action/desctextauradeactall" Translation="すべてのテキストオーバーレイを無効化" />
     <TranslationEntry Key="internal/Action/desctextauradeactrex" Translation="正規表現 ({0}) にマッチするテキストオーバーレイを無効化" />
-    <TranslationEntry Key="internal/Action/desctrigcancel" Translation="トリガー ({0}) からキューイングされた全てのアクションをキャンセル" />
-    <TranslationEntry Key="internal/Action/desctrigcancelall" Translation="すべてのトリガーからキューイングされたアクションをキャンセル" />
+    <TranslationEntry Key="internal/Action/desctrigcancelall" Translation="すべてのトリガーのアクションを取消" />
+    <TranslationEntry Key="internal/Action/desctrigcanceltag" Translation="タグが正規表現（{0}）に一致するアクションを取消" />
+    <TranslationEntry Key="internal/Action/desctrigcanceltrig" Translation="トリガー（{0}）のアクションを取消" />
+    <TranslationEntry Key="internal/Action/desctrigcanceltrigtag" Translation="トリガー（{0}）のタグが正規表現（{1}）に一致するアクションを取消" />
     <TranslationEntry Key="internal/Action/desctrigdisable" Translation="トリガー ({0}) を無効化" />
     <TranslationEntry Key="internal/Action/desctrigenable" Translation="トリガー ({0}) を有効化" />
     <TranslationEntry Key="internal/Action/desctrigfire" Translation="トリガー ({0}) を実行" />
@@ -1205,6 +1209,10 @@
     <TranslationEntry Key="internal/Action/tableunset" Translation="{1}テーブル変数 ({0}) を初期化" />
     <TranslationEntry Key="internal/Action/tableunsetall" Translation="すべての{0}テーブル変数を初期化する" />
     <TranslationEntry Key="internal/Action/tableunsetregex" Translation="正規表現 ({0}) にマッチする{1}テーブル変数をすべて削除しました" />
+    <TranslationEntry Key="internal/Action/trigcancelall" Translation="すべての {0} 件のアクションを取消しました" />
+    <TranslationEntry Key="internal/Action/trigcanceltag" Translation="タグ「{1}」一致の {0} 件のアクションを取消しました" />
+    <TranslationEntry Key="internal/Action/trigcanceltrig" Translation="トリガー「{1}」の {0} 件のアクションを取消しました" />
+    <TranslationEntry Key="internal/Action/trigcanceltrigtag" Translation="トリガー「{1}」のタグ「{2}」一致の {0} 件のアクションを取消しました" />
     <TranslationEntry Key="internal/Action/trigdisable" Translation="トリガー '{0}' を無効化しました" />
     <TranslationEntry Key="internal/Action/trigenable" Translation="トリガー '{0}' を有効化しました" />
     <TranslationEntry Key="internal/Action/waitingprocexit" Translation="プロセスの終了を待っています" />
@@ -1475,7 +1483,6 @@
     <TranslationEntry Key="internal/Plugin/mutexdelayed" Translation="Context '{0}' has been waiting for mutex '{1}' on {2} for {3} ms, current owner is '{4}'" />
     <TranslationEntry Key="internal/Plugin/notadministrator" Translation="管理者としてACTを実行していません。一部のトリガーが機能しない可能性があります。" />
     <TranslationEntry Key="internal/Plugin/procex" Translation="Exception ({0}) when processing log line ({1}) in zone ({2})" />
-    <TranslationEntry Key="internal/Plugin/queuedactscancelled" Translation="{0} queued action(s) from trigger '{1}' cancelled" />
     <TranslationEntry Key="internal/Plugin/releaseunownedmutex" Translation="Tried to release unowned mutex '{0}' from context '{1}'" />
     <TranslationEntry Key="internal/Plugin/repodownloading" Translation="Downloading repository {0} from {1}" />
     <TranslationEntry Key="internal/Plugin/repoexportnull" Translation="リポジトリ {0} のデータは逆シリアル化できませんでした。Triggernometryの最新バージョンを実行していることを確認してください。" />
@@ -2121,6 +2128,7 @@
     <TranslationEntry Key="TriggerForm/lblRefireWithinPeriod" Translation="指定時間内に再びトリガーが起動した場合" />
     <TranslationEntry Key="TriggerForm/lblRegexp" Translation="正規表現" />
     <TranslationEntry Key="TriggerForm/lblScheduleFrom" Translation="トリガーアクションのスケジュール開始" />
+    <TranslationEntry Key="TriggerForm/lblTag" Translation="Tag" />
     <TranslationEntry Key="TriggerForm/lblTriggerSource" Translation="トリガーのイベントソース" />
     <TranslationEntry Key="TriggerForm/tabDebugging" Translation="デバッグ" />
     <TranslationEntry Key="TriggerForm/tabDescription" Translation="説明" />

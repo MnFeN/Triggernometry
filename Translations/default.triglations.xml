@@ -482,6 +482,7 @@
     <TranslationEntry Key="ActionForm/lblSpeechRate" Translation="Speech speed rate (-10 ... +10)" />
     <TranslationEntry Key="ActionForm/lblSpeechRouting" Translation="Audio output method" />
     <TranslationEntry Key="ActionForm/lblSpeechVolume" Translation="Speech volume (0 ... 100 %)" />
+    <TranslationEntry Key="ActionForm/lblTag" Translation="Tag" />
     <TranslationEntry Key="ActionForm/lblTextAuraAlignment" Translation="Text alignment" />
     <TranslationEntry Key="ActionForm/lblTextAuraFont" Translation="Font" />
     <TranslationEntry Key="ActionForm/lblTextAuraHeight" Translation="Height expression" />
@@ -501,6 +502,7 @@
     <TranslationEntry Key="ActionForm/lblTextOutlineColor" Translation="Outline" />
     <TranslationEntry Key="ActionForm/lblTextToSay" Translation="Text to say" />
     <TranslationEntry Key="ActionForm/lblTrigger" Translation="Trigger" />
+    <TranslationEntry Key="ActionForm/lblTriggerTagRegex" Translation="Tag Regex" />
     <TranslationEntry Key="ActionForm/lblTriggerOp" Translation="Operation" />
     <TranslationEntry Key="ActionForm/lblTriggerText" Translation="Event text for firing" />
     <TranslationEntry Key="ActionForm/lblTriggerZone" Translation="Zone name for firing" />
@@ -922,7 +924,7 @@
     <TranslationEntry Key="internal/Action/beepfreqlo" Translation="Beep frequency below limit, capping to {0}" />
     <TranslationEntry Key="internal/Action/beeplengthlo" Translation="Beep length below limit, capping to {0}" />
 	  <TranslationEntry Key="internal/Action/callbackinvoke" Translation="Invoking named callback ({0}) with parameter ({1})" />
-    <TranslationEntry Key="internal/Action/cancelfolder" Translation="Cancelled all trigger actions in folder ({0})" />
+    <TranslationEntry Key="internal/Action/cancelfolder" Translation="Cancelled {1} queued action(s) from {2} triggers in folder ({0})" />
     <TranslationEntry Key="internal/Action/changetagtestmode" Translation="Action '{0}' test mode" />
     <TranslationEntry Key="internal/Action/changetagtrigaction" Translation="Trigger '{0}' action '{1}'" />
     <TranslationEntry Key="internal/Action/descactcombatend" Translation="End ACT encounter" />
@@ -1080,8 +1082,10 @@
     <TranslationEntry Key="internal/Action/desctextauradeact" Translation="deactivate text aura ({0})" />
     <TranslationEntry Key="internal/Action/desctextauradeactall" Translation="deactivate all text auras" />
     <TranslationEntry Key="internal/Action/desctextauradeactrex" Translation="deactivate text auras matching regular expression ({0})" />
-    <TranslationEntry Key="internal/Action/desctrigcancel" Translation="cancel all actions queued from trigger ({0})" />
     <TranslationEntry Key="internal/Action/desctrigcancelall" Translation="cancel all actions queued from all triggers" />
+    <TranslationEntry Key="internal/Action/desctrigcanceltag" Translation="cancel all actions queued from all triggers with tags matching regex ({0})" />
+    <TranslationEntry Key="internal/Action/desctrigcanceltrig" Translation="cancel all actions queued from trigger ({0})" />
+    <TranslationEntry Key="internal/Action/desctrigcanceltrigtag" Translation="cancel all actions queued from trigger ({0}) with tags matching regex ({1})" />
     <TranslationEntry Key="internal/Action/desctrigdisable" Translation="disable trigger ({0})" />
     <TranslationEntry Key="internal/Action/desctrigenable" Translation="enable trigger ({0})" />
     <TranslationEntry Key="internal/Action/desctrigfire" Translation="fire trigger ({0})" />
@@ -1205,6 +1209,10 @@
     <TranslationEntry Key="internal/Action/tableunset" Translation="{1}Table variable ({0}) unset" />
     <TranslationEntry Key="internal/Action/tableunsetall" Translation="{0}All table variables unset" />
     <TranslationEntry Key="internal/Action/tableunsetregex" Translation="{1}All table variables matching ({0}) unset" />
+    <TranslationEntry Key="internal/Action/trigcancelall" Translation="All {0} queued action(s) cancelled" />
+    <TranslationEntry Key="internal/Action/trigcanceltag" Translation="{0} queued action(s) with tags matching '{1}' cancelled" />
+    <TranslationEntry Key="internal/Action/trigcanceltrig" Translation="{0} queued action(s) from trigger '{1}' cancelled" />
+    <TranslationEntry Key="internal/Action/trigcanceltrigtag" Translation="{0} queued action(s) from trigger '{1}' with tags matching '{2}' cancelled" />
     <TranslationEntry Key="internal/Action/trigdisable" Translation="Trigger '{0}' disabled" />
     <TranslationEntry Key="internal/Action/trigenable" Translation="Trigger '{0}' enabled" />
     <TranslationEntry Key="internal/Action/waitingprocexit" Translation="Waiting for process to exit" />
@@ -1475,7 +1483,6 @@
     <TranslationEntry Key="internal/Plugin/mutexdelayed" Translation="Context '{0}' has been waiting for mutex '{1}' on {2} for {3} ms, current owner is '{4}'" />
     <TranslationEntry Key="internal/Plugin/notadministrator" Translation="You are not running ACT as an administrator - this might prevent some triggers from working." />
     <TranslationEntry Key="internal/Plugin/procex" Translation="Exception ({0}) when processing log line ({1}) in zone ({2})" />
-    <TranslationEntry Key="internal/Plugin/queuedactscancelled" Translation="{0} queued action(s) from trigger '{1}' cancelled" />
     <TranslationEntry Key="internal/Plugin/releaseunownedmutex" Translation="Tried to release unowned mutex '{0}' from context '{1}'" />
     <TranslationEntry Key="internal/Plugin/repodownloading" Translation="Downloading repository {0} from {1}" />
     <TranslationEntry Key="internal/Plugin/repoexportnull" Translation="Data for repository {0} could not be unserialized" />
@@ -2121,6 +2128,7 @@
     <TranslationEntry Key="TriggerForm/lblRefireWithinPeriod" Translation="If the trigger fires within the refire period" />
     <TranslationEntry Key="TriggerForm/lblRegexp" Translation="Regular expression" />
     <TranslationEntry Key="TriggerForm/lblScheduleFrom" Translation="Schedule trigger actions starting from" />
+    <TranslationEntry Key="TriggerForm/lblTag" Translation="Tag" />
     <TranslationEntry Key="TriggerForm/lblTriggerSource" Translation="Trigger event source" />
     <TranslationEntry Key="TriggerForm/tabDebugging" Translation="Debugging" />
     <TranslationEntry Key="TriggerForm/tabDescription" Translation="Description" />

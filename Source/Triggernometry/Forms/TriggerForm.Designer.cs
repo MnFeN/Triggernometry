@@ -50,6 +50,8 @@
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
             this.expMutexName = new Triggernometry.CustomControls.ExpressionTextBox();
             this.lblMutexCapture = new System.Windows.Forms.Label();
+            this.expTag = new Triggernometry.CustomControls.ExpressionTextBox();
+            this.lblTag = new System.Windows.Forms.Label();
             this.cbxSequential = new System.Windows.Forms.CheckBox();
             this.cbxEditAutofire = new System.Windows.Forms.CheckBox();
             this.cbxEditAutofireAllowCondition = new System.Windows.Forms.CheckBox();
@@ -319,26 +321,29 @@
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
-            this.tableLayoutPanel15.Controls.Add(this.expMutexName, 1, 6);
-            this.tableLayoutPanel15.Controls.Add(this.lblMutexCapture, 0, 6);
-            this.tableLayoutPanel15.Controls.Add(this.cbxSequential, 0, 9);
-            this.tableLayoutPanel15.Controls.Add(this.cbxEditAutofire, 0, 7);
-            this.tableLayoutPanel15.Controls.Add(this.cbxEditAutofireAllowCondition, 0, 8);
-            this.tableLayoutPanel15.Controls.Add(this.cbxTriggerSource, 1, 0);
             this.tableLayoutPanel15.Controls.Add(this.lblTriggerSource, 0, 0);
-            this.tableLayoutPanel15.Controls.Add(this.cbxRefireWithinPeriod, 1, 4);
-            this.tableLayoutPanel15.Controls.Add(this.lblRefireWithinPeriod, 0, 4);
-            this.tableLayoutPanel15.Controls.Add(this.cbxRefireOption2, 1, 2);
-            this.tableLayoutPanel15.Controls.Add(this.lblScheduleFrom, 0, 3);
-            this.tableLayoutPanel15.Controls.Add(this.lblRefirePeriod, 0, 5);
-            this.tableLayoutPanel15.Controls.Add(this.cbxScheduleFrom, 1, 3);
-            this.tableLayoutPanel15.Controls.Add(this.cbxRefireOption1, 1, 1);
-            this.tableLayoutPanel15.Controls.Add(this.lblRefireOption1, 0, 1);
-            this.tableLayoutPanel15.Controls.Add(this.expRefirePeriod, 1, 5);
+            this.tableLayoutPanel15.Controls.Add(this.cbxTriggerSource, 1, 0);
+            this.tableLayoutPanel15.Controls.Add(this.lblTag, 0, 1);
+            this.tableLayoutPanel15.Controls.Add(this.expTag, 1, 1);
+            this.tableLayoutPanel15.Controls.Add(this.lblRefireOption1, 0, 2);
+            this.tableLayoutPanel15.Controls.Add(this.cbxRefireOption1, 1, 2);
+            this.tableLayoutPanel15.Controls.Add(this.cbxRefireOption2, 1, 3);
+            this.tableLayoutPanel15.Controls.Add(this.lblScheduleFrom, 0, 4);
+            this.tableLayoutPanel15.Controls.Add(this.cbxScheduleFrom, 1, 4);
+            this.tableLayoutPanel15.Controls.Add(this.lblRefireWithinPeriod, 0, 5);
+            this.tableLayoutPanel15.Controls.Add(this.cbxRefireWithinPeriod, 1, 5);
+            this.tableLayoutPanel15.Controls.Add(this.lblRefirePeriod, 0, 6);
+            this.tableLayoutPanel15.Controls.Add(this.expRefirePeriod, 1, 6);
+            this.tableLayoutPanel15.Controls.Add(this.lblMutexCapture, 0, 7);
+            this.tableLayoutPanel15.Controls.Add(this.expMutexName, 1, 7);
+            this.tableLayoutPanel15.Controls.Add(this.cbxEditAutofire, 0, 8);
+            this.tableLayoutPanel15.Controls.Add(this.cbxEditAutofireAllowCondition, 0, 9);
+            this.tableLayoutPanel15.Controls.Add(this.cbxSequential, 0, 10);
             this.tableLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel15.Location = new System.Drawing.Point(7, 7);
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
-            this.tableLayoutPanel15.RowCount = 10;
+            this.tableLayoutPanel15.RowCount = 11;
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -375,9 +380,31 @@
             this.lblMutexCapture.Location = new System.Drawing.Point(3, 161);
             this.lblMutexCapture.Name = "lblMutexCapture";
             this.lblMutexCapture.Size = new System.Drawing.Size(273, 26);
-            this.lblMutexCapture.TabIndex = 17;
             this.lblMutexCapture.Text = "Mutex to capture on fire";
             this.lblMutexCapture.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // expTag
+            // 
+            this.expTag.AutocompleteAvailable = true;
+            this.expTag.AutofillType = Triggernometry.CustomControls.ExpressionTextBox.AutofillTypeEnum.None;
+            this.expTag.AutoSize = true;
+            this.tableLayoutPanel15.SetColumnSpan(this.expTag, 2);
+            this.expTag.Dock = System.Windows.Forms.DockStyle.Top;
+            this.expTag.Expression = "";
+            this.expTag.ExpressionType = Triggernometry.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.String;
+            this.expTag.IsPersistent = false;
+            this.expTag.Name = "expTag";
+            this.expTag.ReadOnly = false;
+            this.expTag.TabIndex = 17;
+            // 
+            // lblTag
+            // 
+            this.lblTag.AutoSize = true;
+            this.lblTag.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTag.Name = "lblTag";
+            this.lblTag.TabIndex = 17;
+            this.lblTag.Text = "Tag";
+            this.lblTag.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cbxSequential
             // 
@@ -843,6 +870,8 @@
         private System.Windows.Forms.CheckBox cbxSequential;
         private CustomControls.ExpressionTextBox expMutexName;
         private System.Windows.Forms.Label lblMutexCapture;
+        private CustomControls.ExpressionTextBox expTag;
+        private System.Windows.Forms.Label lblTag;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel23;
         private System.Windows.Forms.CheckBox chkReadmeTrigger;
         private CustomControls.ActionViewer actionViewer1;

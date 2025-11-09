@@ -567,10 +567,6 @@ namespace Triggernometry
             values = new List<List<string>>();
         }
 
-        public void CancelAllTriggersInFolder(Folder folder, Context ctx)
-        {
-        }
-
         public bool ObsConnector(Context ctx, string endpoint, string password)
         {
             return false;

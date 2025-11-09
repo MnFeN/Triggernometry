@@ -23,14 +23,6 @@ using static Triggernometry.RealPlugin;
 namespace Triggernometry
 {
 
-    /*
-	Confirm the triggers to import.
-	
-	At least one of triggers you are trying to import includes one of more actions that are set to launch an external process.
-	These triggers may be dangerous and as such they are not included in the import by default.
-	To import these triggers, you will have to confirm them manually one by one.
-	
-	*/
     public partial class Action
     {
 
@@ -332,12 +324,14 @@ namespace Triggernometry
         }
 
         /// <summary> A string tag used in trigger/folder actions to interrupt specific actions. </summary>
-        internal string _Tag { get; set; } = null;
-        [XmlAttribute]
-        public string Tag
+        [XmlIgnore]
+        public string Tag { get; set; }
+
+        [XmlAttribute("Tag")]
+        public string TagXml
         {
-            get => string.IsNullOrWhiteSpace(_Tag) ? _Tag : null;
-            set => _Tag = value;
+            get => string.IsNullOrWhiteSpace(Tag) ? null : Tag;
+            set => Tag = value;
         }
 
         internal ConditionGroup _Condition = new ConditionGroup { Enabled = false };
@@ -526,19 +520,6 @@ namespace Triggernometry
             return str.ToUpper();
         }
 
-        private void CancelAllTriggersInFolder(Folder folder, Context ctx)
-        {
-            foreach (var trigger in folder.Triggers)
-            {
-                plug.CancelAllQueuedActionsFromTrigger(trigger);
-            }
-
-            foreach (var subFolder in folder.Folders)
-            {
-                CancelAllTriggersInFolder(subFolder, ctx);
-            }
-        }
-
         /// <returns>
         /// <c>true</c> : connected <br /> 
         /// <c>false</c>: failed <br /> 
@@ -662,81 +643,94 @@ namespace Triggernometry
                 case ActionTypeEnum.Trigger:
                     {
                         Trigger t = plug.GetTriggerById(_TriggerId, ctx.trig?.Repo);
-                        if (t != null)
+                        if (t == null && _TriggerOp != TriggerOpEnum.CancelAllTrigger)
                         {
-                            switch (_TriggerOp)
-                            {
-                                case TriggerOpEnum.CancelTrigger:
-                                    temp += I18n.Translate("internal/Action/desctrigcancel", "cancel all actions queued from trigger ({0})", t.Name);
-                                    break;
-                                case TriggerOpEnum.CancelAllTrigger:
-                                    if (string.IsNullOrWhiteSpace(_TriggerActionTag))
-                                        temp += I18n.Translate("internal/Action/desctrigcancelall", "cancel all actions queued from all triggers");
-                                    else
-                                        temp += I18n.Translate("internal/Action/desctrigcancelregex", "cancel all actions matching regex {0}", _TriggerActionTag);
-                                    break;
-                                case TriggerOpEnum.FireTrigger:
-
-                                    temp += I18n.Translate("internal/Action/desctrigfire", "fire trigger ({0})", t.Name);
-                                    List<string> ex = new List<string>();
-                                    if (_TriggerForceType == TriggerForceTypeEnum.SkipAll)
-                                    {
-                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreall", "all restrictions"));
-                                    }
-                                    else
-                                    {
-                                        if ((_TriggerForceType & TriggerForceTypeEnum.SkipRegexp) != 0)
-                                        {
-                                            ex.Add(I18n.Translate("internal/Action/desctrigignoreregex", "regular expression"));
-                                        }
-                                        else
-                                        {
-                                            temp += " " + I18n.Translate("internal/Action/desctrigfireusing", "with event text ({0}) and zone ({1})", _TriggerText, _TriggerZone);
-                                        }
-                                        if ((_TriggerForceType & TriggerForceTypeEnum.SkipConditions) != 0)
-                                        {
-                                            ex.Add(I18n.Translate("internal/Action/desctrigignoreconditions", "conditions"));
-                                        }
-                                        if ((_TriggerForceType & TriggerForceTypeEnum.SkipRefire) != 0)
-                                        {
-                                            ex.Add(I18n.Translate("internal/Action/desctrigignorerefire", "refire delay"));
-                                        }
-                                        if ((_TriggerForceType & TriggerForceTypeEnum.SkipParent) != 0)
-                                        {
-                                            ex.Add(I18n.Translate("internal/Action/desctrigignoreparent", "parent folder settings"));
-                                        }
-                                        if ((_TriggerForceType & TriggerForceTypeEnum.SkipActive) != 0)
-                                        {
-                                            ex.Add(I18n.Translate("internal/Action/desctrigignorestate", "enabled/disabled status"));
-                                        }
-                                    }
-                                    if (ex.Count > 1)
-                                    {
-                                        ex[ex.Count - 1] = I18n.Translate("internal/Action/desctrigignoreand", "and") + " " + ex[ex.Count - 1];
-                                    }
-                                    if (ex.Count > 0)
-                                    {
-                                        temp += ", " + I18n.Translate("internal/Action/desctrigignoring", "ignoring") + " " + String.Join(", ", ex);
-                                    }
-                                    break;
-                                case TriggerOpEnum.DisableTrigger:
-                                    temp += I18n.Translate("internal/Action/desctrigdisable", "disable trigger ({0})", t.Name);
-                                    break;
-                                case TriggerOpEnum.EnableTrigger:
-                                    temp += I18n.Translate("internal/Action/desctrigenable", "enable trigger ({0})", t.Name);
-                                    break;
-                            }
+                            temp += I18n.Translate("internal/Action/desctriginvalidref", "trigger action with an invalid trigger reference ({0})", _TriggerId);
+                            break;
                         }
-                        else
+                        switch (_TriggerOp)
                         {
-                            if (_TriggerOp == TriggerOpEnum.CancelAllTrigger)
-                            {
-                                temp += I18n.Translate("internal/Action/desctrigcancelall", "cancel all actions queued from all triggers");
-                            }
-                            else
-                            {
-                                temp += I18n.Translate("internal/Action/desctriginvalidref", "trigger action with an invalid trigger reference ({0})", _TriggerId);
-                            }
+                            case TriggerOpEnum.CancelTrigger:
+                                if (string.IsNullOrWhiteSpace(_TriggerTagRegex))
+                                {
+                                    temp += I18n.Translate(
+                                        "internal/Action/desctrigcanceltrig",
+                                        "cancel all actions queued from trigger ({0})",
+                                        t?.Name ?? "null");
+                                }
+                                else
+                                {
+                                    temp += I18n.Translate(
+                                        "internal/Action/desctrigcanceltrigtag",
+                                        "cancel all actions queued from trigger ({0}) with tags matching regex ({1})",
+                                        t?.Name ?? "null", _TriggerTagRegex);
+                                }
+                                break;
+                            case TriggerOpEnum.CancelAllTrigger:
+                                if (string.IsNullOrWhiteSpace(_TriggerTagRegex))
+                                {
+                                    temp += I18n.Translate(
+                                        "internal/Action/desctrigcancelall",
+                                        "cancel all actions queued from all triggers");
+                                }
+                                else
+                                {
+                                    temp += I18n.Translate(
+                                        "internal/Action/desctrigcanceltag",
+                                        "cancel all actions queued from all triggers with tags matching regex ({0})",
+                                        _TriggerTagRegex);
+                                }
+                                break;
+                            case TriggerOpEnum.FireTrigger:
+
+                                temp += I18n.Translate("internal/Action/desctrigfire", "fire trigger ({0})", t?.Name ?? "null");
+                                List<string> ex = new List<string>();
+                                if (_TriggerForceType == TriggerForceTypeEnum.SkipAll)
+                                {
+                                    ex.Add(I18n.Translate("internal/Action/desctrigignoreall", "all restrictions"));
+                                }
+                                else
+                                {
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipRegexp) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreregex", "regular expression"));
+                                    }
+                                    else
+                                    {
+                                        temp += " " + I18n.Translate("internal/Action/desctrigfireusing", "with event text ({0}) and zone ({1})", _TriggerText, _TriggerZone);
+                                    }
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipConditions) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreconditions", "conditions"));
+                                    }
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipRefire) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignorerefire", "refire delay"));
+                                    }
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipParent) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreparent", "parent folder settings"));
+                                    }
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipActive) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignorestate", "enabled/disabled status"));
+                                    }
+                                }
+                                if (ex.Count > 1)
+                                {
+                                    ex[ex.Count - 1] = I18n.Translate("internal/Action/desctrigignoreand", "and") + " " + ex[ex.Count - 1];
+                                }
+                                if (ex.Count > 0)
+                                {
+                                    temp += ", " + I18n.Translate("internal/Action/desctrigignoring", "ignoring") + " " + String.Join(", ", ex);
+                                }
+                                break;
+                            case TriggerOpEnum.DisableTrigger:
+                                temp += I18n.Translate("internal/Action/desctrigdisable", "disable trigger ({0})", t?.Name ?? "null");
+                                break;
+                            case TriggerOpEnum.EnableTrigger:
+                                temp += I18n.Translate("internal/Action/desctrigenable", "enable trigger ({0})", t?.Name ?? "null");
+                                break;
                         }
                     }
                     break;
@@ -2356,8 +2350,13 @@ namespace Triggernometry
                                         break;
                                     case FolderOpEnum.CancelFolder:
                                         {
-                                            CancelAllTriggersInFolder(f, ctx);
-                                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfolder", "Cancelled all triggers in folder ({0})", f.Name));
+                                            var triggersInFolder = new HashSet<Trigger>(f.RecursiveGetTriggers());
+                                            int removed = plug.CancelQueuedActions(
+                                                _qa => _qa?.ctx?.trig != null && triggersInFolder.Contains(_qa.ctx.trig)
+                                            );
+                                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfolder",
+                                                "Cancelled {1} queued action(s) from {2} triggers in folder ({0})", 
+                                                f.Name, removed, triggersInFolder.Count));
                                         }
                                         break;
                                 }
@@ -4065,92 +4064,125 @@ namespace Triggernometry
                     case ActionTypeEnum.Trigger:
                         {
                             Trigger t = plug.GetTriggerById(_TriggerId, ctx.trig?.Repo);
-                            if (t != null)
+                            if (t == null && _TriggerOp != TriggerOpEnum.CancelAllTrigger)
                             {
-                                switch (_TriggerOp)
-                                {
-                                    case TriggerOpEnum.CancelAllTrigger:
-                                        if (string.IsNullOrWhiteSpace(_TriggerActionTag))
-                                            plug.ClearActionQueue();
-                                        else
-                                            plug.CancelAllQueuedActionsMatchingTag(_TriggerActionTag);
-                                            break;
-                                    case TriggerOpEnum.CancelTrigger:
-                                        plug.CancelAllQueuedActionsFromTrigger(t);
-                                        break;
-                                    case TriggerOpEnum.FireTrigger:
-                                        {
-                                            LogEvent le = new LogEvent();
-                                            le.Text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _TriggerText);
-                                            le.ZoneName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _TriggerZone);
-                                            if (_TriggerZoneType == TriggerZoneTypeEnum.ZoneIdFFXIV && le.ZoneName.Trim().Length > 0)
-                                            {
-                                                le.ZoneId = le.ZoneName;
-                                            }
-                                            le.Timestamp = DateTime.Now;
-                                            if (ctx.zoneIdOverride != null)
-                                            {
-                                                le.TestMode = true;
-                                                le.ZoneId = ctx.zoneIdOverride;
-                                            }
-                                            plug.TestTrigger(t, le, _TriggerForceType);
-                                        }
-                                        break;
-                                    case TriggerOpEnum.EnableTrigger:
-                                        {
-                                            t.Enabled = true;
-
-                                            plug.ui.Invoke((System.Action)(() =>
-                                            {
-                                                bool isLocal = ctx.trig == null || ctx.trig.Repo == null;
-                                                TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
-
-                                                if (tn != null)
-                                                {
-                                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/trigenable", "Trigger '{0}' enabled", t.LogName));
-                                                    tn.Checked = true;
-                                                }
-                                                else
-                                                {
-                                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodetrigenable", "Could not find tree node to modify for enabling trigger {0}", t.LogName));
-                                                }
-                                            }));
-                                        }
-                                        break;
-                                    case TriggerOpEnum.DisableTrigger:
-                                        {
-                                            t.Enabled = false;
-
-                                            plug.ui.Invoke((System.Action)(() =>
-                                            {
-                                                bool isLocal = ctx.trig == null || ctx.trig.Repo == null;
-                                                TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
-
-                                                if (tn != null)
-                                                {
-                                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/trigdisable", "Trigger '{0}' disabled", t.LogName));
-                                                    tn.Checked = false;
-                                                }
-                                                else
-                                                {
-                                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodetrigdisable", "Could not find tree node to modify for disabling trigger {0}", t.LogName));
-                                                }
-                                            }));
-                                        }
-                                        break;
-                                }
-                            }
-                            else
-                            {
-                                if (_TriggerOp == TriggerOpEnum.CancelAllTrigger)
-                                {
-                                    plug.ClearActionQueue();
-                                }
-                                else
-                                {
-                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/notriggerwithid", 
+                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/notriggerwithid",
                                         "Trigger operation failed: In trigger ({1}), the specified trigger id ({0}) does not exist.", _TriggerId, ParentTrigger?.FullPath ?? "null"));
-                                }
+                                break;
+                            }
+                            switch (_TriggerOp)
+                            {
+                                case TriggerOpEnum.CancelAllTrigger:
+                                    {
+                                        // Specified Tag Regex
+                                        if (!string.IsNullOrWhiteSpace(_TriggerTagRegex))
+                                        {
+                                            var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, _TriggerTagRegex);
+                                            var regex = new Regex(tag);
+                                            var removedCount = plug.CancelQueuedActions(
+                                                _qa => regex.IsMatch(_qa?.ParsedTag ?? "")
+                                            );
+                                            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                                                "internal/Action/trigcanceltag",
+                                                "{0} queued action(s) with tags matching '{1}' cancelled",
+                                                removedCount, tag));
+                                        }
+                                        else
+                                        {
+                                            var removedCount = plug.CancelQueuedActions();
+                                            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                                                "internal/Action/trigcancelall",
+                                                "All {0} queued action(s) cancelled",
+                                                removedCount));
+                                        }
+                                    }
+                                    break;
+                                case TriggerOpEnum.CancelTrigger:
+                                    {
+                                        bool trigFilter(QueuedAction _qa) => _qa?.ctx?.trig == t;
+
+                                        if (!string.IsNullOrWhiteSpace(_TriggerTagRegex))
+                                        {
+                                            var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, _TriggerTagRegex);
+                                            var regex = new Regex(tag);
+                                            var removedCount = plug.CancelQueuedActions(
+                                                _qa => trigFilter(_qa) && regex.IsMatch(_qa?.ParsedTag ?? "")
+                                            );
+                                            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                                                "internal/Action/trigcanceltrigtag",
+                                                "{0} queued action(s) from trigger '{1}' with tags matching '{2}' cancelled",
+                                                removedCount, t.LogName, tag));
+                                        }
+                                        else
+                                        {
+                                            var removedCount = plug.CancelQueuedActions(queuedAction => trigFilter(queuedAction));
+                                            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                                                "internal/Action/trigcanceltrig",
+                                                "{0} queued action(s) from trigger '{1}' cancelled",
+                                                removedCount, t.LogName));
+                                        }
+                                    }
+                                    break;
+                                case TriggerOpEnum.FireTrigger:
+                                    {
+                                        LogEvent le = new LogEvent();
+                                        le.Text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _TriggerText);
+                                        le.ZoneName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _TriggerZone);
+                                        if (_TriggerZoneType == TriggerZoneTypeEnum.ZoneIdFFXIV && le.ZoneName.Trim().Length > 0)
+                                        {
+                                            le.ZoneId = le.ZoneName;
+                                        }
+                                        le.Timestamp = DateTime.Now;
+                                        if (ctx.zoneIdOverride != null)
+                                        {
+                                            le.TestMode = true;
+                                            le.ZoneId = ctx.zoneIdOverride;
+                                        }
+                                        plug.TestTrigger(t, le, _TriggerForceType);
+                                    }
+                                    break;
+                                case TriggerOpEnum.EnableTrigger:
+                                    {
+                                        t.Enabled = true;
+
+                                        plug.ui.Invoke((System.Action)(() =>
+                                        {
+                                            bool isLocal = ctx.trig == null || ctx.trig.Repo == null;
+                                            TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
+
+                                            if (tn != null)
+                                            {
+                                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/trigenable", "Trigger '{0}' enabled", t.LogName));
+                                                tn.Checked = true;
+                                            }
+                                            else
+                                            {
+                                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodetrigenable", "Could not find tree node to modify for enabling trigger {0}", t.LogName));
+                                            }
+                                        }));
+                                    }
+                                    break;
+                                case TriggerOpEnum.DisableTrigger:
+                                    {
+                                        t.Enabled = false;
+
+                                        plug.ui.Invoke((System.Action)(() =>
+                                        {
+                                            bool isLocal = ctx.trig == null || ctx.trig.Repo == null;
+                                            TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
+
+                                            if (tn != null)
+                                            {
+                                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/trigdisable", "Trigger '{0}' disabled", t.LogName));
+                                                tn.Checked = false;
+                                            }
+                                            else
+                                            {
+                                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodetrigdisable", "Could not find tree node to modify for disabling trigger {0}", t.LogName));
+                                            }
+                                        }));
+                                    }
+                                    break;
                             }
                         }
                         break;
@@ -4381,6 +4413,7 @@ namespace Triggernometry
             a.OrderNumber = OrderNumber;
             a._Asynchronous = _Asynchronous;
             a._Enabled = _Enabled;
+            a.Tag = Tag;
             a._ExecutionDelayExpression = _ExecutionDelayExpression;
             a._LaunchProcessCmdlineExpression = _LaunchProcessCmdlineExpression;
             a._LaunchProcessPathExpression = _LaunchProcessPathExpression;
@@ -4410,7 +4443,7 @@ namespace Triggernometry
             a._TriggerOp = _TriggerOp;
             a._TriggerText = _TriggerText;
             a._TriggerZone = _TriggerZone;
-            a._TriggerActionTag = _TriggerActionTag;
+            a._TriggerTagRegex = _TriggerTagRegex;
             a._TriggerForceType = _TriggerForceType;
             a._AuraOp = _AuraOp;
             a._AuraName = _AuraName;
