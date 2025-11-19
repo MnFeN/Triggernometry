@@ -23,7 +23,7 @@ namespace Triggernometry
             }
         }
 
-        public string PluginVersionDescription => _pluginVersion?.ToString() ?? "< 1.2.0.1";
+        public string PluginVersionDescription => string.IsNullOrWhiteSpace(PluginVersion) ? "< 1.2.0.1" : PluginVersion;
 
         [XmlIgnore]
         public bool Corrupted = false;
@@ -54,7 +54,7 @@ namespace Triggernometry
             return UTF8Encoding.UTF8.GetString(buf);            
         }
 
-        static public TriggernometryExport Unserialize(string src)
+        public static TriggernometryExport Unserialize(string src)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace Triggernometry
             }
             catch (Exception)
             {
-                Regex rexVersion = new Regex(@"TriggernometryExport[^>]+PluginVersion *= *(?<version>\d+.\d+.\d+.\d+)");
+                Regex rexVersion = new Regex(@"TriggernometryExport[^>]+PluginVersion *= *(?<version>\d+\.\d+\.\d+\.\d+)");
                 string version = rexVersion.Match(src.Length > 100 ? src.Substring(0, 100) : src).Groups["version"].Value;
                 return new TriggernometryExport() { PluginVersion = version, Corrupted = true };
             }

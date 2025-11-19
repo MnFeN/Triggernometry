@@ -77,14 +77,11 @@ namespace Triggernometry.Forms
                 chkKeepLocal.Checked = r.KeepLocalBackup;
                 cbxUpdateAuto.Checked = r.AutoUpdate;
                 nudUpdateMinutes.Value = r.UpdateInterval;
-                txtCacheFilename.Text = plug.GetRepositoryBackupFilename(r);
-                txtLastUpdated.Text = r.LastUpdated == DateTime.MinValue ? I18n.Translate("internal/RepositoryForm/unavailable", "Unavailable") : r.LastUpdated.ToString(CultureInfo.InvariantCulture);
-                txtLastChecked.Text = r.LastUpdatedTrig == DateTime.MinValue ? I18n.Translate("internal/RepositoryForm/unavailable", "Unavailable") : r.LastUpdatedTrig.ToString(CultureInfo.InvariantCulture);
-                txtContentSize.Text = r.ContentSize == 0 ? I18n.Translate("internal/RepositoryForm/unavailable", "Unavailable") : r.ContentSize.ToString(CultureInfo.InvariantCulture);
-                lock (r.UpdateLog)
-                {
-                    txtLog.Text = String.Join(Environment.NewLine, r.UpdateLog);
-                }
+                txtCacheFilename.Text = r.GetBackupFileName();
+                txtLastUpdated.Text = r.LocalLastModified == DateTime.MinValue ? I18n.Translate("internal/RepositoryForm/unavailable", "Unavailable") : r.LocalLastModified.ToString(CultureInfo.InvariantCulture);
+                txtLastChecked.Text = r.UpdateLastChecked == DateTime.MinValue ? I18n.Translate("internal/RepositoryForm/unavailable", "Unavailable") : r.UpdateLastChecked.ToString(CultureInfo.InvariantCulture);
+                txtContentSize.Text = r.CurrentContentLength == 0 ? I18n.Translate("internal/RepositoryForm/unavailable", "Unavailable") : r.CurrentContentLength.ToString(CultureInfo.InvariantCulture);
+                txtLog.Text = String.Join(Environment.NewLine, r.UpdateLogSnapshot());
             }
         }
 
@@ -103,6 +100,11 @@ namespace Triggernometry.Forms
             r.UpdatePolicy = (Repository.UpdatePolicyEnum)cbxUpdatePolicy.SelectedIndex;
             r.UpdateInterval = (int)nudUpdateMinutes.Value;
             r.AutoUpdate = cbxUpdateAuto.Checked;
+            // reset restrictions
+            foreach (Trigger t in r.Root.RecursiveGetTriggers())
+            {
+                _ = r.GetAndSetTriggerRestrictions(t);
+            }
         }
 
         private void chkAllowProcess_CheckedChanged(object sender, EventArgs e)

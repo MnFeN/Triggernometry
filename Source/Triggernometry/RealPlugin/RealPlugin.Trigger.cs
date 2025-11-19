@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Triggernometry
@@ -14,12 +15,12 @@ namespace Triggernometry
         internal List<Trigger> ActiveACTTriggers = new List<Trigger>();
         internal List<Trigger> ActiveEndpointTriggers = new List<Trigger>();
 
-        internal void AddTrigger(Trigger t, bool parentenable)
+        internal void AddTrigger(Trigger t, bool parentEnabled)
         {
             lock (Triggers)
             {
                 Triggers.Add(t);
-                if (t.Enabled == true && parentenable == true)
+                if (t.Enabled == true && parentEnabled == true)
                 {
                     switch (t.Source)
                     {
@@ -116,6 +117,14 @@ namespace Triggernometry
                     case Trigger.TriggerSourceEnum.None:
                         break;
                 }
+            }
+        }
+
+        internal void RemoveTriggersFromFolder(Folder f)
+        {
+            foreach (var trigger in f.RecursiveGetTriggers())
+            {
+                RemoveTrigger(trigger);
             }
         }
 
@@ -293,14 +302,14 @@ namespace Triggernometry
                     }
                     else
                     {
-                        t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigmatches", "Trigger '{0}' matches log line '{1}'", t.LogName, le.Text));
+                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigmatches", "Trigger '{0}' matches log line '{1}'", t.LogName, le.Text));
                     }
                 }
                 if ((force & Action.TriggerForceTypeEnum.SkipActive) == 0)
                 {
                     if (t.Enabled == false)
                     {
-                        t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trignotactive", "Trigger '{0}' is not active for firing", t.LogName));
+                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trignotactive", "Trigger '{0}' is not active for firing", t.LogName));
                         return;
                     }
                 }
@@ -311,7 +320,7 @@ namespace Triggernometry
                     {
                         if (reason != Folder.FilterFailReason.NotEnabled)
                         {
-                            t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigparentfail", "Trigger '{0}' doesn't pass parent folder '{1}' filter(s): {2}", t.LogName, t.Parent.Name, reason.ToString()));
+                            t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigparentfail", "Trigger '{0}' doesn't pass parent folder '{1}' filter(s): {2}", t.LogName, t.Parent.Name, reason.ToString()));
                         }
                         return;
                     }
@@ -320,11 +329,11 @@ namespace Triggernometry
                 {
                     if (t.PeriodRefire == Trigger.RefireEnum.Deny && DateTime.Now < t.RefireDelayedUntil)
                     {
-                        t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrefirefail", "Trigger '{0}' refire delayed until {1}", t.LogName, FormatDateTime(t.RefireDelayedUntil)));
+                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrefirefail", "Trigger '{0}' refire delayed until {1}", t.LogName, FormatDateTime(t.RefireDelayedUntil)));
                         return;
                     }
                 }
-                t.AddToLog(this, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/trigfiring", "Firing trigger '{0}'", t.LogName));
+                t.AddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/trigfiring", "Firing trigger '{0}'", t.LogName));
                 Context ctx = new Context();
                 ctx.plug = this;
                 ctx.trig = t;
@@ -335,12 +344,12 @@ namespace Triggernometry
                     foreach (int idx in t.regexCache.GetGroupNumbers())
                     {
                         ctx.numgroups.Add(m.Groups[idx].Value);
-                        t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnumgroup", "Trigger '{0}' numbered group {1}: {2}", t.LogName, idx, m.Groups[idx].Value));
+                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnumgroup", "Trigger '{0}' numbered group {1}: {2}", t.LogName, idx, m.Groups[idx].Value));
                     }
                     foreach (string sdx in t.regexCache.GetGroupNames())
                     {
                         ctx.namedgroups[sdx] = m.Groups[sdx].Value;
-                        t.AddToLog(this, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnamedgroup", "Trigger '{0}' named group '{1}': {2}", t.LogName, sdx, m.Groups[sdx].Value));
+                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnamedgroup", "Trigger '{0}' named group '{1}': {2}", t.LogName, sdx, m.Groups[sdx].Value));
                     }
                 }
                 ctx.namedgroups["_zone"] = le.ZoneName;

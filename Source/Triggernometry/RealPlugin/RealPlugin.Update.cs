@@ -9,8 +9,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.CustomControls;
+using Triggernometry.Utilities;
+using static Triggernometry.RepositoryList;
 
 namespace Triggernometry
 {
@@ -22,44 +25,20 @@ namespace Triggernometry
             Timeout = TimeSpan.FromSeconds(10)
         };
 
-        public class UpdateManifest
-        {
-
-            [XmlAttribute]
-            public string Version { get; set; }
-
-            [XmlAttribute]
-            public string PluginDownloadURI { get; set; }
-
-            [XmlAttribute]
-            public string LanguageDownloadURI { get; set; }
-
-            [XmlAttribute]
-            public string Message { get; set; }
-
-        }
-
         #region Plugin Update
 
         internal void CheckForUpdates(bool isManual = false)
         {
-            // start
-            if (I18n.IsChineseEnvironment)
-            {
-                CheckForUpdatesBuiltinCN(isManual);
-                return;
-            }
-            // end
             switch (cfg.UpdateCheckMethod)
             {
                 case Configuration.UpdateCheckMethodEnum.ACT:
                     CheckForUpdatesACT();
                     break;
                 case Configuration.UpdateCheckMethodEnum.Builtin:
-                    CheckForUpdatesBuiltin();
+                    CheckForUpdatesBuiltin(alwaysNotify: isManual);
                     break;
                 case Configuration.UpdateCheckMethodEnum.External:
-                    CheckForUpdatesExternal(cfg.UpdateExternalChannelURI);
+                    CheckForUpdatesExternal(cfg.UpdateExternalChannelUrl, alwaysNotify: isManual);
                     break;
             }
         }
@@ -69,253 +48,80 @@ namespace Triggernometry
             CheckUpdateHook();
         }
 
-        internal void CheckForUpdatesBuiltin()
+        private string _builtInUpdateDownloadUrl;
+
+        /// <summary>
+        /// Checks for new versions of Triggernometry by querying GitHub Releases.
+        /// This is the built-in update check (legacy).
+        /// </summary>
+        internal void CheckForUpdatesBuiltin(bool alwaysNotify = false)
         {
-            Task tx = new Task(() =>
+            Task.Run(async () =>
             {
-                string curver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                string[] curvers = curver.Split(".".ToArray());
-                string newest = curver;
-                string[] newests = curvers;
-                string newestasset = "";
+                // Current running plugin version
+                Version localVer = Assembly.GetExecutingAssembly().GetName().Version;
+                Version latestVer = localVer;
+                // The URL of the downloadable asset of the latest version
+                string latestAssetUrl = "";
+
                 try
                 {
-                    string json = "";
-                    using (WebClient wc = new WebClient())
-                    {
-                        wc.Headers["User-Agent"] = "Triggernometry Auto-update";
-                        byte[] rawdata = wc.DownloadData(@"https://api.github.com/repos/paissaheavyindustries/Triggernometry/releases");
-                        json = Encoding.UTF8.GetString(rawdata);
-                    }
+                    // Fetch GitHub release list (JSON array) and parse it
+                    string json = await HttpHelper.GetStringAsync("https://api.github.com/repos/paissaheavyindustries/Triggernometry/releases");
                     dynamic releases = new JavaScriptSerializer().DeserializeObject(json);
+
+                    // Iterate through releases and find the highest valid version
+                    dynamic latestRelease = null;
                     foreach (dynamic release in releases)
                     {
-                        string fullrver = (string)release["tag_name"];
-                        string[] rvers = fullrver.Split(".".ToArray());
-                        if (rvers[0][0] == 'v')
+                        string tag = (string)release["tag_name"]; // e.g. v1.2.3.4
+                        if (tag.StartsWith("v"))
+                            tag = tag.Substring(1);
+                        if (!Version.TryParse(tag, out Version remoteVer))
+                            continue;
+                        if (remoteVer > latestVer)
                         {
-                            rvers[0] = rvers[0].Substring(1);
+                            latestVer = remoteVer;
+                            latestRelease = release;
                         }
-                        fullrver = String.Join(".", rvers);
-                        for (int i = 0; i < 4; i++)
-                        {
-                            int a = Int32.Parse(newests[i]);
-                            int b = Int32.Parse(rvers[i]);
-                            if (a > b)
-                            {
-                                //FilteredAddToLog(DebugLevelEnum.Info, "Newest version " + newest + " > release version " + fullrver);
-                                break;
-                            }
-                            if (a < b)
-                            {
-                                //FilteredAddToLog(DebugLevelEnum.Info, "Newest version " + newest + " < release version " + fullrver);
-                                newest = fullrver;
-                                newests = rvers;
-                                newestasset = release["assets"][0]["browser_download_url"];
-                                break;
-                            }
-                        }
+                    }
+                    // Extract asset URL
+                    if (latestRelease?["assets"] is object[] assets && assets.Length > 0 &&
+                        assets[0] is Dictionary<string, object> asset && asset.TryGetValue("browser_download_url", out object url))
+                    {
+                        latestAssetUrl = url.ToString();
                     }
                 }
                 catch (Exception ex)
                 {
-                    FilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Plugin/vercheckfail", "Version update check failed: {0}", ex.ToString()));
-                }
-                if (newest != curver)
-                {
-                    FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/verchecknew", "Version check: A new version {0} is available for download to replace current version {1}", newest, curver));
-                    updateDownloadUrl = newestasset;
-                    CustomControls.Toast t = new CustomControls.Toast();
-                    t.ToastText = I18n.Translate("internal/Plugin/downloadnewver", "A new version ({0}) is available for download. Would you like to open the download page?", newest);
-                    t.OnYes += AutoUpdatePromptResult;
-                    t.OnNo += AutoUpdatePromptResult;
-                    t.ToastType = CustomControls.Toast.ToastTypeEnum.YesNo;
-                    ui.QueueToast(t);
-                }
-                else
-                {
-                    FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/verchecksame", "Version check: Newest version {0} is the same or older than current version {1}", newest, curver));
-                }
-            });
-            tx.Start();
-        }
-
-        public void CheckForUpdatesExternal(string uri, bool isManual = false)
-        {
-            Task.Run(() =>
-            {
-                Version localVersion, remoteVersion;
-                UpdateManifest um = null;
-                try
-                {
-                    string manifest;
-                    Uri u = new Uri(uri);
-                    if (u.IsFile == false)
-                    {
-                        manifest = client.GetStringAsync(uri).GetAwaiter().GetResult();
-                        XmlSerializer xs = new XmlSerializer(typeof(UpdateManifest));
-                        using (MemoryStream ms = new MemoryStream())
-                        {
-                            um = (UpdateManifest)xs.Deserialize(ms);
-                        }
-                    }
-                    else
-                    {
-                        XmlSerializer xs = new XmlSerializer(typeof(UpdateManifest));
-                        using (FileStream fs = File.Open(uri, FileMode.Open, FileAccess.Read))
-                        {
-                            um = (UpdateManifest)xs.Deserialize(fs);
-                        }
-                    }
-                    remoteVersion = Version.Parse(um.Version.Trim());
-                    localVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                    if (remoteVersion > localVersion)
-                    {
-                        plug.FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/extupdateavailable", "External update available (current version: {0}, remote version: {1})", localVersion, remoteVersion));
-                        string filePath = Path.Combine(pluginPath, $"{pluginName}.dll");
-                        Toast t = new Toast
-                        {
-                            ToastText = string.Format(um.Message, localVersion, remoteVersion),
-                            ToastType = Toast.ToastTypeEnum.YesNo
-                        };
-                        t.OnYes += (_, __) => UpdatePluginExternal(um, filePath, localVersion, remoteVersion);
-                        ui.QueueToast(t);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    plug.FilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Plugin/extupdatefailed", "Couldn't process update manifest from {0}, error: {1}", uri, ex.Message));
+                    FilteredAddToLog(DebugLevelEnum.Error,
+                        I18n.Translate("internal/Plugin/vercheckfail",
+                        "Version update check failed: {0}", ex.ToString()));
                     return;
                 }
-            });
-        }
 
-        private void UpdatePluginExternal(UpdateManifest um, string filePath, Version localVersion, Version remoteVersion)
-        {
-            Task.Run(async () =>
-            {
-                try
+                if (latestVer > localVer)
                 {
-                    string tmpPath = filePath + ".tmp";
-                    Uri u = new Uri(um.PluginDownloadURI);
-                    byte[] fileBytes;
-                    if (u.IsFile == false)
-                    {
-                        fileBytes = await client.GetByteArrayAsync(um.PluginDownloadURI);
-                        File.WriteAllBytes(tmpPath, fileBytes);
-                    }
-                    else
-                    {
-                        File.Copy(um.PluginDownloadURI, tmpPath, true);
-                    }
-                    if (File.Exists(filePath))
-                    {
-                        string backupPath = $"{filePath}.{localVersion}.backup";
-                        if (File.Exists(backupPath))
-                            File.Delete(backupPath);
-                        File.Move(filePath, backupPath);
-                    }
-                    File.Move(tmpPath, filePath);
-                    if (um.LanguageDownloadURI != null)
-                    {
-                        UpdateTranslationExternal(um);
-                    }
-                    string logt = I18n.Translate("internal/Plugin/extupdatesuccess", "Plugin version updated from {0} to {1}. Restart ACT for changes to take effect.", localVersion, remoteVersion);
-                    plug.FilteredAddToLog(DebugLevelEnum.Info, logt);
-                    ui.QueueToast(new Toast
-                    {
-                        ToastText = logt,
-                        ToastType = Toast.ToastTypeEnum.OK
-                    });
-                }
-                catch (Exception ex)
-                {
-                    string err = I18n.Translate("internal/Plugin/extupdatedlfailed", "Couldn't download plugin update from {0}, error: {1}", um.PluginDownloadURI, ex.Message);
-                    plug.FilteredAddToLog(DebugLevelEnum.Error, err);
-                    ui.QueueToast(new Toast
-                    {
-                        ToastText = err,
-                        ToastType = Toast.ToastTypeEnum.OK
-                    });
-                }
-            });
-        }
+                    _builtInUpdateDownloadUrl = latestAssetUrl;
 
-        public void UpdateTranslationExternal(UpdateManifest um)
-        {
-            string fileName = Path.GetFileName(um.LanguageDownloadURI);
-            string localPath = Path.Combine(pluginPath, fileName);
-            Task.Run(async () =>
-            {
-                try
-                {
-                    Uri u = new Uri(um.PluginDownloadURI);
-                    if (u.IsFile == false)
-                    {
-                        var fileBytes = await client.GetByteArrayAsync(um.LanguageDownloadURI);
-                        File.WriteAllBytes(localPath, fileBytes);
-                    }
-                    else
-                    {
-                        File.Copy(um.LanguageDownloadURI, localPath, true);
-                    }
-                    string logt = I18n.Translate("internal/Plugin/exttranssuccess", "Translation updated, restart ACT for changes to take effect.");
-                    plug.FilteredAddToLog(DebugLevelEnum.Info, logt);
-                }
-                catch (Exception ex)
-                {
-                    string err = I18n.Translate("internal/Plugin/exttransdlfailed", "Couldn't download language update from {0}, error: {1}", um.LanguageDownloadURI, ex.Message);
-                    plug.FilteredAddToLog(DebugLevelEnum.Error, err);
-                    ui.QueueToast(new Toast
-                    {
-                        ToastText = err,
-                        ToastType = Toast.ToastTypeEnum.OK
-                    });
-                }
-            });
-        }
-        // start
-        private static readonly string _updateRemotePathCN = "https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/";
+                    FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/verchecknew",
+                        "Version check: A new version {0} is available to replace current version {1}", latestVer, localVer));
 
-        public void CheckForUpdatesBuiltinCN(bool isManual = false)
-        {
-            Task.Run(() =>
-            {
-                Version localVersion, remoteVersion;
-                try
-                {
-                    using (HttpClient client = new HttpClient())
+                    var t = new Toast
                     {
-                        string versionString = client.GetStringAsync(_updateRemotePathCN + "version").GetAwaiter().GetResult();
-                        remoteVersion = Version.Parse(versionString.Trim());
-                        localVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    plug.FilteredAddToLog(DebugLevelEnum.Error, "Triggernometry 更新检查失败：" + ex.ToString());
-                    return;
-                }
-                if (remoteVersion > localVersion)
-                {
-                    plug.FilteredAddToLog(DebugLevelEnum.Warning, $"Triggernometry 已发布新版本 {remoteVersion}，当前版本 {localVersion}。");
-                    string filePath = Path.Combine(pluginPath, $"{pluginName}.dll");
-                    /*
-                    Toast t = new Toast
-                    {
-                        ToastText = $"Triggernometry 更新检查：本地已有版本 {localVersion} 低于远程版本 {remoteVersion}。是否后台开始更新插件及汉化文件？（更新不影响当前使用）",
+                        ToastText = I18n.Translate("internal/Plugin/downloadnewver",
+                            "A new version ({0}) is available. Would you like to open the download page?", latestVer),
                         ToastType = Toast.ToastTypeEnum.YesNo
                     };
-                    t.OnYes += (_, __) => UpdatePluginCN(filePath, localVersion, remoteVersion);
+                    t.OnYes += (_, __) => System.Diagnostics.Process.Start(_builtInUpdateDownloadUrl);
                     ui.QueueToast(t);
-                    */
-                    UpdatePluginCN(filePath, localVersion, remoteVersion);
                 }
                 else
                 {
-                    string info = $"Triggernometry 更新检查：本地已有版本 {localVersion} 不低于远程版本 {remoteVersion}，无需更新。";
-                    plug.FilteredAddToLog(DebugLevelEnum.Info, info);
-                    if (isManual)
+                    var info = I18n.Translate("internal/Plugin/verchecksame",
+                        "Version check: Newest version {0} is the same or older than current version {1}", latestVer, localVer);
+                    FilteredAddToLog(DebugLevelEnum.Info, info);
+                    if (alwaysNotify)
                     {
                         ui.QueueToast(new Toast { ToastText = info, ToastType = Toast.ToastTypeEnum.OK });
                     }
@@ -323,77 +129,215 @@ namespace Triggernometry
             });
         }
 
-        private void UpdatePluginCN(string filePath, Version localVersion, Version remoteVersion)
+        #endregion Plugin Update
+
+        #region Plugin Update (External)
+
+        /// <summary>
+        /// Represents an external update manifest used for Triggernometry auto-updates. <br />
+        /// The manifest provides version information, download URLs, and an optional update message displayed to the user.
+        /// </summary>
+        public class UpdateManifest
         {
-            Task.Run(async () =>
-            {
-                try
-                {
-                    string tmpPath = filePath + ".tmp";
-                    using (HttpClient client = new HttpClient())
-                    {
-                        byte[] fileBytes = await client.GetByteArrayAsync(_updateRemotePathCN + "Triggernometry.dll");
-                        File.WriteAllBytes(tmpPath, fileBytes);
-                    }
-                    if (File.Exists(filePath))
-                    {
-                        string backupPath = $"{filePath}.{localVersion}.backup";
-                        if (File.Exists(backupPath))
-                            File.Delete(backupPath);
-                        File.Move(filePath, backupPath);
-                    }
-                    File.Move(tmpPath, filePath);
-                    UpdateTranslationCN(isManual: false);
-                    ui.QueueToast(new Toast
-                    {
-                        ToastText = $"Triggernometry 插件已从 {localVersion} 更新至 {remoteVersion}，重启后生效。",
-                        ToastType = Toast.ToastTypeEnum.OK
-                    });
-                }
-                catch (Exception ex)
-                {
-                    FilteredAddToLog(DebugLevelEnum.Error, $"Triggernometry 插件更新失败：{ex.Message}");
-                }
-            });
-        }
-        // end
-        private void AutoUpdatePromptResult(CustomControls.Toast t, bool result)
-        {
-            if (result == true)
-            {
-                System.Diagnostics.Process.Start(updateDownloadUrl);
+            /// <summary> 
+            /// The version of the remote plugin file. 
+            /// </summary>
+            [XmlIgnore]
+            public Version Version { get; set; }
+
+            [XmlAttribute("Version")]
+            public string Xml_Version
+            { 
+                get => Version?.ToString();
+                set => Version = Version.Parse(value);
             }
+
+            /// <summary>
+            /// (Optional) The minimum version, required to continue running without warnings. <br />
+            /// If the current version is lower, an urgent restart prompt may be shown.
+            /// </summary>
+            [XmlIgnore]
+            public Version LowestAllowedVersion { get; set; }
+
+            [XmlAttribute("LowestAllowedVersion")]
+            public string Xml_LowestAllowedVersion
+            {
+                get => LowestAllowedVersion?.ToString();
+                set => LowestAllowedVersion = Version.Parse(value);
+            }
+
+            /// <summary>
+            /// The URL to download the remote plugin DLL.
+            /// </summary>
+            [XmlAttribute]
+            public string Url { get; set; }
+
+            /// <summary>
+            /// (Optional) The URL to download the updated translation file.
+            /// </summary>
+            [XmlAttribute]
+            public string TranslationUrl { get; set; }
+
+            /// <summary>
+            /// (Optional) The message template shown to the user when an update is available. <br />
+            /// May contain placeholders {0} (local version) and {1} (remote version). <br />
+            /// A default message is used if not provided.
+            /// </summary>
+            [XmlAttribute]
+            public string Message { get; set; }
+
         }
-        // start
-        public void UpdateTranslationCN(bool isManual = false)
+
+        public void CheckForUpdatesExternal(string manifestUrl, bool alwaysNotify = false, bool forceAutoUpdate = false)
         {
-            string fileName = "zh-CN.triglations.xml";
-            string localPath = Path.Combine(pluginPath, fileName);
-            string remotePath = _updateRemotePathCN + fileName;
             Task.Run(async () =>
             {
                 try
                 {
-                    using (HttpClient client = new HttpClient())
+                    Version localVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
+                    string manifestData = await client.GetStringAsync(manifestUrl);
+                    UpdateManifest um;
+                    using (var sr = new StringReader(manifestData))
                     {
-                        var fileBytes = await client.GetByteArrayAsync(remotePath);
-                        File.WriteAllBytes(localPath, fileBytes);
-                        UnfilteredAddToLog(DebugLevelEnum.Info, "已更新汉化文件。");
+                        um = (UpdateManifest)new XmlSerializer(typeof(UpdateManifest)).Deserialize(sr);
                     }
-                    if (!isManual) return;
-                    ui.QueueToast(new Toast
+
+                    Version remoteVersion = um.Version;
+                    if (remoteVersion <= localVersion)
                     {
-                        ToastText = $"已更新汉化文件，重启以应用更新。",
-                        ToastType = CustomControls.Toast.ToastTypeEnum.OK
-                    });
+                        string info = I18n.Translate("internal/Plugin/verchecksame",
+                            "Version check: Newest version {0} is the same or older than current version {1}", remoteVersion, localVersion);
+                        plug.FilteredAddToLog(DebugLevelEnum.Info, info);
+                        if (alwaysNotify)
+                        {
+                            ui.QueueToast(new Toast { ToastText = info, ToastType = Toast.ToastTypeEnum.OK });
+                        }
+                        return;
+                    }
+
+                    FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/verchecknew",
+                        "Version check: A new version {0} is available to replace current version {1}", remoteVersion, localVersion));
+
+                    if (forceAutoUpdate || cfg.AutoUpdate)
+                    {
+                        UpdatePluginExternal(um, localVersion);
+                        return;
+                    }
+
+                    var msg = um.Message?.Replace("{0}", $"{localVersion}").Replace("{1}", $"{remoteVersion}")
+                        ?? I18n.Translate("internal/Plugin/verchecknew", 
+                            "Version check: A new version {0} is available to replace current version {1}", remoteVersion, localVersion);
+
+                    Toast t = new Toast 
+                    { 
+                        ToastText = msg,
+                        ToastType = Toast.ToastTypeEnum.YesNo 
+                    }; 
+                    t.OnYes += (_, __) => UpdatePluginExternal(um, localVersion); 
+                    ui.QueueToast(t);
                 }
                 catch (Exception ex)
                 {
-                    UnfilteredAddToLog(DebugLevelEnum.Error, "更新汉化文件失败：" + ex.Message);
+                    plug.FilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Plugin/extplugincheckfailed", 
+                        "Couldn't process update manifest from {0}, error: {1}", manifestUrl, ex.Message));
+                    return;
                 }
             });
         }
 
+        private void UpdatePluginExternal(UpdateManifest um, Version localVersion)
+        {
+            var filePath = Path.Combine(pluginPath, $"{pluginName}.dll");
+
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await HttpHelper.DownloadAndReplaceAsync(um.Url, filePath, $"{filePath}.{localVersion}.backup");
+
+                    if (!string.IsNullOrWhiteSpace(um.TranslationUrl))
+                    {
+                        UpdateTranslationExternal(um);
+                    }
+
+                    string msg = I18n.Translate("internal/Plugin/extpluginupdatesuccess",
+                        "Plugin version updated from {0} to {1}. Restart ACT for changes to take effect.",
+                        localVersion, um.Version);
+
+                    ui.QueueToast(new Toast
+                    {
+                        ToastText = msg,
+                        ToastType = Toast.ToastTypeEnum.OK
+                    });
+
+                    if (um.LowestAllowedVersion != null && um.LowestAllowedVersion > localVersion)
+                    {
+                        ui.Invoke((System.Action)(() => {
+                            var urgentMsg = I18n.Translate("internal/Plugin/extpluginupdateurgent",
+                                "The plugin has been updated from {0} to {1}. \n\nThe current running version was outdated. It is recommended to restart immediately.", 
+                                localVersion, um.Version);
+                            MessageBox.Show(urgentMsg, "Triggernometry Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string err = I18n.Translate("internal/Plugin/extpluginupdatefailed",
+                        "Couldn't update plugin file from {0}: {1}", um.Url, ex.Message);
+
+                    plug.FilteredAddToLog(DebugLevelEnum.Error, err);
+                    ui.QueueToast(new Toast
+                    {
+                        ToastText = err,
+                        ToastType = Toast.ToastTypeEnum.OK
+                    });
+                }
+            });
+        }
+
+        public async Task UpdateTranslationExternal()
+        {
+            string manifestData = await client.GetStringAsync(cfg.UpdateExternalChannelUrl);
+            UpdateManifest um;
+            using (var sr = new StringReader(manifestData))
+            {
+                um = (UpdateManifest)new XmlSerializer(typeof(UpdateManifest)).Deserialize(sr);
+            }
+            UpdateTranslationExternal(um);
+        }
+
+        private void UpdateTranslationExternal(UpdateManifest um)
+        {
+            string fileName = Path.GetFileName(um.TranslationUrl);
+            string localPath = Path.Combine(pluginPath, fileName);
+
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await HttpHelper.DownloadAndReplaceAsync(um.TranslationUrl, localPath);
+                    var info = I18n.Translate("internal/Plugin/exttranslationupdated",
+                        "Translation file updated, restart ACT for changes to take effect.");
+                    plug.FilteredAddToLog(DebugLevelEnum.Info, info);
+                    // ui.QueueToast(new Toast { ToastText = info, ToastType = Toast.ToastTypeEnum.OK });
+                    // to-do: check version, notify if language file is for different version than plugin
+                }
+                catch (Exception ex)
+                {
+                    string err = I18n.Translate("internal/Plugin/exttranslationupdatefail",
+                        "Couldn't update translation file from {0}: {1}", um.TranslationUrl, ex.Message);
+                    plug.FilteredAddToLog(DebugLevelEnum.Error, err);
+                    ui.QueueToast(new Toast
+                    {
+                        ToastText = err,
+                        ToastType = Toast.ToastTypeEnum.OK
+                    });
+                }
+            });
+        }
+
+        private static readonly string _updateRemotePathCN = "https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/";
         public void UpdatePostNamazu(string remoteVersion)
         {
             var plug = RealPlugin.InstanceHook(null, "PostNamazu.PostNamazu");
@@ -447,417 +391,63 @@ namespace Triggernometry
                 }
             });
         }
-        // end
-
-        #endregion
+        
+        #endregion Plugin Update (External)
 
         #region Repo Update
 
-        private void ClearRepository(Repository r)
+        public async Task UpdateAllRepositoriesAsync(bool isStartup)
         {
-            ui.ClearRepository(r);
+            await UpdateRepositoriesAsync(cfg.RepositoryRoot.Repositories.Where(r => r.Enabled), isStartup);
         }
 
-        internal async Task RepositoryUpdate(Repository r, bool singleUpdate, bool isStartup)
+        internal async Task UpdateSingleRepositoryAsync(Repository r)
         {
-            r.LastUpdatedTrig = DateTime.Now;
-            ClearRepository(r);
-            r.ClearLog();
-            string trans;
-            bool useBackup = isStartup && r.UpdatePolicy != Repository.UpdatePolicyEnum.Startup;
-            // update the repo
-            if (!useBackup)
-            {
-                try
-                {
-                    if (singleUpdate == true)
-                    {
-                        trans = I18n.Translate("internal/Plugin/repoupdate", "[{2}/{3}] Updating repository {0} at {1}", r.Name, r.Address, 1, 1);
-                        FilteredAddToLog(DebugLevelEnum.Verbose, trans);
-                        r.AddToLog(trans);
-                        ShowProgress(-1, trans);
-                    }
-                    long localsize = 0;
-                    (DateTime remdate, long remsize) = await FetchRepositoryMetadata(r);
-                    DateTime cacheExpiry = DateTime.Now.AddMinutes(0 - cfg.CacheRepoExpiry);
-                    bool cacheExpired = false;
-                    if (r.KeepLocalBackup == true)
-                    {
-                        string repofn = GetRepositoryBackupFilename(r);
-                        if (File.Exists(repofn) == true)
-                        {
-                            FileInfo fi = new FileInfo(repofn);
-                            localsize = fi.Length;
-                            cacheExpired = (fi.LastWriteTime < cacheExpiry);
-                        }
-                    }
-                    // nothing has changed: try to load local backup
-                    if (remdate == r.LastUpdated && remsize == localsize && localsize > 0 && r.KeepLocalBackup == true && cacheExpired == false)
-                    {
-                        trans = I18n.Translate("internal/Plugin/repousingbackup", "Repository {0} hasn't changed since {1}, and size hasn't changed from {2}, using local backup", r.Name, remdate, localsize);
-                        FilteredAddToLog(DebugLevelEnum.Info, trans);
-                        r.AddToLog(trans);
-                        if (LoadLocalBackupForRepository(r) == true) // success
-                        {
-                            if (singleUpdate)
-                                CompleteSingleUpdate(r);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        trans = I18n.Translate("internal/Plugin/repofetching", "Repository {0} has changed since {1} (new timestamp {2}), or size has changed from {3} (new size {4}), fetching new version", r.Name, r.LastUpdated, remdate, localsize, remsize);
-                        FilteredAddToLog(DebugLevelEnum.Verbose, trans);
-                        r.LastUpdated = remdate;
-                    }
-                    string data;
-                    trans = I18n.Translate("internal/Plugin/repodownloading", "Downloading repository {0} from {1}", r.Name, r.Address);
-                    FilteredAddToLog(DebugLevelEnum.Info, trans);
-                    using (HttpClient httpClient = new HttpClient())
-                    {
-                        httpClient.Timeout = TimeSpan.FromSeconds(10);
-                        httpClient.DefaultRequestHeaders.Add("User-Agent", "Triggernometry Repository Updater");
-                        byte[] rawdata = await httpClient.GetByteArrayAsync(r.Address);
-                        data = Encoding.UTF8.GetString(rawdata);
-                    }
-                    TriggernometryExport exp = TriggernometryExport.Unserialize(data);
-                    if (!exp.Corrupted)
-                    {
-                        r.ContentSize = data.Length;
-                        AddContentToRepository(exp, r);
-                        if (r.KeepLocalBackup == true)
-                        {
-                            SaveLocalBackupForRepository(r, data);
-                        }
-                    }
-                    else
-                    {
-                        trans = I18n.Translate("internal/Plugin/repoexportnull", "Data for repository {0} could not be unserialized, make sure you are running the latest version of Triggernometry", r.Name);
-                        FilteredAddToLog(DebugLevelEnum.Error, trans);
-                        r.AddToLog(trans);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    trans = I18n.Translate("internal/Plugin/repoupdateexception", "Couldn't update repository {0} due to exception: {1}", r.Name, ex.ToString());
-                    r.AddToLog(trans);
-                    FilteredAddToLog(DebugLevelEnum.Error, trans);
-                    useBackup = true; // use local backup if the update failed
-                }
-            }
-            // load local backup
-            if (useBackup && r.KeepLocalBackup)
-            {
-                trans = I18n.Translate("internal/Plugin/repousinglocal", "Loading local backup of repository {0}", r.Name);
-                FilteredAddToLog(DebugLevelEnum.Info, trans);
-                r.AddToLog(trans);
-                LoadLocalBackupForRepository(r);
-            }
-            if (singleUpdate)
-                CompleteSingleUpdate(r);
+            string info = I18n.Translate("internal/Plugin/repoupdate", "Going to update {0} repository(s)", 1);
+            FilteredAddToLog(DebugLevelEnum.Info, info);
+            ShowProgress(-1, info);
+
+            await r.CheckAndUpdateAsync();
+            _ = CompleteRepositoryUpdate();
         }
 
-        private async Task<(DateTime remdate, long remsize)> FetchRepositoryMetadata(Repository r)
+        internal async Task UpdateRepositoriesAsync(IEnumerable<Repository> repos, bool isStartup)
         {
-            var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Head, new Uri(r.Address));
-            using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
-            {
-                var response = await client.SendAsync(request, cts.Token);
-                var lastmod = response.Content.Headers.LastModified;
-                DateTime remdate = lastmod.HasValue ? lastmod.Value.DateTime : r.LastUpdated;
-                long remsize = response.Content.Headers.ContentLength.GetValueOrDefault(0);
-                return (remdate, remsize);
-            }
-        }
-
-        private void CompleteSingleUpdate(Repository r)
-        {
-            string trans = I18n.Translate("internal/Plugin/repoupdatecomplete", "Repository update complete");
-            r.AddToLog(trans);
-            ShowProgressWhenComplete(trans);
-        }
-
-        internal void AllRepositoryUpdates(bool isStartup)
-        {
-            List<Repository> lr = new List<Repository>();
-            lr.AddRange(from ix in cfg.RepositoryRoot.Repositories where ix.Enabled == true select ix);
-            RepositoryUpdates(lr, isStartup);
-        }
-
-        internal async void RepositoryUpdates(IEnumerable<Repository> lr, bool isStartup)
-        {
-            if (!lr.Any())
+            if (!repos.Any())
             {
                 return;
             }
-            string trans = I18n.Translate("internal/Plugin/repoupdates", "Going to update {0} repositories", lr.Count());
+            string trans = I18n.Translate("internal/Plugin/repoupdate", "Going to update {0} repository(s)", repos.Count());
             FilteredAddToLog(DebugLevelEnum.Info, trans);
             ShowProgress(-1, trans);
-            int total = lr.Count();
+            int total = repos.Count();
             int completed = 0;
             object progressLock = new object();
-            var tasks = lr.Select(r => Task.Run(async () =>
+            var tasks = repos.Select(async r => 
             {
-                if (ExitEvent.WaitOne(0))
-                {
-                    return;
-                }
-                trans = I18n.Translate("internal/Plugin/repoupdate", "[{2}/{3}] Updating repository {0} at {1}", r.Name, r.Address, completed + 1, total);
-                FilteredAddToLog(DebugLevelEnum.Verbose, trans);
-                r.AddToLog(trans);
-                await RepositoryUpdate(r, false, isStartup);
+                if (ExitEvent.WaitOne(0)) return;
+                await r.CheckAndUpdateAsync(isStartup);
+                int percent; string info;
                 lock (progressLock)
                 {
                     completed++;
-                    ShowProgress((int)Math.Floor(100.0 * completed / total), trans);
+                    info = I18n.Translate("internal/Plugin/repoupdatedcount",
+                        "[{0}/{1}] Updated repository {2} at {3}",
+                        completed, total, r.Name, r.Address);
+                    r.AddToLog(DebugLevelEnum.Info, info);
+                    percent = (int)(100.0 * completed / total);
                 }
-            }));
+                ShowProgress(percent, info);
+            });
             await Task.WhenAll(tasks);
-            ShowProgressWhenComplete(I18n.Translate("internal/Plugin/repoupdatecomplete", "Repository update complete"));
+            _ = CompleteRepositoryUpdate();
         }
 
-        private void ApplyRepositoryRestrictions(Folder f, Repository r)
+        private async Task CompleteRepositoryUpdate()
         {
-            var ix = from tx in r.FolderStates where tx.Id == f.Id select tx;
-            if (ix.Count() == 0)
-            {
-                switch (r.NewBehavior)
-                {
-                    case Repository.NewBehaviorEnum.AlwaysEnable:
-                        f.Enabled = true;
-                        break;
-                    case Repository.NewBehaviorEnum.AlwaysDisable:
-                        f.Enabled = false;
-                        break;
-                }
-                r.FolderStates.Add(new Repository.RepositoryItem() { Id = f.Id, Enabled = f.Enabled });
-            }
-            else
-            {
-                Repository.RepositoryItem ri = ix.First();
-                f.Enabled = ri.Enabled;
-            }
-            foreach (Folder subf in f.Folders)
-            {
-                ApplyRepositoryRestrictions(subf, r);
-            }
-            List<Trigger> torem = new List<Trigger>();
-            foreach (Trigger t in f.Triggers)
-            {
-                if (ApplyRepositoryRestrictions(t, r) == false)
-                {
-                    torem.Add(t);
-                }
-            }
-            foreach (Trigger t in torem)
-            {
-                f.Triggers.Remove(t);
-            }
-            f.Repo = r;
-        }
-
-        private bool ApplyActionSpecificRestrictions(IEnumerable<Action> actions, Repository r)
-        {
-            foreach (Action a in actions)
-            {
-                if (a._ActionType == Action.ActionTypeEnum.ExecuteScript && r.AllowScriptExecution == false)
-                {
-                    return false;
-                }
-                if (a._ActionType == Action.ActionTypeEnum.LaunchProcess && r.AllowProcessLaunch == false)
-                {
-                    return false;
-                }
-                if (a._ActionType == Action.ActionTypeEnum.WindowMessage && r.AllowWindowMessages == false)
-                {
-                    return false;
-                }
-                if (a._ActionType == Action.ActionTypeEnum.DiskFile && r.AllowDiskOperations == false)
-                {
-                    return false;
-                }
-                if (a._ActionType == Action.ActionTypeEnum.ObsControl && r.AllowObsControl == false)
-                {
-                    return false;
-                }
-                if (a._ActionType == Action.ActionTypeEnum.Loop)
-                {
-                    bool ret = ApplyActionSpecificRestrictions(a.LoopActions, r);
-                    if (ret == false)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        private bool ApplyRepositoryRestrictions(Trigger t, Repository r)
-        {
-            bool ret = ApplyActionSpecificRestrictions(t.Actions, r);
-            if (ret == false)
-            {
-                return false;
-            }
-            var ix = from tx in r.TriggerStates where tx.Id == t.Id select tx;
-            if (ix.Count() == 0)
-            {
-                switch (r.NewBehavior)
-                {
-                    case Repository.NewBehaviorEnum.AlwaysEnable:
-                        t.Enabled = true;
-                        break;
-                    case Repository.NewBehaviorEnum.AlwaysDisable:
-                        t.Enabled = false;
-                        break;
-                }
-                r.TriggerStates.Add(new Repository.RepositoryItem() { Id = t.Id, Enabled = t.Enabled });
-            }
-            else
-            {
-                Repository.RepositoryItem ri = ix.First();
-                t.Enabled = ri.Enabled;
-            }
-            switch (r.AudioOutput)
-            {
-                case Repository.AudioOutputEnum.AlwaysOverride:
-                    {
-                        foreach (Action a in t.Actions)
-                        {
-                            a._SoundRouting = Configuration.AudioRoutingMethodEnum.Triggernometry;
-                            a._TTSRouting = Configuration.AudioRoutingMethodEnum.Triggernometry;
-                        }
-                    }
-                    break;
-                case Repository.AudioOutputEnum.NeverOverride:
-                    {
-                    }
-                    break;
-            }
-            t.Repo = r;
-            return true;
-        }
-
-        private void RegisterRepositoryFolder(Repository r, Folder f, bool parentenable)
-        {
-            if (f.Enabled == false)
-            {
-                parentenable = false;
-            }
-            foreach (Folder fs in f.Folders)
-            {
-                fs.Parent = f;
-                RegisterRepositoryFolder(r, fs, parentenable);
-            }
-            foreach (Trigger t in f.Triggers)
-            {
-                t.Parent = f;
-                RegisterRepositoryTrigger(r, t, parentenable);
-            }
-        }
-
-        private void RegisterRepositoryTrigger(Repository r, Trigger t, bool parentenable)
-        {
-            //if (t.Enabled == true && parentenable == true)
-            //{
-            AddTrigger(t, parentenable);
-            //}
-            if (t.IsReadme == true && t.Enabled == true)
-            {
-                r.ReadmeTriggers.Add(t);
-            }
-        }
-
-        private void AddContentToRepository(TriggernometryExport exp, Repository r)
-        {
-            r.ReadmeTriggers.Clear();
-            if (exp.ExportedFolder != null)
-            {
-                ApplyRepositoryRestrictions(exp.ExportedFolder, r);
-                r.Root.Folders.Add(exp.ExportedFolder);
-                RegisterRepositoryFolder(r, exp.ExportedFolder, r.Enabled && ui.treeView1.Nodes[1].Checked);
-            }
-            if (exp.ExportedTrigger != null)
-            {
-                if (ApplyRepositoryRestrictions(exp.ExportedTrigger, r) == false)
-                {
-                    return;
-                }
-                r.Root.Triggers.Add(exp.ExportedTrigger);
-                exp.ExportedTrigger.Parent = r.Root;
-                RegisterRepositoryTrigger(r, exp.ExportedTrigger, r.Enabled);
-            }
-            ui.BuildTreeForRepository(exp, r);
-        }
-
-        internal string GetRepositoryBackupFilename(Repository r)
-        {
-            string fn = Path.Combine(path, "TriggernometryRepoBackups");
-            return Path.Combine(fn, GenerateHash(r.Address) + ".xml");
-        }
-
-        private bool LoadLocalBackupForRepository(Repository r)
-        {
-            string trans;
-            try
-            {
-                string fn = GetRepositoryBackupFilename(r);
-                trans = I18n.Translate("internal/Plugin/repoloadinglocal", "Loading local backup of repository {0} in {1}", r.Name, fn);
-                FilteredAddToLog(DebugLevelEnum.Verbose, trans);
-                r.AddToLog(trans);
-                string data = File.ReadAllText(fn);
-                TriggernometryExport exp = TriggernometryExport.Unserialize(data);
-                if (!exp.Corrupted)
-                {
-                    r.LastUpdated = File.GetLastWriteTime(fn);
-                    r.ContentSize = data.Length;
-                    AddContentToRepository(exp, r);
-                    trans = I18n.Translate("internal/Plugin/repoloadedlocal", "Loaded local backup of repository {0} from {1}", r.Name, fn);
-                    FilteredAddToLog(DebugLevelEnum.Info, trans);
-                    r.AddToLog(trans);
-                    return true;
-                }
-                else
-                {
-                    trans = I18n.Translate("internal/Plugin/repoexportnull", "Data for repository {0} could not be unserialized, make sure you are running the latest version of Triggernometry", r.Name);
-                    FilteredAddToLog(DebugLevelEnum.Error, trans);
-                    r.AddToLog(trans);
-                }
-            }
-            catch (Exception ex)
-            {
-                trans = I18n.Translate("internal/Plugin/repoloadlocalexception", "Couldn't load local backup of repository {0} due to exception: {1}", r.Name, ex.ToString());
-                FilteredAddToLog(DebugLevelEnum.Error, trans);
-                r.AddToLog(trans);
-            }
-            return false;
-        }
-
-        private void SaveLocalBackupForRepository(Repository r, string data)
-        {
-            string trans;
-            try
-            {
-                string fn = Path.Combine(path, "TriggernometryRepoBackups");
-                string fn2 = Path.Combine(fn, GenerateHash(r.Address) + ".xml");
-                trans = I18n.Translate("internal/Plugin/reposavinglocal", "Saving local backup of repository {0} in {1}", r.Name, fn2);
-                FilteredAddToLog(DebugLevelEnum.Verbose, trans);
-                r.AddToLog(trans);
-                if (Directory.Exists(fn) == false)
-                {
-                    Directory.CreateDirectory(fn);
-                }
-                File.WriteAllText(fn2, data);
-                trans = I18n.Translate("internal/Plugin/reposavedlocal", "Saved local backup of repository {0} in {1}", r.Name, fn2);
-                FilteredAddToLog(DebugLevelEnum.Info, trans);
-                r.AddToLog(trans);
-            }
-            catch (Exception ex)
-            {
-                trans = I18n.Translate("internal/Plugin/reposavelocalexception", "Couldn't save local backup of repository {0} due to exception: {1}", r.Name, ex.ToString());
-                FilteredAddToLog(DebugLevelEnum.Error, trans);
-                r.AddToLog(trans);
-            }
+            string info = I18n.Translate("internal/Plugin/repoupdatecomplete", "Repository update complete");
+            plug.UnfilteredAddToLog(DebugLevelEnum.Info, info);
+            await ShowProgressWhenComplete(info);
         }
 
         #endregion

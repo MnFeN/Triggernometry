@@ -291,8 +291,8 @@ namespace TriggernometryProxy
 
         public void GetPluginNameAndPath()
         {
-            Instance.path = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config");
-            Instance.pluginPath = Instance.path;
+            Instance.ConfigPath = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config");
+            Instance.pluginPath = Instance.ConfigPath;
             string name = null;            
             foreach (ActPluginData p in ActGlobals.oFormActMain.ActPlugins)
             {

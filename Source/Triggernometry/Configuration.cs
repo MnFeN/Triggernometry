@@ -84,7 +84,10 @@ namespace Triggernometry
         public UpdateCheckMethodEnum UpdateCheckMethod { get; set; } = UpdateCheckMethodEnum.ACT;
 
         [XmlAttribute]
-        public string UpdateExternalChannelURI { get; set; } = "";
+        public bool AutoUpdate { get; set; }
+
+        [XmlAttribute]
+        public string UpdateExternalChannelUrl { get; set; } = "";
 
         // Startup Trigger/Folder
 
@@ -560,6 +563,9 @@ namespace Triggernometry
 
         [XmlAttribute]
         public int Version { get; set; } = 1;
+
+        [XmlAttribute]
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [XmlAttribute]
         public string PluginVersion { get; set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();

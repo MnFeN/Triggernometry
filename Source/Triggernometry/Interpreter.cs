@@ -145,9 +145,9 @@ namespace Triggernometry
 
             public void Log(RealPlugin.DebugLevelEnum level, string message)
             {
-                if (CurrentContext != null && CurrentContext.trig != null && Plugin != null)
+                if (CurrentContext?.trig != null)
                 {
-                    CurrentContext.trig.AddToLog(Plugin, level, message);
+                    CurrentContext.trig.AddToLog(level, message);
                     return;
                 }
                 Plugin.FilteredAddToLog(level, message);

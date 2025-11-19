@@ -71,13 +71,14 @@ namespace Triggernometry
         private ManualResetEvent QueueWakeupEvent = null;
         public CustomControls.UserInterface ui = null;
 
-        public string path { get; set; }
+        [Obsolete("Use ConfigPath")]
+        public string path => ConfigPath;
+        public string ConfigPath { get; set; }
         private bool isInitialized { get; set; } = false;
         internal Thread EventQueueThread = null;
         private ManualResetEvent ExitEvent = null;
         private TabPage mytp;
         private bool complainAboutReload = false;
-        private string updateDownloadUrl;
         public string pluginName { get; set; }
         public string pluginPath { get; set; }
         internal Endpoint _ep = null;
@@ -286,7 +287,7 @@ namespace Triggernometry
                 exwhere = I18n.Translate("internal/Plugin/inilanguages", "loading languages");
                 LoadLanguages();
                 exwhere = I18n.Translate("internal/Plugin/inicfg", "loading configuration");
-                _cfg = LoadConfigFromFile(Path.Combine(path, pluginName + ".config.xml"));
+                _cfg = LoadConfigFromFile(Path.Combine(ConfigPath, pluginName + ".config.xml"));
                 SetupDefaultSecurity();
                 AutofixConfiguration();
                 ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
@@ -403,13 +404,9 @@ namespace Triggernometry
                 {
                     ui.AddDefaultRepoCN();
                 }
-                RegisterNamedCallback("UploadText", (Action<object, string>)UploadTextHelper.UploadTextCallback, registrant: nameof(RealPlugin));
+                _ = RegisterNamedCallback("UploadText", (Action<object, string>)UploadTextHelper.UploadTextCallback, registrant: nameof(RealPlugin));
                 // end
-                Task tx = new Task(() =>
-                {
-                    AllRepositoryUpdates(true);
-                });
-                tx.Start();
+                _ = Task.Run(() => UpdateAllRepositoriesAsync(true));
                 isInitialized = true;
             }
             catch (Exception ex)
@@ -423,10 +420,10 @@ namespace Triggernometry
             ui.ShowProgress(progress, state);
         }
 
-        private void ShowProgressWhenComplete(string state)
+        private async Task ShowProgressWhenComplete(string state)
         {
             ui.ShowProgress(100, state);
-            System.Threading.Thread.Sleep(2000);
+            await Task.Delay(2000);
             ui.ShowProgress(0, "");
         }
 
@@ -825,7 +822,7 @@ namespace Triggernometry
 
         internal int ClearCache(string cachedir, int expiry)
         {
-            string cachepath = Path.Combine(path, cachedir);
+            string cachepath = Path.Combine(ConfigPath, cachedir);
             DateTime dt = DateTime.Now.AddMinutes(0 - expiry);
             DirectoryInfo di = new DirectoryInfo(cachepath);
             if (di.Exists == true)

@@ -247,16 +247,14 @@ namespace Triggernometry.CustomControls
                 if (e.Effect == DragDropEffects.Move)
                 {
                     Folder tf = (Folder)targetNode.Tag;
-                    if (draggedNode.Tag is Trigger)
+                    if (draggedNode.Tag is Trigger t)
                     {
-                        Trigger t = (Trigger)draggedNode.Tag;
                         t.Parent.Triggers.Remove(t);
                         t.Parent = tf;
                         tf.Triggers.Add(t);                        
                     }
-                    else
+                    else if (draggedNode.Tag is Folder f)
                     {
-                        Folder f = (Folder)draggedNode.Tag;
                         f.Parent.Folders.Remove(f);
                         f.Parent = tf;
                         tf.Folders.Add(f);
@@ -696,12 +694,11 @@ namespace Triggernometry.CustomControls
                     }
                 }
             }
-            else if (treeView1.SelectedNode.Tag is Folder && treeView1.SelectedNode.Parent != null)
+            else if (treeView1.SelectedNode.Tag is Folder f && treeView1.SelectedNode.Parent != null)
             {
                 using (Forms.FolderForm ff = new Forms.FolderForm())
                 {
                     ff.plug = plug;
-                    Folder f = (Folder)treeView1.SelectedNode.Tag;
                     ff.SettingsFromFolder(f);
                     if (IsPartOfRemote(treeView1.SelectedNode) == true)
                     {
@@ -863,18 +860,6 @@ namespace Triggernometry.CustomControls
             }
         }
 
-        internal void RemoveAllTriggers(Folder f)
-        {
-            foreach (Trigger t in f.Triggers)
-            {
-                plug.RemoveTrigger(t);
-            }
-            foreach (Folder fx in f.Folders)
-            {
-                RemoveAllTriggers(fx);
-            }
-        }
-
         private delegate void RepoTreeDelegate(Repository r);
 
         internal void ClearRepositoryInTree(Repository r)
@@ -893,14 +878,6 @@ namespace Triggernometry.CustomControls
             }
         }
 
-        internal void ClearRepository(Repository r)
-        {
-            RemoveAllTriggers(r.Root);
-            r.Root.Triggers.Clear();
-            r.Root.Folders.Clear();
-            ClearRepositoryInTree(r);
-        }
-
         internal void CopySelected()
         {
             try
@@ -916,9 +893,8 @@ namespace Triggernometry.CustomControls
 
         internal void btnRemoveTrigger_Click(object sender, EventArgs e)
         {
-            if (treeView1.SelectedNode.Tag is Trigger)
+            if (treeView1.SelectedNode.Tag is Trigger t)
             {
-                Trigger t = (Trigger)treeView1.SelectedNode.Tag;
                 switch (MessageBox.Show(this, I18n.Translate("internal/UserInterface/areyousuretrigger", "Are you sure you want to remove trigger '{0}'?", t.Name), I18n.Translate("internal/UserInterface/confirm", "Confirm removal"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
                 {
                     case DialogResult.Yes:
@@ -931,26 +907,24 @@ namespace Triggernometry.CustomControls
                         return;
                 }
             }
-            else if (treeView1.SelectedNode.Tag is Repository)
+            else if (treeView1.SelectedNode.Tag is Repository r)
             {
-                Repository r = (Repository)treeView1.SelectedNode.Tag;
                 switch (MessageBox.Show(this, I18n.Translate("internal/UserInterface/areyousurerepo", "Are you sure you want to remove repository '{0}'?", r.Name), I18n.Translate("internal/UserInterface/confirm", "Confirm removal"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
                 {
                     case DialogResult.Yes:
                         TreeNode tn = treeView1.SelectedNode;
                         tn.Parent.Nodes.Remove(tn);
                         r.Parent.Repositories.Remove(r);
-                        RemoveAllTriggers(r.Root);
+                        plug.RemoveTriggersFromFolder(r.Root);
                         return;
                     case DialogResult.No:
                         return;
                 }
             }
-            else if (treeView1.SelectedNode.Tag is Folder)
+            else if (treeView1.SelectedNode.Tag is Folder f)
             {
                 int numfolders = 0;
                 int numtriggers = 0;
-                Folder f = (Folder)treeView1.SelectedNode.Tag;
                 CountItems(f, ref numfolders, ref numtriggers);
                 string temp = I18n.Translate("internal/UserInterface/areyousurefolder", "Are you sure you want to remove folder '{0}'?", f.Name);
                 if (numfolders > 1 || numtriggers > 0)
@@ -979,7 +953,7 @@ namespace Triggernometry.CustomControls
                         TreeNode tn = treeView1.SelectedNode;
                         tn.Parent.Nodes.Remove(tn);
                         f.Parent.Folders.Remove(f);
-                        RemoveAllTriggers(f);
+                        plug.RemoveTriggersFromFolder(f);
                         return;
                     case DialogResult.No:
                         return;
@@ -1142,28 +1116,24 @@ namespace Triggernometry.CustomControls
         {
             TriggernometryExport exp = new TriggernometryExport();
             exp.PluginVersion = RealPlugin.plug.cfg.PluginVersion;
-            if (treeView1.SelectedNode.Tag is Trigger)
+            if (treeView1.SelectedNode.Tag is Trigger t)
             {
-                Trigger t = (Trigger)treeView1.SelectedNode.Tag;
                 exp.ExportedTrigger = t;
             }
-            else if (treeView1.SelectedNode.Tag is Folder)
+            else if (treeView1.SelectedNode.Tag is Folder f)
             {
-                if (treeView1.SelectedNode.Tag is RepositoryFolder)
+                if (treeView1.SelectedNode.Tag is RepositoryFolder rf) // ? RepositoryFolder is not a subclass of Folder
                 {
-                    RepositoryFolder f = (RepositoryFolder)treeView1.SelectedNode.Tag;
-                    exp.ExportedFolder = f.ConvertToFolder();
+                    exp.ExportedFolder = rf.ConvertToFolder();
                 }
                 else
                 {
-                    Folder f = (Folder)treeView1.SelectedNode.Tag;
                     exp.ExportedFolder = f;
                 }
             }
-            else if (treeView1.SelectedNode.Tag is Repository)
+            else if (treeView1.SelectedNode.Tag is Repository repo)
             {
-                Repository f = (Repository)treeView1.SelectedNode.Tag;
-                exp.ExportedFolder = f.Root;
+                exp.ExportedFolder = repo.Root;
             }
             return exp;
         }
@@ -1211,9 +1181,9 @@ namespace Triggernometry.CustomControls
 
         private void CloseTree(TreeNode tn)
         {
-            if (tn.Tag is Folder)
+            if (tn.Tag is Folder f)
             {
-                tn.ImageIndex = (int)GetImageIndexForClosedFolder((Folder)tn.Tag);
+                tn.ImageIndex = (int)GetImageIndexForClosedFolder(f);
                 tn.SelectedImageIndex = tn.ImageIndex;
             }
             foreach (TreeNode tc in tn.Nodes)
@@ -1277,18 +1247,18 @@ namespace Triggernometry.CustomControls
 
         internal void treeView1_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node.Tag is Folder)
+            if (e.Node.Tag is Folder f)
             {
-                e.Node.ImageIndex = (int)GetImageIndexForClosedFolder((Folder)e.Node.Tag);
+                e.Node.ImageIndex = (int)GetImageIndexForClosedFolder(f);
                 e.Node.SelectedImageIndex = e.Node.ImageIndex;
             }
         }
 
         internal void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node.Tag is Folder)
+            if (e.Node.Tag is Folder f)
             {
-                e.Node.ImageIndex = (int)GetImageIndexForOpenFolder((Folder)e.Node.Tag);
+                e.Node.ImageIndex = (int)GetImageIndexForOpenFolder(f);
                 e.Node.SelectedImageIndex = e.Node.ImageIndex;
             }
         }
@@ -1502,21 +1472,17 @@ namespace Triggernometry.CustomControls
                     ptn = ptn.Parent;
                 }
                 Repository r = (Repository)ptn.Tag;
-                if (x is Folder)
+                if (x is Folder f)
                 {
-                    var temp = (from ix in r.FolderStates where ix.Id == ((Folder)x).Id select ix).ToList();
-                    foreach (Repository.RepositoryItem ri in temp)
-                    {
-                        ri.Enabled = tn.Checked;
-                    }
+                    r.FolderStates
+                        .Where(folderItem => folderItem.Id == f.Id).ToList()
+                        .ForEach(folderItem => folderItem.Enabled = tn.Checked);
                 }
-                if (x is Trigger)
+                else if (x is Trigger t)
                 {
-                    var temp = (from ix in r.TriggerStates where ix.Id == ((Trigger)x).Id select ix).ToList();
-                    foreach (Repository.RepositoryItem ri in temp)
-                    {
-                        ri.Enabled = tn.Checked;
-                    }
+                    r.TriggerStates
+                        .Where(triggerItem => triggerItem.Id == t.Id).ToList()
+                        .ForEach(triggerItem => triggerItem.Enabled = tn.Checked);
                 }
             }
             RecolorStartingFromNode(e.Node, e.Node.Checked, true);
@@ -1800,7 +1766,7 @@ namespace Triggernometry.CustomControls
 
         private void goToConfigurationFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string pth = plug.path;
+            string pth = plug.ConfigPath;
             Process.Start(pth);
         }
 
@@ -1919,6 +1885,17 @@ namespace Triggernometry.CustomControls
             }
         }
 
+        /// <summary>
+        /// Shows or updates the status bar progress. <br />
+        /// Thread-safe: marshals to UI thread when required. <br /><br />
+        /// 
+        /// Behavior: <br />
+        /// - progress = -1:    indeterminate (Marquee) <br />
+        /// - progress = 0-100: normal progress <br />
+        /// - progress = 0 and state = "": hide status bar
+        /// </summary>
+        /// <param name="progress">Progress value or -1 for indeterminate.</param>
+        /// <param name="state">Status text to display.</param>
         internal void ShowProgress(int progress, string state)
         {
             if (statusStrip1.InvokeRequired == true)
@@ -2004,30 +1981,20 @@ namespace Triggernometry.CustomControls
             {
                 return;
             }
-            if (tnupdate.Tag is RepositoryFolder)
+            if (tnupdate.Tag is RepositoryFolder rfo)
             {
-                RepositoryFolder rfo = (RepositoryFolder)tnupdate.Tag;
                 foreach (TreeNode tn in tnupdate.Nodes)
                 {
                     tn.ImageIndex = (int)ImageIndices.RemoteRepoUnavailable;
                     tn.SelectedImageIndex = tn.ImageIndex;
                 }
-                Task tx = new Task(() =>
-                {
-                    plug.AllRepositoryUpdates(false);
-                });
-                tx.Start();
+                _ = Task.Run(() => plug.UpdateAllRepositoriesAsync(false));
             }
-            if (tnupdate.Tag is Repository)
+            if (tnupdate.Tag is Repository repo)
             {
-                Repository rfo = (Repository)tnupdate.Tag;
                 tnupdate.ImageIndex = (int)ImageIndices.RemoteRepoUnavailable;
                 tnupdate.SelectedImageIndex = tnupdate.ImageIndex;
-                Task tx = new Task(() =>
-                {
-                    plug.RepositoryUpdate(rfo, true, false);
-                });
-                tx.Start();
+                _ = Task.Run(() => plug.UpdateSingleRepositoryAsync(repo));
             }
         }
 
@@ -2150,7 +2117,7 @@ namespace Triggernometry.CustomControls
             {
                 Repository existingRepo = (Repository)tn.Tag;
                 existingRepo.Name = r.Name;
-                // existingRepo.Enabled = r.Enabled;
+                // do not change enable state
                 existingRepo.AllowProcessLaunch = r.AllowProcessLaunch;
                 existingRepo.AllowScriptExecution = r.AllowScriptExecution;
                 existingRepo.AllowDiskOperations = r.AllowDiskOperations;
@@ -2159,6 +2126,8 @@ namespace Triggernometry.CustomControls
                 existingRepo.KeepLocalBackup = r.KeepLocalBackup;
                 existingRepo.UpdatePolicy = r.UpdatePolicy;
                 existingRepo.AudioOutput = r.AudioOutput;
+                existingRepo.AutoUpdate = r.AutoUpdate;
+                existingRepo.UpdateInterval = r.UpdateInterval;
 
                 tn.Text = existingRepo.Name;
                 tn.Checked = existingRepo.Enabled;
@@ -2221,106 +2190,46 @@ namespace Triggernometry.CustomControls
             }
         }
 
+        public Repository DefaultRepoCN(string address, string name) => new Repository
+        {
+            Enabled = true,
+            Address = address,
+            AllowProcessLaunch = true,
+            AllowScriptExecution = true,
+            KeepLocalBackup = true,
+            Name = name,
+            NewBehavior = Repository.NewBehaviorEnum.AsDefined,
+            UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
+            AudioOutput = Repository.AudioOutputEnum.NeverOverride,
+            AutoUpdate = true,
+            UpdateInterval = 60 // min
+        };
+
         public void AddDefaultRepoCN(bool shouldUpdate = false)
         {
-            Repository selfTest = new Repository
+            var repos = new List<Repository>
             {
-                Enabled = true,
-                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/SelfTest.xml",
-                AllowProcessLaunch = true,
-                AllowScriptExecution = true,
-                KeepLocalBackup = true,
-                Name = "[工具] 问题自检工具箱 + 使用教程　　有问题请自行在此解决",
-                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
-                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
-                AudioOutput = Repository.AudioOutputEnum.NeverOverride
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/SelfTest.xml",
+                    "[工具] 问题自检工具箱 + 使用教程　　有问题请自行在此解决"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/Utils.xml",
+                    "[工具] 运行支持库（必需）"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7a.xml",
+                    "7.0 M1-4 阿卡狄亚轻量级"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7b.xml",
+                    "7.2 M5-8 阿卡狄亚中量级"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/Ex7.xml",
+                    "7.X 极神"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/temp.xml",
+                    "临时推送"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/U7a.xml",
+                    "7.1 绝伊甸"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/field.xml",
+                    "特殊场景探索"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/dungeon.xml",
+                    "深宫")
             };
-            Repository utils = new Repository
-            {
-                Enabled = true,
-                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/Utils.xml",
-                AllowProcessLaunch = true,
-                AllowScriptExecution = true,
-                KeepLocalBackup = true,
-                Name = "[工具] 运行支持库",
-                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
-                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
-                AudioOutput = Repository.AudioOutputEnum.NeverOverride
-            };
-            Repository s7a = new Repository
-            {
-                Enabled = true,
-                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/S7a.xml",
-                AllowProcessLaunch = true,
-                AllowScriptExecution = true,
-                KeepLocalBackup = true,
-                Name = "7.0 M1-4 阿卡狄亚轻量级",
-                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
-                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
-                AudioOutput = Repository.AudioOutputEnum.NeverOverride
-            };
-            Repository s7b = new Repository
-            {
-                Enabled = true,
-                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/S7b.xml",
-                AllowProcessLaunch = true,
-                AllowScriptExecution = true,
-                KeepLocalBackup = true,
-                Name = "7.2 M5-8 阿卡狄亚中量级",
-                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
-                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
-                AudioOutput = Repository.AudioOutputEnum.NeverOverride
-            };
-            Repository ex7 = new Repository
-            {
-                Enabled = true,
-                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/Ex7.xml",
-                AllowProcessLaunch = true,
-                AllowScriptExecution = true,
-                KeepLocalBackup = true,
-                Name = "7.X 极神",
-                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
-                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
-                AudioOutput = Repository.AudioOutputEnum.NeverOverride
-            };
-            Repository temp = new Repository
-            {
-                Enabled = true,
-                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/temp.xml",
-                AllowProcessLaunch = true,
-                AllowScriptExecution = true,
-                KeepLocalBackup = true,
-                Name = "临时推送",
-                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
-                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
-                AudioOutput = Repository.AudioOutputEnum.NeverOverride
-            };
-            Repository u7a = new Repository
-            {
-                Enabled = true,
-                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/U7a.xml",
-                AllowProcessLaunch = true,
-                AllowScriptExecution = true,
-                KeepLocalBackup = true,
-                Name = "7.1 绝伊甸",
-                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
-                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
-                AudioOutput = Repository.AudioOutputEnum.NeverOverride
-            };
-            Repository field = new Repository
-            {
-                Enabled = true,
-                Address = "https://vip.123pan.cn/1824544011/Remote_Triggers/field.xml",
-                AllowProcessLaunch = true,
-                AllowScriptExecution = true,
-                KeepLocalBackup = true,
-                Name = "特殊场景探索",
-                NewBehavior = Repository.NewBehaviorEnum.AsDefined,
-                UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
-                AudioOutput = Repository.AudioOutputEnum.NeverOverride
-            };
-            RemoveRepo("vip.123pan.cn/1824544011/Remote_Triggers/AdvWm.xml");
-            AddRepos(new List<Repository> { selfTest, utils, s7a, s7b, ex7, temp, u7a, field }, false);
+            RemoveRepo("vip.123pan.cn/1824544011/Remote_Triggers/AdvWm.xml"); // old
+            AddRepos(repos, shouldUpdate);
         }
 
         public void AddMoreRepoCN(bool shouldUpdate = true)
@@ -2346,9 +2255,8 @@ namespace Triggernometry.CustomControls
             if (treeView1.SelectedNode != null)
             {
                 TreeNode tn = treeView1.SelectedNode;
-                if (tn.Tag is Trigger)
+                if (tn.Tag is Trigger t)
                 {
-                    Trigger t = (Trigger)tn.Tag;
                     ForceFireTrigger(t, Action.TriggerForceTypeEnum.SkipAll);
                 }
             }
@@ -2359,9 +2267,8 @@ namespace Triggernometry.CustomControls
             if (treeView1.SelectedNode != null)
             {
                 TreeNode tn = treeView1.SelectedNode;
-                if (tn.Tag is Trigger)
+                if (tn.Tag is Trigger t)
                 {
-                    Trigger t = (Trigger)tn.Tag;
                     ForceFireTrigger(t, Action.TriggerForceTypeEnum.SkipExceptConditions);
                 }
             }
@@ -2453,18 +2360,14 @@ namespace Triggernometry.CustomControls
             List<Repository> upds = new List<Repository>();
             foreach (Repository r in rfo.Repositories)
             {
-                if (r.Enabled == true && r.AutoUpdate == true && r.LastUpdatedTrig.AddMinutes(r.UpdateInterval) < DateTime.Now)
+                if (r.Enabled == true && r.AutoUpdate == true && r.UpdateLastChecked.AddMinutes(r.UpdateInterval) < DateTime.Now)
                 {
                     upds.Add(r);
                 }
             }
             if (upds.Count > 0)
             {
-                Task tx = new Task(() =>
-                {
-                    plug.RepositoryUpdates(upds, false);
-                });
-                tx.Start();                
+                _ = Task.Run(() => plug.UpdateRepositoriesAsync(upds, false));
             }
             if (cfg.AutosaveEnabled == true && plug.lastConfigSave.AddMinutes(cfg.AutosaveInterval) < DateTime.Now)
             {

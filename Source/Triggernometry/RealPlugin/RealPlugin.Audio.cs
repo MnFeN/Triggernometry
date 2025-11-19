@@ -103,8 +103,9 @@ namespace Triggernometry
                     return;
                 }
             }
-            SpeechSynthesizer mytts;
-            if (/*a._UseTTSExclusive == */true)
+            SpeechSynthesizer mytts = new SpeechSynthesizer();
+            /*
+            if (a._UseTTSExclusive == true)
             {
                 mytts = new SpeechSynthesizer();
             }
@@ -112,6 +113,7 @@ namespace Triggernometry
             {
                 mytts = tts;
             }
+            */
             double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a._UseTTSVolumeExpression);
             vol *= (ctx.plug.cfg.TtsVolumeAdjustment / 100.0);
             if (vol < 0.0)
@@ -270,7 +272,7 @@ namespace Triggernometry
             Uri u = new Uri(filename);
             if (u.IsFile == false)
             {
-                string fn = Path.Combine(path, "TriggernometryRemoteSounds");
+                string fn = Path.Combine(ConfigPath, "TriggernometryRemoteSounds");
                 if (Directory.Exists(fn) == false)
                 {
                     Directory.CreateDirectory(fn);

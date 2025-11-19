@@ -220,7 +220,7 @@ namespace Scarborough
                 {
                     if (ctx.trig != null)
                     {
-                        ctx.trig.AddToLog(plug, Triggernometry.RealPlugin.DebugLevelEnum.Verbose, Triggernometry.I18n.Translate("internal/AuraContainer/deactaurattl", "Deactivating aura due to TTL expression"));
+                        ctx.trig.AddToLog(Triggernometry.RealPlugin.DebugLevelEnum.Verbose, Triggernometry.I18n.Translate("internal/AuraContainer/deactaurattl", "Deactivating aura due to TTL expression"));
                     }
                     else
                     {
@@ -242,7 +242,7 @@ namespace Scarborough
             {
                 if (ctx.trig != null)
                 {
-                    ctx.trig.AddToLog(plug, Triggernometry.RealPlugin.DebugLevelEnum.Error, Triggernometry.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", Name, ctx.trig.LogName, ex.Message)));
+                    ctx.trig.AddToLog(Triggernometry.RealPlugin.DebugLevelEnum.Error, Triggernometry.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", Name, ctx.trig.LogName, ex.Message)));
                 }
                 else
                 {

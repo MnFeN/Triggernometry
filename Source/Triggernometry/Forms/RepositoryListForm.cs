@@ -70,14 +70,10 @@ namespace Triggernometry.Forms
             string trans = I18n.Translate("RepositoryListForm/statusdownloading", "Downloading master repository list...");
             ShowProgress(-1, trans);
             plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Info, trans);
-            Task tx = new Task(() =>
-            {
-                RepositoryListDownload();
-            });
-            tx.Start();
+            _ = Task.Run(() => RepositoryListDownload());
         }
 
-        private void RepositoryListDownload()
+        private async Task RepositoryListDownload()
         {
             string trans;
             try
@@ -99,7 +95,7 @@ namespace Triggernometry.Forms
                 trans = I18n.Translate("RepositoryListForm/downloadcomplete", "Download complete");
                 plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Info, trans);
                 ShowProgress(100, trans);
-                System.Threading.Thread.Sleep(2000);
+                await Task.Delay(2000);
                 ShowProgress(0, "");
             }
             catch (Exception ex)

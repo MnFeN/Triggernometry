@@ -64,8 +64,8 @@ namespace Triggernometry
             cfg.PrevPluginVersion = cfgver;
             if (cfgver != curver)
             {
-                string oldfn = Path.Combine(path, pluginName + ".config.xml");
-                string bacfn = Path.Combine(path, pluginName + "." + cfgver + ".config.xml");
+                string oldfn = Path.Combine(ConfigPath, pluginName + ".config.xml");
+                string bacfn = Path.Combine(ConfigPath, pluginName + "." + cfgver + ".config.xml");
                 if (File.Exists(oldfn) == true)
                 {
                     if (File.Exists(bacfn) == false)
@@ -85,7 +85,7 @@ namespace Triggernometry
         public void SaveCurrentConfig()
         {
             lastConfigSave = DateTime.Now;
-            SaveConfigToFile(cfg, Path.Combine(path, pluginName + ".config.xml"), true);
+            SaveConfigToFile(cfg, Path.Combine(ConfigPath, pluginName + ".config.xml"), true);
         }
 
         private Configuration LoadConfigFromFile(string filename)

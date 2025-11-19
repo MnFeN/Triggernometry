@@ -927,7 +927,7 @@ namespace Triggernometry
                         }
                         else if (x == "_configpath")
                         {
-                            val = RealPlugin.plug.path;
+                            val = RealPlugin.plug.ConfigPath;
                             found = true;
                         }
                         else if (x == "_pluginpath")

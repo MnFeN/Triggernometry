@@ -763,7 +763,7 @@
     <TranslationEntry Key="ConfigurationForm2/lblEndpointStartup" Translation="插件启动时启动终端" />
     <TranslationEntry Key="ConfigurationForm2/lblExternalSoundWarn" Translation="此选项会使 Triggernometry 启动外部应用程序。这可能会使系统面临恶意软件的风险，请仅在您了解自己在做什么的情况下谨慎使用此选项。Windows 系统一般无需使用此选项。" />
     <TranslationEntry Key="ConfigurationForm2/lblExternalTtsWarn" Translation="此选项会使 Triggernometry 启动外部应用程序。这可能会使系统面临恶意软件的风险，请仅在您了解自己在做什么的情况下谨慎使用此选项。Windows 系统一般无需使用此选项。" />
-    <TranslationEntry Key="ConfigurationForm2/lblExternalUpdateWarn" Translation="第三方更新渠道不受 Triggernometry 官方管理，请谨慎使用，仅对可信的更新来源启用此功能。&#xD;&#xA;注：建议使用以下链接更新，包含中文版远程触发器等额外功能。&#xD;&#xA;https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml" />
+    <TranslationEntry Key="ConfigurationForm2/lblExternalUpdateWarn" Translation="第三方更新渠道不受 Triggernometry 官方管理，请谨慎使用，仅对可信的更新来源启用此功能。&#xD;&#xA;注：建议使用以下链接更新，包含国服远程触发器等额外功能。&#xD;&#xA;https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivJobMethod" Translation="排序方式" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivJobOrder" Translation="职业排序" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivLogNetwork" Translation="记录网络日志" />
@@ -790,7 +790,7 @@
     <TranslationEntry Key="ConfigurationForm2/lblTtsVolume" Translation="音量" />
     <TranslationEntry Key="ConfigurationForm2/lblUiFont" Translation="自定义字体" />
     <TranslationEntry Key="ConfigurationForm2/lblUiFontDefault" Translation="使用默认字体" />
-    <TranslationEntry Key="ConfigurationForm2/lblUpdateChannelUri" Translation="更新链接" />
+    <TranslationEntry Key="ConfigurationForm2/lblUpdateChannelUrl" Translation="更新链接" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdateMethod" Translation="更新方式" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdates" Translation="启动时检查更新" />
     <TranslationEntry Key="ConfigurationForm2/lblWarnAdmin" Translation="在非管理员模式下运行 ACT 时显示警告" />
@@ -1129,7 +1129,7 @@
     <TranslationEntry Key="internal/Action/filetableset" Translation="从 CSV 文件 ({1}) 读取内容到{2}表格 ({0})" />
     <TranslationEntry Key="internal/Action/fivescripterrorsare" Translation="前 5 条异常是：" />
     <TranslationEntry Key="internal/Action/invalidEnumType" Translation="{0} = {1} 并不是已知的枚举类型。&#xD;&#xA;这可能是由于你的触发器插件版本过旧，或尝试导入的数据受损。" />
-    <TranslationEntry Key="internal/Action/jsonpostexception" Translation="由于异常而无法发送消息：{0}" />
+    <TranslationEntry Key="internal/Action/jsonpostexception" Translation="发送 JSON 消息失败：{0}" />
     <TranslationEntry Key="internal/Action/jsonpostunexpectedresponse" Translation="异常响应代码：{0}" />
     <TranslationEntry Key="internal/Action/listbuild" Translation="将表达式 ({2}) 以 ({3}) 拆分，构筑为{1}列表 ({0})" />
     <TranslationEntry Key="internal/Action/listbuildfail" Translation="{1}列表 ({0}) 无法构筑，因为表达式 ({2}) 长度小于 1" />
@@ -1168,8 +1168,8 @@
     <TranslationEntry Key="internal/Action/obsconnecterror" Translation="连接到 OBS 接口时出错：{0}" />
     <TranslationEntry Key="internal/Action/obsconnectok" Translation="OBS 接口连接成功" />
     <TranslationEntry Key="internal/Action/obsconnectversionerror" Translation="目前不支持当前 OBS 版本。" />
-    <TranslationEntry Key="internal/Action/obscontrolerror" Translation="由于错误，无法执行 OBS 控制操作" />
-    <TranslationEntry Key="internal/Action/obscontrolexception" Translation="由于异常，无法执行 OBS 操作：{0}" />
+    <TranslationEntry Key="internal/Action/obscontrolerror" Translation="OBS 控制操作失败。" />
+    <TranslationEntry Key="internal/Action/obscontrolexception" Translation="OBS 操作失败：{0}" />
     <TranslationEntry Key="internal/Action/obsnotrunning" Translation="OBS 未启动，无法执行 OBS 操作。" />
     <TranslationEntry Key="internal/Action/repoupdateall" Translation="更新全部远程仓库" />
     <TranslationEntry Key="internal/Action/repoupdateself" Translation="更新所处于的远程仓库" />
@@ -1325,9 +1325,9 @@
     <TranslationEntry Key="internal/ffxiv/idexception" Translation="以 ID 检索 FFXIV 实体时发生异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/missingactplugin" Translation="找不到具有文件名 ({0}) 或类型 ({1}) 的 FFXIV 解析插件，某些功能可能无法正常工作" />
     <TranslationEntry Key="internal/ffxiv/namedexception" Translation="以名称检索 FFXIV 实体时发生异常：{0}" />
-    <TranslationEntry Key="internal/ffxiv/networksubexception" Translation="由于下列异常，无法监听 FFXIV 网络事件：{0}" />
+    <TranslationEntry Key="internal/ffxiv/networksubexception" Translation="监听 FFXIV 网络事件失败：{0}" />
     <TranslationEntry Key="internal/ffxiv/networksubok" Translation="已监听 FFXIV 网络事件" />
-    <TranslationEntry Key="internal/ffxiv/networkunsubexception" Translation="由于下列异常，无法停止监听 FFXIV 网络事件：{0}" />
+    <TranslationEntry Key="internal/ffxiv/networkunsubexception" Translation="停止监听 FFXIV 网络事件失败：{0}" />
     <TranslationEntry Key="internal/ffxiv/networkunsubok" Translation="已停止监听 FFXIV 网络事件" />
     <TranslationEntry Key="internal/ffxiv/oldactplugin" Translation="FFXIV 解析插件的版本 ({0}) 低于要求 ({1})，某些功能可能无法正常工作" />
     <TranslationEntry Key="internal/ffxiv/partytoobig" Translation="小队构成中有超过 {0} 名成员" />
@@ -1443,6 +1443,12 @@
     <TranslationEntry Key="internal/Plugin/exactimageaura" Translation="激活图像悬浮窗 '{1}' 时发生错误 '{0}'" />
     <TranslationEntry Key="internal/Plugin/exacttextaura" Translation="激活文本悬浮窗 '{1}' 时发生错误 '{0}'" />
     <TranslationEntry Key="internal/Plugin/exception" Translation="异常" />
+    <TranslationEntry Key="internal/Plugin/extplugincheckfailed" Translation="无法从 {0} 更新插件文件：{1}" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="无法从 {0} 更新插件文件：{1}" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatesuccess" Translation="插件版本已从 {0} 更新到 {1}。请重启 ACT 以使更改生效。" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdateurgent" Translation="插件已从 {0} 更新到 {1}。&#xD;&#xA;&#xD;&#xA;当前正在运行的版本已过期，建议立即重启。" />
+    <TranslationEntry Key="internal/Plugin/exttranslationupdated" Translation="翻译文件已更新，请重启 ACT 以使更改生效。" />
+    <TranslationEntry Key="internal/Plugin/exttranslationupdatefail" Translation="无法从 {0} 更新翻译文件：{1}" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworklogline" Translation="网络日志：({0})" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworkprocex" Translation="解析网络日志 ({1}) 时发生异常 ({0}) " />
     <TranslationEntry Key="internal/Plugin/ffxivnetworksplitlogline" Translation="分割网络日志：({0})" />
@@ -1477,28 +1483,16 @@
     <TranslationEntry Key="internal/Plugin/langchangeok" Translation="翻译语言现在是 '{0}'" />
     <TranslationEntry Key="internal/Plugin/langfilenotfound" Translation="翻译文件 '{0}' 不存在" />
     <TranslationEntry Key="internal/Plugin/langload" Translation="从 '{0}' 加载翻译语言" />
-    <TranslationEntry Key="internal/Plugin/langloadex" Translation="由于异常，加载翻译文件 '{0}' 失败" />
+    <TranslationEntry Key="internal/Plugin/langloadex" Translation="加载翻译文件 '{0}' 时遇到错误" />
     <TranslationEntry Key="internal/Plugin/langloadfail" Translation="加载翻译文件失败，请确保您运行的是最新版本" />
     <TranslationEntry Key="internal/Plugin/logline" Translation="ACT 日志：({0})" />
     <TranslationEntry Key="internal/Plugin/mutexdelayed" Translation="上下文 '{0}' 在内部操作 {2} 中已等待独占锁 '{1}' 释放超过 {3} 毫秒，该独占锁目前的所有者是 '{4}'" />
     <TranslationEntry Key="internal/Plugin/notadministrator" Translation="您没有以管理员身份运行 ACT  - 这可能会阻止某些触发器工作。" />
     <TranslationEntry Key="internal/Plugin/procex" Translation="发生错误：&#xD;&#xA; ({0}) &#xD;&#xA;日志行：({1}) &#xD;&#xA; 区域： ({2})" />
     <TranslationEntry Key="internal/Plugin/releaseunownedmutex" Translation="尝试在上下文 '{1}' 释放非其所有的独占锁 '{0}' 失败" />
-    <TranslationEntry Key="internal/Plugin/repodownloading" Translation="正在从 {1} 下载仓库 {0}。" />
-    <TranslationEntry Key="internal/Plugin/repoexportnull" Translation="仓库 {0} 的数据格式无法解析，请确认 Triggernometry 版本为最新版。" />
-    <TranslationEntry Key="internal/Plugin/repofetching" Translation="仓库 {0} 自 {1} 同步后有改动 ({2})，或文件大小从 {3} 改变为 {4}，正在同步新版本。" />
-    <TranslationEntry Key="internal/Plugin/repoloadedlocal" Translation="已从下列地址加载仓库 {0} 的本地备份：{1}" />
-    <TranslationEntry Key="internal/Plugin/repoloadinglocal" Translation="正从下列地址加载仓库 {0} 的本地备份：{1}" />
-    <TranslationEntry Key="internal/Plugin/repoloadlocalexception" Translation="由于下列异常，仓库 {0} 的本地备份无法加载：{1}" />
-    <TranslationEntry Key="internal/Plugin/reposavedlocal" Translation="已向下列地址保存仓库 {0} 的本地备份：{1}" />
-    <TranslationEntry Key="internal/Plugin/reposavelocalexception" Translation="由于下列异常，仓库 {0} 的本地备份无法保存：{1}" />
-    <TranslationEntry Key="internal/Plugin/reposavinglocal" Translation="正向下列地址保存仓库 {0} 的本地备份：{1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="[{2}/{3}] 从下列地址更新仓库 {0}： {1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdatecomplete" Translation="仓库更新完成" />
-    <TranslationEntry Key="internal/Plugin/repoupdateexception" Translation="由于下列异常，仓库 {0} 无法更新：{1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdates" Translation="即将更新 {0} 个仓库" />
-    <TranslationEntry Key="internal/Plugin/repousingbackup" Translation="仓库 {0} 自 {1} 未改动，并且文件大小 {2} 与本地缓存一致，故使用本地缓存" />
-    <TranslationEntry Key="internal/Plugin/repousinglocal" Translation="正在加载仓库 {0} 的本地备份" />
+    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="即将更新 {0} 个远程仓库" />
+    <TranslationEntry Key="internal/Plugin/repoupdatedcount" Translation="[{0}/{1}] 远程仓库 {2} 已更新（{3}）" />
+    <TranslationEntry Key="internal/Plugin/repoupdatecomplete" Translation="远程仓库更新完成" />
     <TranslationEntry Key="internal/Plugin/splitlogline" Translation="拆分日志行：({0})" />
     <TranslationEntry Key="internal/Plugin/trigaddbook" Translation="触发器 '{0}' 已添加到记录中" />
     <TranslationEntry Key="internal/Plugin/trigfiring" Translation="触发的触发器 '{0}'" />
@@ -1507,17 +1501,44 @@
     <TranslationEntry Key="internal/Plugin/trigparentfail" Translation="触发器 '{0}' 没有通过父分组 '{1}' 的过滤器：{2}" />
     <TranslationEntry Key="internal/Plugin/trigrefirefail" Translation="触发器 '{0}' 再次触发延迟 {1}" />
     <TranslationEntry Key="internal/Plugin/trigrembook" Translation="触发器 '{0}' 已从记录中移除" />
-    <TranslationEntry Key="internal/Plugin/vercheckfail" Translation="版本更新检查失败：{0}" />
-    <TranslationEntry Key="internal/Plugin/verchecknew" Translation="版本更新：新版本 {0}已经发布，当前版本为 {1}" />
-    <TranslationEntry Key="internal/Plugin/verchecksame" Translation="版本更新：新的版本 {0} 旧于或等于当前版本 {1}" />
+    <TranslationEntry Key="internal/Plugin/vercheckfail" Translation="Triggernometry 版本更新检查失败：{0}" />
+    <TranslationEntry Key="internal/Plugin/verchecknew" Translation="Triggernometry 版本更新：新版本 {0} 已经发布，当前版本 {1}。" />
+    <TranslationEntry Key="internal/Plugin/verchecksame" Translation="Triggernometry 版本更新：本地版本 {1} 不低于远程版本 {0}，无需更新。" />
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="行 ({0}) 使用 {1} 毫秒进行处理" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="当前区域切换至 '{0}'。区域分组限制：{1} 个触发器处于激活状态，{2} 个触发器未激活" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="此字段支持正则表达式。绿色代表输入的正则合法，红色代表不合法。" />
-    <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="允许远程触发器操作文件的风险极大。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在你不知情时收到更新并添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
-    <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="允许远程触发器控制 OBS 存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在你不知情时收到更新并添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
-    <TranslationEntry Key="internal/RepositoryForm/allowprocesswarn" Translation="允许远程触发器启动进程的风险极大。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在你不知情时收到更新并添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
-    <TranslationEntry Key="internal/RepositoryForm/allowscriptwarn" Translation="允许远程触发器执行代码的风险极大。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在你不知情时收到更新并添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
-    <TranslationEntry Key="internal/RepositoryForm/allowwmsgwarn" Translation="允许远程触发器发送窗口消息的风险极大。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在你不知情时收到更新并添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
+    <TranslationEntry Key="internal/Repository/loadlocalex" Translation="仓库 {0} 的本地备份无法加载。错误：{1}" /> 
+    <TranslationEntry Key="internal/Repository/localcleared" Translation="已从下列地址删除仓库 {0} 的本地备份：{1}" /> 
+    <TranslationEntry Key="internal/Repository/localclearex" Translation="仓库 {0} 的本地备份无法删除。错误：{1}" /> 
+    <TranslationEntry Key="internal/Repository/localclearnotfound" Translation="仓库 {0} 不存在本地备份 {1}" /> 
+    <TranslationEntry Key="internal/Repository/localloadcorrupted" Translation="仓库 {0} 的本地备份数据格式无法解析。" /> 
+    <TranslationEntry Key="internal/Repository/localloaded" Translation="已加载仓库 {0} 的本地备份：{1}" /> 
+    <TranslationEntry Key="internal/Repository/localloading" Translation="尝试加载仓库 {0} 的本地备份：{1}" /> 
+    <TranslationEntry Key="internal/Repository/localloadnotfound" Translation="仓库 {0} 不存在本地备份 {1}" /> 
+    <TranslationEntry Key="internal/Repository/localsaved" Translation="已向下列地址保存仓库 {0} 的本地备份：{1}" /> 
+    <TranslationEntry Key="internal/Repository/localsaveex" Translation="仓库 {0} 的本地备份无法保存。错误：{1}" /> 
+    <TranslationEntry Key="internal/Repository/localsaving" Translation="正向下列地址保存仓库 {0} 的本地备份：{1}" /> 
+    <TranslationEntry Key="internal/Repository/probeinfocache" Translation="[Info] 缓存已过期：{0}" /> 
+    <TranslationEntry Key="internal/Repository/probeinfolocal" Translation="[Info] 本地备份：长度={0}，时间={1}" /> 
+    <TranslationEntry Key="internal/Repository/probeinfolocalmissing" Translation="[Info] 不存在本地备份，需要更新。" /> 
+    <TranslationEntry Key="internal/Repository/probeinforemote" Translation="[Info] 远程数据：长度={0}，时间={1}" /> 
+    <TranslationEntry Key="internal/Repository/probeinforemotefail" Translation="[Info] 无法获取远程数据长度，将强制更新。" /> 
+    <TranslationEntry Key="internal/Repository/proberesultfalse" Translation="仓库 {0} 未发生变更，无需更新。长度：{1}，时间：({2})" /> 
+    <TranslationEntry Key="internal/Repository/proberesulttrue" Translation="仓库 {0} 已发生变更，正在获取新版本。长度：{1} → {2}，时间：({3}) → ({4})" /> 
+    <TranslationEntry Key="internal/Repository/restricted" Translation="远程仓库 ({0}) 未开启以下权限：[{1}]。部分触发器可能无法正常工作。" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/DiskOperation" Translation="磁盘操作" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/ExecuteScript" Translation="执行脚本" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/LaunchProcess" Translation="启动进程" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/ObsControl" Translation="OBS 控制" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="窗口消息" /> 
+    <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="位于 {1} 的仓库 {0} 数据格式无法解析。请确认远程仓库本身未过时，且 Triggernometry 为最新版本。" /> 
+    <TranslationEntry Key="internal/Repository/updateex" Translation="仓库 {0} 无法更新：{1}" /> 
+    <TranslationEntry Key="internal/Repository/updating" Translation="正在从 {1} 下载仓库 {0}。" /> 
+    <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="允许远程触发器操作文件可能存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
+    <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="允许远程触发器控制 OBS 可能存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
+    <TranslationEntry Key="internal/RepositoryForm/allowprocesswarn" Translation="允许远程触发器启动进程存在高风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
+    <TranslationEntry Key="internal/RepositoryForm/allowscriptwarn" Translation="允许远程触发器执行代码存在高风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
+    <TranslationEntry Key="internal/RepositoryForm/allowwmsgwarn" Translation="允许远程触发器发送窗口消息存在高风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
     <TranslationEntry Key="internal/RepositoryForm/exception" Translation="异常" />
     <TranslationEntry Key="internal/RepositoryForm/unavailable" Translation="不可用" />
     <TranslationEntry Key="internal/RepositoryForm/warning" Translation="警告" />
@@ -1591,14 +1612,15 @@
     <TranslationEntry Key="internal/TestInputForm/debugwarningformat" Translation="日志行 #{0}：{1}&#xD;&#xA;数据：{2}" />
     <TranslationEntry Key="internal/Trigger/beforelastfired" Translation="当前时间在上次触发触发器之前 '{0}'" />
     <TranslationEntry Key="internal/Trigger/delayingrefire" Translation="延迟触发器 '{0}' 再次触发 {1}" />
-    <TranslationEntry Key="internal/Trigger/firingexception" Translation="由于下列异常，触发器 '{0}' 无法被触发：{1}" />
+    <TranslationEntry Key="internal/Trigger/firingexception" Translation="触发器 '{0}' 触发失败：{1}" />
     <TranslationEntry Key="internal/Trigger/lastactionfound" Translation="在 {1} 找到上个触发器 '{0}' 的动作" />
     <TranslationEntry Key="internal/Trigger/refiredenied" Translation="{0} 个触发器 '{1}' 的动作在队列中， 拒绝再次触发" />
     <TranslationEntry Key="internal/Trigger/removefromqueue" Translation="已从队列中移除 {0} 个触发器 '{1}' 的动作" />
     <TranslationEntry Key="internal/Trigger/removefromqueuenorefire" Translation="已从队列中移除 {0} 个触发器 '{1}' 的动作，拒绝再次触发" />
+    <TranslationEntry Key="internal/Trigger/restricted" Translation="触发器 '{1}' 由于下列权限被禁用而无法执行：&#xD;&#xA;[{0}] &#xD;&#xA;您可以在此远程触发器仓库的设置中启用这些权限，或禁用此触发器以防止继续报错。" />
     <TranslationEntry Key="internal/Trigger/trignotfired" Translation="触发器 '{0}' 未触发，因为条件未满足" />
-    <TranslationEntry Key="internal/TriggerForm/actioncopyfail" Translation="由于异常，动作复制失败：{0}" />
-    <TranslationEntry Key="internal/TriggerForm/actionpastefail" Translation="由于异常，动作粘贴失败：{0}" />
+    <TranslationEntry Key="internal/TriggerForm/actioncopyfail" Translation="动作复制失败：{0}" />
+    <TranslationEntry Key="internal/TriggerForm/actionpastefail" Translation="动作粘贴失败：{0}" />
     <TranslationEntry Key="internal/TriggerForm/add" Translation="添加" />
     <TranslationEntry Key="internal/TriggerForm/addnewaction" Translation="添加新动作" />
     <TranslationEntry Key="internal/TriggerForm/areyousureplural" Translation="您确定要移除选择的动作吗？" />
@@ -1644,7 +1666,7 @@
     <TranslationEntry Key="internal/UserInterface/areyousuretrigger" Translation="您确定要移除触发器 '{0}' 吗？" />
     <TranslationEntry Key="internal/UserInterface/clearvar" Translation="你确定要移除所有临时变量吗？" />
     <TranslationEntry Key="internal/UserInterface/confirm" Translation="移除确认" />
-    <TranslationEntry Key="internal/UserInterface/copyfail" Translation="由于异常，树复制失败：{0}" />
+    <TranslationEntry Key="internal/UserInterface/copyfail" Translation="节点树复制失败：{0}" />
     <TranslationEntry Key="internal/UserInterface/editfolder" Translation="编辑分组 '{0}'" />
     <TranslationEntry Key="internal/UserInterface/editrepository" Translation="编辑仓库 '{0}'" />
     <TranslationEntry Key="internal/UserInterface/editsubstitution" Translation="编辑替换项 '{0}'" />
@@ -1665,7 +1687,7 @@
     <TranslationEntry Key="internal/UserInterface/loglinequeue" Translation="队列 {0} 用户日志行" />
     <TranslationEntry Key="internal/UserInterface/loglinequeuedone" Translation="完成" />
     <TranslationEntry Key="internal/UserInterface/operationwillremove" Translation="此操作将移除：" />
-    <TranslationEntry Key="internal/UserInterface/pastefail" Translation="由于异常，树粘贴失败；{0}" />
+    <TranslationEntry Key="internal/UserInterface/pastefail" Translation="节点树粘贴失败；{0}" />
     <TranslationEntry Key="internal/UserInterface/remote" Translation="远程触发器" />
     <TranslationEntry Key="internal/UserInterface/restartafterupdate" Translation="您在未重启 ACT 的情况下更新了触发器增强版 Triggernometry - 新功能可能在重启 ACT 前无法使用" />
     <TranslationEntry Key="internal/UserInterface/savechanges" Translation="保存更改" />
@@ -1817,7 +1839,7 @@
     <TranslationEntry Key="RepositoryListForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="RepositoryListForm/btnOk" Translation="添加所选" />
     <TranslationEntry Key="RepositoryListForm/downloadcomplete" Translation="下载完成" />
-    <TranslationEntry Key="RepositoryListForm/exception" Translation="由于下列异常，下载失败：{0}" />
+    <TranslationEntry Key="RepositoryListForm/exception" Translation="下载失败：{0}" />
     <TranslationEntry Key="RepositoryListForm/grpAvailRepos" Translation=" 可用的仓库 " />
     <TranslationEntry Key="RepositoryListForm/grpRepoDetails" Translation=" 仓库信息 " />
     <TranslationEntry Key="RepositoryListForm/lblStatus" Translation="请稍候……" />

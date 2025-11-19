@@ -246,11 +246,11 @@ namespace Triggernometry.Actions
             }
             if (_UseCache == true)
             {
-                string endpointh = ctx.plug.GenerateHash(endpoint);
-                string payloadh = ctx.plug.GenerateHash(payload);
-                string headersh = ctx.plug.GenerateHash(headers);
-                string fh = ctx.plug.GenerateHash(endpointh + payloadh + headers);
-                string fn = Path.Combine(ctx.plug.path, "TriggernometryJsonCache");
+                string endpointh = RealPlugin.GenerateHash(endpoint);
+                string payloadh = RealPlugin.GenerateHash(payload);
+                string headersh = RealPlugin.GenerateHash(headers);
+                string fh = RealPlugin.GenerateHash(endpointh + payloadh + headers);
+                string fn = Path.Combine(ctx.plug.ConfigPath, "TriggernometryJsonCache");
                 if (Directory.Exists(fn) == false)
                 {
                     Directory.CreateDirectory(fn);

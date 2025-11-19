@@ -198,13 +198,13 @@ namespace Triggernometry.Actions
                 Uri u = new Uri(filename);
                 if (u.IsFile == false)
                 {
-                    string fn = Path.Combine(ctx.plug.path, "TriggernometryFileCache");
+                    string fn = Path.Combine(ctx.plug.ConfigPath, "TriggernometryFileCache");
                     if (Directory.Exists(fn) == false)
                     {
                         Directory.CreateDirectory(fn);
                     }
                     string ext = Path.GetExtension(u.LocalPath);
-                    fn = Path.Combine(fn, ctx.plug.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
+                    fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
                     bool fromcache = false;
                     if (File.Exists(fn) == true && _UseCache == true)
                     {

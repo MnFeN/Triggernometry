@@ -230,7 +230,19 @@ namespace Triggernometry.Forms
                 case "dgvMutexes":
                 case "dgvImage":
                 case "dgvText":
+                    break;
                 case "dgvCallback":
+                    switch (e.ColumnIndex)
+                    {
+                        case 0: newType = "id"; break;
+                        case 1: newType = "name"; break;
+                        case 2: newType = "registrant"; break;
+                        case 3: newType = "lastRegistered"; break;
+                        case 4: newType = "lastInvoked"; break;
+                    }
+                    UpdateSortType(newType, dgv, e.ColumnIndex);
+                    RefreshNamedCallbacks();
+                    break;
                 default:
                     return;
             }
@@ -1706,6 +1718,7 @@ namespace Triggernometry.Forms
             {
                 dgvCallback.RowCount = plug.callbacksById.Count;
             }
+            SortCallbacks();
             Refresh();
         }
 
@@ -1727,7 +1740,7 @@ namespace Triggernometry.Forms
                 {
                     return;
                 }
-                int cbid = plug.callbacksById.Keys.ElementAt(e.RowIndex);
+                int cbid = sortedCallbackKeys[e.RowIndex];
                 RealPlugin.NamedCallback cb = plug.callbacksById[cbid];
                 switch (e.ColumnIndex)
                 {
@@ -1745,6 +1758,37 @@ namespace Triggernometry.Forms
                 }
             }
         }
+
+        private List<int> sortedCallbackKeys = new List<int>();
+        private void SortCallbacks()
+        {
+            lock (plug.callbacksById)
+            {
+                var list = plug.callbacksById;
+
+                Func<KeyValuePair<int, RealPlugin.NamedCallback>, object> selector;
+
+                switch (sortType)
+                {
+                    case "id": selector = kv => kv.Value.Id; break;
+                    case "name": selector = kv => kv.Value.Name; break;
+                    case "registrant": selector = kv => kv.Value.Registrant ?? ""; break;
+                    case "lastRegistered": selector = kv => kv.Value.RegistrationTime; break;
+                    case "lastInvoked": selector = kv => kv.Value.LastInvoked ?? DateTime.MinValue; break;
+                    default: selector = kv => kv.Key; break;
+                }
+
+                if (sortAsc)
+                {
+                    sortedCallbackKeys = list.OrderBy(selector).ThenBy(kv => kv.Key).Select(kv => kv.Key).ToList();
+                }
+                else
+                {
+                    sortedCallbackKeys = list.OrderByDescending(selector).ThenBy(kv => kv.Key).Select(kv => kv.Key).ToList();
+                }
+            }
+        }
+
         #endregion
 
     }

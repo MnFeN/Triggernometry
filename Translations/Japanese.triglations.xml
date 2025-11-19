@@ -790,7 +790,7 @@
     <TranslationEntry Key="ConfigurationForm/lblTtsVolume" Translation="音量" />
     <TranslationEntry Key="ConfigurationForm/lblUiFont" Translation="Custom font" />
     <TranslationEntry Key="ConfigurationForm/lblUiFontDefault" Translation="Use default font" />
-    <TranslationEntry Key="ConfigurationForm/lblUpdateChannelUri" Translation="Channel URI" />
+    <TranslationEntry Key="ConfigurationForm/lblUpdateChannelUrl" Translation="Channel URL" />
     <TranslationEntry Key="ConfigurationForm/lblUpdateMethod" Translation="Update method" />
     <TranslationEntry Key="ConfigurationForm/lblUpdates" Translation="起動時に更新を確認" />
     <TranslationEntry Key="ConfigurationForm/lblWarnAdmin" Translation="管理者権限で起動していない場合に警告を表示" />
@@ -1122,7 +1122,7 @@
     <TranslationEntry Key="internal/Action/disabledfolderwithid" Translation="Disabled folder ({0}) with id ({1})" />
     <TranslationEntry Key="internal/Action/dynamicexprerror" Translation="The dynamic expression ({0}) is invalid in the current action. Expression: ({1})" />
     <TranslationEntry Key="internal/Action/enabledfolderwithid" Translation="Enabled folder ({0}) with id ({1})" />
-    <TranslationEntry Key="internal/Action/exception" Translation="Action exception: {0} \nIn action: {1} \nIn trigger: {2}{3}" />
+    <TranslationEntry Key="internal/Action/exception" Translation="Action exception: {0} &#xD;&#xA;In action: {1} &#xD;&#xA;In trigger: {2}{3}" />
     <TranslationEntry Key="internal/Action/executingaction" Translation="Executing action '{0}' in thread {1}" />
     <TranslationEntry Key="internal/Action/filelistset" Translation="{2}リスト変数 ({0}) にファイル ({1}) を読み込む" />
     <TranslationEntry Key="internal/Action/filescalarset" Translation="{2}スカラ変数 ({0}) にファイル ({1}) を読み込む" />
@@ -1443,6 +1443,12 @@
     <TranslationEntry Key="internal/Plugin/exactimageaura" Translation="画像オーバーレイ '{1}' を有効化する途中で例外が発生しました: '{0}'" />
     <TranslationEntry Key="internal/Plugin/exacttextaura" Translation="テキストオーバーレイ '{1}' を有効化する途中で例外が発生しました: '{0}'" />
     <TranslationEntry Key="internal/Plugin/exception" Translation="例外" />
+    <TranslationEntry Key="internal/Plugin/extplugincheckfailed" Translation="Couldn't process update manifest from {0}, error: {1}" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="プラグインファイルを {0} から更新できませんでした: {1}" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatesuccess" Translation="プラグインのバージョンが {0} から {1} に更新されました。変更を反映するには ACT を再起動してください。" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdateurgent" Translation="プラグインは {0} から {1} に更新されました。&#xD;&#xA;&#xD;&#xA;現在実行中のバージョンは古いため、直ちに再起動することを推奨します。" />
+    <TranslationEntry Key="internal/Plugin/exttranslationupdated" Translation="翻訳ファイルが更新されました。変更を反映するには ACT を再起動してください。" />
+    <TranslationEntry Key="internal/Plugin/exttranslationupdatefail" Translation="翻訳ファイルを {0} から更新できませんでした: {1}" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworklogline" Translation="Network log line: ({0})" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworkprocex" Translation="Exception ({0}) when processing network log line ({1})" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworksplitlogline" Translation="Split network log line: ({0})" />
@@ -1484,21 +1490,9 @@
     <TranslationEntry Key="internal/Plugin/notadministrator" Translation="管理者としてACTを実行していません。一部のトリガーが機能しない可能性があります。" />
     <TranslationEntry Key="internal/Plugin/procex" Translation="Exception ({0}) when processing log line ({1}) in zone ({2})" />
     <TranslationEntry Key="internal/Plugin/releaseunownedmutex" Translation="Tried to release unowned mutex '{0}' from context '{1}'" />
-    <TranslationEntry Key="internal/Plugin/repodownloading" Translation="Downloading repository {0} from {1}" />
-    <TranslationEntry Key="internal/Plugin/repoexportnull" Translation="リポジトリ {0} のデータは逆シリアル化できませんでした。Triggernometryの最新バージョンを実行していることを確認してください。" />
-    <TranslationEntry Key="internal/Plugin/repofetching" Translation="Repository {0} has changed since {1} (new timestamp {2}), or size has changed from {3} (new size {4}), fetching new version" />
-    <TranslationEntry Key="internal/Plugin/repoloadedlocal" Translation="Loaded local backup of repository {0} from {1}" />
-    <TranslationEntry Key="internal/Plugin/repoloadinglocal" Translation="Loading local backup of repository {0} in {1}" />
-    <TranslationEntry Key="internal/Plugin/repoloadlocalexception" Translation="Couldn't load local backup of repository {0} due to exception: {1}" />
-    <TranslationEntry Key="internal/Plugin/reposavedlocal" Translation="Saved local backup of repository {0} in {1}" />
-    <TranslationEntry Key="internal/Plugin/reposavelocalexception" Translation="Couldn't save local backup of repository {0} due to exception: {1}" />
-    <TranslationEntry Key="internal/Plugin/reposavinglocal" Translation="Saving local backup of repository {0} in {1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="[{2}/{3}] Updating repository {0} at {1}" />
+    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="{0} 個のリポジトリを更新します" />
+    <TranslationEntry Key="internal/Plugin/repoupdatedcount" Translation="[{0}/{1}] リポジトリ {2} を {3} から更新しました" />
     <TranslationEntry Key="internal/Plugin/repoupdatecomplete" Translation="リポジトリの更新が完了しました" />
-    <TranslationEntry Key="internal/Plugin/repoupdateexception" Translation="リポジトリ {0} の更新中に例外が発生しました: {1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdates" Translation="{0} 個のリポジトリを更新します" />
-    <TranslationEntry Key="internal/Plugin/repousingbackup" Translation="Repository {0} hasn't changed since {1}, and size {2} hasn't changed from {3}, using local backup" />
-    <TranslationEntry Key="internal/Plugin/repousinglocal" Translation="Loading local backup of repository {0}" />
     <TranslationEntry Key="internal/Plugin/splitlogline" Translation="Split log line: ({0})" />
     <TranslationEntry Key="internal/Plugin/trigaddbook" Translation="Trigger '{0}' added to bookkeeping" />
     <TranslationEntry Key="internal/Plugin/trigfiring" Translation="Firing trigger '{0}'" />
@@ -1513,6 +1507,33 @@
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="Line ({0}) took {1} ms to process, may be falling behind" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="Zone update to '{0}' - allowed triggers: {1}, restricted triggers: {2}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)." />
+    <TranslationEntry Key="internal/Repository/loadlocalex" Translation="リポジトリ {0} のローカルバックアップを読み込めませんでした: {1}" /> 
+    <TranslationEntry Key="internal/Repository/localcleared" Translation="リポジトリ {0} のローカルバックアップを {1} から削除しました" /> 
+    <TranslationEntry Key="internal/Repository/localclearex" Translation="リポジトリ {0} のローカルバックアップを削除できませんでした: {1}" /> 
+    <TranslationEntry Key="internal/Repository/localclearnotfound" Translation="リポジトリ {0} のローカルバックアップが {1} に見つかりませんでした" /> 
+    <TranslationEntry Key="internal/Repository/localloadcorrupted" Translation="リポジトリ {0} のバックアップデータを逆シリアル化できませんでした。" /> 
+    <TranslationEntry Key="internal/Repository/localloaded" Translation="リポジトリ {0} のローカルバックアップを {1} から読み込みました" /> 
+    <TranslationEntry Key="internal/Repository/localloading" Translation="リポジトリ {0} のローカルバックアップを {1} から読み込み中です" /> 
+    <TranslationEntry Key="internal/Repository/localloadnotfound" Translation="リポジトリ {0} のローカルバックアップが {1} に見つかりませんでした" /> 
+    <TranslationEntry Key="internal/Repository/localsaved" Translation="リポジトリ {0} のローカルバックアップを {1} に保存しました" /> 
+    <TranslationEntry Key="internal/Repository/localsaveex" Translation="リポジトリ {0} のローカルバックアップを保存できませんでした: {1}" /> 
+    <TranslationEntry Key="internal/Repository/localsaving" Translation="リポジトリ {0} のローカルバックアップを {1} に保存中です" /> 
+    <TranslationEntry Key="internal/Repository/probeinfocache" Translation="[Info] キャッシュ期限切れ: {0}" /> 
+    <TranslationEntry Key="internal/Repository/probeinfolocal" Translation="[Info] ローカルバックアップ: サイズ={0}, 時刻={1}" /> 
+    <TranslationEntry Key="internal/Repository/probeinfolocalmissing" Translation="[Info] ローカルバックアップが存在しません。更新が必要です。" /> 
+    <TranslationEntry Key="internal/Repository/probeinforemote" Translation="[Info] リモートメタデータ: サイズ={0}, 時刻={1}" /> 
+    <TranslationEntry Key="internal/Repository/probeinforemotefail" Translation="[Info] リモートのメタデータサイズを取得できません。更新を強制します。" /> 
+    <TranslationEntry Key="internal/Repository/proberesultfalse" Translation="リポジトリ {0} は変更されていないため、更新は不要です。サイズ: {1}, 時刻: ({2})" /> 
+    <TranslationEntry Key="internal/Repository/proberesulttrue" Translation="リポジトリ {0} は変更されているため、新しいバージョンを取得します。サイズ: {1} → {2}, 時刻: ({3}) → ({4})" /> 
+    <TranslationEntry Key="internal/Repository/restricted" Translation="リモートリポジトリ {0} では次の権限が無効になっています: [{1}]。一部のトリガーが正しく動作しない可能性があります。" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/DiskOperation" Translation="ディスク操作" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/ExecuteScript" Translation="スクリプト実行" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/LaunchProcess" Translation="プロセス起動" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/ObsControl" Translation="OBS 制御" /> 
+    <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="ウィンドウメッセージ" /> 
+    <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="パス {1} のリポジトリ {0} のデータは逆シリアル化できませんでした。Triggernometry とリポジトリの両方が最新バージョンであることを確認してください。" /> 
+    <TranslationEntry Key="internal/Repository/updateex" Translation="リポジトリ {0} の更新中に例外が発生しました: {1}" /> 
+    <TranslationEntry Key="internal/Repository/updating" Translation="リポジトリ {0} を {1} からダウンロードしています" />
     <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="Allowing triggers from a repository to perform disk operations can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
     <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="Allowing triggers from a repository to control OBS can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
     <TranslationEntry Key="internal/RepositoryForm/allowprocesswarn" Translation="Allowing triggers from a repository to launch processes can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
@@ -1596,6 +1617,7 @@
     <TranslationEntry Key="internal/Trigger/refiredenied" Translation="{0} instance(s) of trigger '{1}' actions in queue, refire denied" />
     <TranslationEntry Key="internal/Trigger/removefromqueue" Translation="Removed {0} instance(s) of trigger '{1}' actions from queue" />
     <TranslationEntry Key="internal/Trigger/removefromqueuenorefire" Translation="Removed {0} instance(s) of trigger '{1}' actions from queue, refire denied" />
+    <TranslationEntry Key="internal/Trigger/restricted" Translation="トリガー「{1}」は、次の権限が無効になっているため実行されませんでした: &#xD;&#xA;[{0}] &#xD;&#xA;このエラーを防ぐには、リモートリポジトリでこれらの権限を有効にするか、このトリガーを無効化してください。" />
     <TranslationEntry Key="internal/Trigger/trignotfired" Translation="Trigger '{0}' not fired, condition not met" />
     <TranslationEntry Key="internal/TriggerForm/actioncopyfail" Translation="アクションのコピーに失敗しました: {0}" />
     <TranslationEntry Key="internal/TriggerForm/actionpastefail" Translation="アクションの貼り付けに失敗しました: {0}" />

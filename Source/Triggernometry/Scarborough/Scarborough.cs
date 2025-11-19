@@ -454,7 +454,7 @@ namespace Scarborough
             {
                 if (msg.ctx != null)
                 {
-                    msg.ctx.trig.AddToLog(msg.plug, msg.level, msg.Message);
+                    msg.ctx.trig.AddToLog(msg.level, msg.Message);
                 }
                 else
                 {

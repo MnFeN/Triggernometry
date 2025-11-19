@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Triggernometry;
 
 namespace Scarborough
 {
@@ -221,13 +222,13 @@ namespace Scarborough
             }
             else
             {
-                string fn = Path.Combine(plug.path, "TriggernometryRemoteImages");
+                string fn = Path.Combine(plug.ConfigPath, "TriggernometryRemoteImages");
                 if (Directory.Exists(fn) == false)
                 {
                     Directory.CreateDirectory(fn);
                 }
                 string ext = Path.GetExtension(u.LocalPath);
-                fn = Path.Combine(fn, plug.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
+                fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
                 bool fromcache = false;
                 if (File.Exists(fn) == true)
                 {

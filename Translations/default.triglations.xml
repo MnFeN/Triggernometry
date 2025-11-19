@@ -790,7 +790,7 @@
     <TranslationEntry Key="ConfigurationForm/lblTtsVolume" Translation="Volume" />
     <TranslationEntry Key="ConfigurationForm/lblUiFont" Translation="Custom font" />
     <TranslationEntry Key="ConfigurationForm/lblUiFontDefault" Translation="Use default font" />
-    <TranslationEntry Key="ConfigurationForm/lblUpdateChannelUri" Translation="Channel URI" />
+    <TranslationEntry Key="ConfigurationForm/lblUpdateChannelUrl" Translation="Channel URL" />
     <TranslationEntry Key="ConfigurationForm/lblUpdateMethod" Translation="Update method" />
     <TranslationEntry Key="ConfigurationForm/lblUpdates" Translation="Check for updates" />
     <TranslationEntry Key="ConfigurationForm/lblWarnAdmin" Translation="Warn if not running as Administrator" />
@@ -1122,7 +1122,7 @@
     <TranslationEntry Key="internal/Action/disabledfolderwithid" Translation="Disabled folder ({0}) with id ({1})" />
     <TranslationEntry Key="internal/Action/dynamicexprerror" Translation="The dynamic expression ({0}) is invalid in the current action. Expression: ({1})" />
     <TranslationEntry Key="internal/Action/enabledfolderwithid" Translation="Enabled folder ({0}) with id ({1})" />
-    <TranslationEntry Key="internal/Action/exception" Translation="Action exception: {0} \nIn action: {1} \nIn trigger: {2}{3}" />
+    <TranslationEntry Key="internal/Action/exception" Translation="Action exception: {0} &#xD;&#xA;In action: {1} &#xD;&#xA;In trigger: {2}{3}" />
     <TranslationEntry Key="internal/Action/executingaction" Translation="Executing action '{0}' in thread {1}" />
     <TranslationEntry Key="internal/Action/filelistset" Translation="{2}List variable ({0}) value read from file ({1})" />
     <TranslationEntry Key="internal/Action/filescalarset" Translation="{2}Scalar variable ({0}) value read from file ({1})" />
@@ -1443,6 +1443,12 @@
     <TranslationEntry Key="internal/Plugin/exactimageaura" Translation="Exception '{0}' when activating image aura '{1}'" />
     <TranslationEntry Key="internal/Plugin/exacttextaura" Translation="Exception '{0}' when activating text aura '{1}'" />
     <TranslationEntry Key="internal/Plugin/exception" Translation="Exception" />
+    <TranslationEntry Key="internal/Plugin/extplugincheckfailed" Translation="Couldn't process update manifest from {0}, error: {1}" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="Couldn't update plugin file from {0}: {1}" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatesuccess" Translation="Plugin version updated from {0} to {1}. Restart ACT for changes to take effect." />
+    <TranslationEntry Key="internal/Plugin/extpluginupdateurgent" Translation="The plugin has been updated from {0} to {1}. &#xD;&#xA;&#xD;&#xA;The current running version was outdated. It is recommended to restart immediately." />
+    <TranslationEntry Key="internal/Plugin/exttranslationupdated" Translation="Translation file updated, restart ACT for changes to take effect." />
+    <TranslationEntry Key="internal/Plugin/exttranslationupdatefail" Translation="Couldn't update translation file from {0}: {1}" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworklogline" Translation="Network log line: ({0})" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworkprocex" Translation="Exception ({0}) when processing network log line ({1})" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworksplitlogline" Translation="Split network log line: ({0})" />
@@ -1484,21 +1490,9 @@
     <TranslationEntry Key="internal/Plugin/notadministrator" Translation="You are not running ACT as an administrator - this might prevent some triggers from working." />
     <TranslationEntry Key="internal/Plugin/procex" Translation="Exception ({0}) when processing log line ({1}) in zone ({2})" />
     <TranslationEntry Key="internal/Plugin/releaseunownedmutex" Translation="Tried to release unowned mutex '{0}' from context '{1}'" />
-    <TranslationEntry Key="internal/Plugin/repodownloading" Translation="Downloading repository {0} from {1}" />
-    <TranslationEntry Key="internal/Plugin/repoexportnull" Translation="Data for repository {0} could not be unserialized" />
-    <TranslationEntry Key="internal/Plugin/repofetching" Translation="Repository {0} has changed since {1} (new timestamp {2}), or size has changed from {3} (new size {4}), fetching new version" />
-    <TranslationEntry Key="internal/Plugin/repoloadedlocal" Translation="Loaded local backup of repository {0} from {1}" />
-    <TranslationEntry Key="internal/Plugin/repoloadinglocal" Translation="Loading local backup of repository {0} in {1}" />
-    <TranslationEntry Key="internal/Plugin/repoloadlocalexception" Translation="Couldn't load local backup of repository {0} due to exception: {1}" />
-    <TranslationEntry Key="internal/Plugin/reposavedlocal" Translation="Saved local backup of repository {0} in {1}" />
-    <TranslationEntry Key="internal/Plugin/reposavelocalexception" Translation="Couldn't save local backup of repository {0} due to exception: {1}" />
-    <TranslationEntry Key="internal/Plugin/reposavinglocal" Translation="Saving local backup of repository {0} in {1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="[{2}/{3}] Updating repository {0} at {1}" />
+    <TranslationEntry Key="internal/Plugin/repoupdate" Translation="Going to update {0} repository(s)" />
+    <TranslationEntry Key="internal/Plugin/repoupdatedcount" Translation="[{0}/{1}] Updated repository {2} at {3}" />
     <TranslationEntry Key="internal/Plugin/repoupdatecomplete" Translation="Repository update complete" />
-    <TranslationEntry Key="internal/Plugin/repoupdateexception" Translation="Couldn't update repository {0} due to exception: {1}" />
-    <TranslationEntry Key="internal/Plugin/repoupdates" Translation="Going to update {0} repositories" />
-    <TranslationEntry Key="internal/Plugin/repousingbackup" Translation="Repository {0} hasn't changed since {1}, and size {2} hasn't changed from {3}, using local backup" />
-    <TranslationEntry Key="internal/Plugin/repousinglocal" Translation="Loading local backup of repository {0}" />
     <TranslationEntry Key="internal/Plugin/splitlogline" Translation="Split log line: ({0})" />
     <TranslationEntry Key="internal/Plugin/trigaddbook" Translation="Trigger '{0}' added to bookkeeping" />
     <TranslationEntry Key="internal/Plugin/trigfiring" Translation="Firing trigger '{0}'" />
@@ -1513,6 +1507,33 @@
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="Line ({0}) took {1} ms to process, may be falling behind" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="Zone update to '{0}' - allowed triggers: {1}, restricted triggers: {2}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)." />
+    <TranslationEntry Key="internal/Repository/loadlocalex" Translation="Couldn't load local backup of repository {0} due to exception: {1}" />
+    <TranslationEntry Key="internal/Repository/localcleared" Translation="Cleared local backup of repository {0} at {1}" />
+    <TranslationEntry Key="internal/Repository/localclearex" Translation="Couldn't clear local backup of repository {0} due to exception: {1}" />
+    <TranslationEntry Key="internal/Repository/localclearnotfound" Translation="No local backup found for repository {0} at {1}" />
+    <TranslationEntry Key="internal/Repository/localloadcorrupted" Translation="Backup data for repository {0} could not be unserialized." />
+    <TranslationEntry Key="internal/Repository/localloaded" Translation="Loaded local backup of repository {0} from {1}" />
+    <TranslationEntry Key="internal/Repository/localloading" Translation="Loading local backup of repository {0} in {1}" />
+    <TranslationEntry Key="internal/Repository/localloadnotfound" Translation="No local backup found for repository {0} at {1}" />
+    <TranslationEntry Key="internal/Repository/localsaved" Translation="Saved local backup of repository {0} in {1}" />
+    <TranslationEntry Key="internal/Repository/localsaveex" Translation="Couldn't save local backup of repository {0} due to exception: {1}" />
+    <TranslationEntry Key="internal/Repository/localsaving" Translation="Saving local backup of repository {0} in {1}" />
+    <TranslationEntry Key="internal/Repository/probeinfocache" Translation="[Info] Cache expired: {0}" />
+    <TranslationEntry Key="internal/Repository/probeinfolocal" Translation="[Info] Local backup: Size={0}, Time={1}" />
+    <TranslationEntry Key="internal/Repository/probeinfolocalmissing" Translation="[Info] Local backup does not exist, update required." />
+    <TranslationEntry Key="internal/Repository/probeinforemote" Translation="[Info] Remote metadata: Length={0}, Time={1}" />
+    <TranslationEntry Key="internal/Repository/probeinforemotefail" Translation="[Info] Remote metadata size not available, forcing update." />
+    <TranslationEntry Key="internal/Repository/proberesultfalse" Translation="Repository {0} hasn't changed, update is not needed. Size: {1}, Time: ({2})" />
+    <TranslationEntry Key="internal/Repository/proberesulttrue" Translation="Repository {0} has changed, fetching new version. Size: {1} → {2}, Time: ({3}) → ({4})" />
+    <TranslationEntry Key="internal/Repository/restricted" Translation="Remote repository {0} has the following permissions disabled: [{1}]. Some triggers could not work correctly." />
+    <TranslationEntry Key="internal/Repository/restrictionenum/DiskOperation" Translation="DiskOperation" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/ExecuteScript" Translation="ExecuteScript" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/LaunchProcess" Translation="LaunchProcess" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/ObsControl" Translation="ObsControl" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="WindowMessage" />
+    <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="Data for repository {0} at {1} could not be unserialized. Make sure you are running the latest version of Triggernometry, and the repository is up-to-date." />
+    <TranslationEntry Key="internal/Repository/updateex" Translation="Couldn't update repository {0} due to exception: {1}" />
+    <TranslationEntry Key="internal/Repository/updating" Translation="Downloading repository {0} from {1}" />
     <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="Allowing triggers from a repository to perform disk operations can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
     <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="Allowing triggers from a repository to control OBS can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
     <TranslationEntry Key="internal/RepositoryForm/allowprocesswarn" Translation="Allowing triggers from a repository to launch processes can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
@@ -1596,6 +1617,7 @@
     <TranslationEntry Key="internal/Trigger/refiredenied" Translation="{0} instance(s) of trigger '{1}' actions in queue, refire denied" />
     <TranslationEntry Key="internal/Trigger/removefromqueue" Translation="Removed {0} instance(s) of trigger '{1}' actions from queue" />
     <TranslationEntry Key="internal/Trigger/removefromqueuenorefire" Translation="Removed {0} instance(s) of trigger '{1}' actions from queue, refire denied" />
+    <TranslationEntry Key="internal/Trigger/restricted" Translation="Trigger '{1}' was not executed because the following repository permission(s) are disabled: &#xD;&#xA;[{0}] &#xD;&#xA;You can enable these permissions for the remote repository, or disable this trigger to prevent this error." />
     <TranslationEntry Key="internal/Trigger/trignotfired" Translation="Trigger '{0}' not fired, condition not met" />
     <TranslationEntry Key="internal/TriggerForm/actioncopyfail" Translation="Action copy failed due to exception: {0}" />
     <TranslationEntry Key="internal/TriggerForm/actionpastefail" Translation="Action paste failed due to exception: {0}" />

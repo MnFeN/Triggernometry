@@ -63,13 +63,13 @@ namespace Triggernometry.Aura
             }
             else
             {
-                string fn = Path.Combine(plug.path, "TriggernometryRemoteImages");
+                string fn = Path.Combine(plug.ConfigPath, "TriggernometryRemoteImages");
                 if (Directory.Exists(fn) == false)
                 {
                     Directory.CreateDirectory(fn);
                 }
                 string ext = Path.GetExtension(u.LocalPath);
-                fn = Path.Combine(fn, plug.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
+                fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
                 if (File.Exists(fn) == true)
                 {
                     FileInfo fi = new FileInfo(fn);

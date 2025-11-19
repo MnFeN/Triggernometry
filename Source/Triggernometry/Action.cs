@@ -2142,13 +2142,13 @@ namespace Triggernometry
                                 Uri u = new Uri(filename);
                                 if (u.IsFile == false)
                                 {
-                                    string fn = Path.Combine(plug.path, "TriggernometryFileCache");
+                                    string fn = Path.Combine(plug.ConfigPath, "TriggernometryFileCache");
                                     if (Directory.Exists(fn) == false)
                                     {
                                         Directory.CreateDirectory(fn);
                                     }
                                     string ext = Path.GetExtension(u.LocalPath);
-                                    fn = Path.Combine(fn, plug.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
+                                    fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
                                     bool fromcache = false;
                                     if (File.Exists(fn) == true && _DiskFileCache == true)
                                     {
@@ -2393,11 +2393,11 @@ namespace Triggernometry
                             }
                             if (_JsonCacheRequest == true)
                             {
-                                string endpointh = plug.GenerateHash(endpoint);
-                                string payloadh = plug.GenerateHash(payload);
-                                string headersh = plug.GenerateHash(headers);
-                                string fh = plug.GenerateHash(endpointh + payloadh + headers);
-                                string fn = Path.Combine(plug.path, "TriggernometryJsonCache");
+                                string endpointh = GenerateHash(endpoint);
+                                string payloadh = GenerateHash(payload);
+                                string headersh = GenerateHash(headers);
+                                string fh = GenerateHash(endpointh + payloadh + headers);
+                                string fn = Path.Combine(plug.ConfigPath, "TriggernometryJsonCache");
                                 if (Directory.Exists(fn) == false)
                                 {
                                     Directory.CreateDirectory(fn);
@@ -3291,12 +3291,12 @@ namespace Triggernometry
                                     r = plug.GetRepositoryById(_RepositoryId);
                                     break;
                                 case RepositoryOpEnum.UpdateAll:
-                                    plug.AllRepositoryUpdates(false);
+                                    _ = plug.UpdateAllRepositoriesAsync(false);
                                     break;
                             }
                             if (r != null)
                             {
-                                plug.RepositoryUpdate(r, true, false);
+                                _ = plug.UpdateSingleRepositoryAsync(r);
                             }
                         }
                         break;

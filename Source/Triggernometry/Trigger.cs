@@ -55,6 +55,17 @@ namespace Triggernometry
             }
         }
 
+        private Repository.RestrictionEnum _repoRestrictions = Repository.RestrictionEnum.None;
+        [XmlIgnore]
+        public Repository.RestrictionEnum RepoRestrictions
+        {
+            get => _repoRestrictions;
+            internal set
+            {
+                _repoRestrictions = value;
+            }
+        }
+
         #endregion Properties - Basic
 
 
@@ -617,14 +628,14 @@ namespace Triggernometry
         /// <summary>
         /// Adds a log entry for this trigger if the specified debug level is within the effective debug level threshold.
         /// </summary>
-        internal void AddToLog(RealPlugin p, RealPlugin.DebugLevelEnum level, string message)
+        internal void AddToLog(RealPlugin.DebugLevelEnum level, string message)
         {
-            RealPlugin.DebugLevelEnum dx = GetDebugLevel(p);
+            RealPlugin.DebugLevelEnum dx = GetDebugLevel(RealPlugin.plug);
             if (level > dx)
             {
                 return;
             }
-            p.UnfilteredAddToLog(level, message, this);
+            RealPlugin.plug.UnfilteredAddToLog(level, message, this);
         }
 
         internal void DeferredFire(RealPlugin p, Context ctx, RealPlugin.MutexInformation mi, RealPlugin.MutexTicket m)
@@ -652,6 +663,18 @@ namespace Triggernometry
 
         public bool Fire(RealPlugin p, Context ctx, RealPlugin.MutexInformation mtx)
 		{
+            if (Repo != null && RepoRestrictions != Repository.RestrictionEnum.None)
+            {
+                var restrictionNames = Enum.GetValues(typeof(Repository.RestrictionEnum))
+                        .Cast<Repository.RestrictionEnum>()
+                        .Where(flag => flag != Repository.RestrictionEnum.None && RepoRestrictions.HasFlag(flag))
+                        .Select(flag => I18n.Translate($"internal/Repository/restriction/{flag}", flag.ToString()))
+                        .ToList();
+                AddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Trigger/restricted",
+                    "Trigger '{1}' was not executed because the following repository permission(s) are disabled: \n[{0}] \nYou can enable these permissions for the remote repository, or disable this trigger to prevent this error.",
+                    string.Join(", ", restrictionNames), FullPath));
+                return false;
+            }
             try
             {
                 if (mtx == null && !string.IsNullOrWhiteSpace(MutexToCapture))
@@ -659,13 +682,13 @@ namespace Triggernometry
                     string mn = ctx.EvaluateStringExpression(TriggerContextLogger, p, MutexToCapture);
                     RealPlugin.MutexInformation mi = ctx.plug.GetMutex(mn);
                     RealPlugin.MutexTicket m = mi.QueueForAcquisition(ctx);
-                    Task t = new Task(() => {
+                    _ = Task.Run(() =>
+                    {
                         using (m)
-                        {                            
+                        {
                             DeferredFire(ctx.plug, ctx, mi, m);
                         }
                     });
-                    t.Start();
                     return true;
                 }
                 if ((ctx.force & Action.TriggerForceTypeEnum.SkipConditions) == 0)
@@ -674,7 +697,7 @@ namespace Triggernometry
                     {
                         if (Condition.CheckCondition(ctx, TriggerContextLogger, ctx.plug) == false)
                         {
-                            AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/trignotfired", "Trigger '{0}' not fired, condition not met", LogName));
+                            AddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/trignotfired", "Trigger '{0}' not fired, condition not met", LogName));
                             return false;
                         }
                     }
@@ -684,7 +707,7 @@ namespace Triggernometry
                 if (PeriodRefire == RefireEnum.Deny)
                 {
                     RefireDelayedUntil = LastFired.AddMilliseconds(ctx.EvaluateNumericExpression(TriggerContextLogger, p, RefirePeriodExpression));
-                    AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/delayingrefire", "Delaying trigger '{0}' refire to {1}", LogName, RefireDelayedUntil));
+                    AddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/delayingrefire", "Delaying trigger '{0}' refire to {1}", LogName, RefireDelayedUntil));
                 }
                 else
                 {
@@ -703,7 +726,7 @@ namespace Triggernometry
                         if (ixy.Count() > 0)
                         {
                             curtime = ixy.ElementAt(0).when;
-                            AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/lastactionfound", "Last action for trigger '{0}' found at {1}", LogName, curtime));
+                            AddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/lastactionfound", "Last action for trigger '{0}' found at {1}", LogName, curtime));
                         }
                     }
                 }
@@ -713,7 +736,7 @@ namespace Triggernometry
                     if (curtime < LastFired)
                     {
                         curtime = LastFired;
-                        AddToLog(p, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Trigger/beforelastfired", "Current time is before last fired for trigger '{0}'", LogName));
+                        AddToLog(RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Trigger/beforelastfired", "Current time is before last fired for trigger '{0}'", LogName));
                     }
                 }
                 if (PrevActions == PrevActionsEnum.Interrupt)
@@ -739,12 +762,12 @@ namespace Triggernometry
                     {
                         if (PrevActionsRefire == RefireEnum.Deny)
                         {
-                            AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/removefromqueuenorefire", "Removed {0} instance(s) of trigger '{1}' actions from queue, refire denied", exx, LogName));
+                            AddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/removefromqueuenorefire", "Removed {0} instance(s) of trigger '{1}' actions from queue, refire denied", exx, LogName));
                             return false;
                         }
                         else
                         {
-                            AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/removefromqueue", "Removed {0} instance(s) of trigger '{1}' actions from queue", exx, LogName));
+                            AddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/removefromqueue", "Removed {0} instance(s) of trigger '{1}' actions from queue", exx, LogName));
                         }
                     }
                 }
@@ -760,7 +783,7 @@ namespace Triggernometry
                     }
                     if (exx > 0)
                     {
-                        AddToLog(p, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/refiredenied", "{0} instance(s) of trigger '{1}' actions in queue, refire denied", exx, LogName));
+                        AddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/refiredenied", "{0} instance(s) of trigger '{1}' actions in queue, refire denied", exx, LogName));
                         return false;
                     }
                 }
@@ -769,14 +792,14 @@ namespace Triggernometry
             }
             catch (Exception ex)
             {
-                AddToLog(p, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Trigger/firingexception", "Trigger '{0}' didn't fire due to exception: {1}", LogName, ex.ToString()));
+                AddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Trigger/firingexception", "Trigger '{0}' didn't fire due to exception: {1}", LogName, ex.ToString()));
             }
             return false;
         }
 
         public void TriggerContextLogger(object o, string msg)
         {
-            AddToLog((RealPlugin)o, RealPlugin.DebugLevelEnum.Verbose, msg);
+            AddToLog(RealPlugin.DebugLevelEnum.Verbose, msg);
         }
 
         public void CopySettingsTo(Trigger t)

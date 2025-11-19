@@ -17,7 +17,6 @@ namespace Triggernometry.Forms
     public partial class ConfigurationForm2 : MemoryForm<ConfigurationForm2>
     {
 
-        bool cancomplain;
         internal RealPlugin plug;
         private bool firstchange = true;
         private List<Configuration.Substitution> subs = new List<Configuration.Substitution>();
@@ -42,7 +41,6 @@ namespace Triggernometry.Forms
                 tbcMain.ItemSize = new Size(0, 1);
                 tbcMain.SizeMode = TabSizeMode.Fixed;
             }
-            cancomplain = false;
             SetupFfxivJobOrder(null);
             lblSoundVolP.Tag = I18n.DoNotTranslate;
             lblTtsVolP.Tag = I18n.DoNotTranslate;
@@ -64,7 +62,6 @@ namespace Triggernometry.Forms
 
         private void ConfigurationForm2_Shown(object sender, EventArgs e)
         {
-            cancomplain = true;
             cbxAutosaveConfig_CheckedChanged(null, null);
             RefreshCacheStates();
             plug._ep.OnStatusChange += _ep_OnStatusChange;
@@ -108,7 +105,7 @@ namespace Triggernometry.Forms
             cbxActionAsync.Checked = cfg.ActionAsyncByDefault;
             chkUpdates.Checked = (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes);
             cbxUpdateMethod.SelectedIndex = (int)cfg.UpdateCheckMethod;
-            txtUpdateChannelUri.Text = cfg.UpdateExternalChannelURI;
+            txtUpdateChannelUrl.Text = cfg.UpdateExternalChannelUrl;
             chkLogNormalEvents.Checked = cfg.LogNormalEvents;
             chkLogVariableExpansions.Checked = cfg.LogVariableExpansions;
             chkFfxivLogNetwork.Checked = cfg.FfxivLogNetwork;
@@ -223,7 +220,7 @@ namespace Triggernometry.Forms
                 }
             }
             cfg.UpdateCheckMethod = (Configuration.UpdateCheckMethodEnum)cbxUpdateMethod.SelectedIndex;
-            cfg.UpdateExternalChannelURI = txtUpdateChannelUri.Text;
+            cfg.UpdateExternalChannelUrl = txtUpdateChannelUrl.Text;
             TreeNode tn = trvTrigger.SelectedNode;
             if (tn != null)
             {
@@ -761,31 +758,31 @@ namespace Triggernometry.Forms
 
         private void RefreshImageCacheState()
         {
-            string path = Path.Combine(plug.path, "TriggernometryRemoteImages");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryRemoteImages");
             RefreshCacheState(path, txtCacheImageCount, txtCacheImageSize, btnCacheImageClear, btnCacheImageBrowse);
         }
 
         private void RefreshSoundCacheState()
         {
-            string path = Path.Combine(plug.path, "TriggernometryRemoteSounds");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryRemoteSounds");
             RefreshCacheState(path, txtCacheSoundCount, txtCacheSoundSize, btnCacheSoundClear, btnCacheSoundBrowse);
         }
 
         private void RefreshJsonCacheState()
         {
-            string path = Path.Combine(plug.path, "TriggernometryJsonCache");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryJsonCache");
             RefreshCacheState(path, txtCacheJsonCount, txtCacheJsonSize, btnCacheJsonClear, btnCacheJsonBrowse);
         }
 
         private void RefreshRepoCacheState()
         {
-            string path = Path.Combine(plug.path, "TriggernometryRepoBackups");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryRepoBackups");
             RefreshCacheState(path, txtCacheRepoCount, txtCacheRepoSize, btnCacheRepoClear, btnCacheRepoBrowse);
         }
 
         private void RefreshFileCacheState()
         {
-            string path = Path.Combine(plug.path, "TriggernometryFileCache");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryFileCache");
             RefreshCacheState(path, txtCacheFileCount, txtCacheFileSize, btnCacheFileClear, btnCacheFileBrowse);
         }
 
@@ -856,7 +853,7 @@ namespace Triggernometry.Forms
 
         private void btnCacheImageBrowse_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(plug.path, "TriggernometryRemoteImages");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryRemoteImages");
             if (Directory.Exists(path) == true)
             {
                 Process.Start("explorer.exe", path);
@@ -865,7 +862,7 @@ namespace Triggernometry.Forms
 
         private void btnCacheSoundBrowse_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(plug.path, "TriggernometryRemoteSounds");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryRemoteSounds");
             if (Directory.Exists(path) == true)
             {
                 Process.Start("explorer.exe", path);
@@ -874,7 +871,7 @@ namespace Triggernometry.Forms
 
         private void btnCacheJsonBrowse_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(plug.path, "TriggernometryJsonCache");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryJsonCache");
             if (Directory.Exists(path) == true)
             {
                 Process.Start("explorer.exe", path);
@@ -883,7 +880,7 @@ namespace Triggernometry.Forms
 
         private void btnCacheRepoBrowse_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(plug.path, "TriggernometryRepoBackups");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryRepoBackups");
             if (Directory.Exists(path) == true)
             {
                 Process.Start("explorer.exe", path);
@@ -892,7 +889,7 @@ namespace Triggernometry.Forms
 
         private void btnCacheFileBrowse_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(plug.path, "TriggernometryFileCache");
+            string path = Path.Combine(plug.ConfigPath, "TriggernometryFileCache");
             if (Directory.Exists(path) == true)
             {
                 Process.Start("explorer.exe", path);
@@ -1282,22 +1279,22 @@ namespace Triggernometry.Forms
             switch (cbxUpdateMethod.SelectedIndex)
             {
                 case 0:
-                    plug.CheckForUpdatesBuiltin(); 
+                    plug.CheckForUpdatesBuiltin(alwaysNotify: true); 
                     break;
                 case 1:
                     plug.CheckForUpdatesACT();
                     break;
                 case 2:
-                    plug.CheckForUpdatesExternal(txtUpdateChannelUri.Text);
+                    plug.CheckForUpdatesExternal(txtUpdateChannelUrl.Text, alwaysNotify: true);
                     break;
             }
         }
 
         private void cbxUpdateChannel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lblUpdateChannelUri.Enabled = (cbxUpdateMethod.SelectedIndex == 2);
-            lblExternalUpdateWarn.Visible = lblUpdateChannelUri.Enabled;
-            txtUpdateChannelUri.Enabled = lblUpdateChannelUri.Enabled;
+            lblUpdateChannelUrl.Enabled = (cbxUpdateMethod.SelectedIndex == 2);
+            lblExternalUpdateWarn.Visible = lblUpdateChannelUrl.Enabled;
+            txtUpdateChannelUrl.Enabled = lblUpdateChannelUrl.Enabled;
         }
 
         #endregion

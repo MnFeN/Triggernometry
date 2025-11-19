@@ -13,10 +13,9 @@ namespace Triggernometry
         internal static string FormatDateTime(DateTime dt)
         {
             return dt.ToString("MM-dd HH:mm:ss.fff");
-            // return dt.ToString("yyyy-MM-dd HH:mm:ss.fff");
         }
 
-        internal string GenerateHash(string addy)
+        internal static string GenerateHash(string addy)
         {
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {

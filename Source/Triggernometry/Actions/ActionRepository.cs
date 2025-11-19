@@ -120,12 +120,12 @@ namespace Triggernometry.Actions
                     r = ctx.plug.GetRepositoryById(_RepositoryId);
                     break;
                 case OperationEnum.UpdateAll:
-                    ctx.plug.AllRepositoryUpdates(false);
+                    _ = ctx.plug.UpdateAllRepositoriesAsync(false);
                     break;
             }
             if (r != null)
             {
-                ctx.plug.RepositoryUpdate(r, true, false);
+                _ = ctx.plug.UpdateSingleRepositoryAsync(r);
             }
         }
 

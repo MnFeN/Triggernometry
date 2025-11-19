@@ -16,18 +16,15 @@ namespace Triggernometry
 
         private void FixConfigurationOnStartCN()
         {
+            cfg.ShowWelcome = false;
             cfg.TestLiveByDefault = true;
             cfg.TestIgnoreConditionsByDefault = true;
             cfg.TtsMethod = Configuration.AudioRoutingMethodEnum.ACT;
             cfg.AutosaveEnabled = true;
-            try
-            {
-                PluginBridges.BridgeFFXIV.UseDeucalion(true);
-            }
-            catch { }
             cfg.UpdateNotifications = Configuration.UpdateNotificationsEnum.Yes;
             cfg.UpdateCheckMethod = Configuration.UpdateCheckMethodEnum.External;
-            cfg.UpdateExternalChannelURI = "https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml";
+            cfg.UpdateExternalChannelUrl = "https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml";
+            cfg.AutoUpdate = true;
             var apis = (List<Configuration.APIUsage>)cfg?.GetType()?.GetProperty("_APIUsages", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(cfg);
             var utilities = apis?.FirstOrDefault(a => a.Name == "Triggernometry.Utilities");
             if (utilities != null)

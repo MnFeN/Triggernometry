@@ -192,9 +192,9 @@
             this.panel10 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.lblExternalUpdateWarn = new System.Windows.Forms.Label();
-            this.txtUpdateChannelUri = new System.Windows.Forms.TextBox();
+            this.txtUpdateChannelUrl = new System.Windows.Forms.TextBox();
             this.cbxUpdateMethod = new System.Windows.Forms.ComboBox();
-            this.lblUpdateChannelUri = new System.Windows.Forms.Label();
+            this.lblUpdateChannelUrl = new System.Windows.Forms.Label();
             this.lblUpdateMethod = new System.Windows.Forms.Label();
             this.btnUpdateCheck = new System.Windows.Forms.Button();
             this.capUpdateChannel = new Triggernometry.CustomControls.PrettyCaption();
@@ -2710,9 +2710,9 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.lblExternalUpdateWarn, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.txtUpdateChannelUri, 1, 2);
+            this.tableLayoutPanel2.Controls.Add(this.txtUpdateChannelUrl, 1, 2);
             this.tableLayoutPanel2.Controls.Add(this.cbxUpdateMethod, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lblUpdateChannelUri, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.lblUpdateChannelUrl, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.lblUpdateMethod, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.btnUpdateCheck, 1, 3);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -2742,11 +2742,11 @@
             // 
             // txtUpdateChannelUri
             // 
-            this.txtUpdateChannelUri.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtUpdateChannelUri.Location = new System.Drawing.Point(159, 90);
-            this.txtUpdateChannelUri.Name = "txtUpdateChannelUri";
-            this.txtUpdateChannelUri.Size = new System.Drawing.Size(478, 20);
-            this.txtUpdateChannelUri.TabIndex = 22;
+            this.txtUpdateChannelUrl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.txtUpdateChannelUrl.Location = new System.Drawing.Point(159, 90);
+            this.txtUpdateChannelUrl.Name = "txtUpdateChannelUri";
+            this.txtUpdateChannelUrl.Size = new System.Drawing.Size(478, 20);
+            this.txtUpdateChannelUrl.TabIndex = 22;
             // 
             // cbxUpdateMethod
             // 
@@ -2765,16 +2765,16 @@
             // 
             // lblUpdateChannelUri
             // 
-            this.lblUpdateChannelUri.AutoEllipsis = true;
-            this.lblUpdateChannelUri.AutoSize = true;
-            this.lblUpdateChannelUri.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblUpdateChannelUri.Location = new System.Drawing.Point(3, 87);
-            this.lblUpdateChannelUri.MinimumSize = new System.Drawing.Size(150, 0);
-            this.lblUpdateChannelUri.Name = "lblUpdateChannelUri";
-            this.lblUpdateChannelUri.Size = new System.Drawing.Size(150, 26);
-            this.lblUpdateChannelUri.TabIndex = 11;
-            this.lblUpdateChannelUri.Text = "Channel URI";
-            this.lblUpdateChannelUri.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblUpdateChannelUrl.AutoEllipsis = true;
+            this.lblUpdateChannelUrl.AutoSize = true;
+            this.lblUpdateChannelUrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblUpdateChannelUrl.Location = new System.Drawing.Point(3, 87);
+            this.lblUpdateChannelUrl.MinimumSize = new System.Drawing.Size(150, 0);
+            this.lblUpdateChannelUrl.Name = "lblUpdateChannelUri";
+            this.lblUpdateChannelUrl.Size = new System.Drawing.Size(150, 26);
+            this.lblUpdateChannelUrl.TabIndex = 11;
+            this.lblUpdateChannelUrl.Text = "Channel URI";
+            this.lblUpdateChannelUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblUpdateMethod
             // 
@@ -4733,9 +4733,9 @@
         private System.Windows.Forms.Label lblTtsPath;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TextBox txtUpdateChannelUri;
+        private System.Windows.Forms.TextBox txtUpdateChannelUrl;
         private System.Windows.Forms.ComboBox cbxUpdateMethod;
-        private System.Windows.Forms.Label lblUpdateChannelUri;
+        private System.Windows.Forms.Label lblUpdateChannelUrl;
         private System.Windows.Forms.Label lblUpdateMethod;
         private CustomControls.PrettyCaption capUpdateChannel;
         private System.Windows.Forms.Panel panel23;

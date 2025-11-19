@@ -33,9 +33,9 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
         {
             GameConfigForm form = new GameConfigForm(Info);
             form.Shown += (sender, e) => RealPlugin.plug.InvokeNamedCallback("command", "/e <se.9>");
-            BijectDictionary<string, string> cbxItems;
+            //BijectDictionary<string, string> cbxItems;
             Option optionCtrl;
-            Label label;
+            //Label label;
             string hint = "";
 
             // 在下面倒序添加各个选项组（组内的选项正序）

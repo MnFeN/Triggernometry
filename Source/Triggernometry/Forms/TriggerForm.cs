@@ -21,8 +21,6 @@ namespace Triggernometry.Forms
     {
         public Trigger trig;
 
-        private bool _isReadOnly = false;
-
         private WMPLib.WindowsMediaPlayer _wmp;
         internal WMPLib.WindowsMediaPlayer wmp
         {
@@ -184,7 +182,6 @@ namespace Triggernometry.Forms
 
         internal void SetReadOnly()
         {
-            _isReadOnly = true;
             txtName.ReadOnly = true;
             txtRegexp.ReadOnly = true;
             btnOk.Enabled = false;
