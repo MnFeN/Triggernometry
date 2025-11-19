@@ -1507,6 +1507,8 @@
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="Line ({0}) took {1} ms to process, may be falling behind" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="Zone update to '{0}' - allowed triggers: {1}, restricted triggers: {2}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)." />
+    <TranslationEntry Key="internal/Repository/metadataex" Translation="Couldn't get metadata for repository {0} due to exception: {1}" />
+    <TranslationEntry Key="internal/Repository/metadatatimeout" Translation="Couldn't get metadata for repository {0}: network error or timeout. Exception: {1}" />
     <TranslationEntry Key="internal/Repository/loadlocalex" Translation="Couldn't load local backup of repository {0} due to exception: {1}" />
     <TranslationEntry Key="internal/Repository/localcleared" Translation="Cleared local backup of repository {0} at {1}" />
     <TranslationEntry Key="internal/Repository/localclearex" Translation="Couldn't clear local backup of repository {0} due to exception: {1}" />
@@ -1533,6 +1535,7 @@
     <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="WindowMessage" />
     <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="Data for repository {0} at {1} could not be unserialized. Make sure you are running the latest version of Triggernometry, and the repository is up-to-date." />
     <TranslationEntry Key="internal/Repository/updateex" Translation="Couldn't update repository {0} due to exception: {1}" />
+    <TranslationEntry Key="internal/Repository/updatetimeout" Translation="Couldn't update repository {0}: network error or timeout. Exception: {1}" />
     <TranslationEntry Key="internal/Repository/updating" Translation="Downloading repository {0} from {1}" />
     <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="Allowing triggers from a repository to perform disk operations can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
     <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="Allowing triggers from a repository to control OBS can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -435,6 +436,88 @@ namespace Triggernometry
             }
         }
 
+
+        /// <summary>
+        /// Checks whether the remote repository needs to be updated: <br />
+        /// 1) Compare with local backup file timestamp + size <br />
+        /// 2) Consider cache expiry <br />
+        /// </summary>
+        /// <returns>
+        /// true  = Should update (remote changed / cache expired / missing backup) <br />
+        /// false = No update needed (remote matches local backup)
+        /// </returns>
+        private bool ShouldUpdate(long remoteLength, DateTime remoteLastModified)
+        {
+            // --- Step 1: check remote metadata ---
+            AddToLog(null, I18n.Translate("internal/Repository/probeinforemote",
+                "[Info] Remote metadata: Length={0}, Time={1}", remoteLength, remoteLastModified));
+            if (remoteLength < 0)
+            {
+                AddToLog(null, I18n.Translate("internal/Repository/probeinforemotefail",
+                    "[Info] Remote metadata size not available, forcing update."));
+                return true;
+            }
+
+            // --- Step 2: load local backup info ---
+
+            CurrentContentLength = GetBackupFileLength(); // read the real length of the local backup file
+            if (CurrentContentLength < 0)
+            {
+                AddToLog(null, I18n.Translate("internal/Repository/probeinfolocalmissing",
+                    "[Info] Local backup does not exist, update required."));
+                return true;
+            }
+            AddToLog(null, I18n.Translate("internal/Repository/probeinfolocal",
+                "[Info] Local backup: Size={0}, Time={1}", CurrentContentLength, LocalLastModified));
+
+            // --- Step 3: cache expiry check ---
+            DateTime cacheLimit;
+            try
+            {
+                cacheLimit = LocalLastModified.AddMinutes(plug.cfg.CacheRepoExpiry);
+            }
+            catch
+            {
+                cacheLimit = DateTime.MinValue;
+            }
+            bool cacheExpired = cacheLimit < DateTime.Now;
+            AddToLog(null, I18n.Translate("internal/Repository/probeinfocache", "[Info] Cache expired: {0}", cacheExpired));
+
+            // --- Step 4: compare remote & local ---
+            bool shouldUpdate = remoteLength != CurrentContentLength || remoteLastModified != LocalLastModified || cacheExpired;
+
+            if (shouldUpdate)
+                AddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Repository/proberesulttrue",
+                    "Repository {0} has changed, fetching new version. Size: {1} → {2}, Time: ({3}) → ({4})",
+                    Name, CurrentContentLength, remoteLength, LocalLastModified, remoteLastModified));
+            else
+                AddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Repository/proberesultfalse",
+                    "Repository {0} hasn't changed, update is not needed. Size: {1}, Time: ({2})",
+                    Name, CurrentContentLength, LocalLastModified));
+
+            return shouldUpdate;
+        }
+
+        private async Task<(long? contentLength, DateTime? lastModified)> GetMetadataAsync()
+        {
+            try
+            {
+                return await HttpHelper.GetMetadataAsync(Address);
+            }
+            catch (Exception ex) when (ex is TimeoutException || ex is HttpRequestException)
+            {
+                AddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Repository/metadatatimeout",
+                    "Couldn't get metadata for repository {0}: HTTP request timeout. Exception: {1}", Name, ex.Message));
+                return (null, null);
+            }
+            catch (Exception ex)
+            {
+                AddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Repository/metadataex",
+                    "Couldn't get metadata for repository {0} due to exception: {1}", Name, ex.Message));
+                return (null, null);
+            }
+        }
+
         /// <summary>
         /// Downloads the repository XML, loads it and imports content. <br />
         /// Does NOT perform any validation, metadata checks, cache checks or decision logic. <br />
@@ -473,6 +556,12 @@ namespace Triggernometry
 
                 return true;
             }
+            catch (Exception ex) when (ex is TimeoutException || ex is HttpRequestException)
+            {
+                AddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Repository/updatetimeout",
+                    "Couldn't update repository {0}: network error or timeout. Exception: {1}", Name, ex.Message));
+                return false;
+            }
             catch (Exception ex)
             {
                 AddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Repository/updateex",
@@ -509,7 +598,7 @@ namespace Triggernometry
             DateTime remoteLastModified = default;
             if (shouldCheckUpdate)
             {
-                var metadata = await HttpHelper.GetMetadataAsync(Address);
+                var metadata = await GetMetadataAsync();
                 remoteLength = metadata.contentLength ?? -1;
                 remoteLastModified = metadata.lastModified ?? LocalLastModified; // GitHub does not provide last-modified, bypass this check
                 shouldUpdate = ShouldUpdate(remoteLength, remoteLastModified); 
@@ -542,67 +631,6 @@ namespace Triggernometry
                     _ = TryLoadLocalBackup();
                 }
             }
-        }
-
-        /// <summary>
-        /// Checks whether the remote repository needs to be updated: <br />
-        /// 1) Compare with local backup file timestamp + size <br />
-        /// 2) Consider cache expiry <br />
-        /// </summary>
-        /// <returns>
-        /// true  = Should update (remote changed / cache expired / missing backup) <br />
-        /// false = No update needed (remote matches local backup)
-        /// </returns>
-        private bool ShouldUpdate(long remoteLength, DateTime remoteLastModified)
-        {
-            // --- Step 1: check remote metadata ---
-            AddToLog(null, I18n.Translate("internal/Repository/probeinforemote",
-                "[Info] Remote metadata: Length={0}, Time={1}", remoteLength, remoteLastModified));
-            if (remoteLength < 0)
-            {
-                AddToLog(null, I18n.Translate("internal/Repository/probeinforemotefail",
-                    "[Info] Remote metadata size not available, forcing update."));
-                return true;
-            }
-
-            // --- Step 2: load local backup info ---
-
-            CurrentContentLength = GetBackupFileLength();
-            if (CurrentContentLength < 0)
-            {
-                AddToLog(null, I18n.Translate("internal/Repository/probeinfolocalmissing",
-                    "[Info] Local backup does not exist, update required."));
-                return true;
-            }
-            AddToLog(null, I18n.Translate("internal/Repository/probeinfolocal", 
-                "[Info] Local backup: Size={0}, Time={1}", CurrentContentLength, LocalLastModified));
-
-            // --- Step 3: cache expiry check ---
-            DateTime cacheLimit;
-            try
-            {
-                cacheLimit = LocalLastModified.AddMinutes(plug.cfg.CacheRepoExpiry);
-            }
-            catch
-            {
-                cacheLimit = DateTime.MinValue;
-            }
-            bool cacheExpired = cacheLimit < DateTime.Now;
-            AddToLog(null, I18n.Translate("internal/Repository/probeinfocache", "[Info] Cache expired: {0}", cacheExpired));
-
-            // --- Step 4: compare remote & local ---
-            bool shouldUpdate = remoteLength != CurrentContentLength || remoteLastModified != LocalLastModified || cacheExpired;
-
-            if (shouldUpdate)
-                AddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Repository/proberesulttrue",
-                    "Repository {0} has changed, fetching new version. Size: {1} → {2}, Time: ({3}) → ({4})",
-                    Name, CurrentContentLength, remoteLength, LocalLastModified, remoteLastModified));
-            else
-                AddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Repository/proberesultfalse",
-                    "Repository {0} hasn't changed, update is not needed. Size: {1}, Time: ({2})",
-                    Name, CurrentContentLength, LocalLastModified));
-
-            return shouldUpdate;
         }
 
         #endregion Update and Import

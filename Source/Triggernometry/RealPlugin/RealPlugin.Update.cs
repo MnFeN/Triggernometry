@@ -188,8 +188,10 @@ namespace Triggernometry
 
         }
 
-        public void CheckForUpdatesExternal(string manifestUrl, bool alwaysNotify = false, bool forceAutoUpdate = false)
+        public void CheckForUpdatesExternal(string manifestUrl = null, bool alwaysNotify = false, bool forceAutoUpdate = false)
         {
+            if (manifestUrl == null)
+                manifestUrl = cfg.UpdateExternalChannelUrl;
             Task.Run(async () =>
             {
                 try

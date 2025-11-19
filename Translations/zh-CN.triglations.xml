@@ -1507,6 +1507,8 @@
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="行 ({0}) 使用 {1} 毫秒进行处理" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="当前区域切换至 '{0}'。区域分组限制：{1} 个触发器处于激活状态，{2} 个触发器未激活" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="此字段支持正则表达式。绿色代表输入的正则合法，红色代表不合法。" />
+    <TranslationEntry Key="internal/Repository/metadataex" Translation="获取仓库 {0} 元数据失败：{1}" />
+    <TranslationEntry Key="internal/Repository/metadatatimeout" Translation="获取仓库 {0} 元数据失败，网络错误或请求超时：{1}" />
     <TranslationEntry Key="internal/Repository/loadlocalex" Translation="仓库 {0} 的本地备份无法加载。错误：{1}" /> 
     <TranslationEntry Key="internal/Repository/localcleared" Translation="已从下列地址删除仓库 {0} 的本地备份：{1}" /> 
     <TranslationEntry Key="internal/Repository/localclearex" Translation="仓库 {0} 的本地备份无法删除。错误：{1}" /> 
@@ -1532,7 +1534,8 @@
     <TranslationEntry Key="internal/Repository/restrictionenum/ObsControl" Translation="OBS 控制" /> 
     <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="窗口消息" /> 
     <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="位于 {1} 的仓库 {0} 数据格式无法解析。请确认远程仓库本身未过时，且 Triggernometry 为最新版本。" /> 
-    <TranslationEntry Key="internal/Repository/updateex" Translation="仓库 {0} 无法更新：{1}" /> 
+    <TranslationEntry Key="internal/Repository/updateex" Translation="无法更新仓库 {0}：{1}" /> 
+    <TranslationEntry Key="internal/Repository/updatetimeout" Translation="无法更新仓库 {0}：网络错误或请求超时。请检查网络或切换代理设置后尝试手动更新仓库（右键-更新）。异常信息：{1}" />
     <TranslationEntry Key="internal/Repository/updating" Translation="正在从 {1} 下载仓库 {0}。" /> 
     <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="允许远程触发器操作文件可能存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
     <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="允许远程触发器控制 OBS 可能存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />

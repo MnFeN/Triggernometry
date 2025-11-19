@@ -1507,6 +1507,8 @@
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="Line ({0}) took {1} ms to process, may be falling behind" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="Zone update to '{0}' - allowed triggers: {1}, restricted triggers: {2}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)." />
+    <TranslationEntry Key="internal/Repository/metadataex" Translation="リポジトリ {0} のメタデータを取得できませんでした。例外が発生しました：{1}" />
+    <TranslationEntry Key="internal/Repository/metadatatimeout" Translation="リポジトリ {0} のメタデータを取得できませんでした：ネットワークエラーまたはタイムアウトが発生しました。例外情報：{1}" />
     <TranslationEntry Key="internal/Repository/loadlocalex" Translation="リポジトリ {0} のローカルバックアップを読み込めませんでした: {1}" /> 
     <TranslationEntry Key="internal/Repository/localcleared" Translation="リポジトリ {0} のローカルバックアップを {1} から削除しました" /> 
     <TranslationEntry Key="internal/Repository/localclearex" Translation="リポジトリ {0} のローカルバックアップを削除できませんでした: {1}" /> 
@@ -1533,6 +1535,7 @@
     <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="ウィンドウメッセージ" /> 
     <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="パス {1} のリポジトリ {0} のデータは逆シリアル化できませんでした。Triggernometry とリポジトリの両方が最新バージョンであることを確認してください。" /> 
     <TranslationEntry Key="internal/Repository/updateex" Translation="リポジトリ {0} の更新中に例外が発生しました: {1}" /> 
+    <TranslationEntry Key="internal/Repository/updatetimeout" Translation="リポジトリ {0} を更新できませんでした：ネットワークエラーまたはタイムアウトが発生しました。例外情報：{1}" />
     <TranslationEntry Key="internal/Repository/updating" Translation="リポジトリ {0} を {1} からダウンロードしています" />
     <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="Allowing triggers from a repository to perform disk operations can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
     <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="Allowing triggers from a repository to control OBS can be extremely risky, as the repository may have triggers (or may add some later) that prove to be dangerous and/or malicious. Are you sure you want to allow this?" />
