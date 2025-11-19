@@ -271,6 +271,8 @@ namespace Triggernometry.FFXIV
             { "HexAddress",     e => e.HexAddress },
             { "Name",           e => e.Name },
             { "ID",             e => e.HexID },
+            { "IsSelf",         e => e.ID == GetMyself().ID },
+            { "IsPlayer",       e => e.ID == GetMyself().ID },
             { "BNpcID",         e => e.BNpcID },
             { "OwnerID",        e => e.OwnerHexID },
             { "TypeName",       e => e.Type },
@@ -368,12 +370,29 @@ namespace Triggernometry.FFXIV
                 var statusID = (ushort)MathParser.Parse(args.First());
                 return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Stack ?? -1;
             }},
+            { "PercentHP",      (e, args) => PercentXP("PercentHP", e.CurrentHP, e.MaxHP, args)},
+            { "PercentMP",      (e, args) => PercentXP("PercentMP", e.CurrentMP, e.MaxMP, args)},
+            { "PercentCP",      (e, args) => PercentXP("PercentCP", e.CurrentCP, e.MaxCP, args)},
+            { "PercentGP",      (e, args) => PercentXP("PercentGP", e.CurrentGP, e.MaxGP, args)},
         };
 
         private static Exception ArgCountError(string methodName, string requiredArgCount, IEnumerable<string> args)
         {
             string expr = $"_entity.{methodName}({string.Join(", ", args)})";
             return Context.ArgCountError(methodName, requiredArgCount, args.Count(), expr);
+        }
+
+        private static string PercentXP(string name, float current, float max, IEnumerable<string> args)
+        {
+            var list = args as IList<string> ?? args.ToList();
+            if (list.Count > 1)
+                throw ArgCountError(name, "0-1", list);
+
+            var percentage = max == 0 ? 0f : (100f * current / max);
+            var round = list.Count == 0 ? -1 : (int)MathParser.Parse(list[0]);
+            return round < 0
+                ? percentage.ToString(CultureInfo.InvariantCulture)
+                : percentage.ToString("F" + round, CultureInfo.InvariantCulture);
         }
 
         /// <summary>

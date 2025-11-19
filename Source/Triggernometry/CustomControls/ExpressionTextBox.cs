@@ -151,6 +151,7 @@ namespace Triggernometry.CustomControls
         // Name, X, Job, Role, etc.
         public static List<string> XivEntityProps = new List<string> { 
             "HasStatus(statusId)", "StatusTimer(statusId)", "StatusStack(statusId)",
+            "PercentHP(digits=-1)", "PercentMP(digits=-1)", "PercentCP(digits=-1)","PercentGP(digits=-1)",
         }.Concat(FFXIV.Entity.ValidEntityPropNames).Concat(FFXIV.Job.LegalJobPropNames).ToList();
         
         // Job, Role, etc.
@@ -335,7 +336,7 @@ namespace Triggernometry.CustomControls
             UpdateBackground();
         }
 
-        internal Context ctx;
+        // internal Context ctx;
         private Context fakectx;
 
         // record all the capture groups and combine with prefixes
