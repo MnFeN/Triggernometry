@@ -1445,8 +1445,8 @@
     <TranslationEntry Key="internal/Plugin/exception" Translation="异常" />
     <TranslationEntry Key="internal/Plugin/extplugincheckfailed" Translation="无法从 {0} 更新插件文件：{1}" />
     <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="无法从 {0} 更新插件文件：{1}" />
-    <TranslationEntry Key="internal/Plugin/extpluginupdatesuccess" Translation="插件版本已从 {0} 更新到 {1}。请重启 ACT 以使更改生效。" />
-    <TranslationEntry Key="internal/Plugin/extpluginupdateurgent" Translation="插件已从 {0} 更新到 {1}。&#xD;&#xA;&#xD;&#xA;当前正在运行的版本已过期，建议立即重启。" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgentfalse" Translation="Triggernometry 插件版本已从 {0} 更新到 {1}（非重要更新）。&#xD;&#xA;&#xD;&#xA;请在方便时重启 ACT。" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgenttrue" Translation="Triggernometry 插件版本已从 {0} 更新到 {1}（重要更新）。&#xD;&#xA;&#xD;&#xA;建议立即重启 ACT。" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdated" Translation="翻译文件已更新，请重启 ACT 以使更改生效。" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdatefail" Translation="无法从 {0} 更新翻译文件：{1}" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworklogline" Translation="网络日志：({0})" />

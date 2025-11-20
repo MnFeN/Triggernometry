@@ -1445,8 +1445,8 @@
     <TranslationEntry Key="internal/Plugin/exception" Translation="例外" />
     <TranslationEntry Key="internal/Plugin/extplugincheckfailed" Translation="Couldn't process update manifest from {0}, error: {1}" />
     <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="プラグインファイルを {0} から更新できませんでした: {1}" />
-    <TranslationEntry Key="internal/Plugin/extpluginupdatesuccess" Translation="プラグインのバージョンが {0} から {1} に更新されました。変更を反映するには ACT を再起動してください。" />
-    <TranslationEntry Key="internal/Plugin/extpluginupdateurgent" Translation="プラグインは {0} から {1} に更新されました。&#xD;&#xA;&#xD;&#xA;現在実行中のバージョンは古いため、直ちに再起動することを推奨します。" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgentfalse" Translation="プラグインは {0} から {1} に更新されました（非緊急）。&#xD;&#xA;&#xD;&#xA;ACT の再起動はご都合の良い時に行ってください。" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgenttrue" Translation="プラグインは {0} から {1} に更新されました（緊急）。&#xD;&#xA;&#xD;&#xA;直ちに ACT を再起動することを推奨します。" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdated" Translation="翻訳ファイルが更新されました。変更を反映するには ACT を再起動してください。" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdatefail" Translation="翻訳ファイルを {0} から更新できませんでした: {1}" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworklogline" Translation="Network log line: ({0})" />
