@@ -30,17 +30,19 @@ namespace Triggernometry.Utilities
                 using (var req = new HttpRequestMessage(HttpMethod.Get, url))
                 {
                     req.Headers.UserAgent.ParseAdd(USER_AGENT);
-                    var resp = await client.SendAsync(req, token);
-                    resp.EnsureSuccessStatusCode();
-                    return await resp.Content.ReadAsStringAsync();
+                    using (var resp = await client.SendAsync(req, token))
+                    {
+                        resp.EnsureSuccessStatusCode();
+                        return await resp.Content.ReadAsStringAsync();
+                    }
                 }
             }
             catch (TaskCanceledException ex)
             {
                 if (token.IsCancellationRequested)
-                    throw new OperationCanceledException(ex.Message, token);
+                    throw new OperationCanceledException(ex.Message, token); // cancelled by caller
                 else
-                    throw new TimeoutException(ex.Message);
+                    throw new TimeoutException(ex.Message); // cancelled due to HTTP timeout
             }
         }
 
@@ -59,17 +61,19 @@ namespace Triggernometry.Utilities
                 using (var req = new HttpRequestMessage(HttpMethod.Get, url))
                 {
                     req.Headers.UserAgent.ParseAdd(USER_AGENT);
-                    var resp = await client.SendAsync(req, token);
-                    resp.EnsureSuccessStatusCode();
-                    return await resp.Content.ReadAsByteArrayAsync();
+                    using (var resp = await client.SendAsync(req, token))
+                    {
+                        resp.EnsureSuccessStatusCode();
+                        return await resp.Content.ReadAsByteArrayAsync();
+                    }
                 }
             }
             catch (TaskCanceledException ex)
             {
                 if (token.IsCancellationRequested)
-                    throw new OperationCanceledException(ex.Message, token);
+                    throw new OperationCanceledException(ex.Message, token); // cancelled by caller
                 else
-                    throw new TimeoutException(ex.Message);
+                    throw new TimeoutException(ex.Message); // cancelled due to HTTP timeout
             }
         }
 
@@ -85,7 +89,7 @@ namespace Triggernometry.Utilities
             string tempPath = filePath + ".tmp";
 
             // download tmp file
-            byte[] data = await client.GetByteArrayAsync(url);
+            byte[] data = await GetBytesAsync(url);
             File.WriteAllBytes(tempPath, data);
 
             // backup old file
@@ -119,62 +123,58 @@ namespace Triggernometry.Utilities
             DateTime? lastModified = null;
 
             // Try HEAD
-            try
+            using (var req = new HttpRequestMessage(HttpMethod.Head, url))
             {
-                using (var req = new HttpRequestMessage(HttpMethod.Head, url))
+                req.Headers.UserAgent.ParseAdd(USER_AGENT);
+                try
                 {
-                    req.Headers.UserAgent.ParseAdd(USER_AGENT);
+                    using (var resp = await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, token))
+                    {
+                        resp.EnsureSuccessStatusCode();
+                        if (resp.Content.Headers.ContentLength.HasValue)
+                            contentLength = resp.Content.Headers.ContentLength.Value;
+                        if (resp.Content.Headers.LastModified.HasValue)
+                            lastModified = resp.Content.Headers.LastModified.Value.UtcDateTime;
+                    }
+                }
+                catch (TaskCanceledException ex)
+                {
+                    if (token.IsCancellationRequested)
+                        throw new OperationCanceledException(ex.Message, token); // cancelled by caller
+                    else
+                        throw new TimeoutException(ex.Message); // cancelled due to HTTP timeout
+                }
+                catch { /* HEAD failure → fallback to Range */ }
+            }
 
-                    var resp = await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, token);
+            // GitHub Raw does NOT support Last-Modified
+            if (contentLength != null && (lastModified != null || url.ToLower().Contains("raw.githubusercontent.com")))
+                return (contentLength, lastModified);
 
-                    resp.EnsureSuccessStatusCode();
-
-                    if (resp.Content.Headers.ContentLength.HasValue)
-                        contentLength = resp.Content.Headers.ContentLength.Value;
-                    if (resp.Content.Headers.LastModified.HasValue)
-                        lastModified = resp.Content.Headers.LastModified.Value.UtcDateTime;
+            // Metadata still incomplete → Try GET with Range 0–0
+            using (var req = new HttpRequestMessage(HttpMethod.Get, url))
+            {
+                req.Headers.UserAgent.ParseAdd(USER_AGENT);
+                req.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(0, 0);
+                try
+                {
+                    using (var resp = await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, token))
+                    {
+                        resp.EnsureSuccessStatusCode();
+                        if (resp.Content.Headers.ContentRange?.Length.HasValue == true)
+                            contentLength = resp.Content.Headers.ContentRange.Length.Value;
+                        if (resp.Content.Headers.LastModified.HasValue)
+                            lastModified = resp.Content.Headers.LastModified.Value.UtcDateTime;
+                    }
+                }
+                catch (TaskCanceledException ex)
+                {
+                    if (token.IsCancellationRequested)
+                        throw new OperationCanceledException(ex.Message, token); // cancelled by caller
+                    else
+                        throw new TimeoutException(ex.Message); // cancelled due to HTTP timeout
                 }
             }
-            catch (TaskCanceledException ex)
-            {
-                if (token.IsCancellationRequested)
-                    throw new OperationCanceledException(ex.Message, token);
-                else
-                    throw new TimeoutException(ex.Message);
-            }
-            catch { /* HEAD failure → fallback to Range */ }
-
-            // Metadata incomplete → Try GET with Range 0–0
-            if (contentLength == null || lastModified == null)
-            {
-                using (var req = new HttpRequestMessage(HttpMethod.Get, url))
-                {
-                    req.Headers.UserAgent.ParseAdd(USER_AGENT);
-                    req.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(0, 0);
-
-                    HttpResponseMessage resp;
-                    try
-                    {
-                        resp = await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, token);
-                    }
-                    catch (TaskCanceledException ex)
-                    {
-                        if (token.IsCancellationRequested)
-                            throw new OperationCanceledException(ex.Message, token);
-                        else
-                            throw new TimeoutException(ex.Message);
-                    }
-
-                    resp.EnsureSuccessStatusCode();
-
-                    if (resp.Content.Headers.ContentRange?.Length.HasValue == true)
-                        contentLength = resp.Content.Headers.ContentRange.Length.Value;
-
-                    if (resp.Content.Headers.LastModified.HasValue)
-                        lastModified = resp.Content.Headers.LastModified.Value.UtcDateTime;
-                }
-            }
-
             return (contentLength, lastModified);
         }
 

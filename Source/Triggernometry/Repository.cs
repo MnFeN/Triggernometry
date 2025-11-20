@@ -459,6 +459,7 @@ namespace Triggernometry
             }
 
             // --- Step 2: load local backup info ---
+            // (Maybe check if the file exists before probing metadata?)
 
             CurrentContentLength = GetBackupFileLength(); // read the real length of the local backup file
             if (CurrentContentLength < 0)
@@ -503,6 +504,10 @@ namespace Triggernometry
             try
             {
                 return await HttpHelper.GetMetadataAsync(Address);
+            }
+            catch (TaskCanceledException) // Cancelled by caller, do nothing. Should not happen here, just in case the code changes in the future
+            {
+                return (null, null);
             }
             catch (Exception ex) when (ex is TimeoutException || ex is HttpRequestException)
             {
@@ -555,6 +560,10 @@ namespace Triggernometry
                 }
 
                 return true;
+            }
+            catch (TaskCanceledException) // Cancelled by caller, do nothing. Should not happen here, just in case the code changes in the future
+            { 
+                return false;
             }
             catch (Exception ex) when (ex is TimeoutException || ex is HttpRequestException)
             {

@@ -263,25 +263,29 @@ namespace Triggernometry
                         UpdateTranslationExternal(um);
                     }
 
-                    string msg = I18n.Translate("internal/Plugin/extpluginupdatesuccess",
-                        "Plugin version updated from {0} to {1}. Restart ACT for changes to take effect.",
-                        localVersion, um.Version);
-
-                    ui.QueueToast(new Toast
+                    string msg;
+                    var isUrgent = um.LowestAllowedVersion != null && um.LowestAllowedVersion > localVersion;
+                    if (isUrgent) // recommend restart immediately
                     {
-                        ToastText = msg,
-                        ToastType = Toast.ToastTypeEnum.OK
-                    });
-
-                    if (um.LowestAllowedVersion != null && um.LowestAllowedVersion > localVersion)
-                    {
-                        ui.Invoke((System.Action)(() => {
-                            var urgentMsg = I18n.Translate("internal/Plugin/extpluginupdateurgent",
-                                "The plugin has been updated from {0} to {1}. \n\nThe current running version was outdated. It is recommended to restart immediately.", 
+                        msg = I18n.Translate("internal/Plugin/extpluginupdatedurgenttrue",
+                                "The plugin has been updated from {0} to {1} (urgent). \n\nIt is recommended to restart immediately.",
                                 localVersion, um.Version);
-                            MessageBox.Show(urgentMsg, "Triggernometry Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ui.Invoke((System.Action)(() =>
+                        {
+                            MessageBox.Show(msg, "Triggernometry Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }));
                     }
+                    else
+                    {
+                        msg = I18n.Translate("internal/Plugin/extpluginupdatedurgentfalse",
+                            "The plugin has been updated from {0} to {1} (non-urgent). \n\nYou may restart ACT at your convenience.",
+                            localVersion, um.Version);
+                    }
+                    ui.QueueToast(new Toast
+                    {
+                        ToastText = msg.Replace("\n", "").Replace("\r", ""),
+                        ToastType = Toast.ToastTypeEnum.OK
+                    });
                 }
                 catch (Exception ex)
                 {
