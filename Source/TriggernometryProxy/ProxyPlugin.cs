@@ -46,19 +46,19 @@ namespace TriggernometryProxy
             {
                 throw new ArgumentNullException("callback");
             }
-            int newid = Interlocked.Increment(ref callbackIdCounter);
             lock (this)
             {
                 if (Instance != null)
                 {
-                    Instance.RegisterNamedCallback(newid, name, callback, o, registrant);
+                    return Instance.RegisterNamedCallback(name, callback, o, true, registrant);
                 }
                 else
                 {
+                    int newid = Interlocked.Decrement(ref callbackIdCounter); // negative IDs for queued registrations to avoid conflict
                     queuedRegs.Add(new Tuple<int, string, CustomCallbackDelegate, object, string>(newid, name, callback, o, registrant));
+                    return newid;
                 }
             }
-            return newid;
         }
 
         // for backward compatibility: auto-detect the registrant
@@ -82,16 +82,22 @@ namespace TriggernometryProxy
         {
             lock (this)
             {
+                // private void UnregisterNamedCallback(int id)
+                var unregisterNamedCallbackMethod = Instance.GetType().GetMethod(
+                    "UnregisterNamedCallback",
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null,
+                    new Type[] { typeof(int) },
+                    null
+                ) ?? throw new MissingMethodException("RealPlugin", "UnregisterNamedCallback(int)");
                 if (Instance != null)
                 {
-                    Instance.UnregisterNamedCallback(id);
+                    unregisterNamedCallbackMethod.Invoke(Instance, new object[] { id });
                 }
                 else
                 {
-                    var ex = (from ix in queuedRegs where ix.Item1 == id select ix).ToList();
-                    foreach (var x in ex)
+                    foreach (var tuple in queuedRegs.Where(tuple => tuple.Item1 == id).ToList())
                     {
-                        queuedRegs.Remove(x);
+                        queuedRegs.Remove(tuple);
                     }
                 }
             }
@@ -131,11 +137,23 @@ namespace TriggernometryProxy
             lock (this)
             {
                 Instance = Triggernometry.RealPlugin.plug;
-                foreach (Tuple<int, string, CustomCallbackDelegate, object, string> t in queuedRegs)
+
+                // register any queued callbacks if the RealPlugin instance was not ready to register previously
+                if (queuedRegs.Count > 0)
                 {
-                    Instance.RegisterNamedCallback(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5);
+                    // private void RegisterNamedCallback(int id, string name, Delegate callback, object o, string registrant)
+                    var registerNamedCallbackMethod = Instance.GetType().GetMethod(
+                        "RegisterNamedCallback",
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null,
+                        new Type[] { typeof(int), typeof(string), typeof(Delegate), typeof(object), typeof(string) },
+                        null
+                    ) ?? throw new MissingMethodException("RealPlugin", "RegisterNamedCallback(int, string, Delegate, object, string)");
+                    foreach (Tuple<int, string, CustomCallbackDelegate, object, string> t in queuedRegs)
+                    {
+                        registerNamedCallbackMethod.Invoke(Instance, new object[] { t.Item1, t.Item2, t.Item3, t.Item4, t.Item5 });
+                    }
+                    queuedRegs.Clear();
                 }
-                queuedRegs.Clear();
             }
             Instance.mainform = ActGlobals.oFormActMain;
             Version iv = typeof(Triggernometry.RealPlugin).Assembly.GetName().Version;

@@ -61,7 +61,12 @@ namespace Triggernometry
             }
         }
 
-        public void RegisterNamedCallback(int id, string name, Delegate callback, object o, string registrant)
+        /// <summary>
+        /// Registers a <see cref="NamedCallback" /> using the provided ID. <br />
+        /// This method is used automatically via reflection when ProxyPlugin processes callbacks that were registered too early (before RealPlugin was ready). <br />
+        /// Not intended for use in user scripts or external plugins. <br />
+        /// </summary>
+        private void RegisterNamedCallback(int id, string name, Delegate callback, object o, string registrant)
         {
             NamedCallback nc = new NamedCallback
             {
@@ -83,7 +88,11 @@ namespace Triggernometry
             }
         }
 
-        // used in scripts
+        /// <summary>
+        /// Registers a named callback and returns a unique ID. <br />
+        /// If <paramref name="allowDuplicatedName"/> is false, all callbacks with the same name are removed before registration. <br />
+        /// Used in ProxyPlugin, and can also be invoked by Triggernometry user scripts.
+        /// </summary>
         public int RegisterNamedCallback(string name, Delegate callback, object o = null, bool allowDuplicatedName = false, string registrant = "Triggernometry Script")
         {
             if (!allowDuplicatedName)
@@ -91,17 +100,21 @@ namespace Triggernometry
                 UnregisterNamedCallback(name);
             }
 
-            int id;
             lock (callbacksById)
             {
-                id = (callbacksById.Count == 0) ? 1 : callbacksById.Keys.Max() + 1;
+                // Find the first free positive integer ID
+                int id = Enumerable.Range(1, int.MaxValue).Where(n => !callbacksById.ContainsKey(n)).First();
+                RegisterNamedCallback(id, name, callback, o, registrant);
+                return id;
             }
-
-            RegisterNamedCallback(id, name, callback, o, registrant);
-            return id;
         }
 
-        public void UnregisterNamedCallback(int id)
+        /// <summary>
+        /// Unregisters the callback with the specified ID.
+        /// This method is used by ProxyPlugin via reflection. <br />
+        /// Not intended for use in user scripts or external plugins. <br />
+        /// </summary>
+        private void UnregisterNamedCallback(int id)
         {
             lock (callbacksById)
             {
@@ -120,8 +133,11 @@ namespace Triggernometry
             }
         }
 
+        /// <summary>
+        /// Unregisters all callbacks with the given name.
+        /// </summary>
         public void UnregisterNamedCallback(string name)
-        {   // unregister all callbacks with the given name
+        {
             lock (callbacksById)
             {
                 if (!callbacksByName.ContainsKey(name))
