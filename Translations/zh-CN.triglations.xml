@@ -1661,7 +1661,7 @@
     <TranslationEntry Key="internal/UserInterface/adddefaultrepo" Translation="开始前，您是否要添加一些远程触发器？" />
     <TranslationEntry Key="internal/UserInterface/addfolder" Translation="添加新分组" />
     <TranslationEntry Key="internal/UserInterface/addrepo" Translation="添加新存储库" />
-    <TranslationEntry Key="internal/UserInterface/addrepolist" Translation="添加 Github 列表中的仓库" />
+    <TranslationEntry Key="internal/UserInterface/addrepolist" Translation="添加 Github 官方库中的仓库" />
     <TranslationEntry Key="internal/UserInterface/addsubstitution" Translation="添加新的替换项" />
     <TranslationEntry Key="internal/UserInterface/addtrigger" Translation="添加新触发器" />
     <TranslationEntry Key="internal/UserInterface/areyousurefolder" Translation="您确定要移除分组 '{0}' 吗？" />

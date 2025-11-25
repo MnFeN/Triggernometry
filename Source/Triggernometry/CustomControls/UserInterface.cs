@@ -557,7 +557,8 @@ namespace Triggernometry.CustomControls
 
         internal void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (treeView1.SelectedNode == null)
+            var selectedNode = treeView1.SelectedNode;
+            if (selectedNode == null)
             {
                 btnAdd.Enabled = false;
                 btnUpdate.Enabled = false;
@@ -568,8 +569,8 @@ namespace Triggernometry.CustomControls
             }
             else
             {
-                object o = treeView1.SelectedNode.Tag;
-                if (o == plug.cfg.RepositoryRoot)
+                object tag = selectedNode.Tag;
+                if (tag == plug.cfg.RepositoryRoot)
                 {
                     btnAdd.Enabled = true;
                     btnUpdate.Enabled = true;
@@ -583,12 +584,12 @@ namespace Triggernometry.CustomControls
                     btnAddRepoList.Enabled = true;
                     btnRemoveTrigger.Enabled = false;
                     btnEdit.Enabled = false;
-                    btnImportTrigger.Enabled = false;
+                    btnImportTrigger.Enabled = true;
                     btnExportTrigger.Enabled = true;
                 }
                 else
                 {                    
-                    if (treeView1.SelectedNode.Tag is Repository)
+                    if (tag is Repository)
                     {
                         btnAdd.Enabled = false;
                         btnUpdate.Enabled = true;
@@ -597,9 +598,9 @@ namespace Triggernometry.CustomControls
                         btnImportTrigger.Enabled = false;
                         btnExportTrigger.Enabled = true;
                     }
-                    else if (treeView1.SelectedNode.Tag is Trigger)
+                    else if (tag is Trigger)
                     {
-                        bool isLocal = !IsPartOfRemote(treeView1.SelectedNode); 
+                        bool isLocal = !IsPartOfRemote(selectedNode); 
                         btnAdd.Enabled = isLocal;
                         btnAddTrigger.Visible = isLocal;
                         btnAddTriggerFolder.Visible = isLocal;
@@ -613,11 +614,11 @@ namespace Triggernometry.CustomControls
                         btnRemoveTrigger.Enabled = isLocal;
                         btnEdit.Enabled = true;
                         btnImportTrigger.Enabled = false;
-                        btnExportTrigger.Enabled = (treeView1.SelectedNode.ImageIndex != (int)ImageIndices.Readme);
+                        btnExportTrigger.Enabled = (selectedNode.ImageIndex != (int)ImageIndices.Readme);
                     }
-                    else if (treeView1.SelectedNode.Tag is Folder)
+                    else if (tag is Folder)
                     {
-                        btnAdd.Enabled = (IsPartOfRemote(treeView1.SelectedNode) == false);
+                        btnAdd.Enabled = (IsPartOfRemote(selectedNode) == false);
                         btnUpdate.Enabled = false;
                         btnAddTrigger.Visible = true;
                         btnAddTriggerFolder.Visible = true;
@@ -627,9 +628,9 @@ namespace Triggernometry.CustomControls
                         btnAddTriggerFolder.Enabled = true;
                         btnAddRepo.Enabled = false;
                         btnAddRepoList.Enabled = false;
-                        btnRemoveTrigger.Enabled = (treeView1.SelectedNode.Parent != null && IsPartOfRemote(treeView1.SelectedNode) == false);
+                        btnRemoveTrigger.Enabled = (selectedNode.Parent != null && IsPartOfRemote(selectedNode) == false);
                         btnEdit.Enabled = true;
-                        btnImportTrigger.Enabled = (IsPartOfRemote(treeView1.SelectedNode) == false);
+                        btnImportTrigger.Enabled = (IsPartOfRemote(selectedNode) == false);
                         btnExportTrigger.Enabled = true;
                     }
                 }
@@ -1076,6 +1077,13 @@ namespace Triggernometry.CustomControls
 
         internal void btnImportTrigger_Click(object sender, EventArgs e)
         {
+            // repo root: redirect to add remote trigger
+            if (treeView1.SelectedNode?.Tag == plug.cfg.RepositoryRoot)
+            {
+                remoteTriggerRepositoryToolStripMenuItem_Click(sender, e);
+                return;
+            }
+            // local import
             using (Forms.ImportForm imf = new Forms.ImportForm(plug))
             {
                 imf.imgs = imageList1;
