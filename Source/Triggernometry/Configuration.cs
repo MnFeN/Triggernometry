@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Variables;
 
@@ -565,9 +567,6 @@ namespace Triggernometry
         public int Version { get; set; } = 1;
 
         [XmlAttribute]
-        public Guid Id { get; set; } = Guid.NewGuid();
-
-        [XmlAttribute]
         public string PluginVersion { get; set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         [XmlIgnore]
@@ -576,6 +575,13 @@ namespace Triggernometry
         internal bool isnew = true;
         internal DateTime lastWrite = DateTime.Now;
         internal string corruptRecoveryError = "";
+
+        /// <summary>
+        /// Unique identifier for the current user, used in custom configurations.
+        /// </summary>
+        [XmlIgnore]
+        public Guid Id => _id.Value;
+        private static readonly Lazy<Guid> _id = new Lazy<Guid>(() => LoadOrCreateUserId());
 
         public Configuration()
         {
@@ -621,6 +627,43 @@ namespace Triggernometry
         Red Mage	35
         Blue Mage	36
          */
+
+        // in case the ACT folder is given by another user
+        private static Guid LoadOrCreateUserId()
+        {
+            // location: LocalAppData\Triggernometry\user_guid.txt
+
+            string dir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Triggernometry"
+            );
+
+            string file = Path.Combine(dir, "user_guid.txt");
+
+            try
+            {
+                Directory.CreateDirectory(dir);
+
+                if (File.Exists(file))
+                {
+                    string text = File.ReadAllText(file).Trim();
+
+                    if (Guid.TryParse(text, out Guid g))
+                    {
+                        return g;
+                    }
+                }
+
+                Guid newId = Guid.NewGuid();
+                File.WriteAllText(file, newId.ToString());
+                return newId;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Triggernometry config", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return Guid.Empty;
+            }
+        }
 
     }
 
