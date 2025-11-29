@@ -1312,17 +1312,25 @@ namespace Triggernometry.Forms
             {
                 dgvApiAccess.Rows.Add(new object[] { ap.Name, ap.AllowLocal, ap.AllowRemote, ap.AllowAdmin });
             }
-            Configuration.UnsafeUsageEnum us = cfg.UnsafeUsage;
+            Configuration.ScriptUsageEnum us = cfg.UnsafeUsage;
             dgvAdditionalFeatures.Rows.Add(new object[] {
                 "Unsafe",
-                (us & Configuration.UnsafeUsageEnum.AllowLocal) != 0,
-                (us & Configuration.UnsafeUsageEnum.AllowRemote) != 0,
-                (us & Configuration.UnsafeUsageEnum.AllowAdmin) != 0 }
-            );
+                us.HasFlag(Configuration.ScriptUsageEnum.AllowLocal),
+                us.HasFlag(Configuration.ScriptUsageEnum.AllowRemote),
+                us.HasFlag(Configuration.ScriptUsageEnum.AllowAdmin)
+            });
+            us = cfg.DynamicUsage;
+            dgvAdditionalFeatures.Rows.Add(new object[] {
+                "Dynamic",
+                us.HasFlag(Configuration.ScriptUsageEnum.AllowLocal),
+                us.HasFlag(Configuration.ScriptUsageEnum.AllowRemote),
+                us.HasFlag(Configuration.ScriptUsageEnum.AllowAdmin)
+            });
         }
 
         private void SecuritySettingsToConfiguration(Configuration cfg)
         {
+            // APIs
             MethodInfo setter = cfg.GetType().GetMethod("AddAPIUsage", BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (DataGridViewRow r in dgvApiAccess.Rows)
             {
@@ -1335,24 +1343,35 @@ namespace Triggernometry.Forms
                 };
                 setter.Invoke(cfg, new object[] { au, true });
             }
+
+            // Additional features
             foreach (DataGridViewRow r in dgvAdditionalFeatures.Rows)
             {
                 string Name = (string)r.Cells[0].Value;
                 bool AllowLocal = (bool)r.Cells[1].Value;
                 bool AllowRemote = (bool)r.Cells[2].Value;
                 bool AllowAdmin = (bool)r.Cells[3].Value;
+                
+                MethodInfo featureSetter = null;
                 switch (Name.ToLower())
                 {
                     case "unsafe":
-                        Configuration.UnsafeUsageEnum us = Configuration.UnsafeUsageEnum.None;
-                        if (AllowLocal == true) us |= Configuration.UnsafeUsageEnum.AllowLocal;
-                        if (AllowRemote == true) us |= Configuration.UnsafeUsageEnum.AllowRemote;
-                        if (AllowAdmin == true) us |= Configuration.UnsafeUsageEnum.AllowAdmin;
-                        setter = cfg.GetType().GetMethod("SetUnsafeUsage", BindingFlags.NonPublic | BindingFlags.Instance);
-                        setter.Invoke(cfg, new object[] { us });
-                        break;
+                        {
+                            featureSetter = cfg.GetType().GetMethod("SetUnsafeUsage", BindingFlags.NonPublic | BindingFlags.Instance);
+                            break;
+                        }
+                    case "dynamic":
+                        {
+                            featureSetter = cfg.GetType().GetMethod("SetDynamicUsage", BindingFlags.NonPublic | BindingFlags.Instance);
+                            break;
+                        }
                 }
-            };
+                Configuration.ScriptUsageEnum us = Configuration.ScriptUsageEnum.None;
+                if (AllowLocal == true) us |= Configuration.ScriptUsageEnum.AllowLocal;
+                if (AllowRemote == true) us |= Configuration.ScriptUsageEnum.AllowRemote;
+                if (AllowAdmin == true) us |= Configuration.ScriptUsageEnum.AllowAdmin;
+                featureSetter.Invoke(cfg, new object[] { us });
+            }
         }
 
         private void btnUnlockSecurity_Click(object sender, EventArgs e)

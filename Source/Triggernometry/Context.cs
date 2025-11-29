@@ -1071,6 +1071,7 @@ namespace Triggernometry
                                     case "Autosave": val = plug.cfg.AutosaveEnabled ? plug.cfg.AutosaveInterval.ToString(InvClt) : "0"; break;
                                     case "Language": val = plug.cfg.Language; break;
                                     case "UnsafeUsage": val = ((int)plug.cfg.UnsafeUsage).ToString(); break;
+                                    case "DynamicUsage": val = ((int)plug.cfg.DynamicUsage).ToString(); break;
                                     default:
                                         try
                                         {

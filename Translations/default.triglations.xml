@@ -1397,7 +1397,7 @@
     <TranslationEntry Key="internal/ImportForm/warnacttab" Translation="Some of the imported ACT triggers include triggers which add results to a tab. However, importing these options is currently not supported. The affected items have been highlighted below." />
     <TranslationEntry Key="internal/ImportForm/warnacttabtimers" Translation="Some of the imported ACT triggers include triggers which add results to a tab and fire timers. However, importing these options is currently not supported. The affected items have been highlighted below." />
     <TranslationEntry Key="internal/ImportForm/warnacttimers" Translation="Some of the imported ACT triggers include triggers which fire timers. However, importing these options is currently not supported. The affected items have been highlighted below." />
-    <TranslationEntry Key="internal/Interpreter/scriptblocked" Translation="Script execution on trigger {0} blocked due to restricted API: {1}" />
+    <TranslationEntry Key="internal/Interpreter/scriptblocked" Translation="Script execution on trigger {0} blocked due to restricted API/feature: {1}" />
     <TranslationEntry Key="internal/Interpreter/scriptExecutionError" Translation="Error occurred during script execution: &#xD;&#xA;{0}" />
     <TranslationEntry Key="internal/LogForm/displaying" Translation="Displaying {0} out of {1}" />
     <TranslationEntry Key="internal/LogForm/exception" Translation="Exception" />

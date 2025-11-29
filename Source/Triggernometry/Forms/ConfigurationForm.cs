@@ -87,12 +87,12 @@ namespace Triggernometry.Forms
             {
                 dgvApiAccess.Rows.Add(new object[] { ap.Name, ap.AllowLocal, ap.AllowRemote, ap.AllowAdmin });
             }
-            Configuration.UnsafeUsageEnum us = cfg.UnsafeUsage;
+            Configuration.ScriptUsageEnum us = cfg.UnsafeUsage;
             dgvAdditionalFeatures.Rows.Add(new object[] {
                 "Unsafe",
-                (us & Configuration.UnsafeUsageEnum.AllowLocal) != 0,
-                (us & Configuration.UnsafeUsageEnum.AllowRemote) != 0,
-                (us & Configuration.UnsafeUsageEnum.AllowAdmin) != 0 }
+                (us & Configuration.ScriptUsageEnum.AllowLocal) != 0,
+                (us & Configuration.ScriptUsageEnum.AllowRemote) != 0,
+                (us & Configuration.ScriptUsageEnum.AllowAdmin) != 0 }
             );
         }
 
@@ -257,10 +257,10 @@ namespace Triggernometry.Forms
                 switch (Name.ToLower())
                 {
                     case "unsafe":
-                        Configuration.UnsafeUsageEnum us = Configuration.UnsafeUsageEnum.None;
-                        if (AllowLocal == true) us |= Configuration.UnsafeUsageEnum.AllowLocal;
-                        if (AllowRemote == true) us |= Configuration.UnsafeUsageEnum.AllowRemote;
-                        if (AllowAdmin == true) us |= Configuration.UnsafeUsageEnum.AllowAdmin;
+                        Configuration.ScriptUsageEnum us = Configuration.ScriptUsageEnum.None;
+                        if (AllowLocal == true) us |= Configuration.ScriptUsageEnum.AllowLocal;
+                        if (AllowRemote == true) us |= Configuration.ScriptUsageEnum.AllowRemote;
+                        if (AllowAdmin == true) us |= Configuration.ScriptUsageEnum.AllowAdmin;
                         setter = cfg.GetType().GetMethod("SetUnsafeUsage", BindingFlags.NonPublic | BindingFlags.Instance);
                         setter.Invoke(cfg, new object[] { us });
                         break;

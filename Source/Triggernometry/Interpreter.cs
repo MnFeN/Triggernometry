@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Scripting;
@@ -43,7 +44,12 @@ namespace Triggernometry
                 return assy != null && badApis.Any(x => assy.Contains(x) == true);
             }
 
-            public static bool Validate(Script script, out string badApi, params string[] badApis)
+            /// <summary>
+            /// Validates the script against a list of restricted APIs. <br /><br /> 
+            /// Examines using directives, declared variables, invocations, method declarations, and property types, <br />
+            /// to detect usage of any namespace or assembly listed in <paramref name="badApis"/>.
+            /// </summary>
+            public static bool ValidateApis(Script script, out string badApi, params string[] badApis)
             {                
                 Compilation comp = script.GetCompilation();
                 SyntaxTree st = comp.SyntaxTrees.First();
@@ -126,6 +132,208 @@ namespace Triggernometry
                 }
                 return true;
             }
+
+            /// <summary>
+            /// Determines whether the script uses dynamic typing. <br />
+            /// Checks for expressions whose type is dynamic,  
+            /// member access on a dynamic receiver,  
+            /// or invocation of a dynamic target.
+            /// </summary>
+            public static bool ContainsDynamic(Script script)
+            {
+                var comp = script.GetCompilation();
+                var st = comp.SyntaxTrees.First();
+                var model = comp.GetSemanticModel(st);
+                var root = st.GetRoot();
+
+                foreach (var expr in root.DescendantNodes().OfType<ExpressionSyntax>())
+                {
+                    var type = model.GetTypeInfo(expr).Type;
+
+                    // dynamic expressions
+                    if (type != null && type.TypeKind == TypeKind.Dynamic)
+                        return true;
+
+                    // dynamic.X
+                    if (expr is MemberAccessExpressionSyntax ma)
+                    {
+                        var recvType = model.GetTypeInfo(ma.Expression).Type;
+                        if (recvType != null && recvType.TypeKind == TypeKind.Dynamic)
+                            return true;
+                    }
+
+                    // MethodReturningDynamic()
+                    if (expr is InvocationExpressionSyntax inv)
+                    {
+                        var recvType = model.GetTypeInfo(inv.Expression).Type;
+                        if (recvType != null && recvType.TypeKind == TypeKind.Dynamic)
+                            return true;
+                    }
+                }
+
+                return false;
+            }
+
+        }
+
+        public ScriptOptions _so { get; set; }
+
+        internal bool Ready = false;
+        public Interpreter()
+        {
+            _so = ScriptOptions.Default;
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly asm in asms)
+            {
+                _so = _so.AddMetadataReferenceFromAssembly(asm);
+            }
+            _so = _so.AddImports("System");
+            
+            Task.Run(() =>
+            {
+                try
+                {
+                    Evaluate("int whee;", null, new Context() { plug = RealPlugin.plug });
+                    Ready = true;
+                }
+                catch (Exception ex)
+                {
+                    RealPlugin.plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, 
+                        I18n.Translate(
+                            "internal/Plugin/iniscripterror", 
+                            "Error when initializing scripting - try changing plugin load order: {0}", 
+                            ex.Message));
+                }
+                RealPlugin.plug.scriptingInited = true;
+            });
+        }
+
+        private bool GetFeatureUsage(Configuration.ScriptUsageEnum usage, Context ctx)
+        {
+            bool isRemote = ctx.trig?.Repo != null;
+            bool isAdmin = ctx.plug.runningAsAdmin;
+
+            if (isAdmin == true   && !usage.HasFlag(Configuration.ScriptUsageEnum.AllowAdmin)) return false;
+            if (isRemote == false && !usage.HasFlag(Configuration.ScriptUsageEnum.AllowLocal)) return false;
+            if (isRemote == true  && !usage.HasFlag(Configuration.ScriptUsageEnum.AllowRemote)) return false;
+
+            return true;
+        }
+
+        public string[] GetBadApis(Context ctx)
+        {
+            bool isremote = ctx.trig?.Repo != null;
+            bool isadmin = ctx.plug.runningAsAdmin;
+            List<string> apis = new List<string>();
+            foreach (Configuration.APIUsage a in ctx.plug.cfg.GetAPIUsages())
+            {
+                if (isadmin == true && a.AllowAdmin == false)
+                {
+                    apis.Add(a.Name);
+                    continue;
+                }
+                if (isremote == false && a.AllowLocal == false)
+                {
+                    apis.Add(a.Name);
+                    continue;
+                }
+                if (isremote == true && a.AllowRemote == false)
+                {
+                    apis.Add(a.Name);
+                    continue;
+                }
+            }
+            return apis.ToArray();
+        }
+
+        public void Evaluate(string command, string assy, Context ctx)
+        {
+            Globs g = new Globs() { TriggernometryHelpers = new Helpers() { CurrentContext = ctx } };
+            ScriptOptions _myso = _so.WithAllowUnsafe(GetFeatureUsage(ctx.plug.cfg.UnsafeUsage, ctx));
+            if (assy != null)
+            {
+                var assys = assy.Split(',').Select(x => x.Trim());
+                var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+                foreach (var asmName in assys)
+                {
+                    var assembly = currentAssemblies.FirstOrDefault(a => a.GetName().Name.Equals(asmName, StringComparison.OrdinalIgnoreCase));
+                    // try to first load from current assemblies
+                    // including the assemblies loaded into memory by ACT which were not detected during InitPlugin
+                    _myso = (assembly != null) ? _myso.AddMetadataReferenceFromAssembly(assembly) : _myso.AddReferences(asmName);
+                }
+            }
+            string[] badApis = GetBadApis(ctx);
+            bool allowDynamic = GetFeatureUsage(ctx.plug.cfg.DynamicUsage, ctx);
+
+            // nothing restricted: run directly
+            if (badApis.Length == 0 && allowDynamic)
+            {
+                Task<object> t = CSharpScript.EvaluateAsync(command, _myso, g, typeof(Globs));
+                ExecuteScriptTask(t, g);
+                return;
+            }
+
+            Script<object> scp = CSharpScript.Create(command, _myso, typeof(Globs));
+
+            // Check API usage
+            if (badApis.Length > 0 && Validator.ValidateApis(scp, out string badApi, badApis) == false)
+            {
+                g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error,
+                    I18n.Translate(
+                        "internal/Interpreter/scriptblocked",
+                        "Script execution on trigger {0} blocked due to restricted API/feature: {1}",
+                        ctx?.trig?.LogName ?? "(null)", badApi
+                    )
+                );
+                return;
+            }
+
+            // Check dynamic usage
+            if (!allowDynamic && Validator.ContainsDynamic(scp))
+            {
+                g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error,
+                    I18n.Translate(
+                        "internal/Interpreter/scriptblocked",
+                        "Script execution on trigger {0} blocked due to restricted API/feature: {1}",
+                        ctx?.trig?.LogName ?? "(null)", "dynamic"
+                    )
+                );
+                return;
+            }
+
+            Task<ScriptState<object>> ts = scp.RunAsync(g);
+            ExecuteScriptTask(ts, g);
+
+        }
+
+        private void ExecuteScriptTask(Task task, Globs g)
+        {
+            try
+            {
+                Task.Run(async () => { await task; }).Wait();
+            }
+            catch (Exception ex)
+            {
+                List<Exception> exList = (ex is AggregateException aex)
+                    ? aex.Flatten().InnerExceptions.ToList()
+                    : new List<Exception> { ex };
+
+                foreach (var e in exList)
+                {
+                    g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error,
+                        I18n.Translate(
+                            "internal/Interpreter/scriptExecutionError",
+                            "Error occurred during script execution: \n{0}", e.FullMessage()
+                        )
+                    );
+                }
+            }
+        }
+
+        public class Globs
+        {
+
+            public Helpers TriggernometryHelpers { get; set; } = null;
 
         }
 
@@ -321,172 +529,13 @@ namespace Triggernometry
                 }
             }
 
-            public static string Serialize(object o, bool indent = true) 
+            public static string Serialize(object o, bool indent = true)
                 => JsonSerializer.Serialize(o, new JsonSerializerOptions { WriteIndented = indent });
             public static T Deserialize<T>(string s) => JsonSerializer.Deserialize<T>(s);
 
             public static Process XivProcess => Triggernometry.Utilities.Memory.XivProc;
-            public static void RegisterXivProcessUpdatedAction(string key, System.Action action) 
+            public static void RegisterXivProcessUpdatedAction(string key, System.Action action)
                 => Triggernometry.Utilities.Memory.RegisterXivProcUpdatedAction(key, action);
-        }
-
-        public ScriptOptions _so { get; set; }
-
-        public class Globs
-        {
-
-            public Helpers TriggernometryHelpers { get; set; } = null;
-
-        }
-
-        internal bool Ready = false;
-        public Interpreter()
-        {
-            _so = ScriptOptions.Default;
-            var asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly asm in asms)
-            {
-                _so = _so.AddMetadataReferenceFromAssembly(asm);
-            }
-            _so = _so.AddImports("System");
-            
-            Task.Run(() =>
-            {
-                try
-                {
-                    Evaluate("int whee;", null, new Context() { plug = RealPlugin.plug });
-                    Ready = true;
-                }
-                catch (Exception ex)
-                {
-                    RealPlugin.plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Plugin/iniscripterror", "Error when initializing scripting - try changing plugin load order: {0}", ex.Message));
-                }
-                RealPlugin.plug.scriptingInited = true;
-            });
-        }
-
-        public bool GetUnsafeUsage(Context ctx)
-        {
-            Configuration.UnsafeUsageEnum us = ctx.plug.cfg.UnsafeUsage;
-            bool isremote = ctx.trig?.Repo != null;
-            bool isadmin = ctx.plug.runningAsAdmin;
-            if (isadmin == true && (us & Configuration.UnsafeUsageEnum.AllowAdmin) == 0)
-            {
-                return false;
-            }
-            if (isremote == false && (us & Configuration.UnsafeUsageEnum.AllowLocal) == 0)
-            {
-                return false;
-            }
-            if (isremote == true && (us & Configuration.UnsafeUsageEnum.AllowRemote) == 0)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public string[] GetBadApis(Context ctx)
-        {
-            bool isremote = ctx.trig?.Repo != null;
-            bool isadmin = ctx.plug.runningAsAdmin;
-            List<string> apis = new List<string>();
-            foreach (Configuration.APIUsage a in ctx.plug.cfg.GetAPIUsages())
-            {
-                if (isadmin == true && a.AllowAdmin == false)
-                {
-                    apis.Add(a.Name);
-                    continue;
-                }
-                if (isremote == false && a.AllowLocal == false)
-                {
-                    apis.Add(a.Name);
-                    continue;
-                }
-                if (isremote == true && a.AllowRemote == false)
-                {
-                    apis.Add(a.Name);
-                    continue;
-                }
-            }
-            return apis.ToArray();
-        }
-
-        public void Evaluate(string command, string assy, Context ctx)
-        {
-            Globs g = new Globs() { TriggernometryHelpers = new Helpers() { CurrentContext = ctx } };
-            ScriptOptions _myso = _so.WithAllowUnsafe(GetUnsafeUsage(ctx));
-            if (assy != null)
-            {
-                var assys = assy.Split(',').Select(x => x.Trim());
-                var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-                foreach (var asmName in assys)
-                {
-                    var assembly = currentAssemblies.FirstOrDefault(a => a.GetName().Name.Equals(asmName, StringComparison.OrdinalIgnoreCase));
-                    // try to first load from current assemblies (including the assemblies loaded into memory by ACT which were not detected during InitPlugin)
-                    _myso = (assembly != null) ? _myso.AddMetadataReferenceFromAssembly(assembly) : _myso.AddReferences(asmName);
-                }
-            }
-            string[] badApis = GetBadApis(ctx);
-            if (badApis != null && badApis.Length > 0)
-            {
-                Script<object> scp = CSharpScript.Create(command, _myso, typeof(Globs));
-                if (Validator.Validate(scp, out string badApi, badApis) == true)
-                {
-                    Task<ScriptState<object>> ts = scp.RunAsync(g);
-                    try
-                    {
-                        Task.Run(async () => { await ts; }).Wait();
-                    }
-                    catch (AggregateException aex)
-                    {
-                        foreach (var ex in aex.Flatten().InnerExceptions)
-                        {
-                            g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error, I18n.Translate(
-                                    "internal/Interpreter/scriptExecutionError",
-                                    "Error occurred during script execution: \n{0}", ex.FullMessage()));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error, I18n.Translate(
-                                    "internal/Interpreter/scriptExecutionError",
-                                    "Error occurred during script execution: \n{0}", ex.FullMessage()));
-                    }
-                }
-                else
-                {
-                    g.TriggernometryHelpers.Log(
-                        RealPlugin.DebugLevelEnum.Error,
-                        I18n.Translate(
-                            "internal/Interpreter/scriptblocked", "Script execution on trigger {0} blocked due to restricted API: {1}",
-                            ctx?.trig?.LogName ?? "(null)", badApi
-                        )
-                    );
-                }
-            }
-            else
-            {
-                Task<object> t = CSharpScript.EvaluateAsync(command, _myso, g, typeof(Globs));
-                try
-                {
-                    Task.Run(async () => { await t; }).Wait();
-                }
-                catch (AggregateException aex)
-                {
-                    foreach (var ex in aex.Flatten().InnerExceptions)
-                    {
-                        g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error, I18n.Translate(
-                                "internal/Interpreter/scriptExecutionError",
-                                "Error occurred during script execution: \n{0}", ex.ToString()));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    g.TriggernometryHelpers.Log(RealPlugin.DebugLevelEnum.Error, I18n.Translate(
-                                "internal/Interpreter/scriptExecutionError",
-                                "Error occurred during script execution: \n{0}", ex.ToString()));
-                }
-            }
         }
 
     }

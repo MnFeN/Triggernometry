@@ -395,7 +395,7 @@ namespace Triggernometry
         }
 
         [Flags]
-        public enum UnsafeUsageEnum
+        public enum ScriptUsageEnum
         {
             None = 0,
             AllowLocal = 1,
@@ -421,9 +421,9 @@ namespace Triggernometry
             }
         }
 
-        [XmlAttribute]
-        private UnsafeUsageEnum _UnsafeUsage = UnsafeUsageEnum.None;
-        public UnsafeUsageEnum UnsafeUsage
+        
+        private ScriptUsageEnum _UnsafeUsage = ScriptUsageEnum.None;
+        public ScriptUsageEnum UnsafeUsage
         {
             get
             {
@@ -434,6 +434,22 @@ namespace Triggernometry
                 if (SecuritySettingsLocked == false)
                 {
                     _UnsafeUsage = value;
+                }
+            }
+        }
+
+        private ScriptUsageEnum _DynamicUsage = ScriptUsageEnum.None;
+        public ScriptUsageEnum DynamicUsage
+        {
+            get
+            {
+                return _DynamicUsage;
+            }
+            set
+            {
+                if (SecuritySettingsLocked == false)
+                {
+                    _DynamicUsage = value;
                 }
             }
         }
@@ -463,9 +479,14 @@ namespace Triggernometry
             }
         }
 
-        private void SetUnsafeUsage(UnsafeUsageEnum us)
+        private void SetUnsafeUsage(ScriptUsageEnum us)
         {
             _UnsafeUsage = us;
+        }
+
+        private void SetDynamicUsage(ScriptUsageEnum us)
+        {
+            _DynamicUsage = us;
         }
 
         #endregion

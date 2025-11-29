@@ -1397,7 +1397,7 @@
     <TranslationEntry Key="internal/ImportForm/version" Translation="Source plugin version: {0}    Current plugin version: {1}" />
     <TranslationEntry Key="internal/ImportForm/warnacttabtimers" Translation="インポートされたACTトリガーの一部には、結果をタブに追加するトリガー、タイマーを起動するトリガーが含まれています。これらのオプションのインポートは現在サポートされていません。該当の項目は以下で強調表示されています" />
     <TranslationEntry Key="internal/ImportForm/warnacttimers" Translation="インポートされたACTトリガーの一部には、結果をタブに追加するトリガー、タイマーを起動するトリガーが含まれています。これらのオプションのインポートは現在サポートされていません。該当の項目は以下で強調表示されています" />
-    <TranslationEntry Key="internal/Interpreter/scriptblocked" Translation="Script execution on trigger {0} blocked due to restricted API: {1}" />
+    <TranslationEntry Key="internal/Interpreter/scriptblocked" Translation="Script execution on trigger {0} blocked due to restricted API/feature: {1}" />
     <TranslationEntry Key="internal/Interpreter/scriptExecutionError" Translation="Error occurred during script execution: &#xD;&#xA;{0}" />
     <TranslationEntry Key="internal/LogForm/displaying" Translation="{1} 件中 {0} 件を表示" />
     <TranslationEntry Key="internal/LogForm/exception" Translation="例外" />

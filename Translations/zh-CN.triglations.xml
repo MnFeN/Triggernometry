@@ -1397,7 +1397,7 @@
     <TranslationEntry Key="internal/ImportForm/warnacttab" Translation="一些导入的 ACT 触发器包括将结果添加到选项卡的触发器。 但是，目前不支持导入这些选项。 受影响的项目已在下面突出显示。" />
     <TranslationEntry Key="internal/ImportForm/warnacttabtimers" Translation="一些导入的 ACT 触发器包括将结果添加到选项卡和触发计时器的触发器。 但是，目前不支持导入这些选项。 受影响的项目已在下面突出显示。" />
     <TranslationEntry Key="internal/ImportForm/warnacttimers" Translation="一些导入的 ACT 触发器包括触发定时器的触发器。 但是，目前不支持导入这些选项。 受影响的项目已在下面突出显示。" />
-    <TranslationEntry Key="internal/Interpreter/scriptblocked" Translation="脚本代码因调用了触发器配置中禁用的 API ({1}) 而未执行。触发器：({0})" />
+    <TranslationEntry Key="internal/Interpreter/scriptblocked" Translation="脚本代码因 API 或特性被禁用而未执行。&#xD;&#xA;详见：触发器右上角配置 - 安全 - {1}。&#xD;&#xA;触发器：({0})" />
     <TranslationEntry Key="internal/Interpreter/scriptExecutionError" Translation="脚本代码运行时遇到错误：&#xD;&#xA;{0}" />
     <TranslationEntry Key="internal/LogForm/displaying" Translation="显示日志数量：{0} / {1}" />
     <TranslationEntry Key="internal/LogForm/exception" Translation="异常" />

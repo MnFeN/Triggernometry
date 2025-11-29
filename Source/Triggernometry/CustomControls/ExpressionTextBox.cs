@@ -159,7 +159,8 @@ namespace Triggernometry.CustomControls
 
         public static List<string> configurations = new List<string>()
         {
-            "DebugLevel", "UseACTForSound", "UseACTForTTS", "FfxivLogNetwork", "UseOsClipboard", "DeveloperMode", "Autosave", "Language", "UnsafeUsage",
+            "DebugLevel", "UseACTForSound", "UseACTForTTS", "FfxivLogNetwork", "UseOsClipboard", "DeveloperMode", "Autosave", "Language", 
+            "UnsafeUsage", "DynamicUsage",
             "Microsoft.CodeAnalysis", "Microsoft.Win32", "System.CodeDom.Compiler", "System.Diagnostics", "Triggernometry.Utilities",
             "System.IO", "System.Net", "System.Reflection", "System.Runtime", "System.Security", "System.Web",
         };
