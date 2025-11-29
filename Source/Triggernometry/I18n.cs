@@ -169,105 +169,116 @@ namespace Triggernometry
 
         internal static void TranslateControl(string path, Control c)
         {
-            if (c.Tag == I18n.DoNotTranslate)
+            try
             {
-                return;
-            }
-            if (c is UserControl)
-            {
-                path += "/" + c.Name;
-                foreach (Control cc in c.Controls)
+                if (c.Tag == I18n.DoNotTranslate)
                 {
-                    TranslateControl(path, cc);
+                    return;
                 }
-                return;
-            }
-            if (c is NumericUpDown)
-            {
-                return;
-            }
-            if (c.ContextMenuStrip != null)
-            {
-                ContextMenuStrip ctx = c.ContextMenuStrip;
-                foreach (ToolStripItem tsi in ctx.Items)
+                if (c is UserControl)
                 {
-                    TranslateSecondaryControl(path, tsi);
+                    path += "/" + c.Name;
+                    foreach (Control cc in c.Controls)
+                    {
+                        TranslateControl(path, cc);
+                    }
+                    return;
                 }
-            }
-            if (c.Text != null && c.Text != "")
-            {
-                if (c is TabPage)
+                if (c is NumericUpDown)
                 {
-                    if (((TabControl)((TabPage)c).Parent).Appearance != TabAppearance.FlatButtons)
+                    return;
+                }
+                if (c.ContextMenuStrip != null)
+                {
+                    ContextMenuStrip ctx = c.ContextMenuStrip;
+                    foreach (ToolStripItem tsi in ctx.Items)
+                    {
+                        TranslateSecondaryControl(path, tsi);
+                    }
+                }
+                if (c.Text != null && c.Text != "")
+                {
+                    if (c is TabPage)
+                    {
+                        if (((TabControl)((TabPage)c).Parent).Appearance != TabAppearance.FlatButtons)
+                        {
+                            c.Text = GetLocalizationFor(path + "/" + c.Name, c.Text);
+                        }
+                    }
+                    else
                     {
                         c.Text = GetLocalizationFor(path + "/" + c.Name, c.Text);
                     }
                 }
-                else
+                if (c is CheckedListBox)
                 {
-                    c.Text = GetLocalizationFor(path + "/" + c.Name, c.Text);
-                }
-            }
-            if (c is CheckedListBox)
-            {
-                CheckedListBox x = (CheckedListBox)c;
-                for (int i = 0; i < x.Items.Count; i++)
-                {
-                    string o = x.Items[i].ToString();
-                    if (x.Items[i] is Forms.FolderForm.ClassLink)
+                    CheckedListBox x = (CheckedListBox)c;
+                    for (int i = 0; i < x.Items.Count; i++)
                     {
-                        ((Forms.FolderForm.ClassLink)x.Items[i]).name = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
+                        string o = x.Items[i].ToString();
+                        if (x.Items[i] is Forms.FolderForm.ClassLink)
+                        {
+                            ((Forms.FolderForm.ClassLink)x.Items[i]).name = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
+                        }
+                        else
+                        {
+                            x.Items[i] = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
+                        }
                     }
-                    else
+                }
+                else if (c is ListBox)
+                {
+                    ListBox x = (ListBox)c;
+                    for (int i = 0; i < x.Items.Count; i++)
                     {
+                        string o = x.Items[i].ToString();
                         x.Items[i] = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
                     }
                 }
-            }
-            else if (c is ListBox)
-            {
-                ListBox x = (ListBox)c;
-                for (int i = 0; i < x.Items.Count; i++)
+                else if (c is ComboBox)
                 {
-                    string o = x.Items[i].ToString();
-                    x.Items[i] = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
-                }
-            }
-            else if (c is ComboBox)
-            {
-                ComboBox x = (ComboBox)c;
-                for (int i = 0; i < x.Items.Count; i++)
-                {
-                    string o = x.Items[i].ToString();
-                    x.Items[i] = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
-                }
-            }
-            else if (c is DataGridView)
-            {
-                DataGridView x = (DataGridView)c;
-                for (int i = 0; i < x.Columns.Count; i++)
-                {
-                    string hd = x.Columns[i].HeaderText.Trim();
-                    if (hd.Length > 0)
+                    ComboBox x = (ComboBox)c;
+                    for (int i = 0; i < x.Items.Count; i++)
                     {
-                        x.Columns[i].HeaderText = GetLocalizationFor(path + "/" + x.Columns[i].Name, x.Columns[i].HeaderText);
+                        string o = x.Items[i].ToString();
+                        x.Items[i] = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
+                    }
+                }
+                else if (c is DataGridView)
+                {
+                    DataGridView x = (DataGridView)c;
+                    for (int i = 0; i < x.Columns.Count; i++)
+                    {
+                        string hd = x.Columns[i].HeaderText.Trim();
+                        if (hd.Length > 0)
+                        {
+                            x.Columns[i].HeaderText = GetLocalizationFor(path + "/" + x.Columns[i].Name, x.Columns[i].HeaderText);
+                        }
+                    }
+                }
+                if (c is ToolStrip)
+                {
+                    ToolStrip ts = (ToolStrip)c;
+                    foreach (ToolStripItem tsi in ts.Items)
+                    {
+                        TranslateSecondaryControl(path, tsi);
+                    }
+                }
+                else
+                {
+                    foreach (Control cc in c.Controls)
+                    {
+                        TranslateControl(path, cc);
                     }
                 }
             }
-            if (c is ToolStrip)
+            catch (Exception ex)
             {
-                ToolStrip ts = (ToolStrip)c;
-                foreach (ToolStripItem tsi in ts.Items)
-                {
-                    TranslateSecondaryControl(path, tsi);
-                }
-            }
-            else
-            {
-                foreach (Control cc in c.Controls)
-                {
-                    TranslateControl(path, cc);
-                }
+                // Some welcome labels might throw exceptions after successfully translated.
+                // Reason not examined yet.
+                // Reproduce: Set language to Chinese, open and save configuration form, set language to English.
+                RealPlugin.plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, 
+                    $"Error occurs when translating {c.Name} ({c.Text ?? "null"}): {ex.Message}");
             }
         }
 
