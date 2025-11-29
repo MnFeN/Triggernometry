@@ -94,7 +94,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
                 if (tempTable.ContainsKey(key))
                     throw new InvalidDataException($"CSV {filePath} 存在重复 key: {key}");
 
-                var rowInstance = new CsvRow(this, row);
+                var rowInstance = new CsvRow(this, key, row);
                 tempTable[key] = rowInstance;
             }
             Rows = tempTable;

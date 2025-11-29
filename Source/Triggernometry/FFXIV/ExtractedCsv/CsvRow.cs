@@ -12,24 +12,27 @@ namespace Triggernometry.FFXIV.ExtractedCsv
     public class CsvRow
     {
         public CsvTable Table { get; private set; }
+        /// <summary>
+        /// 当前行的原始数据（列名 → 值）。
+        /// </summary>
+        public IReadOnlyList<string> Fields { get; private set; }
+        public RowIndexKey Index { get; private set; }
+
         public CsvManager Manager => Table.Manager;
         public IReadOnlyList<string> Headers => Table.Headers;
         public IReadOnlyList<string> Types => Table.Types;
         public IReadOnlyDictionary<RowIndexKey, CsvRow> Rows => Table.Rows;
         internal Dictionary<string, int> HeaderIndex => Table.HeaderIndex;
-
-        /// <summary>
-        /// 当前行的原始数据（列名 → 值）。
-        /// </summary>
-        public IReadOnlyList<string> Fields { get; private set; }
+        
 
         /// <summary> 仅用于子类自动生成无参构造函数，供自动转换类型的表达式使用。 </summary>
         protected CsvRow() { }
 
-        internal CsvRow(CsvTable table, string[] fields)
+        internal CsvRow(CsvTable table, RowIndexKey index, string[] fields)
         {
-            Fields = fields ?? throw new ArgumentNullException(nameof(fields));
             Table = table ?? throw new ArgumentNullException(nameof(table));
+            Index = index;
+            Fields = fields ?? throw new ArgumentNullException(nameof(fields));
         }
 
         /// <summary>
@@ -74,13 +77,14 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         /// 从另一行复制基础字段（Table / Fields）。
         /// 供工厂方法 <see cref="GetOrCreateFactory" /> 使用。
         /// </summary>
-        protected void CopyBaseFrom(CsvRow other)
+        protected void CopyBaseFrom(CsvRow src)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            if (src == null)
+                throw new ArgumentNullException(nameof(src));
 
-            Table = other.Table;
-            Fields = other.Fields;
+            Table = src.Table;
+            Index = src.Index;
+            Fields = src.Fields;
         }
 
         private static readonly Dictionary<Type, Func<CsvRow, CsvRow>> _factoryCache = new Dictionary<Type, Func<CsvRow, CsvRow>>();

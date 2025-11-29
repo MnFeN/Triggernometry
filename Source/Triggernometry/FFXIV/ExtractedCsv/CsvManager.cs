@@ -11,6 +11,24 @@ namespace Triggernometry.FFXIV.ExtractedCsv
     public class CsvManager
     {
         public static CsvManager Instance { get; } = new CsvManager();
+        
+        public int Count
+        {
+            get
+            {
+                lock (_lockTables)
+                    return _tables.Count;
+            }
+        }
+
+        public int TypedCount
+        {
+            get
+            {
+                lock (_lockTypedTables)
+                    return _typedTables.Count;
+            }
+        }
 
         // 全局缓存（文件名 → 对应的表实例）
         private readonly Dictionary<string, CsvTable> _tables =
@@ -18,9 +36,9 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         private readonly object _lockTables = new object();
         
         // 全局缓存（类型 → 对应的 ReadOnlyCollection<TRow> 表实例）
-        private readonly Dictionary<Type, object> _strongTables =
+        private readonly Dictionary<Type, object> _typedTables =
             new Dictionary<Type, object>();
-        private readonly object _lockStrongTables = new object();
+        private readonly object _lockTypedTables = new object();
 
         public CsvTable this[string tableName]
             => TryGetTable(tableName, out CsvTable table) ? table
@@ -32,19 +50,19 @@ namespace Triggernometry.FFXIV.ExtractedCsv
                 return _tables.TryGetValue(tableName, out table);
         }
 
-        public IReadOnlyList<TRow> Get<TRow>() where TRow : CsvRow
+        public IReadOnlyList<T> Get<T>() where T : TypedCsvRow
         {
-            lock (_lockStrongTables)
+            lock (_lockTypedTables)
             {
-                if (_strongTables.TryGetValue(typeof(TRow), out object o))
+                if (_typedTables.TryGetValue(typeof(T), out object o))
                 {
-                    if (o is IReadOnlyList<TRow> list)
+                    if (o is IReadOnlyList<T> list)
                         return list;
 
-                    throw new InvalidCastException($"Cached list of '{typeof(TRow)}' is not of type IReadOnlyList<{typeof(TRow).Name}>.");
+                    throw new InvalidCastException($"Cached list of '{typeof(T)}' is not of type IReadOnlyList<{typeof(T).Name}>.");
                 }
             }
-            throw new KeyNotFoundException($"Table '{typeof(TRow)}.csv' was not loaded.");
+            throw new KeyNotFoundException($"Table '{typeof(T)}.csv' was not loaded.");
         }
 
         /// <summary>
@@ -98,29 +116,18 @@ namespace Triggernometry.FFXIV.ExtractedCsv
             {
                 type = GetType().Assembly.GetTypes().FirstOrDefault(t =>
                     t.Namespace == "Triggernometry.FFXIV.ExtractedCsv.Rows" &&
-                    t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase));
+                    t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase) &&
+                    typeof(TypedCsvRow).IsAssignableFrom(t));
             }
 
             if (type == null) return;
 
-            // create List<TRow>
-            var listType = typeof(List<>).MakeGenericType(type);
-            var list = (IList)Activator.CreateInstance(listType);
-
             var rowFactory = CsvRow.GetOrCreateFactory(type);
+            var array = table.Rows.Values.Select(csvRow => rowFactory(csvRow)).ToArray();
 
-            foreach (var csvRow in table.Rows.Values)
+            lock (_lockTypedTables)
             {
-                list.Add(rowFactory(csvRow));
-            }
-
-            // wrap as ReadOnlyCollection<TRow>
-            var readOnlyType = typeof(ReadOnlyCollection<>).MakeGenericType(type);
-            var readOnly = Activator.CreateInstance(readOnlyType, list);
-
-            lock (_lockStrongTables)
-            {
-                _strongTables[type] = readOnly;
+                _typedTables[type] = array;
             }
         }
 
@@ -135,7 +142,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to load CSV file '{filePath}': {ex.Message}", ex);
+                throw new Exception($"Failed to load CSV file '{filePath}': {ex.Message}", ex); // 需要改
             }
         }
 
@@ -166,8 +173,8 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         {
             lock (_lockTables)
                 _tables.Clear();
-            lock (_lockStrongTables)
-                _strongTables.Clear();
+            lock (_lockTypedTables)
+                _typedTables.Clear();
         }
     }
 }
