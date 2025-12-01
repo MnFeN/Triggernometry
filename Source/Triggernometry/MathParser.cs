@@ -654,7 +654,7 @@ namespace Triggernometry
         /// <summary> Tokenizes <paramref name="expr"/>. </summary>
         /// <param name="expr">The expression.</param>
         /// <returns>Tokens found <paramref name="expr"/>.</returns>
-        internal static List<string> Lexer(string expr)
+        public static List<string> Lexer(string expr)
         {
             var tokens = new List<string>();
 
@@ -722,7 +722,7 @@ namespace Triggernometry
         private static readonly Regex regexBinNumber = new Regex(@"^0b[01]+$", RegexOptions.Compiled);
         private static readonly Regex regexOctNumber = new Regex(@"^0o[0-7]+$", RegexOptions.Compiled);
 
-        internal static double MathParserLogic(List<string> tokens)
+        public static double MathParserLogic(List<string> tokens)
         {
             // for error information
             var originalTokens = tokens.ToArray();
