@@ -37,6 +37,33 @@ namespace Triggernometry.FFXIV.ExtractedCsv.Rows
         public ushort OmenId => Get<ushort>("Omen"); // Omen
         public Omen Omen => GetRow<Omen>(OmenId);
 
+        public ActionCategoryEnum ActionCategory => (ActionCategoryEnum)Get<byte>("ActionCategory");
+        public AttackTypeEnum AttackType => (AttackTypeEnum)Get<sbyte>("AttackType");
+        public AspectTypeEnum Aspect => (AspectTypeEnum)Get<byte>("Aspect");
+
+        public enum ActionCategoryEnum : byte
+        {
+            None = 0,
+            AutoAttack = 1,
+            Spell = 2,
+            Weaponskill = 3,
+            Ability = 4,
+            Item = 5,
+            DoLAbility = 6,
+            DoHAbility = 7,
+            Event = 8,
+            LimitBreak = 9,
+            System = 10,
+            System2 = 11,
+            Mount = 12,
+            Special = 13,
+            ItemManipulation = 14,
+            LimitBreak2 = 15,
+            unk_16 = 16,
+            Artillery = 17,
+            Fashion = 18,
+        }
+
         public enum ShapeEnum : byte
         {
             None,
@@ -69,6 +96,33 @@ namespace Triggernometry.FFXIV.ExtractedCsv.Rows
             [14] = ShapeEnum.Triangle,
             [15] = ShapeEnum.RectThrough,
         };
+
+        public enum AttackTypeEnum : sbyte
+        {
+            普通 = -1,
+            无 = 0,
+            斩击 = 1,
+            突刺 = 2,
+            打击 = 3,
+            射击 = 4,
+            魔法 = 5,
+            吐息 = 6,
+            音波 = 7,
+            极限 = 8
+        }
+
+        public enum AspectTypeEnum : sbyte
+        {
+            Generic = 0, // not specified
+            Fire = 1,
+            Ice = 2,
+            Wind = 3,
+            Earth = 4,
+            Thunder = 5,
+            Water = 6,
+            None = 7, // specified as None
+        }
+
     }
 
 }
