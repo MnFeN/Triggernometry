@@ -2225,6 +2225,8 @@ namespace Triggernometry.CustomControls
                     "7.0 M1-4 阿卡狄亚轻量级"),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7b.xml",
                     "7.2 M5-8 阿卡狄亚中量级"),
+                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7c.xml",
+                    "7.4 M9-12 阿卡狄亚重量级"),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/Ex7.xml",
                     "7.X 极神"),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/temp.xml",
