@@ -10,112 +10,79 @@ namespace Triggernometry
     {
 
         internal List<Trigger> Triggers = new List<Trigger>();
+
         internal List<Trigger> ActiveTextTriggers = new List<Trigger>();
         internal List<Trigger> ActiveFFXIVNetworkTriggers = new List<Trigger>();
         internal List<Trigger> ActiveACTTriggers = new List<Trigger>();
         internal List<Trigger> ActiveEndpointTriggers = new List<Trigger>();
 
+        private List<Trigger> GetActiveTriggers(Trigger.TriggerSourceEnum src)
+        {
+            switch (src)
+            {
+                        case Trigger.TriggerSourceEnum.Log:
+                    return ActiveTextTriggers;
+
+                        case Trigger.TriggerSourceEnum.FFXIVNetwork:
+                    return ActiveFFXIVNetworkTriggers;
+
+                        case Trigger.TriggerSourceEnum.ACT:
+                    return ActiveACTTriggers;
+
+                        case Trigger.TriggerSourceEnum.Endpoint:
+                    return ActiveEndpointTriggers;
+
+                        case Trigger.TriggerSourceEnum.None:
+                    return null;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(src), src, "Unknown trigger source");
+                    }
+                }
+
         internal void AddTrigger(Trigger t, bool parentEnabled)
         {
+            List<Trigger> activeTriggers = GetActiveTriggers(t.Source);
+
             lock (Triggers)
             {
                 Triggers.Add(t);
-                if (t.Enabled == true && parentEnabled == true)
+                if (t.Enabled == true && parentEnabled == true && activeTriggers != null)
                 {
-                    switch (t.Source)
-                    {
-                        case Trigger.TriggerSourceEnum.Log:
-                            lock (ActiveTextTriggers)
-                            {
-                                ActiveTextTriggers.Add(t);
-                            }
-                            break;
-                        case Trigger.TriggerSourceEnum.FFXIVNetwork:
-                            lock (ActiveFFXIVNetworkTriggers)
-                            {
-                                ActiveFFXIVNetworkTriggers.Add(t);
-                            }
-                            break;
-                        case Trigger.TriggerSourceEnum.ACT:
-                            lock (ActiveACTTriggers)
-                            {
-                                ActiveACTTriggers.Add(t);
-                            }
-                            break;
-                        case Trigger.TriggerSourceEnum.Endpoint:
-                            lock (ActiveEndpointTriggers)
-                            {
-                                ActiveEndpointTriggers.Add(t);
-                            }
-                            break;
-                        case Trigger.TriggerSourceEnum.None:
-                            break;
-                    }
-                }
-            }
-        }
+                    lock (activeTriggers)
+                        {
+                        activeTriggers.Add(t);
+                        }
+                        }
+                        }
+                        }
 
         internal void SourceChange(Trigger t, Trigger.TriggerSourceEnum oldSource, Trigger.TriggerSourceEnum newSource)
-        {
-            if (t.Enabled == true && t.Parent != null && t.Parent.ParentsEnabled() == true)
-            {
-                switch (oldSource)
                 {
-                    case Trigger.TriggerSourceEnum.Log:
-                        lock (ActiveTextTriggers)
+            if (oldSource == newSource)
+                return;
+
+            if (t.Enabled == false || t.Parent?.ParentsEnabled() != true)
+                return;
+
+            var oldList = GetActiveTriggers(oldSource);
+            if (oldList != null)
                         {
-                            ActiveTextTriggers.Remove(t);
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.FFXIVNetwork:
-                        lock (ActiveFFXIVNetworkTriggers)
+                lock (oldList)
                         {
-                            ActiveFFXIVNetworkTriggers.Remove(t);
+                    oldList.Remove(t);
                         }
-                        break;
-                    case Trigger.TriggerSourceEnum.ACT:
-                        lock (ActiveACTTriggers)
+                        }
+
+            var newList = GetActiveTriggers(newSource);
+            if (newList != null)
                         {
-                            ActiveACTTriggers.Remove(t);
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.Endpoint:
-                        lock (ActiveEndpointTriggers)
-                        {
-                            ActiveEndpointTriggers.Remove(t);
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.None:
-                        break;
-                }
-                switch (newSource)
+                lock (newList)
                 {
-                    case Trigger.TriggerSourceEnum.Log:
-                        lock (ActiveTextTriggers)
-                        {
-                            ActiveTextTriggers.Add(t);
+                    if (!newList.Contains(t))
+                    {
+                        newList.Add(t);
                         }
-                        break;
-                    case Trigger.TriggerSourceEnum.FFXIVNetwork:
-                        lock (ActiveFFXIVNetworkTriggers)
-                        {
-                            ActiveFFXIVNetworkTriggers.Add(t);
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.ACT:
-                        lock (ActiveACTTriggers)
-                        {
-                            ActiveACTTriggers.Add(t);
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.Endpoint:
-                        lock (ActiveEndpointTriggers)
-                        {
-                            ActiveEndpointTriggers.Add(t);
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.None:
-                        break;
                 }
             }
         }
@@ -130,162 +97,56 @@ namespace Triggernometry
 
         internal void RemoveTrigger(Trigger t)
         {
+            List<Trigger> activeTriggers = GetActiveTriggers(t.Source);
             lock (Triggers)
             {
-                switch (t.Source)
+                if (activeTriggers != null)
                 {
-                    case Trigger.TriggerSourceEnum.Log:
-                        lock (ActiveTextTriggers)
+                    lock (activeTriggers)
                         {
-                            if (ActiveTextTriggers.Contains(t) == true)
-                            {
-                                ActiveTextTriggers.Remove(t);
+                        activeTriggers.Remove(t);
                             }
                         }
-                        break;
-                    case Trigger.TriggerSourceEnum.FFXIVNetwork:
-                        lock (ActiveFFXIVNetworkTriggers)
-                        {
-                            if (ActiveFFXIVNetworkTriggers.Contains(t) == true)
-                            {
-                                ActiveFFXIVNetworkTriggers.Remove(t);
-                            }
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.ACT:
-                        lock (ActiveACTTriggers)
-                        {
-                            if (ActiveACTTriggers.Contains(t) == true)
-                            {
-                                ActiveACTTriggers.Remove(t);
-                            }
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.Endpoint:
-                        lock (ActiveEndpointTriggers)
-                        {
-                            if (ActiveEndpointTriggers.Contains(t) == true)
-                            {
-                                ActiveEndpointTriggers.Remove(t);
-                            }
-                        }
-                        break;
-                    case Trigger.TriggerSourceEnum.None:
-                        break;
-                }
                 Triggers.Remove(t);
             }
         }
 
         internal void TriggerEnabled(Trigger t)
         {
-            switch (t.Source)
-            {
-                case Trigger.TriggerSourceEnum.Log:
-                    lock (ActiveTextTriggers)
-                    {
-                        if (ActiveTextTriggers.Contains(t) == false)
-                        {
-                            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigaddbook", "Trigger '{0}' added to bookkeeping", t.LogName));
-                            ActiveTextTriggers.Add(t);
+            List<Trigger> activeTriggers = GetActiveTriggers(t.Source);
+
+            if (activeTriggers == null)
                             return;
-                        }
-                    }
-                    break;
-                case Trigger.TriggerSourceEnum.FFXIVNetwork:
-                    lock (ActiveFFXIVNetworkTriggers)
+
+            lock (activeTriggers)
                     {
-                        if (ActiveFFXIVNetworkTriggers.Contains(t) == false)
+                if (!activeTriggers.Contains(t))
                         {
-                            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigaddbook", "Trigger '{0}' added to bookkeeping", t.LogName));
-                            ActiveFFXIVNetworkTriggers.Add(t);
-                            return;
-                        }
+                    FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigaddbook",
+                        "Trigger '{0}' added to bookkeeping", t.LogName));
+                    activeTriggers.Add(t);
                     }
-                    break;
-                case Trigger.TriggerSourceEnum.ACT:
-                    lock (ActiveACTTriggers)
-                    {
-                        if (ActiveACTTriggers.Contains(t) == false)
-                        {
-                            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigaddbook", "Trigger '{0}' added to bookkeeping", t.LogName));
-                            ActiveACTTriggers.Add(t);
-                            return;
-                        }
-                    }
-                    break;
-                case Trigger.TriggerSourceEnum.Endpoint:
-                    lock (ActiveEndpointTriggers)
-                    {
-                        if (ActiveEndpointTriggers.Contains(t) == false)
-                        {
-                            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigaddbook", "Trigger '{0}' added to bookkeeping", t.LogName));
-                            ActiveEndpointTriggers.Add(t);
-                            return;
-                        }
-                    }
-                    break;
-                case Trigger.TriggerSourceEnum.None:
-                    break;
             }
         }
 
         internal void TriggerDisabled(Trigger t)
         {
-            switch (t.Source)
+            List<Trigger> activeTriggers = GetActiveTriggers(t.Source);
+
+            if (activeTriggers != null)
             {
-                case Trigger.TriggerSourceEnum.Log:
-                    lock (ActiveTextTriggers)
+                lock (activeTriggers)
                     {
-                        if (ActiveTextTriggers.Contains(t) == true)
+                    if (activeTriggers.Contains(t))
                         {
-                            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrembook", "Trigger '{0}' removed from bookkeeping", t.LogName));
-                            RemoveAurasFromTrigger(t);
-                            ActiveTextTriggers.Remove(t);
-                            return;
+                        FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrembook",
+                            "Trigger '{0}' removed from bookkeeping", t.LogName));
+                        activeTriggers.Remove(t);
                         }
                     }
-                    break;
-                case Trigger.TriggerSourceEnum.FFXIVNetwork:
-                    lock (ActiveFFXIVNetworkTriggers)
-                    {
-                        if (ActiveFFXIVNetworkTriggers.Contains(t) == true)
-                        {
-                            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrembook", "Trigger '{0}' removed from bookkeeping", t.LogName));
-                            RemoveAurasFromTrigger(t);
-                            ActiveFFXIVNetworkTriggers.Remove(t);
-                            return;
                         }
-                    }
-                    break;
-                case Trigger.TriggerSourceEnum.ACT:
-                    lock (ActiveACTTriggers)
-                    {
-                        if (ActiveACTTriggers.Contains(t) == true)
-                        {
-                            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrembook", "Trigger '{0}' removed from bookkeeping", t.LogName));
-                            RemoveAurasFromTrigger(t);
-                            ActiveACTTriggers.Remove(t);
-                            return;
-                        }
-                    }
-                    break;
-                case Trigger.TriggerSourceEnum.Endpoint:
-                    lock (ActiveEndpointTriggers)
-                    {
-                        if (ActiveEndpointTriggers.Contains(t) == true)
-                        {
-                            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrembook", "Trigger '{0}' removed from bookkeeping", t.LogName));
-                            RemoveAurasFromTrigger(t);
-                            ActiveEndpointTriggers.Remove(t);
-                            return;
-                        }
-                    }
-                    break;
-                case Trigger.TriggerSourceEnum.None:
+
                     RemoveAurasFromTrigger(t);
-                    break;
-            }
         }
 
         internal void TestTrigger(Trigger t, LogEvent le, Action.TriggerForceTypeEnum force)
