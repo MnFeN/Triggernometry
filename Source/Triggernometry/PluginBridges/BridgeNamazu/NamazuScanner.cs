@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Triggernometry.Core;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu
 {
@@ -63,7 +64,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
             }
             catch (Exception ex)
             {
-                RealPlugin.plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, ex.Message);
+                RealPlugin.Instance.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, ex.Message);
                 return IntPtr.Zero;
             }
         }
@@ -82,7 +83,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
                     ex = e;
                 }
             }
-            RealPlugin.plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, ex?.Message ?? "");
+            RealPlugin.Instance.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, ex?.Message ?? "");
             return IntPtr.Zero;
         }
 

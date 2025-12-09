@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
-using static Triggernometry.Utilities.DataStringHelper;
+using Triggernometry.Expressions.Maths;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {

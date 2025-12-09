@@ -29,6 +29,14 @@
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Expressions\String\Metadata\**" />
+	  <Compile Remove="Resources\**" />
+	  <EmbeddedResource Remove="Expressions\String\Metadata\**" />
+	  <EmbeddedResource Remove="Resources\**" />
+	  <None Remove="Expressions\String\Metadata\**" />
+	  <None Remove="Resources\**" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="CsvHelper" Version="33.1.0" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.9">
 			<Private>True</Private>
@@ -79,23 +87,22 @@
 		</COMReference>
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Resources\" />
-	</ItemGroup>
-	<ItemGroup>
-		<Content Include="newtranslations.txt" />
+		<Content Include="Localization\newtranslations.txt" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="app.config" />
 		<None Include="readme.md" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Remove="Aura/Renderer/SharpDXRenderer.cs" />
-		<Compile Remove="Aura/Renderer/WinformsRenderer.cs" />
+		<Compile Remove="UI\Aura\Renderer\SharpDXRenderer.cs" />
+		<Compile Remove="UI\Aura\Renderer\WinformsRenderer.cs" />
 		<Compile Remove="Forms/testi.cs" />
 		<Compile Remove="Forms/testi.Designer.cs" />
 		<Compile Remove="Forms/testi2.cs" />
 		<Compile Remove="Forms/testi2.Designer.cs" />
 		<Compile Remove="Forms/testi3.cs" />
 		<Compile Remove="Forms/testi3.Designer.cs" />
+		<Compile Remove="UI\Forms\testi2.cs" />
+		<Compile Remove="UI\Forms\testi2.Designer.cs" />
 	</ItemGroup>
 </Project>

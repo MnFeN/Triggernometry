@@ -5,12 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-// using Costura;
-using System.Drawing;
 using System.Threading;
 using System.Diagnostics;
-using System.Xml.Linq;
-using Triggernometry;
+using Triggernometry.Core;
 
 namespace TriggernometryProxy
 {
@@ -18,11 +15,9 @@ namespace TriggernometryProxy
     public class ProxyPlugin : IActPluginV1
     {
 
-        private Triggernometry.RealPlugin Instance;
+        private RealPlugin Instance;
 
-        private ActPluginData ActPluginPrevious = null;
-
-        private object CornerLock = new object();
+        private readonly object CornerLock = new object();
         private bool CornerPopupVisible = false;
         private Control CornerPopup = null;
         private bool complained = false;
@@ -133,10 +128,10 @@ namespace TriggernometryProxy
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
-            Triggernometry.RealPlugin.ResetPlugin();
+            RealPlugin.ResetPlugin();
             lock (this)
             {
-                Instance = Triggernometry.RealPlugin.plug;
+                Instance = RealPlugin.Instance;
 
                 // register any queued callbacks if the RealPlugin instance was not ready to register previously
                 if (queuedRegs.Count > 0)
@@ -156,7 +151,7 @@ namespace TriggernometryProxy
                 }
             }
             Instance.mainform = ActGlobals.oFormActMain;
-            Version iv = typeof(Triggernometry.RealPlugin).Assembly.GetName().Version;
+            Version iv = typeof(RealPlugin).Assembly.GetName().Version;
             Version ip = typeof(ProxyPlugin).Assembly.GetName().Version;
             if (iv.CompareTo(ip) != 0)
             {
@@ -418,20 +413,20 @@ namespace TriggernometryProxy
             return (ActGlobals.oFormActMain.CustomTriggers.Count > 0);
         }
 
-        public List<Triggernometry.RealPlugin.CustomTriggerCategoryProxy> GetCustomTriggers()
+        public List<RealPlugin.CustomTriggerCategoryProxy> GetCustomTriggers()
         {
-            List<Triggernometry.RealPlugin.CustomTriggerCategoryProxy> alltrigs = new List<Triggernometry.RealPlugin.CustomTriggerCategoryProxy>(); ;
+            List<RealPlugin.CustomTriggerCategoryProxy> alltrigs = new List<RealPlugin.CustomTriggerCategoryProxy>(); ;
             var trigs = from ix in ActGlobals.oFormActMain.CustomTriggers
                         group ix by new { ix.Value.Category, ix.Value.RestrictToCategoryZone } into ixs
                         select new { Key = ixs.Key, Items = ixs.ToList() };
             foreach (var trig in trigs)
             {
-                Triggernometry.RealPlugin.CustomTriggerCategoryProxy ctp = new Triggernometry.RealPlugin.CustomTriggerCategoryProxy();
+                RealPlugin.CustomTriggerCategoryProxy ctp = new RealPlugin.CustomTriggerCategoryProxy();
                 ctp.Category = trig.Key.Category;
                 ctp.RestrictToCategoryZone = trig.Key.RestrictToCategoryZone;
                 foreach (var tx in trig.Items)
                 {
-                    Triggernometry.RealPlugin.CustomTriggerProxy ct = new Triggernometry.RealPlugin.CustomTriggerProxy();
+                    RealPlugin.CustomTriggerProxy ct = new RealPlugin.CustomTriggerProxy();
                     ct.Active = tx.Value.Active;
                     ct.ShortRegexString = tx.Value.ShortRegexString;
                     ct.SoundData = tx.Value.SoundData;
@@ -446,14 +441,14 @@ namespace TriggernometryProxy
             return alltrigs;
         }
 
-        public Triggernometry.RealPlugin.PluginWrapper GetInstance(string ActPluginName, string ActPluginType)
+        public RealPlugin.PluginWrapper GetInstance(string ActPluginName, string ActPluginType)
         {
             ActPluginData pluginData = GetPluginDataByType(ActPluginType) ?? GetPluginDataByFileName(ActPluginName);
             if (pluginData == null)
             {
-                return new Triggernometry.RealPlugin.PluginWrapper() { pluginObj = null };
+                return new RealPlugin.PluginWrapper() { pluginObj = null };
             }
-            return new Triggernometry.RealPlugin.PluginWrapper() {
+            return new RealPlugin.PluginWrapper() {
                 pluginObj = pluginData.pluginObj,
                 PnlInfo = pluginData.pPluginInfo,
                 TabPage = pluginData.tpPluginSpace,

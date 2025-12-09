@@ -3,7 +3,12 @@ using System.Linq;
 using System.Net;
 using System.Numerics;
 using System.Threading.Tasks;
-using static Triggernometry.Utilities.DataStringHelper;
+using Triggernometry.Core;
+using Triggernometry.Expressions.String.Evaluators;
+using Triggernometry.Expressions.String.Utils;
+using Triggernometry.FFXIV;
+using static Triggernometry.Expressions.String.Utils.ArgHelper;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -74,8 +79,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckBeforeExecution(cmd);
             var cmds = cmd.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             // 首行是实体过滤器
-            string entityFilter = cmds[0];
-            foreach (IntPtr address in Triggernometry.FFXIV.Entity.GetFilteredEntities(entityFilter).Select(e => e.Address))
+            var filter = XivEntityFilterEvaluator.CreateFilter(cmds[0]);
+            foreach (IntPtr address in Entity.GetEntities().Where(filter).Select(e => e.Address))
             {
                 var strAddress = address.ToString();
                 var hexId = Memory.Read<uint>(address + IdOffset()).ToString("X8");
@@ -89,7 +94,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     {
                         try
                         {
-                            RealPlugin.plug.InvokeNamedCallback(cbName, cbRawParams);
+                            RealPlugin.Instance.InvokeNamedCallback(cbName, cbRawParams);
                         }
                         catch (Exception ex)
                         {
@@ -104,7 +109,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetDefaultPos(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, x, y, z) = ParseArgs<IntPtr, float, float, float>(cmd);
+            var (objectPtr, x, y, z) = cmd.ParseArgs<IntPtr, float, float, float>();
             Memory.ExecuteWithLock(() => SetDefaultPos(objectPtr, x, y, z));
         }
 
@@ -112,7 +117,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetPos(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, x, y, z) = ParseArgs<IntPtr, float, float, float>(cmd);
+            var (objectPtr, x, y, z) = cmd.ParseArgs<IntPtr, float, float, float>();
             Memory.ExecuteWithLock(() => SetPos(objectPtr, x, y, z));
         }
 
@@ -120,7 +125,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetModelRelPos(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, dx, dy, dz) = ParseArgs<IntPtr, float, float, float>(cmd);
+            var (objectPtr, dx, dy, dz) = cmd.ParseArgs<IntPtr, float, float, float>();
             Memory.ExecuteWithLock(() => SetModelRelPos(objectPtr, dx, dy, dz));
         }
 
@@ -129,7 +134,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var objectPtr = Triggernometry.FFXIV.Entity.GetMyself().Address;
-            var (x, y, z) = ParseArgs<float, float, float>(cmd);
+            var (x, y, z) = cmd.ParseArgs<float, float, float>();
             Memory.ExecuteWithLock(() => SetPos(objectPtr, x, y, z));
         }
 
@@ -137,7 +142,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetDefaultHeading(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, heading) = ParseArgs<IntPtr, float>(cmd);
+            var (objectPtr, heading) = cmd.ParseArgs<IntPtr, float>();
             Memory.ExecuteWithLock(() => SetDefaultHeading(objectPtr, heading));
         }
 
@@ -145,7 +150,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetHeading(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, heading) = ParseArgs<IntPtr, float>(cmd);
+            var (objectPtr, heading) = cmd.ParseArgs<IntPtr, float>();
             Memory.ExecuteWithLock(() => SetHeading(objectPtr, heading));
         }
 
@@ -153,7 +158,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbTarget(string cmd)
         {
             CheckBeforeExecution(cmd);
-            (uint id, bool hard, bool soft) = ParseArgs<HexOrDecId, bool, bool>(cmd, (1, true), (2, true));
+            (uint id, bool hard, bool soft) = cmd.ParseArgs<HexOrDecId, bool, bool>((1, true), (2, true));
             IntPtr objectPtr = default;
 
             if (id != HexOrDecId.Default)
@@ -171,7 +176,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetModelStatus(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, modelStatus) = ParseArgs<IntPtr, int>(cmd);
+            var (objectPtr, modelStatus) = cmd.ParseArgs<IntPtr, int>();
             Memory.ExecuteWithLock(() => SetModelStatus(objectPtr, modelStatus));
         }
 
@@ -181,7 +186,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("ObjectScale") == false) return; // ignored
-            var (objectPtr, scale) = ParseArgs<IntPtr, float>(cmd);
+            var (objectPtr, scale) = cmd.ParseArgs<IntPtr, float>();
             Memory.ExecuteWithLock(() => SetObjectScale(objectPtr, scale));
         }
 
@@ -191,7 +196,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("ObjectScale") == false) return; // ignored
-            var (objectPtr, scaleX, scaleY, scaleZ) = ParseArgs<IntPtr, float, float?, float?>(cmd, (2, null), (3, null));
+            var (objectPtr, scaleX, scaleY, scaleZ) = cmd.ParseArgs<IntPtr, float, float?, float?>((2, null), (3, null));
             Memory.ExecuteWithLock(() => SetObjectScaleTemp(objectPtr, scaleX, scaleY ?? scaleX, scaleZ ?? scaleX));
         }
 
@@ -200,7 +205,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("Opacity") == false) return; // ignored
-            var (objectPtr, opacity) = ParseArgs<IntPtr, float>(cmd);
+            var (objectPtr, opacity) = cmd.ParseArgs<IntPtr, float>();
             Memory.ExecuteWithLock(() => SetOpacity(objectPtr, opacity));
         }
 
@@ -208,7 +213,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetStatusLoopVfx(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, vfxId) = ParseArgs<IntPtr, ushort>(cmd);
+            var (objectPtr, vfxId) = cmd.ParseArgs<IntPtr, ushort>();
             Memory.ExecuteWithLock(() => {
                 SetStatusLoopVfx(objectPtr, vfxId);
                 ReDraw(objectPtr);
@@ -219,7 +224,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbRedraw(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var objectPtr = ParseArgs<IntPtr>(cmd);
+            var objectPtr = cmd.ParseData<IntPtr>();
             Memory.ExecuteWithLock(() => ReDraw(objectPtr));
         }
 
@@ -227,7 +232,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetHighlightColor(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, color) = ParseArgs<IntPtr, byte>(cmd);
+            var (objectPtr, color) = cmd.ParseArgs<IntPtr, byte>();
             Memory.ExecuteWithLock(() => SetHighlightColor(objectPtr, color));
         }
 
@@ -235,7 +240,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbRemoveStatus(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var (objectPtr, statusId) = ParseArgs<IntPtr, ushort>(cmd);
+            var (objectPtr, statusId) = cmd.ParseArgs<IntPtr, ushort>();
             Memory.ExecuteWithLock(() => RemoveStatus(objectPtr, statusId));
         }
 

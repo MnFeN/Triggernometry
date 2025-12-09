@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using Triggernometry.FFXIV;
 using System.Text;
+using Triggernometry.Localization;
+using Triggernometry.Core;
 
 namespace Triggernometry.PluginBridges
 {
@@ -57,14 +59,14 @@ namespace Triggernometry.PluginBridges
                 if (_currentCombatantMemory == null) // OverlayPlugin is still scanning memory
                 {
                     Ready = false;
-                    RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
+                    RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
                         "internal/BridgeOverlay/moduleCombatantsNotReady",
                         "OverlayPlugin combatant memory is not ready. Could not retrieve entities via OverlayPlugin yet, will retry later."));
                     return;
                 }
                 if (Ready == false) // previously not ready (has generated the warning above)
                 {
-                    RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
+                    RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
                         "internal/BridgeOverlay/moduleCombatantsReady", 
                         "OverlayPlugin combatant memory is ready."));
                 }
@@ -84,7 +86,7 @@ namespace Triggernometry.PluginBridges
             }
             catch (Exception ex)
             {
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
                     I18n.Translate("internal/BridgeOverlay/failInitModule",
                     "OverlayPlugin {1} module initialization failed due to: {0}",
                     ex.ToString(), "Combatant")

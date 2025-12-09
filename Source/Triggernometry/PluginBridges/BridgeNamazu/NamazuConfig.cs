@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Triggernometry;
-using Triggernometry.Forms;
+using Triggernometry.UI.Forms;
 using Triggernometry.PluginBridges.BridgeNamazu.Modules;
-using static Triggernometry.Forms.GameConfigForm;
-using static Triggernometry.Utilities.DataStringHelper;
+using static Triggernometry.UI.Forms.GameConfigForm;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
+using Triggernometry.Expressions.String.Utils;
+using Triggernometry.Core;
 
 
 namespace Triggernometry.PluginBridges.BridgeNamazu
@@ -32,7 +33,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
         internal static void RunConfigForm()
         {
             GameConfigForm form = new GameConfigForm(Info);
-            form.Shown += (sender, e) => RealPlugin.plug.InvokeNamedCallback("command", "/e <se.9>");
+            form.Shown += (sender, e) => RealPlugin.Instance.InvokeNamedCallback("command", "/e <se.9>");
             //BijectDictionary<string, string> cbxItems;
             Option optionCtrl;
             //Label label;
@@ -142,7 +143,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
                 if (!optionTxt.Txt.Enabled) return;
                 try
                 {
-                    var value = ParseArgs<float>(optionTxt.Txt.Text);
+                    var value = optionTxt.Txt.Text.ParseData<float>();
                     var key = optionTxt.ConfigKey.Substring(7); // camera_xxx
                     BridgeNamazu.GetModule<CameraModule>().SetParam(key, value);
                 }

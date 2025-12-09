@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Triggernometry.Core;
+using Triggernometry.Localization;
 
 namespace Triggernometry.PluginBridges
 {
@@ -28,7 +30,7 @@ namespace Triggernometry.PluginBridges
             }
             catch (Exception ex)
             {
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
                     I18n.Translate("internal/BridgeOverlay/initfail", "OverlayPlugin initialization failed due to: {0}", ex.ToString())
                 );
                 Ready = false;

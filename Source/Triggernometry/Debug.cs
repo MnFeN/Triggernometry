@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using Triggernometry.Core;
 
 namespace Triggernometry
 {
@@ -15,24 +16,24 @@ namespace Triggernometry
         {
             string data = string.Join(Environment.NewLine, objs.Select(o => o?.ToString() ?? "(null)"));
             MessageBox.Show(data, "Debug", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Action.ClipboardSetText(data);
+            Core.ActionOld.ClipboardSetText(data);
         }
 
         public static void Log(params object[] objs)
         {
-            RealPlugin.plug.InvokeNamedCallback("command", $"/e \n" + string.Join(Environment.NewLine, objs.Select(o => o?.ToString() ?? "(null)")));
+            RealPlugin.Instance.InvokeNamedCallback("command", $"/e \n" + string.Join(Environment.NewLine, objs.Select(o => o?.ToString() ?? "(null)")));
         }
 
         public static object Show(this object o)
         {
             MessageBox.Show(o?.ToString() ?? "(null)", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Action.ClipboardSetText(o?.ToString() ?? "(null)");
+            Core.ActionOld.ClipboardSetText(o?.ToString() ?? "(null)");
             return o;
         }
 
         public static object Log(this object o)
         {
-            RealPlugin.plug.InvokeNamedCallback("command", "/e \n" + o?.ToString() ?? "(null)");
+            RealPlugin.Instance.InvokeNamedCallback("command", "/e \n" + o?.ToString() ?? "(null)");
             return o;
         }
 
@@ -158,37 +159,83 @@ namespace Triggernometry
             return (T)o.GetType().GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static).GetValue(o);
         }
 
-        public static string TimeIt(int times, System.Action testAction)
+        public static string[] TimeIt(int iterationsPerSample, int sampleCount, params System.Action[] testActions)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            List<double> msResults = new List<double>();
+            if (testActions == null)
+                throw new ArgumentNullException(nameof(testActions));
+            if (testActions.Length == 0)
+                throw new ArgumentException("At least one test action is required.", nameof(testActions));
+            if (iterationsPerSample <= 0)
+                throw new ArgumentOutOfRangeException(nameof(iterationsPerSample));
+            if (sampleCount <= 0)
+                throw new ArgumentOutOfRangeException(nameof(sampleCount));
 
-            for (int i = 0; i < times; i++)
+            int actionCount = testActions.Length;
+
+            // 为每个 Action 维护一组采样结果
+            var results = new List<double>[actionCount];
+            for (int i = 0; i < actionCount; i++)
             {
-                stopwatch.Restart();
-                testAction();
-                stopwatch.Stop();
-                msResults.Add(stopwatch.Elapsed.TotalMilliseconds);
+                results[i] = new List<double>(sampleCount);
             }
-            msResults = msResults.OrderBy(x => x).ToList();
-            double avr = msResults.Average();
-            double min = msResults[0];
-            double max = msResults[times - 1];
-            double med10 = msResults[(int)(times * 0.1)];
-            double med25 = msResults[(int)(times * 0.25)];
-            double med50 = msResults[(int)(times * 0.5)];
-            double med75 = msResults[(int)(times * 0.75)];
-            double med90 = msResults[(int)(times * 0.9)];
-            return $@"Avr: {avr:0.000} ms
-Min: {min:0.000} ms
-10%: {med10:0.000} ms
-25%: {med25:0.000} ms
-50%: {med50:0.000} ms
-75%: {med75:0.000} ms
-90%: {med90:0.000} ms
-Max: {max:0.000} ms";
-        }
 
+            var stopwatch = new Stopwatch();
+
+            // 交替执行 sample：
+            // 一个 sample 的流程是：
+            //   对每个 action：
+            //     连续执行 iterationsPerSample 次，记录本次 sample 的平均耗时
+            for (int sample = 0; sample < sampleCount; sample++)
+            {
+                for (int i = 0; i < actionCount; i++)
+                {
+                    System.Action action = testActions[i];
+                    if (action == null)
+                        throw new ArgumentException($"testActions[{i}] is null.", nameof(testActions));
+
+                    stopwatch.Restart();
+                    for (int j = 0; j < iterationsPerSample; j++)
+                    {
+                        action();
+                    }
+                    stopwatch.Stop();
+
+                    // 记录“每次调用”的平均耗时（毫秒）
+                    double perCallMs = stopwatch.Elapsed.TotalMilliseconds / iterationsPerSample;
+                    results[i].Add(perCallMs);
+                }
+            }
+
+            // 对每个 action 计算统计量并输出一段字符串
+            var output = new string[actionCount];
+            for (int i = 0; i < actionCount; i++)
+            {
+                var msResults = results[i];
+                msResults.Sort();
+
+                double avr = msResults.Average();
+                double min = msResults[0];
+                double max = msResults[msResults.Count - 1];
+
+                int n = msResults.Count;
+                double p10 = msResults[(int)(n * 0.1)];
+                double p25 = msResults[(int)(n * 0.25)];
+                double p50 = msResults[(int)(n * 0.5)];
+                double p75 = msResults[(int)(n * 0.75)];
+                double p90 = msResults[(int)(n * 0.9)];
+
+                output[i] = $@"Avr: {avr:0.000} ms
+Min: {min:0.000} ms
+10%: {p10:0.000} ms
+25%: {p25:0.000} ms
+50%: {p50:0.000} ms
+75%: {p75:0.000} ms
+90%: {p90:0.000} ms
+Max: {max:0.000} ms";
+            }
+
+            return output;
+        }
 
     }
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Triggernometry.Core;
 
 namespace Triggernometry.FFXIV.ExtractedCsv
 {
@@ -130,7 +131,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         private string GetFolderPath(string folder = null)
         {
             if (folder == null &&
-                (!RealPlugin.plug.cfg.Constants.TryGetValue("XivExtractedCsvPath", out var v) ||
+                (!RealPlugin.Instance.cfg.Constants.TryGetValue("XivExtractedCsvPath", out var v) ||
                  string.IsNullOrEmpty(folder = v.Value.Trim())))
             {
                 throw new InvalidOperationException("The current configuration does not contain valid key: 'XivExtractedCsvPath'.");

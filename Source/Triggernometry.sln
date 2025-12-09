@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriggernometryProxy", "Trig
 		{CA86FD05-FB30-4923-BB27-638CA9CBAFCD} = {CA86FD05-FB30-4923-BB27-638CA9CBAFCD}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scripts", "Scripts\Scripts.csproj", "{23C52BC4-D4BC-4F57-8D45-F987F7147CB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{AA747357-8F4A-4633-A631-B421CA05BC26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA747357-8F4A-4633-A631-B421CA05BC26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA747357-8F4A-4633-A631-B421CA05BC26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23C52BC4-D4BC-4F57-8D45-F987F7147CB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23C52BC4-D4BC-4F57-8D45-F987F7147CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23C52BC4-D4BC-4F57-8D45-F987F7147CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23C52BC4-D4BC-4F57-8D45-F987F7147CB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

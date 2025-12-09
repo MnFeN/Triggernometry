@@ -9,8 +9,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Triggernometry;
-using static Triggernometry.RealPlugin;
+using Triggernometry.Expressions.String.Utils;
+using Triggernometry.Localization;
+using static Triggernometry.Core.RealPlugin;
 
 // to-do: I18n
 
@@ -94,7 +95,7 @@ namespace Triggernometry.Utilities
             foreach (var action in _xivProcUpdatedActions.Values)
             {
                 try { action.Invoke(); }
-                catch (Exception ex) { plug.UnfilteredAddToLog(DebugLevelEnum.Error, ex.ToString()); }
+                catch (Exception ex) { Instance.UnfilteredAddToLog(DebugLevelEnum.Error, ex.ToString()); }
             }
         }
 
@@ -241,7 +242,7 @@ namespace Triggernometry.Utilities
             byte[] valueBytes = new byte[size];
             if (!ReadProcessMemory(procHandle, address, valueBytes, (uint)size, out int bytesRead) || bytesRead != size)
             {
-                plug.UnfilteredAddToLog(DebugLevelEnum.Error, "Failed to read memory or read incorrect number of bytes.");
+                Instance.UnfilteredAddToLog(DebugLevelEnum.Error, "Failed to read memory or read incorrect number of bytes.");
                 return default;
             }
             return BytesToStructure<T>(valueBytes);
@@ -252,7 +253,7 @@ namespace Triggernometry.Utilities
             byte[] valueBytes = StructureToBytes(newValue);
             if (!WriteProcessMemory(procHandle, address, valueBytes, (uint)valueBytes.Length, out int bytesWritten) || bytesWritten != valueBytes.Length)
             {
-                plug.UnfilteredAddToLog(DebugLevelEnum.Error, "Failed to write all bytes to memory.");
+                Instance.UnfilteredAddToLog(DebugLevelEnum.Error, "Failed to write all bytes to memory.");
             }
         }
 
@@ -323,12 +324,12 @@ namespace Triggernometry.Utilities
             Match match = pattern.PatternRegex.Match(dataStr);
             if (match.Success)
             {
-                plug.UnfilteredAddToLog(DebugLevelEnum.Verbose, $"Found address \"{pattern.RawPattern}\" in module data");
+                Instance.UnfilteredAddToLog(DebugLevelEnum.Verbose, $"Found address \"{pattern.RawPattern}\" in module data");
                 address = match.Index + pattern.Offset;
             }
             else
             {
-                plug.UnfilteredAddToLog(showWarning ? DebugLevelEnum.Warning : DebugLevelEnum.Verbose, $"Failed to find \"{pattern.RawPattern}\" in module data");
+                Instance.UnfilteredAddToLog(showWarning ? DebugLevelEnum.Warning : DebugLevelEnum.Verbose, $"Failed to find \"{pattern.RawPattern}\" in module data");
                 return null;
             }
             if (pattern.Jump)
@@ -372,7 +373,7 @@ namespace Triggernometry.Utilities
                 try
                 {
                     _offset1B = value;
-                    plug.UnfilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Memory/update1B",
+                    Instance.UnfilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Memory/update1B",
                         "Headmarker offset updated to ({0})", _offset1B));
                 }
                 finally { _semaphoreSlim1B.Release(); }
@@ -390,7 +391,7 @@ namespace Triggernometry.Utilities
             try { _offset1B = await Task.Run(() => GetHeadMarkerOffset()); }
             catch (Exception e)
             {
-                plug.UnfilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Memory/update1Berror",
+                Instance.UnfilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Memory/update1Berror",
                     "Update headmarker offset failed due to exception:\n\n{0}", e.ToString()));
             }
             finally { _semaphoreSlim1B.Release(); }
@@ -533,9 +534,9 @@ namespace Triggernometry.Utilities
                         { 
                             type = (WaymarkEnum)typeIdx;
                         }
-                        else throw Context.InvalidValueError("waymark", I18n.TranslateWord("index"), rawType, $"${{_waymark[{rawType}].{rawProp}}}");
+                        else throw ErrorHelper.InvalidValueError("waymark", I18n.TranslateWord("index"), rawType, $"${{_waymark[{rawType}].{rawProp}}}");
                     }
-                    else throw Context.InvalidValueError("waymark", I18n.TranslateWord("type"), rawType, $"${{_waymark[{rawType}].{rawProp}}}");
+                    else throw ErrorHelper.InvalidValueError("waymark", I18n.TranslateWord("type"), rawType, $"${{_waymark[{rawType}].{rawProp}}}");
                 }
                 Waymark wm = Read(type);
                 switch (rawProp.ToLower())
@@ -553,7 +554,7 @@ namespace Triggernometry.Utilities
                     case "xyz": case "pos":
                         return $"{wm.X3}, {wm.Y3}, {wm.Z3}";
                     default:
-                        throw Context.InvalidValueError("waymark", I18n.TranslateWord("property"), rawProp, $"${{_waymark[{rawType}].{rawProp}}}");
+                        throw ErrorHelper.InvalidValueError("waymark", I18n.TranslateWord("property"), rawProp, $"${{_waymark[{rawType}].{rawProp}}}");
                 }
             }
         }

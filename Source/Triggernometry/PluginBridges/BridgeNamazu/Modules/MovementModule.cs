@@ -1,5 +1,6 @@
 ﻿using System;
-using static Triggernometry.Utilities.DataStringHelper;
+using Triggernometry.Expressions.String.Utils;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -26,7 +27,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetMoveSpeedMultiplier(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var multiplier = ParseArgs<float>(cmd, 1.0f);
+            var multiplier = cmd.ParseDataOrDefault(1.0f);
             SetMoveSpeedMultiplier(multiplier);
         }
 
@@ -34,7 +35,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbSetJumpHeightMultiplier(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var multiplier = ParseArgs<float>(cmd, 1.0f);
+            var multiplier = cmd.ParseDataOrDefault(1.0f);
             SetJumpHeightMultiplier(multiplier);
         }
 

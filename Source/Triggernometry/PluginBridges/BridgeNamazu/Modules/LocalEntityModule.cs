@@ -6,9 +6,8 @@ using System.Threading;
 using Triggernometry;
 using Triggernometry.PluginBridges.BridgeNamazu;
 using Triggernometry.PluginBridges.BridgeNamazu.Modules;
-using Triggernometry.Utilities;
 using static Triggernometry.Debug;
-using static Triggernometry.Utilities.DataStringHelper;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 public class LocalEntityModule : ModuleBase
 {

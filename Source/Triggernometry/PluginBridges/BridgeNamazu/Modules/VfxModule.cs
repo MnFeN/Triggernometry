@@ -4,8 +4,10 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Triggernometry.Core;
+using Triggernometry.Expressions.String.Utils;
 using Triggernometry.PluginBridges.BridgeNamazu.Vfx;
-using static Triggernometry.Utilities.DataStringHelper;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -95,7 +97,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("ActorVfx") == false) return; // ignored
-            var (tgtAddress, vfxName, duration) = ParseArgs<IntPtr, string, double>(cmd, (2, -1.0)); // 默认不移除
+            var (tgtAddress, vfxName, duration) = cmd.ParseArgs<IntPtr, string, double>((2, -1.0)); // 默认不移除
             CheckIfVfxNameTooShort(vfxName, "LockOn");
             IntPtr vfxPtr = LockOnCreate(tgtAddress, vfxName).Ptr;
             ScheduleActorVfxRemove(vfxPtr, duration);
@@ -107,7 +109,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("ActorVfx") == false) return; // ignored
-            var (srcAddress, tgtAddress, vfxName, duration) = ParseArgs<IntPtr, IntPtr, string, double>(cmd, (3, 3.0)); // 默认持续时间 3 秒
+            var (srcAddress, tgtAddress, vfxName, duration) = cmd.ParseArgs<IntPtr, IntPtr, string, double>((3, 3.0)); // 默认持续时间 3 秒
             CheckIfVfxNameTooShort(vfxName, "Channeling");
             IntPtr vfxPtr = ChannelingCreate(srcAddress, tgtAddress, vfxName).Ptr;
             ScheduleActorVfxRemove(vfxPtr, duration);
@@ -119,7 +121,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("ActorVfx") == false) return; // ignored
-            var (srcAddress, vfxName, duration) = ParseArgs<IntPtr, string, double>(cmd, (2, 3.0)); // 默认持续时间 3 秒
+            var (srcAddress, vfxName, duration) = cmd.ParseArgs<IntPtr, string, double>((2, 3.0)); // 默认持续时间 3 秒
             CheckIfVfxNameTooShort(vfxName, "CastVfx");
             IntPtr vfxPtr = CastVfxCreate(srcAddress, vfxName).Ptr;
             ScheduleActorVfxRemove(vfxPtr, duration);
@@ -131,7 +133,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("ActorVfx") == false) return; // ignored
-            var (srcAddress, tgtAddress, vfxName, duration) = ParseArgs<IntPtr, IntPtr, string, double>(cmd, (3, 3.0)); // 默认持续时间 3 秒
+            var (srcAddress, tgtAddress, vfxName, duration) = cmd.ParseArgs<IntPtr, IntPtr, string, double>((3, 3.0)); // 默认持续时间 3 秒
             CheckIfVfxNameTooShort(vfxName, "ActorVfx");
             IntPtr vfxPtr = ActorVfxCreate(srcAddress, tgtAddress, vfxName).Ptr;
             ScheduleActorVfxRemove(vfxPtr, duration);
@@ -222,8 +224,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckBeforeExecution(rawArgs);
             if (GetConfig<bool>("StaticVfx") == false) return; // ignored
             var (vfxName, t, x, y, z, h, scaleX, rawScaleY, rawScaleZ, r, g, b, a) 
-                = ParseArgs<string, float, float, float, float, float, float, float?, float?, float, float, float, float>(
-                    rawArgs, (6, 1), (7, null), (8, null), (9, 1), (10, 1), (11, 1), (12, 1));
+                = rawArgs.ParseArgs<string, float, float, float, float, float, float, float?, float?, float, float, float, float>(
+                    (6, 1), (7, null), (8, null), (9, 1), (10, 1), (11, 1), (12, 1));
 
             CheckIfVfxNameTooShort(vfxName, "StaticVfx");
             var vfxPath = nameFormatTemplate == null ? vfxName : string.Format(nameFormatTemplate, vfxName);
@@ -265,7 +267,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     catch
                     {
                         string hexDump = string.Join(" ", staticVfxCreateBytesDebug.Select(b => $"{b:X2}"));
-                        RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, $"[Debug] 反馈错误请复制这几条完整信息：StaticVfxCreate {hexDump}");
+                        RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, $"[Debug] 反馈错误请复制这几条完整信息：StaticVfxCreate {hexDump}");
                         throw;
                     }
                 }

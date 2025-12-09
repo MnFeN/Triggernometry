@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using static Triggernometry.Utilities.DataStringHelper;
+using Triggernometry.Expressions.String.Utils;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -26,7 +27,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("InstanceAfkTimer") == false) return; // ignored
-            var shouldDisable = ParseArgs<bool>(cmd, true);
+            var shouldDisable = cmd.ParseDataOrDefault(true);
             DisableInstanceTimer(shouldDisable);
         }
 

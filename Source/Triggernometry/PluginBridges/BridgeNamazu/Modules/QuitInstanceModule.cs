@@ -1,5 +1,6 @@
 ﻿using System;
-using static Triggernometry.Utilities.DataStringHelper;
+using Triggernometry.Expressions.String.Utils;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -19,7 +20,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbQuitInstance(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var shouldForceQuit = ParseArgs<bool>(cmd, false);
+            var shouldForceQuit = cmd.ParseDataOrDefault(false);
             Memory.ExecuteWithLock(() => QuitInstance(shouldForceQuit));
         }
 

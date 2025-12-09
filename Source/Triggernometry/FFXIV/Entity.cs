@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Text.RegularExpressions;
-using Triggernometry;
+using Triggernometry.Expressions.Maths;
+using Triggernometry.Expressions.String.Utils;
 using Triggernometry.PluginBridges;
 using Triggernometry.Utilities;
 
@@ -105,6 +104,12 @@ namespace Triggernometry.FFXIV
 
         #region Get Entities
 
+        public static IEnumerable<Entity> GetEntities(Func<Entity, bool> filter)
+            => GetEntities().Where(filter);
+
+        public static IEnumerable<Entity> GetEntities(Func<Entity, bool> filter, bool useOverlay)
+            => GetEntities(useOverlay).Where(filter);
+
         public static IEnumerable<Entity> GetEntities()
         {
             var result = ModuleCombatants.InternalGetEntities();
@@ -154,115 +159,9 @@ namespace Triggernometry.FFXIV
         public static string MyName => MySnapshot.Name;
         public static IntPtr MyAddress => MySnapshot.Address;
 
-        private static readonly Regex entityNameGuess = new Regex("^[^<>()=&|!,]+$", RegexOptions.Compiled);
-
-        // to-do: sortings
-        public static IEnumerable<Entity> GetFilteredEntities(string expr)
-        {
-            expr = expr.Trim();
-            // only given a single id (10123456)
-            if (uint.TryParse(expr, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint id))
-            {
-                var entity = GetEntityByID(id);
-                return entity != null ? new Entity[] { entity } : new Entity[0];
-            }
-            // only given a single name
-            if (!ValidEntityPropNames.Contains(expr) && entityNameGuess.IsMatch(expr))
-            {
-                return GetEntities().Where(e => e.Name == expr);
-            }
-            // given an expression (x > 100 && y < 100 && type = 1)
-            List<Func<Entity, string>> funcTokens = EntityLexer(expr);
-            return GetEntities().Where(entity => {
-                var tokens = funcTokens.Select(func => func(entity)).ToList();
-                var result = MathParser.MathParserLogic(tokens);
-                return !MathParser.IsZero(result);
-            });
-        }
-
-        public static IEnumerable<Entity> GetFilteredEntities(string expr, bool useOverlay)
-        {
-            // only given a single id (10123456)
-            if (uint.TryParse(expr, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint id))
-            {
-                var entity = GetEntityByID(id, useOverlay);
-                return entity != null ? new Entity[] { entity } : new Entity[0];
-            }
-            // only given a single name
-            if (entityNameGuess.IsMatch(expr))
-            {
-                var entities = GetEntities(useOverlay).Where(e => e.Name == expr.Trim());
-                if (entities.Count() >= 1) return entities;
-            }
-            // given an expression (x > 100 && y < 100 && type = 1)
-            List<Func<Entity, string>> funcTokens = EntityLexer(expr);
-            return GetEntities(useOverlay).Where(entity => {
-                var tokens = funcTokens.Select(func => func(entity)).ToList();
-                var result = MathParser.MathParserLogic(tokens);
-                return !MathParser.IsZero(result);
-            });
-        }
-
-        private static List<Func<Entity, string>> EntityLexer(string expr)
-        {
-            var rawTokens = MathParser.Lexer(expr);
-            Entity dummy = new Entity();
-            var funcTokens = new List<Func<Entity, string>>();
-            for (int i = 0; i < rawTokens.Count; i++)
-            {
-                var token = rawTokens[i];
-                // regular entity/job properties
-                if (dummy.TryQueryProperty(token, null, out var result))
-                {
-                    // disambiguation: "distance" is also a numeric function
-                    if (token.Equals("distance", StringComparison.InvariantCultureIgnoreCase)
-                        && i + 1 < rawTokens.Count && rawTokens[i + 1] == "(")
-                    {
-                        funcTokens.Add(e => token);
-                    }
-                    else
-                    {
-                        funcTokens.Add(e => e.QueryProperty(token, null));
-                    }
-                }
-                // entity methods (with args)
-                else if (ValidEntityMethodNames.Contains(token) && i + 1 < rawTokens.Count && rawTokens[i + 1] == "(")
-                {
-                    int depth = 1;
-                    bool paired = false;
-                    for (int j = i + 2; j < rawTokens.Count; j++)
-                    {
-                        if (rawTokens[j] == "(")
-                            depth++;
-                        else if (rawTokens[j] == ")")
-                        {
-                            depth--;
-                            if (depth == 0)
-                            {
-                                var methodArgs = rawTokens.GetRange(i + 2, j - i - 2); // between (...)
-                                funcTokens.Add(e => e.QueryProperty(token, methodArgs).Replace(" ", "")); // to-do: spaces in numeric expressions
-                                i = j;
-                                paired = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!paired) funcTokens.Add(e => token);
-                }
-                // normal numeric tokens
-                else
-                {
-                    funcTokens.Add(e => token);
-                }
-            }
-            return funcTokens;
-        }
-
         #endregion Get Entities
 
-        #region Query Properties
-
-        private readonly static Dictionary<string, Func<Entity, object>> _propAccessors
+        internal readonly static Dictionary<string, Func<Entity, object>> _propAccessors
             = new Dictionary<string, Func<Entity, object>>(StringComparer.OrdinalIgnoreCase)
         {
             { "Exist",          e => e.Exist },
@@ -271,8 +170,8 @@ namespace Triggernometry.FFXIV
             { "HexAddress",     e => e.HexAddress },
             { "Name",           e => e.Name },
             { "ID",             e => e.HexID },
-            { "IsSelf",         e => e.ID == GetMyself().ID },
-            { "IsPlayer",       e => e.ID == GetMyself().ID },
+            { "IsSelf",         e => e.ID == Entity.GetMyself().ID },
+            { "IsPlayer",       e => e.ID == Entity.GetMyself().ID },
             { "BNpcID",         e => e.BNpcID },
             { "OwnerID",        e => e.OwnerHexID },
             { "TypeName",       e => e.Type },
@@ -348,52 +247,29 @@ namespace Triggernometry.FFXIV
             { "MarkerID",       e => (int)Memory.TargetMarkerOnEntity(e.ID) },
         };
 
-        /// <summary>
-        /// Note: <br />
-        /// The given <see cref="IEnumerable"/>&lt;<see cref="string"/>&gt; args should not be null. 
-        /// </summary>
-        private readonly static Dictionary<string, Func<Entity, IEnumerable<string>, object>> _methodAccessors
-            = new Dictionary<string, Func<Entity, IEnumerable<string>, object>>(StringComparer.OrdinalIgnoreCase)
-        {
-            { "HasStatus",      (e, args) => {
-                if (args.Count() != 1) throw ArgCountError("HasStatus", "1", args);
-                var statusID = (ushort)MathParser.Parse(args.First());
-                return e.Statuses.Any(s => s.StatusID == statusID);
-            }},
-            { "StatusTimer",    (e, args) => {
-                if (args.Count() != 1) throw ArgCountError("StatusTimer", "1", args);
-                var statusID = (ushort)MathParser.Parse(args.First());
-                return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Timer ?? -1f;
-            }},
-            { "StatusStack",    (e, args) => {
-                if (args.Count() != 1) throw ArgCountError("StatusStack", "1", args);
-                var statusID = (ushort)MathParser.Parse(args.First());
-                return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Stack ?? -1;
-            }},
-            { "PercentHP",      (e, args) => PercentXP("PercentHP", e.CurrentHP, e.MaxHP, args)},
-            { "PercentMP",      (e, args) => PercentXP("PercentMP", e.CurrentMP, e.MaxMP, args)},
-            { "PercentCP",      (e, args) => PercentXP("PercentCP", e.CurrentCP, e.MaxCP, args)},
-            { "PercentGP",      (e, args) => PercentXP("PercentGP", e.CurrentGP, e.MaxGP, args)},
-        };
-
-        private static Exception ArgCountError(string methodName, string requiredArgCount, IEnumerable<string> args)
-        {
-            string expr = $"_entity.{methodName}({string.Join(", ", args)})";
-            return Context.ArgCountError(methodName, requiredArgCount, args.Count(), expr);
-        }
-
-        private static string PercentXP(string name, float current, float max, IEnumerable<string> args)
-        {
-            var list = args as IList<string> ?? args.ToList();
-            if (list.Count > 1)
-                throw ArgCountError(name, "0-1", list);
-
-            var percentage = max == 0 ? 0f : (100f * current / max);
-            var round = list.Count == 0 ? -1 : (int)MathParser.Parse(list[0]);
-            return round < 0
-                ? percentage.ToString(CultureInfo.InvariantCulture)
-                : percentage.ToString("F" + round, CultureInfo.InvariantCulture);
-        }
+        internal readonly static Dictionary<string, Func<Entity, string[], object>> _methodAccessors
+            = new Dictionary<string, Func<Entity, string[], object>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["HasStatus"] = (e, args) => {
+                    CheckArgCount("1", "HasStatus", args);
+                    var statusID = (ushort)MathParser.Parse(args[0]);
+                    return e.Statuses.Any(s => s.StatusID == statusID);
+                },
+                ["StatusTimer"] = (e, args) => {
+                    CheckArgCount("1", "StatusTimer", args);
+                    var statusID = (ushort)MathParser.Parse(args[0]);
+                    return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Timer ?? -1f;
+                },
+                ["StatusStack"] = (e, args) => {
+                    CheckArgCount("1", "StatusStack", args);
+                    var statusID = (ushort)MathParser.Parse(args[0]);
+                    return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Stack ?? -1;
+                },
+                ["PercentHP"] = (e, args) => PercentXP("PercentHP", e.CurrentHP, e.MaxHP, args),
+                ["PercentMP"] = (e, args) => PercentXP("PercentMP", e.CurrentMP, e.MaxMP, args),
+                ["PercentCP"] = (e, args) => PercentXP("PercentCP", e.CurrentCP, e.MaxCP, args),
+                ["PercentGP"] = (e, args) => PercentXP("PercentGP", e.CurrentGP, e.MaxGP, args),
+            };
 
         /// <summary>
         /// All "property" names that could be used to query a "property" (with no arguments). <br />
@@ -424,87 +300,20 @@ namespace Triggernometry.FFXIV
                 "Order", "StatusIDs", "Marker", "MarkerID"
             }, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
 
-        /// <summary> Try to query a single property/method from the entity by separated property/method name and arguments. </summary>
-        /// <param name="propertyName">Property/method name. </param>
-        /// <param name="args">Null for properties, and the separated arguments for methods. </param>
-        /// <param name="result">The value as data string (<see cref="ToDataStringExtension.ToDataString(object)"/>).</param>
-        /// <returns> True if the the property/method name is valid and outputs a result.</returns>
-        public bool TryQueryProperty(string propertyName, IEnumerable<string> args, out string result)
+        private static string PercentXP(string propName, float current, float max, string[] args)
         {
-            object value;
-            int argCount = args?.Count() ?? 0;
-            if (args?.Any() == true && _methodAccessors.TryGetValue(propertyName, out var methodAccessor))
-            {
-                value = methodAccessor(this, args);
-            }
-            else if (_propAccessors.TryGetValue(propertyName, out var propAccessor))
-            {
-                value = propAccessor(this);
-            }
-            else if (this.Job.TryQueryProperty(propertyName, out string jobProp)) // Job, JobID, JobEN, Role, etc.
-            {
-                value = jobProp;
-            }
-            else
-            {
-                result = null;
-                return false;
-            }
-            result = value.ToDataString();
-            return true;
+            CheckArgCount("0-1", propName, args);
+
+            var percentage = max == 0 ? 0f : (100f * current / max);
+            var round = args.Length == 0 ? -1 : (int)MathParser.Parse(args[0]);
+            return round < 0
+                ? percentage.ToString(CultureInfo.InvariantCulture)
+                : percentage.ToString("F" + round, CultureInfo.InvariantCulture);
         }
 
-        /// <summary>
-        /// Query a single property/method from the entity by separated property/method name and arguments. <br />
-        /// </summary>
-        /// <param name="propertyName">Property/method name. </param>
-        /// <param name="args">Null for properties, and the separated arguments for methods. </param>
-        /// <returns>
-        /// The value as data string (<see cref="ToDataStringExtension.ToDataString(object)"/>). </returns>
-        /// <exception cref="ArgumentException">The property/method name is invalid.</exception>
-        public string QueryProperty(string propertyName, IEnumerable<string> args)
-        {
-            if (TryQueryProperty(propertyName, args, out string result))
-                return result;
-            var argsExpr = args != null ? $"({string.Join(", ", args)})" : "";
-            throw new ArgumentException(I18n.Translate("internal/FFXIV/Entity/wrongProp",
-                "({0}) is not a valid entity property expression. Full expression: {1}",
-                propertyName, $"Entity.{propertyName}{argsExpr}"));
-        }
+        private static void CheckArgCount(string expectedCount, string methodName, string[] args)
+            => ArgHelper.CheckArgCount(expectedCount, args?.Count() ?? 0, methodName);
 
-        /// <summary> Query a single property/method from the entity by a raw expression. </summary>
-        /// <param name="rawExpression">
-        /// Could be a property name, or a method with arguments. <br /> 
-        /// e.g. <c>Name</c> <c>HasStatus(0x32)</c>
-        /// </param>
-        /// <exception cref="ArgumentException">Any property/method name is invalid.</exception>
-        public string QueryProperty(string rawExpression)
-        {
-            var propName = rawExpression;
-            string[] args = null;
-            var leftIdx = rawExpression.IndexOf('(');
-            if (leftIdx > 0 && propName.EndsWith(")"))
-            {
-                propName = rawExpression.Substring(0, leftIdx);
-                var rawArgs = rawExpression.Substring(leftIdx + 1, rawExpression.Length - leftIdx - 2);
-                args = Context.SplitArguments(rawArgs);
-            }
-            return QueryProperty(propName, args);
-        }
-
-        /// <summary> Query all given properties/methods from the entity by a raw expression. </summary>
-        /// <param name="rawExpression">
-        /// Multiple raw expressions separated with comma. <br /> 
-        /// e.g. <c>X, Y, HasStatus(0x32), Heading</c>
-        /// </param>
-        /// <exception cref="ArgumentException">Any property/method name is invalid.</exception>
-        public IEnumerable<string> QueryProperties(string rawExpression)
-        {
-            var rawProps = Context.SplitArguments(rawExpression);
-            return rawProps.Select(QueryProperty);
-        }
-
-        #endregion Query Properties
     }
 
     #region Enums

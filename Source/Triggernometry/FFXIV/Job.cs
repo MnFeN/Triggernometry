@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using Triggernometry.Utilities;
+using Triggernometry.Expressions.String.Utils;
+using Triggernometry.Localization;
 
 namespace Triggernometry.FFXIV
 {
@@ -156,7 +157,7 @@ namespace Triggernometry.FFXIV
         /// <returns>True if the property is successfully found.</returns>
         public bool TryQueryProperty(string propName, out string result)
         {
-            if (_propAccessors.TryGetValue(propName, out Func<Job, object> accessor))
+            if (TryGetAccessor(propName, out Func<Job, object> accessor))
             {
                 result = accessor(this).ToDataString();
                 return true;
@@ -167,6 +168,9 @@ namespace Triggernometry.FFXIV
                 return false;
             }
         }
+
+        public static bool TryGetAccessor(string propName, out Func<Job, object> accessor)
+            => _propAccessors.TryGetValue(propName, out accessor);
 
     }
 }

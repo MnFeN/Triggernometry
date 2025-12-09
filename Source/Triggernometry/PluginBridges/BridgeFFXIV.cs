@@ -6,8 +6,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Triggernometry.Variables;
 using Triggernometry.FFXIV;
+using Triggernometry.Localization;
+using Triggernometry.Core.Variables;
+using Triggernometry.Core;
 
 namespace Triggernometry.PluginBridges
 {
@@ -17,7 +19,7 @@ namespace Triggernometry.PluginBridges
 
         private const string ActPluginName = "FFXIV_ACT_Plugin.dll";
         private const string ActPluginType = "FFXIV_ACT_Plugin.FFXIV_ACT_Plugin";
-        public static Configuration cfg = RealPlugin.plug.cfg;
+        public static Configuration cfg = RealPlugin.Instance.cfg;
 
         internal delegate void LoggingDelegate(RealPlugin.DebugLevelEnum level, string text);
         internal static event LoggingDelegate OnLogEvent;
@@ -614,7 +616,7 @@ namespace Triggernometry.PluginBridges
                 {
                     foreach (dynamic cmx in cd.Combatants)
                     {
-                        if (String.Compare(ConvertToHex(cmx.ID), id, true) == 0)
+                        if (string.Compare(ConvertToHex(cmx.ID), id, true) == 0)
                         {
                             int nump = 0;
                             try
@@ -894,7 +896,7 @@ namespace Triggernometry.PluginBridges
             UpdateState();
             foreach (VariableDictionary vc in PartyMembers)
             {
-                if (String.Compare(vc.GetValue("id").ToString(), id, true) == 0)
+                if (string.Compare(vc.GetValue("id").ToString(), id, true) == 0)
                 {
                     return vc;
                 }

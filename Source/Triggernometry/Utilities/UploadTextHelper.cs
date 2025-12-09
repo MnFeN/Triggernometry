@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Triggernometry.Core;
 
 namespace Triggernometry.Utilities
 {
@@ -84,7 +85,7 @@ namespace Triggernometry.Utilities
             } 
             catch (Exception ex)
             {
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, ex.Message);
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, ex.Message);
             }
         }
 
@@ -96,14 +97,14 @@ namespace Triggernometry.Utilities
             }
             catch (Exception ex)
             {
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, ex.Message);
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, ex.Message);
             }
         }
 
         /// <summary> 从随机 Guid <see cref="Configuration.Id" /> 生成的四字随机名，以 3500 个常用汉字编码。</summary>
         public static string GetFakeName()
         {
-            var id = RealPlugin.plug.cfg.Id;
+            var id = RealPlugin.Instance.cfg.Id;
             if (id == Guid.Empty)
                 return "？？？？";
 

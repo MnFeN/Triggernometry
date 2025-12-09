@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
-using static Triggernometry.Utilities.DataStringHelper;
+using Triggernometry.Expressions.String.Utils;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -34,8 +35,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(command);
             var (actionType, actionId, targetId, mode)
-                = ParseArgs<ActionType, uint, uint, UseActionMode>(
-                    command,
+                = command.ParseArgs<ActionType, uint, uint, UseActionMode>(
                     (2, 0xE0000000),
                     (3, UseActionMode.None)
                 );
@@ -60,7 +60,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(command);
             var (actionType, actionId, x, y, z, extraParam)
-                = ParseArgs<ActionType, uint, float, float, float, uint>(command,
+                = command.ParseArgs<ActionType, uint, float, float, float, uint>(
                     (1, 0xE0000000),
                     (2, 0), (3, 0), (4, 0),
                     (5, 0)

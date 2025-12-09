@@ -4,8 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using Triggernometry.Utilities;
-using Triggernometry.Variables;
+using Triggernometry.Core;
+using Triggernometry.Core.Scripting;
+using Triggernometry.Core.Variables;
+using Triggernometry.Expressions.String.Utils;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -36,12 +38,12 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         } 
 
         public void NamazuLog(string msg) => BridgeNamazu.Log(msg);
-        public void TriggerLog(RealPlugin.DebugLevelEnum level, string msg) => RealPlugin.plug.UnfilteredAddToLog(level, msg);
-        public void InfoLog(string msg) => RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Info, msg);
-        public void CustomLog(string msg) => RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Custom, msg);
-        public void Custom2Log(string msg) => RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Custom2, msg);
-        public void WarningLog(string msg) => RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, msg);
-        public void ErrorLog(string msg) => RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, msg);
+        public void TriggerLog(RealPlugin.DebugLevelEnum level, string msg) => RealPlugin.Instance.UnfilteredAddToLog(level, msg);
+        public void InfoLog(string msg) => RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Info, msg);
+        public void CustomLog(string msg) => RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Custom, msg);
+        public void Custom2Log(string msg) => RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Custom2, msg);
+        public void WarningLog(string msg) => RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, msg);
+        public void ErrorLog(string msg) => RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, msg);
 
         public void Sideload(params string[] methodTags)
         {
@@ -52,7 +54,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public void RegisterCallback(string callBackName, Action<string> callBackAction)
         {
-            Triggernometry.RealPlugin.plug.RegisterNamedCallback(
+            Core.RealPlugin.Instance.RegisterNamedCallback(
                 callBackName,
                 new Action<object, string>((_, cmd) => callBackAction(cmd)),
                 null,
@@ -105,7 +107,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                         ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
                     }
                 });
-                RealPlugin.plug.RegisterNamedCallback(attr.Name, callback, null, false, $"[鲶鱼精邮差扩展] {GetType().Name}");
+                RealPlugin.Instance.RegisterNamedCallback(attr.Name, callback, null, false, $"[鲶鱼精邮差扩展] {GetType().Name}");
             }
         }
 
@@ -119,7 +121,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     continue;
                 }
 
-                var storage = RealPlugin.plug.scriptingStorage;
+                var storage = RealPlugin.Instance.scriptingStorage;
                 lock (storage)
                 {
                     try
@@ -160,7 +162,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var cfg = GetConfigDict();
             if (cfg.Values.TryGetValue(key, out var rawValue))
             {
-                return rawValue.ToString().FromDataString<T>();
+                return rawValue.ToString().ParseData<T>();
             }
             cfg.SetValue(key, defaultValue.ToDataString());
             return defaultValue;
@@ -171,7 +173,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var cfg = GetConfigDict();
             if (cfg.Values.TryGetValue(key, out var rawValue))
             {
-                return rawValue.ToString().FromDataString<T>();
+                return rawValue.ToString().ParseData<T>();
             }
             return null;
         }
@@ -188,12 +190,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public static VariableDictionary GetConfigDict()
         {
-            var cfg = Triggernometry.Interpreter.StaticHelpers.GetDictVariable(true, "PNE_cfg");
-            if (cfg == null)
-            {
-                cfg = new VariableDictionary();
-                Triggernometry.Interpreter.StaticHelpers.SetDictVariable(true, "PNE_cfg", cfg);
-            }
+            var store = RealPlugin.Instance.cfg.PersistentVariables;
+            var cfg = store.GetDictVariable("PNE_cfg", true);
             return cfg;
         }
 

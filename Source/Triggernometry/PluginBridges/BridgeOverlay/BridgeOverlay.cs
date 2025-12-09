@@ -6,7 +6,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Triggernometry;
+using Triggernometry.Core;
+using Triggernometry.Localization;
 using Triggernometry.Utilities;
 
 namespace Triggernometry.PluginBridges
@@ -32,7 +33,7 @@ namespace Triggernometry.PluginBridges
             object op = WrappedPlugin?.pluginObj;
             if (op == null)
             { 
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, "OverlayPlugin not found");
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, "OverlayPlugin not found");
                 Ready = false;
                 return;
             }
@@ -48,7 +49,7 @@ namespace Triggernometry.PluginBridges
             }
             catch (Exception ex)
             {
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, 
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, 
                     I18n.Translate("internal/BridgeOverlay/failInit", 
                     "OverlayPlugin-related initialization failed due to: {0}", ex.ToString())
                 );

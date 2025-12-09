@@ -101,7 +101,7 @@ namespace Triggernometry.Utilities
                 GetWindowText(hWnd, builder, len + 1);
                 return builder.ToString();
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         public static void SendMouse(MouseEventFlags flags, MouseEventDataXButtons buttons, int x, int y)

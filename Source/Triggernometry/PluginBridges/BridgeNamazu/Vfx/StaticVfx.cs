@@ -5,8 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Triggernometry.PluginBridges.BridgeNamazu.Modules;
-using Triggernometry.Utilities;
-using Triggernometry.Utilities.Math;
+using Triggernometry.Utilities.Maths;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
 {

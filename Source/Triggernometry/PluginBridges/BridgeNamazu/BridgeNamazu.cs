@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using Triggernometry.Forms;
+using Triggernometry.UI.Forms;
 using Triggernometry.PluginBridges.BridgeNamazu.Modules;
+using Triggernometry.Core;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu
 {
@@ -31,7 +32,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
         {
             if (!RealPlugin.IsAdmin())
             {
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
                     "[鲶鱼精邮差扩展] 警告：ACT 未以管理员权限运行。如果遇到游戏崩溃，请尝试右键 ACT 程序 - 属性 - 兼容性，开启管理员身份运行。");
             }
         }
@@ -68,7 +69,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
                     }
                     catch (Exception ex)
                     {
-                        RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
+                        RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
                             $"[鲶鱼精邮差扩展] 模块 {type.Name} 创建失败：{ex.Message}");
                     }
                 }
@@ -82,17 +83,17 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
                 {
                     var module = GetModule(type);
                     module.Scan();
-                    RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Custom,
+                    RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Custom,
                         $"[鲶鱼精邮差扩展] 已初始化模块 {module.GetType().Name}。");
                 }
                 catch (Exception ex)
                 { 
-                    RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
+                    RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
                         $"[鲶鱼精邮差扩展] 模块 {type.Name} 初始化失败：{ex.Message}");
                 }
             }
             // 生成日志 以供后续脚本添加回调
-            RealPlugin.plug.LogLineQueuer("PNE_ModulesInited", "", LogEvent.SourceEnum.Log);
+            RealPlugin.Instance.LogLineQueuer("PNE_ModulesInited", "", LogEvent.SourceEnum.Log);
         }
 
         /// <summary>
@@ -111,7 +112,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
             foreach (var tag in methodTags)
             {
                 // 生成日志
-                RealPlugin.plug.LogLineQueuer($"PNE_ModulesRegistered:{tag}", RealPlugin.plug.currentZone, LogEvent.SourceEnum.Log);
+                RealPlugin.Instance.LogLineQueuer($"PNE_ModulesRegistered:{tag}", RealPlugin.Instance.currentZone, LogEvent.SourceEnum.Log);
             }
         }
 

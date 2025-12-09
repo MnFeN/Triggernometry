@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Triggernometry.Utilities;
 
 namespace Triggernometry.FFXIV.ExtractedCsv
 {
@@ -44,7 +43,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         {
             var tempTable = new Dictionary<RowIndexKey, CsvRow>();
             // 读取整个 CSV 文件
-            var lines = Triggernometry.Utilities.CsvHelper.ReadCsv(filePath);
+            var lines = Common.CsvHelper.ReadCsv(filePath);
             if (lines.Count < 3)
                 throw new InvalidDataException($"CSV 文件 {filePath} 行数 ({lines.Count}) 不足，无法解析数据。");
             if (lines[0].Length < 1)

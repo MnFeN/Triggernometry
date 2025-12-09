@@ -8,11 +8,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Triggernometry;
+using Triggernometry.Expressions.String.Models;
+using Triggernometry.Expressions.String.Utils;
 using Triggernometry.PluginBridges.BridgeNamazu.Vfx;
-using Triggernometry.Utilities;
-using Triggernometry.Utilities.Math;
+using Triggernometry.Utilities.Maths;
 using static System.Math;
-using static Triggernometry.Utilities.DataStringHelper;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -60,7 +61,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             // 判断是否需要延迟执行
             double delay;
             if (data.TryGet("Delay", out string rawDelay) &&
-                (delay = rawDelay.FromDataString<double>()) > 0)
+                (delay = rawDelay.ParseData<double>()) > 0)
             {
                 string tag = ParseTag(data);
                 var cts = new CancellationTokenSource();
@@ -132,7 +133,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             // 提取共通参数
             string action = data.TryGet("Action", out action) ? action.Trim() : null;
-            bool shouldLog = data.TryGet("Log", out string rawLog) && rawLog.FromDataString<bool>(); // default false
+            bool shouldLog = data.TryGet("Log", out string rawLog) && rawLog.ParseData<bool>(); // default false
             switch (action?.ToUpper())
             {
                 case "CREATE":
@@ -208,7 +209,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             _ = data.TryGet(out string rawTime, "Time", "t");
             if (rawTime != null)
             {
-                vfx.ScheduleRemove(rawTime.FromDataString<double>());
+                vfx.ScheduleRemove(rawTime.ParseData<double>());
             }
             // 额外的修饰（目前用于延迟执行额外操作）
             if (createModifier != null)
@@ -226,8 +227,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             TryParseCenter(data, out XIVCoord center);
             TryParseFlip(data, out bool? keepX, out bool? keepY);
             var colorModifier = ColorModifier(data, true);
-            bool shouldUpdate = !data.TryGet("Update", out var rawUpdate) || rawUpdate.FromDataString<bool>(); // default true
-            var t = data.TryGet(out string rawTime, "Time", "t") ? rawTime.FromDataString<double>() : 0.0;
+            bool shouldUpdate = !data.TryGet("Update", out var rawUpdate) || rawUpdate.ParseData<bool>(); // default true
+            var t = data.TryGet(out string rawTime, "Time", "t") ? rawTime.ParseData<double>() : 0.0;
             string tag = ParseTag(data);
 
             // 等腰直角三角形 Omen，顶点位于直角，朝向直角开口方向，斜边长 1
@@ -236,7 +237,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             // 解析顶点坐标，格式为 "x1, y1; x2, y2; ..."，并三角剖分
             var points = data.Get("Points").Split(';')
                 .Where(s => !string.IsNullOrWhiteSpace(s))
-                .Select(s => ParseArgs<float, float>(s))
+                .Select(s => s.ParseArgs<float, float>())
                 .Select(tuple => new Vector2(tuple.Item1, tuple.Item2));
             var isoscelesTriangles = new Polygon(points).Triangulate()
                 .SelectMany(triangle => triangle.IsoscelesTriangulate());
@@ -278,17 +279,17 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 throw new ArgumentException($"[PictoACT] 不支持的 VfxType: {vfxType}");
 
             // 地火特有的参数
-            var n = data.Get("n", "count").FromDataString<int>();
+            var n = data.Get("n", "count").ParseData<int>();
             var dPos = data.TryGet("dpos", out string dPosRaw) ? XIVCoord.ParseRawData(dPosRaw) : null;
-            var dθ = data.TryGet(out string dθRaw, "dθ", "dTheta") ? dθRaw.FromDataString<double>() : (double?)null;
-            var dt = data.Get("dt").FromDataString<float>();
+            var dθ = data.TryGet(out string dθRaw, "dθ", "dTheta") ? dθRaw.ParseData<double>() : (double?)null;
+            var dt = data.Get("dt").ParseData<float>();
             _ = data.TryGet("color2", out string color2);
-            var colorDelay = data.TryGet("colorDelay", out string rawColorDelay) ? rawColorDelay.FromDataString<float>() : 0f;
-            var n0 = data.TryGet("n0", out string rawN0) ? rawN0.FromDataString<float>() : 0; // 初始地火在给定位置 = 0，在给定位置的下一个 = 1，...
+            var colorDelay = data.TryGet("colorDelay", out string rawColorDelay) ? rawColorDelay.ParseData<float>() : 0f;
+            var n0 = data.TryGet("n0", out string rawN0) ? rawN0.ParseData<float>() : 0; // 初始地火在给定位置 = 0，在给定位置的下一个 = 1，...
 
             // 地火需要修改、检查的参数
-            var delay0 = data.TryGet("Delay0", out string rawDelay) ? rawDelay.FromDataString<float>() : 0f;
-            var t = data.Get("Time", "t").FromDataString<float>();
+            var delay0 = data.TryGet("Delay0", out string rawDelay) ? rawDelay.ParseData<float>() : 0f;
+            var t = data.Get("Time", "t").ParseData<float>();
             var pos0 = TryParsePos(data, out XIVCoord pos) ? pos : new CartesianCoord(0, 0, 0);
             var θ0 = TryParseRotation(data, out double? θ) ? θ : -PI;
             for (var step = 0; step < n; step++)
@@ -527,7 +528,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             ParsePosAndAngleModifiers(data, isCreate, modifiers);
             ParseScaleModifier(data, isCreate, modifiers);
             ParseColorModifier(data, isCreate, modifiers);
-            bool shouldUpdate = !data.TryGet("Update", out var rawUpdate) || rawUpdate.FromDataString<bool>(); // default true
+            bool shouldUpdate = !data.TryGet("Update", out var rawUpdate) || rawUpdate.ParseData<bool>(); // default true
             if (shouldUpdate && modifiers.Count > 0)
             {
                 modifiers.Add(vfx => vfx.Update());
@@ -563,13 +564,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             if (data.TryGet("Angle", out string rawAngle))
             {
-                var θ = rawAngle.FromDataString<float>();
+                var θ = rawAngle.ParseData<float>();
                 angles = new Vector3(θ, 0, 0);
                 return true;
             }
             if (data.TryGet("Angle3D", out string rawAngle3D)) // 【需要优化括号和逗号的处理，优化之后考虑合并到 Angle】
             {
-                var (θ, θx, θy) = ParseArgs<float, float, float>(rawAngle3D, (0, 0.0), (1, 0.0), (2, 0.0));
+                var (θ, θx, θy) = rawAngle3D.ParseArgs<float, float, float>((0, 0.0), (1, 0.0), (2, 0.0));
                 angles = new Vector3(θ, θx, θy);
                 return true;
             }
@@ -592,7 +593,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             if (data.TryGet(out string rawRotation, "θ", "Theta"))
             {
-                rotation = rawRotation.FromDataString<double>();
+                rotation = rawRotation.ParseData<double>();
                 return true;
             }
             rotation = default;
@@ -611,11 +612,11 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             }
             if (hasX)
             {
-                keepX = rawKeepX.FromDataString<bool>();
+                keepX = rawKeepX.ParseData<bool>();
             }
             if (hasY)
             {
-                keepY = rawKeepY.FromDataString<bool>();
+                keepY = rawKeepY.ParseData<bool>();
             }
             return true;
         }
@@ -674,7 +675,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 // 适用于柱状 Omen，x = y
                 // 给定一个参数：(a, a, a)
                 // 给定两个参数：(a, a, b)
-                var (x, _z) = ParseArgs<float, float?>(rawScale3D, (0, 1f), (1, null));
+                var (x, _z) = rawScale3D.ParseArgs<float, float?>((0, 1f), (1, null));
                 var y = x;
                 var z = _z ?? x;
                 scales = new Vector3(x, y, z);
@@ -685,7 +686,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 // 给定一个参数：(a, a, 1)
                 // 给定两个参数：(a, b, 1)
                 // 给定三个参数：(a, b, c)
-                var (x, _y, _z) = ParseArgs<float, float?, float?>(rawScale, (0, 1f), (1, null), (2, null));
+                var (x, _y, _z) = rawScale.ParseArgs<float, float?, float?>((0, 1f), (1, null), (2, null));
                 scales = new Vector3(x, _y ?? x, _z ?? 1f);
             }
             else return; // 未给定参数则直接返回（暂时没用到 isCreate）
@@ -710,7 +711,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             if (data.TryGet("Color", out string rawColor)) // 没有指定 Color 时不处理
             {
-                var (r, g, b, a) = ParseArgs<float, float, float, float>(rawColor, (3, 1f));
+                var (r, g, b, a) = rawColor.ParseArgs<float, float, float, float>((3, 1f));
                 var color = new Vector4(r, g, b, a);
                 return vfx => vfx.Color = color;
             }

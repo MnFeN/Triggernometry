@@ -1,5 +1,5 @@
 ﻿using System;
-using static Triggernometry.Utilities.DataStringHelper;
+using Triggernometry.Expressions.String.Utils;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -22,7 +22,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbDisableAbilityRangeCheck(string cmd)
         {
             CheckBeforeExecution(cmd);
-            var shouldDisable = ParseArgs<bool>(cmd, true);
+            var shouldDisable = cmd.ParseDataOrDefault(true);
             DisableAbilityRangeCheck(shouldDisable);
         }
 

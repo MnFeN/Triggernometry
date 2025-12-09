@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Triggernometry.Utilities;
+using Triggernometry.Expressions.String.Utils;
 
 namespace Triggernometry.FFXIV.ExtractedCsv
 {
@@ -38,7 +38,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         /// <summary>
         /// 获取字段并转换类型。
         /// </summary>
-        public T Get<T>(string key) => Get(key).FromDataString<T>();
+        public T Get<T>(string key) => Get(key).ParseData<T>();
 
         /// <summary>
         /// 根据列名获取字段。
@@ -71,7 +71,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         /// <summary>
         /// 根据列号获取字段并转换类型。
         /// </summary>
-        public T Get<T>(int colIndex) => Get(colIndex).FromDataString<T>();
+        public T Get<T>(int colIndex) => Get(colIndex).ParseData<T>();
 
         /// <summary>
         /// 从另一行复制基础字段（Table / Fields）。

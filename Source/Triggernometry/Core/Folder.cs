@@ -1,0 +1,448 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Triggernometry.Core.Variables;
+using Triggernometry.Expressions.String.Utils;
+using Triggernometry.Localization;
+
+namespace Triggernometry.Core
+{
+
+    public class Folder
+    {
+
+		private Regex rexz, rexxivz;
+		private string _ZoneFilterRegularExpression;
+        private string _FfxivZoneFilterRegularExpression;
+
+        internal bool _FFXIVZoneFilterEnabled { get; set; } = false;
+        [XmlAttribute]
+        public string FFXIVZoneFilterEnabled
+        {
+            get
+            {
+                if (_FFXIVZoneFilterEnabled == false)
+                {
+                    return null;
+                }
+                return _FFXIVZoneFilterEnabled.ToString();
+            }
+            set
+            {
+                _FFXIVZoneFilterEnabled = bool.Parse(value);
+            }
+        }
+
+        [XmlAttribute]
+        public string FfxivZoneFilterRegularExpression
+        {
+            get
+            {
+                if (_FfxivZoneFilterRegularExpression == "")
+                {
+                    return null;
+                }
+                return _FfxivZoneFilterRegularExpression;
+            }
+            set
+            {
+                if (_FfxivZoneFilterRegularExpression != value)
+                {
+                    _FfxivZoneFilterRegularExpression = value;
+                    try
+                    {
+                        rexxivz = new Regex(_FfxivZoneFilterRegularExpression);
+                    }
+                    catch (Exception)
+                    {
+                        rexxivz = null;
+                    }
+                }
+            }
+        }
+
+        internal bool _FFXIVJobFilterEnabled { get; set; } = false;
+        [XmlAttribute]
+        public string FFXIVJobFilterEnabled
+        {
+            get
+            {
+                if (_FFXIVJobFilterEnabled == false)
+                {
+                    return null;
+                }
+                return _FFXIVJobFilterEnabled.ToString();
+            }
+            set
+            {
+                _FFXIVJobFilterEnabled = bool.Parse(value);
+            }
+        }
+
+        internal long _FFXIVJobFilter { get; set; } = 0;
+        [XmlAttribute]
+        public string FFXIVJobFilter
+        {
+            get
+            {
+                if (_FFXIVJobFilter == 0)
+                {
+                    return null;
+                }
+                return _FFXIVJobFilter.ToString(CultureInfo.InvariantCulture);
+            }
+            set
+            {
+                _FFXIVJobFilter = long.Parse(value, CultureInfo.InvariantCulture);
+            }
+        }
+
+        internal bool _EventFilterEnabled { get; set; } = false;
+        [XmlAttribute]
+        public string EventFilterEnabled
+        {
+            get
+            {
+                if (_EventFilterEnabled == false)
+                {
+                    return null;
+                }
+                return _EventFilterEnabled.ToString();
+            }
+            set
+            {
+                _EventFilterEnabled = bool.Parse(value);
+            }
+        }
+
+        internal bool _ZoneFilterEnabled { get; set; } = false;
+        [XmlAttribute]
+        public string ZoneFilterEnabled
+        {
+            get
+            {
+                if (_ZoneFilterEnabled == false)
+                {
+                    return null;
+                }
+                return _ZoneFilterEnabled.ToString();
+            }
+            set
+            {
+                _ZoneFilterEnabled = bool.Parse(value);
+            }
+        }
+
+        internal bool _DescendingSort { get; set; } = false;
+        [XmlAttribute]
+        public string DescendingSort
+        {
+            get => _DescendingSort ? _DescendingSort.ToString() : null;
+            set
+            {
+                _DescendingSort = bool.Parse(value);
+            }
+        }
+
+        [XmlAttribute]
+        public Guid Id { get; set; }
+
+        internal bool _ReadOnly = false;
+        [XmlAttribute]
+        public string ReadOnly
+        {
+            get => _ReadOnly == false ? null : _ReadOnly.ToString();
+            set => _ReadOnly = bool.Parse(value);
+        }
+
+        internal bool _DisableRemoteExpand = false;
+        [XmlAttribute]
+        public string DisableRemoteExpand
+        {
+            get => _DisableRemoteExpand == false ? null : _DisableRemoteExpand.ToString();
+            set => _DisableRemoteExpand = bool.Parse(value);
+        }
+
+        internal bool _DisableRemoteToggle = false;
+        [XmlAttribute]
+        public string DisableRemoteToggle
+        {
+            get => _DisableRemoteToggle == false ? null : _DisableRemoteToggle.ToString();
+            set => _DisableRemoteToggle = bool.Parse(value);
+        }
+
+        [XmlAttribute]
+        public string ZoneFilterRegularExpression
+		{
+			get
+			{
+				if (_ZoneFilterRegularExpression == "")
+                {
+                    return null;
+                }
+                return _ZoneFilterRegularExpression;
+            }
+			set
+			{
+				if (_ZoneFilterRegularExpression != value)
+				{
+					_ZoneFilterRegularExpression = value;
+					try
+					{
+						rexz = new Regex(_ZoneFilterRegularExpression);
+					}
+					catch (Exception)
+					{
+						rexz = null;
+					}
+				}
+			}
+		}
+
+        internal string FullPath
+        {
+            get
+            {
+                string name = Name;
+                Folder f = Parent;
+                while (f != null)
+                {
+                    if (f.Parent != null)
+                    {
+                        name = f.Name + @"\" + name;
+                    }
+                    f = f.Parent;
+                }
+                return name;
+            }
+        }
+
+        private Regex rexe;
+		private string _EventFilterRegularExpression;
+
+		[XmlAttribute]
+        public string EventFilterRegularExpression
+		{
+			get
+			{
+				if (_EventFilterRegularExpression == "")
+                {
+                    return null;
+                }
+                return _EventFilterRegularExpression;
+            }
+			set
+			{
+				if (_EventFilterRegularExpression != value)
+				{
+					_EventFilterRegularExpression = value;
+					try
+					{
+						rexe = new Regex(_EventFilterRegularExpression);
+					}
+					catch (Exception)
+					{
+						rexe = null;
+					}
+				}
+			}
+		}		
+
+		internal Folder Parent { get; set; }
+        public List<Folder> Folders { get; set; }
+        public List<Trigger> Triggers { get; set; }
+        [XmlAttribute]
+        public string Name { get; set; }
+        [XmlAttribute]
+        public bool Enabled { get; set; }
+
+        internal Repository Repo { get; set; } = null;
+
+        [XmlIgnore]
+        public Dictionary<string, string> EnvironmentVariables { get; private set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        private string _rawEnvironmentVariables = null;
+
+        [XmlAttribute]
+        public string RawEnvironmentVariables 
+        { 
+            get => string.IsNullOrWhiteSpace(_rawEnvironmentVariables) ? null : _rawEnvironmentVariables;
+            set
+            {
+                _rawEnvironmentVariables = value;
+                ParseRawEnvironmentVariables();
+            }
+        }
+
+        public Dictionary<string, string> RecursiveGetEnvironmentVariables()
+        {
+            var dict = new Dictionary<string, string>(EnvironmentVariables, StringComparer.OrdinalIgnoreCase);
+            for (var parent = Parent; parent != null; parent = parent.Parent)
+            {
+                foreach (var kv in parent.EnvironmentVariables)
+                {
+                    if (!dict.ContainsKey(kv.Key)) dict[kv.Key] = kv.Value;
+                }
+            }
+            return dict;
+        }
+
+        public Folder()
+        {
+            Folders = new List<Folder>();
+            Triggers = new List<Trigger>();
+            Enabled = true;
+            Id = Guid.NewGuid();
+        }
+
+        public enum FilterFailReason
+        {
+            Passed,
+            Failed,
+            NotEnabled,
+            Exception
+        }
+
+        public bool ParentsEnabled()
+        {
+            Folder f = this;
+            while (f != null)
+            {
+                if (f.Enabled == false)
+                {
+                    return false;
+                }
+                f = f.Parent;
+            }
+            return true;
+        }
+
+        public bool IsLimited()
+        {
+            return 
+                _ZoneFilterEnabled == true
+                ||
+                _EventFilterEnabled == true
+                ||
+                _FFXIVJobFilterEnabled == true
+                ||
+                _FFXIVZoneFilterEnabled == true
+            ;
+        }
+
+        public bool PassesZoneRestriction(string zone)
+        {
+            if (zone == null)
+            {
+                return false;
+            }
+            bool ret = true;
+            Folder f = this;
+            while (f != null && ret == true)
+            {
+                if (ret == true && f._ZoneFilterEnabled == true)
+                {
+                    ret = f.rexz != null ? f.rexz.IsMatch(zone) : false;
+                }
+                if (ret == true && f._FFXIVZoneFilterEnabled == true)
+                {
+                    ret = f.rexxivz != null ? f.rexxivz.IsMatch(PluginBridges.BridgeFFXIV.ZoneID.ToString()) : false;
+                }
+                f = f.Parent;
+            }
+            return ret;
+        }
+		
+		internal FilterFailReason PassesFilter(LogEvent le)
+		{
+			bool ret = true;
+			Folder f = this;
+            while (f != null && ret == true)
+			{
+                if (f.Enabled == false)
+                {
+                    return FilterFailReason.NotEnabled;
+                }
+                if (ret == true && f._ZoneFilterEnabled == true)
+				{
+					ret = f.rexz != null ? f.rexz.IsMatch(le.ZoneName) : false;
+				}		
+				if (ret == true && f._EventFilterEnabled == true)
+				{
+					ret = f.rexe != null ? f.rexe.IsMatch(le.Text) : false;
+				}
+                if (ret == true && f._FFXIVZoneFilterEnabled == true)
+                {
+                    string zId = le.ZoneId == null ? PluginBridges.BridgeFFXIV.ZoneID.ToString() : le.ZoneId;
+                    ret = f.rexxivz != null ? f.rexxivz.IsMatch(zId) : false;
+                }
+                if (ret == true && f._FFXIVJobFilterEnabled == true)
+                {
+                    VariableDictionary vc = PluginBridges.BridgeFFXIV.GetMyself();
+                    if (vc != null)
+                    {
+                        long currentJob = 0;
+                        long.TryParse(vc.GetValue("jobid").ToString(), out currentJob);
+                        long shifted = (long)1 << (int)currentJob - 1;
+                        ret = (f._FFXIVJobFilter & shifted) != 0;
+                    }
+                    else
+                    {
+                        ret = false;
+                    }
+                }
+                f = f.Parent;
+			}
+			return ret == true ? FilterFailReason.Passed : FilterFailReason.Failed;
+		}
+
+        internal void ParseRawEnvironmentVariables()
+        {
+            if (string.IsNullOrWhiteSpace(_rawEnvironmentVariables)) return;
+            // separate each lines
+            var kvps = ArgHelper.SplitArguments(
+                ParserCommon.ReplaceLineBreak(_rawEnvironmentVariables), 
+                allowEmptyList: false, 
+                separator: ParserCommon.LINEBREAK_STR
+            );
+            foreach (var rawkvp in kvps) 
+            {
+                if (rawkvp.StartsWith("//") || string.IsNullOrWhiteSpace(rawkvp)) continue;
+                var kvp = ArgHelper.SplitArguments(rawkvp, allowEmptyList: false, separator: "=");
+                if (kvp.Length >= 2)
+                {
+                    EnvironmentVariables[kvp[0]] = kvp[1];
+                }
+                if (kvp.Length > 2)
+                {
+                    RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Folder/envvariablekvptoolong",
+                        "The raw environment variable key-value pair expression contains more than 2 parts. \n Folder: {0}; \n Expression: {1}",
+                        FullPath, kvp));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Recursively enumerates all <see cref="Trigger"/> instances contained in this folder and its subfolders. <br/>
+        /// Each trigger in the current folder is yielded first, followed by triggers from all nested folders.
+        /// </summary>
+        public IEnumerable<Trigger> RecursiveGetTriggers()
+        {
+            foreach (var t in Triggers)
+                yield return t;
+
+            foreach (var sub in Folders)
+            {
+                foreach (var t in sub.RecursiveGetTriggers())
+                    yield return t;
+            }
+        }
+
+    }
+
+}

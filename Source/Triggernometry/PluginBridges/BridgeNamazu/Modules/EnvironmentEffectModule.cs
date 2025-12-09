@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using static Triggernometry.Utilities.DataStringHelper;
+using Triggernometry.Expressions.String.Utils;
+using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -56,7 +57,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 {
                     if (command.Contains(","))
                     {
-                        var (index, unknownFlag, flag) = ParseArgs<uint, ushort?, ushort?>(command, (2, null));
+                        var (index, unknownFlag, flag) = command.ParseArgs<uint, ushort?, ushort?>((2, null));
                         // 支持的参数格式如 (index, unknownFlag, flag)，或 (index, flag)，因为游戏中实际并未使用 unknownFlag
                         if (flag == null)
                             (unknownFlag, flag) = (flag, unknownFlag);
@@ -147,7 +148,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         [CallbackMethod("ChangeWeather")]
         internal void CbChangeWeather(string command)
         {
-            var weatherId = ParseArgs<byte>(command);
+            var weatherId = command.ParseData<byte>();
             CheckBeforeExecution(command);
             NamazuLog($"[ChangeWeather] {weatherId}");
             Memory.ExecuteWithLock(() => ChangeWeather(weatherId));
