@@ -19,8 +19,8 @@ namespace Triggernometry.Expressions.String
         /// · <paramref name="ctx" />: Evaluation context; if null, <see cref="Context.Unbound"/> is used.<br />
         /// · Returns the evaluated result as a string.
         /// </summary>
-        public static string ParseBody(string expr, Context ctx = null)
-            => TemplateParser.EvaluateSingleTemplate(expr, ctx, false);
+        public static string ParseSingleTemplate(string expr, Context ctx = null)
+            => TemplateParser.ParseSingleTemplate(expr, ctx, false);
 
         /// <summary>
         /// Parse a full string that may contain templates such as <c>$n</c>, <c>${...}</c>, <c>¤{...}</c>.<br />
@@ -47,7 +47,7 @@ namespace Triggernometry.Expressions.String
             int depth;
             for (depth = 0; depth < MAX_DEPTH; depth++)
             {
-                var templates = TemplateParser.FindTemplates(newExpr);
+                var templates = TemplateParser.FindNonNestedTemplates(newExpr);
                 if (templates.Count == 0)
                     break;
 
@@ -56,7 +56,7 @@ namespace Triggernometry.Expressions.String
 
             if (depth == MAX_DEPTH)
             {
-                throw new InvalidOperationException("待补充文本");
+                throw new InvalidOperationException($"当前表达式 {expr} 解析疑似无限循环。");
             }
 
             // ¤1 ¤{...} => $1 ${...}

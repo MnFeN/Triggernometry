@@ -18,6 +18,7 @@ namespace Triggernometry.Expressions.String.Parsers
             public readonly string Expression;
             /// <summary> The group index n of $n. </summary>
             public readonly int? NumIndex;
+            public string RawExpression => NumIndex != null ? $"${NumIndex}" : $"${{{Expression}}}";
 
             public TemplateMatch(int start, int end, string expression, int? numIndex)
             {
@@ -28,10 +29,10 @@ namespace Triggernometry.Expressions.String.Parsers
             }
         }
 
-        private static string EvaluateTemplateMatch(TemplateMatch m, Context ctx, bool isNumeric = false)
+        private static string ParseTemplateMatch(TemplateMatch m, Context ctx, bool isNumeric = false)
         {
             if (m.NumIndex == null) // "${...}"
-                return EvaluateSingleTemplate(m.Expression ?? "", ctx, isNumeric);
+                return ParseSingleTemplate(m.Expression ?? "", ctx, isNumeric);
 
             else // "$n"
                 return ctx?.GetNumGroup(m.NumIndex.Value) ?? "";
@@ -40,69 +41,85 @@ namespace Triggernometry.Expressions.String.Parsers
         /// <summary>
         /// Find all non-nested template expressions <c>$n</c> or <c>${...}</c> in the given string.
         /// </summary>
-        internal static List<TemplateMatch> FindTemplates(string expr)
+        internal static List<TemplateMatch> FindNonNestedTemplates(string expr)
         {
-            var result = new List<TemplateMatch>();
-            if (string.IsNullOrEmpty(expr)) return result;
+            var results = new List<TemplateMatch>();
+            if (string.IsNullOrEmpty(expr)) return results;
 
             int fullLength = expr.Length;
 
             for (int i = 0; i < fullLength - 1; i++)
             {
                 // not '$'
-                if (expr[i] != '$')
-                    continue;
+                if (expr[i] != '$') continue;
 
                 var next = expr[i + 1];
 
                 // "$n"
                 if (next >= '0' && next <= '9')
                 {
-                    var start = i;
-                    var end = i + 1;
-                    var num = next - '0';
-                    result.Add(new TemplateMatch(start, end, null, num));
-                    i = end;
+                    AddNumGroupTemplate(results, next, i, out i);
+                    continue;
                 }
-                // "${"
-                else if (next == '{')
+                
+                // a single $
+                if (next != '{') continue;
+
+                // "${": scan for the next valid close '}'
+                int validRightBracePos = -1;
+                for (int j = i + 2; j < fullLength; j++)
                 {
-                    // scan for the next valid close '}'
-                    int j = i + 2;
-                    bool isValid = false;
-
-                    // Find the next '}'
-                    while (j < fullLength)
+                    // found valid close '}'
+                    if (expr[j] == '}')
                     {
-                        // valid close '}'
-                        if (expr[j] == '}')
-                        {
-                            isValid = true;
-                            break;
-                        }
-                        // inner start: ${...${...}...}
-                        //                   ^
-                        if (j < fullLength - 1 && expr[j] == '$' && expr[j + 1] == '{')
-                        {
-                            i = j - 1; // skip scanned part
-                            break;
-                        }
-                        j++;
+                        validRightBracePos = j;
+                        break;
                     }
-                    // invalid: continue to find the next '${'
-                    if (!isValid) continue;
+                    
+                    bool notInnerDollar = j >= fullLength - 1 || expr[j] != '$';
+                    if (notInnerDollar) continue;
 
-                    // "${...}"
-                    var start = i;
-                    var end = j;
-                    // inner expression "..."
-                    var innerExpr = expr.Substring(start + 2, end - start - 2);
-                    result.Add(new TemplateMatch(start, end, innerExpr, null));
-                    i = j;
+                    // nested: ${...${...}...} or ${...$n...}
+                    //         i    j             i    j
+                    var charAfterDollar = expr[j + 1];
+                    if (charAfterDollar == '{') // inner ${
+                    {
+                        i = j - 1; // skip scanned part
+                        break;
+                    }
+                    else if (charAfterDollar >= '0' && charAfterDollar <= '9') // inner $n
+                    {
+                        AddNumGroupTemplate(results, charAfterDollar, j, out i);
+                        break;
+                    }
                 }
-                // else: a single '$', continue;
+
+                // found valid "${...}"
+                if (validRightBracePos != -1)
+                    AddBraceTemplate(results, expr, i, validRightBracePos, out i);
             }
-            return result;
+            return results;
+        }
+
+        /// <summary>
+        /// Add a "$n" template match to the result list. <br />
+        /// </summary>
+        private static void AddNumGroupTemplate(List<TemplateMatch> templateMatches, char digitChar, int dollarPos, out int newScanPos)
+        {
+            int numGroupIdx = digitChar - '0';
+            templateMatches.Add(new TemplateMatch(dollarPos, dollarPos + 1, null, numGroupIdx));
+            newScanPos = dollarPos + 1;
+        }
+
+        /// <summary>
+        /// Add a "${...}" template match to the result list. <br />
+        /// </summary>
+        private static void AddBraceTemplate(List<TemplateMatch> templateMatches, string expr, int dollarPos, int rBracePos, out int newScanPos)
+        {
+            var length = rBracePos - dollarPos - 2;
+            string innerExpr = expr.Substring(dollarPos + 2, length); // without "${" / "}"
+            templateMatches.Add(new TemplateMatch(dollarPos, rBracePos, innerExpr, null));
+            newScanPos = rBracePos;
         }
 
         internal static string ReplaceTemplates(string text, List<TemplateMatch> templates, Context ctx, bool isNumeric)
@@ -129,7 +146,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 Append(text.AsSpan(start, template.Start - start));
 
                 // add evaluated template
-                var result = EvaluateTemplateMatch(template, ctx, isNumeric);
+                var result = ParseTemplateMatch(template, ctx, isNumeric);
                 result = Utils.ParserCommon.ReplaceLineBreak(result);
                 sb.Append(result); // 和前面可以合并一个函数减少扫描
 
@@ -142,7 +159,7 @@ namespace Triggernometry.Expressions.String.Parsers
             return sb.ToString();
         }
 
-        internal static string EvaluateSingleTemplate(string rawExpr, Context ctx, bool isTestModeNumeric)
+        internal static string ParseSingleTemplate(string rawExpr, Context ctx, bool isTestModeNumeric)
         {
             ctx = ctx ?? Context.Unbound;
             var plug = ctx.Plugin;
