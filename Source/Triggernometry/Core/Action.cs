@@ -1,5 +1,4 @@
 using CsvHelper;
-using SharpDX.Direct2D1.Effects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +18,6 @@ using System.Xml.Serialization;
 using Triggernometry.Common.Audio;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
-using Triggernometry.Expressions.String.Evaluators;
 using Triggernometry.Expressions.String.Parsers;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
@@ -1976,14 +1974,13 @@ namespace Triggernometry.Core
                                         string filterExpr = ParseValue();
                                         var entity = XivEntityExpressionParser.GetEntityFromUserInput(filterExpr);
 
-                                        var propNames = string.IsNullOrWhiteSpace(_DictVariableKey)
+                                        var memberExprs = string.IsNullOrWhiteSpace(_DictVariableKey)
                                             ? FFXIV.Entity.RecommendedEntityPropNames.Concat(FFXIV.Job.LegalJobPropNames)
                                             : ArgHelper.SplitArguments(ParseKey(), false);
 
-                                        var evaluator = XivEntityEvaluator.BuildEvaluator(propNames.ToArray());
-                                        var vd = new VariableDictionary(propNames.ToDictionary(
-                                            propName => propName,
-                                            propName => string.Join(", ", evaluator(entity))
+                                        var vd = new VariableDictionary(memberExprs.ToDictionary(
+                                            member => member,
+                                            member => XivEntityExpressionParser.EvaluateEntityMember(entity, member)
                                         ));
                                         lock (svs.Dict)
                                         {
@@ -4045,7 +4042,7 @@ namespace Triggernometry.Core
                                             if (entity.ID == 0) continue;
                                             var row = new VariableTable.VariableTableRow
                                             {
-                                                Values = propNames.Select(prop => XivEntityExpressionParser.EvaluateEntity(entity, prop))
+                                                Values = propNames.Select(prop => XivEntityExpressionParser.EvaluateEntityMembers(entity, prop))
                                                                   .Select(result => (Variable)new VariableScalar(result))
                                                                   .ToList()
                                             };

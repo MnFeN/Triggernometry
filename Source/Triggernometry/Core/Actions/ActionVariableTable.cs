@@ -1026,7 +1026,7 @@ namespace Triggernometry.Core.Actions
                             if (entity.ID == 0) continue;
                             var row = new VariableTable.VariableTableRow
                             {
-                                Values = propNames.Select(prop => XivEntityExpressionParser.EvaluateEntity(entity, prop))
+                                Values = propNames.Select(prop => XivEntityExpressionParser.EvaluateEntityMembers(entity, prop))
                                                   .Select(result => (Variable)new VariableScalar(result))
                                                   .ToList()
                             };

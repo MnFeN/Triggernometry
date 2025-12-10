@@ -36,8 +36,8 @@ namespace Triggernometry.Expressions.String.Evaluators
                 // single keyword token (prop; jobProp; method without args) or other normal numeric tokens
                 if (!followedByParentheses)
                 {
-                    var possibleMethodExpr = new MethodExpression(token, null, token);
-                    var accessor = XivEntityEvaluator.TryGetSingleAccessor(possibleMethodExpr);
+                    var possibleMemberExpr = new MemberExpression(token, null, token);
+                    var accessor = XivEntityEvaluator.TryGetSingleAccessor(possibleMemberExpr);
                     if (accessor != null) // found
                         funcTokens.Add(e => accessor(e).ToDataString().Replace(" ", "")); // why replace?
                     else
@@ -65,7 +65,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                         if (depth == 0) // closed
                         {
                             var methodArgs = rawTokenList.GetRange(i + 3, j - i - 3).ToArray(); // between (...)
-                            var methodExpr = new MethodExpression(token, methodArgs);
+                            var methodExpr = new MemberExpression(token, methodArgs);
                             var accessor = XivEntityEvaluator.GetSingleAccessor(methodExpr);
                             funcTokens.Add(e => accessor(e).ToDataString().Replace(" ", "")); // to-do: spaces in numeric expressions
                             i = j;

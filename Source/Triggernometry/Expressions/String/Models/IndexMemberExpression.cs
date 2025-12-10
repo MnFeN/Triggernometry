@@ -6,29 +6,29 @@ using Triggernometry.Expressions.String.Utils;
 namespace Triggernometry.Expressions.String.Models
 {
     /// <summary>
-    /// Represents an indexed identifier with an optional member access or invocation. <br />
-    /// Name should be present, and at least Indexes/Method should be present: <br />
+    /// Represents a name with optional indexes followed by optional dot member expression. <br />
+    /// Name is always present; Indexes/Member may be present: <br />
     /// · <c>Name</c> <br />
     /// · <c>Name.XXX</c> <br />
     /// · <c>Name.XXX()</c> <br />
     /// · <c>Name.XXX(args)</c> <br />
     /// · <c>Name[index]</c> <br />
     /// · <c>Name[index][index2][index3]</c> <br />
-    /// · <c>Name[index].XXX</c> <br />
-    /// · <c>Name[index].XXX(args)</c> <br />
-    /// The parts after '.' are considered as "Method"; check <see cref="MethodExpression"/> for detail.
+    /// · <c>Name[index].Member</c> <br />
+    /// · <c>Name[index].Member(MemberArgs)</c> <br />
+    /// The part after '.' is treated as a <see cref="MemberExpression"/>.
     /// </summary>
-    public readonly struct IndexMethodExpression
+    public readonly struct IndexMemberExpression
     {
         /// <summary> 
-        /// The part before indexes or method. 
+        /// The part before indexes or member. 
         /// Trimmed. 
         /// Should not be <see langword="null"/>. 
         /// </summary>
         public readonly string Name;
 
         private readonly string[] _indexes;
-        private readonly MethodExpression? _method;
+        private readonly MemberExpression? _member;
         private readonly string _rawExpression;
 
         /// <summary>
@@ -38,10 +38,10 @@ namespace Triggernometry.Expressions.String.Models
         public string[] Indexes => _indexes ?? Array.Empty<string>();
 
         /// <summary>
-        /// The parsed method expression. <br />
-        /// <see cref="MethodExpression.Empty"/> when absent.
+        /// The parsed member expression. <br />
+        /// <see cref="MemberExpression.Empty"/> when no member expression is given.
         /// </summary>
-        public MethodExpression Method => _method ?? MethodExpression.Empty;
+        public MemberExpression Member => _member ?? MemberExpression.Empty;
 
         /// <summary>
         /// The original expression text.
@@ -52,26 +52,26 @@ namespace Triggernometry.Expressions.String.Models
         /// <summary>
         /// Creates an instance directly from already-parsed components.
         /// </summary>
-        public IndexMethodExpression(
+        public IndexMemberExpression(
             string name,
             string[] indexes,
-            MethodExpression method,
+            MemberExpression member,
             string rawExpression = null)
         {
             Name = name ?? throw new ArgumentNullException("name");
             _indexes = indexes ?? Array.Empty<string>();
-            _method = method;
+            _member = member;
             _rawExpression = rawExpression;
         }
 
         /// <summary>
-        /// Parses an indexed method expression from the given string.
+        /// Parses an index-member expression from the given string.
         /// </summary>
-        public IndexMethodExpression(string expr)
+        public IndexMemberExpression(string expr)
         {
             _rawExpression = expr ?? throw new ArgumentNullException(nameof(expr));
             _indexes = null;
-            _method = null;
+            _member = null;
             Name = expr;
 
             // Scan the string to find the first '[' or '.'.
@@ -97,7 +97,7 @@ namespace Triggernometry.Expressions.String.Models
 
             // Parse member access or invocation if a valid '.' is found
             if (validDotPos != -1)
-                _method = new MethodExpression(expr, validDotPos + 1);
+                _member = new MemberExpression(expr, validDotPos + 1);
         }
 
         #region Index helpers
@@ -152,8 +152,8 @@ namespace Triggernometry.Expressions.String.Models
             if (Indexes.Length > 0)
                 sb.Append($"[{string.Join("][", Indexes)}]");
 
-            if (Method.HasValue)
-                sb.Append($".{Method.RawExpression}");
+            if (Member.HasValue)
+                sb.Append($".{Member.RawExpression}");
 
             return sb.ToString();
         }

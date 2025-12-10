@@ -10,10 +10,10 @@ namespace Triggernometry.Expressions.String.Evaluators
 {
     internal static class DictEvaluator
     {
-        internal static Func<VariableDictionary, string> BuildEvaluator(IndexMethodExpression expr)
+        internal static Func<VariableDictionary, string> BuildEvaluator(IndexMemberExpression expr)
         {
             // invalid (only name)
-            if (expr.Indexes.Length == 0 && !expr.Method.HasValue)
+            if (expr.Indexes.Length == 0 && !expr.Member.HasValue)
                 throw new NotImplementedException("dict");
 
             // dvar:Name[Key]
@@ -24,8 +24,8 @@ namespace Triggernometry.Expressions.String.Evaluators
             }
 
             // dvar:Name.Method(Args)
-            var methodName = expr.Method.Name.ToLowerInvariant();
-            var args = expr.Method.Args;
+            var methodName = expr.Member.Name.ToLowerInvariant();
+            var args = expr.Member.Args;
             int argCount = args.Length;
 
             switch (methodName)

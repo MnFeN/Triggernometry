@@ -21,8 +21,8 @@ namespace Triggernometry.Expressions.String.Parsers
             ctx = ctx ?? Context.Unbound;
             var plug = ctx.Plugin; // can be null
 
-            var expr = new IndexMethodExpression(rawExpr);
-            if (expr.Method.Name == null && expr.Indexes.Length == 0)
+            var expr = new IndexMemberExpression(rawExpr);
+            if (expr.Member.Name == null && expr.Indexes.Length == 0)
             {
                 return null;
             }
@@ -32,7 +32,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 // ===== FFXIV =====
 
                 case "_me": // ${_me.prop}
-                    if (expr.Method.Name.ToLowerInvariant() == "id" && !string.IsNullOrWhiteSpace(BridgeFFXIV.PlayerHexId))
+                    if (expr.Member.Name.ToLowerInvariant() == "id" && !string.IsNullOrWhiteSpace(BridgeFFXIV.PlayerHexId))
                     {
                         return BridgeFFXIV.PlayerHexId;
                     }
@@ -59,7 +59,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 case "_job": // ${_job[jobid].prop} or ${_job[Name].prop}
-                    return Job.GetJob(expr.Index).QueryProperty(expr.Method.Name);
+                    return Job.GetJob(expr.Index).QueryProperty(expr.Member.Name);
 
                 case "_targetmarker2id":
                 case "_tm2id":
@@ -68,7 +68,7 @@ namespace Triggernometry.Expressions.String.Parsers
 
                 case "_waymark":
                 case "_wm":
-                    return Memory.Waymark.QueryWaymark(expr.Index, expr.Method.Name) ?? "";
+                    return Memory.Waymark.QueryWaymark(expr.Index, expr.Member.Name) ?? "";
 
                 // ===== Dynamic expressions with index =====
 
@@ -154,7 +154,7 @@ namespace Triggernometry.Expressions.String.Parsers
                             {
                                 ScarboroughText item = plug.sc.GetText(expr.Index);
                                 if (item == null) return "";
-                                switch (expr.Method.Name.ToLowerInvariant())
+                                switch (expr.Member.Name.ToLowerInvariant())
                                 {
                                     case "x":
                                         return I18n.ThingToString(item.Left);
@@ -180,7 +180,7 @@ namespace Triggernometry.Expressions.String.Parsers
                                 if (!plug.textauras.TryGetValue(expr.Index, out UI.Forms.AuraContainerForm acf))
                                     return "";
 
-                                switch (expr.Method.Name.ToLowerInvariant())
+                                switch (expr.Member.Name.ToLowerInvariant())
                                 {
                                     case "x":
                                         return I18n.ThingToString(acf.Left);
@@ -209,7 +209,7 @@ namespace Triggernometry.Expressions.String.Parsers
                             {
                                 ScarboroughImage item = plug.sc.GetImage(expr.Index);
                                 if (item == null) return "";
-                                switch (expr.Method.Name.ToLowerInvariant())
+                                switch (expr.Member.Name.ToLowerInvariant())
                                 {
                                     case "x":
                                         return I18n.ThingToString(item.Left);
@@ -232,7 +232,7 @@ namespace Triggernometry.Expressions.String.Parsers
                             {
                                 if (!plug.imageauras.TryGetValue(expr.Index, out UI.Forms.AuraContainerForm acf))
                                     return "";
-                                switch (expr.Method.Name.ToLowerInvariant())
+                                switch (expr.Member.Name.ToLowerInvariant())
                                 {
                                     case "x":
                                         return I18n.ThingToString(acf.Left);

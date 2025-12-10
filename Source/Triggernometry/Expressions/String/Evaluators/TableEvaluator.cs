@@ -11,10 +11,10 @@ namespace Triggernometry.Expressions.String.Evaluators
 {
     internal static class TableEvaluator
     {
-        internal static Func<VariableTable, string> BuildEvaluator(IndexMethodExpression expr)
+        internal static Func<VariableTable, string> BuildEvaluator(IndexMemberExpression expr)
         {
             // invalid (only name)
-            if (expr.Indexes.Length == 0 && !expr.Method.HasValue)
+            if (expr.Indexes.Length == 0 && !expr.Member.HasValue)
                 throw new NotImplementedException("table");
 
             // tvar:Name[Col][Row]
@@ -32,8 +32,8 @@ namespace Triggernometry.Expressions.String.Evaluators
             }
 
             // tvar:Name.Method(Args)
-            var methodName = expr.Method.Name.ToLowerInvariant();
-            var args = expr.Method.Args;
+            var methodName = expr.Member.Name.ToLowerInvariant();
+            var args = expr.Member.Args;
             int argCount = args.Length;
 
             switch (methodName)

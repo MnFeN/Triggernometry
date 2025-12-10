@@ -20,7 +20,7 @@ namespace Triggernometry.Expressions.String.Evaluators
         /// -- Null/Empty: numeric as default.  <br />
         /// · <paramref name="expr"/>: provides method name, variable name, and raw expression text for error reporting.
         ///</summary>
-        internal static Func<IEnumerable<string>, string> BuildEvaluator(string valueType, bool isMin, IndexMethodExpression expr)
+        internal static Func<IEnumerable<string>, string> BuildEvaluator(string valueType, bool isMin, IndexMemberExpression expr)
         {
             // type: "n(umeric)" / "s(tring)" / "h(ex)"
             var typeChar = !string.IsNullOrEmpty(valueType) ? valueType[0] : 'n';
@@ -32,12 +32,12 @@ namespace Triggernometry.Expressions.String.Evaluators
                     return source => SafeGetExtremum(source, ParseHex, isMin, I18n.TranslateWord("hex"), expr);
                 case 's':
                     return source => SafeGetExtremum(source, s => s, isMin, I18n.TranslateWord("string"), expr);
-                default: throw InvalidValueError(expr.Method.Name, "type", valueType, expr.RawExpression);
+                default: throw InvalidValueError(expr.Member.Name, "type", valueType, expr.RawExpression);
             }
         }
 
         private static string SafeGetExtremum<T>(IEnumerable<string> source, Func<string, T> parser, bool isMin,
-            string typeDescription, IndexMethodExpression expr) where T : IComparable<T>
+            string typeDescription, IndexMemberExpression expr) where T : IComparable<T>
         {
             var srcList = source as List<string> ?? source.ToList();
             if (source == null || srcList.Count == 0)
@@ -50,7 +50,7 @@ namespace Triggernometry.Expressions.String.Evaluators
             }
             catch
             {
-                throw ExtremumParseTypeError(expr.Method.Name, typeDescription, expr.RawExpression);
+                throw ExtremumParseTypeError(expr.Member.Name, typeDescription, expr.RawExpression);
             }
         }
 

@@ -16,21 +16,27 @@ namespace Triggernometry.Expressions.String.Parsers
     internal static class XivEntityExpressionParser
     {
 
-        public static string EvaluateEntity(Entity entity, string rawMethodExpressions)
+        public static string EvaluateEntityMember(Entity entity, string rawMemberExpression)
         {
-            var evaluator = XivEntityEvaluator.BuildEvaluator(rawMethodExpressions);
+            var accessor = XivEntityEvaluator.GetSingleAccessor(new MemberExpression(rawMemberExpression));
+            return accessor(entity).ToDataString();
+        }
+
+        public static string EvaluateEntityMembers(Entity entity, string rawMemberExpressions)
+        {
+            var evaluator = XivEntityEvaluator.BuildEvaluator(rawMemberExpressions);
             return string.Join(", ", evaluator(entity));
         }
 
-        internal static string Parse(IndexMethodExpression expr, Context ctx)
+        internal static string Parse(IndexMemberExpression expr, Context ctx)
         {
             var conditionExpr = expr.Index;
             var isParty = expr.Name.EndsWith("party");
-            var rawMethodExprs = expr.Method.RawExpression;
+            var rawMemberExprs = expr.Member.RawExpression;
 
             var entity = GetEntityFromUserInput(conditionExpr, isParty);
 
-            if (!entity.Exist && !rawMethodExprs.Equals("exist", StringComparison.OrdinalIgnoreCase))
+            if (!entity.Exist && !rawMemberExprs.Equals("exist", StringComparison.OrdinalIgnoreCase))
             {
                 RealPlugin.Instance.UnfilteredAddToLog(
                     RealPlugin.DebugLevelEnum.Warning,
@@ -39,7 +45,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     ctx?.Trigger);
             }
 
-            var evaluator = XivEntityEvaluator.BuildEvaluator(rawMethodExprs);
+            var evaluator = XivEntityEvaluator.BuildEvaluator(rawMemberExprs);
             return string.Join(", ", evaluator(entity));
         }
 

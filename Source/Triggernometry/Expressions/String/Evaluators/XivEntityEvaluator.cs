@@ -13,29 +13,29 @@ namespace Triggernometry.Expressions.String.Evaluators
         /// <summary>
         /// · "X, Y, HasStatus(0x1A)"
         /// </summary>
-        internal static Func<Entity, string[]> BuildEvaluator(string rawMethodExpressions)
+        internal static Func<Entity, string[]> BuildEvaluator(string rawMemberExpressions)
         {
-            var methodExpressions = ArgHelper.SplitArguments(rawMethodExpressions);
-            return BuildEvaluator(methodExpressions, $"Entity.{rawMethodExpressions}");
+            var memberExpressions = ArgHelper.SplitArguments(rawMemberExpressions);
+            return BuildEvaluator(memberExpressions, $"Entity.{rawMemberExpressions}");
         }
 
-        internal static Func<Entity, string[]> BuildEvaluator(IndexMethodExpression expr)
+        internal static Func<Entity, string[]> BuildEvaluator(IndexMemberExpression expr)
         {
-            if (!expr.Method.HasValue) 
-                throw new ArgumentException($"实体表达式 {expr.RawExpression} 未包含属性", nameof(expr.Method));
+            if (!expr.Member.HasValue) 
+                throw new ArgumentException($"实体表达式 {expr.RawExpression} 未包含属性", nameof(expr.Member));
 
-            // Entity expressions allow multiple properties/methods separated with comma,
-            // so we need to split the raw expression of the method part.
-            var methodExpressions = ArgHelper.SplitArguments(expr.Method.RawExpression);
-            return BuildEvaluator(methodExpressions, expr.RawExpression);
+            // Entity expressions allow multiple members (properties/methods) separated with comma,
+            // so we need to split the raw expression of the member part.
+            var memberExpressions = ArgHelper.SplitArguments(expr.Member.RawExpression);
+            return BuildEvaluator(memberExpressions, expr.RawExpression);
         }
 
-        internal static Func<Entity, string[]> BuildEvaluator(string[] methodExpressions, string rawExprForErrorOverride = null)
+        internal static Func<Entity, string[]> BuildEvaluator(string[] memberExpressions, string rawExprForErrorOverride = null)
         {
-            var rawExpr = rawExprForErrorOverride ?? $"Entity.{string.Join(", ", methodExpressions)}";
-            var accessors = methodExpressions
-                .Select(raw => new MethodExpression(raw))
-                .Select(method => GetSingleAccessor(method)); // GetSingleAccessor would throw error if not found
+            var rawExpr = rawExprForErrorOverride ?? $"Entity.{string.Join(", ", memberExpressions)}";
+            var accessors = memberExpressions
+                .Select(raw => new MemberExpression(raw))
+                .Select(member => GetSingleAccessor(member)); // GetSingleAccessor would throw error if not found
 
             return entity => accessors.Select(a => {
                 try
@@ -45,17 +45,17 @@ namespace Triggernometry.Expressions.String.Evaluators
                 catch (Exception ex)
                 {
                     throw new ArgumentException(I18n.Translate("internal/FFXIV/Entity/？？？？？？？？",
-                        "Failed to evaluate entity property expression '{0}': {1}",
+                        "Failed to evaluate entity property/method expression '{0}': {1}",
                         rawExpr, ex.Message), ex);
 
                 }
             }).ToArray();
         }
 
-        internal static Func<Entity, object> GetSingleAccessor(MethodExpression expr)
+        internal static Func<Entity, object> GetSingleAccessor(MemberExpression expr)
             => TryGetSingleAccessor(expr) ?? throw new ArgumentException("Invalid entity property/method name: " + expr.Name, nameof(expr));
 
-        internal static Func<Entity, object> TryGetSingleAccessor(MethodExpression expr)
+        internal static Func<Entity, object> TryGetSingleAccessor(MemberExpression expr)
         {
             var accessor = TryGetSingleMethodAccessor(expr.Name, expr.Args)
                         ?? TryGetSinglePropAccessor(expr.Name);
@@ -69,7 +69,7 @@ namespace Triggernometry.Expressions.String.Evaluators
             return null;
         }
 
-        internal static Func<Entity, object> TryGetSinglePropAccessor(string propName)
+        private static Func<Entity, object> TryGetSinglePropAccessor(string propName)
         {
             if (Entity._propAccessors.TryGetValue(propName, out var propAccessor))
             {
@@ -78,7 +78,7 @@ namespace Triggernometry.Expressions.String.Evaluators
             else return null;
         }
 
-        internal static Func<Entity, object> TryGetSingleMethodAccessor(string methodName, string[] args)
+        private static Func<Entity, object> TryGetSingleMethodAccessor(string methodName, string[] args)
         {
             if (Entity._methodAccessors.TryGetValue(methodName, out var methodAccessor))
             {

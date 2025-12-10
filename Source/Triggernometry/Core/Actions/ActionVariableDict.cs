@@ -462,16 +462,15 @@ namespace Triggernometry.Core.Actions
                         string filterExpr = ParseValue();
                         var entity = XivEntityExpressionParser.GetEntityFromUserInput(filterExpr);
 
-                        var propNames = string.IsNullOrWhiteSpace(_Key)
+                        var memberExprs = string.IsNullOrWhiteSpace(_Key)
                             ? FFXIV.Entity.RecommendedEntityPropNames.Concat(FFXIV.Job.LegalJobPropNames)
                             : ArgHelper.SplitArguments(ParseKey(), false);
 
-                        var evaluator = XivEntityEvaluator.BuildEvaluator(propNames.ToArray());
-                        var vd = new VariableDictionary(propNames.ToDictionary(
-                            propName => propName,
-                            propName => string.Join(", ", evaluator(entity))
+                        var vd = new VariableDictionary(memberExprs.ToDictionary(
+                            member => member,
+                            member => XivEntityExpressionParser.EvaluateEntityMember(entity, member)
                         ));
-                        
+
                         lock (svs.Dict)
                         {
                             svs.Dict[sourcename] = vd;

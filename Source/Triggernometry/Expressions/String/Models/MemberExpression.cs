@@ -4,31 +4,30 @@ using Triggernometry.Expressions.String.Utils;
 namespace Triggernometry.Expressions.String.Models
 {
     /// <summary>
-    /// Represents a generic "method" expression segment. <br />
-    /// The term "method" is purely syntactic here. <br />
-    /// Property/Method-like forms are all treated as "method": <br />
+    /// Represents a generic member expression. <br />
+    /// The term "member" includes property/method-like forms: <br />
     /// · "<c>PropName</c>" <br />
     /// · "<c>MethodName()</c>"  <br />
     /// · "<c>MethodName(args...)</c>"
     /// </summary>
-    public readonly struct MethodExpression
+    public readonly struct MemberExpression
     {
         /// <summary>
         /// Method or property name.
-        /// An empty string indicates an invalid or missing method.
+        /// An empty string indicates an invalid or missing member.
         /// </summary>
         public readonly string Name;
 
         /// <summary>
-        /// Parsed argument list. <br />
-        /// · <see langword="null" />: parentheses not present: MethodName <br />
-        /// · Empty array: parentheses present but no arguments: MethodName() <br />
-        /// · Non-empty array: arguments parsed from parentheses: MethodName(args) 
+        /// Argument parsing result. <br />
+        /// · <see langword="null" />: parentheses not present: Name <br />
+        /// · Empty array: parentheses present but no arguments: Name() <br />
+        /// · Non-empty array: arguments parsed from parentheses: Name(args) 
         /// </summary>
         public readonly string[] _args;
 
         /// <summary>
-        /// Get the parsed argument list, or an empty array if no arguments were given.
+        /// Get the argument parsing result, or an empty array if no arguments were given.
         /// </summary>
         public string[] Args => _args ?? Array.Empty<string>();
 
@@ -40,20 +39,20 @@ namespace Triggernometry.Expressions.String.Models
         public string RawExpression => _rawExpression ?? BuildRawExpression();
 
         /// <summary>
-        /// Whether this instance represents a valid method or property.
+        /// Whether this instance represents a valid member expression.
         /// </summary>
         public bool HasValue => !string.IsNullOrEmpty(Name);
 
         /// <summary>
-        /// Represents an empty or missing method expression.
+        /// Represents an empty or missing member expression.
         /// </summary>
-        public static readonly MethodExpression Empty
-            = new MethodExpression(string.Empty, null, string.Empty);
+        public static readonly MemberExpression Empty
+            = new MemberExpression(string.Empty, null, string.Empty);
 
         /// <summary>
         /// Creates an instance directly from the given data. Name should not be null.
         /// </summary>
-        public MethodExpression(string name, string[] args, string rawExpression = null)
+        public MemberExpression(string name, string[] args, string rawExpression = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             _args = args;
@@ -61,10 +60,10 @@ namespace Triggernometry.Expressions.String.Models
         }
 
         /// <summary>
-        /// Parse a method or property expression from the given string. <br />
-        /// · <paramref name="startIndex"/> points to the first character of the method name
+        /// Parse a member expression from the given string. <br />
+        /// · <paramref name="startIndex"/> points to the first character of the member name
         /// </summary>
-        public MethodExpression(string expr, int startIndex = 0)
+        public MemberExpression(string expr, int startIndex = 0)
         {
             if (expr == null)
                 throw new ArgumentNullException(nameof(expr));

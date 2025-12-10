@@ -107,7 +107,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
                 case "sfunc":  // "StorageKey(arg1, arg2, ...)"
                     {
-                        var methodExpr = new MethodExpression(operand);
+                        var methodExpr = new MemberExpression(operand);
                         return plug?.InvokeStorageCallback(methodExpr.Name, methodExpr.Args).ToDataString() ?? "";
                     }
                 case "func":
@@ -126,7 +126,7 @@ namespace Triggernometry.Expressions.String.Parsers
             // operator:operand = operator:Name[Index].Prop(Args)
             // (Index or Prop must be present)
 
-            var expr = new IndexMethodExpression(operand);
+            var expr = new IndexMemberExpression(operand);
 
             switch (operationToLower)
             {

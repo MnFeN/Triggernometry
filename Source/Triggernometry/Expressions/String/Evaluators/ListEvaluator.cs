@@ -11,10 +11,10 @@ namespace Triggernometry.Expressions.String.Evaluators
 {
     internal static class ListEvaluator
     {
-        internal static Func<VariableList, string> BuildEvaluator(IndexMethodExpression expr)
+        internal static Func<VariableList, string> BuildEvaluator(IndexMemberExpression expr)
         {
             // invalid (only name)
-            if (expr.Indexes.Length == 0 && !expr.Method.HasValue)
+            if (expr.Indexes.Length == 0 && !expr.Member.HasValue)
                 throw new NotImplementedException("list");
 
             // lvar:Name[Index]
@@ -25,8 +25,8 @@ namespace Triggernometry.Expressions.String.Evaluators
             }
 
             // lvar:Name.Method(Args)
-            var methodName = expr.Method.Name.ToLowerInvariant();
-            var args = expr.Method.Args;
+            var methodName = expr.Member.Name.ToLowerInvariant();
+            var args = expr.Member.Args;
             int argCount = args.Length;
             switch (methodName)
             {
