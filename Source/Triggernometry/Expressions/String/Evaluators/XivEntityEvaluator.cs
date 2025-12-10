@@ -57,7 +57,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
         internal static Func<Entity, object> TryGetSingleAccessor(MethodExpression expr)
         {
-            var accessor = TryGetSingleMethodAccessor(expr.Name, expr.Args ?? Array.Empty<string>())
+            var accessor = TryGetSingleMethodAccessor(expr.Name, expr.Args)
                         ?? TryGetSinglePropAccessor(expr.Name);
             if (accessor != null) 
                 return accessor;

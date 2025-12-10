@@ -25,7 +25,12 @@ namespace Triggernometry.Expressions.String.Models
         /// · Empty array: parentheses present but no arguments: MethodName() <br />
         /// · Non-empty array: arguments parsed from parentheses: MethodName(args) 
         /// </summary>
-        public readonly string[] Args;
+        public readonly string[] _args;
+
+        /// <summary>
+        /// Get the parsed argument list, or an empty array if no arguments were given.
+        /// </summary>
+        public string[] Args => _args ?? Array.Empty<string>();
 
         private readonly string _rawExpression;
 
@@ -51,7 +56,7 @@ namespace Triggernometry.Expressions.String.Models
         public MethodExpression(string name, string[] args, string rawExpression = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Args = args;
+            _args = args;
             _rawExpression = rawExpression;
         }
 
@@ -68,7 +73,7 @@ namespace Triggernometry.Expressions.String.Models
 
             _rawExpression = startIndex == 0 ? expr : expr.Substring(startIndex);
             Name = _rawExpression;
-            Args = null;
+            _args = null;
 
             int lParenPos = expr.IndexOf('(', startIndex);
 
@@ -107,7 +112,7 @@ namespace Triggernometry.Expressions.String.Models
             string rawArgs = expr.Substring(lParenPos + 1, argsStrLength);
 
             var hasArgs = !string.IsNullOrWhiteSpace(rawArgs);
-            Args = hasArgs ? ArgHelper.SplitArguments(rawArgs) : Array.Empty<string>();
+            _args = hasArgs ? ArgHelper.SplitArguments(rawArgs) : Array.Empty<string>();
         }
 
         private string BuildRawExpression()
@@ -115,10 +120,10 @@ namespace Triggernometry.Expressions.String.Models
             if (string.IsNullOrEmpty(Name))
                 return string.Empty;
 
-            if (Args == null)
+            if (_args == null)
                 return Name;
 
-            return $"{Name}({string.Join(", ", Args)})";
+            return $"{Name}({string.Join(", ", _args)})";
         }
     }
 }

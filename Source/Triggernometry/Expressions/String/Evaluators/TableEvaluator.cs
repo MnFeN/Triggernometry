@@ -33,7 +33,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
             // tvar:Name.Method(Args)
             var methodName = expr.Method.Name.ToLowerInvariant();
-            var args = expr.Method.Args ?? Array.Empty<string>();
+            var args = expr.Method.Args;
             int argCount = args.Length;
 
             switch (methodName)
