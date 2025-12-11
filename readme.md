@@ -24,7 +24,7 @@ Triggernometry 是 [Advanced Combat Tracker](https://advancedcombattracker.com/)
 
 此版本的插件默认添加一系列远程仓库，其中包含自检工具箱。
 
-成功使用一键安装器添加插件后，便可以使用此远程仓库解决使用过程中可能遇到的大部分问题。
+成功使用上述安装程序添加插件后，便可以使用此远程仓库解决使用过程中可能遇到的大部分问题。
 
 ## 文档
 
