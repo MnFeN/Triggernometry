@@ -102,7 +102,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Scalar)
                         {
-                            VariableScalar result = GetScalarWithCondition(store, varname, mustExist);
+                            VariableScalar result = GetVariableWithCondition(store, store.Scalar, varname, mustExist);
                             return result.Value;
                         }
                     }
@@ -147,7 +147,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         }
                         lock (store.List)
                         {
-                            VariableList vl = GetListWithCondition(store, expr.Name, mustExist);
+                            VariableList vl = GetVariableWithCondition(store, store.List, expr.Name, mustExist);
                             return evaluator(vl);
                         }
                     }
@@ -168,7 +168,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         }
                         lock (store.Dict)
                         {
-                            VariableDictionary vd = GetDictWithCondition(store, expr.Name, mustExist);
+                            VariableDictionary vd = GetVariableWithCondition(store, store.Dict, expr.Name, mustExist);
                             return evaluator(vd);
                         }
                     }
@@ -189,7 +189,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         }
                         lock (store.Table)
                         {
-                            VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
+                            VariableTable vt = GetVariableWithCondition(store, store.Table, expr.Name, mustExist);
                             return evaluator(vt);
                         }
                     }
@@ -212,7 +212,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
-                            VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
+                            VariableTable vt = GetVariableWithCondition(store, store.Table, expr.Name, mustExist);
                             int rowIdxFrom1 = vt.SeekRow(headerExpr);
                             if (rowIdxFrom1 > 0)
                             {
@@ -242,7 +242,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
-                            VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
+                            VariableTable vt = GetVariableWithCondition(store, store.Table, expr.Name, mustExist);
                             int colIdxFrom1 = vt.SeekColumn(headerExpr);
                             if (colIdxFrom1 > 0)
                             {
@@ -271,7 +271,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
-                            VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
+                            VariableTable vt = GetVariableWithCondition(store, store.Table, expr.Name, mustExist);
                             // index starts from 1; 0 if not found
                             int colIdxFrom1 = vt.SeekColumn(colHeader);
                             int rowIdxFrom1 = vt.SeekRow(rowHeader);
@@ -309,32 +309,13 @@ namespace Triggernometry.Expressions.String.Parsers
             store = isPersistent ? ctx?.Plugin?.cfg.PersistentVariables : ctx?.Plugin?.sessionvars;
         }
 
-        private static VariableScalar GetScalarWithCondition(VariableStore store, string varName, bool mustExist)
+        private static T GetVariableWithCondition<T>(VariableStore store, Dictionary<string, T> variables, string varName, bool mustExist)
+            where T: class, new()
         {
             return !mustExist
-                ? store.GetScalarVariable(varName, false)
-                : store.GetScalarVariable(varName) ?? throw new Exception($"Scalar variable '{varName}' does not exist.");
+                ? store.GetVariable(variables, varName, false)
+                : store.GetVariable(variables, varName) ?? throw new Exception($"Scalar variable '{varName}' does not exist.");
         }
 
-        private static VariableList GetListWithCondition(VariableStore store, string varName, bool mustExist)
-        {
-            return !mustExist
-                ? store.GetListVariable(varName, false)
-                : store.GetListVariable(varName) ?? throw new Exception($"List variable '{varName}' does not exist.");
-        }
-
-        private static VariableTable GetTableWithCondition(VariableStore store, string varName, bool mustExist)
-        {
-            return !mustExist
-                ? store.GetTableVariable(varName, false)
-                : store.GetTableVariable(varName) ?? throw new Exception($"Table variable '{varName}' does not exist.");
-        }
-
-        private static VariableDictionary GetDictWithCondition(VariableStore store, string varName, bool mustExist)
-        {
-            return !mustExist
-                ? store.GetDictVariable(varName, false)
-                : store.GetDictVariable(varName) ?? throw new Exception($"Dictionary variable '{varName}' does not exist.");
-        }
     }
 }
