@@ -62,11 +62,13 @@ namespace Triggernometry.UI.CustomControls
         public static List<string> prefixes = new List<string>() // right after "${"
         {
             "numeric:", "n:", "func:", "f:", "sfunc:", "if:",
-            "var:", "pvar:", "evar:", "epvar:", "v:", "pv:", "ev:", "epv:",
-            "lvar:", "plvar:", "elvar:", "eplvar:", "l:", "pl:", "el:", "epl:",
-            "tvar:", "ptvar:", "etvar:", "eptvar:", "t:", "pt:", "et:", "ept:",
-            "dvar:", "pdvar:", "edvar:", "epdvar:", "d:", "pd:", "ed:", "epd:",
-            "tvarcl:", "ptvarcl:", "tvarrl:", "ptvarrl:", "tvardl:", "ptvardl:",
+            "var:", "pvar:", "evar:", "epvar:", "v:", "pv:", "ev:", "epv:", "!var:", "!v:", "!pvar:", "!pv:",
+            "lvar:", "plvar:", "elvar:", "eplvar:", "l:", "pl:", "el:", "epl:", "!lvar:", "!l:", "!plvar:", "!pl:",
+            "tvar:", "ptvar:", "etvar:", "eptvar:", "t:", "pt:", "et:", "ept:", "!tvar:", "!t:", "!ptvar:", "!pt:",
+            "dvar:", "pdvar:", "edvar:", "epdvar:", "d:", "pd:", "ed:", "epd:", "!dvar:", "!d:", "!pdvar:", "!pd:",
+            "tvarcl:", "tcl:", "ptvarcl:", "ptcl:", "!tvarcl:", "!tcl:", "!ptvarcl:", "!ptcl:", 
+            "tvarrl:", "trl:", "ptvarrl:", "ptrl:", "!tvarrl:", "!trl:", "!ptvarrl:", "!ptrl:",
+            "tvardl:", "tdl:", "ptvardl:", "ptdl:", "!tvardl:", "!tdl:", "!ptvardl:", "!ptdl:",
             "?l:", "?lvar:", "?t:", "?tvar:", "?d:", "?dvar:",
             "etext:", "eimage:", "ecallback:", "estorage:",
             "env:",
@@ -410,18 +412,18 @@ namespace Triggernometry.UI.CustomControls
         public static readonly Regex rexEnvironment
             = new Regex(@"[$¤]\{env:(?<key>[^}]*)$", RegexOptions.Compiled);
         public static readonly Regex rexVarName
-            = new Regex(@"[$¤]\{(?<e>e?)(?<persist>p?)(?<type>[vltd]|text|image|callback|storage)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{(?<e>e?)!?(?<persist>p?)(?<type>[vltd]|text|image|callback|storage)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[]*)$", RegexOptions.Compiled);
         public static readonly Regex rexColHeader
-            = new Regex(@"[$¤]\{(?<persist>p?)t(?:var)?[cd]l:(?<name>[^$¤[]+)\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{!?(?<persist>p?)t(?:var)?[cd]l:(?<name>[^$¤[]+)\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
         public static readonly Regex rexRowHeader
-            = new Regex(@"[$¤]\{(?<persist>p?)t(?:var)?(?:rl:(?<name1>[^$¤[]+)|dl:(?<name2>[^$¤[]+)\[.*\])\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{!?(?<persist>p?)t(?:var)?(?:rl:(?<name1>[^$¤[]+)|dl:(?<name2>[^$¤[]+)\[.*\])\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
         public static readonly Regex rexDictKey
-            = new Regex(@"[$¤]\{(?<persist>p?)d(?:var)?:(?<name>[^$¤[]+)\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{!?(?<persist>p?)d(?:var)?:(?<name>[^$¤[]+)\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
         public static readonly Regex rexStructKey
             = new Regex(@"[$¤]\{_(?<struct>const|textaura|imageaura|config|storage)\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
         // The regexes "rex...Prop" and "rexMath" are matched after looking for the previous unclosed '{'
         public static readonly Regex rexVarProp
-            = new Regex(@"^[p?]?(?<type>[ltd])(?:var)?:.*\.(?<prop>[^.(]*)$", RegexOptions.Compiled);
+            = new Regex(@"^!?[p?]?(?<type>[ltd])(?:var)?:.*\.(?<prop>[^.(]*)$", RegexOptions.Compiled);
         public static readonly Regex rexMeProp
             = new Regex(@"^_me\.(?<prop>.*)$", RegexOptions.Compiled);
         public static readonly Regex rexStructProp
@@ -430,7 +432,7 @@ namespace Triggernometry.UI.CustomControls
             = new Regex(@"(?<![[$¤.])\b[\p{L}\w]+$", RegexOptions.Compiled);
 
         private static readonly Regex rexDynamicNames // capture the names in the expressions and store into lists for autofill
-            = new Regex(@"[$¤]\{e?(?<persist>p?)(?<type>[vltd]|text|image)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[{}\n]*)[^\${}]*\}", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{e?!?(?<persist>p?)(?<type>[vltd]|text|image)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[{}\n]*)[^\${}]*\}", RegexOptions.Compiled);
 
         private string CurrentMatch;
         private Timer acfDebounceTimer = new Timer();

@@ -557,7 +557,7 @@ namespace Triggernometry.Core.Actions
                         int h = string.IsNullOrWhiteSpace(_Y) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Y);
                         lock (svs.Table) // verified
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, createNew: true);
+                            VariableTable vt = svs.GetTableVariable(sourcename, true);
                             w = w == int.MinValue ? vt.Width : w;
                             h = h == int.MinValue ? vt.Height : h;
                             vt.Resize(w, h, vtchanger);

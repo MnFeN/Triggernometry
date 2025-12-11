@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Triggernometry.Core;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
@@ -21,11 +22,11 @@ namespace Triggernometry.Expressions.String.Parsers
             if (colonPos == -1) return null;
 
             var operation = rawExpr.Substring(0, colonPos).TrimEx();
-            var operationToLower = operation.ToLowerInvariant();
+            var operationLower = operation.ToLowerInvariant();
             var operand = rawExpr.Substring(colonPos + 1);
 
             // 先处理冒号后面的部分不需要使用通用 VarAccessExpression 解析属性、索引等的：
-            switch (operationToLower)
+            switch (operationLower)
             {
                 // check if variable exists (combined the logic for all types of variable expressions)
                 // evar  = ev, epvar  = epv;    elvar = el, eplvar = epl;
@@ -35,15 +36,16 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "et": case "etvar": case "ept": case "eptvar":
                 case "ed": case "edvar": case "epd": case "epdvar":
                     {
-                        var isPersisent = operation.StartsWith("ep");
-                        var varType = operation[isPersisent ? 2 : 1]; // 'v' 'l' 't' 'd'
+                        var isPersisent = operationLower.StartsWith("ep");
+                        var varType = operationLower[isPersisent ? 2 : 1]; // 'v' 'l' 't' 'd'
                         var varStore = isPersisent ? plug?.cfg.PersistentVariables : plug?.sessionvars;
+                        
                         switch (varType)
                         {
-                            case 'v': return varStore?.Scalar.ContainsKey(operand) ?? false ? "1" : "0";
-                            case 'l': return varStore?.List  .ContainsKey(operand) ?? false ? "1" : "0";
-                            case 't': return varStore?.Table .ContainsKey(operand) ?? false ? "1" : "0";
-                            case 'd': return varStore?.Dict  .ContainsKey(operand) ?? false ? "1" : "0";
+                            case 'v': return ContainsKeyResultWithLock(varStore?.Scalar, operand);
+                            case 'l': return ContainsKeyResultWithLock(varStore?.List, operand);
+                            case 't': return ContainsKeyResultWithLock(varStore?.Table, operand);
+                            case 'd': return ContainsKeyResultWithLock(varStore?.Dict, operand);
                             default: return "0"; // should not be here
                         }
                     }
@@ -51,17 +53,17 @@ namespace Triggernometry.Expressions.String.Parsers
                 // ecallback for named callbacks;
                 // estorage for script storage
                 case "etext":
-                    return plug?.sc?.textitems.ContainsKey(operand)  // new
-                        ?? plug?.textauras.ContainsKey(operand)      // old
-                        ?? false ? "1" : "0";
+                    return plug?.sc?.textitems != null  
+                        ? ContainsKeyResultWithLock(plug?.sc?.textitems, operand) // new
+                        : ContainsKeyResultWithLock(plug?.textauras, operand);    // old
                 case "eimage":
-                    return plug?.sc?.imageitems.ContainsKey(operand) // new
-                        ?? plug?.imageauras.ContainsKey(operand)     // old
-                        ?? false ? "1" : "0";
+                    return plug?.sc?.imageitems != null
+                        ? ContainsKeyResultWithLock(plug?.sc?.imageitems, operand) // new
+                        : ContainsKeyResultWithLock(plug?.imageauras, operand);    // old
                 case "ecallback":
-                    return plug?.callbacksByName.ContainsKey(operand) ?? false ? "1" : "0";
+                    return ContainsKeyResultWithLock(plug?.callbacksByName, operand);
                 case "estorage":
-                    return plug?.scriptingStorage.ContainsKey(operand) ?? false ? "1" : "0";
+                    return ContainsKeyResultWithLock(plug?.scriptingStorage, operand);
 
                 case "env": // folder environment variables
                     Folder f = ctx.Trigger?.Parent;
@@ -80,29 +82,27 @@ namespace Triggernometry.Expressions.String.Parsers
                 // The logger would also not log when invoking EvaluateStringExpression again,
                 // since the inner expressions would not change.
                 // Same for the numeric case.
-                case "string":
-                case "s":
+                case "string":  case "s":
                     return operand;
 
-                case "numeric":
-                case "n":
+                case "numeric": case "n":
                     return I18n.ThingToString(MathParser.Parse(operand));
 
                 case "if":
                     return TernaryParser.Parse(operand);
 
                 // retrieve scalar variable value
-                case "var":
-                case "v":
-                case "pvar":
-                case "pv":
+                case "var":   case "v":
+                case "pvar":  case "pv":
+                case "!var":  case "!v":
+                case "!pvar": case "!pv":
                     {
-                        var isPersistent = operation.StartsWith("p");
-                        var store = isPersistent ? plug.cfg.PersistentVariables : plug.sessionvars;
-                        var varname = operand;
+                        string varname = operand;
+                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Scalar)
                         {
-                            return store.GetScalarVariable(varname).Value;
+                            VariableScalar result = GetScalarWithCondition(store, varname, mustExist);
+                            return result.Value;
                         }
                     }
                 case "sfunc":  // "StorageKey(arg1, arg2, ...)"
@@ -128,88 +128,77 @@ namespace Triggernometry.Expressions.String.Parsers
 
             var expr = new IndexMemberExpression(operand);
 
-            switch (operationToLower)
+            switch (operationLower)
             {
                 // retrieve list variable value
-                case "lvar":
-                case "l":
-                case "plvar":
-                case "pl":
-                case "?lvar":
-                case "?l":
+                case "lvar":   case "l":
+                case "plvar":  case "pl":
+                case "!lvar":  case "!l":
+                case "!plvar": case "!pl":
+                case "?lvar":  case "?l":
                     {
                         Func<VariableList, string> evaluator = ListEvaluator.BuildEvaluator(expr);
-
-                        if (operation.StartsWith("?"))
+                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out bool isTemp);
+                        if (isTemp)
                         {
                             var vl = VariableList.BuildTemp(expr.Name); // name is actually expression: "1, 2, 3"
                             return evaluator(vl);
                         }
-
-                        VariableStore store = rawExpr.StartsWith("p") ? plug.cfg.PersistentVariables : plug.sessionvars;
                         lock (store.List)
                         {
-                            var vl = store.GetListVariable(expr.Name);
+                            VariableList vl = GetListWithCondition(store, expr.Name, mustExist);
                             return evaluator(vl);
                         }
                     }
 
                 // retrieve dict variable value
-                case "dvar":
-                case "d":
-                case "pdvar":
-                case "pd":
-                case "?dvar":
-                case "?d":
+                case "dvar":   case "d":
+                case "pdvar":  case "pd":
+                case "!dvar":  case "!d":
+                case "!pdvar": case "!pd":
+                case "?dvar":  case "?d":
                     {
                         Func<VariableDictionary, string> evaluator = DictEvaluator.BuildEvaluator(expr);
-
-                        if (operation.StartsWith("?"))
+                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out bool isTemp);
+                        if (isTemp)
                         {
                             var vd = VariableDictionary.BuildTemp(expr.Name); // name is actually expression: "a=1, b=2"
                             return evaluator(vd);
                         }
-
-                        VariableStore store = rawExpr.StartsWith("p") ? plug.cfg.PersistentVariables : plug.sessionvars;
                         lock (store.Dict)
                         {
-                            var vd = store.GetDictVariable(expr.Name);
+                            VariableDictionary vd = GetDictWithCondition(store, expr.Name, mustExist);
                             return evaluator(vd);
                         }
                     }
 
                 // retrieve table variable value
-                case "tvar":
-                case "t":
-                case "ptvar":
-                case "pt":
-                case "?tvar":
-                case "?t":
+                case "tvar":   case "t":
+                case "ptvar":  case "pt":
+                case "!tvar":  case "!t":
+                case "!ptvar": case "!pt":
+                case "?tvar":  case "?t":
                     {
                         Func<VariableTable, string> evaluator = TableEvaluator.BuildEvaluator(expr);
-
-                        if (operation.StartsWith("?"))
+                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out bool isTemp);
+                        if (isTemp)
                         {
                             var vt = VariableTable.BuildTemp(expr.Name); // name is actually expression
                             return evaluator(vt);
                         }
-
-                        VariableStore store = rawExpr.StartsWith("p") ? plug.cfg.PersistentVariables : plug.sessionvars;
                         lock (store.Table)
                         {
-                            VariableTable vt = store.GetTableVariable(expr.Name);
+                            VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
                             return evaluator(vt);
                         }
                     }
 
                 // row-based table lookup
-                case "tvarrl":
-                case "trl":
-                case "ptvarrl":
-                case "ptrl":
+                case "tvarrl":   case "trl":
+                case "ptvarrl":  case "ptrl":
+                case "!tvarrl":  case "!trl":
+                case "!ptvarrl": case "!ptrl":
                     {
-                        VariableStore store = rawExpr.StartsWith("p") ? plug.cfg.PersistentVariables : plug.sessionvars;
-
                         // tvarrl:TableName[Header][ColIndex]
                         if (expr.Indexes.Length != 2)
                         {
@@ -219,9 +208,10 @@ namespace Triggernometry.Expressions.String.Parsers
                         string headerExpr = expr.Index1;
                         int idx = expr.Index2.Equals("last", StringComparison.OrdinalIgnoreCase) ? -1 : (int)MathParser.Parse(expr.Index2);
 
+                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
-                            VariableTable vt = store.GetTableVariable(expr.Name);
+                            VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
                             int rowIdxFrom1 = vt.SeekRow(headerExpr);
                             if (rowIdxFrom1 > 0)
                             {
@@ -234,13 +224,11 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 // column-based table lookup
-                case "tvarcl":
-                case "tcl":
-                case "ptvarcl":
-                case "ptcl":
+                case "tvarcl":   case "tcl":
+                case "ptvarcl":  case "ptcl":
+                case "!tvarcl":  case "!tcl":
+                case "!ptvarcl": case "!ptcl":
                     {
-                        VariableStore store = rawExpr.StartsWith("p") ? plug.cfg.PersistentVariables : plug.sessionvars;
-
                         // tvarcl:TableName[Header][RowIndex]
                         if (expr.Indexes.Length != 2)
                         {
@@ -250,9 +238,10 @@ namespace Triggernometry.Expressions.String.Parsers
                         string headerExpr = expr.Index1;
                         int idx = expr.Index2.Equals("last", StringComparison.OrdinalIgnoreCase) ? -1 : (int)MathParser.Parse(expr.Index2);
 
+                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
-                            VariableTable vt = store.GetTableVariable(expr.Name);
+                            VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
                             int colIdxFrom1 = vt.SeekColumn(headerExpr);
                             if (colIdxFrom1 > 0)
                             {
@@ -265,13 +254,11 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 // double-based lookup based on col/row names
-                case "tvardl":
-                case "tdl":
-                case "ptvardl":
-                case "ptdl":
+                case "tvardl":   case "tdl":
+                case "ptvardl":  case "ptdl":
+                case "!tvardl":  case "!tdl":
+                case "!ptvardl": case "!ptdl":
                     {
-                        VariableStore store = rawExpr.StartsWith("p") ? plug.cfg.PersistentVariables : plug.sessionvars;
-
                         // tvardl:TableName[ColHeader][RowHeader]
                         if (expr.Indexes.Length != 2)
                         {
@@ -280,11 +267,10 @@ namespace Triggernometry.Expressions.String.Parsers
 
                         string colHeader = expr.Index1;
                         string rowHeader = expr.Index2;
-
+                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
-                            VariableTable vt = store.GetTableVariable(expr.Name);
-
+                            VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
                             // index starts from 1; 0 if not found
                             int colIdxFrom1 = vt.SeekColumn(colHeader);
                             int rowIdxFrom1 = vt.SeekRow(rowHeader);
@@ -293,13 +279,61 @@ namespace Triggernometry.Expressions.String.Parsers
                                 return vt.Peek(colIdxFrom1, rowIdxFrom1).ToString();
                             }
                         }
-
                         // not found:
                         return "";
                     }
             }
 
             return null;
+        }
+
+        private static string ContainsKeyResultWithLock<TValue>(IDictionary<string, TValue> dict, string key)
+        {
+            if (dict == null)
+            {
+                return "0";
+            }
+            lock (dict)
+            {
+                return dict.ContainsKey(key) ? "1" : "0";
+            }
+        }
+
+        private static void ResolveVarAccess(string operationLower, Context ctx, out VariableStore store, out bool mustExist, out bool isTemp)
+        {
+            mustExist = operationLower.StartsWith("!");
+            isTemp = operationLower.StartsWith("?");
+            int pPos = mustExist ? 1 : 0;
+            var isPersistent = operationLower.Length > pPos && operationLower[pPos] == 'p';
+            store = isPersistent ? ctx?.Plugin?.cfg.PersistentVariables : ctx?.Plugin?.sessionvars;
+        }
+
+        private static VariableScalar GetScalarWithCondition(VariableStore store, string varName, bool mustExist)
+        {
+            return !mustExist
+                ? store.GetScalarVariable(varName, false)
+                : store.GetScalarVariable(varName) ?? throw new Exception($"Scalar variable '{varName}' does not exist.");
+        }
+
+        private static VariableList GetListWithCondition(VariableStore store, string varName, bool mustExist)
+        {
+            return !mustExist
+                ? store.GetListVariable(varName, false)
+                : store.GetListVariable(varName) ?? throw new Exception($"List variable '{varName}' does not exist.");
+        }
+
+        private static VariableTable GetTableWithCondition(VariableStore store, string varName, bool mustExist)
+        {
+            return !mustExist
+                ? store.GetTableVariable(varName, false)
+                : store.GetTableVariable(varName) ?? throw new Exception($"Table variable '{varName}' does not exist.");
+        }
+
+        private static VariableDictionary GetDictWithCondition(VariableStore store, string varName, bool mustExist)
+        {
+            return !mustExist
+                ? store.GetDictVariable(varName, false)
+                : store.GetDictVariable(varName) ?? throw new Exception($"Dictionary variable '{varName}' does not exist.");
         }
     }
 }
