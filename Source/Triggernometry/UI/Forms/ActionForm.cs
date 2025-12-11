@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Speech.Synthesis;
 using System.Windows.Forms;
 using Triggernometry.Core;
 using Triggernometry.Localization;
@@ -384,7 +383,7 @@ namespace Triggernometry.UI.Forms
             txtTextAuraFont.Text = desc;
         }
 
-        internal void SettingsFromAction(ActionOld a)
+        internal void SettingsFromAction(ActionOld a) // to-do 检查这里的 a == null 分支和 new Action() 初始值有何差异，改成 a ?? new ActionOld() 形式
         {
             if (a == null)
             {
