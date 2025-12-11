@@ -70,7 +70,6 @@ namespace Triggernometry.UI.Forms
             // basic props
             Text = Info.Description;
             Font = UserFont;
-            TopMost = true;
             StartPosition = FormStartPosition.CenterScreen;
             int width = (TextRenderer.MeasureText("AAAA", UserFont).Width) * 16;
             MinimumSize = new Size(width, width); // To-do：autoadjust by minimum height
@@ -85,6 +84,7 @@ namespace Triggernometry.UI.Forms
                 mainPanel.AutoScrollPosition = new Point(0, 0);
                 BringToFront();
                 Activate();
+                TopMost = true;
             };
             btnSave.Click += btnSave_Click;
         }
