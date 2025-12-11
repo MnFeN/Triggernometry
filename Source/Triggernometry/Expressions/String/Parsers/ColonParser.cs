@@ -12,21 +12,22 @@ namespace Triggernometry.Expressions.String.Parsers
 {
     internal static class ColonParser
     {
-        // 【【要不要 trim part】】
-        internal static string TryParse(string rawExpr, Context ctx)
+        internal static string TryParse(string rawExpression, Context ctx)
         {
             ctx = ctx ?? Context.Unbound;
             var plug = ctx.Plugin; // can be null
 
-            var colonPos = rawExpr.IndexOf(':');
+            var colonPos = rawExpression.IndexOf(':');
             if (colonPos == -1) return null;
 
-            var operation = rawExpr.Substring(0, colonPos).TrimEx();
-            var operationLower = operation.ToLowerInvariant();
-            var operand = rawExpr.Substring(colonPos + 1);
+            var rawPrefix = rawExpression.Substring(0, colonPos);
+            var prefixLower = rawPrefix.TrimEx().ToLowerInvariant();
+            
+            var rawBody = rawExpression.Substring(colonPos + 1);
+            var body = rawBody.TrimEx();
 
-            // 先处理冒号后面的部分不需要使用通用 VarAccessExpression 解析属性、索引等的：
-            switch (operationLower)
+            // First handle the cases that could not tolerate the general IndexMemberExpression format:
+            switch (prefixLower)
             {
                 // check if variable exists (combined the logic for all types of variable expressions)
                 // evar  = ev, epvar  = epv;    elvar = el, eplvar = epl;
@@ -36,16 +37,16 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "et": case "etvar": case "ept": case "eptvar":
                 case "ed": case "edvar": case "epd": case "epdvar":
                     {
-                        var isPersisent = operationLower.StartsWith("ep");
-                        var varType = operationLower[isPersisent ? 2 : 1]; // 'v' 'l' 't' 'd'
+                        var isPersisent = prefixLower.StartsWith("ep");
+                        var varType = prefixLower[isPersisent ? 2 : 1]; // 'v' 'l' 't' 'd'
                         var varStore = isPersisent ? plug?.cfg.PersistentVariables : plug?.sessionvars;
                         
                         switch (varType)
                         {
-                            case 'v': return ContainsKeyResultWithLock(varStore?.Scalar, operand);
-                            case 'l': return ContainsKeyResultWithLock(varStore?.List, operand);
-                            case 't': return ContainsKeyResultWithLock(varStore?.Table, operand);
-                            case 'd': return ContainsKeyResultWithLock(varStore?.Dict, operand);
+                            case 'v': return ContainsKeyResultWithLock(varStore?.Scalar, body);
+                            case 'l': return ContainsKeyResultWithLock(varStore?.List, body);
+                            case 't': return ContainsKeyResultWithLock(varStore?.Table, body);
+                            case 'd': return ContainsKeyResultWithLock(varStore?.Dict, body);
                             default: return "0"; // should not be here
                         }
                     }
@@ -54,22 +55,22 @@ namespace Triggernometry.Expressions.String.Parsers
                 // estorage for script storage
                 case "etext":
                     return plug?.sc?.textitems != null  
-                        ? ContainsKeyResultWithLock(plug?.sc?.textitems, operand) // new
-                        : ContainsKeyResultWithLock(plug?.textauras, operand);    // old
+                        ? ContainsKeyResultWithLock(plug?.sc?.textitems, body) // new
+                        : ContainsKeyResultWithLock(plug?.textauras, body);    // old
                 case "eimage":
                     return plug?.sc?.imageitems != null
-                        ? ContainsKeyResultWithLock(plug?.sc?.imageitems, operand) // new
-                        : ContainsKeyResultWithLock(plug?.imageauras, operand);    // old
+                        ? ContainsKeyResultWithLock(plug?.sc?.imageitems, body) // new
+                        : ContainsKeyResultWithLock(plug?.imageauras, body);    // old
                 case "ecallback":
-                    return ContainsKeyResultWithLock(plug?.callbacksByName, operand);
+                    return ContainsKeyResultWithLock(plug?.callbacksByName, body);
                 case "estorage":
-                    return ContainsKeyResultWithLock(plug?.scriptingStorage, operand);
+                    return ContainsKeyResultWithLock(plug?.scriptingStorage, body);
 
                 case "env": // folder environment variables
                     Folder f = ctx.Trigger?.Parent;
                     while (f != null)
                     {
-                        if (f.EnvironmentVariables.TryGetValue(operand, out var value))
+                        if (f.EnvironmentVariables.TryGetValue(body, out var value))
                         {
                             return value;
                         }
@@ -83,13 +84,13 @@ namespace Triggernometry.Expressions.String.Parsers
                 // since the inner expressions would not change.
                 // Same for the numeric case.
                 case "string":  case "s":
-                    return operand;
+                    return rawBody;
 
                 case "numeric": case "n":
-                    return I18n.ThingToString(MathParser.Parse(operand));
+                    return I18n.ThingToString(MathParser.Parse(body));
 
                 case "if":
-                    return TernaryParser.Parse(operand);
+                    return TernaryParser.Parse(body);
 
                 // retrieve scalar variable value
                 case "var":   case "v":
@@ -97,8 +98,8 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "!var":  case "!v":
                 case "!pvar": case "!pv":
                     {
-                        string varname = operand;
-                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out _);
+                        string varname = body;
+                        ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Scalar)
                         {
                             VariableScalar result = GetScalarWithCondition(store, varname, mustExist);
@@ -107,13 +108,13 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
                 case "sfunc":  // "StorageKey(arg1, arg2, ...)"
                     {
-                        var methodExpr = new MemberExpression(operand);
+                        var methodExpr = new MemberExpression(body);
                         return plug?.InvokeStorageCallback(methodExpr.Name, methodExpr.Args).ToDataString() ?? "";
                     }
                 case "func":
                 case "f":
                     {
-                        var funcResult = StringFunctionParser.TryParse(operand);
+                        var funcResult = StringFunctionParser.TryParse(rawBody, rawExpression); // use untrimmed body
                         if (funcResult != null)
                         {
                             return funcResult;
@@ -126,9 +127,9 @@ namespace Triggernometry.Expressions.String.Parsers
             // operator:operand = operator:Name[Index].Prop(Args)
             // (Index or Prop must be present)
 
-            var expr = new IndexMemberExpression(operand);
+            var expr = new IndexMemberExpression(body);
 
-            switch (operationLower)
+            switch (prefixLower)
             {
                 // retrieve list variable value
                 case "lvar":   case "l":
@@ -138,7 +139,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "?lvar":  case "?l":
                     {
                         Func<VariableList, string> evaluator = ListEvaluator.BuildEvaluator(expr);
-                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out bool isTemp);
+                        ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out bool isTemp);
                         if (isTemp)
                         {
                             var vl = VariableList.BuildTemp(expr.Name); // name is actually expression: "1, 2, 3"
@@ -159,7 +160,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "?dvar":  case "?d":
                     {
                         Func<VariableDictionary, string> evaluator = DictEvaluator.BuildEvaluator(expr);
-                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out bool isTemp);
+                        ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out bool isTemp);
                         if (isTemp)
                         {
                             var vd = VariableDictionary.BuildTemp(expr.Name); // name is actually expression: "a=1, b=2"
@@ -180,7 +181,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "?tvar":  case "?t":
                     {
                         Func<VariableTable, string> evaluator = TableEvaluator.BuildEvaluator(expr);
-                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out bool isTemp);
+                        ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out bool isTemp);
                         if (isTemp)
                         {
                             var vt = VariableTable.BuildTemp(expr.Name); // name is actually expression
@@ -202,13 +203,13 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvarrl:TableName[Header][ColIndex]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Row-based table lookup expects exactly two indices [Header][ColIndex]: '{rawExpr}'");
+                            throw new Exception($"Row-based table lookup expects exactly two indices [Header][ColIndex]: '{rawExpression}'");
                         }
 
                         string headerExpr = expr.Index1;
                         int idx = expr.Index2.Equals("last", StringComparison.OrdinalIgnoreCase) ? -1 : (int)MathParser.Parse(expr.Index2);
 
-                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out _);
+                        ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
                             VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
@@ -232,13 +233,13 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvarcl:TableName[Header][RowIndex]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Column-based table lookup expects exactly two indices [Header][RowIndex]: '{rawExpr}'");
+                            throw new Exception($"Column-based table lookup expects exactly two indices [Header][RowIndex]: '{rawExpression}'");
                         }
 
                         string headerExpr = expr.Index1;
                         int idx = expr.Index2.Equals("last", StringComparison.OrdinalIgnoreCase) ? -1 : (int)MathParser.Parse(expr.Index2);
 
-                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out _);
+                        ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
                             VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
@@ -262,12 +263,12 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvardl:TableName[ColHeader][RowHeader]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Double-based table lookup expects exactly two indices [ColHeader][RowHeader]: '{rawExpr}'");
+                            throw new Exception($"Double-based table lookup expects exactly two indices [ColHeader][RowHeader]: '{rawExpression}'");
                         }
 
                         string colHeader = expr.Index1;
                         string rowHeader = expr.Index2;
-                        ResolveVarAccess(operationLower, ctx, out var store, out bool mustExist, out _);
+                        ResolveVarAccess(prefixLower, ctx, out var store, out bool mustExist, out _);
                         lock (store.Table)
                         {
                             VariableTable vt = GetTableWithCondition(store, expr.Name, mustExist);
@@ -299,12 +300,12 @@ namespace Triggernometry.Expressions.String.Parsers
             }
         }
 
-        private static void ResolveVarAccess(string operationLower, Context ctx, out VariableStore store, out bool mustExist, out bool isTemp)
+        private static void ResolveVarAccess(string prefixLower, Context ctx, out VariableStore store, out bool mustExist, out bool isTemp)
         {
-            mustExist = operationLower.StartsWith("!");
-            isTemp = operationLower.StartsWith("?");
+            mustExist = prefixLower.StartsWith("!");
+            isTemp = prefixLower.StartsWith("?");
             int pPos = mustExist ? 1 : 0;
-            var isPersistent = operationLower.Length > pPos && operationLower[pPos] == 'p';
+            var isPersistent = prefixLower.Length > pPos && prefixLower[pPos] == 'p';
             store = isPersistent ? ctx?.Plugin?.cfg.PersistentVariables : ctx?.Plugin?.sessionvars;
         }
 
