@@ -27,7 +27,12 @@ namespace Triggernometry.Expressions.String.Evaluators
             // lvar:Name.Method(Args)
             var methodName = expr.Member.Name.ToLowerInvariant();
             var args = expr.Member.Args;
-            int argCount = args.Length;
+
+            void CheckArgCountLocal(string argCountRule)
+            {
+                CheckArgCount(argCountRule, args.Length, methodName, expr.RawExpression);
+            }
+
             switch (methodName)
             {
                 case "size":
@@ -36,15 +41,15 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "indexof":
                 case "i":
-                    CheckArgCount("1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1");
                     return vl => vl.IndexOf(args[0]).ToString();
 
                 case "lastindexof":
-                    CheckArgCount("1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1");
                     return vl => vl.LastIndexOf(args[0]).ToString();
 
                 case "indicesof":
-                    CheckArgCount("1-3", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1-3");
                     {
                         string joiner = GetArgument(args, 1, ",");
                         string slicesStr = GetArgument(args, 2, ":");
@@ -56,7 +61,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "sum":    // lvar:list.sum(slices = ":")
-                    CheckArgCount("0-1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-1");
                     {
                         string slicesStr = GetArgument(args, 0, ":");
                         return vl =>
@@ -68,7 +73,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "min":    // lvar:list.min(type = "n", slices = ":")  num = "n" / str = "s" / hex = "h"
                 case "max":
-                    CheckArgCount("0-2", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-2");
                     {
                         bool isMin = methodName.StartsWith("min", StringComparison.OrdinalIgnoreCase);
                         var valueType = GetArgument(args, 0);
@@ -84,7 +89,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "join":        // lvar:list.join(joiner = ",", slices = ":")
                 case "randjoin":    // lvar:list.randjoin(joiner = ",", slices = ":")
-                    CheckArgCount("0-2", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-2");
                     {
                         string joiner = GetArgument(args, 0, ",");
                         string slicesStr = GetArgument(args, 1, ":");
@@ -101,7 +106,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "count":    // count(targetStr, slices = ":")
-                    CheckArgCount("1-2", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1-2");
                     {
                         string slicesStr = GetArgument(args, 1, ":");
                         return vl =>
@@ -112,7 +117,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "contain":
-                    CheckArgCount("1-2", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1-2");
                     {
                         string slicesStr = GetArgument(args, 1, ":");
                         return vl =>
@@ -123,7 +128,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "ifcontain":
-                    CheckArgCount("3", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("3");
                     {
                         string target = args[0];
                         string trueStr = args[1];

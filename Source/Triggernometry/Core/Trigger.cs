@@ -817,7 +817,6 @@ namespace Triggernometry.Core
             {
                 var newAction = new ActionOld();
                 a.CopySettingsTo(newAction);
-                newAction.ParentTrigger = t;
                 t.Actions.Add(newAction);
             }
             t.Condition = (ConditionGroup)Condition.Duplicate();

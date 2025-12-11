@@ -82,13 +82,9 @@ namespace Triggernometry.UI.Forms
             txtName.GotFocus += ExpressionTextBox.ReplaceIncompleteLineBreaksInClipboard;
             RestoredSavedDimensions();
 
-            SettingsFromTrigger(t); // initialize data
-            foreach (var action in Actions)
-            {
-                action.ParentTrigger = Trigger;  // should be already set, but just in case
-            }
+            SettingsFromTrigger(t); // initialize data, copy action list, etc.
 
-            UiContext = new Context(Trigger);
+            UiContext = new Context(t);
             TreeView = treeView;
             Images = imageList;
 

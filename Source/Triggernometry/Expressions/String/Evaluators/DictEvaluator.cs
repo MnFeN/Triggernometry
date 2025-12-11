@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.String.Models;
@@ -26,18 +25,22 @@ namespace Triggernometry.Expressions.String.Evaluators
             // dvar:Name.Method(Args)
             var methodName = expr.Member.Name.ToLowerInvariant();
             var args = expr.Member.Args;
-            int argCount = args.Length;
+
+            void CheckArgCountLocal(string argCountRule)
+            {
+                CheckArgCount(argCountRule, args.Length, methodName, expr.RawExpression);
+            }
 
             switch (methodName)
             {
                 case "size":
                 case "length":
-                    CheckArgCount("0", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0");
                     return vd => vd.Size.ToString();
 
                 case "ekey":
                 case "evalue":
-                    CheckArgCount("1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1");
                     {
                         string queryStr = args[0];
                         bool checkKey = methodName == "ekey";
@@ -50,7 +53,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "ifekey":
                 case "ifevalue":
-                    CheckArgCount("3", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("3");
                     {
                         string queryStr = args[0];
                         string trueStr = args[1];
@@ -64,21 +67,21 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "count": // count(value)
-                    CheckArgCount("1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1");
                     {
                         string value = args[0];
                         return vd => vd.Count(value).ToString();
                     }
 
                 case "keyof":
-                    CheckArgCount("1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1");
                     {
                         string value = args[0];
                         return vd => vd.KeyOf(value);
                     }
 
                 case "keysof":
-                    CheckArgCount("1-2", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1-2");
                     {
                         string value = args[0];
                         string joiner = GetArgument(args, 1, ",");
@@ -86,7 +89,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "joinkeys":
-                    CheckArgCount("0-1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-1");
                     {
                         string joiner = GetArgument(args, 0, ",");
                         return vd => vd.JoinKeys(joiner);
@@ -95,7 +98,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                 case "joinvalues":
                     {
                         string joiner = GetArgument(args, 0, ",");
-                        if (argCount <= 1)
+                        if (args.Length <= 1)
                         {
                             // joinvalues(joiner = ",")
                             return vd => vd.JoinValues(joiner);
@@ -113,7 +116,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                         string kvjoiner = GetArgument(args, 0, "=");
                         string pairjoiner = GetArgument(args, 1, ",");
 
-                        if (argCount <= 2)
+                        if (args.Length <= 2)
                         {
                             // joinall(kvjoiner = "=", pairjoiner = ",")
                             return vd => vd.JoinAll(kvjoiner, pairjoiner);
@@ -128,7 +131,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "sumkeys":
                 case "sum": // sum values
-                    CheckArgCount("0", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0");
                     {
                         bool sumKeys = methodName == "sumkeys";
                         return vd =>
@@ -140,7 +143,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "minkey":
                 case "maxkey":
-                    CheckArgCount("0-1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-1");
                     {
                         bool isMin = methodName.StartsWith("min", StringComparison.OrdinalIgnoreCase);
                         var valueType = GetArgument(args, 0);
@@ -150,7 +153,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "min":  // dvar:dict.min(type = "n")  num = "n" / str = "s" / hex = "h"
                 case "max":
-                    CheckArgCount("0-1", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-1");
                     {
                         bool isMin = methodName.StartsWith("min", StringComparison.OrdinalIgnoreCase);
                         var valueType = GetArgument(args, 0);

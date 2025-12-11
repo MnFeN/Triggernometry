@@ -20,7 +20,7 @@ namespace Triggernometry.Core.Variables
         public SerializableDictionary<string, VariableDictionary> Dict { get; set; } = new SerializableDictionary<string, VariableDictionary>();
 
         /// <summary> Return a new instance if not exist. Store the new instance if <paramref name="storeNew"/>.</summary>
-        private TValue GetVariable<TValue>(Dictionary<string, TValue> variables, string name, bool storeNew) where TValue : new()
+        public TValue GetVariable<TValue>(Dictionary<string, TValue> variables, string name, bool storeNew) where TValue : new()
         {
             lock (variables)
             {
@@ -62,7 +62,7 @@ namespace Triggernometry.Core.Variables
         }
 
         /// <summary> Null if not exist. </summary>
-        private TValue GetVariable<TValue>(Dictionary<string, TValue> variables, string name) where TValue : class
+        public TValue GetVariable<TValue>(Dictionary<string, TValue> variables, string name) where TValue : class
         {
             lock (variables)
             {

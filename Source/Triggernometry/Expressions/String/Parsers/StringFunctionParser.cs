@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
@@ -26,60 +25,65 @@ namespace Triggernometry.Expressions.String.Parsers
             if (!funcMatch.Success)
                 throw new Exception($"Invalid function expression syntax: '{operand}'");
 
-            var funcname = funcMatch.Groups["name"].Value.ToLower().TrimEx();
+            var funcNameLower = funcMatch.Groups["name"].Value.ToLower().TrimEx();
             var sourceString = funcMatch.Groups["val"].Value;
             var args = SplitArguments(funcMatch.Groups["arg"].Value);
-            int argCount = args.Count();
-            switch (funcname)
+
+            void CheckArgCountLocal(string argCountRule)
+            {
+                CheckArgCount(argCountRule, args.Length, funcNameLower, rawExpression);
+            }
+
+            switch (funcNameLower)
             {
                 case "toupper":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     return sourceString.ToUpper();
 
                 case "tolower":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     return sourceString.ToLower();
 
                 case "tofullwidth":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     return sourceString.ToFullWidth();
 
                 case "tohalfwidth":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     return sourceString.ToHalfWidth();
 
                 case "tosimpcn":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     return sourceString.ToSimplifiedChinese();
                 case "totradcn":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     return sourceString.ToTraditionalChinese();
 
                 case "toxivchar": // old name
                 case "toblackchar":
-                    CheckArgCount("0-1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0-1");
                     var combineDigits = GetArgument(args, 0)?.ParseData<bool>() ?? false;
                     return sourceString.ToXivBlackBoxChar(combineDigits);
 
                 case "towhitechar":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     return sourceString.ToXivWhiteBoxChar();
 
                 case "length":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     return sourceString.Length.ToString();
 
                 case "hex2dec":    // hex2dec()
                 case "hex2float":  // hex2float()
                 case "hex2double": // hex2double()
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     {
                         sourceString = sourceString.TrimEx();
                         if (!long.TryParse(sourceString, NumberStyles.HexNumber, InvClt, out var dataAsLong))
                         {
-                            throw ParseTypeError(funcname, sourceString, I18n.TranslateWord("hex"), rawExpression);
+                            throw ParseTypeError(funcNameLower, sourceString, I18n.TranslateWord("hex"), rawExpression);
                         }
-                        switch (funcname)
+                        switch (funcNameLower)
                         {
                             case "hex2dec":
                                 return dataAsLong.ToString();
@@ -94,18 +98,18 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 case "parsedmg": // parse the hex damage in ACT loglines to dec value
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     {
                         sourceString = sourceString.TrimEx();
                         if (!reHex8.IsMatch(sourceString))
                         {
-                            throw InvalidValueError(funcname, "funcval", sourceString, rawExpression);
+                            throw InvalidValueError(funcNameLower, "funcval", sourceString, rawExpression);
                         }
                         return MathParser.ParseDamage(sourceString).ToString(InvClt);
                     }
 
                 case "float2hex":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     {
                         if (!float.TryParse(sourceString, NSFloat, InvClt, out float floatValue))
                         {
@@ -117,7 +121,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 case "double2hex":
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     {
                         if (!double.TryParse(sourceString, NSFloat, InvClt, out double doubleValue))
                         {
@@ -131,18 +135,18 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "dec2hex2": // dec2hex2()
                 case "dec2hex4": // dec2hex4()
                 case "dec2hex8": // dec2hex8()
-                    CheckArgCount("0", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0");
                     {
                         if (!long.TryParse(sourceString, NSFloat, InvClt, out var result))
                         {
                             throw ParseTypeError(I18n.TranslateWord("string"), sourceString, I18n.TranslateWord("int"), rawExpression);
                         }
-                        string format = funcname.Substring(6).ToUpper(); // "X" "X2" "X4" "X8"
+                        string format = funcNameLower.Substring(6).ToUpper(); // "X" "X2" "X4" "X8"
                         return result.ToString(format);
                     }
 
                 case "ord": // chars => charcodes separated by separator
-                    CheckArgCount("0-1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0-1");
                     {
                         string separator = GetArgument(args, 0, ",");
                         List<int> charcodes = new List<int>();
@@ -161,7 +165,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 case "chr": // charcodes separated by separator => chars
-                    CheckArgCount("0-1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0-1");
                     {
                         string separator = GetArgument(args, 0, ",");
                         string[] rawCharcodes = SplitArguments(sourceString, separator: separator);
@@ -182,19 +186,19 @@ namespace Triggernometry.Expressions.String.Parsers
 
                 case "padleft":
                 case "padright":
-                    CheckArgCount("2", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("2");
                     {
                         char paddingChar = args[0].Length == 1 ? args[0][0] : GetReplacedChar(int.Parse(args[0], InvClt));
                         int length = int.Parse(args[1], InvClt);
 
-                        if (funcname == "padleft")
+                        if (funcNameLower == "padleft")
                             return sourceString.PadLeft(length, paddingChar);
                         else
                             return sourceString.PadRight(length, paddingChar);
                     }
 
                 case "repeat": // repeat(times, joiner = "")
-                    CheckArgCount("1-2", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1-2");
                     {
                         if (!int.TryParse(args[0], NSFloat, InvClt, out int times))
                         {
@@ -223,10 +227,10 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 case "replace": // replace(oldStr, newStr = "", isLooped = false)
-                    CheckArgCount("1-3", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1-3");
                     {
                         string oldStr = args[0];
-                        if (oldStr == "") { throw InvalidValueError(funcname, "oldString", oldStr, rawExpression); }
+                        if (oldStr == "") { throw InvalidValueError(funcNameLower, "oldString", oldStr, rawExpression); }
 
                         string newStr = GetArgument(args, 1, "");
                         if (newStr == oldStr) { }
@@ -261,7 +265,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 case "substring": // substring(startindex, length) or substring(startindex)
-                    CheckArgCount("1-2", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1-2");
                     {
                         if (!int.TryParse(args[0], NSFloat, InvClt, out int startIndex))
                         {
@@ -271,7 +275,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         {
                             startIndex += sourceString.Length;
                         }
-                        switch (argCount)
+                        switch (args.Length)
                         {
                             case 1:
                                 return sourceString.Substring(startIndex);
@@ -286,7 +290,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         return null; // unreachable
                     }
                 case "slice":  // slice(slices = ":") 
-                    CheckArgCount("0-1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0-1");
                     {
                         string slicesStr = GetArgument(args, 0, ":");
                         var indices = GetSliceIndices(slicesStr, sourceString.Length, rawExpression, startIndex: 0);
@@ -299,7 +303,7 @@ namespace Triggernometry.Expressions.String.Parsers
 
                     }
                 case "pick": // pick(index, splitter = ",")
-                    CheckArgCount("1-2", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1-2");
                     {
                         string separator = GetArgument(args, 1, ",");
                         string[] strArray = SplitArguments(sourceString, separator: separator);
@@ -317,14 +321,14 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "i":
                 case "indexof":      // indexof(stringtosearch)
                 case "lastindexof":  // lastindexof(stringtosearch)
-                    CheckArgCount("1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1");
                     {
-                        int index = funcname.StartsWith("i") ? sourceString.IndexOf(args[0]) : sourceString.LastIndexOf(args[0]);
+                        int index = funcNameLower.StartsWith("i") ? sourceString.IndexOf(args[0]) : sourceString.LastIndexOf(args[0]);
                         return I18n.ThingToString(index);
                     }
 
                 case "indicesof":
-                    CheckArgCount("1-3", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1-3");
                     {
                         string targetStr = args[0];
                         int subLength = targetStr.Length;
@@ -346,7 +350,7 @@ namespace Triggernometry.Expressions.String.Parsers
 
                     }
                 case "compare": // compare(stringtocompare) or compare(stringtocompare, ignorecase)
-                    CheckArgCount("1-2", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1-2");
                     string ignoreCaseStr = GetArgument(args, 1, "true");
                     if (!bool.TryParse(ignoreCaseStr, out bool ignoreCase))
                     {
@@ -355,7 +359,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     return string.Compare(sourceString, args[0], ignoreCase).ToString();
 
                 case "versioncompare": // ${f:versioncompare(1.2.0.0):1.1.8.0} = -1
-                    CheckArgCount("1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1");
                     Version srcVersion = Version.TryParse(sourceString, out Version v)
                         ? v : throw ParseTypeError(I18n.TranslateWord("string"), sourceString, I18n.TranslateWord("version"), rawExpression);
                     Version tgtVersion = Version.TryParse(args[0], out v)
@@ -363,46 +367,46 @@ namespace Triggernometry.Expressions.String.Parsers
                     return I18n.ThingToString(srcVersion.CompareTo(tgtVersion));
 
                 case "contain":
-                    CheckArgCount("1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1");
                     return sourceString.Contains(args[0]) ? "1" : "0";
 
                 case "startwith":
-                    CheckArgCount("1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1");
                     return sourceString.StartsWith(args[0]) ? "1" : "0";
 
                 case "endwith":
-                    CheckArgCount("1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1");
                     return sourceString.EndsWith(args[0]) ? "1" : "0";
 
                 case "equal":
-                    CheckArgCount("1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1");
                     return args[0] == sourceString ? "1" : "0";
 
                 case "ifcontain":
-                    CheckArgCount("3", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("3");
                     return sourceString.Contains(args[0]) ? args[1] : args[2];
 
                 case "ifstartwith":
-                    CheckArgCount("3", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("3");
                     return sourceString.StartsWith(args[0]) ? args[1] : args[2];
 
                 case "ifendwith":
-                    CheckArgCount("3", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("3");
                     return sourceString.EndsWith(args[0]) ? args[1] : args[2];
 
                 case "ifequal":
-                    CheckArgCount("3", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("3");
                     return args[0] == sourceString ? args[1] : args[2];
 
                 case "match": // func:match(str):regex
-                    CheckArgCount("1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("1");
                     {
                         Match match = new Regex(UnescapeCustomExpr(sourceString)).Match(args[0]);
                         return match.Success ? "1" : "0";
                     }
 
                 case "capture": // func:capture(str, group):regex
-                    CheckArgCount("2", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("2");
                     {
                         Match match = new Regex(UnescapeCustomExpr(sourceString)).Match(args[0]);
                         if (int.TryParse(args[1], NSFloat, InvClt, out int groupNumber)
@@ -414,7 +418,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 case "ifmatch": // func:ifmatch(str, successStr, failStr):regex
-                    CheckArgCount("3", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("3");
                     {
                         Match match = new Regex(UnescapeCustomExpr(sourceString)).Match(args[0]);
                         return match.Success ? args[1] : args[2];
@@ -424,7 +428,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "trimleft":    // trimleft() or trimleft(charcode/char, charcode/char, ...)
                 case "trimright":   // trimright() or trimright(charcode/char, charcode/char, ...)
                     string trimChars = "";
-                    if (argCount > 0)
+                    if (args.Length > 0)
                     {
                         foreach (string arg in args)
                         {
@@ -435,7 +439,7 @@ namespace Triggernometry.Expressions.String.Parsers
                             }
                             else if (arg.Length == 0)
                             {
-                                throw InvalidValueError(funcname, I18n.TranslateWord("char") + "/" + I18n.TranslateWord("charcode"), arg, rawExpression);
+                                throw InvalidValueError(funcNameLower, I18n.TranslateWord("char") + "/" + I18n.TranslateWord("charcode"), arg, rawExpression);
                             }
                             else if (arg.Length > 1)
                             {
@@ -449,21 +453,21 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
                     char[] trimCharsArray = trimChars.ToCharArray();
 
-                    switch (funcname)
+                    switch (funcNameLower)
                     {
                         case "trim":
-                            return argCount == 0 ? sourceString.TrimEx() : sourceString.Trim(trimCharsArray);
+                            return args.Length == 0 ? sourceString.TrimEx() : sourceString.Trim(trimCharsArray);
 
                         case "trimleft":
-                            return argCount == 0 ? sourceString.TrimLeftEx() : sourceString.TrimStart(trimCharsArray);
+                            return args.Length == 0 ? sourceString.TrimLeftEx() : sourceString.TrimStart(trimCharsArray);
 
                         case "trimright":
-                            return argCount == 0 ? sourceString.TrimRightEx() : sourceString.TrimEnd(trimCharsArray);
+                            return args.Length == 0 ? sourceString.TrimRightEx() : sourceString.TrimEnd(trimCharsArray);
                     }
                     return null; // unreachable
 
                 case "format": // format(type,formatstring)
-                    CheckArgCount("2", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("2");
                     {
                         Type type = Type.GetType(args[0]);
                         object converted = Convert.ChangeType(sourceString, type, InvClt);
@@ -472,11 +476,11 @@ namespace Triggernometry.Expressions.String.Parsers
 
                 case "utctime": // utctime(formatstring)
                 case "localtime": // localtime(formatstring)
-                    CheckArgCount("0-1", argCount, funcname, rawExpression);
+                    CheckArgCountLocal("0-1");
                     {
                         var ts = long.Parse(sourceString, InvClt);
                         DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(ts);
-                        if (funcname == "localtime")
+                        if (funcNameLower == "localtime")
                         {
                             dt = dt.ToLocalTime();
                         }
@@ -484,7 +488,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         return dt.ToString(format);
                     }
                 default:
-                    throw new Exception($"Unknown string function '{funcname}' in expression '{rawExpression}'.");
+                    throw new Exception($"Unknown string function '{funcNameLower}' in expression '{rawExpression}'.");
             }
         }
     }

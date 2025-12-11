@@ -34,23 +34,27 @@ namespace Triggernometry.Expressions.String.Evaluators
             // tvar:Name.Method(Args)
             var methodName = expr.Member.Name.ToLowerInvariant();
             var args = expr.Member.Args;
-            int argCount = args.Length;
+
+            void CheckArgCountLocal(string argCountRule)
+            {
+                CheckArgCount(argCountRule, args.Length, methodName, expr.RawExpression);
+            }
 
             switch (methodName)
             {
                 case "w":
                 case "width":
-                    CheckArgCount("0", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0");
                     return vt => vt.Width.ToString();
 
                 case "h":
                 case "height":
-                    CheckArgCount("0", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0");
                     return vt => vt.Height.ToString();
 
                 case "hjoin": // .hjoin(joiner1 = ",", joiner2 = LINEBREAK_PLACEHOLDER, colSlices = ":", rowSlices = ":")
                 case "vjoin": // .vjoin(joiner1 = ",", joiner2 = LINEBREAK_PLACEHOLDER, colSlices = ":", rowSlices = ":")
-                    CheckArgCount("0-4", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-4");
                     {
                         string joiner1 = GetArgument(args, 0, ",", false);
                         string joiner2 = GetArgument(args, 1, LINEBREAK_STR, false);
@@ -73,7 +77,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                 case "hlookup": // .hlookup(targetStr, rowIndex, colSlices = ":") => colIndex
                 case "vl":
                 case "vlookup": // .vlookup(targetStr, colIndex, rowSlices = ":") => rowIndex
-                    CheckArgCount("2-3", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("2-3");
                     {
                         string targetStr = args[0];
                         string indexStr = args[1];
@@ -102,7 +106,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "count": // count(targetStr, colSlices = ":", rowSlices = ":")
-                    CheckArgCount("1-3", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1-3");
                     {
                         string targetStr = args[0];
                         string colSlicesStr = GetArgument(args, 1, ":");
@@ -117,7 +121,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "sum":
-                    CheckArgCount("0-2", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-2");
                     {
                         string colSlicesStr = GetArgument(args, 0, ":");
                         string rowSlicesStr = GetArgument(args, 1, ":");
@@ -132,7 +136,7 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "min":  // tvar:table.min(type = "n", colSlices = ":", rowSlices = ":")
                 case "max":
-                    CheckArgCount("0-3", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("0-3");
                     {
                         bool isMin = methodName.StartsWith("min", StringComparison.OrdinalIgnoreCase);
                         var valueType = GetArgument(args, 0);
@@ -153,7 +157,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "contain":
-                    CheckArgCount("1-3", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("1-3");
                     {
                         string targetStr = args[0];
                         string colSlicesStr = GetArgument(args, 1, ":");
@@ -172,7 +176,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                     }
 
                 case "ifcontain":
-                    CheckArgCount("3", argCount, methodName, expr.RawExpression);
+                    CheckArgCountLocal("3");
                     {
                         string targetStr = args[0];
                         string trueStr = args[1];

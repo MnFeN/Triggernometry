@@ -82,9 +82,10 @@ namespace Triggernometry.UI.Forms
             {
                 _options.ForEach(o => o.InitializeData());
                 mainPanel.AutoScrollPosition = new Point(0, 0);
+                TopMost = true;
                 BringToFront();
                 Activate();
-                TopMost = true;
+                TopMost = false;
             };
             btnSave.Click += btnSave_Click;
         }
