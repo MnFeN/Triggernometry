@@ -165,8 +165,8 @@ namespace Triggernometry.Expressions.String.Parsers
             var plug = ctx.Plugin;
 
             return KeywordParser.TryParse(rawExpr, ctx, isTestModeNumeric) // ${_xxx} single keyword
-                ?? ColonExpressionParser.TryParse(rawExpr, ctx) // expressions start with "xxx:"
-                ?? IndexPropExpressionParser.TryParse(rawExpr, ctx) // var, var.prop(arg), var[index], var[index1][index2].prop(arg), ...
+                ?? ColonParser.TryParse(rawExpr, ctx) // expressions start with "xxx:"
+                ?? IndexPropParser.TryParse(rawExpr, ctx) // var, var.prop(arg), var[index], var[index1][index2].prop(arg), ...
                 ?? "";
         }
 

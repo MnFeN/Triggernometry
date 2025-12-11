@@ -14,7 +14,7 @@ using static Triggernometry.Core.Configuration;
 
 namespace Triggernometry.Expressions.String.Parsers
 {
-    internal static class IndexPropExpressionParser
+    internal static class IndexPropParser
     {
         internal static string TryParse(string rawExpr, Context ctx)
         {
@@ -55,7 +55,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "_ffxiventity":
                 case "_entity":
                     {
-                        return XivEntityExpressionParser.Parse(expr, ctx);
+                        return XivEntityParser.Parse(expr, ctx);
                     }
 
                 case "_job": // ${_job[jobid].prop} or ${_job[Name].prop}

@@ -13,7 +13,7 @@ using Triggernometry.PluginBridges;
 
 namespace Triggernometry.Expressions.String.Parsers
 {
-    internal static class XivEntityExpressionParser
+    internal static class XivEntityParser
     {
 
         public static string EvaluateEntityMember(Entity entity, string rawMemberExpression)
@@ -49,8 +49,6 @@ namespace Triggernometry.Expressions.String.Parsers
             return string.Join(", ", evaluator(entity));
         }
 
-        private static readonly Regex entityNameGuess = new Regex("^[^<>()=&|!,]+$", RegexOptions.Compiled);
-
         internal static Entity GetEntityFromUserInput(string inputCondition, bool isParty = false)
             => GetEntitiesFromUserInput(inputCondition, isParty).FirstOrDefault() ?? Entity.NullEntity();
 
@@ -81,22 +79,40 @@ namespace Triggernometry.Expressions.String.Parsers
             inputCondition = inputCondition.TrimEx();
 
             // 3. single name
-            if (entityNameGuess.IsMatch(inputCondition))
+            if (ShouldTreatAsName(inputCondition))
             {
                 var entitiesByName = Entity.GetEntities(e => e.Name == inputCondition && (!isParty || e.InParty))
                     .ToList();
 
                 foreach (var e in entitiesByName)
                     yield return e;
-
-                if (entitiesByName.Count > 0) // found by name => skip 4. expression parsing
-                    yield break;
+                // prevent further processing, we do not want to treat a name as a math expression
             }
 
             // 4. expression (x > 100 && y < 100 && type = 1)
-            var filter = XivEntityFilterEvaluator.CreateFilter(inputCondition);
-            foreach (var e in Entity.GetEntities(e => filter(e) && (!isParty || e.InParty)))
-                yield return e;
+            // Simple bools (like IsTH) should be written as IsTH = 1, to avoid ambiguity with names (like someone named "Isth"). 
+            else
+            {
+                var filter = XivEntityFilterEvaluator.CreateFilter(inputCondition);
+                foreach (var e in Entity.GetEntities(e => filter(e) && (!isParty || e.InParty)))
+                    yield return e;
+            }
+        }
+
+        private static bool ShouldTreatAsName(string input)
+        { 
+            var prevChar = '\0';
+            foreach (char c in input)
+            {
+                // X > 0: false
+                if (c == '=' | c == '<' | c == '>' | c == '&' | c == '|') return false; 
+                // HasStatus(1): false
+                // 724P flight unit (A-lpha): true
+                // (Pure String): true
+                if (c == '(' && prevChar != ' ' && prevChar != '\0') return false; 
+                prevChar = c;
+            }
+            return true;
         }
 
     }

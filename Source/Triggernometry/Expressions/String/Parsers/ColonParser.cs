@@ -9,7 +9,7 @@ using Triggernometry.Localization;
 
 namespace Triggernometry.Expressions.String.Parsers
 {
-    internal static class ColonExpressionParser
+    internal static class ColonParser
     {
         // 【【要不要 trim part】】
         internal static string TryParse(string rawExpr, Context ctx)

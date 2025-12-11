@@ -1001,7 +1001,7 @@ namespace Triggernometry.Core.Actions
                     {
                         var entities = string.IsNullOrWhiteSpace(_Y)
                             ? FFXIV.Entity.GetEntities()
-                            : XivEntityExpressionParser.GetEntitiesFromUserInput(
+                            : XivEntityParser.GetEntitiesFromUserInput(
                                 ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Y),
                                 false);
 
@@ -1026,7 +1026,7 @@ namespace Triggernometry.Core.Actions
                             if (entity.ID == 0) continue;
                             var row = new VariableTable.VariableTableRow
                             {
-                                Values = propNames.Select(prop => XivEntityExpressionParser.EvaluateEntityMembers(entity, prop))
+                                Values = propNames.Select(prop => XivEntityParser.EvaluateEntityMembers(entity, prop))
                                                   .Select(result => (Variable)new VariableScalar(result))
                                                   .ToList()
                             };

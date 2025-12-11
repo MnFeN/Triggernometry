@@ -460,7 +460,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.GetEntity:
                     {
                         string filterExpr = ParseValue();
-                        var entity = XivEntityExpressionParser.GetEntityFromUserInput(filterExpr);
+                        var entity = XivEntityParser.GetEntityFromUserInput(filterExpr);
 
                         var memberExprs = string.IsNullOrWhiteSpace(_Key)
                             ? FFXIV.Entity.RecommendedEntityPropNames.Concat(FFXIV.Job.LegalJobPropNames)
@@ -468,7 +468,7 @@ namespace Triggernometry.Core.Actions
 
                         var vd = new VariableDictionary(memberExprs.ToDictionary(
                             member => member,
-                            member => XivEntityExpressionParser.EvaluateEntityMember(entity, member)
+                            member => XivEntityParser.EvaluateEntityMember(entity, member)
                         ));
 
                         lock (svs.Dict)
