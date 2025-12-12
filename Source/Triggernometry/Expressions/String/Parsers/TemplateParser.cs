@@ -148,7 +148,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 // add evaluated template
                 var result = ParseTemplateMatch(template, ctx, isNumeric);
                 result = Utils.ParserCommon.ReplaceLineBreak(result);
-                sb.Append(result); // 和前面可以合并一个函数减少扫描
+                sb.Append(result);
 
                 start = template.End + 1;
             }
@@ -163,34 +163,61 @@ namespace Triggernometry.Expressions.String.Parsers
         {
             ctx = ctx ?? Context.Unbound;
 
-            return KeywordParser.TryParse(rawExpr, ctx, isTestModeNumeric) // ${_xxx} single keyword
+            return KeywordParser.TryParse(rawExpr, ctx, isTestModeNumeric) // ${_xxx} ${regexGroup} ${regexIdx}
                 ?? ColonParser.TryParse(rawExpr, ctx) // expressions start with "xxx:"
                 ?? IndexPropParser.TryParse(rawExpr, ctx) // var, var.prop(arg), var[index], var[index1][index2].prop(arg), ...
                 ?? throw new Exception($"模板字符串 {rawExpr} 无法识别为有效表达式，且不存在此名称的正则捕获组。");
         }
 
-        /// <summary>
-        /// ¤1, ¤{...} => $1, ${...}
-        /// </summary>
-        internal static string ReplacePlaceholderTemplates(string expr)
+        /// <summary> Replace all valid currency-sign templates ¤n, ¤{...} to dollar-sign templates $n, ${...} in the given string. </summary>
+        internal static string ReplaceCurrencyTemplates(string expr)
         {
             var sb = new StringBuilder(expr.Length);
             int n = expr.Length;
             for (int i = 0; i < n; i++)
             {
-                char c = expr[i];
-                if (c == '¤' && i + 1 < n)
+                // count all consecutive '¤'s and convert them together
+                var currencyCount = CheckConsecutiveCurrencyCharCount(expr, i, out bool isValidCurrencyTemplate);
+                if (currencyCount > 0)
                 {
-                    char next = expr[i + 1];
-                    if (char.IsDigit(next) || next == '¤' || next == '$' || next == '{')
-                    {
-                        sb.Append('$');
-                        continue;
-                    }
+                    char c = isValidCurrencyTemplate ? '$' : '¤';
+                    sb.Append(c, currencyCount);
+                    i += currencyCount - 1;
                 }
-                sb.Append(c);
+                else sb.Append(expr[i]);
             }
             return sb.ToString();
+        }
+
+        private static int CheckConsecutiveCurrencyCharCount(string expr, int idx, out bool isValidCurrencyTemplate)
+        {
+            isValidCurrencyTemplate = false;
+            if (expr[idx] != '¤') return 0;
+
+            // ¤{...} => ${...} valid; count = 1
+            // ¤¤1 => $$1 valid; count = 2
+            // ¤¤{var:regexIdx} => $${var:regexIdx} valid; count = 2
+            // ¤¤rawText => ¤¤rawText invalid; count = 2
+
+            // Note: ¤${template} is not a possible case,
+            // because templates are all parsed before currency replacement,
+            // so we treat '$' as normal char here.
+
+            int count = 1;
+            int pos = idx + 1;
+            int length = expr.Length;
+            while (pos < length && expr[pos] == '¤')
+            {
+                count++;
+                pos++;
+            }
+
+            if (pos >= length) return count; // ...¤ till the end
+
+            // check the char after consecutive '¤'s
+            char next = expr[pos];
+            isValidCurrencyTemplate = char.IsDigit(next) || next == '{';
+            return count;
         }
 
     }

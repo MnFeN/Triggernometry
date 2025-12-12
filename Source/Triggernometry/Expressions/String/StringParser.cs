@@ -60,7 +60,7 @@ namespace Triggernometry.Expressions.String
             }
 
             // ¤1 ¤{...} => $1 ${...}
-            newExpr = TemplateParser.ReplacePlaceholderTemplates(newExpr);
+            newExpr = TemplateParser.ReplaceCurrencyTemplates(newExpr);
 
             // '⏎' => '\r' '\n' 
             newExpr = newExpr.Replace(LINEBREAK.ToString(), Environment.NewLine);
