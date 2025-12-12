@@ -162,12 +162,11 @@ namespace Triggernometry.Expressions.String.Parsers
         internal static string ParseSingleTemplate(string rawExpr, Context ctx, bool isTestModeNumeric)
         {
             ctx = ctx ?? Context.Unbound;
-            var plug = ctx.Plugin;
 
             return KeywordParser.TryParse(rawExpr, ctx, isTestModeNumeric) // ${_xxx} single keyword
                 ?? ColonParser.TryParse(rawExpr, ctx) // expressions start with "xxx:"
                 ?? IndexPropParser.TryParse(rawExpr, ctx) // var, var.prop(arg), var[index], var[index1][index2].prop(arg), ...
-                ?? "";
+                ?? throw new Exception($"模板字符串 {rawExpr} 无法识别为有效表达式，且不存在此名称的正则捕获组。");
         }
 
         /// <summary>
