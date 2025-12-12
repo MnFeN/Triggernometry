@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Speech.Synthesis;
-using System.Text;
 using System.Windows.Forms;
-using Triggernometry.UI.Forms;
-using Triggernometry.Localization;
 using Triggernometry.Core;
 using Triggernometry.Core.Conditions;
+using Triggernometry.Localization;
+using Triggernometry.UI.Forms;
 
 namespace Triggernometry.UI.CustomControls
 {

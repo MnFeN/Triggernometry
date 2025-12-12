@@ -503,19 +503,21 @@ namespace Triggernometry.UI.CustomControls
 
         internal void btnAddTrigger_Click(object sender, EventArgs e)
         {
-            Trigger srcTrigger = cfg.UseTemplateTrigger ? cfg.TemplateTrigger : null;
-            using (Forms.TriggerForm tf = new Forms.TriggerForm(srcTrigger, treeView1, imageList1))
+            Trigger newTrigger = new Trigger();
+            if (cfg.UseTemplateTrigger)
+                cfg.TemplateTrigger?.CopySettingsTo(newTrigger);
+
+            using (Forms.TriggerForm tf = new Forms.TriggerForm(newTrigger, treeView1, imageList1))
             {
                 tf.Text = I18n.Translate("internal/UserInterface/addtrigger", "Add new trigger");
                 if (tf.ShowDialog() == DialogResult.OK)
                 {
-                    Trigger t = new Trigger();
-                    t.Enabled = true;
-                    tf.SettingsToTrigger(t);
+                    newTrigger.Enabled = true;
+                    tf.SettingsToTrigger(newTrigger);
                     TreeNode tn = new TreeNode();
-                    tn.Text = t.Name;
-                    tn.Tag = t;
-                    tn.Checked = t.Enabled;
+                    tn.Text = newTrigger.Name;
+                    tn.Tag = newTrigger;
+                    tn.Checked = newTrigger.Enabled;
                     tn.ImageIndex = (int)ImageIndices.Bolt;
                     tn.SelectedImageIndex = tn.ImageIndex;
                     TreeNode parent = treeView1.SelectedNode;
@@ -525,19 +527,19 @@ namespace Triggernometry.UI.CustomControls
                     }
                     parent.Nodes.Add(tn);
                     parent.Expand();
-                    t.Parent = (Folder)parent.Tag;
-                    t.Parent.Triggers.Add(t);
+                    newTrigger.Parent = (Folder)parent.Tag;
+                    newTrigger.Parent.Triggers.Add(newTrigger);
                     treeView1.Sort();
                     treeView1.SelectedNode = tn;
-                    t.ZoneBlocked = (t.PassesZoneRestriction(plug.currentZone) == false);
-                    plug.AddTrigger(t, t.Parent.ParentsEnabled());
+                    newTrigger.ZoneBlocked = (newTrigger.PassesZoneRestriction(plug.currentZone) == false);
+                    plug.AddTrigger(newTrigger, newTrigger.Parent.ParentsEnabled());
                     RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true);
-                    if (t.EditAutofire == true)
+                    if (newTrigger.EditAutofire == true)
                     {
-                        if (t.EditAutofireAllowCondition)
-                            ForceFireTrigger(t, Core.ActionOld.TriggerForceTypeEnum.SkipExceptConditions);
+                        if (newTrigger.EditAutofireAllowCondition)
+                            ForceFireTrigger(newTrigger, Core.ActionOld.TriggerForceTypeEnum.SkipExceptConditions);
                         else
-                            ForceFireTrigger(t, Core.ActionOld.TriggerForceTypeEnum.SkipAll);
+                            ForceFireTrigger(newTrigger, Core.ActionOld.TriggerForceTypeEnum.SkipAll);
                     }
                 }
             }
