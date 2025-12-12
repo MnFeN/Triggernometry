@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Threading;
 
-namespace Triggernometry.Core
+namespace Triggernometry.Core.Conditions
 {
 
     [XmlInclude(typeof(ConditionSingle))]

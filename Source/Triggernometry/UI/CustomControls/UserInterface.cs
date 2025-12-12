@@ -9,6 +9,7 @@ using System.Speech.Synthesis;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 using static Triggernometry.Core.RealPlugin;
 
@@ -365,17 +366,6 @@ namespace Triggernometry.UI.CustomControls
                 foreach (Trigger t in plug.Triggers)
                 {
                     t.SetActionsParent();
-                    foreach (Core.ActionOld a in t.Actions) // old properties
-                    {
-                        if (a.Conditions != null)
-                        {
-                            a.Conditions = null;
-                        }
-                    }
-                    if (t.Conditions != null)  // old properties
-                    {
-                        t.Conditions = null;
-                    }
                 }
             }
         }

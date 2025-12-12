@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using Triggernometry.Common.Audio;
+using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Parsers;
@@ -110,7 +111,7 @@ namespace Triggernometry.Core
         internal ActionOld LoopAction { get; set; } = null;
         internal Guid LoopContext { get; set; } = Guid.Empty;
 
-        internal Guid Id { get; set; }
+        internal Guid Id { get; set; } = Guid.NewGuid();
 
         internal bool _Enabled { get; set; } = true;
         [XmlAttribute]
@@ -347,162 +348,6 @@ namespace Triggernometry.Core
             set => _Condition = value;
         }
 
-        #endregion
-
-        #region Old condition to new condition converter
-        public bool ShouldSerializeConditions()
-        {
-            return false;
-        }
-
-        private EventList<Condition> _Conditions;
-        public EventList<Condition> Conditions
-        {
-            get
-            {
-                return _Conditions;
-            }
-            set
-            {
-                _Conditions = value;
-                if (_Conditions != null)
-                {
-                    _Conditions.ItemAdded += _Conditions_ItemAdded;
-                }
-            }
-        }
-
-        private void _Conditions_ItemAdded(object sender, EventListArgs<Condition> e)
-        {
-            if (_Condition == null)
-            {
-                _Condition = new ConditionGroup();
-                _Condition.Grouping = ConditionGroup.CndGroupingEnum.And;
-                _Condition.Enabled = true;
-            }
-            Condition cx = e.Item;
-            _Condition.AddChild(cx.ConvertToConditionSingle());
-            _Conditions.Remove(e.Item);
-        }
-
-        public class EventListArgs<T> : EventArgs
-        {
-            public EventListArgs(T item, int index)
-            {
-                Item = item;
-                Index = index;
-            }
-
-            public T Item { get; }
-            public int Index { get; }
-        }
-
-        public class EventList<T> : IList<T>
-        {
-            private readonly List<T> _list;
-
-            public EventList()
-            {
-                _list = new List<T>();
-            }
-
-            public EventList(IEnumerable<T> collection)
-            {
-                _list = new List<T>(collection);
-            }
-
-            public EventList(int capacity)
-            {
-                _list = new List<T>(capacity);
-            }
-
-            public event EventHandler<EventListArgs<T>> ItemAdded;
-            public event EventHandler<EventListArgs<T>> ItemRemoved;
-
-            private void RaiseEvent(EventHandler<EventListArgs<T>> eventHandler, T item, int index)
-            {
-                var eh = eventHandler;
-                eh?.Invoke(this, new EventListArgs<T>(item, index));
-            }
-
-            public IEnumerator<T> GetEnumerator()
-            {
-                return _list.GetEnumerator();
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
-
-            public void Add(T item)
-            {
-                var index = _list.Count;
-                _list.Add(item);
-                RaiseEvent(ItemAdded, item, index);
-            }
-
-            public void Clear()
-            {
-                for (var index = 0; index < _list.Count; index++)
-                {
-                    var item = _list[index];
-                    RaiseEvent(ItemRemoved, item, index);
-                }
-
-                _list.Clear();
-            }
-
-            public bool Contains(T item)
-            {
-                return _list.Contains(item);
-            }
-
-            public void CopyTo(T[] array, int arrayIndex)
-            {
-                _list.CopyTo(array, arrayIndex);
-            }
-
-            public bool Remove(T item)
-            {
-                var index = _list.IndexOf(item);
-
-                if (_list.Remove(item))
-                {
-                    RaiseEvent(ItemRemoved, item, index);
-                    return true;
-                }
-
-                return false;
-            }
-
-            public int Count => _list.Count;
-            public bool IsReadOnly => false;
-
-            public int IndexOf(T item)
-            {
-                return _list.IndexOf(item);
-            }
-
-            public void Insert(int index, T item)
-            {
-                _list.Insert(index, item);
-                RaiseEvent(ItemRemoved, item, index);
-            }
-
-            public void RemoveAt(int index)
-            {
-                var item = _list[index];
-                _list.RemoveAt(index);
-                RaiseEvent(ItemRemoved, item, index);
-            }
-
-            public T this[int index]
-            {
-                get { return _list[index]; }
-                set { _list[index] = value; }
-            }
-        }
         #endregion
 
         public void ActionContextLogger(object o, string msg)
@@ -1603,13 +1448,10 @@ namespace Triggernometry.Core
             return Capitalize(temp);
         }
 
-        internal List<WindowsMediaPlayer> players;
+        internal List<WindowsMediaPlayer> players = new List<WindowsMediaPlayer>();
 
         public ActionOld()
         {
-            Id = Guid.NewGuid();
-            Conditions = new EventList<Condition>();
-            players = new List<WindowsMediaPlayer>();
         }
 
         private DebugLevelEnum GetDebugLevel(Context ctx)
@@ -4519,7 +4361,7 @@ namespace Triggernometry.Core
             a._JsonHeaderExpression = _JsonHeaderExpression;
             a._JsonFiringExpression = _JsonFiringExpression;
             a._JsonPayloadExpression = _JsonPayloadExpression;
-            a._Condition = (ConditionGroup)(_Condition != null ? _Condition.Duplicate() : null);
+            a._Condition = (ConditionGroup)(_Condition?.Duplicate());
             a._KeyPressExpression = _KeyPressExpression;
             a._KeypressType = _KeypressType;
             a._KeyPressCode = _KeyPressCode;
@@ -4571,17 +4413,11 @@ namespace Triggernometry.Core
             a._VariableTargetPersist = _VariableTargetPersist;
             a.LoopCondition = (ConditionGroup)(LoopCondition != null ? ((ConditionGroup)LoopCondition).Duplicate() : null);
             a.LoopActions.Clear();
-            if (LoopActions != null)
+            foreach (var loopAction in LoopActions.OrderBy(x => x.OrderNumber))
             {
-                var ix = from tx in LoopActions
-                         orderby tx.OrderNumber ascending
-                         select tx;
-                foreach (ActionOld ax in ix)
-                {
-                    ActionOld b = new ActionOld();
-                    ax.CopySettingsTo(b);
-                    a.LoopActions.Add(b);
-                }
+                var copy = new ActionOld();
+                loopAction.CopySettingsTo(copy);
+                a.LoopActions.Add(copy);
             }
             a._LoopDelayExpression = _LoopDelayExpression;
             a._LoopIncrExpression = _LoopIncrExpression;

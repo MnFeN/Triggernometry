@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Triggernometry.UI.Forms;
 using Triggernometry.Localization;
 using Triggernometry.Core;
+using Triggernometry.Core.Conditions;
 
 namespace Triggernometry.UI.CustomControls
 {

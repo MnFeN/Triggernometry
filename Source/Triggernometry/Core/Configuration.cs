@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
 using Triggernometry.Utilities;
@@ -479,7 +480,7 @@ namespace Triggernometry.Core
 
         // Default Settings
 
-        public Trigger TemplateTrigger = new Trigger() { Enabled = true, Conditions = null, Condition = new ConditionGroup() { Grouping = ConditionGroup.CndGroupingEnum.Or, Enabled = false } };
+        public Trigger TemplateTrigger = new Trigger() { Enabled = true, Condition = new ConditionGroup() { Grouping = ConditionGroup.CndGroupingEnum.Or, Enabled = false } };
 
         [XmlAttribute]
         public bool UseTemplateTrigger { get; set; } = false;

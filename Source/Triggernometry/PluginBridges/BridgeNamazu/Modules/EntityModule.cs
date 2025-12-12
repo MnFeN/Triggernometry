@@ -35,7 +35,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public Func<int> StatusLoopVfxOffset = () => Plugin.IsCN ? 0x1C8 : 0x1C8; // 7.2 / 7.3
         /// <summary> 实体透明度相对于实体地址的偏移。</summary>
         public Func<int> OpacityOffset = () => Plugin.IsCN ? 0x22D8 : 0x22D8; // 7.2 / 7.3 (尚未确认)
-        /// <summary> 实体 ModelStatus 相对于实体地址的偏移。</summary>
+        /// <summary> 实体 ModelStatus (RenderFlags) 相对于实体地址的偏移。</summary>
+        /// https://github.com/xivdev/Penumbra/blob/master/Penumbra/Interop/Structs/DrawState.cs
         public Func<int> ModelStatusOffset = () => Plugin.IsCN ? 0x118 : 0x118; // 7.2 / 7.3
 
         /// <summary> 硬目标地址相对于实体 TargetSystem 地址的偏移（SoftTarget 地址在此基础上 +0x8）。</summary>

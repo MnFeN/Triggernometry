@@ -13,6 +13,7 @@ using Triggernometry.Core.Actions;
 using Triggernometry.UI.CustomControls;
 using Triggernometry.Localization;
 using static Triggernometry.Core.RealPlugin;
+using Triggernometry.Core.Conditions;
 
 namespace Triggernometry.Core
 {

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
 using static Triggernometry.Core.ActionOld;

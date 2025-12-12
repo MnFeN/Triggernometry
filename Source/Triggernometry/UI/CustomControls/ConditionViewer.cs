@@ -11,9 +11,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Windows.Forms;
 using System.IO;
-using static Triggernometry.Core.ConditionGroup;
+using static Triggernometry.Core.Conditions.ConditionGroup;
 using Triggernometry.Localization;
 using Triggernometry.Core;
+using Triggernometry.Core.Conditions;
 
 namespace Triggernometry.UI.CustomControls
 {

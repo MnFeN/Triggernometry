@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 using Triggernometry.Localization;
 using Triggernometry.Expressions.Maths;
 
-namespace Triggernometry.Core
+namespace Triggernometry.Core.Conditions
 {
 
     public sealed class ConditionSingle : ConditionComponent

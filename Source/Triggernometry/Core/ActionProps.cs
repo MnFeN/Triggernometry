@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Speech.Synthesis;
 using System.Windows.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
-using static Triggernometry.Core.ConditionGroup;
+using static Triggernometry.Core.Conditions.ConditionGroup;
 
 namespace Triggernometry.UI.Forms
 {

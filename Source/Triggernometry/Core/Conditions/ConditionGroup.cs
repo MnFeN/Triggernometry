@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Triggernometry.Localization;
 
-namespace Triggernometry.Core
+namespace Triggernometry.Core.Conditions
 {
 
     public sealed class ConditionGroup : ConditionComponent

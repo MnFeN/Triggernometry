@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 using static Triggernometry.Core.ActionOld;
 

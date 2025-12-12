@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Core.Conditions;
 
 namespace Triggernometry.Core.Actions
 {
