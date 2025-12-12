@@ -201,25 +201,19 @@ namespace Triggernometry.Expressions.String.Parsers
             // ${1} ${2}
             if (int.TryParse(rawExpr, out int groupIdx))
             {
-                var result = ctx.GetNumGroup(groupIdx);
-                if (plug != null)
+                var numResult = ctx.GetNumGroup(groupIdx);
+                if (numResult == null && ctx?.Trigger != null)
                 {
-                    result = plug.cfg.PerformSubstitution(result, Substitution.SubstitutionScopeEnum.CaptureGroup);
+                    var msg = $"正则捕获组索引 ${{{rawExpr}}} 超出范围。\n" +
+                              $"完整表达式：{fullExpression}" +
+                              $"触发器：{ctx?.Trigger.LogName ?? "(null)"}";
+                    ctx.Plugin?.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, msg, ctx.Trigger);
                 }
-                return result;
+                return numResult ?? "";
             }
 
             // ${capturedGroupName}
-            if (ctx.namedGroups.TryGetValue(rawExpr, out var namedResult))
-            {
-                if (plug != null)
-                {
-                    namedResult = plug.cfg.PerformSubstitution(namedResult, Substitution.SubstitutionScopeEnum.CaptureGroup);
-                }
-                return namedResult;
-            }
-
-            return null; // not found
+            return ctx.GetNamedGroup(rawExpr); // null if not found
         }
     }
 }

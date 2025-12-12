@@ -7,6 +7,8 @@ using System.Threading;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String;
 using Triggernometry.Localization;
+using static Triggernometry.Core.Configuration;
+using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core
 {
@@ -26,9 +28,8 @@ namespace Triggernometry.Core
         internal RealPlugin.ActionExecutionHook soundhook;
         internal RealPlugin.ActionExecutionHook ttshook;
 
-        internal Dictionary<string, string> namedGroups = new Dictionary<string, string>();
-        internal List<string> numGroups = new List<string>();
-
+        private Dictionary<string, string> _namedRegexGroups = null;
+        private List<string> _numRegexGroups = null;
         internal DateTime triggeredTime;
         internal string zoneName = "";
         internal string regexPattern; // todo
@@ -125,20 +126,69 @@ namespace Triggernometry.Core
             }
         }
 
+        internal void RecordCaptureGroups(Trigger trigger, Match match)
+        {
+            _numRegexGroups = new List<string>();
+            foreach (int idx in trigger.regexCache.GetGroupNumbers())
+            {
+                string capturedValue = match?.Groups[idx].Value ?? "";
+                _numRegexGroups.Add(capturedValue);
+                Plugin?.FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnumgroup",
+                    "Trigger '{0}' numbered group {1}: {2}", trigger.LogName, idx, capturedValue));
+            }
+
+            _namedRegexGroups = new Dictionary<string, string>();
+            foreach (string name in trigger.regexCache.GetGroupNames())
+            {
+                string capturedValue = match?.Groups[name].Value ?? "";
+                _namedRegexGroups[name] = capturedValue;
+                Plugin?.FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnamedgroup",
+                    "Trigger '{0}' named group '{1}': {2}", trigger.LogName, name, capturedValue));
+            }
+        }
+
         internal string GetNumGroup(int groupIdx)
         {
-            if (groupIdx >= 0 && groupIdx < numGroups.Count)
+            string result = null;
+
+            if (_numRegexGroups != null)
             {
-                var result = numGroups[groupIdx];
-                if (Plugin != null)
-                {
-                    result = Plugin.cfg.PerformSubstitution(result, Configuration.Substitution.SubstitutionScopeEnum.CaptureGroup);
-                }
-                return result;
+                if (groupIdx >= 0 && groupIdx < _numRegexGroups.Count)
+                    result = _numRegexGroups[groupIdx];
             }
-            var warning = I18n.Translate("internal/Context/nogroup", "Regex captured group out of range: #{0}", groupIdx);
-            Plugin?.FilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, warning, Trigger);
-            return "";
+            else // never recorded: testing / skipped regex
+            {
+                if (Trigger?.regexCache?.GetGroupNumbers().Contains(groupIdx) == true)
+                    result = "";
+            }
+
+            if (result != null && Plugin != null)
+            {
+                result = Plugin.cfg.PerformSubstitution(result, Substitution.SubstitutionScopeEnum.CaptureGroup);
+            }
+            return result;
+        }
+
+        internal string GetNamedGroup(string groupName)
+        {
+            string result = null;
+
+            if (_namedRegexGroups != null)
+            {
+                if (_namedRegexGroups.TryGetValue(groupName, out var value))
+                    result = value;
+            }
+            else // never recorded: testing / skipped regex
+            {
+                if (Trigger?.regexCache?.GetGroupNames().Contains(groupName) == true)
+                    result = "";
+            }
+
+            if (result != null && Plugin != null)
+            {
+                result = Plugin.cfg.PerformSubstitution(result, Substitution.SubstitutionScopeEnum.CaptureGroup);
+            }
+            return result;
         }
 
         /// <summary>Return the elapsed time in seconds since this context was triggered.</summary>

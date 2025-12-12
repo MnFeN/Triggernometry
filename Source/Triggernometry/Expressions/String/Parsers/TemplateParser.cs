@@ -29,13 +29,34 @@ namespace Triggernometry.Expressions.String.Parsers
             }
         }
 
-        private static string ParseTemplateMatch(TemplateMatch m, Context ctx, bool isNumeric = false)
+        private static string ParseTemplateMatch(TemplateMatch m, Context ctx, string fullExpression, bool isNumeric = false)
         {
+            string result;
             if (m.NumIndex == null) // "${...}"
-                return ParseSingleTemplate(m.Expression ?? "", ctx, isNumeric);
-
+            {
+                result = ParseSingleTemplate(m.Expression ?? "", ctx, fullExpression, isNumeric);
+                if (result == null)
+                {
+                    var msg = 
+                        $"文本模板 {m.RawExpression} 无法识别为有效表达式，且不存在此名称的正则捕获组。\n" +
+                        $"完整表达式： {fullExpression}\n" +
+                        $"触发器：{ctx?.Trigger?.LogName ?? "(null)"}";
+                    ctx.Plugin?.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, msg, ctx.Trigger);
+                }
+            }
             else // "$n"
-                return ctx?.GetNumGroup(m.NumIndex.Value) ?? "";
+            {
+                result = ctx?.GetNumGroup(m.NumIndex.Value);
+                if (result == null && ctx?.Trigger != null)
+                {
+                    var msg = 
+                        $"正则捕获组索引 {m.RawExpression} 超出范围。\n" +
+                        $"完整表达式： {fullExpression}\n" +
+                        $"触发器：{ctx?.Trigger?.LogName ?? "(null)"}";
+                    ctx.Plugin?.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, msg, ctx.Trigger);
+                }
+            }
+            return result ?? string.Empty;
         }
 
         /// <summary>

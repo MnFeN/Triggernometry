@@ -67,32 +67,10 @@ namespace Triggernometry.Core.Scripting
             => ScriptHelper.SetDictVariable(persistent, varname, data);
 
         public string GetRegexMatch(int idx, string defValue = "")
-        {
-            if (idx >= 0 && idx < CurrentContext.numGroups.Count)
-            {
-                string val = CurrentContext.numGroups[idx];
-                if (Plugin != null)
-                {
-                    val = Plugin.cfg.PerformSubstitution(val, Configuration.Substitution.SubstitutionScopeEnum.CaptureGroup);
-                }
-                return val;
-            }
-            return defValue;
-        }
+            => CurrentContext.GetNumGroup(idx) ?? defValue;
 
         public string GetRegexMatch(string name, string defValue = "")
-        {
-            if (CurrentContext.namedGroups.ContainsKey(name) == true)
-            {
-                string val = CurrentContext.namedGroups[name];
-                if (Plugin != null)
-                {
-                    val = Plugin.cfg.PerformSubstitution(val, Configuration.Substitution.SubstitutionScopeEnum.CaptureGroup);
-                }
-                return val;
-            }
-            return defValue;
-        }
+            => CurrentContext.GetNamedGroup(name) ?? defValue;
 
     }
 }

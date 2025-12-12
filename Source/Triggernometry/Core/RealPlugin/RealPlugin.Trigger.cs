@@ -150,76 +150,69 @@ namespace Triggernometry.Core
             RemoveAurasFromTrigger(t);
         }
 
-        internal void TestTrigger(Trigger t, LogEvent le, ActionOld.TriggerForceTypeEnum force)
+        internal void TestTrigger(Trigger trigger, LogEvent logEvent, ActionOld.TriggerForceTypeEnum forceType)
         {
-            lock (t)
+            lock (trigger)
             {
-                Match m = null;
-                if ((force & ActionOld.TriggerForceTypeEnum.SkipRegexp) == 0)
+                Match match = null;
+                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipRegexp) == 0)
                 {
-                    m = t.CheckMatch(le.Text);
-                    if (m == null)
+                    match = trigger.CheckMatch(logEvent.Text);
+                    if (match == null)
                     {
                         return;
                     }
                     else
                     {
-                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigmatches", "Trigger '{0}' matches log line '{1}'", t.LogName, le.Text));
+                        trigger.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigmatches", "Trigger '{0}' matches log line '{1}'", trigger.LogName, logEvent.Text));
                     }
                 }
-                if ((force & ActionOld.TriggerForceTypeEnum.SkipActive) == 0)
+                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipActive) == 0)
                 {
-                    if (t.Enabled == false)
+                    if (trigger.Enabled == false)
                     {
-                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trignotactive", "Trigger '{0}' is not active for firing", t.LogName));
+                        trigger.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trignotactive", "Trigger '{0}' is not active for firing", trigger.LogName));
                         return;
                     }
                 }
-                if ((force & ActionOld.TriggerForceTypeEnum.SkipParent) == 0)
+                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipParent) == 0)
                 {
-                    Folder.FilterFailReason reason = t.Parent.PassesFilter(le);
+                    Folder.FilterFailReason reason = trigger.Parent.PassesFilter(logEvent);
                     if (reason != Folder.FilterFailReason.Passed)
                     {
                         if (reason != Folder.FilterFailReason.NotEnabled)
                         {
-                            t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigparentfail", "Trigger '{0}' doesn't pass parent folder '{1}' filter(s): {2}", t.LogName, t.Parent.Name, reason.ToString()));
+                            trigger.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigparentfail", "Trigger '{0}' doesn't pass parent folder '{1}' filter(s): {2}", trigger.LogName, trigger.Parent.Name, reason.ToString()));
                         }
                         return;
                     }
                 }
-                if ((force & ActionOld.TriggerForceTypeEnum.SkipRefire) == 0)
+                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipRefire) == 0)
                 {
-                    if (t.PeriodRefire == Trigger.RefireEnum.Deny && DateTime.Now < t.RefireDelayedUntil)
+                    if (trigger.PeriodRefire == Trigger.RefireEnum.Deny && DateTime.Now < trigger.RefireDelayedUntil)
                     {
-                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrefirefail", "Trigger '{0}' refire delayed until {1}", t.LogName, FormatDateTime(t.RefireDelayedUntil)));
+                        trigger.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrefirefail", "Trigger '{0}' refire delayed until {1}", trigger.LogName, FormatDateTime(trigger.RefireDelayedUntil)));
                         return;
                     }
                 }
-                t.AddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/trigfiring", "Firing trigger '{0}'", t.LogName));
-                Context ctx = new Context(t);
+                trigger.AddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/trigfiring", "Firing trigger '{0}'", trigger.LogName));
+                Context ctx = new Context(trigger);
                 ctx.soundhook = SoundPlaybackSmart;
                 ctx.ttshook = TtsPlaybackSmart;
-                if (!force.HasFlag(ActionOld.TriggerForceTypeEnum.SkipRegexp))
+
+                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipRegexp) == 0)
                 {
-                    foreach (int idx in t.regexCache.GetGroupNumbers())
-                    {
-                        ctx.numGroups.Add(m.Groups[idx].Value);
-                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnumgroup", "Trigger '{0}' numbered group {1}: {2}", t.LogName, idx, m.Groups[idx].Value));
-                    }
-                    foreach (string groupName in t.regexCache.GetGroupNames())
-                    {
-                        ctx.namedGroups[groupName] = m.Groups[groupName].Value;
-                        t.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnamedgroup", "Trigger '{0}' named group '{1}': {2}", t.LogName, groupName, m.Groups[groupName].Value));
-                    }
+                    ctx.RecordCaptureGroups(trigger, match);
                 }
-                ctx.zoneName = le.ZoneName;
-                ctx.triggeredText = le.Text;
-                if (le.TestMode == true && le.ZoneId != "")
+
+                ctx.zoneName = logEvent.ZoneName;
+                ctx.triggeredText = logEvent.Text;
+                if (logEvent.TestMode == true && logEvent.ZoneId != "")
                 {
-                    ctx.zoneIdOverride = le.ZoneId;
+                    ctx.zoneIdOverride = logEvent.ZoneId;
                 }
-                ctx.force = force;
-                t.Fire(this, ctx, null);
+                ctx.force = forceType;
+                trigger.Fire(this, ctx, null);
             }
         }
 
