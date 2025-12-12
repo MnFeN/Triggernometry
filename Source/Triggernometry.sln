@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriggernometryProxy", "Trig
 		{CA86FD05-FB30-4923-BB27-638CA9CBAFCD} = {CA86FD05-FB30-4923-BB27-638CA9CBAFCD}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scripts", "Scripts\Scripts.csproj", "{23C52BC4-D4BC-4F57-8D45-F987F7147CB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriggernometryScripting", "TriggernometryScripts\TriggernometryScripting.csproj", "{23C52BC4-D4BC-4F57-8D45-F987F7147CB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
