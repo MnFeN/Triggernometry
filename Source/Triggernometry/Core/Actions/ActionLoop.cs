@@ -120,23 +120,23 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            if (ctx.loopcontext == Id)
+            if (ctx.loopActionId == Id)
             {
-                ctx.loopiterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _IncrExpression);
+                ctx.loopIterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _IncrExpression);
             }
             if (LoopCondition.Enabled == true && LoopCondition.CheckCondition(ctx, ActionContextLogger, ctx) == true)
             {
                 bool continuing = false;
-                if (ctx.loopcontext != Id)
+                if (ctx.loopActionId != Id)
                 {
-                    continuing = ctx.loopcontext == Guid.Empty;
+                    continuing = ctx.loopActionId == Guid.Empty;
                     ctx = ctx.Duplicate();
-                    if (ctx.loopcontext != Guid.Empty && ctx.loopcontext != Id)
+                    if (ctx.loopActionId != Guid.Empty && ctx.loopActionId != Id)
                     {
                         ctx.id = Guid.NewGuid();
                     }
-                    ctx.loopcontext = Id;
-                    ctx.loopiterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _InitExpression);
+                    ctx.loopActionId = Id;
+                    ctx.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _InitExpression);
                 }
                 else
                 {

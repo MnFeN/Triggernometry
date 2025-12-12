@@ -136,7 +136,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 // ===== Dynamic expressions =====
                 case "_loopiterator":
                 case "_i":
-                    return ctx.loopiterator.ToString();
+                    return ctx.loopIterator.ToString();
 
                 case "_idx":
                     return ctx.listIndex.ToString();

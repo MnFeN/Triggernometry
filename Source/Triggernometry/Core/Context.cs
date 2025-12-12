@@ -44,8 +44,8 @@ namespace Triggernometry.Core
         internal Dictionary<Mutex, int> heldmutices = new Dictionary<Mutex, int>();
 
         // to-do: refactor these dynamic expressions
-        internal int loopiterator = 0;
-        internal Guid loopcontext = Guid.Empty;
+        internal int loopIterator = 0;
+        internal Guid loopActionId = Guid.Empty;
         internal string varName = "";         // for ${_this} ${_row[i]} ${_col[i]}
         internal int listIndex = 0;           // for ${_idx}
         internal int tableColIndex = 0;       // for ${_col}
