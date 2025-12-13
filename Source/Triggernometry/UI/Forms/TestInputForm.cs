@@ -244,14 +244,14 @@ namespace Triggernometry.UI.Forms
 
             private void AddDelayAction(double seconds) => Trig.Actions.Add(new Core.ActionOld
             {
-                _ActionType = Core.ActionOld.ActionTypeEnum.Placeholder,
+                ActionType = Core.ActionOld.ActionTypeEnum.Placeholder,
                 OrderNumber = Trig.Actions.Count() + 1,
-                _ExecutionDelayExpression = $"{seconds.ToString("F2", CultureInfo.InvariantCulture)} * 1000",
+                ExecutionDelayExpression = $"{seconds.ToString("F2", CultureInfo.InvariantCulture)} * 1000",
             });
 
             private void AddLogMsgAction(Logline logline) => Trig.Actions.Add(new Core.ActionOld
             {                
-                _ActionType = Core.ActionOld.ActionTypeEnum.LogMessage,
+                ActionType = Core.ActionOld.ActionTypeEnum.LogMessage,
                 OrderNumber = Trig.Actions.Count() + 1,
                 _LogMessageText = logline.Data,
                 _LogMessageTarget = DefaultSource,

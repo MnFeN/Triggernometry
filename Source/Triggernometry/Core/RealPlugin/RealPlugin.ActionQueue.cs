@@ -162,9 +162,9 @@ namespace Triggernometry.Core
             {
                 foreach (ActionOld action in sortedActions)
                 {
-                    if (action._Enabled == true)
+                    if (action.Enabled == true)
                     {
-                        startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action._ExecutionDelayExpression));
+                        startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.ExecutionDelayExpression));
                         QueueAction(ctx, ctx.Trigger, mtx, action, startingFrom, finalAction == action);
                         lastAction = action;
                     }
@@ -176,7 +176,7 @@ namespace Triggernometry.Core
                 ActionOld first = null;
                 foreach (ActionOld action in sortedActions)
                 {
-                    if (action._Enabled == false)
+                    if (action.Enabled == false)
                     {
                         continue;
                     }
@@ -188,7 +188,7 @@ namespace Triggernometry.Core
                     else
                     {
                         first = action;
-                        startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action._ExecutionDelayExpression));
+                        startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.ExecutionDelayExpression));
                     }
                     prev = action;
                 }
@@ -204,14 +204,14 @@ namespace Triggernometry.Core
         {
             lock (ActionQueue) // verified
             {
-                if (a._RefireRequeue == false || a._RefireInterrupt == true)
+                if (a.RefireRequeue == false || a.RefireInterrupt == true)
                 {
                     var ix = from ax in ActionQueue
                              where ax.act.Id == a.Id
                              select ax;
                     if (ix.Count() > 0)
                     {
-                        if (a._RefireInterrupt == true)
+                        if (a.RefireInterrupt == true)
                         {
                             List<QueuedAction> rems = new List<QueuedAction>();
                             rems.AddRange(ix);
@@ -226,7 +226,7 @@ namespace Triggernometry.Core
                                 a.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", exx, t.LogName, a.GetDescription(ctx)));
                             }
                         }
-                        if (a._RefireRequeue == false)
+                        if (a.RefireRequeue == false)
                         {
                             a.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", t.LogName, a.GetDescription(ctx)));
                             if (releaseMutex == true && m != null)

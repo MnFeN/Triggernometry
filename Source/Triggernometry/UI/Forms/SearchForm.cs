@@ -199,31 +199,31 @@ namespace Triggernometry.UI.Forms
                     }
                     if ((filter & SearchFilterEnum.ActionCondition) != 0)
                     {
-                        if (ConditionMatches(rex, a._Condition) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitactioncond", "Action #{0} condition", i), Match = tn });
+                        if (ConditionMatches(rex, a.Condition) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitactioncond", "Action #{0} condition", i), Match = tn });
                     }
                     if ((filter & SearchFilterEnum.ActionDetails) != 0)
                     {
-                        if (RegexMatches(rex, a._ExecutionDelayExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitexecdelay", "Action #{0} execution delay", i), Match = tn });
-                        if (a._ActionType == ActionTypeEnum.Aura)
+                        if (RegexMatches(rex, a.ExecutionDelayExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitexecdelay", "Action #{0} execution delay", i), Match = tn });
+                        if (a.ActionType == ActionTypeEnum.Aura)
                         {
                             if (RegexMatches(rex, a._AuraImage) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitimgaurasrc", "Action #{0} image aura source", i), Match = tn });
                             if (RegexMatches(rex, a._AuraName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitimgauraname", "Action #{0} image aura name", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.DiscordWebhook)
+                        if (a.ActionType == ActionTypeEnum.DiscordWebhook)
                         {
                             if (RegexMatches(rex, a._DiscordWebhookURL) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitdiscordurl", "Action #{0} Discord webhook URL", i), Match = tn });
                             if (RegexMatches(rex, a._DiscordWebhookMessage) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitdiscordmsg", "Action #{0} Discord webhook message", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.ExecuteScript)
+                        if (a.ActionType == ActionTypeEnum.ExecuteScript)
                         {
                             if (RegexMatches(rex, a._ExecScriptAssembliesExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitscriptassy", "Action #{0} script assemblies", i), Match = tn });
                             if (RegexMatches(rex, a._ExecScriptExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitscriptcode", "Action #{0} script", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.Folder)
+                        if (a.ActionType == ActionTypeEnum.Folder)
                         {
                             if (RegexMatches(rex, a._FolderId.ToString()) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitactionfolderid", "Action #{0} folder ID", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.GenericJson)
+                        if (a.ActionType == ActionTypeEnum.GenericJson)
                         {
                             if (RegexMatches(rex, a._JsonEndpointExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonendpoint", "Action #{0} JSON endpoint", i), Match = tn });
                             if (RegexMatches(rex, a._JsonFiringExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonfiring", "Action #{0} JSON firing expression", i), Match = tn });
@@ -231,78 +231,78 @@ namespace Triggernometry.UI.Forms
                             if (RegexMatches(rex, a._JsonHeaderExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonheaders", "Action #{0} JSON header expression", i), Match = tn });
                             if (RegexMatches(rex, a._JsonResultVariable) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonvariable", "Action #{0} JSON result variable", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.KeyPress)
+                        if (a.ActionType == ActionTypeEnum.KeyPress)
                         {
                             if (RegexMatches(rex, a._KeyPressCode) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitkeypresscode", "Action #{0} keypress code", i), Match = tn });
                             if (RegexMatches(rex, a._KeyPressExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitkeypressexpression", "Action #{0} keypress expression", i), Match = tn });
                             if (RegexMatches(rex, a._KeyPressWindow) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitkeypresswindow", "Action #{0} keypress window", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.LaunchProcess)
+                        if (a.ActionType == ActionTypeEnum.LaunchProcess)
                         {
                             if (RegexMatches(rex, a._LaunchProcessCmdlineExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitproccmdline", "Action #{0} command line expression", i), Match = tn });
                             if (RegexMatches(rex, a._LaunchProcessPathExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitpathexpr", "Action #{0} command line path", i), Match = tn });
                             if (RegexMatches(rex, a._LaunchProcessWorkingDirExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitworkingdir", "Action #{0} working directory", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.ListVariable)
+                        if (a.ActionType == ActionTypeEnum.ListVariable)
                         {
                             if (RegexMatches(rex, a._ListVariableExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlistexpr", "Action #{0} list variable expression", i), Match = tn });
                             if (RegexMatches(rex, a._ListVariableIndex) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlistindex", "Action #{0} list variable index", i), Match = tn });
                             if (RegexMatches(rex, a._ListVariableName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlistname", "Action #{0} list variable name", i), Match = tn });
                             if (RegexMatches(rex, a._ListVariableTarget) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlisttarget", "Action #{0} list variable target", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.LogMessage)
+                        if (a.ActionType == ActionTypeEnum.LogMessage)
                         {
                             if (RegexMatches(rex, a._LogMessageText) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlogtext", "Action #{0} log text", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.MessageBox)
+                        if (a.ActionType == ActionTypeEnum.MessageBox)
                         {
                             if (RegexMatches(rex, a._MessageBoxText) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitmsgboxtext", "Action #{0} message box text", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.ObsControl)
+                        if (a.ActionType == ActionTypeEnum.ObsControl)
                         {
                             if (RegexMatches(rex, a._OBSSceneName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitobsscene", "Action #{0} OBS scene name", i), Match = tn });
                             if (RegexMatches(rex, a._OBSSourceName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitobssource", "Action #{0} OBS source name", i), Match = tn });
                             if (RegexMatches(rex, a._OBSEndPoint) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitobsendpoint", "Action #{0} OBS endpoint", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.PlaySound)
+                        if (a.ActionType == ActionTypeEnum.PlaySound)
                         {
                             if (RegexMatches(rex, a._PlaySoundFileExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitsfxfile", "Action #{0} sound file", i), Match = tn });
                             if (RegexMatches(rex, a._PlaySoundVolumeExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitsfxvol", "Action #{0} sound volume", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.SystemBeep)
+                        if (a.ActionType == ActionTypeEnum.SystemBeep)
                         {
                             if (RegexMatches(rex, a._SystemBeepFreqExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitbeepfreq", "Action #{0} beep frequency", i), Match = tn });
                             if (RegexMatches(rex, a._SystemBeepLengthExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitbeeplen", "Action #{0} beep length", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.TextAura)
+                        if (a.ActionType == ActionTypeEnum.TextAura)
                         {
                             if (RegexMatches(rex, a._TextAuraExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittextauraexpr", "Action #{0} text aura expression", i), Match = tn });
                             if (RegexMatches(rex, a._TextAuraFontName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittextaurafont", "Action #{0} text aura font", i), Match = tn });
                             if (RegexMatches(rex, a._TextAuraName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittextauraname", "Action #{0} text aura name", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.Trigger)
+                        if (a.ActionType == ActionTypeEnum.Trigger)
                         {
                             if (RegexMatches(rex, a._TriggerId.ToString()) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitactiontriggerid", "Action #{0} trigger ID", i), Match = tn });
                             if (RegexMatches(rex, a._TriggerText) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitactiontriggertext", "Action #{0} trigger firing text", i), Match = tn });
                             if (RegexMatches(rex, a._TriggerZone) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggerzone", "Action #{0} trigger firing zone", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.UseTTS)
+                        if (a.ActionType == ActionTypeEnum.UseTTS)
                         {
                             if (RegexMatches(rex, a._UseTTSRateExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitttsexpr", "Action #{0} TTS rate", i), Match = tn });
                             if (RegexMatches(rex, a._UseTTSTextExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitttstext", "Action #{0} TTS text", i), Match = tn });
                             if (RegexMatches(rex, a._UseTTSVolumeExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitttsvol", "Action #{0} TTS volume", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.Variable)
+                        if (a.ActionType == ActionTypeEnum.Variable)
                         {
                             if (RegexMatches(rex, a._VariableExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitvarexpr", "Action #{0} variable expression", i), Match = tn });
                             if (RegexMatches(rex, a._VariableName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitvarname", "Action #{0} variable name", i), Match = tn });
                             if (RegexMatches(rex, a._VariableJsonTarget) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitvarjsontarget", "Action #{0} variable JSON query target", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.WindowMessage)
+                        if (a.ActionType == ActionTypeEnum.WindowMessage)
                         {
                             if (RegexMatches(rex, a._WmsgTitle) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitwmsgtitle", "Action #{0} window message title", i), Match = tn });
                         }
-                        if (a._ActionType == ActionTypeEnum.DiskFile)
+                        if (a.ActionType == ActionTypeEnum.DiskFile)
                         {
                             if (RegexMatches(rex, a._DiskFileOpName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitdiskfilename", "Action #{0} disk operation file name", i), Match = tn });
                             if (RegexMatches(rex, a._DiskFileOpVar) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitdiskfilevar", "Action #{0} disk operation variable name", i), Match = tn });

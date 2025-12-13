@@ -459,9 +459,9 @@ namespace Triggernometry.UI.CustomControls
                 }
                 foreach (var a in tx.Actions)
                 {
-                    if (a._Condition != null)
+                    if (a.Condition != null)
                     {
-                        ConditionGroup.RebuildParentage(a._Condition);
+                        ConditionGroup.RebuildParentage(a.Condition);
                     }
                 }
             }

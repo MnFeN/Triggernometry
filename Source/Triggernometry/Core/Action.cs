@@ -17,6 +17,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Triggernometry.Common.Audio;
 using Triggernometry.Core.Conditions;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Parsers;
@@ -108,244 +109,191 @@ namespace Triggernometry.Core
         }
 
         internal ActionOld NextAction { get; set; } = null;
-        internal ActionOld LoopAction { get; set; } = null;
-        internal Guid LoopContext { get; set; } = Guid.Empty;
 
+        /// <summary> 循环的父动作 </summary>
+        internal ActionOld LoopAction { get; set; } = null;
+        //internal Guid LoopContext { get; set; } = Guid.Empty;
+
+        /// <summary>
+        /// for queue controlling
+        /// </summary>
         internal Guid Id { get; set; } = Guid.NewGuid();
 
-        internal bool _Enabled { get; set; } = true;
-        [XmlAttribute]
-        public string Enabled
+        [XmlIgnore]
+        public bool Enabled { get; set; } = true;
+
+        [XmlAttribute("Enabled")]
+        public string Xml_Enabled
         {
-            get
-            {
-                if (_Enabled == true)
-                {
-                    return null;
-                }
-                return _Enabled.ToString();
-            }
-            set
-            {
-                _Enabled = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(Enabled, true);
+            set => Enabled = XmlAttr.Bool(value);
         }
+
+
 
         [XmlIgnore]
         public Trigger ParentTrigger { get; set; } = null;
 
-        internal ActionTypeEnum _ActionType = ActionTypeEnum.SystemBeep;
 
-        [XmlAttribute]
-        public string ActionType 
+
+        [XmlIgnore]
+        public ActionTypeEnum ActionType = ActionTypeEnum.SystemBeep;
+
+        [XmlAttribute("ActionType")]
+        public string Xml_ActionType
         {
-            get => _ActionType != ActionTypeEnum.SystemBeep ? _ActionType.ToString() : null;
+            get => XmlAttr.Enum(ActionType, ActionTypeEnum.SystemBeep);
             set
             {
-                if (Enum.TryParse(value, out _ActionType) || string.IsNullOrEmpty(value)) return;
-                // convert old actions
-                else if (value == "EndEncounter")
+                if (XmlAttr.TryEnum(value, out ActionType)) return;
+
+                if (value == "EndEncounter") // convert old actions
                 {
-                    _ActionType = ActionTypeEnum.ActInteraction;
+                    ActionType = ActionTypeEnum.ActInteraction;
                     _ActOpBoolParam = false;
+                    return;
                 }
-                else throw InvalidEnumException("ActionTypeEnum", value);
+
+                throw InvalidEnumException("ActionTypeEnum", value);
             }
         }
 
-        internal string _ExecutionDelayExpression { get; set; } = "0";
-        [XmlAttribute]
-        public string ExecutionDelayExpression
+
+
+        [XmlIgnore]
+        public string ExecutionDelayExpression { get; set; } = "0";
+
+        [XmlAttribute("ExecutionDelayExpression")]
+        public string Xml_ExecutionDelayExpression
         {
-            get
-            {
-                if (_ExecutionDelayExpression != "0" && _ExecutionDelayExpression != "")
-                {
-                    return _ExecutionDelayExpression;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _ExecutionDelayExpression = value;
-            }
+            get => XmlAttr.String(ExecutionDelayExpression, "0");
+            set => ExecutionDelayExpression = value;
         }
 
-        internal bool _Asynchronous { get; set; } = true;
-        [XmlAttribute]
-        public string Asynchronous
+
+
+        [XmlIgnore]
+        public bool Asynchronous { get; set; } = true;
+
+        [XmlAttribute("Asynchronous")]
+        public string Xml_Asynchronous
         {
-            get
-            {
-                if (_Asynchronous == true)
-                {
-                    return null;
-                }
-                return _Asynchronous.ToString();
-            }
-            set
-            {
-                _Asynchronous = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(Asynchronous, true);
+            set => Asynchronous = XmlAttr.Bool(value);
         }
 
-        internal DebugLevelEnum _DebugLevel { get; set; } = DebugLevelEnum.Inherit;
-        [XmlAttribute]
-        public string DebugLevel
+
+
+        [XmlIgnore]
+        public DebugLevelEnum DebugLevel { get; set; } = DebugLevelEnum.Inherit;
+
+        [XmlAttribute("DebugLevel")]
+        public string Xml_DebugLevel
         {
-            get
-            {
-                if (_DebugLevel != DebugLevelEnum.Inherit)
-                {
-                    return _DebugLevel.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _DebugLevel = (DebugLevelEnum)Enum.Parse(typeof(DebugLevelEnum), value);
-            }
+            get => XmlAttr.Enum(DebugLevel, DebugLevelEnum.Inherit);
+            set => DebugLevel = XmlAttr.Enum<DebugLevelEnum>(value);
         }
 
-        internal bool _RefireInterrupt { get; set; } = false;
-        [XmlAttribute]
-        public string RefireInterrupt
+
+
+        [XmlIgnore]
+        public bool RefireInterrupt { get; set; } = false;
+
+        [XmlAttribute("RefireInterrupt")]
+        public string Xml_RefireInterrupt
         {
-            get
-            {
-                if (_RefireInterrupt == false)
-                {
-                    return null;
-                }
-                return _RefireInterrupt.ToString();
-            }
-            set
-            {
-                _RefireInterrupt = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(RefireInterrupt, false);
+            set => RefireInterrupt = XmlAttr.Bool(value);
         }
 
-        internal bool _RefireRequeue { get; set; } = true;
-        [XmlAttribute]
-        public string RefireRequeue
+
+
+        [XmlIgnore]
+        public bool RefireRequeue { get; set; } = true;
+
+        [XmlAttribute("RefireRequeue")]
+        public string Xml_RefireRequeue
         {
-            get
-            {
-                if (_RefireRequeue == true)
-                {
-                    return null;
-                }
-                return _RefireRequeue.ToString();
-            }
-            set
-            {
-                _RefireRequeue = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(RefireRequeue, true);
+            set => RefireRequeue = XmlAttr.Bool(value);
         }
+
+
 
         [XmlAttribute]
         public int OrderNumber;
 
-        internal string _Description { get; set; } = "";
-        [XmlAttribute]
-        public string Description
+
+
+        [XmlIgnore]
+        public string Description { get; set; } = "";
+
+        [XmlAttribute("Description")]
+        public string Xml_Description
         {
-            get
-            {
-                if (_Description == "")
-                {
-                    return null;
-                }
-                return _Description;
-            }
-            set
-            {
-                _Description = value;
-            }
+            get => XmlAttr.String(Description);
+            set => Description = value;
         }
 
-        internal string _DescBgColor { get; set; } = "";
-        [XmlAttribute]
-        public string DescBgColor
+
+
+        [XmlIgnore]
+        public string DescBgColor { get; set; } = "";
+
+        [XmlAttribute("DescBgColor")]
+        public string Xml_DescBgColor
         {
-            get
-            {
-                if (_DescBgColor != "0" & !string.IsNullOrWhiteSpace(_DescBgColor))
-                {
-                    return _DescBgColor;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _DescBgColor = value;
-            }
+            get => XmlAttr.String(DescBgColor);
+            set => DescBgColor = value;
         }
 
-        internal string _DescTextColor { get; set; } = "";
-        [XmlAttribute]
-        public string DescTextColor
+
+
+        [XmlIgnore]
+        public string DescTextColor { get; set; } = "";
+
+        [XmlAttribute("DescTextColor")]
+        public string Xml_DescTextColor
         {
-            get
-            {
-                if (_DescTextColor != "0" && !string.IsNullOrWhiteSpace(_DescTextColor))
-                {
-                    return _DescTextColor;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _DescTextColor = value;
-            }
+            get => XmlAttr.String(DescTextColor);
+            set => DescTextColor = value;
         }
 
-        internal bool _DescriptionOverride { get; set; } = false;
-        [XmlAttribute]
-        public string DescriptionOverride
+
+
+        [XmlIgnore]
+        public bool DescriptionOverride { get; set; } = false;
+
+        [XmlAttribute("DescriptionOverride")]
+        public string Xml_DescriptionOverride
         {
-            get
-            {
-                if (_DescriptionOverride == false)
-                {
-                    return null;
-                }
-                return _DescriptionOverride.ToString();
-            }
-            set
-            {
-                _DescriptionOverride = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(DescriptionOverride, false);
+            set => DescriptionOverride = XmlAttr.Bool(value);
         }
 
-        /// <summary> A string tag used in trigger/folder actions to interrupt specific actions. </summary>
+
+
+        /// <summary>A string tag used in trigger/folder actions to interrupt specific actions.</summary>
         [XmlIgnore]
         public string Tag { get; set; }
 
         [XmlAttribute("Tag")]
-        public string TagXml
+        public string Xml_Tag
         {
-            get => string.IsNullOrWhiteSpace(Tag) ? null : Tag;
+            get => XmlAttr.String(Tag);
             set => Tag = value;
         }
 
-        internal ConditionGroup _Condition = new ConditionGroup { Enabled = false };
-        public ConditionGroup Condition
+
+
+        [XmlIgnore]
+        public ConditionGroup Condition = new ConditionGroup { Enabled = false };
+
+        [XmlElement("Condition")]
+        public ConditionGroup Xml_Condition
         {
-            get => _Condition.Children.Count == 0 && !_Condition.Enabled ? null : _Condition;
-            set => _Condition = value;
+            get => Condition.Children.Count == 0 && !Condition.Enabled ? null : Condition;
+            set => Condition = value;
         }
 
         #endregion
@@ -457,22 +405,22 @@ namespace Triggernometry.Core
         internal string GetDescription(Context ctx)
         {
             string temp = "";
-            if (_DescriptionOverride == true)
+            if (DescriptionOverride == true)
             {
-                return _Description;
+                return Description;
             }
-            temp += I18n.TrlAsync(_Asynchronous);
-            if (!string.IsNullOrWhiteSpace(_ExecutionDelayExpression) && _ExecutionDelayExpression.Trim() != "0")
+            temp += I18n.TrlAsync(Asynchronous);
+            if (!string.IsNullOrWhiteSpace(ExecutionDelayExpression) && ExecutionDelayExpression.Trim() != "0")
             {
-                string delay = double.TryParse(_ExecutionDelayExpression.Trim(), NSFloat, InvClt, out _)
-                    ? _ExecutionDelayExpression : $"({_ExecutionDelayExpression})";
+                string delay = double.TryParse(ExecutionDelayExpression.Trim(), NSFloat, InvClt, out _)
+                    ? ExecutionDelayExpression : $"({ExecutionDelayExpression})";
                 temp += I18n.Translate("internal/Action/descafterdelay", "after {0} ms, ", delay);  // included comma in translations (comma symbols are language-dependent)
             }
-            if (_Condition != null && _Condition.Enabled == true)
+            if (Condition != null && Condition.Enabled == true)
             {
                 temp += I18n.Translate("internal/Action/descassumingcondition", "assuming condition is met, ");
             }
-            switch (_ActionType)
+            switch (ActionType)
             {
                 case ActionTypeEnum.ActInteraction:
                     {
@@ -1412,7 +1360,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionTypeEnum.Loop:
                     temp += I18n.Translate("internal/Action/descloop", "Loop with {0} actions at ({1}) ms intervals",
-                        LoopActions?.Count(action => action._Enabled) ?? 0,
+                        LoopActions?.Count(action => action.Enabled) ?? 0,
                         string.IsNullOrWhiteSpace(_LoopDelayExpression) ? "0" : _LoopDelayExpression);
                     break;
                 case ActionTypeEnum.Repository:
@@ -1456,13 +1404,13 @@ namespace Triggernometry.Core
 
         private DebugLevelEnum GetDebugLevel(Context ctx)
         {
-            if (_DebugLevel == DebugLevelEnum.Inherit)
+            if (DebugLevel == DebugLevelEnum.Inherit)
             {
                 return ctx?.Trigger?.GetDebugLevel(Instance) ?? DebugLevelEnum.Verbose;
             }
             else
             {
-                return _DebugLevel;
+                return DebugLevel;
             }
         }
 
@@ -1634,7 +1582,7 @@ namespace Triggernometry.Core
             try
             {
                 if ((ctx.force & TriggerForceTypeEnum.SkipConditions) == 0 && !ctx.testByPlaceholder &&
-                    _Condition?.Enabled == true && _Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
+                    Condition?.Enabled == true && Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
                 {
                     ctx.PushActionResult(0);
                     AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", OrderNumber, ctx.Trigger?.LogName ?? "(null)"));
@@ -1644,7 +1592,7 @@ namespace Triggernometry.Core
                     ctx.PushActionResult(1);
                     AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", GetDescription(ctx), Thread.CurrentThread.ManagedThreadId));
 
-                    if (_ActionType == ActionTypeEnum.Loop)
+                    if (ActionType == ActionTypeEnum.Loop)
                     {
                         ExecuteLoopAction(ref ctx, qa, out bool shouldReturn); // ctx might be changed here
                         if (shouldReturn) return; // need to check: mutex should be released here?
@@ -1662,7 +1610,7 @@ namespace Triggernometry.Core
                 }
                 else if (NextAction != null)
                 {
-                    DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, NextAction._ExecutionDelayExpression));
+                    DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, NextAction.ExecutionDelayExpression));
                     Instance.QueueAction(ctx, ctx.Trigger, qa?.mutex, NextAction, dt, false);
                 }
                 else if (qa?.mutex != null)
@@ -1673,7 +1621,7 @@ namespace Triggernometry.Core
             }
             catch (Exception ex)
             {
-                if (_ActionType == ActionTypeEnum.NamedCallback)
+                if (ActionType == ActionTypeEnum.NamedCallback)
                 {
                     if (ex is TargetInvocationException tiex && tiex.InnerException != null)
                         ex = tiex.InnerException;
@@ -1727,7 +1675,7 @@ namespace Triggernometry.Core
 
         private void ExecutionCore(Context ctx)
         {
-            switch (_ActionType)
+            switch (ActionType)
             {
                 #region Implementation - ACT Interaction
                 case ActionTypeEnum.ActInteraction:
@@ -2434,7 +2382,7 @@ namespace Triggernometry.Core
                         psi.FileName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _LaunchProcessPathExpression);
                         p.StartInfo = psi;
                         p.Start();
-                        if (_Asynchronous == false)
+                        if (Asynchronous == false)
                         {
                             AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/waitingprocexit", "Waiting for process to exit"));
                             p.WaitForExit();
@@ -4237,7 +4185,7 @@ namespace Triggernometry.Core
 
         internal void Execute(QueuedAction qa, Context ctx)
         {
-            if (_Asynchronous == true)
+            if (Asynchronous == true)
             {
                 CancellationToken? ct = ctx.Plugin?.GetCancellationToken();
                 Task.Run(() =>
@@ -4258,12 +4206,12 @@ namespace Triggernometry.Core
         {
             a.ParentTrigger = ParentTrigger;
             a.Id = Id;
-            a._ActionType = _ActionType;
+            a.ActionType = ActionType;
             a.OrderNumber = OrderNumber;
-            a._Asynchronous = _Asynchronous;
-            a._Enabled = _Enabled;
+            a.Asynchronous = Asynchronous;
+            a.Enabled = Enabled;
             a.Tag = Tag;
-            a._ExecutionDelayExpression = _ExecutionDelayExpression;
+            a.ExecutionDelayExpression = ExecutionDelayExpression;
             a._LaunchProcessCmdlineExpression = _LaunchProcessCmdlineExpression;
             a._LaunchProcessPathExpression = _LaunchProcessPathExpression;
             a._LaunchProcessWindowStyle = _LaunchProcessWindowStyle;
@@ -4271,8 +4219,8 @@ namespace Triggernometry.Core
             a._PlaySoundExclusive = _PlaySoundExclusive;
             a._PlaySoundFileExpression = _PlaySoundFileExpression;
             a._PlaySoundVolumeExpression = _PlaySoundVolumeExpression;
-            a._RefireInterrupt = _RefireInterrupt;
-            a._RefireRequeue = _RefireRequeue;
+            a.RefireInterrupt = RefireInterrupt;
+            a.RefireRequeue = RefireRequeue;
             a._SystemBeepFreqExpression = _SystemBeepFreqExpression;
             a._SystemBeepLengthExpression = _SystemBeepLengthExpression;
             a._UseTTSExclusive = _UseTTSExclusive;
@@ -4286,7 +4234,7 @@ namespace Triggernometry.Core
             a._VariableOp = _VariableOp;
             a._VariableName = _VariableName;
             a._VariableJsonTarget = _VariableJsonTarget;
-            a._DebugLevel = _DebugLevel;
+            a.DebugLevel = DebugLevel;
             a._VariableExpression = _VariableExpression;
             a._TriggerId = _TriggerId;
             a._TriggerOp = _TriggerOp;
@@ -4360,7 +4308,7 @@ namespace Triggernometry.Core
             a._JsonHeaderExpression = _JsonHeaderExpression;
             a._JsonFiringExpression = _JsonFiringExpression;
             a._JsonPayloadExpression = _JsonPayloadExpression;
-            a._Condition = (ConditionGroup)_Condition?.Duplicate();
+            a.Condition = (ConditionGroup)Condition?.Duplicate();
             a._KeyPressExpression = _KeyPressExpression;
             a._KeypressType = _KeypressType;
             a._KeyPressCode = _KeyPressCode;
@@ -4393,10 +4341,10 @@ namespace Triggernometry.Core
             a._DictVariableLength = _DictVariableLength;
             a._MutexOpType = _MutexOpType;
             a._MutexName = _MutexName;
-            a._Description = _Description;
-            a._DescriptionOverride = _DescriptionOverride;
-            a._DescBgColor = _DescBgColor;
-            a._DescTextColor = _DescTextColor;
+            a.Description = Description;
+            a.DescriptionOverride = DescriptionOverride;
+            a.DescBgColor = DescBgColor;
+            a.DescTextColor = DescTextColor;
             a._NamedCallbackParam = _NamedCallbackParam;
             a._NamedCallbackName = _NamedCallbackName;
             a._MouseOpType = _MouseOpType;

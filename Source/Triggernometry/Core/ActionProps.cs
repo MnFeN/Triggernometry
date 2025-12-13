@@ -2671,7 +2671,7 @@ namespace Triggernometry.Core
         {
             get
             {
-                if (_ActionType != ActionTypeEnum.TextAura)
+                if (ActionType != ActionTypeEnum.TextAura)
                 {
                     return null;
                 }
@@ -2989,7 +2989,7 @@ namespace Triggernometry.Core
         {
             get
             {
-                if (_TextAuraFontName == "" || _ActionType != ActionTypeEnum.TextAura)
+                if (_TextAuraFontName == "" || ActionType != ActionTypeEnum.TextAura)
                 {
                     return null;
                 }

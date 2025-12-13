@@ -112,7 +112,7 @@ namespace Triggernometry.Core.Actions
         {
             return I18n.Translate(
                 "internal/Action/descloop", "Loop with {0} actions at ({1}) ms intervals",
-                Actions?.Count(action => action._Enabled) ?? 0,
+                Actions?.Count(action => action.Enabled) ?? 0,
                 string.IsNullOrWhiteSpace(_DelayExpression) ? "0" : _DelayExpression
             );
         }

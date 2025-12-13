@@ -135,7 +135,7 @@ namespace Triggernometry.Core.Serialization
         // ---------- enum ----------
 
         /// <summary>Serializes an enum value for XML attributes, omitting the specified default value. </summary>
-        public static string Enum<T>(T value, T omitValue) where T : Enum
+        public static string Enum<T>(T value, T omitValue) where T : struct, Enum
         {
             if (value.Equals(omitValue))
                 return null;
@@ -144,12 +144,18 @@ namespace Triggernometry.Core.Serialization
         }
 
         /// <summary>Parses an enum value from an XML attribute string, ignoring case. </summary>
-        public static T Enum<T>(string value) where T : Enum
+        public static T Enum<T>(string value) where T : struct, Enum
         {
             return (T)System.Enum.Parse(typeof(T), value, ignoreCase: true);
         }
 
-
+        /// <summary>
+        /// Tries to parse an enum value from an XML attribute string, ignoring case.
+        /// </summary>
+        public static bool TryEnum<T>(string value, out T result) where T : struct, Enum
+        {
+            return System.Enum.TryParse(value, ignoreCase: true, out result);
+        }
 
         // ---------- Version ----------
 

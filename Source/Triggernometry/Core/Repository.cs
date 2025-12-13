@@ -239,9 +239,9 @@ namespace Triggernometry.Core
         /// </summary>
         private RestrictionEnum GetActionRestrictions(ActionOld a)
         {
-            if (!a._Enabled)
+            if (!a.Enabled)
                 return RestrictionEnum.None;
-            switch (a._ActionType)
+            switch (a.ActionType)
             {
                 case ActionOld.ActionTypeEnum.ExecuteScript:
                     return AllowScriptExecution ? RestrictionEnum.None : RestrictionEnum.ExecuteScript;

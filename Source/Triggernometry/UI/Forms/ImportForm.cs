@@ -338,7 +338,7 @@ namespace Triggernometry.UI.Forms
         }
 
         private bool IsActionTypeTrigger(Trigger trigger, Core.ActionOld.ActionTypeEnum actionType)
-            => trigger.Actions.Any(action => action._ActionType == actionType);
+            => trigger.Actions.Any(action => action.ActionType == actionType);
 
         private bool HasActionTypeTrigger(Folder folder, Core.ActionOld.ActionTypeEnum actionType)
             => folder.Triggers.Any(trigger => IsActionTypeTrigger(trigger, actionType)) ||
@@ -556,7 +556,7 @@ namespace Triggernometry.UI.Forms
                 case 1:
                     {
                         Core.ActionOld a = new Core.ActionOld();
-                        a._ActionType = Core.ActionOld.ActionTypeEnum.SystemBeep;
+                        a.ActionType = Core.ActionOld.ActionTypeEnum.SystemBeep;
                         a._SystemBeepFreqExpression = "1046.5"; // C6
                         a._SystemBeepLengthExpression = "100";
                         a.OrderNumber = 1;
@@ -566,7 +566,7 @@ namespace Triggernometry.UI.Forms
                 case 2:
                     {
                         Core.ActionOld a = new Core.ActionOld();
-                        a._ActionType = Core.ActionOld.ActionTypeEnum.PlaySound;
+                        a.ActionType = Core.ActionOld.ActionTypeEnum.PlaySound;
                         a._PlaySoundExclusive = true;
                         a._PlaySoundFileExpression = soundData;
                         a._PlaySoundVolumeExpression = "100";
@@ -577,7 +577,7 @@ namespace Triggernometry.UI.Forms
                 case 3:
                     {
                         Core.ActionOld a = new Core.ActionOld();
-                        a._ActionType = Core.ActionOld.ActionTypeEnum.UseTTS;
+                        a.ActionType = Core.ActionOld.ActionTypeEnum.UseTTS;
                         a._UseTTSExclusive = true;
                         a._UseTTSTextExpression = soundData;
                         a._UseTTSVolumeExpression = "100";

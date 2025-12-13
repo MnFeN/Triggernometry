@@ -573,12 +573,12 @@ namespace Triggernometry.UI.Forms
             }
             else
             {
-                cbxActionType.SelectedIndex = (int)a._ActionType;
+                cbxActionType.SelectedIndex = (int)a.ActionType;
                 expTag.Expression = a.Tag;
-                cbxRefireOption1.SelectedIndex = (a._RefireInterrupt == true ? 0 : 1);
-                cbxRefireOption2.SelectedIndex = (a._RefireRequeue == true ? 1 : 0);
-                expExecutionDelay.Expression = a._ExecutionDelayExpression;
-                chkExecuteAsync.Checked = a._Asynchronous;
+                cbxRefireOption1.SelectedIndex = (a.RefireInterrupt == true ? 0 : 1);
+                cbxRefireOption2.SelectedIndex = (a.RefireRequeue == true ? 1 : 0);
+                expExecutionDelay.Expression = a.ExecutionDelayExpression;
+                chkExecuteAsync.Checked = a.Asynchronous;
                 expBeepFrequency.Expression = a._SystemBeepFreqExpression;
                 expBeepLength.Expression = a._SystemBeepLengthExpression;
                 expSoundFile.Expression = a._PlaySoundFileExpression;
@@ -594,7 +594,7 @@ namespace Triggernometry.UI.Forms
                 cbxProcessWindowStyle.SelectedIndex = (int)a._LaunchProcessWindowStyle;
                 expKeypresses.Expression = a._KeyPressExpression;
                 expExecScriptCode.Expression = a._ExecScriptExpression;
-                cbxLoggingLevel.SelectedIndex = (int)a._DebugLevel;
+                cbxLoggingLevel.SelectedIndex = (int)a.DebugLevel;
                 expExecScriptAssemblies.Expression = a._ExecScriptAssembliesExpression;
                 cbxMessageBoxIcon.SelectedIndex = ((int)a._MessageBoxIconType) / 16;
                 expMessageBoxText.Expression = a._MessageBoxText;
@@ -747,9 +747,9 @@ namespace Triggernometry.UI.Forms
                 expTextBackColor.Text = a._TextAuraBackgroundClInt;
                 UpdateFontDescription();
                 ConditionGroup cx;
-                if (a._Condition != null)
+                if (a.Condition != null)
                 {
-                    cx = (ConditionGroup)a._Condition.Duplicate();
+                    cx = (ConditionGroup)a.Condition.Duplicate();
                 }
                 else
                 {
@@ -796,10 +796,10 @@ namespace Triggernometry.UI.Forms
                 cbxFileOpCache.Checked = a._DiskFileCache;
                 cbxMutexOp.SelectedIndex = (int)a._MutexOpType;
                 expMutexName.Expression = a._MutexName;
-                txtDescription.Text = a._Description;
-                chkOverrideDesc.Checked = a._DescriptionOverride;
-                expDescBgColor.Expression = a._DescBgColor;
-                expDescTextColor.Expression = a._DescTextColor;
+                txtDescription.Text = a.Description;
+                chkOverrideDesc.Checked = a.DescriptionOverride;
+                expDescBgColor.Expression = a.DescBgColor;
+                expDescTextColor.Expression = a.DescTextColor;
                 expCallbackName.Expression = a._NamedCallbackName;
                 expCallbackParam.Expression = a._NamedCallbackParam;
                 cbxMouseOp.SelectedIndex = (int)a._MouseOpType;
@@ -861,12 +861,12 @@ namespace Triggernometry.UI.Forms
         internal void SettingsToAction(ActionOld a)
         {
             a.ParentTrigger = ParentTrigger;
-            a._ActionType = (ActionTypeEnum)cbxActionType.SelectedIndex;
+            a.ActionType = (ActionTypeEnum)cbxActionType.SelectedIndex;
             a.Tag = expTag.Expression;
-            a._RefireInterrupt = (cbxRefireOption1.SelectedIndex == 0);
-            a._RefireRequeue = (cbxRefireOption2.SelectedIndex == 1);
-            a._ExecutionDelayExpression = expExecutionDelay.Expression;
-            a._Asynchronous = chkExecuteAsync.Checked;
+            a.RefireInterrupt = (cbxRefireOption1.SelectedIndex == 0);
+            a.RefireRequeue = (cbxRefireOption2.SelectedIndex == 1);
+            a.ExecutionDelayExpression = expExecutionDelay.Expression;
+            a.Asynchronous = chkExecuteAsync.Checked;
             a._SystemBeepFreqExpression = expBeepFrequency.Expression;
             a._SystemBeepLengthExpression = expBeepLength.Expression;
             a._PlaySoundFileExpression = expSoundFile.Expression;
@@ -882,7 +882,7 @@ namespace Triggernometry.UI.Forms
             a._LaunchProcessPathExpression = expProcessName.Expression;
             a._LaunchProcessCmdlineExpression = expProcessParameters.Expression;
             a._LaunchProcessWorkingDirExpression = expProcessWorkingDir.Expression;
-            a._DebugLevel = (RealPlugin.DebugLevelEnum)cbxLoggingLevel.SelectedIndex;
+            a.DebugLevel = (RealPlugin.DebugLevelEnum)cbxLoggingLevel.SelectedIndex;
             a._LaunchProcessWindowStyle = (System.Diagnostics.ProcessWindowStyle)cbxProcessWindowStyle.SelectedIndex;
             a._KeyPressExpression = expKeypresses.Expression;
             a._ExecScriptExpression = expExecScriptCode.Expression;
@@ -1048,7 +1048,7 @@ namespace Triggernometry.UI.Forms
             a._TextAuraForegroundClInt = expTextForeColor.Text;
             a._TextAuraBackgroundClInt = expTextBackColor.Text;
             a._TextAuraOutlineClInt = expTextOutlineColor.Text;
-            a._Condition = cndCondition.ConditionToEdit;
+            a.Condition = cndCondition.ConditionToEdit;
             a._KeypressType = (KeypressTypeEnum)cbxKeypressMethod.SelectedIndex;
             a._KeyPressCode = expKeypress.Expression;
             a._KeyPressProcId = expKeypressProcId.Expression;
@@ -1076,10 +1076,10 @@ namespace Triggernometry.UI.Forms
             a._DictTargetPersist = prsDictTarget.IsPersistent;
             a._MutexOpType = (MutexOpEnum)cbxMutexOp.SelectedIndex;
             a._MutexName = expMutexName.Expression;
-            a._Description = txtDescription.Text;
-            a._DescriptionOverride = chkOverrideDesc.Checked;
-            a._DescBgColor = expDescBgColor.Expression;
-            a._DescTextColor = expDescTextColor.Expression;
+            a.Description = txtDescription.Text;
+            a.DescriptionOverride = chkOverrideDesc.Checked;
+            a.DescBgColor = expDescBgColor.Expression;
+            a.DescTextColor = expDescTextColor.Expression;
             a._NamedCallbackName = expCallbackName.Expression;
             a._NamedCallbackParam = expCallbackParam.Expression;
             a._MouseOpType = (MouseOpEnum)cbxMouseOp.SelectedIndex;
@@ -1126,7 +1126,7 @@ namespace Triggernometry.UI.Forms
         {
             ActionOld a = new ActionOld();
             SettingsToAction(a);
-            if (ignoreConditions) a._Condition = new ConditionGroup();
+            if (ignoreConditions) a.Condition = new ConditionGroup();
 
             Context ctx = new Context(a.ParentTrigger);
             ctx.testByPlaceholder = liveValues == false;
@@ -1583,7 +1583,7 @@ namespace Triggernometry.UI.Forms
             var a = new ActionOld();
             Context ctx = new Context(ParentTrigger) { testByPlaceholder = true };
             SettingsToAction(a);
-            a._ActionType = ActionTypeEnum.Aura;
+            a.ActionType = ActionTypeEnum.Aura;
             a._AuraOp = AuraOpEnum.DeactivateAura;
             a.Execute(null, ctx);
         }
@@ -1593,7 +1593,7 @@ namespace Triggernometry.UI.Forms
             var a = new ActionOld();
             Context ctx = new Context(ParentTrigger) { testByPlaceholder = true };
             SettingsToAction(a);
-            a._ActionType = ActionTypeEnum.TextAura;
+            a.ActionType = ActionTypeEnum.TextAura;
             a._AuraOp = AuraOpEnum.DeactivateAura;
             a.Execute(null, ctx);
         }
