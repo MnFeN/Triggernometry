@@ -559,7 +559,7 @@ namespace Triggernometry.Core
                 return;
             }
             Context ctx = ai.ctx;
-            if ((ctx.force & ActionOld.TriggerForceTypeEnum.SkipConditions) == 0 && ctx.testByPlaceholder == false)
+            if ((ctx.forceType & ActionOld.TriggerForceTypeEnum.SkipConditions) == 0 && ctx.testByPlaceholder == false)
             {
                 if (Condition != null && Condition.Enabled == true)
                 {

@@ -23,7 +23,7 @@ namespace Triggernometry.Core
         private readonly RealPlugin _plugOverride;
         internal RealPlugin Plugin => _plugOverride ?? RealPlugin.Instance;
         public readonly Trigger Trigger;
-        internal ActionOld.TriggerForceTypeEnum force;
+        internal ActionOld.TriggerForceTypeEnum forceType;
 
         internal RealPlugin.ActionExecutionHook soundhook;
         internal RealPlugin.ActionExecutionHook ttshook;

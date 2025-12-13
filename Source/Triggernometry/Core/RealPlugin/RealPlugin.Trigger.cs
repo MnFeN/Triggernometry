@@ -211,8 +211,8 @@ namespace Triggernometry.Core
                 {
                     ctx.zoneIdOverride = logEvent.ZoneId;
                 }
-                ctx.force = forceType;
-                trigger.Fire(this, ctx, null);
+                ctx.forceType = forceType;
+                trigger.Fire(ctx, null);
             }
         }
 

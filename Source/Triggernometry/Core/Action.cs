@@ -293,7 +293,7 @@ namespace Triggernometry.Core
         public ConditionGroup Xml_Condition
         {
             get => Condition.Children.Count == 0 && !Condition.Enabled ? null : Condition;
-            set => Condition = value;
+            set => Condition = value ?? new ConditionGroup { Enabled = false };
         }
 
         #endregion
@@ -1581,7 +1581,7 @@ namespace Triggernometry.Core
         {
             try
             {
-                if ((ctx.force & TriggerForceTypeEnum.SkipConditions) == 0 && !ctx.testByPlaceholder &&
+                if ((ctx.forceType & TriggerForceTypeEnum.SkipConditions) == 0 && !ctx.testByPlaceholder &&
                     Condition?.Enabled == true && Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
                 {
                     ctx.PushActionResult(0);

@@ -49,6 +49,8 @@ namespace Triggernometry.Core
             return ret;
         }
 
+        // to-do: These chars should not be kept in Regex textboxes.
+        // Better warn the user when they paste these invalid chars, or delete them directly.
         internal static string SerializeInvalidXmlCharacters(string ex)
         {
             ex = ex.Replace("&#x0;", "␀");
