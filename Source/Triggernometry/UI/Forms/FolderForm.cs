@@ -163,29 +163,29 @@ namespace Triggernometry.UI.Forms
         {
             f = f ?? new Folder();
             txtFolderName.Text = f.Name ?? "";
-            chkZoneFilter.Checked = f._ZoneFilterEnabled;
-            chkEventFilter.Checked = f._EventFilterEnabled;
-            expZoneFilterRegex.Text = f.ZoneFilterRegularExpression ?? "";
-            expEventFilterRegex.Text = f.EventFilterRegularExpression ?? "";
-            chkFfxivClassFilterEnabled.Checked = f._FFXIVJobFilterEnabled;
-            chkFfxivZoneFilter.Checked = f._FFXIVZoneFilterEnabled;
-            JobFilterFromInt(f._FFXIVJobFilter);
-            expFfxivZoneFilterRegex.Text = f.FfxivZoneFilterRegularExpression ?? "";
+            chkZoneFilter.Checked = f.ZoneFilterEnabled;
+            chkEventFilter.Checked = f.EventFilterEnabled;
+            expZoneFilterRegex.Text = f.ZoneRegex ?? "";
+            expEventFilterRegex.Text = f.EventRegex ?? "";
+            chkFfxivClassFilterEnabled.Checked = f.FFXIVJobFilterEnabled;
+            chkFfxivZoneFilter.Checked = f.FFXIVZoneFilterEnabled;
+            JobFilterFromInt(f.FFXIVJobFilter);
+            expFfxivZoneFilterRegex.Text = f.FfxivZoneIdRegex ?? "";
             txtEnvironment.Text = f.RawEnvironmentVariables ?? "";
-            if (f._ReadOnly) SetReadOnly(showRemoteBanner: false); // disables the edit of a local folder
+            if (f.ReadOnly) SetReadOnly(showRemoteBanner: false); // disables the edit of a local folder
         }
 
         internal void SettingsToFolder(Folder f)
         {
             f.Name = txtFolderName.Text;
-			f._ZoneFilterEnabled = chkZoneFilter.Checked;
-			f._EventFilterEnabled = chkEventFilter.Checked;
-			f.ZoneFilterRegularExpression = expZoneFilterRegex.Text;
-			f.EventFilterRegularExpression = expEventFilterRegex.Text;
-            f._FFXIVJobFilterEnabled = chkFfxivClassFilterEnabled.Checked;
-            f._FFXIVJobFilter = JobfilterToInt();
-            f._FFXIVZoneFilterEnabled = chkFfxivZoneFilter.Checked;
-            f.FfxivZoneFilterRegularExpression = expFfxivZoneFilterRegex.Text;
+			f.ZoneFilterEnabled = chkZoneFilter.Checked;
+			f.EventFilterEnabled = chkEventFilter.Checked;
+			f.ZoneRegex = expZoneFilterRegex.Text;
+			f.EventRegex = expEventFilterRegex.Text;
+            f.FFXIVJobFilterEnabled = chkFfxivClassFilterEnabled.Checked;
+            f.FFXIVJobFilter = JobfilterToInt();
+            f.FFXIVZoneFilterEnabled = chkFfxivZoneFilter.Checked;
+            f.FfxivZoneIdRegex = expFfxivZoneFilterRegex.Text;
             f.RawEnvironmentVariables = txtEnvironment.Text;
         }
 

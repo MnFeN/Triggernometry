@@ -47,7 +47,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void TreeViewEx_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node.Tag is Folder folder && folder.Repo != null && folder._DisableRemoteExpand)
+            if (e.Node.Tag is Folder folder && folder.Repo != null && folder.DisableRemoteExpand)
             {
                 MessageBox.Show("你无需浏览此分组。", "远程触发器", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
@@ -56,7 +56,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void TreeViewEx_BeforeCheck(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node.Tag is Folder folder && folder.Repo != null && folder._DisableRemoteToggle)
+            if (e.Node.Tag is Folder folder && folder.Repo != null && folder.DisableRemoteToggle)
             {
                 MessageBox.Show("你无需修改此分组。", "远程触发器", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;

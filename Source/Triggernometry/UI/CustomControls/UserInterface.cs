@@ -83,7 +83,7 @@ namespace Triggernometry.UI.CustomControls
             {
                 if (parent?.Tag is Folder folder)
                 {
-                    return folder._DescendingSort;
+                    return folder.DescendingSort;
                 }
                 else
                 {
@@ -737,7 +737,7 @@ namespace Triggernometry.UI.CustomControls
         {
             if (treeView1.SelectedNode?.Tag is Folder f)
             {
-                f._DescendingSort = !f._DescendingSort;
+                f.DescendingSort = !f.DescendingSort;
                 treeView1.Sort();
             }
         }
@@ -783,11 +783,11 @@ namespace Triggernometry.UI.CustomControls
                 ctxUpdate.Visible = true;
                 ctxEdit.Visible = true;
                 ctxDescendingSort.Visible = folder != null;
-                ctxDescendingSort.Checked = folder != null && folder._DescendingSort;
+                ctxDescendingSort.Checked = folder != null && folder.DescendingSort;
                 ctxFire.Visible = true;
                 ctxFireAllowCondition.Visible = true;
                 ctxCollapse.Visible = true;
-                ctxExpand.Visible = !(folder != null && folder.Repo != null && folder._DisableRemoteExpand);
+                ctxExpand.Visible = !(folder != null && folder.Repo != null && folder.DisableRemoteExpand);
                 ctxImport.Visible = true;
                 ctxExport.Visible = true;
                 ctxCopy.Visible = true;

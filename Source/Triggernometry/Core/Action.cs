@@ -34,8 +34,6 @@ namespace Triggernometry.Core
     public partial class ActionOld
     {
 
-        #region General properties
-
         public class ActionBundle
         {
             [XmlArrayItem("Action")]
@@ -107,6 +105,8 @@ namespace Triggernometry.Core
             }
 
         }
+
+        #region General properties
 
         internal ActionOld NextAction { get; set; } = null;
 

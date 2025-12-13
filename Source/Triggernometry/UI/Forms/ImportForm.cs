@@ -461,8 +461,8 @@ namespace Triggernometry.UI.Forms
                 f.Name = trig.Category;
                 if (trig.RestrictToCategoryZone == true)
                 {
-                    f._ZoneFilterEnabled = true;
-                    f.ZoneFilterRegularExpression = f.Name;
+                    f.ZoneFilterEnabled = true;
+                    f.ZoneRegex = f.Name;
                 }
                 f.Name += (trig.RestrictToCategoryZone == true ? " (" + I18n.Translate("internal/ImportForm/restrictedtozone", "restricted to zone") +")" : "");
                 TreeNode fn = new TreeNode();
@@ -774,8 +774,8 @@ namespace Triggernometry.UI.Forms
                 f.Name = kp.Value[0].Item3;
                 if (kp.Value[0].Item1 == true)
                 {
-                    f._ZoneFilterEnabled = true;
-                    f.ZoneFilterRegularExpression = kp.Value[0].Item3;
+                    f.ZoneFilterEnabled = true;
+                    f.ZoneRegex = kp.Value[0].Item3;
                 }
                 f.Name += (kp.Value[0].Item1 == true ? " (" + I18n.Translate("internal/ImportForm/restrictedtozone", "restricted to zone") + ")" : "");
                 TreeNode fn = new TreeNode();

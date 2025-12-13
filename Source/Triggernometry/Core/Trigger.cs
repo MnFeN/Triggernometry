@@ -38,23 +38,7 @@ namespace Triggernometry.Core
         public string LogName => $"{Name} ({(Repo != null ? "@" : "")}{Id})";
 
         [XmlIgnore]
-        public string FullPath
-        {
-            get
-            {
-                string name = Name;
-                Folder f = Parent;
-                while (f != null)
-                {
-                    if (f.Parent != null)
-                    {
-                        name = f.Name + @"\" + name;
-                    }
-                    f = f.Parent;
-                }
-                return name;
-            }
-        }
+        public string FullPath => Parent == null ? Name : $@"{Parent.FullPath}\{Name}";
 
         #endregion Properties - Identity/Runtime
 
