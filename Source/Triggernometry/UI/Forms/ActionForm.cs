@@ -109,6 +109,32 @@ namespace Triggernometry.UI.Forms
             rtbWmsgHelper = new RichTextBoxHelper("rtbWmsgHelper", this, tableLayoutPanel19);
             rtbJsonHelper = new RichTextBoxHelper("rtbJsonHelper", this, jsonTableLayout);
 
+            prsScalarTarget.RelatedTextbox = expVariableTarget;
+            prsScalarName.RelatedTextbox = expVariableName;
+            prsListTarget.RelatedTextbox = expLvarTarget;
+            prsListSource.RelatedTextbox = expLvarName;
+            prsJsonVariable.RelatedTextbox = expJsonVariable;
+            prsFileVariable.RelatedTextbox = expFileOpVariable;
+            prsTableTarget.RelatedTextbox = expTvarTarget;
+            prsTableSource.RelatedTextbox = expTvarName;
+            prsDictSource.RelatedTextbox = expDictName;
+            prsDictTarget.RelatedTextbox = expDictTarget;
+
+            expCallbackName.AutofillType = ExpressionTextBox.AutofillTypeEnum.Callback;
+            expJsonVariable.AutofillType = ExpressionTextBox.AutofillTypeEnum.Scalar;
+
+            Disposed += ActionForm_Disposed;
+            FormClosing += ActionForm_FormClosing;
+
+            txtDescription.GotFocus += ExpressionTextBox.ReplaceIncompleteLineBreaksInClipboard;
+
+            colorSelector1.ColorChanged += colorSelector1_ColorChanged;
+            expTextForeColor.TextChanged += expTextForeColor_TextChanged;
+            expTextBackColor.TextChanged += expTextBackColor_TextChanged;
+            expTextOutlineColor.TextChanged += expTextOutlineColor_TextChanged;
+
+            // finished UI initialization, fill in data
+
             UiContext = uiContext;
             Images = imageList;
             TreeView = treeView;
@@ -125,30 +151,6 @@ namespace Triggernometry.UI.Forms
             CloseTree(trvFolder.Nodes[0]);
 
             SettingsFromAction(action);
-
-            Disposed += ActionForm_Disposed;
-            FormClosing += ActionForm_FormClosing;
-
-            txtDescription.GotFocus += ExpressionTextBox.ReplaceIncompleteLineBreaksInClipboard;
-
-            colorSelector1.ColorChanged += colorSelector1_ColorChanged;
-            expTextForeColor.TextChanged += expTextForeColor_TextChanged;
-            expTextBackColor.TextChanged += expTextBackColor_TextChanged;
-            expTextOutlineColor.TextChanged += expTextOutlineColor_TextChanged;
-
-            prsScalarTarget.RelatedTextbox = expVariableTarget;
-            prsScalarName.RelatedTextbox = expVariableName;
-            prsListTarget.RelatedTextbox = expLvarTarget;
-            prsListSource.RelatedTextbox = expLvarName;
-            prsJsonVariable.RelatedTextbox = expJsonVariable;
-            prsFileVariable.RelatedTextbox = expFileOpVariable;
-            prsTableTarget.RelatedTextbox = expTvarTarget;
-            prsTableSource.RelatedTextbox = expTvarName;
-            prsDictSource.RelatedTextbox = expDictName;
-            prsDictTarget.RelatedTextbox = expDictTarget;
-
-            expCallbackName.AutofillType = ExpressionTextBox.AutofillTypeEnum.Callback;
-            expJsonVariable.AutofillType = ExpressionTextBox.AutofillTypeEnum.Scalar;
         }
 
         private void ActionForm_Disposed(object sender, EventArgs e)
