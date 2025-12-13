@@ -403,6 +403,8 @@ namespace Triggernometry.Core
 
         internal void ParseRawEnvironmentVariables()
         {
+            EnvironmentVariables.Clear();
+
             if (string.IsNullOrWhiteSpace(_rawEnvironmentVariables)) return;
             // separate each lines
             var kvps = ArgHelper.SplitArguments(
