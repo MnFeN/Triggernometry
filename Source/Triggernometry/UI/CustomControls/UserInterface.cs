@@ -2180,7 +2180,7 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        public Repository DefaultRepoCN(string address, string name) => new Repository
+        public Repository DefaultRepoCN(string address, string name, int updateIntervalMinutes) => new Repository
         {
             Enabled = true,
             Address = address,
@@ -2192,7 +2192,7 @@ namespace Triggernometry.UI.CustomControls
             UpdatePolicy = Repository.UpdatePolicyEnum.Startup,
             AudioOutput = Repository.AudioOutputEnum.NeverOverride,
             AutoUpdate = true,
-            UpdateInterval = 60 // min
+            UpdateInterval = updateIntervalMinutes
         };
 
         public void AddDefaultRepoCN(bool shouldUpdate = false)
@@ -2200,25 +2200,25 @@ namespace Triggernometry.UI.CustomControls
             var repos = new List<Repository>
             {
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/SelfTest.xml",
-                    "[工具] 问题自检工具箱 + 使用教程　　有问题请自行在此解决"),
+                    "[工具] 问题自检工具箱 + 使用教程　　有问题请自行在此解决", 60),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/Utils.xml",
-                    "[工具] 运行支持库（必需）"),
+                    "[工具] 运行支持库（必需）", 60),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7a.xml",
-                    "7.0 M1-4 阿卡狄亚轻量级"),
+                    "7.0 M1-4 阿卡狄亚轻量级", 60 * 24),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7b.xml",
-                    "7.2 M5-8 阿卡狄亚中量级"),
+                    "7.2 M5-8 阿卡狄亚中量级", 60 * 24),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7c.xml",
-                    "7.4 M9-12 阿卡狄亚重量级"),
+                    "7.4 M9-12 阿卡狄亚重量级", 60),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/Ex7.xml",
-                    "7.X 极神"),
+                    "7.X 极神", 60),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/temp.xml",
-                    "临时推送"),
+                    "临时推送", 60 * 24),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/U7a.xml",
-                    "7.1 绝伊甸"),
+                    "7.1 绝伊甸", 60 * 24),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/field.xml",
-                    "特殊场景探索"),
+                    "特殊场景探索", 60 * 24),
                 DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/dungeon.xml",
-                    "深宫")
+                    "深宫", 60 * 24)
             };
             RemoveRepo("vip.123pan.cn/1824544011/Remote_Triggers/AdvWm.xml"); // old
             AddRepos(repos, shouldUpdate);
@@ -2271,10 +2271,10 @@ namespace Triggernometry.UI.CustomControls
             Context ctx = new Context(t);
             ctx.soundhook = plug.SoundPlaybackSmart;
             ctx.ttshook = plug.TtsPlaybackSmart;
-            ctx.force = force;
+            ctx.forceType = force;
             if ((t.TestInput?.Length ?? 0) == 0)
             {
-                t.Fire(plug, ctx, null);
+                t.Fire(ctx, null);
             }
             else
             {
