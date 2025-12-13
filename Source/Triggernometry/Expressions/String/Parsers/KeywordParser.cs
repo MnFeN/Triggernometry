@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggernometry.Core;
 using Triggernometry.FFXIV;
 using Triggernometry.Localization;
 using Triggernometry.PluginBridges;
-using static Triggernometry.Core.Configuration;
 
 namespace Triggernometry.Expressions.String.Parsers
 {
@@ -204,9 +199,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 var numResult = ctx.GetNumGroup(groupIdx);
                 if (numResult == null && ctx?.Trigger != null)
                 {
-                    var msg = $"正则捕获组索引 ${{{rawExpr}}} 超出范围。\n" +
-                              $"完整表达式：{fullExpression}" +
-                              $"触发器：{ctx?.Trigger.LogName ?? "(null)"}";
+                    var msg = $"正则捕获组索引 ${{{rawExpr}}} 超出范围。\n触发器：{ctx.Trigger?.LogName ?? "(null)"}";
                     ctx.Plugin?.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, msg, ctx.Trigger);
                 }
                 return numResult ?? "";

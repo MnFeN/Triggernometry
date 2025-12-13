@@ -17,7 +17,7 @@ namespace Triggernometry.Expressions.String.Parsers
             ParseTernaryExpression(ternaryExpr, out string condExpr, out string trueStr, out string falseStr);
             if (trueStr == null || falseStr == null)
             {
-                throw new Exception(I18n.Translate("internal/Context/ternaryexpressionerror",
+                throw new FormatException(I18n.Translate("internal/Context/ternaryexpressionerror",
                     "Ternary expression ({0}) could not be parsed: \r\nCondition: ({1}); \r\nTrueExpr: ({2}); \r\nFalseExpr: ({3})",
                     ternaryExpr, condExpr, trueStr ?? "null", falseStr ?? "null"));
             }

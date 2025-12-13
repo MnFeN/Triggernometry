@@ -18,6 +18,7 @@ namespace Triggernometry.Expressions.String.Parsers
             public readonly string Expression;
             /// <summary> The group index n of $n. </summary>
             public readonly int? NumIndex;
+            /// <summary> The string ${...} or $n </summary>
             public string RawExpression => NumIndex != null ? $"${NumIndex}" : $"${{{Expression}}}";
 
             public TemplateMatch(int start, int end, string expression, int? numIndex)
@@ -29,19 +30,16 @@ namespace Triggernometry.Expressions.String.Parsers
             }
         }
 
-        private static string ParseTemplateMatch(TemplateMatch m, Context ctx, string fullExpression, bool isNumeric = false)
+        private static string ParseTemplateMatch(TemplateMatch m, Context ctx, bool isNumeric = false)
         {
             string result;
             if (m.NumIndex == null) // "${...}"
             {
-                result = ParseSingleTemplate(m.Expression ?? "", ctx, fullExpression, isNumeric);
+                result = ParseSingleTemplate(m.Expression ?? "", ctx, isNumeric);
                 if (result == null)
                 {
-                    var msg = 
-                        $"文本模板 {m.RawExpression} 无法识别为有效表达式，且不存在此名称的正则捕获组。\n" +
-                        $"完整表达式： {fullExpression}\n" +
-                        $"触发器：{ctx?.Trigger?.LogName ?? "(null)"}";
-                    ctx.Plugin?.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, msg, ctx.Trigger);
+                    var msg = $"文本模板 {m.RawExpression} 无法识别为有效表达式，且不存在此名称的正则捕获组。";
+                    throw new FormatException(msg);
                 }
             }
             else // "$n"
@@ -49,10 +47,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 result = ctx?.GetNumGroup(m.NumIndex.Value);
                 if (result == null && ctx?.Trigger != null)
                 {
-                    var msg = 
-                        $"正则捕获组索引 {m.RawExpression} 超出范围。\n" +
-                        $"完整表达式： {fullExpression}\n" +
-                        $"触发器：{ctx?.Trigger?.LogName ?? "(null)"}";
+                    var msg = $"正则捕获组索引 {m.RawExpression} 超出范围。\n触发器：{ctx.Trigger?.LogName ?? "(null)"}";
                     ctx.Plugin?.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, msg, ctx.Trigger);
                 }
             }
@@ -135,10 +130,10 @@ namespace Triggernometry.Expressions.String.Parsers
         /// <summary>
         /// Add a "${...}" template match to the result list. <br />
         /// </summary>
-        private static void AddBraceTemplate(List<TemplateMatch> templateMatches, string expr, int dollarPos, int rBracePos, out int newScanPos)
+        private static void AddBraceTemplate(List<TemplateMatch> templateMatches, string fullExpr, int dollarPos, int rBracePos, out int newScanPos)
         {
             var length = rBracePos - dollarPos - 2;
-            string innerExpr = expr.Substring(dollarPos + 2, length); // without "${" / "}"
+            string innerExpr = fullExpr.Substring(dollarPos + 2, length); // without "${" / "}"
             templateMatches.Add(new TemplateMatch(dollarPos, rBracePos, innerExpr, null));
             newScanPos = rBracePos;
         }
@@ -180,14 +175,13 @@ namespace Triggernometry.Expressions.String.Parsers
             return sb.ToString();
         }
 
-        internal static string ParseSingleTemplate(string rawExpr, Context ctx, bool isTestModeNumeric)
+        /// <summary> Null if not matched. </summary>
+        internal static string ParseSingleTemplate(string templateBody, Context ctx, bool isTestModeNumeric)
         {
             ctx = ctx ?? Context.Unbound;
-
-            return KeywordParser.TryParse(rawExpr, ctx, isTestModeNumeric) // ${_xxx} ${regexGroup} ${regexIdx}
-                ?? ColonParser.TryParse(rawExpr, ctx) // expressions start with "xxx:"
-                ?? IndexPropParser.TryParse(rawExpr, ctx) // var, var.prop(arg), var[index], var[index1][index2].prop(arg), ...
-                ?? throw new Exception($"模板字符串 {rawExpr} 无法识别为有效表达式，且不存在此名称的正则捕获组。");
+            return KeywordParser.TryParse(templateBody, ctx, isTestModeNumeric) // ${_xxx} ${regexGroup} ${regexIdx}
+                ?? ColonParser.TryParse(templateBody, ctx) // expressions start with "xxx:"
+                ?? IndexPropParser.TryParse(templateBody, ctx); // var, var.prop(arg), var[index], var[index1][index2].prop(arg), ...
         }
 
         /// <summary> Replace all valid currency-sign templates ¤n, ¤{...} to dollar-sign templates $n, ${...} in the given string. </summary>

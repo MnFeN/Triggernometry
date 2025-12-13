@@ -189,7 +189,7 @@ namespace Triggernometry.Expressions.String.Utils
             foreach (string slice in slices)
             {   // parse slice string to int start/end/step
                 string[] sliceArgs = slice.Split(':').Select(s => s.TrimEx()).ToArray();
-                CheckArgCount("0-3", sliceArgs.Length, I18n.TranslateWord("slice"), rawExpr);
+                CheckArgCount("0-3", sliceArgs.Length, I18n.TranslateWord("slice"));
 
                 string startStr = GetArgument(sliceArgs, 0, "", true);
                 string endStr = GetArgument(sliceArgs, 1, "", true);
@@ -212,7 +212,7 @@ namespace Triggernometry.Expressions.String.Utils
                         // sliceArgs.Length = 2:  a:b, a:, :b, :
                         // sliceArgs.Length = 0:  "" (= ":")
                         step = int.Parse(stepStr, InvClt);
-                        if (step == 0) { throw ErrorHelper.InvalidValueError(I18n.TranslateWord("slice"), "step", "0", rawExpr); }
+                        if (step == 0) { throw ErrorHelper.InvalidValueError(I18n.TranslateWord("slice"), "step", "0"); }
                         if (startStr != "")
                         {   // `start` value given: apply the negative-index and startIndex logics
                             start = int.Parse(startStr, InvClt);
@@ -235,7 +235,7 @@ namespace Triggernometry.Expressions.String.Utils
                 }
                 catch 
                 { 
-                    throw ErrorHelper.ParseTypeError(I18n.TranslateWord("string"), slice, I18n.TranslateWord("slice"), rawExpr); 
+                    throw ErrorHelper.ParseTypeError(I18n.TranslateWord("string"), slice, I18n.TranslateWord("slice")); 
                 }
 
                 // fix the out-of-range early start value / late end value

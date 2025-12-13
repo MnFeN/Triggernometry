@@ -16,12 +16,12 @@ namespace Triggernometry.Expressions.String.Parsers
 {
     internal static class IndexPropParser
     {
-        internal static string TryParse(string rawExpr, Context ctx)
+        internal static string TryParse(string template, Context ctx)
         {
             ctx = ctx ?? Context.Unbound;
             var plug = ctx.Plugin; // can be null
 
-            var expr = new IndexMemberExpression(rawExpr);
+            var expr = new IndexMemberExpression(template);
             if (expr.Member.Name == null && expr.Indexes.Length == 0)
             {
                 return null;
@@ -64,7 +64,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "_targetmarker2id":
                 case "_tm2id":
                     return Memory.EntityIdByTargetMarker(expr.Index)?.ToString("X8")
-                        ?? throw ErrorHelper.ParseTypeError(I18n.TranslateWord("string"), expr.Index, "targetmarker", rawExpr);
+                        ?? throw ErrorHelper.ParseTypeError(I18n.TranslateWord("string"), expr.Index, "targetmarker");
 
                 case "_waymark":
                 case "_wm":

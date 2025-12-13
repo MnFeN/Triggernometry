@@ -12,18 +12,18 @@ namespace Triggernometry.Expressions.String.Parsers
 {
     internal static class ColonParser
     {
-        internal static string TryParse(string rawExpression, Context ctx)
+        internal static string TryParse(string template, Context ctx)
         {
             ctx = ctx ?? Context.Unbound;
             var plug = ctx.Plugin; // can be null
 
-            var colonPos = rawExpression.IndexOf(':');
+            var colonPos = template.IndexOf(':');
             if (colonPos == -1) return null;
 
-            var rawPrefix = rawExpression.Substring(0, colonPos);
+            var rawPrefix = template.Substring(0, colonPos);
             var prefixLower = rawPrefix.TrimEx().ToLowerInvariant();
             
-            var rawBody = rawExpression.Substring(colonPos + 1);
+            var rawBody = template.Substring(colonPos + 1);
             var body = rawBody.TrimEx();
 
             // First handle the cases that could not tolerate the general IndexMemberExpression format:
@@ -84,7 +84,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 // since the inner expressions would not change.
                 // Same for the numeric case.
                 case "string":  case "s":
-                    return rawBody;
+                    return rawBody; // not trimmed
 
                 case "numeric": case "n":
                     return I18n.ThingToString(MathParser.Parse(body));
@@ -114,7 +114,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "func":
                 case "f":
                     {
-                        var funcResult = StringFunctionParser.TryParse(rawBody, rawExpression); // use untrimmed body
+                        var funcResult = StringFunctionParser.TryParse(rawBody); // use untrimmed body
                         if (funcResult != null)
                         {
                             return funcResult;
@@ -203,7 +203,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvarrl:TableName[Header][ColIndex]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Row-based table lookup expects exactly two indices [Header][ColIndex]: '{rawExpression}'");
+                            throw new Exception($"Row-based table lookup expects exactly two indices [Header][ColIndex]: '{template}'");
                         }
 
                         string headerExpr = expr.Index1;
@@ -233,7 +233,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvarcl:TableName[Header][RowIndex]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Column-based table lookup expects exactly two indices [Header][RowIndex]: '{rawExpression}'");
+                            throw new Exception($"Column-based table lookup expects exactly two indices [Header][RowIndex]: '{template}'");
                         }
 
                         string headerExpr = expr.Index1;
@@ -263,7 +263,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvardl:TableName[ColHeader][RowHeader]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Double-based table lookup expects exactly two indices [ColHeader][RowHeader]: '{rawExpression}'");
+                            throw new Exception($"Double-based table lookup expects exactly two indices [ColHeader][RowHeader]: '{template}'");
                         }
 
                         string colHeader = expr.Index1;
@@ -314,7 +314,7 @@ namespace Triggernometry.Expressions.String.Parsers
         {
             return !mustExist
                 ? store.GetVariable(variables, varName, false)
-                : store.GetVariable(variables, varName) ?? throw new Exception($"Scalar variable '{varName}' does not exist.");
+                : store.GetVariable(variables, varName) ?? throw new Exception($"Variable '{varName}' does not exist.");
         }
 
     }

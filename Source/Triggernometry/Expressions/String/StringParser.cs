@@ -17,7 +17,7 @@ namespace Triggernometry.Expressions.String
         /// Evaluate a single template body expression "..." (the inside of "<c>${...}</c>").<br />
         /// · <paramref name="expr" />: Expression inside the template, such as "<c>lvar:a[1]</c>".<br />
         /// · <paramref name="ctx" />: Evaluation context; if null, <see cref="Context.Unbound"/> is used.<br />
-        /// · Returns the evaluated result as a string.
+        /// · Returns the evaluated result as a string. Null if not matched.
         /// </summary>
         public static string ParseSingleTemplate(string expr, Context ctx = null)
             => TemplateParser.ParseSingleTemplate(expr, ctx, false);
@@ -51,7 +51,14 @@ namespace Triggernometry.Expressions.String
                 if (templates.Count == 0)
                     break;
 
-                newExpr = TemplateParser.ReplaceTemplates(newExpr, templates, ctx, isTestModeNumeric);
+                try
+                {
+                    newExpr = TemplateParser.ReplaceTemplates(newExpr, templates, ctx, isTestModeNumeric);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"解析文本表达式时出错：{ex.Message}。\n完整表达式：{expr}\n触发器：{ctx?.Trigger?.LogName ?? (null)}", ex);
+                }
             }
 
             if (depth == MAX_DEPTH)
