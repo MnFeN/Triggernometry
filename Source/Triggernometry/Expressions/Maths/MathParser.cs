@@ -152,23 +152,21 @@ namespace Triggernometry.Expressions.Maths
 
             // Numeric Variables:
             // local variables such as pi can also be added into the parser.
-            LocalVariables.Add("pi", 3.14159265358979323846264338327950288);
-            LocalVariables.Add("π", 3.14159265358979323846264338327950288);
-            LocalVariables.Add("pi2", 6.28318530717958647692528676655900576);
-            LocalVariables.Add("pi05", 1.57079632679489661923132169163975144);
-            LocalVariables.Add("pi025", 0.78539816339744830961566084581987572);
-            LocalVariables.Add("pi0125", 0.39269908169872415480783042290993786);
-            LocalVariables.Add("pitograd", 57.2957795130823208767981548141051704);
-            LocalVariables.Add("piofgrad", 0.01745329251994329576923690768488612);
-            LocalVariables.Add("pitorad", 57.2957795130823208767981548141051704);
-            LocalVariables.Add("piofrad", 0.01745329251994329576923690768488612);
-            LocalVariables.Add("e", 2.71828182845904523536028747135266249);
-            LocalVariables.Add("phi", 1.61803398874989484820458683436563811);
-            LocalVariables.Add("major", 0.61803398874989484820458683436563811);
-            LocalVariables.Add("minor", 0.38196601125010515179541316563436189);
+            LocalVariables.Add("pi", Math.PI);
+            LocalVariables.Add("π", Math.PI);
+            LocalVariables.Add("pi2", Math.PI * 2);
+            LocalVariables.Add("pi05", Math.PI / 2);
+            LocalVariables.Add("pi025", Math.PI / 4);
+            LocalVariables.Add("pi0125", Math.PI / 8);
+            LocalVariables.Add("pitorad", 180.0 / Math.PI);
+            LocalVariables.Add("piofrad", Math.PI / 180.0);
+            LocalVariables.Add("e", Math.E);
+            LocalVariables.Add("phi", (Math.Sqrt(5) + 1) / 2);
+            LocalVariables.Add("major", (Math.Sqrt(5) - 1) / 2);
+            LocalVariables.Add("minor", (-Math.Sqrt(5) + 3) / 2);
             LocalVariables.Add("ETmin2sec", ETmin2sec); // 70 / 24
-            LocalVariables.Add("semitone", 1.059463094359295261164710035654);  // 2^(1/12)
-            LocalVariables.Add("cent", 1.000577789506554859333888573259);      // 2^(1/1200)
+            LocalVariables.Add("semitone", Math.Pow(2, 1.0 / 12));
+            LocalVariables.Add("cent", Math.Pow(2, 1.0 / 1200));
             LocalVariables.Add("δ", TOLERANCE);
         }
 
@@ -630,12 +628,16 @@ namespace Triggernometry.Expressions.Maths
         /// <param name="mathExpression"></param>
         public static double Parse(string mathExpression)
         {
+            if (string.IsNullOrWhiteSpace(mathExpression))
+                return 0.0;
+            if (double.TryParse(mathExpression, NumberStyles.Float, CultureInfo, out var result))
+                return result;
             return MathParserLogic(Lexer(mathExpression));
         }
 
         /// <summary> Enter the math expression in form of a list of tokens. </summary>
         /// <param name="mathExpression"></param>
-        public double Parse(ReadOnlyCollection<string> mathExpression)
+        public double Parse(ReadOnlyCollection<string> mathExpression) 
         {
             return MathParserLogic(new List<string>(mathExpression));
         }
