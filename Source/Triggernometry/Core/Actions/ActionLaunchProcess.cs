@@ -79,7 +79,7 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             string tempt = "";
             switch (WindowStyle)

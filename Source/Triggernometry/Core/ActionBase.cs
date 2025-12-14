@@ -490,42 +490,41 @@ namespace Triggernometry.Core
 
         #region Describe/Implementation
 
-        private string Capitalize(string str)
-        {
-            if (str == null)
-            {
-                return null;
-            }
-            if (str.Length > 1)
-            {
-                return char.ToUpper(str[0]) + str.Substring(1);
-            }
-            return str.ToUpper();
-        }
+        /// <summary>
+        /// Returns the specific description text for this action type.  
+        /// Implemented by each subclass.
+        /// </summary>
+        internal abstract string DescribeImplementation();
 
-        internal abstract string DescribeImplementation(Context ctx);
-        public string Describe(Context ctx)
+        /// <summary>
+        /// Builds a full description of this action, including common details  
+        /// like async mode, delay, and condition, plus the subclass-specific part.
+        /// </summary>
+        public string Describe()
         {
-            if (DescriptionOverride == true)
+            try
             {
-                return Description ?? "";
+                if (DescriptionOverride)
+                {
+                    return Description ?? "";
+                }
+                string temp = I18n.TrlAsync(Asynchronous);
+                if (!string.IsNullOrWhiteSpace(ExecutionDelayExpression) && ExecutionDelayExpression.Trim() != "0")
+                {
+                    string delay = double.TryParse(ExecutionDelayExpression.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out _) ? ExecutionDelayExpression : $"({ExecutionDelayExpression})";
+                    temp += I18n.Translate("internal/Action/descafterdelay", "after {0} ms, ", delay);  // included comma in translations (comma symbols are language-dependent)
+                }
+                if (Condition?.Enabled == true)
+                {
+                    temp += I18n.Translate("internal/Action/descassumingcondition", "assuming condition is met, ");
+                }
+                temp += DescribeImplementation();
+                return !string.IsNullOrWhiteSpace(temp) ? char.ToUpperInvariant(temp[0]) + temp.Substring(1) : string.Empty;
             }
-            string temp = I18n.TrlAsync(Asynchronous);
-            if (!string.IsNullOrWhiteSpace(ExecutionDelayExpression) && ExecutionDelayExpression.Trim() != "0")
+            catch (Exception ex)
             {
-                string delay = double.TryParse(ExecutionDelayExpression.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out _) ? ExecutionDelayExpression : $"({ExecutionDelayExpression})";
-                temp += I18n.Translate("internal/Action/descafterdelay", "after {0} ms, ", delay);  // included comma in translations (comma symbols are language-dependent)
+                return "Failed to describe action: " + ex.Message;
             }
-            if (Condition != null && Condition.Enabled == true)
-            {
-                temp += I18n.Translate("internal/Action/descassumingcondition", "assuming condition is met, ");
-            }
-            temp += DescribeImplementation(ctx);
-            if (temp.Length > 1)
-            {
-                return char.ToUpper(temp[0]) + temp.Substring(1);
-            }
-            return temp.ToUpper();
         }
 
         #endregion
@@ -582,7 +581,7 @@ namespace Triggernometry.Core
                     t = new Task(() =>
                     {
                         ct.ThrowIfCancellationRequested();
-                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(ctx), Thread.CurrentThread.ManagedThreadId));
+                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
                         ExecuteImplementation(ai);
                         ai?.ActionFinished();
                     });
@@ -591,7 +590,7 @@ namespace Triggernometry.Core
                 {
                     t = new Task(() =>
                     {                        
-                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(ctx), Thread.CurrentThread.ManagedThreadId));
+                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
                         ExecuteImplementation(ai);
                         ai?.ActionFinished();
                     });
@@ -600,7 +599,7 @@ namespace Triggernometry.Core
             }
             else
             {                
-                AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(ctx), Thread.CurrentThread.ManagedThreadId));
+                AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
                 ExecuteImplementation(ai);
                 ai?.ActionFinished();
             }

@@ -71,7 +71,7 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             if (UseTTS == true)
             {

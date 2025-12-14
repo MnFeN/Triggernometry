@@ -49,7 +49,7 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             return I18n.Translate("internal/Action/descnamedcallback", "Invoke named callback ({0}) with parameter ({1})", Name, Parameter);
         }

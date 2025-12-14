@@ -86,7 +86,7 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             return I18n.Translate(
                 "internal/Action/descloop", "Loop with {0} actions at ({1}) ms intervals",

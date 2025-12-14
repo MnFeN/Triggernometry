@@ -355,18 +355,18 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             switch (Operation)
             {
                 case OperationEnum.Activate:
-                    return I18n.Translate("internal/Action/desctextoverlayact", "activate text overlay ({0}) with expression ({1})", Name, Text);
+                    return I18n.Translate("internal/Action/desctextauraact", "activate text overlay ({0}) with expression ({1})", Name, Text);
                 case OperationEnum.Deactivate:
-                    return I18n.Translate("internal/Action/desctextoverlaydeact", "deactivate text overlay ({0})", Name);
+                    return I18n.Translate("internal/Action/desctextauradeact", "deactivate text overlay ({0})", Name);
                 case OperationEnum.DeactivateAll:
-                    return I18n.Translate("internal/Action/desctextoverlaydeactall", "deactivate all text overlays");
+                    return I18n.Translate("internal/Action/desctextauradeactall", "deactivate all text overlays");
                 case OperationEnum.DeactivateRegex:
-                    return I18n.Translate("internal/Action/desctextoverlaydeactrex", "deactivate text overlays matching regular expression ({0})", Name);
+                    return I18n.Translate("internal/Action/desctextauradeactrex", "deactivate text overlays matching regular expression ({0})", Name);
             }
             return "";
         }

@@ -117,7 +117,7 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             string persist = I18n.TrlVarPersist(Persistent);
             string cache = I18n.TrlCacheFile(UseCache);
@@ -215,11 +215,11 @@ namespace Triggernometry.Core.Actions
                             string vtchanger;
                             if (ctx.Trigger != null)
                             {
-                                vtchanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe(ctx));
+                                vtchanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
                             }
                             else
                             {
-                                vtchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe(ctx));
+                                vtchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
                             }
                             vt.Resize(datawidth, data.Count);
                             int y = 1;
@@ -252,11 +252,11 @@ namespace Triggernometry.Core.Actions
                             }
                             if (ctx.Trigger != null)
                             {
-                                x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe(ctx));
+                                x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
                             }
                             else
                             {
-                                x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe(ctx));
+                                x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
                             }
                             x.LastChanged = DateTime.Now;
                         }
@@ -277,11 +277,11 @@ namespace Triggernometry.Core.Actions
                             x.Value = data;
                             if (ctx.Trigger != null)
                             {
-                                x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe(ctx));
+                                x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
                             }
                             else
                             {
-                                x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe(ctx));
+                                x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
                             }
                             x.LastChanged = DateTime.Now;
                         }

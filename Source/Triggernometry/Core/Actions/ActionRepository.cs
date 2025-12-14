@@ -68,14 +68,14 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             switch (Operation)
             {
                 case OperationEnum.UpdateSelf:
                     return I18n.Translate("internal/Action/repoupdateself", "Update containing repository");                    
                 case OperationEnum.UpdateRepo:
-                    Repository r = ctx.Plugin.GetRepositoryById(RepositoryId);
+                    Repository r = RealPlugin.Instance.GetRepositoryById(RepositoryId);
                     if (r != null)
                     {
                         return I18n.Translate("internal/Action/repoupdatespecific", "Update repository ({0})", r.Name);

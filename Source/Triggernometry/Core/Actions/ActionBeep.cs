@@ -50,7 +50,7 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             return I18n.Translate("internal/Action/descbeep", "Beep at ({0}) hz for ({1}) ms", Frequency, Duration);
         }

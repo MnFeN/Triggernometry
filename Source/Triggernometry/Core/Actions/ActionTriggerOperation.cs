@@ -275,9 +275,9 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
-            Trigger t = ctx.Plugin.GetTriggerById(TriggerId, ctx.Trigger?.Repo);
+            Trigger t = RealPlugin.Instance.GetTriggerById(TriggerId, ParentTrigger?.Repo);
             if (t == null && Operation != OperationEnum.CancelAllTrigger)
             {
                 return I18n.Translate("internal/Action/desctriginvalidref", "trigger action with an invalid trigger reference ({0})", TriggerId);

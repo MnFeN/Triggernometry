@@ -136,6 +136,7 @@ namespace Triggernometry.Core
 
         internal Trigger GetTriggerById(Guid id, Repository repo)
         {
+            if (id == Guid.Empty) return null;
             lock (Triggers)
             {
                 var ix = from ax in Triggers
@@ -147,6 +148,7 @@ namespace Triggernometry.Core
 
         internal Folder GetFolderById(Guid id, Repository repo)
         {
+            if (id == Guid.Empty) return null;
             if (repo != null)
             {
                 return RecursiveFolderSearch(repo.Root, id, repo);

@@ -147,7 +147,7 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             string cache = I18n.TrlCacheFile(UseCache);
             if (FiringExpression != null && FiringExpression.Trim().Length > 0)
@@ -234,11 +234,11 @@ namespace Triggernometry.Core.Actions
                     x.Value = response;
                     if (ctx.Trigger != null)
                     {
-                        x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe(ctx));
+                        x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
                     }
                     else
                     {
-                        x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe(ctx));
+                        x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
                     }
                     x.LastChanged = DateTime.Now;
                 }

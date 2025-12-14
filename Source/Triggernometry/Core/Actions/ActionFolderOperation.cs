@@ -60,9 +60,9 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
-            Folder f = ctx.Plugin.GetFolderById(FolderId, ctx.Trigger?.Repo);
+            Folder f = RealPlugin.Instance.GetFolderById(FolderId, ParentTrigger?.Repo);
             if (f != null)
             {
                 switch (Operation)

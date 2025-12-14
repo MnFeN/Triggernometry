@@ -404,999 +404,8 @@ namespace Triggernometry.Core
         }
 
         internal string GetDescription(Context ctx)
-        {
-            string temp = "";
-            if (DescriptionOverride == true)
-            {
-                return Description;
-            }
-            temp += I18n.TrlAsync(Asynchronous);
-            if (!string.IsNullOrWhiteSpace(ExecutionDelayExpression) && ExecutionDelayExpression.Trim() != "0")
-            {
-                string delay = double.TryParse(ExecutionDelayExpression.Trim(), NSFloat, InvClt, out _)
-                    ? ExecutionDelayExpression : $"({ExecutionDelayExpression})";
-                temp += I18n.Translate("internal/Action/descafterdelay", "after {0} ms, ", delay);  // included comma in translations (comma symbols are language-dependent)
-            }
-            if (Condition != null && Condition.Enabled == true)
-            {
-                temp += I18n.Translate("internal/Action/descassumingcondition", "assuming condition is met, ");
-            }
-            switch (ActionType)
-            {
-                case ActionTypeEnum.ActInteraction:
-                    {
-                        switch (_ActOpType)
-                        {
-                            case ActInteractionTypeEnum.SetCombatState:
-                                temp += !_ActOpBoolParam ? I18n.Translate("internal/Action/descactcombatend", "End ACT encounter")
-                                                         : I18n.Translate("internal/Action/descactcombatstart", "Start ACT encounter");
-                                break;
-                            case ActInteractionTypeEnum.LogAllNetwork:
-                                temp += I18n.Translate("internal/Action/descactlogallnetwork", "{0} option: Log all network data", I18n.TranslateEnable(_ActOpBoolParam));
-                                break;
-                            case ActInteractionTypeEnum.UseDeucalion:
-                                temp += I18n.Translate("internal/Action/descactusedeucalion", "{0} option: Use Deucalion (injection)", I18n.TranslateEnable(_ActOpBoolParam));
-                                break;
-                        }
-                    }
-                    break;
-                case ActionTypeEnum.Trigger:
-                    {
-                        Trigger t = Instance.GetTriggerById(_TriggerId, ctx.Trigger?.Repo);
-                        if (t == null && _TriggerOp != TriggerOpEnum.CancelAllTrigger)
-                        {
-                            temp += I18n.Translate("internal/Action/desctriginvalidref", "trigger action with an invalid trigger reference ({0})", _TriggerId);
-                            break;
-                        }
-                        switch (_TriggerOp)
-                        {
-                            case TriggerOpEnum.CancelTrigger:
-                                if (string.IsNullOrWhiteSpace(_TriggerTagRegex))
-                                {
-                                    temp += I18n.Translate(
-                                        "internal/Action/desctrigcanceltrig",
-                                        "cancel all actions queued from trigger ({0})",
-                                        t?.Name ?? "null");
-                                }
-                                else
-                                {
-                                    temp += I18n.Translate(
-                                        "internal/Action/desctrigcanceltrigtag",
-                                        "cancel all actions queued from trigger ({0}) with tags matching regex ({1})",
-                                        t?.Name ?? "null", _TriggerTagRegex);
-                                }
-                                break;
-                            case TriggerOpEnum.CancelAllTrigger:
-                                if (string.IsNullOrWhiteSpace(_TriggerTagRegex))
-                                {
-                                    temp += I18n.Translate(
-                                        "internal/Action/desctrigcancelall",
-                                        "cancel all actions queued from all triggers");
-                                }
-                                else
-                                {
-                                    temp += I18n.Translate(
-                                        "internal/Action/desctrigcanceltag",
-                                        "cancel all actions queued from all triggers with tags matching regex ({0})",
-                                        _TriggerTagRegex);
-                                }
-                                break;
-                            case TriggerOpEnum.FireTrigger:
+            => ConvertToNewAction().Describe();
 
-                                temp += I18n.Translate("internal/Action/desctrigfire", "fire trigger ({0})", t?.Name ?? "null");
-                                List<string> ex = new List<string>();
-                                if (_TriggerForceType == TriggerForceTypeEnum.SkipAll)
-                                {
-                                    ex.Add(I18n.Translate("internal/Action/desctrigignoreall", "all restrictions"));
-                                }
-                                else
-                                {
-                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipRegexp) != 0)
-                                    {
-                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreregex", "regular expression"));
-                                    }
-                                    else
-                                    {
-                                        temp += " " + I18n.Translate("internal/Action/desctrigfireusing", "with event text ({0}) and zone ({1})", _TriggerText, _TriggerZone);
-                                    }
-                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipConditions) != 0)
-                                    {
-                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreconditions", "conditions"));
-                                    }
-                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipRefire) != 0)
-                                    {
-                                        ex.Add(I18n.Translate("internal/Action/desctrigignorerefire", "refire delay"));
-                                    }
-                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipParent) != 0)
-                                    {
-                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreparent", "parent folder settings"));
-                                    }
-                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipActive) != 0)
-                                    {
-                                        ex.Add(I18n.Translate("internal/Action/desctrigignorestate", "enabled/disabled status"));
-                                    }
-                                }
-                                if (ex.Count > 1)
-                                {
-                                    ex[ex.Count - 1] = I18n.Translate("internal/Action/desctrigignoreand", "and") + " " + ex[ex.Count - 1];
-                                }
-                                if (ex.Count > 0)
-                                {
-                                    temp += ", " + I18n.Translate("internal/Action/desctrigignoring", "ignoring") + " " + string.Join(", ", ex);
-                                }
-                                break;
-                            case TriggerOpEnum.DisableTrigger:
-                                temp += I18n.Translate("internal/Action/desctrigdisable", "disable trigger ({0})", t?.Name ?? "null");
-                                break;
-                            case TriggerOpEnum.EnableTrigger:
-                                temp += I18n.Translate("internal/Action/desctrigenable", "enable trigger ({0})", t?.Name ?? "null");
-                                break;
-                        }
-                    }
-                    break;
-                case ActionTypeEnum.Folder:
-                    {
-                        Folder f = Instance.GetFolderById(_FolderId, ctx.Trigger?.Repo);
-                        if (f != null)
-                        {
-                            switch (_FolderOp)
-                            {
-                                case FolderOpEnum.DisableFolder:
-                                    temp += I18n.Translate("internal/Action/descdisablefolder", "disable folder ({0})", f.Name);
-                                    break;
-                                case FolderOpEnum.EnableFolder:
-                                    temp += I18n.Translate("internal/Action/descenablefolder", "enable folder ({0})", f.Name);
-                                    break;
-                                case FolderOpEnum.CancelFolder:
-                                    temp += I18n.Translate("internal/Action/desccancelfolder", "cancel all actions from folder ({0})", f.Name);
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            temp += I18n.Translate("internal/Action/descinvalidfolderref", "folder action with an invalid folder reference ({0})", _FolderId);
-                        }
-                    }
-                    break;
-                case ActionTypeEnum.KeyPress:
-                    switch (_KeypressType)
-                    {
-                        case KeypressTypeEnum.SendKeys:
-                            temp += I18n.Translate("internal/Action/desckeypresses", "send keypresses ({0}) to the active window", _KeyPressExpression);
-                            break;
-                        case KeypressTypeEnum.WindowMessage:
-                        case KeypressTypeEnum.WindowMessageCombo:
-                            string target = GetTargetWindowsDescription(_KeyPressProcId, _KeyPressWindow);
-
-                            if (_KeypressType == KeypressTypeEnum.WindowMessage)
-                            {
-                                temp += I18n.Translate("internal/Action/desckeypress", "send keycode ({0}) to {1}", _KeyPressCode, target);
-                            }
-                            else
-                            {
-                                temp += I18n.Translate("internal/Action/desckeypresscombo", "send keycodes ({0}) to {1}", _KeyPressCode, target);
-                            }
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.LaunchProcess:
-                    {
-                        string tempt = "";
-                        switch (_LaunchProcessWindowStyle)
-                        {
-                            case System.Diagnostics.ProcessWindowStyle.Hidden:
-                                tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Hidden from view]", _LaunchProcessWindowStyle.ToString());
-                                break;
-                            case System.Diagnostics.ProcessWindowStyle.Maximized:
-                                tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Maximized to fullscreen]", _LaunchProcessWindowStyle.ToString());
-                                break;
-                            case System.Diagnostics.ProcessWindowStyle.Minimized:
-                                tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Minimized to taskbar]", _LaunchProcessWindowStyle.ToString());
-                                break;
-                            case System.Diagnostics.ProcessWindowStyle.Normal:
-                                tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Normal]", _LaunchProcessWindowStyle.ToString());
-                                break;
-                            default:
-                                tempt = _LaunchProcessWindowStyle.ToString();
-                                break;
-                        }
-                        temp += I18n.Translate("internal/Action/desclaunchprocess", "launch process ({0}) as ({1}) using command line parameters ({2})",
-                            LaunchProcessPathExpression,
-                            tempt,
-                            LaunchProcessCmdlineExpression
-                        );
-                    }
-                    break;
-                case ActionTypeEnum.PlaySound:
-                    temp += I18n.Translate("internal/Action/descplaysound", "play sound file ({0}) at volume ({1}) %", _PlaySoundFileExpression, _PlaySoundVolumeExpression);
-                    break;
-                case ActionTypeEnum.SystemBeep:
-                    temp += I18n.Translate("internal/Action/descbeep", "beep at ({0}) hz for ({1}) ms", _SystemBeepFreqExpression, _SystemBeepLengthExpression);
-                    break;
-                case ActionTypeEnum.UseTTS:
-                    temp += I18n.Translate("internal/Action/desctts", "say ({0}) at volume ({1}) %, using speed ({2})", _UseTTSTextExpression, _UseTTSVolumeExpression, _UseTTSRateExpression);
-                    break;
-                case ActionTypeEnum.ExecuteScript:
-                    temp += I18n.Translate("internal/Action/descexecscript", "execute C# script");
-                    break;
-                case ActionTypeEnum.MessageBox:
-                    temp += I18n.Translate($"internal/Action/descmsgbox{_MessageBoxIconType}", "show a message box saying ({0}) with icon (" + _MessageBoxIconType.ToString() + ")", _MessageBoxText);
-                    break;
-                case ActionTypeEnum.Mutex:
-                    switch (_MutexOpType)
-                    {
-                        case MutexOpEnum.Release:
-                            temp += I18n.Translate("internal/Action/mutexrelease", "release mutex ({0})", _MutexName);
-                            break;
-                        case MutexOpEnum.Acquire:
-                            temp += I18n.Translate("internal/Action/mutexacquire", "acquire mutex ({0})", _MutexName);
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.ListVariable:
-                    string sPersistL = I18n.TrlVarPersist(_ListSourcePersist);
-                    string tPersistL = I18n.TrlVarPersist(_ListTargetPersist);
-                    string exprTypeL = I18n.TrlExprType(_ListVariableExpressionType == ListVariableExpTypeEnum.String);
-                    switch (_ListVariableOp)
-                    {
-                        case ListVariableOpEnum.Unset:
-                            temp += I18n.Translate("internal/Action/desclistunset",
-                                    "unset {1}list variable ({0})", _ListVariableName, sPersistL);
-                            break;
-                        case ListVariableOpEnum.Push:
-                            temp += I18n.Translate("internal/Action/desclistpush",
-                                    "push the value from {3} expression ({2}) to the end of {1}list variable ({0})",
-                                    _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL);
-                            break;
-                        case ListVariableOpEnum.Insert:
-                            temp += I18n.Translate("internal/Action/desclistinsert",
-                                    "insert the value from {3} expression ({2}) to index ({4}) on {1}list variable ({0})",
-                                    _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL, _ListVariableIndex);
-                            break;
-                        case ListVariableOpEnum.Set:
-                            temp += I18n.Translate("internal/Action/desclistset",
-                                    "set the value from {3} expression ({2}) to index ({4}) on {1}list variable ({0})",
-                                    _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL, _ListVariableIndex);
-                            break;
-                        case ListVariableOpEnum.SetAll:
-                            if (string.IsNullOrWhiteSpace(_ListVariableIndex))
-                                temp += I18n.Translate("internal/Action/desclistsetall",
-                                        "set all values on {1}list ({0}) to {3} expr ({2})",
-                                        _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL);
-                            else
-                                temp += I18n.Translate("internal/Action/desclistsetallresize",
-                                        "set all values on {1}list ({0}) to {3} expr ({2}) (resized to length ({4}))",
-                                        _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL, _ListVariableIndex);
-                            break;
-                        case ListVariableOpEnum.Remove:
-                            temp += I18n.Translate("internal/Action/desclistremove",
-                                    "remove the value at index ({0}) on {2}list variable ({1})",
-                                    _ListVariableIndex, _ListVariableName, sPersistL);
-                            break;
-                        case ListVariableOpEnum.PopFirst: // the action was updated to "Pop" but the name was unchanged
-                            string index = string.IsNullOrWhiteSpace(_ListVariableIndex) ? "1" : _ListVariableIndex;
-                            temp += I18n.Translate("internal/Action/desclistpop",
-                                    "pop index ({4}) of {1}list variable ({0}) into {3}scalar variable ({2})",
-                                    _ListVariableName, sPersistL, _ListVariableTarget, tPersistL, index);
-                            break;
-                        case ListVariableOpEnum.PopToListInsert:
-                            if (string.IsNullOrWhiteSpace(_ListVariableExpression))
-                                temp += I18n.Translate("internal/Action/desclistpoptolist",
-                                        "pop index ({2}) of {1}list variable ({0}) to the end of {5}list variable ({4})",
-                                        _ListVariableName, sPersistL, _ListVariableIndex, _ListVariableTarget, tPersistL);
-                            else
-                                temp += I18n.Translate("internal/Action/desclistpoptolistinsert",
-                                        "pop index ({2}) of {1}list variable ({0}) and insert to index ({5}) of {4}list variable ({3})",
-                                        _ListVariableName, sPersistL, _ListVariableIndex,
-                                        _ListVariableTarget, tPersistL, _ListVariableExpression);
-                            break;
-                        case ListVariableOpEnum.PopToListSet:
-                            temp += I18n.Translate("internal/Action/desclistpoptolistset",
-                                    "pop index ({2}) of {1}list variable ({0}) and set to index ({5}) of {4}list variable ({3})",
-                                    _ListVariableName, sPersistL, _ListVariableIndex,
-                                    _ListVariableTarget, tPersistL, _ListVariableExpression);
-                            break;
-                        case ListVariableOpEnum.SortAlphaAsc:
-                        case ListVariableOpEnum.SortAlphaDesc:
-                            string strOrder = I18n.TrlSortAscOrDesc(_ListVariableOp == ListVariableOpEnum.SortAlphaAsc);
-                            temp += I18n.Translate("internal/Action/desclistsortstring",
-                                    "sort {1}list variable ({0}) in an alphabetically {2} order",
-                                    _ListVariableName, sPersistL, strOrder);
-                            break;
-                        case ListVariableOpEnum.SortNumericAsc:
-                        case ListVariableOpEnum.SortNumericDesc:
-                            string numOrder = I18n.TrlSortAscOrDesc(_ListVariableOp == ListVariableOpEnum.SortNumericAsc);
-                            temp += I18n.Translate("internal/Action/desclistsortnum",
-                                    "sort {1}list variable ({0}) in a numerically {2} order",
-                                    _ListVariableName, sPersistL, numOrder);
-                            break;
-                        case ListVariableOpEnum.SortFfxivPartyAsc:
-                        case ListVariableOpEnum.SortFfxivPartyDesc:
-                            string jobOrder = I18n.TrlSortAscOrDesc(_ListVariableOp == ListVariableOpEnum.SortFfxivPartyAsc);
-                            temp += I18n.Translate("internal/Action/desclistsortffxiv",
-                                    "sort {1}list variable ({0}) in an FFXIV party job {2} order",
-                                    _ListVariableName, sPersistL, jobOrder);
-                            break;
-                        case ListVariableOpEnum.SortByKeys:
-                            temp += I18n.Translate("internal/Action/desclistsortbykeys",
-                                    "sort {1}list variable ({0}) by keys ({2})",
-                                    _ListVariableName, sPersistL, _ListVariableExpression);
-                            break;
-                        case ListVariableOpEnum.Copy:
-                            temp += I18n.Translate("internal/Action/desclistcopy",
-                                    "copy {2}list variable ({0}) to {3}list variable ({1})",
-                                    _ListVariableName, _ListVariableTarget, sPersistL, tPersistL);
-                            break;
-                        case ListVariableOpEnum.InsertList:
-                            temp += I18n.Translate("internal/Action/desclistinsertlist",
-                                    "insert {3}list variable ({0}) into {4}list variable ({1}) at index ({2})",
-                                    _ListVariableName, _ListVariableTarget, _ListVariableIndex, sPersistL, tPersistL);
-                            break;
-                        case ListVariableOpEnum.Join:
-                            temp += I18n.Translate("internal/Action/desclistjoin",
-                                    "join all values in {3}list variable ({0}) to {4}scalar variable ({1}) using {5} expression ({2}) as separator",
-                                    _ListVariableName, _ListVariableTarget, _ListVariableExpression, sPersistL, tPersistL, exprTypeL);
-                            break;
-                        case ListVariableOpEnum.Split:
-                            temp += I18n.Translate("internal/Action/desclistsplit",
-                                    "split {3}scalar variable ({0}) into {4}list variable ({1}) using {5} expression ({2}) as separator",
-                                    _ListVariableName, _ListVariableTarget, _ListVariableExpression, sPersistL, tPersistL, exprTypeL);
-                            break;
-                        case ListVariableOpEnum.Build:
-                            if (_ListVariableExpressionType == ListVariableExpTypeEnum.String
-                                && !_ListVariableExpression.StartsWith("$") && !_ListVariableExpression.StartsWith("ก่{"))
-                                temp += I18n.Translate("internal/Action/desclistbuild",
-                                        "build {1}list variable ({0}) from string ({2}) separated by ({3})",
-                                        _ListVariableTarget, tPersistL,
-                                        _ListVariableExpression.Length == 0 ? "" : _ListVariableExpression.Substring(1),
-                                        _ListVariableExpression.Length == 0 ? "" : _ListVariableExpression.Substring(0, 1));
-                            else
-                                temp += I18n.Translate("internal/Action/desclistbuildraw",
-                                        "build {1}list variable ({0}) from {3} expression ({2}) separated by its first character",
-                                        _ListVariableTarget, tPersistL, _ListVariableExpression, exprTypeL);
-                            break;
-                        case ListVariableOpEnum.Filter:
-                            temp += I18n.Translate("internal/Action/desclistfilter",
-                                    "Use expression ({4}) to filter {1}list ({0}) into {3}list ({2})",
-                                    _ListVariableName, sPersistL, _ListVariableTarget, tPersistL, _ListVariableExpression);
-                            break;
-                        case ListVariableOpEnum.UnsetAll:
-                            temp += I18n.Translate("internal/Action/desclistunsetall",
-                                    "unset all {0}list variables", sPersistL);
-                            break;
-                        case ListVariableOpEnum.UnsetRegex:
-                            temp += I18n.Translate("internal/Action/desclistunsetregex",
-                                    "unset {1}list variables matching regular expression ({0})", _ListVariableName, sPersistL);
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.GenericJson:
-                    {
-                        string cache = I18n.TrlCacheFile(_JsonCacheRequest);
-                        if (_JsonFiringExpression != null && _JsonFiringExpression.Trim().Length > 0)
-                        {
-                            temp += I18n.Translate("internal/Action/descjsonsendrelay",
-                                "send JSON payload to endpoint ({0}){1}, and relaying response for further processing", _JsonEndpointExpression, cache);
-                        }
-                        else
-                        {
-                            temp += I18n.Translate("internal/Action/descjsonsend",
-                                "send JSON payload to endpoint ({0}){1} and cache the response", _JsonEndpointExpression, cache);
-                        }
-                        break;
-                    }
-                case ActionTypeEnum.ObsControl:
-                    switch (_OBSControlType)
-                    {
-                        case ObsControlTypeEnum.StartStreaming:
-                            temp += I18n.Translate("internal/Action/descobsstartstream", "start streaming on OBS");
-                            break;
-                        case ObsControlTypeEnum.StopStreaming:
-                            temp += I18n.Translate("internal/Action/descobsstopstream", "stop streaming on OBS");
-                            break;
-                        case ObsControlTypeEnum.ToggleStreaming:
-                            temp += I18n.Translate("internal/Action/descobstogglestream", "start/stop streaming on OBS (toggle)");
-                            break;
-                        case ObsControlTypeEnum.StartRecording:
-                            temp += I18n.Translate("internal/Action/descobsstartrecord", "start recording on OBS");
-                            break;
-                        case ObsControlTypeEnum.StopRecording:
-                            temp += I18n.Translate("internal/Action/descobsstoprecord", "stop recording on OBS");
-                            break;
-                        case ObsControlTypeEnum.ToggleRecording:
-                            temp += I18n.Translate("internal/Action/descobstogglerecord", "start/stop recording on OBS (toggle)");
-                            break;
-                        case ObsControlTypeEnum.RestartRecording:
-                            temp += I18n.Translate("internal/Action/descobsrestartrecord", "stop then start recording on OBS");
-                            break;
-                        case ObsControlTypeEnum.RestartRecordingIfActive:
-                            temp += I18n.Translate("internal/Action/descobsrestartrecordifactive", "stop then start recording on OBS (if currently recording)");
-                            break;
-                        case ObsControlTypeEnum.ResumeRecording:
-                            temp += I18n.Translate("internal/Action/descobsresumerecord", "resume recording on OBS");
-                            break;
-                        case ObsControlTypeEnum.PauseRecording:
-                            temp += I18n.Translate("internal/Action/descobspauserecord", "pause recording on OBS");
-                            break;
-                        case ObsControlTypeEnum.ToggleRecordPause:
-                            temp += I18n.Translate("internal/Action/descobstogglerecordpause", "resume/pause recording on OBS (toggle)");
-                            break;
-                        case ObsControlTypeEnum.StartReplayBuffer:
-                            temp += I18n.Translate("internal/Action/descobsstartreplay", "start OBS replay buffer");
-                            break;
-                        case ObsControlTypeEnum.StopReplayBuffer:
-                            temp += I18n.Translate("internal/Action/descobsstopreplay", "stop OBS replay buffer");
-                            break;
-                        case ObsControlTypeEnum.ToggleReplayBuffer:
-                            temp += I18n.Translate("internal/Action/descobstogglereplay", "start/stop OBS replay buffer (toggle)");
-                            break;
-                        case ObsControlTypeEnum.SaveReplayBuffer:
-                            temp += I18n.Translate("internal/Action/descobssavereplay", "save OBS replay buffer");
-                            break;
-                        case ObsControlTypeEnum.SetScene:
-                            temp += I18n.Translate("internal/Action/descobssetscene", "set current OBS scene to ({0})", _OBSSceneName);
-                            break;
-                        case ObsControlTypeEnum.ShowSource:
-                            temp += I18n.Translate("internal/Action/descobsshowsource", "show source ({0}) on OBS scene ({1})", _OBSSourceName, _OBSSceneName);
-                            break;
-                        case ObsControlTypeEnum.HideSource:
-                            temp += I18n.Translate("internal/Action/descobshidesource", "hide source ({0}) on OBS scene ({1})", _OBSSourceName, _OBSSceneName);
-                            break;
-                        case ObsControlTypeEnum.JSONPayload:
-                            temp += I18n.Translate("internal/Action/descobsjsonpayload", "Send custom JSON payload to OBS");
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.LiveSplitControl:
-                    switch (_LSControlType)
-                    {
-                        case LiveSplitControlTypeEnum.StartOrSplit:
-                            temp += I18n.Translate("internal/Action/desclsstartorsplit", "Start run or split on LiveSplit");
-                            break;
-                        case LiveSplitControlTypeEnum.Start:
-                            temp += I18n.Translate("internal/Action/desclsstart", "Start run on LiveSplit");
-                            break;
-                        case LiveSplitControlTypeEnum.Split:
-                            temp += I18n.Translate("internal/Action/desclssplit", "Split on LiveSplit");
-                            break;
-                        case LiveSplitControlTypeEnum.UndoSplit:
-                            temp += I18n.Translate("internal/Action/desclsundosplit", "Undo split on LiveSplit");
-                            break;
-                        case LiveSplitControlTypeEnum.SkipSplit:
-                            temp += I18n.Translate("internal/Action/desclsskipsplit", "Skip split on LiveSplit");
-                            break;
-                        case LiveSplitControlTypeEnum.Reset:
-                            temp += I18n.Translate("internal/Action/desclsreset", "Reset run on LiveSplit");
-                            break;
-                        case LiveSplitControlTypeEnum.Pause:
-                            temp += I18n.Translate("internal/Action/desclspause", "Pause run on LiveSplit");
-                            break;
-                        case LiveSplitControlTypeEnum.Resume:
-                            temp += I18n.Translate("internal/Action/desclsresume", "Resume run on LiveSplit");
-                            break;
-                        case LiveSplitControlTypeEnum.CustomPayload:
-                            temp += I18n.Translate("internal/Action/desclscustompayload", "Send custom payload to LiveSplit");
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.Variable:
-                    string sPersist = I18n.TrlVarPersist(_VariablePersist);
-                    string tPersist = I18n.TrlVarPersist(_VariableTargetPersist);
-                    switch (_VariableOp)
-                    {
-                        case VariableOpEnum.SetNumeric:
-                        case VariableOpEnum.SetString:
-                            string exprType = I18n.TrlExprType(_VariableOp == VariableOpEnum.SetString);
-                            temp += I18n.Translate("internal/Action/descscalarset",
-                                "set {1}scalar variable ({0}) value with {3} expression ({2})",
-                                _VariableName, sPersist, _VariableExpression, exprType);
-                            break;
-                        case VariableOpEnum.Increment:
-                            string value = string.IsNullOrWhiteSpace(_VariableExpression) ? "1" : _VariableExpression;
-                            temp += I18n.Translate("internal/Action/descscalarincrement",
-                                "increment the value of {1}scalar variable ({0}) by ({2})",
-                                _VariableName, sPersist, value);
-                            break;
-                        case VariableOpEnum.Clipboard:
-                            bool isName = !string.IsNullOrWhiteSpace(_VariableName);
-                            if (isName)
-                                temp += I18n.Translate("internal/Action/descscalarclipboardvar",
-                                    "Copy {1}scalar variable ({0}) value to clipboard", _VariableName, sPersist);
-                            else
-                                temp += I18n.Translate("internal/Action/descscalarclipboardexpr",
-                                    "Copy string expression ({0}) to clipboard", _VariableExpression);
-                            break;
-                        case VariableOpEnum.Unset:
-                            temp += I18n.Translate("internal/Action/descscalarunset",
-                                "unset {1}scalar variable ({0})", _VariableName, sPersist);
-                            break;
-                        case VariableOpEnum.UnsetAll:
-                            temp += I18n.Translate("internal/Action/descscalarunsetall",
-                                "unset all {0}scalar variables", sPersist);
-                            break;
-                        case VariableOpEnum.UnsetRegex:
-                            temp += I18n.Translate("internal/Action/descscalarunsetregex",
-                                "unset {1}scalar variables matching regular expression ({0})",
-                                _VariableName, sPersist);
-                            break;
-                        case VariableOpEnum.UnsetRegexUniversal:
-                            temp += I18n.Translate("internal/Action/descscalarunsetregexuniversal",
-                                "unset all types of {1}variables matching regular expression ({0})",
-                                _VariableName, sPersist);
-                            break;
-                        case VariableOpEnum.QueryJsonPath:
-                            temp += I18n.Translate("internal/Action/descscalarqueryjson",
-                                "query {1} variable ({0}) with JSON path ({2}) and store result to {4}scalar variable ({3})",
-                                _VariableName, sPersist, _VariableExpression, _VariableJsonTarget, tPersist);
-                            break;
-                        case VariableOpEnum.QueryJsonPathList:
-                            temp += I18n.Translate("internal/Action/descscalarqueryjsonlist",
-                                "query {1} variable ({0}) with JSON path ({2}) and store result to {4}list variable ({3})",
-                                _VariableName, sPersist, _VariableExpression, _VariableJsonTarget, tPersist);
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.TableVariable:
-                    string sPersistT = I18n.TrlVarPersist(_TableSourcePersist);
-                    string tPersistT = I18n.TrlVarPersist(_TableTargetPersist);
-                    string exprTypeT = I18n.TrlExprType(_TableVariableExpressionType == TableVariableExpTypeEnum.String);
-                    switch (_TableVariableOp)
-                    {
-                        case TableVariableOpEnum.Set:
-                            temp += I18n.Translate("internal/Action/desctableset",
-                                    "set {1}table variable ({0}) value at ({2},{3}) with {5} expression ({4})",
-                                    _TableVariableName, sPersistT, _TableVariableX, _TableVariableY, _TableVariableExpression, exprTypeT);
-                            break;
-                        case TableVariableOpEnum.SetAll:
-                            {
-                                temp += I18n.Translate("internal/Action/desctablesetall",
-                                        "set all values in {1}table ({0}) to {3} expr ({2})",
-                                        _TableVariableName, sPersistT, _TableVariableExpression, exprTypeT);
-                                bool givenX = !string.IsNullOrWhiteSpace(_TableVariableX);
-                                bool givenY = !string.IsNullOrWhiteSpace(_TableVariableY);
-                                if (givenX && givenY)
-                                {
-                                    temp += I18n.Translate("internal/Action/desctablesetallresizeXY",
-                                            " (resized to width ({0}) height ({1}))", _TableVariableX, _TableVariableY);
-                                }
-                                else if (givenX && !givenY)
-                                {
-                                    temp += I18n.Translate("internal/Action/desctablesetallresizeX",
-                                            " (resized to width ({0}))", _TableVariableX);
-                                }
-                                else if (!givenX && givenY)
-                                {
-                                    temp += I18n.Translate("internal/Action/desctablesetallresizeY",
-                                            " (resized to height ({0}))", _TableVariableY);
-                                }
-                            }
-                            break;
-                        case TableVariableOpEnum.SlicesSetAll:
-                            {
-                                temp += I18n.Translate("internal/Action/desctableslicessetall",
-                                        "set all values in column(s) ({4}) and row(s) ({5}) of {1}table ({0}) to {3} expr ({2})",
-                                        _TableVariableName, sPersistT, _TableVariableExpression, exprTypeT,
-                                        _TableVariableX, _TableVariableY);
-                            }
-                            break;
-                        case TableVariableOpEnum.Resize:
-                            {
-                                temp += I18n.Translate("internal/Action/desctableresizeprefix",
-                                        "resize {1}table variable ({0}) to", _TableVariableName, sPersistT);
-                                bool givenCol = !string.IsNullOrWhiteSpace(_TableVariableX);
-                                bool givenRow = !string.IsNullOrWhiteSpace(_TableVariableY);
-                                if (!givenCol && !givenRow)
-                                {
-                                    temp += I18n.Translate("internal/Action/desctableresizeunchanged", " (unchanged)");
-                                }
-                                if (givenCol)
-                                {
-                                    temp += I18n.Translate("internal/Action/desctableresizecol", " width ({0})", _TableVariableX);
-                                }
-                                if (givenRow)
-                                {
-                                    temp += I18n.Translate("internal/Action/desctableresizerow", " height ({0})", _TableVariableY);
-                                }
-                            }
-                            break;
-                        case TableVariableOpEnum.Unset:
-                            temp += I18n.Translate("internal/Action/desctableunset",
-                                "unset {1}table variable ({0})", _TableVariableName, sPersistT);
-                            break;
-                        case TableVariableOpEnum.UnsetAll:
-                            temp += I18n.Translate("internal/Action/desctableunsetall",
-                                "unset {0}all table variables", sPersistT);
-                            break;
-                        case TableVariableOpEnum.UnsetRegex:
-                            temp += I18n.Translate("internal/Action/desctableunsetregex",
-                                "unset {1}table variables matching regular expression ({0})", _TableVariableName, sPersistT);
-                            break;
-                        case TableVariableOpEnum.Copy:
-                            temp += I18n.Translate("internal/Action/desctablecopy",
-                                "copy {2}table variable ({0}) to {3}table variable ({1})",
-                                _TableVariableName, _TableVariableTarget, sPersistT, tPersistT);
-                            break;
-                        case TableVariableOpEnum.Append:
-                            temp += I18n.Translate("internal/Action/desctableappend",
-                                "vertically append {2}table variable ({0}) to {3}table variable ({1})",
-                                _TableVariableName, _TableVariableTarget, sPersistT, tPersistT);
-                            break;
-                        case TableVariableOpEnum.AppendH:
-                            temp += I18n.Translate("internal/Action/desctableappendh",
-                                "horizontally append {2}table variable ({0}) to {3}table variable ({1})",
-                                _TableVariableName, _TableVariableTarget, sPersistT, tPersistT);
-                            break;
-                        case TableVariableOpEnum.Build:
-                            int dollarIndex = _TableVariableExpression.IndexOf("$");
-                            int crcIndex = _TableVariableExpression.IndexOf("ก่{");
-                            if (_TableVariableExpressionType == TableVariableExpTypeEnum.String
-                                && dollarIndex != 0 && dollarIndex != 1 && crcIndex != 0 && crcIndex != 1)
-                                temp += I18n.Translate("internal/Action/desctablebuild",
-                                    "build {1}table variable ({0}) from string ({2}) separated by ({3}) ({4})",
-                                    _TableVariableTarget, tPersistT,
-                                    _TableVariableExpression.Length < 2 ? "" : _TableVariableExpression.Substring(2),
-                                    _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(0, 1),
-                                    _TableVariableExpression.Length < 2 ? "" : _TableVariableExpression.Substring(1, 1));
-                            else
-                                temp += I18n.Translate("internal/Action/desctablebuildraw",
-                                    "build {1}table variable ({0}) from {3} expression ({2}) separated by its first 2 characters",
-                                    _TableVariableTarget, tPersistT, _TableVariableExpression, exprTypeT);
-                            break;
-                        case TableVariableOpEnum.Filter:
-                            {
-                                temp += I18n.Translate("internal/Action/desctablefilter",
-                                    "Use expression ({4}) to filter {1}table ({0}) into {3}list ({2})",
-                                    _TableVariableName, sPersistT, _TableVariableTarget, tPersistT, _TableVariableExpression);
-                            }
-                            break;
-                        case TableVariableOpEnum.FilterLine:
-                            {
-                                bool isCol = !string.IsNullOrWhiteSpace(_TableVariableX);
-                                string lineType = I18n.TrlTableColOrRow(isCol);
-                                temp += I18n.Translate("internal/Action/desctablefilterline",
-                                    "Use expression ({4}) to filter the {5}s in {1}table ({0}) into {3}table ({2})",
-                                    _TableVariableName, sPersistT, _TableVariableTarget, tPersistT,
-                                    isCol ? _TableVariableX : _TableVariableY, lineType);
-                            }
-                            break;
-                        case TableVariableOpEnum.SetLine:
-                            {
-                                string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_TableVariableX));
-                                string index = !string.IsNullOrWhiteSpace(_TableVariableX) ? _TableVariableX : _TableVariableY;
-                                if (_TableVariableExpressionType == TableVariableExpTypeEnum.String
-                                    && !_TableVariableExpression.StartsWith("$") && !_TableVariableExpression.StartsWith("ก่{"))
-                                    temp += I18n.Translate("internal/Action/desctablesetline",
-                                        "set {1}table ({0}) {2} #({3}) values from string ({4}) separated by ({5})",
-                                        _TableVariableName, sPersistT, lineType, index,
-                                        _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(1),
-                                        _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(0, 1));
-                                else
-                                    temp += I18n.Translate("internal/Action/desctablesetlineraw",
-                                        "set {1}table ({0}) {2} #({3}) values from {5} expression ({4}) separated by its first character",
-                                        _TableVariableName, sPersistT, lineType, index, _TableVariableExpression, exprTypeT);
-                            }
-                            break;
-                        case TableVariableOpEnum.InsertLine:
-                            {
-                                string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_TableVariableX));
-                                string index = !string.IsNullOrWhiteSpace(_TableVariableX) ? _TableVariableX : _TableVariableY;
-                                if (_TableVariableExpressionType == TableVariableExpTypeEnum.String
-                                    && !_TableVariableExpression.StartsWith("$") && !_TableVariableExpression.StartsWith("ก่{"))
-                                    temp += I18n.Translate("internal/Action/desctableinsertline",
-                                        "at {1}table ({0}) {3} #({2}), insert values from string ({4}) separated by ({5})",
-                                        _TableVariableName, sPersistT, lineType, index,
-                                        _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(1),
-                                        _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(0, 1));
-                                else
-                                    temp += I18n.Translate("internal/Action/desctableinsertlineraw",
-                                        "at {1}table ({0}) {3} #({2}), insert values from {5} expression ({4}) separated by its first character",
-                                        _TableVariableName, sPersistT, lineType, index, _TableVariableExpression, exprTypeT);
-                            }
-                            break;
-                        case TableVariableOpEnum.RemoveLine:
-                            {
-                                string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_TableVariableX));
-                                string index = !string.IsNullOrWhiteSpace(_TableVariableX) ? _TableVariableX : _TableVariableY;
-                                temp += I18n.Translate("internal/Action/desctableremoveline",
-                                        "removed {2} #({3}) from {1}table ({0})",
-                                        _TableVariableName, sPersistT, lineType, index);
-                            }
-                            break;
-                        case TableVariableOpEnum.SortLine:
-                            {
-                                bool isCol = !string.IsNullOrWhiteSpace(_TableVariableX);
-                                string lineType = I18n.TrlTableColOrRow(isCol);
-                                temp += I18n.Translate("internal/Action/desctablesortline",
-                                    "sort the {2}s of {1}table variable ({0}) by keys ({3})",
-                                    _TableVariableName, sPersistT, lineType, isCol ? _TableVariableX : _TableVariableY);
-                            }
-                            break;
-                        case TableVariableOpEnum.GetAllEntities:
-                            {
-                                bool hasFilter = !string.IsNullOrWhiteSpace(_TableVariableY);
-                                bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(_TableVariableX);
-                                string keySuffix = (hasFilter ? "1" : "0") + (hasSpecifiedProps ? "1" : "0");
-                                string key = $"internal/Action/desctablegetallentities{keySuffix}"; //...00, ...01, ...10, ...11
-                                string trl = "";
-                                switch (keySuffix)
-                                {
-                                    case "11": trl = "Store ({3}) properties of FFXIV entities matching ({2}) in {1}table ({0})"; break;
-                                    case "10": trl = "Store all properties of FFXIV entities matching ({2}) in {1}table ({0})"; break;
-                                    case "01": trl = "Store ({3}) properties of all FFXIV entities in {1}table ({0})"; break;
-                                    case "00": trl = "Store all properties of all FFXIV entities in {1}table ({0})"; break;
-                                }
-                                temp += I18n.Translate(key, trl, _TableVariableName, sPersistT, _TableVariableY, _TableVariableX);
-                            }
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.DictVariable:
-                    string sPersistD = I18n.TrlVarPersist(_DictSourcePersist);
-                    string tPersistD = I18n.TrlVarPersist(_DictTargetPersist);
-                    string keyType = I18n.TrlExprType(_DictVariableKeyType == DictVariableExpTypeEnum.String);
-                    string valueType = I18n.TrlExprType(_DictVariableValueType == DictVariableExpTypeEnum.String);
-                    switch (_DictVariableOp)
-                    {
-                        case DictVariableOpEnum.Unset:
-                            temp += I18n.Translate("internal/Action/descdictunset",
-                                "unset {1}dict variable ({0})",
-                                _DictVariableName, sPersistD);
-                            break;
-                        case DictVariableOpEnum.Set:
-                            temp += I18n.Translate("internal/Action/descdictset",
-                                "set the value of {3} key ({2}) in the {1}dict variable ({0}) to {5} expression ({4})",
-                                _DictVariableName, sPersistD, _DictVariableKey, keyType, _DictVariableValue, valueType);
-                            break;
-                        case DictVariableOpEnum.Remove:
-                            temp += I18n.Translate("internal/Action/descdictremove",
-                                "remove the {3} key ({2}) in the {1}dict variable ({0})",
-                                _DictVariableName, sPersistD, _DictVariableKey, keyType);
-                            break;
-                        case DictVariableOpEnum.Build:
-                            int dollarIndex = _DictVariableValue.IndexOf("$");
-                            int crcIndex = _DictVariableValue.IndexOf("ก่{");
-                            if (_DictVariableValueType == DictVariableExpTypeEnum.String
-                                && dollarIndex != 0 && dollarIndex != 1 && crcIndex != 0 && crcIndex != 1)
-                                temp += I18n.Translate("internal/Action/descdictbuild",
-                                    "build {1}dict variable ({0}) from string ({2}) separated by ({3}) ({4})",
-                                    _DictVariableTarget, tPersistD,
-                                    _DictVariableValue.Length < 2 ? "" : _DictVariableValue.Substring(2),
-                                    _DictVariableValue.Length < 1 ? "" : _DictVariableValue.Substring(0, 1),
-                                    _DictVariableValue.Length < 2 ? "" : _DictVariableValue.Substring(1, 1));
-                            else
-                                temp += I18n.Translate("internal/Action/descdictbuildraw",
-                                    "build {1}dict variable ({0}) from {3} expression ({2}) separated by its first 2 characters",
-                                    _DictVariableTarget, tPersistD, _DictVariableValue, valueType);
-                            break;
-                        case DictVariableOpEnum.Filter:
-                            temp += I18n.Translate("internal/Action/descdictfilter",
-                                    "Use expression ({4}) to filter {1}dict ({0}) into {3}dict ({2})",
-                                    _DictVariableName, sPersistD, _DictVariableTarget, tPersistD, _DictVariableValue);
-                            break;
-                        case DictVariableOpEnum.SetAll:
-                            if (string.IsNullOrWhiteSpace(_DictVariableLength))
-                                temp += I18n.Translate("internal/Action/descdictsetall",
-                                    "rewrite all key value pairs in {1}dict ({0}) to {3} expr ({2}) : {5} expr ({4})",
-                                    _DictVariableName, sPersistD, _DictVariableKey, keyType, _DictVariableValue, valueType);
-                            else
-                                temp += I18n.Translate("internal/Action/descdictsetallbyindex",
-                                    "set {6} key value pairs in {1}dict ({0}) to {3} expr ({2}) : {5} expr ({4})",
-                                    _DictVariableName, sPersistD, _DictVariableKey, keyType, _DictVariableValue, valueType, _DictVariableLength);
-                            break;
-                        case DictVariableOpEnum.Merge:
-                            temp += I18n.Translate("internal/Action/descdictmerge",
-                                "merge {1}dict variable ({0}) into {3}dict variable ({2}), and keep the values of repeated keys",
-                                _DictVariableName, sPersistD, _DictVariableTarget, tPersistD);
-                            break;
-                        case DictVariableOpEnum.MergeHard:
-                            temp += I18n.Translate("internal/Action/descdictmergehard",
-                                "merge {1}dict variable ({0}) into {3}dict variable ({2}), and overwrite the values of repeated keys",
-                                _DictVariableName, sPersistD, _DictVariableTarget, tPersistD);
-                            break;
-                        case DictVariableOpEnum.GetEntity:
-                            {
-                                bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(_DictVariableKey);
-                                string key = hasSpecifiedProps ? "internal/Action/descdictgetentitygivenprops"
-                                                               : "internal/Action/descdictgetentity";
-                                string trl = hasSpecifiedProps ? "Store ({3}) properties of the entity ({2}) in {1}dictionary ({0})"
-                                                               : "Store all properties of the entity ({2}) in {1}dictionary ({0})";
-                                temp += I18n.Translate(key, trl, _DictVariableName, sPersistD, _DictVariableValue, _DictVariableKey);
-                            }
-                            break;
-                        case DictVariableOpEnum.UnsetAll:
-                            temp += I18n.Translate("internal/Action/descdictunsetall",
-                                "unset all {0}dict variables",
-                                sPersistD);
-                            break;
-                        case DictVariableOpEnum.UnsetRegex:
-                            temp += I18n.Translate("internal/Action/descdictunsetregex",
-                                "unset all {0}dict variables matching regular expression ({1})",
-                                sPersistD, _DictVariableName);
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.Aura:
-                    switch (_AuraOp)
-                    {
-                        case AuraOpEnum.ActivateAura:
-                            temp += I18n.Translate("internal/Action/descimgauraact", "activate image aura ({0}) with image ({1})", _AuraName, _AuraImage);
-                            break;
-                        case AuraOpEnum.DeactivateAura:
-                            temp += I18n.Translate("internal/Action/descimgauradeact", "deactivate image aura ({0})", _AuraName);
-                            break;
-                        case AuraOpEnum.DeactivateAllAura:
-                            temp += I18n.Translate("internal/Action/descimgauradeactall", "deactivate all image auras");
-                            break;
-                        case AuraOpEnum.DeactivateAuraRegex:
-                            temp += I18n.Translate("internal/Action/descimgauradeactrex", "deactivate image auras matching regular expression ({0})", _AuraName);
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.TextAura:
-                    switch (_TextAuraOp)
-                    {
-                        case AuraOpEnum.ActivateAura:
-                            temp += I18n.Translate("internal/Action/desctextauraact", "activate text aura ({0}) with expression ({1})", _TextAuraName, _TextAuraExpression);
-                            break;
-                        case AuraOpEnum.DeactivateAura:
-                            temp += I18n.Translate("internal/Action/desctextauradeact", "deactivate text aura ({0})", _TextAuraName);
-                            break;
-                        case AuraOpEnum.DeactivateAllAura:
-                            temp += I18n.Translate("internal/Action/desctextauradeactall", "deactivate all text auras");
-                            break;
-                        case AuraOpEnum.DeactivateAuraRegex:
-                            temp += I18n.Translate("internal/Action/desctextauradeactrex", "deactivate text auras matching regular expression ({0})", _TextAuraName);
-                            break;
-                    }
-                    break;
-                case ActionTypeEnum.DiscordWebhook:
-                    {
-                        if (_DiscordTts == true)
-                        {
-                            temp += I18n.Translate("internal/Action/descdiscordttsmsg", "send TTS message ({0}) to Discord webhook ({1})", _DiscordWebhookMessage, _DiscordWebhookURL);
-                        }
-                        else
-                        {
-                            temp += I18n.Translate("internal/Action/descdiscordmsg", "send message ({0}) to Discord webhook ({1})", _DiscordWebhookMessage, _DiscordWebhookURL);
-                        }
-                    }
-                    break;
-                case ActionTypeEnum.LogMessage:
-                    {
-                        if (_LogProcess == true)
-                        {
-                            string srcType = "";
-                            switch (_LogMessageTarget)
-                            {
-                                case LogEvent.SourceEnum.ACT: srcType = "ACT event"; break;
-                                case LogEvent.SourceEnum.NetworkFFXIV: srcType = "FFXIV network event"; break;
-                                case LogEvent.SourceEnum.Log: srcType = "Normal log line"; break;
-                            }
-                            srcType = I18n.Translate($"ActionForm/cbxLogMessageTarget[{srcType}]", srcType);
-                            temp += I18n.Translate("internal/Action/descprocessmessage",
-                                "process message ({0}) as {1}", _LogMessageText, srcType);
-                        }
-                        else
-                        {
-                            string level = "";
-                            switch (_LogLevel)
-                            {
-                                case LogMessageEnum.Error: level = "Error"; break;
-                                case LogMessageEnum.Info: level = "Info"; break;
-                                case LogMessageEnum.Verbose: level = "Verbose"; break;
-                                case LogMessageEnum.Warning: level = "Warning"; break;
-                                case LogMessageEnum.Custom: level = "Custom"; break;
-                                case LogMessageEnum.Custom2: level = "Custom 2"; break;
-                            }
-                            level = I18n.Translate($"ActionForm/cbxLogMessageLevel[{level}]", level);
-                            temp += I18n.Translate("internal/Action/desclogmessage",
-                                "log message ({0}) with {1} level", _LogMessageText, level);
-                        }
-                    }
-                    break;
-                case ActionTypeEnum.WindowMessage:
-                    {
-                        string target = GetTargetWindowsDescription(_WmsgProcId, _WmsgTitle);
-                        temp += I18n.Translate("internal/Action/descwmsg", "send message ({0}) wparam ({1}) lparam ({2}) to {3}", _WmsgCode, _WmsgWparam, _WmsgLparam, target);
-                        break;
-                    }
-                case ActionTypeEnum.DiskFile:
-                    {
-                        string persist = I18n.TrlVarPersist(_DiskPersist);
-                        string cache = I18n.TrlCacheFile(_DiskFileCache);
-                        switch (_DiskFileOp)
-                        {
-                            case DiskFileOpEnum.ReadIntoListVariable:
-                                temp += I18n.Translate("internal/Action/descfilereadlistvar",
-                                    "read file ({0}) lines into {2}list variable ({1}){3}",
-                                    _DiskFileOpName, _DiskFileOpVar, persist, cache);
-                                break;
-                            case DiskFileOpEnum.ReadIntoVariable:
-                                temp += I18n.Translate("internal/Action/descfilereadvar",
-                                    "read file ({0}) lines into {2}scalar variable ({1}){3}",
-                                    _DiskFileOpName, _DiskFileOpVar, persist, cache);
-                                break;
-                            case DiskFileOpEnum.ReadCSVIntoTableVariable:
-                                temp += I18n.Translate("internal/Action/descfilereadcsvtable",
-                                    "read csv file ({0}) into {2}table variable ({1}){3}",
-                                    _DiskFileOpName, _DiskFileOpVar, persist, cache);
-                                break;
-                        }
-                    }
-                    break;
-                case ActionTypeEnum.Placeholder:
-                    temp += I18n.Translate("internal/Action/descplaceholder", "Placeholder");
-                    break;
-                case ActionTypeEnum.NamedCallback:
-                    temp += I18n.Translate("internal/Action/descnamedcallback", "Invoke named callback ({0}) with parameter ({1})", _NamedCallbackName, _NamedCallbackParam);
-                    break;
-                case ActionTypeEnum.Mouse:
-                    {
-                        string coorddesc = "";
-                        switch (_MouseCoordType)
-                        {
-                            case MouseCoordEnum.Absolute:
-                                coorddesc = I18n.Translate("internal/Action/descmousecoordabsolute", "to absolute coordinates");
-                                break;
-                            case MouseCoordEnum.Relative:
-                                coorddesc = I18n.Translate("internal/Action/descmousecoordrelative", "by relative coordinates");
-                                break;
-                        }
-                        switch (_MouseOpType)
-                        {
-                            case MouseOpEnum.Move:
-                                temp += I18n.Translate("internal/Action/descmousemove", "Move mouse {0} X: {1} Y: {2}", coorddesc, _MouseX, _MouseY);
-                                break;
-                            case MouseOpEnum.LeftClick:
-                                temp += I18n.Translate("internal/Action/descmouselmb", "Move mouse {0} X: {1} Y: {2} and left click", coorddesc, _MouseX, _MouseY);
-                                break;
-                            case MouseOpEnum.MiddleClick:
-                                temp += I18n.Translate("internal/Action/descmousemmb", "Move mouse {0} X: {1} Y: {2} and middle click", coorddesc, _MouseX, _MouseY);
-                                break;
-                            case MouseOpEnum.RightClick:
-                                temp += I18n.Translate("internal/Action/descmousermb", "Move mouse {0} X: {1} Y: {2} and right click", coorddesc, _MouseX, _MouseY);
-                                break;
-                        }
-                    }
-                    break;
-                case ActionTypeEnum.Loop:
-                    temp += I18n.Translate("internal/Action/descloop", "Loop with {0} actions at ({1}) ms intervals",
-                        LoopActions?.Count(action => action.Enabled) ?? 0,
-                        string.IsNullOrWhiteSpace(_LoopDelayExpression) ? "0" : _LoopDelayExpression);
-                    break;
-                case ActionTypeEnum.Repository:
-                    {
-                        switch (_RepositoryOp)
-                        {
-                            case RepositoryOpEnum.UpdateSelf:
-                                temp += I18n.Translate("internal/Action/repoupdateself", "Update containing repository");
-                                break;
-                            case RepositoryOpEnum.UpdateRepo:
-                                {
-                                    Repository r = Instance.GetRepositoryById(_RepositoryId);
-                                    if (r != null)
-                                    {
-                                        temp += I18n.Translate("internal/Action/repoupdatespecific", "Update repository ({0})", r.Name);
-                                    }
-                                    else
-                                    {
-                                        temp += I18n.Translate("internal/Action/descrepoinvalidref", "repository action with an invalid repository reference ({0})", _RepositoryId);
-                                    }
-                                }
-                                break;
-                            case RepositoryOpEnum.UpdateAll:
-                                temp += I18n.Translate("internal/Action/repoupdateall", "Update all repositories");
-                                break;
-                        }
-                    }
-                    break;
-                default:
-                    temp += I18n.Translate("internal/Action/descunknown", "unknown action type");
-                    break;
-            }
-            return Capitalize(temp);
-        }
-        #region temp_fold
         internal List<WindowsMediaPlayer> players = new List<WindowsMediaPlayer>();
 
         public ActionOld()
@@ -1673,7 +682,7 @@ namespace Triggernometry.Core
 
             shouldReturn = continuing == true;
         }
-        #endregion temp_fold
+        
         private void ExecutionCore(Context ctx)
         {
             switch (ActionType)
@@ -4576,6 +3585,1004 @@ namespace Triggernometry.Core
                     throw new NotSupportedException($"Unknown ActionType: {ActionType}");
             }
         }
+
+        #region backup
+        /*
+        internal string GetDescription(Context ctx)
+        {
+            string temp = "";
+            if (DescriptionOverride == true)
+            {
+                return Description;
+            }
+            temp += I18n.TrlAsync(Asynchronous);
+            if (!string.IsNullOrWhiteSpace(ExecutionDelayExpression) && ExecutionDelayExpression.Trim() != "0")
+            {
+                string delay = double.TryParse(ExecutionDelayExpression.Trim(), NSFloat, InvClt, out _)
+                    ? ExecutionDelayExpression : $"({ExecutionDelayExpression})";
+                temp += I18n.Translate("internal/Action/descafterdelay", "after {0} ms, ", delay);  // included comma in translations (comma symbols are language-dependent)
+            }
+            if (Condition != null && Condition.Enabled == true)
+            {
+                temp += I18n.Translate("internal/Action/descassumingcondition", "assuming condition is met, ");
+            }
+            switch (ActionType)
+            {
+                case ActionTypeEnum.ActInteraction:
+                    {
+                        switch (_ActOpType)
+                        {
+                            case ActInteractionTypeEnum.SetCombatState:
+                                temp += !_ActOpBoolParam ? I18n.Translate("internal/Action/descactcombatend", "End ACT encounter")
+                                                         : I18n.Translate("internal/Action/descactcombatstart", "Start ACT encounter");
+                                break;
+                            case ActInteractionTypeEnum.LogAllNetwork:
+                                temp += I18n.Translate("internal/Action/descactlogallnetwork", "{0} option: Log all network data", I18n.TranslateEnable(_ActOpBoolParam));
+                                break;
+                            case ActInteractionTypeEnum.UseDeucalion:
+                                temp += I18n.Translate("internal/Action/descactusedeucalion", "{0} option: Use Deucalion (injection)", I18n.TranslateEnable(_ActOpBoolParam));
+                                break;
+                        }
+                    }
+                    break;
+                case ActionTypeEnum.Trigger:
+                    {
+                        Trigger t = Instance.GetTriggerById(_TriggerId, ctx.Trigger?.Repo);
+                        if (t == null && _TriggerOp != TriggerOpEnum.CancelAllTrigger)
+                        {
+                            temp += I18n.Translate("internal/Action/desctriginvalidref", "trigger action with an invalid trigger reference ({0})", _TriggerId);
+                            break;
+                        }
+                        switch (_TriggerOp)
+                        {
+                            case TriggerOpEnum.CancelTrigger:
+                                if (string.IsNullOrWhiteSpace(_TriggerTagRegex))
+                                {
+                                    temp += I18n.Translate(
+                                        "internal/Action/desctrigcanceltrig",
+                                        "cancel all actions queued from trigger ({0})",
+                                        t?.Name ?? "null");
+                                }
+                                else
+                                {
+                                    temp += I18n.Translate(
+                                        "internal/Action/desctrigcanceltrigtag",
+                                        "cancel all actions queued from trigger ({0}) with tags matching regex ({1})",
+                                        t?.Name ?? "null", _TriggerTagRegex);
+                                }
+                                break;
+                            case TriggerOpEnum.CancelAllTrigger:
+                                if (string.IsNullOrWhiteSpace(_TriggerTagRegex))
+                                {
+                                    temp += I18n.Translate(
+                                        "internal/Action/desctrigcancelall",
+                                        "cancel all actions queued from all triggers");
+                                }
+                                else
+                                {
+                                    temp += I18n.Translate(
+                                        "internal/Action/desctrigcanceltag",
+                                        "cancel all actions queued from all triggers with tags matching regex ({0})",
+                                        _TriggerTagRegex);
+                                }
+                                break;
+                            case TriggerOpEnum.FireTrigger:
+
+                                temp += I18n.Translate("internal/Action/desctrigfire", "fire trigger ({0})", t?.Name ?? "null");
+                                List<string> ex = new List<string>();
+                                if (_TriggerForceType == TriggerForceTypeEnum.SkipAll)
+                                {
+                                    ex.Add(I18n.Translate("internal/Action/desctrigignoreall", "all restrictions"));
+                                }
+                                else
+                                {
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipRegexp) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreregex", "regular expression"));
+                                    }
+                                    else
+                                    {
+                                        temp += " " + I18n.Translate("internal/Action/desctrigfireusing", "with event text ({0}) and zone ({1})", _TriggerText, _TriggerZone);
+                                    }
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipConditions) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreconditions", "conditions"));
+                                    }
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipRefire) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignorerefire", "refire delay"));
+                                    }
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipParent) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignoreparent", "parent folder settings"));
+                                    }
+                                    if ((_TriggerForceType & TriggerForceTypeEnum.SkipActive) != 0)
+                                    {
+                                        ex.Add(I18n.Translate("internal/Action/desctrigignorestate", "enabled/disabled status"));
+                                    }
+                                }
+                                if (ex.Count > 1)
+                                {
+                                    ex[ex.Count - 1] = I18n.Translate("internal/Action/desctrigignoreand", "and") + " " + ex[ex.Count - 1];
+                                }
+                                if (ex.Count > 0)
+                                {
+                                    temp += ", " + I18n.Translate("internal/Action/desctrigignoring", "ignoring") + " " + string.Join(", ", ex);
+                                }
+                                break;
+                            case TriggerOpEnum.DisableTrigger:
+                                temp += I18n.Translate("internal/Action/desctrigdisable", "disable trigger ({0})", t?.Name ?? "null");
+                                break;
+                            case TriggerOpEnum.EnableTrigger:
+                                temp += I18n.Translate("internal/Action/desctrigenable", "enable trigger ({0})", t?.Name ?? "null");
+                                break;
+                        }
+                    }
+                    break;
+                case ActionTypeEnum.Folder:
+                    {
+                        Folder f = Instance.GetFolderById(_FolderId, ctx.Trigger?.Repo);
+                        if (f != null)
+                        {
+                            switch (_FolderOp)
+                            {
+                                case FolderOpEnum.DisableFolder:
+                                    temp += I18n.Translate("internal/Action/descdisablefolder", "disable folder ({0})", f.Name);
+                                    break;
+                                case FolderOpEnum.EnableFolder:
+                                    temp += I18n.Translate("internal/Action/descenablefolder", "enable folder ({0})", f.Name);
+                                    break;
+                                case FolderOpEnum.CancelFolder:
+                                    temp += I18n.Translate("internal/Action/desccancelfolder", "cancel all actions from folder ({0})", f.Name);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            temp += I18n.Translate("internal/Action/descinvalidfolderref", "folder action with an invalid folder reference ({0})", _FolderId);
+                        }
+                    }
+                    break;
+                case ActionTypeEnum.KeyPress:
+                    switch (_KeypressType)
+                    {
+                        case KeypressTypeEnum.SendKeys:
+                            temp += I18n.Translate("internal/Action/desckeypresses", "send keypresses ({0}) to the active window", _KeyPressExpression);
+                            break;
+                        case KeypressTypeEnum.WindowMessage:
+                        case KeypressTypeEnum.WindowMessageCombo:
+                            string target = GetTargetWindowsDescription(_KeyPressProcId, _KeyPressWindow);
+
+                            if (_KeypressType == KeypressTypeEnum.WindowMessage)
+                            {
+                                temp += I18n.Translate("internal/Action/desckeypress", "send keycode ({0}) to {1}", _KeyPressCode, target);
+                            }
+                            else
+                            {
+                                temp += I18n.Translate("internal/Action/desckeypresscombo", "send keycodes ({0}) to {1}", _KeyPressCode, target);
+                            }
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.LaunchProcess:
+                    {
+                        string tempt = "";
+                        switch (_LaunchProcessWindowStyle)
+                        {
+                            case System.Diagnostics.ProcessWindowStyle.Hidden:
+                                tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Hidden from view]", _LaunchProcessWindowStyle.ToString());
+                                break;
+                            case System.Diagnostics.ProcessWindowStyle.Maximized:
+                                tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Maximized to fullscreen]", _LaunchProcessWindowStyle.ToString());
+                                break;
+                            case System.Diagnostics.ProcessWindowStyle.Minimized:
+                                tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Minimized to taskbar]", _LaunchProcessWindowStyle.ToString());
+                                break;
+                            case System.Diagnostics.ProcessWindowStyle.Normal:
+                                tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Normal]", _LaunchProcessWindowStyle.ToString());
+                                break;
+                            default:
+                                tempt = _LaunchProcessWindowStyle.ToString();
+                                break;
+                        }
+                        temp += I18n.Translate("internal/Action/desclaunchprocess", "launch process ({0}) as ({1}) using command line parameters ({2})",
+                            LaunchProcessPathExpression,
+                            tempt,
+                            LaunchProcessCmdlineExpression
+                        );
+                    }
+                    break;
+                case ActionTypeEnum.PlaySound:
+                    temp += I18n.Translate("internal/Action/descplaysound", "play sound file ({0}) at volume ({1}) %", _PlaySoundFileExpression, _PlaySoundVolumeExpression);
+                    break;
+                case ActionTypeEnum.SystemBeep:
+                    temp += I18n.Translate("internal/Action/descbeep", "beep at ({0}) hz for ({1}) ms", _SystemBeepFreqExpression, _SystemBeepLengthExpression);
+                    break;
+                case ActionTypeEnum.UseTTS:
+                    temp += I18n.Translate("internal/Action/desctts", "say ({0}) at volume ({1}) %, using speed ({2})", _UseTTSTextExpression, _UseTTSVolumeExpression, _UseTTSRateExpression);
+                    break;
+                case ActionTypeEnum.ExecuteScript:
+                    temp += I18n.Translate("internal/Action/descexecscript", "execute C# script");
+                    break;
+                case ActionTypeEnum.MessageBox:
+                    temp += I18n.Translate($"internal/Action/descmsgbox{_MessageBoxIconType}", "show a message box saying ({0}) with icon (" + _MessageBoxIconType.ToString() + ")", _MessageBoxText);
+                    break;
+                case ActionTypeEnum.Mutex:
+                    switch (_MutexOpType)
+                    {
+                        case MutexOpEnum.Release:
+                            temp += I18n.Translate("internal/Action/mutexrelease", "release mutex ({0})", _MutexName);
+                            break;
+                        case MutexOpEnum.Acquire:
+                            temp += I18n.Translate("internal/Action/mutexacquire", "acquire mutex ({0})", _MutexName);
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.ListVariable:
+                    string sPersistL = I18n.TrlVarPersist(_ListSourcePersist);
+                    string tPersistL = I18n.TrlVarPersist(_ListTargetPersist);
+                    string exprTypeL = I18n.TrlExprType(_ListVariableExpressionType == ListVariableExpTypeEnum.String);
+                    switch (_ListVariableOp)
+                    {
+                        case ListVariableOpEnum.Unset:
+                            temp += I18n.Translate("internal/Action/desclistunset",
+                                    "unset {1}list variable ({0})", _ListVariableName, sPersistL);
+                            break;
+                        case ListVariableOpEnum.Push:
+                            temp += I18n.Translate("internal/Action/desclistpush",
+                                    "push the value from {3} expression ({2}) to the end of {1}list variable ({0})",
+                                    _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL);
+                            break;
+                        case ListVariableOpEnum.Insert:
+                            temp += I18n.Translate("internal/Action/desclistinsert",
+                                    "insert the value from {3} expression ({2}) to index ({4}) on {1}list variable ({0})",
+                                    _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL, _ListVariableIndex);
+                            break;
+                        case ListVariableOpEnum.Set:
+                            temp += I18n.Translate("internal/Action/desclistset",
+                                    "set the value from {3} expression ({2}) to index ({4}) on {1}list variable ({0})",
+                                    _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL, _ListVariableIndex);
+                            break;
+                        case ListVariableOpEnum.SetAll:
+                            if (string.IsNullOrWhiteSpace(_ListVariableIndex))
+                                temp += I18n.Translate("internal/Action/desclistsetall",
+                                        "set all values on {1}list ({0}) to {3} expr ({2})",
+                                        _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL);
+                            else
+                                temp += I18n.Translate("internal/Action/desclistsetallresize",
+                                        "set all values on {1}list ({0}) to {3} expr ({2}) (resized to length ({4}))",
+                                        _ListVariableName, sPersistL, _ListVariableExpression, exprTypeL, _ListVariableIndex);
+                            break;
+                        case ListVariableOpEnum.Remove:
+                            temp += I18n.Translate("internal/Action/desclistremove",
+                                    "remove the value at index ({0}) on {2}list variable ({1})",
+                                    _ListVariableIndex, _ListVariableName, sPersistL);
+                            break;
+                        case ListVariableOpEnum.PopFirst: // the action was updated to "Pop" but the name was unchanged
+                            string index = string.IsNullOrWhiteSpace(_ListVariableIndex) ? "1" : _ListVariableIndex;
+                            temp += I18n.Translate("internal/Action/desclistpop",
+                                    "pop index ({4}) of {1}list variable ({0}) into {3}scalar variable ({2})",
+                                    _ListVariableName, sPersistL, _ListVariableTarget, tPersistL, index);
+                            break;
+                        case ListVariableOpEnum.PopToListInsert:
+                            if (string.IsNullOrWhiteSpace(_ListVariableExpression))
+                                temp += I18n.Translate("internal/Action/desclistpoptolist",
+                                        "pop index ({2}) of {1}list variable ({0}) to the end of {5}list variable ({4})",
+                                        _ListVariableName, sPersistL, _ListVariableIndex, _ListVariableTarget, tPersistL);
+                            else
+                                temp += I18n.Translate("internal/Action/desclistpoptolistinsert",
+                                        "pop index ({2}) of {1}list variable ({0}) and insert to index ({5}) of {4}list variable ({3})",
+                                        _ListVariableName, sPersistL, _ListVariableIndex,
+                                        _ListVariableTarget, tPersistL, _ListVariableExpression);
+                            break;
+                        case ListVariableOpEnum.PopToListSet:
+                            temp += I18n.Translate("internal/Action/desclistpoptolistset",
+                                    "pop index ({2}) of {1}list variable ({0}) and set to index ({5}) of {4}list variable ({3})",
+                                    _ListVariableName, sPersistL, _ListVariableIndex,
+                                    _ListVariableTarget, tPersistL, _ListVariableExpression);
+                            break;
+                        case ListVariableOpEnum.SortAlphaAsc:
+                        case ListVariableOpEnum.SortAlphaDesc:
+                            string strOrder = I18n.TrlSortAscOrDesc(_ListVariableOp == ListVariableOpEnum.SortAlphaAsc);
+                            temp += I18n.Translate("internal/Action/desclistsortstring",
+                                    "sort {1}list variable ({0}) in an alphabetically {2} order",
+                                    _ListVariableName, sPersistL, strOrder);
+                            break;
+                        case ListVariableOpEnum.SortNumericAsc:
+                        case ListVariableOpEnum.SortNumericDesc:
+                            string numOrder = I18n.TrlSortAscOrDesc(_ListVariableOp == ListVariableOpEnum.SortNumericAsc);
+                            temp += I18n.Translate("internal/Action/desclistsortnum",
+                                    "sort {1}list variable ({0}) in a numerically {2} order",
+                                    _ListVariableName, sPersistL, numOrder);
+                            break;
+                        case ListVariableOpEnum.SortFfxivPartyAsc:
+                        case ListVariableOpEnum.SortFfxivPartyDesc:
+                            string jobOrder = I18n.TrlSortAscOrDesc(_ListVariableOp == ListVariableOpEnum.SortFfxivPartyAsc);
+                            temp += I18n.Translate("internal/Action/desclistsortffxiv",
+                                    "sort {1}list variable ({0}) in an FFXIV party job {2} order",
+                                    _ListVariableName, sPersistL, jobOrder);
+                            break;
+                        case ListVariableOpEnum.SortByKeys:
+                            temp += I18n.Translate("internal/Action/desclistsortbykeys",
+                                    "sort {1}list variable ({0}) by keys ({2})",
+                                    _ListVariableName, sPersistL, _ListVariableExpression);
+                            break;
+                        case ListVariableOpEnum.Copy:
+                            temp += I18n.Translate("internal/Action/desclistcopy",
+                                    "copy {2}list variable ({0}) to {3}list variable ({1})",
+                                    _ListVariableName, _ListVariableTarget, sPersistL, tPersistL);
+                            break;
+                        case ListVariableOpEnum.InsertList:
+                            temp += I18n.Translate("internal/Action/desclistinsertlist",
+                                    "insert {3}list variable ({0}) into {4}list variable ({1}) at index ({2})",
+                                    _ListVariableName, _ListVariableTarget, _ListVariableIndex, sPersistL, tPersistL);
+                            break;
+                        case ListVariableOpEnum.Join:
+                            temp += I18n.Translate("internal/Action/desclistjoin",
+                                    "join all values in {3}list variable ({0}) to {4}scalar variable ({1}) using {5} expression ({2}) as separator",
+                                    _ListVariableName, _ListVariableTarget, _ListVariableExpression, sPersistL, tPersistL, exprTypeL);
+                            break;
+                        case ListVariableOpEnum.Split:
+                            temp += I18n.Translate("internal/Action/desclistsplit",
+                                    "split {3}scalar variable ({0}) into {4}list variable ({1}) using {5} expression ({2}) as separator",
+                                    _ListVariableName, _ListVariableTarget, _ListVariableExpression, sPersistL, tPersistL, exprTypeL);
+                            break;
+                        case ListVariableOpEnum.Build:
+                            if (_ListVariableExpressionType == ListVariableExpTypeEnum.String
+                                && !_ListVariableExpression.StartsWith("$") && !_ListVariableExpression.StartsWith("ก่{"))
+                                temp += I18n.Translate("internal/Action/desclistbuild",
+                                        "build {1}list variable ({0}) from string ({2}) separated by ({3})",
+                                        _ListVariableTarget, tPersistL,
+                                        _ListVariableExpression.Length == 0 ? "" : _ListVariableExpression.Substring(1),
+                                        _ListVariableExpression.Length == 0 ? "" : _ListVariableExpression.Substring(0, 1));
+                            else
+                                temp += I18n.Translate("internal/Action/desclistbuildraw",
+                                        "build {1}list variable ({0}) from {3} expression ({2}) separated by its first character",
+                                        _ListVariableTarget, tPersistL, _ListVariableExpression, exprTypeL);
+                            break;
+                        case ListVariableOpEnum.Filter:
+                            temp += I18n.Translate("internal/Action/desclistfilter",
+                                    "Use expression ({4}) to filter {1}list ({0}) into {3}list ({2})",
+                                    _ListVariableName, sPersistL, _ListVariableTarget, tPersistL, _ListVariableExpression);
+                            break;
+                        case ListVariableOpEnum.UnsetAll:
+                            temp += I18n.Translate("internal/Action/desclistunsetall",
+                                    "unset all {0}list variables", sPersistL);
+                            break;
+                        case ListVariableOpEnum.UnsetRegex:
+                            temp += I18n.Translate("internal/Action/desclistunsetregex",
+                                    "unset {1}list variables matching regular expression ({0})", _ListVariableName, sPersistL);
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.GenericJson:
+                    {
+                        string cache = I18n.TrlCacheFile(_JsonCacheRequest);
+                        if (_JsonFiringExpression != null && _JsonFiringExpression.Trim().Length > 0)
+                        {
+                            temp += I18n.Translate("internal/Action/descjsonsendrelay",
+                                "send JSON payload to endpoint ({0}){1}, and relaying response for further processing", _JsonEndpointExpression, cache);
+                        }
+                        else
+                        {
+                            temp += I18n.Translate("internal/Action/descjsonsend",
+                                "send JSON payload to endpoint ({0}){1} and cache the response", _JsonEndpointExpression, cache);
+                        }
+                        break;
+                    }
+                case ActionTypeEnum.ObsControl:
+                    switch (_OBSControlType)
+                    {
+                        case ObsControlTypeEnum.StartStreaming:
+                            temp += I18n.Translate("internal/Action/descobsstartstream", "start streaming on OBS");
+                            break;
+                        case ObsControlTypeEnum.StopStreaming:
+                            temp += I18n.Translate("internal/Action/descobsstopstream", "stop streaming on OBS");
+                            break;
+                        case ObsControlTypeEnum.ToggleStreaming:
+                            temp += I18n.Translate("internal/Action/descobstogglestream", "start/stop streaming on OBS (toggle)");
+                            break;
+                        case ObsControlTypeEnum.StartRecording:
+                            temp += I18n.Translate("internal/Action/descobsstartrecord", "start recording on OBS");
+                            break;
+                        case ObsControlTypeEnum.StopRecording:
+                            temp += I18n.Translate("internal/Action/descobsstoprecord", "stop recording on OBS");
+                            break;
+                        case ObsControlTypeEnum.ToggleRecording:
+                            temp += I18n.Translate("internal/Action/descobstogglerecord", "start/stop recording on OBS (toggle)");
+                            break;
+                        case ObsControlTypeEnum.RestartRecording:
+                            temp += I18n.Translate("internal/Action/descobsrestartrecord", "stop then start recording on OBS");
+                            break;
+                        case ObsControlTypeEnum.RestartRecordingIfActive:
+                            temp += I18n.Translate("internal/Action/descobsrestartrecordifactive", "stop then start recording on OBS (if currently recording)");
+                            break;
+                        case ObsControlTypeEnum.ResumeRecording:
+                            temp += I18n.Translate("internal/Action/descobsresumerecord", "resume recording on OBS");
+                            break;
+                        case ObsControlTypeEnum.PauseRecording:
+                            temp += I18n.Translate("internal/Action/descobspauserecord", "pause recording on OBS");
+                            break;
+                        case ObsControlTypeEnum.ToggleRecordPause:
+                            temp += I18n.Translate("internal/Action/descobstogglerecordpause", "resume/pause recording on OBS (toggle)");
+                            break;
+                        case ObsControlTypeEnum.StartReplayBuffer:
+                            temp += I18n.Translate("internal/Action/descobsstartreplay", "start OBS replay buffer");
+                            break;
+                        case ObsControlTypeEnum.StopReplayBuffer:
+                            temp += I18n.Translate("internal/Action/descobsstopreplay", "stop OBS replay buffer");
+                            break;
+                        case ObsControlTypeEnum.ToggleReplayBuffer:
+                            temp += I18n.Translate("internal/Action/descobstogglereplay", "start/stop OBS replay buffer (toggle)");
+                            break;
+                        case ObsControlTypeEnum.SaveReplayBuffer:
+                            temp += I18n.Translate("internal/Action/descobssavereplay", "save OBS replay buffer");
+                            break;
+                        case ObsControlTypeEnum.SetScene:
+                            temp += I18n.Translate("internal/Action/descobssetscene", "set current OBS scene to ({0})", _OBSSceneName);
+                            break;
+                        case ObsControlTypeEnum.ShowSource:
+                            temp += I18n.Translate("internal/Action/descobsshowsource", "show source ({0}) on OBS scene ({1})", _OBSSourceName, _OBSSceneName);
+                            break;
+                        case ObsControlTypeEnum.HideSource:
+                            temp += I18n.Translate("internal/Action/descobshidesource", "hide source ({0}) on OBS scene ({1})", _OBSSourceName, _OBSSceneName);
+                            break;
+                        case ObsControlTypeEnum.JSONPayload:
+                            temp += I18n.Translate("internal/Action/descobsjsonpayload", "Send custom JSON payload to OBS");
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.LiveSplitControl:
+                    switch (_LSControlType)
+                    {
+                        case LiveSplitControlTypeEnum.StartOrSplit:
+                            temp += I18n.Translate("internal/Action/desclsstartorsplit", "Start run or split on LiveSplit");
+                            break;
+                        case LiveSplitControlTypeEnum.Start:
+                            temp += I18n.Translate("internal/Action/desclsstart", "Start run on LiveSplit");
+                            break;
+                        case LiveSplitControlTypeEnum.Split:
+                            temp += I18n.Translate("internal/Action/desclssplit", "Split on LiveSplit");
+                            break;
+                        case LiveSplitControlTypeEnum.UndoSplit:
+                            temp += I18n.Translate("internal/Action/desclsundosplit", "Undo split on LiveSplit");
+                            break;
+                        case LiveSplitControlTypeEnum.SkipSplit:
+                            temp += I18n.Translate("internal/Action/desclsskipsplit", "Skip split on LiveSplit");
+                            break;
+                        case LiveSplitControlTypeEnum.Reset:
+                            temp += I18n.Translate("internal/Action/desclsreset", "Reset run on LiveSplit");
+                            break;
+                        case LiveSplitControlTypeEnum.Pause:
+                            temp += I18n.Translate("internal/Action/desclspause", "Pause run on LiveSplit");
+                            break;
+                        case LiveSplitControlTypeEnum.Resume:
+                            temp += I18n.Translate("internal/Action/desclsresume", "Resume run on LiveSplit");
+                            break;
+                        case LiveSplitControlTypeEnum.CustomPayload:
+                            temp += I18n.Translate("internal/Action/desclscustompayload", "Send custom payload to LiveSplit");
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.Variable:
+                    string sPersist = I18n.TrlVarPersist(_VariablePersist);
+                    string tPersist = I18n.TrlVarPersist(_VariableTargetPersist);
+                    switch (_VariableOp)
+                    {
+                        case VariableOpEnum.SetNumeric:
+                        case VariableOpEnum.SetString:
+                            string exprType = I18n.TrlExprType(_VariableOp == VariableOpEnum.SetString);
+                            temp += I18n.Translate("internal/Action/descscalarset",
+                                "set {1}scalar variable ({0}) value with {3} expression ({2})",
+                                _VariableName, sPersist, _VariableExpression, exprType);
+                            break;
+                        case VariableOpEnum.Increment:
+                            string value = string.IsNullOrWhiteSpace(_VariableExpression) ? "1" : _VariableExpression;
+                            temp += I18n.Translate("internal/Action/descscalarincrement",
+                                "increment the value of {1}scalar variable ({0}) by ({2})",
+                                _VariableName, sPersist, value);
+                            break;
+                        case VariableOpEnum.Clipboard:
+                            bool isName = !string.IsNullOrWhiteSpace(_VariableName);
+                            if (isName)
+                                temp += I18n.Translate("internal/Action/descscalarclipboardvar",
+                                    "Copy {1}scalar variable ({0}) value to clipboard", _VariableName, sPersist);
+                            else
+                                temp += I18n.Translate("internal/Action/descscalarclipboardexpr",
+                                    "Copy string expression ({0}) to clipboard", _VariableExpression);
+                            break;
+                        case VariableOpEnum.Unset:
+                            temp += I18n.Translate("internal/Action/descscalarunset",
+                                "unset {1}scalar variable ({0})", _VariableName, sPersist);
+                            break;
+                        case VariableOpEnum.UnsetAll:
+                            temp += I18n.Translate("internal/Action/descscalarunsetall",
+                                "unset all {0}scalar variables", sPersist);
+                            break;
+                        case VariableOpEnum.UnsetRegex:
+                            temp += I18n.Translate("internal/Action/descscalarunsetregex",
+                                "unset {1}scalar variables matching regular expression ({0})",
+                                _VariableName, sPersist);
+                            break;
+                        case VariableOpEnum.UnsetRegexUniversal:
+                            temp += I18n.Translate("internal/Action/descscalarunsetregexuniversal",
+                                "unset all types of {1}variables matching regular expression ({0})",
+                                _VariableName, sPersist);
+                            break;
+                        case VariableOpEnum.QueryJsonPath:
+                            temp += I18n.Translate("internal/Action/descscalarqueryjson",
+                                "query {1} variable ({0}) with JSON path ({2}) and store result to {4}scalar variable ({3})",
+                                _VariableName, sPersist, _VariableExpression, _VariableJsonTarget, tPersist);
+                            break;
+                        case VariableOpEnum.QueryJsonPathList:
+                            temp += I18n.Translate("internal/Action/descscalarqueryjsonlist",
+                                "query {1} variable ({0}) with JSON path ({2}) and store result to {4}list variable ({3})",
+                                _VariableName, sPersist, _VariableExpression, _VariableJsonTarget, tPersist);
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.TableVariable:
+                    string sPersistT = I18n.TrlVarPersist(_TableSourcePersist);
+                    string tPersistT = I18n.TrlVarPersist(_TableTargetPersist);
+                    string exprTypeT = I18n.TrlExprType(_TableVariableExpressionType == TableVariableExpTypeEnum.String);
+                    switch (_TableVariableOp)
+                    {
+                        case TableVariableOpEnum.Set:
+                            temp += I18n.Translate("internal/Action/desctableset",
+                                    "set {1}table variable ({0}) value at ({2},{3}) with {5} expression ({4})",
+                                    _TableVariableName, sPersistT, _TableVariableX, _TableVariableY, _TableVariableExpression, exprTypeT);
+                            break;
+                        case TableVariableOpEnum.SetAll:
+                            {
+                                temp += I18n.Translate("internal/Action/desctablesetall",
+                                        "set all values in {1}table ({0}) to {3} expr ({2})",
+                                        _TableVariableName, sPersistT, _TableVariableExpression, exprTypeT);
+                                bool givenX = !string.IsNullOrWhiteSpace(_TableVariableX);
+                                bool givenY = !string.IsNullOrWhiteSpace(_TableVariableY);
+                                if (givenX && givenY)
+                                {
+                                    temp += I18n.Translate("internal/Action/desctablesetallresizeXY",
+                                            " (resized to width ({0}) height ({1}))", _TableVariableX, _TableVariableY);
+                                }
+                                else if (givenX && !givenY)
+                                {
+                                    temp += I18n.Translate("internal/Action/desctablesetallresizeX",
+                                            " (resized to width ({0}))", _TableVariableX);
+                                }
+                                else if (!givenX && givenY)
+                                {
+                                    temp += I18n.Translate("internal/Action/desctablesetallresizeY",
+                                            " (resized to height ({0}))", _TableVariableY);
+                                }
+                            }
+                            break;
+                        case TableVariableOpEnum.SlicesSetAll:
+                            {
+                                temp += I18n.Translate("internal/Action/desctableslicessetall",
+                                        "set all values in column(s) ({4}) and row(s) ({5}) of {1}table ({0}) to {3} expr ({2})",
+                                        _TableVariableName, sPersistT, _TableVariableExpression, exprTypeT,
+                                        _TableVariableX, _TableVariableY);
+                            }
+                            break;
+                        case TableVariableOpEnum.Resize:
+                            {
+                                temp += I18n.Translate("internal/Action/desctableresizeprefix",
+                                        "resize {1}table variable ({0}) to", _TableVariableName, sPersistT);
+                                bool givenCol = !string.IsNullOrWhiteSpace(_TableVariableX);
+                                bool givenRow = !string.IsNullOrWhiteSpace(_TableVariableY);
+                                if (!givenCol && !givenRow)
+                                {
+                                    temp += I18n.Translate("internal/Action/desctableresizeunchanged", " (unchanged)");
+                                }
+                                if (givenCol)
+                                {
+                                    temp += I18n.Translate("internal/Action/desctableresizecol", " width ({0})", _TableVariableX);
+                                }
+                                if (givenRow)
+                                {
+                                    temp += I18n.Translate("internal/Action/desctableresizerow", " height ({0})", _TableVariableY);
+                                }
+                            }
+                            break;
+                        case TableVariableOpEnum.Unset:
+                            temp += I18n.Translate("internal/Action/desctableunset",
+                                "unset {1}table variable ({0})", _TableVariableName, sPersistT);
+                            break;
+                        case TableVariableOpEnum.UnsetAll:
+                            temp += I18n.Translate("internal/Action/desctableunsetall",
+                                "unset {0}all table variables", sPersistT);
+                            break;
+                        case TableVariableOpEnum.UnsetRegex:
+                            temp += I18n.Translate("internal/Action/desctableunsetregex",
+                                "unset {1}table variables matching regular expression ({0})", _TableVariableName, sPersistT);
+                            break;
+                        case TableVariableOpEnum.Copy:
+                            temp += I18n.Translate("internal/Action/desctablecopy",
+                                "copy {2}table variable ({0}) to {3}table variable ({1})",
+                                _TableVariableName, _TableVariableTarget, sPersistT, tPersistT);
+                            break;
+                        case TableVariableOpEnum.Append:
+                            temp += I18n.Translate("internal/Action/desctableappend",
+                                "vertically append {2}table variable ({0}) to {3}table variable ({1})",
+                                _TableVariableName, _TableVariableTarget, sPersistT, tPersistT);
+                            break;
+                        case TableVariableOpEnum.AppendH:
+                            temp += I18n.Translate("internal/Action/desctableappendh",
+                                "horizontally append {2}table variable ({0}) to {3}table variable ({1})",
+                                _TableVariableName, _TableVariableTarget, sPersistT, tPersistT);
+                            break;
+                        case TableVariableOpEnum.Build:
+                            int dollarIndex = _TableVariableExpression.IndexOf("$");
+                            int crcIndex = _TableVariableExpression.IndexOf("ก่{");
+                            if (_TableVariableExpressionType == TableVariableExpTypeEnum.String
+                                && dollarIndex != 0 && dollarIndex != 1 && crcIndex != 0 && crcIndex != 1)
+                                temp += I18n.Translate("internal/Action/desctablebuild",
+                                    "build {1}table variable ({0}) from string ({2}) separated by ({3}) ({4})",
+                                    _TableVariableTarget, tPersistT,
+                                    _TableVariableExpression.Length < 2 ? "" : _TableVariableExpression.Substring(2),
+                                    _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(0, 1),
+                                    _TableVariableExpression.Length < 2 ? "" : _TableVariableExpression.Substring(1, 1));
+                            else
+                                temp += I18n.Translate("internal/Action/desctablebuildraw",
+                                    "build {1}table variable ({0}) from {3} expression ({2}) separated by its first 2 characters",
+                                    _TableVariableTarget, tPersistT, _TableVariableExpression, exprTypeT);
+                            break;
+                        case TableVariableOpEnum.Filter:
+                            {
+                                temp += I18n.Translate("internal/Action/desctablefilter",
+                                    "Use expression ({4}) to filter {1}table ({0}) into {3}list ({2})",
+                                    _TableVariableName, sPersistT, _TableVariableTarget, tPersistT, _TableVariableExpression);
+                            }
+                            break;
+                        case TableVariableOpEnum.FilterLine:
+                            {
+                                bool isCol = !string.IsNullOrWhiteSpace(_TableVariableX);
+                                string lineType = I18n.TrlTableColOrRow(isCol);
+                                temp += I18n.Translate("internal/Action/desctablefilterline",
+                                    "Use expression ({4}) to filter the {5}s in {1}table ({0}) into {3}table ({2})",
+                                    _TableVariableName, sPersistT, _TableVariableTarget, tPersistT,
+                                    isCol ? _TableVariableX : _TableVariableY, lineType);
+                            }
+                            break;
+                        case TableVariableOpEnum.SetLine:
+                            {
+                                string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_TableVariableX));
+                                string index = !string.IsNullOrWhiteSpace(_TableVariableX) ? _TableVariableX : _TableVariableY;
+                                if (_TableVariableExpressionType == TableVariableExpTypeEnum.String
+                                    && !_TableVariableExpression.StartsWith("$") && !_TableVariableExpression.StartsWith("ก่{"))
+                                    temp += I18n.Translate("internal/Action/desctablesetline",
+                                        "set {1}table ({0}) {2} #({3}) values from string ({4}) separated by ({5})",
+                                        _TableVariableName, sPersistT, lineType, index,
+                                        _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(1),
+                                        _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(0, 1));
+                                else
+                                    temp += I18n.Translate("internal/Action/desctablesetlineraw",
+                                        "set {1}table ({0}) {2} #({3}) values from {5} expression ({4}) separated by its first character",
+                                        _TableVariableName, sPersistT, lineType, index, _TableVariableExpression, exprTypeT);
+                            }
+                            break;
+                        case TableVariableOpEnum.InsertLine:
+                            {
+                                string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_TableVariableX));
+                                string index = !string.IsNullOrWhiteSpace(_TableVariableX) ? _TableVariableX : _TableVariableY;
+                                if (_TableVariableExpressionType == TableVariableExpTypeEnum.String
+                                    && !_TableVariableExpression.StartsWith("$") && !_TableVariableExpression.StartsWith("ก่{"))
+                                    temp += I18n.Translate("internal/Action/desctableinsertline",
+                                        "at {1}table ({0}) {3} #({2}), insert values from string ({4}) separated by ({5})",
+                                        _TableVariableName, sPersistT, lineType, index,
+                                        _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(1),
+                                        _TableVariableExpression.Length < 1 ? "" : _TableVariableExpression.Substring(0, 1));
+                                else
+                                    temp += I18n.Translate("internal/Action/desctableinsertlineraw",
+                                        "at {1}table ({0}) {3} #({2}), insert values from {5} expression ({4}) separated by its first character",
+                                        _TableVariableName, sPersistT, lineType, index, _TableVariableExpression, exprTypeT);
+                            }
+                            break;
+                        case TableVariableOpEnum.RemoveLine:
+                            {
+                                string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_TableVariableX));
+                                string index = !string.IsNullOrWhiteSpace(_TableVariableX) ? _TableVariableX : _TableVariableY;
+                                temp += I18n.Translate("internal/Action/desctableremoveline",
+                                        "removed {2} #({3}) from {1}table ({0})",
+                                        _TableVariableName, sPersistT, lineType, index);
+                            }
+                            break;
+                        case TableVariableOpEnum.SortLine:
+                            {
+                                bool isCol = !string.IsNullOrWhiteSpace(_TableVariableX);
+                                string lineType = I18n.TrlTableColOrRow(isCol);
+                                temp += I18n.Translate("internal/Action/desctablesortline",
+                                    "sort the {2}s of {1}table variable ({0}) by keys ({3})",
+                                    _TableVariableName, sPersistT, lineType, isCol ? _TableVariableX : _TableVariableY);
+                            }
+                            break;
+                        case TableVariableOpEnum.GetAllEntities:
+                            {
+                                bool hasFilter = !string.IsNullOrWhiteSpace(_TableVariableY);
+                                bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(_TableVariableX);
+                                string keySuffix = (hasFilter ? "1" : "0") + (hasSpecifiedProps ? "1" : "0");
+                                string key = $"internal/Action/desctablegetallentities{keySuffix}"; //...00, ...01, ...10, ...11
+                                string trl = "";
+                                switch (keySuffix)
+                                {
+                                    case "11": trl = "Store ({3}) properties of FFXIV entities matching ({2}) in {1}table ({0})"; break;
+                                    case "10": trl = "Store all properties of FFXIV entities matching ({2}) in {1}table ({0})"; break;
+                                    case "01": trl = "Store ({3}) properties of all FFXIV entities in {1}table ({0})"; break;
+                                    case "00": trl = "Store all properties of all FFXIV entities in {1}table ({0})"; break;
+                                }
+                                temp += I18n.Translate(key, trl, _TableVariableName, sPersistT, _TableVariableY, _TableVariableX);
+                            }
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.DictVariable:
+                    string sPersistD = I18n.TrlVarPersist(_DictSourcePersist);
+                    string tPersistD = I18n.TrlVarPersist(_DictTargetPersist);
+                    string keyType = I18n.TrlExprType(_DictVariableKeyType == DictVariableExpTypeEnum.String);
+                    string valueType = I18n.TrlExprType(_DictVariableValueType == DictVariableExpTypeEnum.String);
+                    switch (_DictVariableOp)
+                    {
+                        case DictVariableOpEnum.Unset:
+                            temp += I18n.Translate("internal/Action/descdictunset",
+                                "unset {1}dict variable ({0})",
+                                _DictVariableName, sPersistD);
+                            break;
+                        case DictVariableOpEnum.Set:
+                            temp += I18n.Translate("internal/Action/descdictset",
+                                "set the value of {3} key ({2}) in the {1}dict variable ({0}) to {5} expression ({4})",
+                                _DictVariableName, sPersistD, _DictVariableKey, keyType, _DictVariableValue, valueType);
+                            break;
+                        case DictVariableOpEnum.Remove:
+                            temp += I18n.Translate("internal/Action/descdictremove",
+                                "remove the {3} key ({2}) in the {1}dict variable ({0})",
+                                _DictVariableName, sPersistD, _DictVariableKey, keyType);
+                            break;
+                        case DictVariableOpEnum.Build:
+                            int dollarIndex = _DictVariableValue.IndexOf("$");
+                            int crcIndex = _DictVariableValue.IndexOf("ก่{");
+                            if (_DictVariableValueType == DictVariableExpTypeEnum.String
+                                && dollarIndex != 0 && dollarIndex != 1 && crcIndex != 0 && crcIndex != 1)
+                                temp += I18n.Translate("internal/Action/descdictbuild",
+                                    "build {1}dict variable ({0}) from string ({2}) separated by ({3}) ({4})",
+                                    _DictVariableTarget, tPersistD,
+                                    _DictVariableValue.Length < 2 ? "" : _DictVariableValue.Substring(2),
+                                    _DictVariableValue.Length < 1 ? "" : _DictVariableValue.Substring(0, 1),
+                                    _DictVariableValue.Length < 2 ? "" : _DictVariableValue.Substring(1, 1));
+                            else
+                                temp += I18n.Translate("internal/Action/descdictbuildraw",
+                                    "build {1}dict variable ({0}) from {3} expression ({2}) separated by its first 2 characters",
+                                    _DictVariableTarget, tPersistD, _DictVariableValue, valueType);
+                            break;
+                        case DictVariableOpEnum.Filter:
+                            temp += I18n.Translate("internal/Action/descdictfilter",
+                                    "Use expression ({4}) to filter {1}dict ({0}) into {3}dict ({2})",
+                                    _DictVariableName, sPersistD, _DictVariableTarget, tPersistD, _DictVariableValue);
+                            break;
+                        case DictVariableOpEnum.SetAll:
+                            if (string.IsNullOrWhiteSpace(_DictVariableLength))
+                                temp += I18n.Translate("internal/Action/descdictsetall",
+                                    "rewrite all key value pairs in {1}dict ({0}) to {3} expr ({2}) : {5} expr ({4})",
+                                    _DictVariableName, sPersistD, _DictVariableKey, keyType, _DictVariableValue, valueType);
+                            else
+                                temp += I18n.Translate("internal/Action/descdictsetallbyindex",
+                                    "set {6} key value pairs in {1}dict ({0}) to {3} expr ({2}) : {5} expr ({4})",
+                                    _DictVariableName, sPersistD, _DictVariableKey, keyType, _DictVariableValue, valueType, _DictVariableLength);
+                            break;
+                        case DictVariableOpEnum.Merge:
+                            temp += I18n.Translate("internal/Action/descdictmerge",
+                                "merge {1}dict variable ({0}) into {3}dict variable ({2}), and keep the values of repeated keys",
+                                _DictVariableName, sPersistD, _DictVariableTarget, tPersistD);
+                            break;
+                        case DictVariableOpEnum.MergeHard:
+                            temp += I18n.Translate("internal/Action/descdictmergehard",
+                                "merge {1}dict variable ({0}) into {3}dict variable ({2}), and overwrite the values of repeated keys",
+                                _DictVariableName, sPersistD, _DictVariableTarget, tPersistD);
+                            break;
+                        case DictVariableOpEnum.GetEntity:
+                            {
+                                bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(_DictVariableKey);
+                                string key = hasSpecifiedProps ? "internal/Action/descdictgetentitygivenprops"
+                                                               : "internal/Action/descdictgetentity";
+                                string trl = hasSpecifiedProps ? "Store ({3}) properties of the entity ({2}) in {1}dictionary ({0})"
+                                                               : "Store all properties of the entity ({2}) in {1}dictionary ({0})";
+                                temp += I18n.Translate(key, trl, _DictVariableName, sPersistD, _DictVariableValue, _DictVariableKey);
+                            }
+                            break;
+                        case DictVariableOpEnum.UnsetAll:
+                            temp += I18n.Translate("internal/Action/descdictunsetall",
+                                "unset all {0}dict variables",
+                                sPersistD);
+                            break;
+                        case DictVariableOpEnum.UnsetRegex:
+                            temp += I18n.Translate("internal/Action/descdictunsetregex",
+                                "unset all {0}dict variables matching regular expression ({1})",
+                                sPersistD, _DictVariableName);
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.Aura:
+                    switch (_AuraOp)
+                    {
+                        case AuraOpEnum.ActivateAura:
+                            temp += I18n.Translate("internal/Action/descimgauraact", "activate image aura ({0}) with image ({1})", _AuraName, _AuraImage);
+                            break;
+                        case AuraOpEnum.DeactivateAura:
+                            temp += I18n.Translate("internal/Action/descimgauradeact", "deactivate image aura ({0})", _AuraName);
+                            break;
+                        case AuraOpEnum.DeactivateAllAura:
+                            temp += I18n.Translate("internal/Action/descimgauradeactall", "deactivate all image auras");
+                            break;
+                        case AuraOpEnum.DeactivateAuraRegex:
+                            temp += I18n.Translate("internal/Action/descimgauradeactrex", "deactivate image auras matching regular expression ({0})", _AuraName);
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.TextAura:
+                    switch (_TextAuraOp)
+                    {
+                        case AuraOpEnum.ActivateAura:
+                            temp += I18n.Translate("internal/Action/desctextauraact", "activate text aura ({0}) with expression ({1})", _TextAuraName, _TextAuraExpression);
+                            break;
+                        case AuraOpEnum.DeactivateAura:
+                            temp += I18n.Translate("internal/Action/desctextauradeact", "deactivate text aura ({0})", _TextAuraName);
+                            break;
+                        case AuraOpEnum.DeactivateAllAura:
+                            temp += I18n.Translate("internal/Action/desctextauradeactall", "deactivate all text auras");
+                            break;
+                        case AuraOpEnum.DeactivateAuraRegex:
+                            temp += I18n.Translate("internal/Action/desctextauradeactrex", "deactivate text auras matching regular expression ({0})", _TextAuraName);
+                            break;
+                    }
+                    break;
+                case ActionTypeEnum.DiscordWebhook:
+                    {
+                        if (_DiscordTts == true)
+                        {
+                            temp += I18n.Translate("internal/Action/descdiscordttsmsg", "send TTS message ({0}) to Discord webhook ({1})", _DiscordWebhookMessage, _DiscordWebhookURL);
+                        }
+                        else
+                        {
+                            temp += I18n.Translate("internal/Action/descdiscordmsg", "send message ({0}) to Discord webhook ({1})", _DiscordWebhookMessage, _DiscordWebhookURL);
+                        }
+                    }
+                    break;
+                case ActionTypeEnum.LogMessage:
+                    {
+                        if (_LogProcess == true)
+                        {
+                            string srcType = "";
+                            switch (_LogMessageTarget)
+                            {
+                                case LogEvent.SourceEnum.ACT: srcType = "ACT event"; break;
+                                case LogEvent.SourceEnum.NetworkFFXIV: srcType = "FFXIV network event"; break;
+                                case LogEvent.SourceEnum.Log: srcType = "Normal log line"; break;
+                            }
+                            srcType = I18n.Translate($"ActionForm/cbxLogMessageTarget[{srcType}]", srcType);
+                            temp += I18n.Translate("internal/Action/descprocessmessage",
+                                "process message ({0}) as {1}", _LogMessageText, srcType);
+                        }
+                        else
+                        {
+                            string level = "";
+                            switch (_LogLevel)
+                            {
+                                case LogMessageEnum.Error: level = "Error"; break;
+                                case LogMessageEnum.Info: level = "Info"; break;
+                                case LogMessageEnum.Verbose: level = "Verbose"; break;
+                                case LogMessageEnum.Warning: level = "Warning"; break;
+                                case LogMessageEnum.Custom: level = "Custom"; break;
+                                case LogMessageEnum.Custom2: level = "Custom 2"; break;
+                            }
+                            level = I18n.Translate($"ActionForm/cbxLogMessageLevel[{level}]", level);
+                            temp += I18n.Translate("internal/Action/desclogmessage",
+                                "log message ({0}) with {1} level", _LogMessageText, level);
+                        }
+                    }
+                    break;
+                case ActionTypeEnum.WindowMessage:
+                    {
+                        string target = GetTargetWindowsDescription(_WmsgProcId, _WmsgTitle);
+                        temp += I18n.Translate("internal/Action/descwmsg", "send message ({0}) wparam ({1}) lparam ({2}) to {3}", _WmsgCode, _WmsgWparam, _WmsgLparam, target);
+                        break;
+                    }
+                case ActionTypeEnum.DiskFile:
+                    {
+                        string persist = I18n.TrlVarPersist(_DiskPersist);
+                        string cache = I18n.TrlCacheFile(_DiskFileCache);
+                        switch (_DiskFileOp)
+                        {
+                            case DiskFileOpEnum.ReadIntoListVariable:
+                                temp += I18n.Translate("internal/Action/descfilereadlistvar",
+                                    "read file ({0}) lines into {2}list variable ({1}){3}",
+                                    _DiskFileOpName, _DiskFileOpVar, persist, cache);
+                                break;
+                            case DiskFileOpEnum.ReadIntoVariable:
+                                temp += I18n.Translate("internal/Action/descfilereadvar",
+                                    "read file ({0}) lines into {2}scalar variable ({1}){3}",
+                                    _DiskFileOpName, _DiskFileOpVar, persist, cache);
+                                break;
+                            case DiskFileOpEnum.ReadCSVIntoTableVariable:
+                                temp += I18n.Translate("internal/Action/descfilereadcsvtable",
+                                    "read csv file ({0}) into {2}table variable ({1}){3}",
+                                    _DiskFileOpName, _DiskFileOpVar, persist, cache);
+                                break;
+                        }
+                    }
+                    break;
+                case ActionTypeEnum.Placeholder:
+                    temp += I18n.Translate("internal/Action/descplaceholder", "Placeholder");
+                    break;
+                case ActionTypeEnum.NamedCallback:
+                    temp += I18n.Translate("internal/Action/descnamedcallback", "Invoke named callback ({0}) with parameter ({1})", _NamedCallbackName, _NamedCallbackParam);
+                    break;
+                case ActionTypeEnum.Mouse:
+                    {
+                        string coorddesc = "";
+                        switch (_MouseCoordType)
+                        {
+                            case MouseCoordEnum.Absolute:
+                                coorddesc = I18n.Translate("internal/Action/descmousecoordabsolute", "to absolute coordinates");
+                                break;
+                            case MouseCoordEnum.Relative:
+                                coorddesc = I18n.Translate("internal/Action/descmousecoordrelative", "by relative coordinates");
+                                break;
+                        }
+                        switch (_MouseOpType)
+                        {
+                            case MouseOpEnum.Move:
+                                temp += I18n.Translate("internal/Action/descmousemove", "Move mouse {0} X: {1} Y: {2}", coorddesc, _MouseX, _MouseY);
+                                break;
+                            case MouseOpEnum.LeftClick:
+                                temp += I18n.Translate("internal/Action/descmouselmb", "Move mouse {0} X: {1} Y: {2} and left click", coorddesc, _MouseX, _MouseY);
+                                break;
+                            case MouseOpEnum.MiddleClick:
+                                temp += I18n.Translate("internal/Action/descmousemmb", "Move mouse {0} X: {1} Y: {2} and middle click", coorddesc, _MouseX, _MouseY);
+                                break;
+                            case MouseOpEnum.RightClick:
+                                temp += I18n.Translate("internal/Action/descmousermb", "Move mouse {0} X: {1} Y: {2} and right click", coorddesc, _MouseX, _MouseY);
+                                break;
+                        }
+                    }
+                    break;
+                case ActionTypeEnum.Loop:
+                    temp += I18n.Translate("internal/Action/descloop", "Loop with {0} actions at ({1}) ms intervals",
+                        LoopActions?.Count(action => action.Enabled) ?? 0,
+                        string.IsNullOrWhiteSpace(_LoopDelayExpression) ? "0" : _LoopDelayExpression);
+                    break;
+                case ActionTypeEnum.Repository:
+                    {
+                        switch (_RepositoryOp)
+                        {
+                            case RepositoryOpEnum.UpdateSelf:
+                                temp += I18n.Translate("internal/Action/repoupdateself", "Update containing repository");
+                                break;
+                            case RepositoryOpEnum.UpdateRepo:
+                                {
+                                    Repository r = Instance.GetRepositoryById(_RepositoryId);
+                                    if (r != null)
+                                    {
+                                        temp += I18n.Translate("internal/Action/repoupdatespecific", "Update repository ({0})", r.Name);
+                                    }
+                                    else
+                                    {
+                                        temp += I18n.Translate("internal/Action/descrepoinvalidref", "repository action with an invalid repository reference ({0})", _RepositoryId);
+                                    }
+                                }
+                                break;
+                            case RepositoryOpEnum.UpdateAll:
+                                temp += I18n.Translate("internal/Action/repoupdateall", "Update all repositories");
+                                break;
+                        }
+                    }
+                    break;
+                default:
+                    temp += I18n.Translate("internal/Action/descunknown", "unknown action type");
+                    break;
+            }
+            return Capitalize(temp);
+        }
+        */
+        #endregion backup
 
     }
 

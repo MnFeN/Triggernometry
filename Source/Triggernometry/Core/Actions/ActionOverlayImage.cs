@@ -246,18 +246,18 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             switch (Operation)
             {
                 case OperationEnum.Activate:
-                    return I18n.Translate("internal/Action/descimgoverlayact", "activate image overlay ({0}) with image ({1})", Name, Filename);
+                    return I18n.Translate("internal/Action/descimgauraact", "activate image overlay ({0}) with image ({1})", Name, Filename);
                 case OperationEnum.Deactivate:
-                    return I18n.Translate("internal/Action/descimgoverlaydeact", "deactivate image overlay ({0})", Name);
+                    return I18n.Translate("internal/Action/descimgauradeact", "deactivate image overlay ({0})", Name);
                 case OperationEnum.DeactivateAll:
-                    return I18n.Translate("internal/Action/descimgoverlaydeactall", "deactivate all image overlays");
+                    return I18n.Translate("internal/Action/descimgauradeactall", "deactivate all image overlays");
                 case OperationEnum.DeactivateRegex:
-                    return I18n.Translate("internal/Action/descimgoverlaydeactrex", "deactivate image overlays matching regular expression ({0})", Name);
+                    return I18n.Translate("internal/Action/descimgauradeactrex", "deactivate image overlays matching regular expression ({0})", Name);
             }
             return "";
         }

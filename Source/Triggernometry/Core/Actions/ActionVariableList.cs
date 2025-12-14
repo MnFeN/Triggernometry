@@ -197,7 +197,7 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
-        internal override string DescribeImplementation(Context ctx)
+        internal override string DescribeImplementation()
         {
             string sPersistL = I18n.TrlVarPersist(Persistent);
             string tPersistL = I18n.TrlVarPersist(TargetPersistent);
@@ -387,11 +387,11 @@ namespace Triggernometry.Core.Actions
             string changer;
             if (ctx.Trigger != null)
             {
-                changer = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe(ctx));
+                changer = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
             }
             else
             {
-                changer = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe(ctx));
+                changer = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
             }
             switch (Operation)
             {
