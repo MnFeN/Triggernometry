@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using Triggernometry.Localization;
 using Triggernometry.Core.Conditions;
+using Triggernometry.Core.Serialization;
+using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
 {
@@ -28,7 +29,7 @@ namespace Triggernometry.Core.Actions
 
         private bool ShouldSerializeLoopActions()
         {
-            return Actions.Count > 0;
+            return LoopActions.Count > 0;
         }
 
         /// <summary>
@@ -39,72 +40,49 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Actions within the loop
         /// </summary>
-        public List<ActionBase> Actions = new List<ActionBase>();
+        public List<ActionBase> LoopActions = new List<ActionBase>();
 
         /// <summary>
         /// Delay between every loop iteration
         /// </summary>        
-        private string _DelayExpression = "";
-        [XmlAttribute]
-        public string DelayExpression
+        [XmlIgnore]
+        public string DelayExpression { get; set; } = "";
+
+        [XmlAttribute("DelayExpression")]
+        public string Xml_DelayExpression
         {
-            get
-            {
-                if (_DelayExpression == "")
-                {
-                    return null;
-                }
-                return _DelayExpression;
-            }
-            set
-            {
-                _DelayExpression = value;
-            }
+            get => XmlAttr.String(DelayExpression);
+            set => DelayExpression = value;
         }
 
         /// <summary>
         /// Expression for the initial value of the loop iterator
         /// </summary>
-        private string _InitExpression = "0";
-        [XmlAttribute]
-        public string InitExpression
+        [XmlIgnore]
+        public string InitExpression { get; set; } = "0";
+
+        [XmlAttribute("InitExpression")]
+        public string Xml_InitExpression
         {
-            get
-            {
-                if (_InitExpression == "0")
-                {
-                    return null;
-                }
-                return _InitExpression;
-            }
-            set
-            {
-                _InitExpression = value;
-            }
+            get => XmlAttr.String(InitExpression, "0");
+            set => InitExpression = value;
         }
 
         /// <summary>
         /// Expression for the addition to the loop iterator after every iteration
         /// </summary>
-        private string _IncrExpression = "1";
-        [XmlAttribute]
-        public string IncrExpression
+        [XmlIgnore]
+        public string IncrExpression { get; set; } = "1";
+
+        [XmlAttribute("IncrExpression")]
+        public string Xml_IncrExpression
         {
-            get
-            {
-                if (_IncrExpression == "1")
-                {
-                    return null;
-                }
-                return _IncrExpression;
-            }
-            set
-            {
-                _IncrExpression = value;
-            }
+            get => XmlAttr.String(IncrExpression, "1");
+            set => IncrExpression = value;
         }
 
         #endregion
+
 
         #region Implementation
 
@@ -112,8 +90,8 @@ namespace Triggernometry.Core.Actions
         {
             return I18n.Translate(
                 "internal/Action/descloop", "Loop with {0} actions at ({1}) ms intervals",
-                Actions?.Count(action => action.Enabled) ?? 0,
-                string.IsNullOrWhiteSpace(_DelayExpression) ? "0" : _DelayExpression
+                LoopActions?.Count(action => action.Enabled) ?? 0,
+                string.IsNullOrWhiteSpace(DelayExpression) ? "0" : DelayExpression
             );
         }
 
@@ -122,7 +100,7 @@ namespace Triggernometry.Core.Actions
             Context ctx = ai.ctx;
             if (ctx.loopActionId == Id)
             {
-                ctx.loopIterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _IncrExpression);
+                ctx.loopIterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, IncrExpression);
             }
             if (LoopCondition.Enabled == true && LoopCondition.CheckCondition(ctx, ActionContextLogger, ctx) == true)
             {
@@ -136,7 +114,7 @@ namespace Triggernometry.Core.Actions
                         ctx.id = Guid.NewGuid();
                     }
                     ctx.loopActionId = Id;
-                    ctx.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _InitExpression);
+                    ctx.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, InitExpression);
                 }
                 else
                 {

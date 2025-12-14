@@ -2,6 +2,7 @@
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -17,7 +18,7 @@ namespace Triggernometry.Core.Actions
 
         #region Properties
 
-        private enum MethodEnum
+        public enum MethodEnum
         {
             POST,
             GET
@@ -26,68 +27,45 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Discord webhook URL
         /// </summary>
-        [Action(ordernum: 1)]
-        private string _WebhookURL { get; set; } = "";
-        [XmlAttribute]
-        public string WebhookURL
+        [XmlIgnore]
+        [Action(order: 1)]
+        public string WebhookURL { get; set; } = "";
+
+        [XmlAttribute("WebhookURL")]
+        public string Xml_WebhookURL
         {
-            get
-            {
-                if (_WebhookURL == "")
-                {
-                    return null;
-                }
-                return _WebhookURL;
-            }
-            set
-            {
-                _WebhookURL = value;
-            }
+            get => XmlAttr.String(WebhookURL);
+            set => WebhookURL = value;
         }
 
         /// <summary>
         /// Message to send to the webhook
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _Message { get; set; } = "";
-        [XmlAttribute]
-        public string Message
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Message { get; set; } = "";
+
+        [XmlAttribute("Message")]
+        public string Xml_Message
         {
-            get
-            {
-                if (_Message == "")
-                {
-                    return null;
-                }
-                return _Message;
-            }
-            set
-            {
-                _Message = value;
-            }
+            get => XmlAttr.String(Message);
+            set => Message = value;
         }
 
         /// <summary>
         /// If set, sent telegram will be flagged as a TTS message
         /// </summary>
-        [Action(ordernum: 3)]
-        private bool _UseTTS { get; set; } = false;
-        [XmlAttribute]
-        public string UseTTS
+        [XmlIgnore]
+        [Action(order: 3)]
+        public bool UseTTS { get; set; } = false;
+
+        [XmlAttribute("UseTTS")]
+        public string Xml_UseTTS
         {
-            get
-            {
-                if (_UseTTS == false)
-                {
-                    return null;
-                }
-                return _UseTTS.ToString();
-            }
-            set
-            {
-                _UseTTS = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(UseTTS, false);
+            set => UseTTS = XmlAttr.Bool(value);
         }
+
 
         #endregion
 
@@ -95,19 +73,19 @@ namespace Triggernometry.Core.Actions
 
         internal override string DescribeImplementation(Context ctx)
         {
-            if (_UseTTS == true)
+            if (UseTTS == true)
             {
-                return I18n.Translate("internal/Action/descdiscordttsmsg", "send TTS message ({0}) to Discord webhook ({1})", _Message, _WebhookURL);
+                return I18n.Translate("internal/Action/descdiscordttsmsg", "send TTS message ({0}) to Discord webhook ({1})", Message, WebhookURL);
             }
-            return I18n.Translate("internal/Action/descdiscordmsg", "send message ({0}) to Discord webhook ({1})", _Message, _WebhookURL);
+            return I18n.Translate("internal/Action/descdiscordmsg", "send message ({0}) to Discord webhook ({1})", Message, WebhookURL);
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            string msg = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Message);
-            string url = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _WebhookURL);
-            if (_UseTTS == true)
+            string msg = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Message);
+            string url = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WebhookURL);
+            if (UseTTS == true)
             {
                 if (msg.Length > 1970)
                 {

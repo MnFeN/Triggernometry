@@ -723,6 +723,7 @@ namespace Triggernometry.Core
 
         #endregion Firing Pipeline
 
+
         #region Utils
 
         internal bool PassesZoneRestriction(string zone)

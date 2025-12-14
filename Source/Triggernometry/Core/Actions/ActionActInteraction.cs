@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -19,7 +20,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// ACT interaction operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             /// <summary>
             /// Set ACT combat state
@@ -38,31 +39,29 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of ACT interaction
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.SetCombatState;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.SetCombatState;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get => _Operation != OperationEnum.SetCombatState ? _Operation.ToString() : null;
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.SetCombatState);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Value to set
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _Value { get; set; } = "";
-        [XmlAttribute]
-        public string Value
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Value { get; set; } = "";
+
+        [XmlAttribute("Value")]
+        public string Xml_Value
         {
-            get => _Value != "" ? _Value : null;
-            set
-            {
-                _Value = value;
-            }
+            get => XmlAttr.String(Value);
+            set => Value = value;
         }
 
         #endregion
@@ -71,17 +70,17 @@ namespace Triggernometry.Core.Actions
 
         internal override string DescribeImplementation(Context ctx)
         {
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.SetCombatState:
-                    return bool.Parse(_Value) == false ? 
+                    return bool.Parse(Value) == false ? 
                         I18n.Translate("internal/Action/descactcombatend", "end ACT encounter")
                         :
                         I18n.Translate("internal/Action/descactcombatstart", "start ACT encounter");                    
                 case OperationEnum.LogAllNetwork:
-                    return I18n.Translate("internal/Action/descactlogallnetwork", "{0} option: Log all network data", I18n.TranslateEnable(bool.Parse(_Value)));
+                    return I18n.Translate("internal/Action/descactlogallnetwork", "{0} option: Log all network data", I18n.TranslateEnable(bool.Parse(Value)));
                 case OperationEnum.UseDeucalion:
-                    return I18n.Translate("internal/Action/descactusedeucalion", "{0} option: Use Deucalion (injection)", I18n.TranslateEnable(bool.Parse(_Value)));
+                    return I18n.Translate("internal/Action/descactusedeucalion", "{0} option: Use Deucalion (injection)", I18n.TranslateEnable(bool.Parse(Value)));
             }
             return "";
         }
@@ -89,16 +88,16 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             RealPlugin plug = ai.ctx.Plugin;
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.SetCombatState:
-                    plug.SetCombatStateHook(bool.Parse(_Value));
+                    plug.SetCombatStateHook(bool.Parse(Value));
                     break;
                 case OperationEnum.LogAllNetwork:
-                    PluginBridges.BridgeFFXIV.LogAllNetwork(bool.Parse(_Value));
+                    PluginBridges.BridgeFFXIV.LogAllNetwork(bool.Parse(Value));
                     break;
                 case OperationEnum.UseDeucalion:
-                    PluginBridges.BridgeFFXIV.UseDeucalion(bool.Parse(_Value));
+                    PluginBridges.BridgeFFXIV.UseDeucalion(bool.Parse(Value));
                     break;
             }
         }

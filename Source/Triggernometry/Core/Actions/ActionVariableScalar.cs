@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
 
@@ -24,7 +25,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Scalar variable operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             /// <summary>
             /// Unset scalar variable
@@ -69,183 +70,133 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Scalar variable operation type
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.Unset;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.Unset;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.Unset)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.Unset);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Name of the scalar variable
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _Name { get; set; } = "";
-        [XmlAttribute]
-        public string Name
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Name { get; set; } = "";
+
+        [XmlAttribute("Name")]
+        public string Xml_Name
         {
-            get
-            {
-                if (_Name == "")
-                {
-                    return null;
-                }
-                return _Name;
-            }
-            set
-            {
-                _Name = value;
-            }
+            get => XmlAttr.String(Name);
+            set => Name = value;
         }
 
         /// <summary>
         /// Name of the target variable for some JSON operations
         /// </summary>
-        [Action(ordernum: 3)]
-        private string _JsonTargetName { get; set; } = "";
-        [XmlAttribute]
-        public string JsonTargetName
+        [XmlIgnore]
+        [Action(order: 3)]
+        public string JsonTargetName { get; set; } = "";
+
+        [XmlAttribute("JsonTargetName")]
+        public string Xml_JsonTargetName
         {
-            get
-            {
-                if (_JsonTargetName == "")
-                {
-                    return null;
-                }
-                return _JsonTargetName;
-            }
-            set
-            {
-                _JsonTargetName = value;
-            }
+            get => XmlAttr.String(JsonTargetName);
+            set => JsonTargetName = value;
         }
 
         /// <summary>
         /// Value expression
         /// </summary>
-        [Action(ordernum: 4)]
-        private string _Value { get; set; } = "";
-        [XmlAttribute]
-        public string Value
+        [XmlIgnore]
+        [Action(order: 4)]
+        public string Value { get; set; } = "";
+
+        [XmlAttribute("Value")]
+        public string Xml_Value
         {
-            get
-            {
-                if (_Value == "")
-                {
-                    return null;
-                }
-                return _Value;
-            }
-            set
-            {
-                _Value = value;
-            }
+            get => XmlAttr.String(Value);
+            set => Value = value;
         }
 
         /// <summary>
         /// Indicates whether referenced target variable is persistent or not
         /// </summary>
-        [Action(ordernum: 5)] // todo need to couple this with variable on editor
-        private bool _JsonTargetPersistent { get; set; } = false;
-        [XmlAttribute]
-        public string JsonTargetPersistent
+        [XmlIgnore]
+        [Action(order: 5)] // todo need to couple this with variable on editor
+        public bool JsonTargetPersistent { get; set; } = false;
+
+        [XmlAttribute("JsonTargetPersistent")]
+        public string Xml_JsonTargetPersistent
         {
-            get
-            {
-                if (_JsonTargetPersistent == false)
-                {
-                    return null;
-                }
-                return _JsonTargetPersistent.ToString();
-            }
-            set
-            {
-                _JsonTargetPersistent = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(JsonTargetPersistent, false);
+            set => JsonTargetPersistent = XmlAttr.Bool(value);
         }
 
         /// <summary>
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
-        [Action(ordernum: 6)] // todo need to couple this with variable on editor
-        private bool _Persistent { get; set; } = false;
-        [XmlAttribute]
-        public string Persistent
+        [XmlIgnore]
+        [Action(order: 6)] // todo need to couple this with variable on editor
+        public bool Persistent { get; set; } = false;
+
+        [XmlAttribute("Persistent")]
+        public string Xml_Persistent
         {
-            get
-            {
-                if (_Persistent == false)
-                {
-                    return null;
-                }
-                return _Persistent.ToString();
-            }
-            set
-            {
-                _Persistent = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(Persistent, false);
+            set => Persistent = XmlAttr.Bool(value);
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            string sPersist = I18n.TrlVarPersist(_Persistent);
-            string tPersist = I18n.TrlVarPersist(_JsonTargetPersistent);
-            switch (_Operation)
+            string sPersist = I18n.TrlVarPersist(Persistent);
+            string tPersist = I18n.TrlVarPersist(JsonTargetPersistent);
+            switch (Operation)
             {
                 case OperationEnum.SetNumeric:
                 case OperationEnum.SetString:
-                    string exprType = I18n.TrlExprType(_Operation == OperationEnum.SetString);
+                    string exprType = I18n.TrlExprType(Operation == OperationEnum.SetString);
                     return I18n.Translate(
                         "internal/Action/descscalarset",
                         "set {1}scalar variable ({0}) value with {3} expression ({2})",
-                        _Name, sPersist, _Value, exprType
+                        Name, sPersist, Value, exprType
                     );                    
                 case OperationEnum.Increment:
-                    string value = string.IsNullOrWhiteSpace(_Value) ? "1" : _Value;
+                    string value = string.IsNullOrWhiteSpace(Value) ? "1" : Value;
                     return I18n.Translate(
                         "internal/Action/descscalarincrement",
                         "increment the value of {1}scalar variable ({0}) by ({2})",
-                        _Name, sPersist, value
+                        Name, sPersist, value
                     );                    
                 case OperationEnum.Clipboard:
-                    bool isName = !string.IsNullOrWhiteSpace(_Name);
+                    bool isName = !string.IsNullOrWhiteSpace(Name);
                     if (isName)
                     {
                         return I18n.Translate(
                             "internal/Action/descscalarclipboardvar", 
                             "Copy {1}scalar variable ({0}) value to clipboard",
-                            _Name, sPersist
+                            Name, sPersist
                         );
                     }
                     return I18n.Translate(
                         "internal/Action/descscalarclipboardexpr",
                         "Copy string expression ({0}) to clipboard",
-                        _Value
+                        Value
                     );
                 case OperationEnum.Unset:
                     return I18n.Translate(
                         "internal/Action/descscalarunset",
                         "unset {1}scalar variable ({0})",
-                        _Name, sPersist
+                        Name, sPersist
                     );
                 case OperationEnum.UnsetAll:
                     return I18n.Translate(
@@ -257,25 +208,25 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/descscalarunsetregex",
                         "unset {1}scalar variables matching regular expression ({0})",
-                        _Name, sPersist
+                        Name, sPersist
                     );
                 case OperationEnum.UnsetRegexUniversal:
                     return I18n.Translate(
                         "internal/Action/descscalarunsetregexuniversal", 
                         "unset all types of {1}variables matching regular expression ({0})", 
-                        _Name, sPersist
+                        Name, sPersist
                     );
                 case OperationEnum.QueryJsonPath:
                     return I18n.Translate(
                         "internal/Action/descscalarqueryjson",
                         "query {1} variable ({0}) with JSON path ({2}) and store result to {4}scalar variable ({3})",
-                        _Name, sPersist, _Value, _JsonTargetName, tPersist
+                        Name, sPersist, Value, JsonTargetName, tPersist
                     );
                 case OperationEnum.QueryJsonPathList:
                     return I18n.Translate(
                         "internal/Action/descscalarqueryjsonlist",
                         "query {1} variable ({0}) with JSON path ({2}) and store result to {4}list variable ({3})",
-                        _Name, sPersist, _Value, _JsonTargetName, tPersist
+                        Name, sPersist, Value, JsonTargetName, tPersist
                     );                    
             }
             return "";
@@ -284,9 +235,9 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Name);
-            string sPersist = I18n.TrlVarPersist(_Persistent);
-            string tPersist = I18n.TrlVarPersist(_JsonTargetPersistent);
+            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
+            string sPersist = I18n.TrlVarPersist(Persistent);
+            string tPersist = I18n.TrlVarPersist(JsonTargetPersistent);
             string changer;
             if (ctx.Trigger != null)
             {
@@ -297,8 +248,8 @@ namespace Triggernometry.Core.Actions
                 changer = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe(ctx));
             }
             string newval;
-            VariableStore vs = _Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
-            switch (_Operation)
+            VariableStore vs = Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+            switch (Operation)
             {
                 case OperationEnum.UnsetAll:
                     {
@@ -309,20 +260,20 @@ namespace Triggernometry.Core.Actions
                     }
                 case OperationEnum.UnsetRegex:
                     {
-                        vs.UnsetVariableRegex(vs.Scalar, _Name);
+                        vs.UnsetVariableRegex(vs.Scalar, Name);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarunsetregex",
-                            "All {1}scalar variables matching ({0}) unset", _Name, sPersist));
+                            "All {1}scalar variables matching ({0}) unset", Name, sPersist));
                         break;
                     }
                 case OperationEnum.UnsetRegexUniversal:
                     {
-                        Regex rx = new Regex(_Name);
+                        Regex rx = new Regex(Name);
                         vs.UnsetVariableRegex(vs.Scalar, rx);
                         vs.UnsetVariableRegex(vs.List, rx);
                         vs.UnsetVariableRegex(vs.Table, rx);
                         vs.UnsetVariableRegex(vs.Dict, rx);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarunsetregexuniversal",
-                            "All {1}variables matching ({0}) unset", _Name, sPersist));
+                            "All {1}variables matching ({0}) unset", Name, sPersist));
                         break;
                     }
                 case OperationEnum.Unset:
@@ -335,13 +286,13 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.SetString:
                 case OperationEnum.SetNumeric:
                     {
-                        if (_Operation == OperationEnum.SetString)
+                        if (Operation == OperationEnum.SetString)
                         {
-                            newval = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Value);
+                            newval = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         }
                         else
                         {
-                            newval = I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Value));
+                            newval = I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
                         }
 
                         VariableScalar x = new VariableScalar();
@@ -359,8 +310,8 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Increment:
                     {
                         double original = 0;
-                        double increment = string.IsNullOrWhiteSpace(_Value)
-                            ? 1 : ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Value);
+                        double increment = string.IsNullOrWhiteSpace(Value)
+                            ? 1 : ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
                         VariableScalar x = new VariableScalar { LastChanger = changer, LastChanged = DateTime.Now };
                         lock (vs.Scalar)
                         {
@@ -380,7 +331,7 @@ namespace Triggernometry.Core.Actions
                     }
                 case OperationEnum.Clipboard:
                     {
-                        bool isName = !string.IsNullOrWhiteSpace(_Name);
+                        bool isName = !string.IsNullOrWhiteSpace(Name);
                         string text = "";
                         if (isName)
                             lock (vs.Scalar)
@@ -389,7 +340,7 @@ namespace Triggernometry.Core.Actions
                             }
                         else
                         {
-                            text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Value);
+                            text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         }
                         //ClipboardSetText(text); todo
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarclipboard",
@@ -406,9 +357,9 @@ namespace Triggernometry.Core.Actions
                                 newval = vs.Scalar[varname].Value;
                             }
                         }
-                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _JsonTargetName);
-                        VariableStore vs2 = _JsonTargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
-                        string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Value);
+                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JsonTargetName);
+                        VariableStore vs2 = JsonTargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+                        string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         Dictionary<string, object> p = new Utilities.Parser().Parse(newval);
                         IEnumerable<object> result = pc.Select(p, query);
@@ -441,9 +392,9 @@ namespace Triggernometry.Core.Actions
                                 newval = vs.Scalar[varname].Value;
                             }
                         }
-                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _JsonTargetName);
-                        VariableStore vs2 = _JsonTargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
-                        string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Value);
+                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JsonTargetName);
+                        VariableStore vs2 = JsonTargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+                        string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         Dictionary<string, object> p = new Utilities.Parser().Parse(newval);
                         IEnumerable<object> result = pc.Select(p, query);

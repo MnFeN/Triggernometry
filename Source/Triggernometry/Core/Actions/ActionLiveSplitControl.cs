@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.PluginBridges.ExternalTools;
 
@@ -20,7 +21,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// LiveSplit remote control operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             StartOrSplit,
             Start,
@@ -36,57 +37,39 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the LiveSplit control operation
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.StartOrSplit;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.StartOrSplit;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.StartOrSplit)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.StartOrSplit);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Custom payload to send to LiveSplit
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _CustomPayload { get; set; } = "";
-        [XmlAttribute]
-        public string CustomPayload
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string CustomPayload { get; set; } = "";
+
+        [XmlAttribute("CustomPayload")]
+        public string Xml_CustomPayload
         {
-            get
-            {
-                if (_Operation != OperationEnum.CustomPayload)
-                {
-                    return null;
-                }
-                return _CustomPayload;
-            }
-            set
-            {
-                _CustomPayload = value;
-            }
+            get => /*_Operation != OperationEnum.CustomPayload ? null :*/ XmlAttr.String(CustomPayload);
+            set => CustomPayload = value;
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.StartOrSplit:
                     return I18n.Translate("internal/Action/desclsstartorsplit", "Start run or split on LiveSplit");
@@ -122,7 +105,7 @@ namespace Triggernometry.Core.Actions
                     {
                         try
                         {
-                            switch (_Operation)
+                            switch (Operation)
                             {
                                 case OperationEnum.StartOrSplit:
                                     livesplitController.StartOrSplit();
@@ -149,7 +132,7 @@ namespace Triggernometry.Core.Actions
                                     livesplitController.Resume();
                                     break;
                                 case OperationEnum.CustomPayload:
-                                    string lscommand = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _CustomPayload);
+                                    string lscommand = ctx.EvaluateStringExpression(ActionContextLogger, ctx, CustomPayload);
                                     livesplitController.SendCommand(lscommand);
                                     break;
                             }

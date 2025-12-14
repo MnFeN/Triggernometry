@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Evaluators;
@@ -26,7 +27,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Dictionary variable operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             Unset,
             Set,
@@ -46,7 +47,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Expression types
         /// </summary>
-        private enum ExpressionTypeEnum
+        public enum ExpressionTypeEnum
         {
             /// <summary>
             /// String expression
@@ -61,279 +62,232 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Dictionary variable operation type
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.Unset;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.Unset;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.Unset)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.Unset);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value); // 似乎没有处理旧的两个 enum？
         }
 
         /// <summary>
         /// Type of the key expression
         /// </summary>
-        [Action(ordernum: 2)]
-        private ExpressionTypeEnum _KeyType { get; set; } = ExpressionTypeEnum.String;
-        [XmlAttribute]
-        public string KeyType
+        [XmlIgnore]
+        [Action(order: 2)]
+        public ExpressionTypeEnum KeyType { get; set; } = ExpressionTypeEnum.String;
+
+        [XmlAttribute("KeyType")]
+        public string Xml_KeyType
         {
-            get
-            {
-                return _KeyType != ExpressionTypeEnum.String ? _KeyType.ToString() : null;
-            }
-            set
-            {
-                _KeyType = (ExpressionTypeEnum)Enum.Parse(typeof(ExpressionTypeEnum), value);
-            }
+            get => XmlAttr.Enum(KeyType, ExpressionTypeEnum.String);
+            set => KeyType = XmlAttr.Enum<ExpressionTypeEnum>(value);
         }
 
         /// <summary>
         /// Type of the value expression
         /// </summary>
-        [Action(ordernum: 3)]
-        private ExpressionTypeEnum _ValueType { get; set; } = ExpressionTypeEnum.String;
-        [XmlAttribute]
-        public string ValueType
+        [XmlIgnore]
+        [Action(order: 3)]
+        public ExpressionTypeEnum ValueType { get; set; } = ExpressionTypeEnum.String;
+
+        [XmlAttribute("ValueType")]
+        public string Xml_ValueType
         {
-            get
-            {
-                return _ValueType != ExpressionTypeEnum.String ? _ValueType.ToString() : null;
-            }
-            set
-            {
-                _ValueType = (ExpressionTypeEnum)Enum.Parse(typeof(ExpressionTypeEnum), value);
-            }
+            get => XmlAttr.Enum(ValueType, ExpressionTypeEnum.String);
+            set => ValueType = XmlAttr.Enum<ExpressionTypeEnum>(value);
         }
 
         /// <summary>
         /// Name of the dictionary variable
         /// </summary>
-        [Action(ordernum: 4)]
-        private string _Name { get; set; } = "";
-        [XmlAttribute]
-        public string Name
+        [XmlIgnore]
+        [Action(order: 4)]
+        public string Name { get; set; } = "";
+
+        [XmlAttribute("Name")]
+        public string Xml_Name
         {
-            get
-            {
-                return _Name == "" ? null : _Name;
-            }
-            set
-            {
-                _Name = value;
-            }
+            get => XmlAttr.String(Name);
+            set => Name = value;
         }
 
         /// <summary>
         /// Name of the target variable for some operations
         /// </summary>
-        [Action(ordernum: 5)]
-        private string _TargetVariable { get; set; } = "";
-        [XmlAttribute]
-        public string TargetVariable
+        [XmlIgnore]
+        [Action(order: 5)]
+        public string TargetVariable { get; set; } = "";
+
+        [XmlAttribute("TargetVariable")]
+        public string Xml_TargetVariable
         {
-            get
-            {
-                return _TargetVariable == "" ? null : _TargetVariable;
-            }
-            set
-            {
-                _TargetVariable = value;
-            }
+            get => XmlAttr.String(TargetVariable);
+            set => TargetVariable = value;
         }
 
-        // todo remove?
-        [Action(ordernum: 6)]
-        private string _VariableLength { get; set; } = "";
-        [XmlAttribute]
-        public string VariableLength
+        [XmlIgnore]
+        [Action(order: 6)]
+        public string VariableLength { get; set; } = "";
+
+        [XmlAttribute("VariableLength")]
+        public string Xml_VariableLength
         {
-            get
-            {
-                return _VariableLength == "" ? null : _VariableLength;
-            }
-            set
-            {
-                _VariableLength = value;
-            }
+            get => XmlAttr.String(VariableLength);
+            set => VariableLength = value;
         }
 
         /// <summary>
         /// Key expression
         /// </summary>
-        [Action(ordernum: 7)]
-        private string _Key { get; set; } = "";
-        [XmlAttribute]
-        public string Key
+        [XmlIgnore]
+        [Action(order: 7)]
+        public string Key { get; set; } = "";
+
+        [XmlAttribute("Key")]
+        public string Xml_Key
         {
-            get
-            {
-                return _Key == "" ? null : _Key;
-            }
-            set
-            {
-                _Key = value;
-            }
+            get => XmlAttr.String(Key);
+            set => Key = value;
         }
 
         /// <summary>
         /// Value expression
         /// </summary>
-        [Action(ordernum: 8)]
-        private string _Value { get; set; } = "";
-        [XmlAttribute]
-        public string Value
+        [XmlIgnore]
+        [Action(order: 8)]
+        public string Value { get; set; } = "";
+
+        [XmlAttribute("Value")]
+        public string Xml_Value
         {
-            get
-            {
-                return _Value == "" ? null : _Value;
-            }
-            set
-            {
-                _Value = value;
-            }
+            get => XmlAttr.String(Value);
+            set => Value = value;
         }
 
         /// <summary>
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
-        [Action(ordernum: 9)] // todo need to couple this with variable on editor
-        private bool _Persistent { get; set; } = false;
-        [XmlAttribute]
-        public string Persistent
+        [XmlIgnore]
+        [Action(order: 9)] // todo need to couple this with variable on editor
+        public bool Persistent { get; set; } = false;
+
+        [XmlAttribute("Persistent")]
+        public string Xml_Persistent
         {
-            get
-            {
-                return _Persistent ? _Persistent.ToString() : null;
-            }
-            set
-            {
-                _Persistent = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(Persistent, false);
+            set => Persistent = XmlAttr.Bool(value);
         }
 
         /// <summary>
         /// Indicates whether referenced target variable is persistent or not
         /// </summary>
-        [Action(ordernum: 10)] // todo need to couple this with variable on editor
-        private bool _TargetPersistent { get; set; } = false;
-        [XmlAttribute]
-        public string TargetPersistent
+        [XmlIgnore]
+        [Action(order: 10)] // todo need to couple this with variable on editor
+        public bool TargetPersistent { get; set; } = false;
+
+        [XmlAttribute("TargetPersistent")]
+        public string Xml_TargetPersistent
         {
-            get
-            {
-                return _TargetPersistent ? _TargetPersistent.ToString() : null;
-            }
-            set
-            {
-                _TargetPersistent = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(TargetPersistent, false);
+            set => TargetPersistent = XmlAttr.Bool(value);
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            string sPersistD = I18n.TrlVarPersist(_Persistent);
-            string tPersistD = I18n.TrlVarPersist(_TargetPersistent);
-            string keyType = I18n.TrlExprType(_KeyType == ExpressionTypeEnum.String);
-            string valueType = I18n.TrlExprType(_ValueType == ExpressionTypeEnum.String);
-            switch (_Operation)
+            string sPersistD = I18n.TrlVarPersist(Persistent);
+            string tPersistD = I18n.TrlVarPersist(TargetPersistent);
+            string keyType = I18n.TrlExprType(KeyType == ExpressionTypeEnum.String);
+            string valueType = I18n.TrlExprType(ValueType == ExpressionTypeEnum.String);
+            switch (Operation)
             {
                 case OperationEnum.Unset:
                     return I18n.Translate(
                         "internal/Action/descdictunset",
                         "unset {1}dict variable ({0})",
-                        _Name, sPersistD
+                        Name, sPersistD
                     );                    
                 case OperationEnum.Set:
                     return I18n.Translate("internal/Action/descdictset",
                         "set the value of {3} key ({2}) in the {1}dict variable ({0}) to {5} expression ({4})",
-                        _Name, sPersistD, _Key, keyType, _Value, valueType
+                        Name, sPersistD, Key, keyType, Value, valueType
                     );
                 case OperationEnum.Remove:
                     return I18n.Translate(
                         "internal/Action/descdictremove",
                         "remove the {3} key ({2}) in the {1}dict variable ({0})",
-                        _Name, sPersistD, _Key, keyType
+                        Name, sPersistD, Key, keyType
                     );
                 case OperationEnum.Build:
-                    int dollarIndex = _Value.IndexOf("$");
-                    int crcIndex = _Value.IndexOf("¡è{");
+                    int dollarIndex = Value.IndexOf("$");
+                    int crcIndex = Value.IndexOf("¡è{");
                     if (
-                        _ValueType == ExpressionTypeEnum.String
+                        ValueType == ExpressionTypeEnum.String
                         && dollarIndex != 0 && dollarIndex != 1 && crcIndex != 0 && crcIndex != 1
                     )
                     {
                         return I18n.Translate(
                             "internal/Action/descdictbuild",
                             "build {1}dict variable ({0}) from string ({2}) separated by ({3}) ({4})",
-                            _TargetVariable, tPersistD,
-                            _Value.Length < 2 ? "" : _Value.Substring(2),
-                            _Value.Length < 1 ? "" : _Value.Substring(0, 1),
-                            _Value.Length < 2 ? "" : _Value.Substring(1, 1)
+                            TargetVariable, tPersistD,
+                            Value.Length < 2 ? "" : Value.Substring(2),
+                            Value.Length < 1 ? "" : Value.Substring(0, 1),
+                            Value.Length < 2 ? "" : Value.Substring(1, 1)
                         );
                     }
                     return I18n.Translate(
                         "internal/Action/descdictbuildraw",
                         "build {1}dict variable ({0}) from {3} expression ({2}) separated by its first 2 characters",
-                        _TargetVariable, tPersistD, _Value, valueType
+                        TargetVariable, tPersistD, Value, valueType
                     );
                 case OperationEnum.Filter:
                     return I18n.Translate(
                         "internal/Action/descdictfilter",
                         "Use expression ({4}) to filter {1}dict ({0}) into {3}dict ({2})",
-                        _Name, sPersistD, _TargetVariable, tPersistD, _Value
+                        Name, sPersistD, TargetVariable, tPersistD, Value
                     );
                 case OperationEnum.SetAll:
-                    if (string.IsNullOrWhiteSpace(_VariableLength))
+                    if (string.IsNullOrWhiteSpace(VariableLength))
                     {
                         return I18n.Translate(
                             "internal/Action/descdictsetall",
                             "rewrite all key value pairs in {1}dict ({0}) to {3} expr ({2}) : {5} expr ({4})",
-                            _Name, sPersistD, _Key, keyType, _Value, valueType
+                            Name, sPersistD, Key, keyType, Value, valueType
                         );
                     }
                     return I18n.Translate(
                         "internal/Action/descdictsetallbyindex",
                         "set {6} key value pairs in {1}dict ({0}) to {3} expr ({2}) : {5} expr ({4})",
-                        _Name, sPersistD, _Key, keyType, _Value, valueType, _VariableLength
+                        Name, sPersistD, Key, keyType, Value, valueType, VariableLength
                     );
                 case OperationEnum.Merge:
                     return I18n.Translate(
                         "internal/Action/descdictmerge",
                         "merge {1}dict variable ({0}) into {3}dict variable ({2}), and keep the values of repeated keys",
-                        _Name, sPersistD, _TargetVariable, tPersistD
+                        Name, sPersistD, TargetVariable, tPersistD
                     );                    
                 case OperationEnum.MergeHard:
                     return I18n.Translate(
                         "internal/Action/descdictmergehard",
                         "merge {1}dict variable ({0}) into {3}dict variable ({2}), and overwrite the values of repeated keys",
-                        _Name, sPersistD, _TargetVariable, tPersistD
+                        Name, sPersistD, TargetVariable, tPersistD
                     );
                 case OperationEnum.GetEntity:
                     {
-                        bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(_Key);
+                        bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(Key);
                         string key = hasSpecifiedProps ? "internal/Action/descdictgetentitygivenprops"
                                                        : "internal/Action/descdictgetentity";
                         string trl = hasSpecifiedProps ? "Store ({3}) properties of the entity ({2}) in {1}dictionary ({0})"
                                                        : "Store all properties of the entity ({2}) in {1}dictionary ({0})";
-                        return I18n.Translate(key, trl, _Name, sPersistD, _Value, _Key);
+                        return I18n.Translate(key, trl, Name, sPersistD, Value, Key);
                     }
                 case OperationEnum.UnsetAll:
                     return I18n.Translate(
@@ -345,7 +299,7 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/descdictunsetregex",
                         "unset all {0}dict variables matching regular expression ({1})",
-                        sPersistD, _Name
+                        sPersistD, Name
                     );
             }
             return "";
@@ -354,27 +308,27 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Name);
-            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _TargetVariable);
-            VariableStore svs = _Persistent ? ctx.Plugin.cfg.PersistentVariables : ctx.Plugin.sessionvars;
-            VariableStore tvs = _TargetPersistent ? ctx.Plugin.cfg.PersistentVariables : ctx.Plugin.sessionvars;
-            string sPersist = I18n.TrlVarPersist(_Persistent);
-            string tPersist = I18n.TrlVarPersist(_TargetPersistent);
+            string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
+            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVariable);
+            VariableStore svs = Persistent ? ctx.Plugin.cfg.PersistentVariables : ctx.Plugin.sessionvars;
+            VariableStore tvs = TargetPersistent ? ctx.Plugin.cfg.PersistentVariables : ctx.Plugin.sessionvars;
+            string sPersist = I18n.TrlVarPersist(Persistent);
+            string tPersist = I18n.TrlVarPersist(TargetPersistent);
 
             string ParseKey()
             {
-                if (_KeyType == ExpressionTypeEnum.String)
-                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Key);
+                if (KeyType == ExpressionTypeEnum.String)
+                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, Key);
                 else
-                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Key));
+                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Key));
 
             }
             string ParseValue()
             {
-                if (_ValueType == ExpressionTypeEnum.String)
-                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Value);
+                if (ValueType == ExpressionTypeEnum.String)
+                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                 else
-                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Value));
+                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
             }
 
             string vdchanger;
@@ -383,7 +337,7 @@ namespace Triggernometry.Core.Actions
             else
                 vdchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe(ctx));
 
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.UnsetAll:
                     lock (svs.Dict)
@@ -394,9 +348,9 @@ namespace Triggernometry.Core.Actions
                         "All {0}dict variables unset", sPersist));
                     break;
                 case OperationEnum.UnsetRegex:                    
-                    svs.UnsetVariableRegex(svs.Dict, _Name);
+                    svs.UnsetVariableRegex(svs.Dict, Name);
                     AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictunsetregex",
-                        "All {0}dict variables matching ({1}) unset", sPersist, _Name));
+                        "All {0}dict variables matching ({1}) unset", sPersist, Name));
                     break;
                 case OperationEnum.Unset:
                     svs.UnsetVariable(svs.Dict, sourcename);
@@ -406,7 +360,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Set:
                     {
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_this}", "${_idx}", "${_key}" };
-                        CheckInvalidDymanicExpr(_Value, invalidExprs);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
 
                         string key = ParseKey();
                         string value;
@@ -436,7 +390,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Merge:
                 case OperationEnum.MergeHard:
                     {
-                        bool shouldOverwrite = _Operation == OperationEnum.MergeHard;
+                        bool shouldOverwrite = Operation == OperationEnum.MergeHard;
                         VariableDictionary svdCopy;
                         lock (svs.Dict)
                         {
@@ -462,7 +416,7 @@ namespace Triggernometry.Core.Actions
                         string filterExpr = ParseValue();
                         var entity = XivEntityParser.GetEntityFromUserInput(filterExpr);
 
-                        var memberExprs = string.IsNullOrWhiteSpace(_Key)
+                        var memberExprs = string.IsNullOrWhiteSpace(Key)
                             ? FFXIV.Entity.RecommendedEntityPropNames.Concat(FFXIV.Job.LegalJobPropNames)
                             : ArgHelper.SplitArguments(ParseKey(), false);
 
@@ -517,7 +471,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Filter:
                     {
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_this}", "${_idx}" };
-                        CheckInvalidDymanicExpr(_Value, invalidExprs);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
                         VariableDictionary vdResult = new VariableDictionary();
                         lock (svs.Dict)
                         {
@@ -526,7 +480,7 @@ namespace Triggernometry.Core.Actions
                             {
                                 ctx.dictKey = pair.Key;                 // for ${_key}
                                 ctx.dictValue = pair.Value.ToString();  // for ${_val}
-                                double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Value);
+                                double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
                                 if (!MathParser.IsZero(result))
                                 {
                                     vdResult.Values[pair.Key] = pair.Value.Duplicate();
@@ -546,16 +500,16 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.SetAll:
                     {
-                        bool isLengthMode = !string.IsNullOrWhiteSpace(_VariableLength);
-                        int length = isLengthMode ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _VariableLength) : 0;
+                        bool isLengthMode = !string.IsNullOrWhiteSpace(VariableLength);
+                        int length = isLengthMode ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, VariableLength) : 0;
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_this}" };
-                        CheckInvalidDymanicExpr(_Key, invalidExprs);
-                        CheckInvalidDymanicExpr(_Value, invalidExprs);
+                        CheckInvalidDymanicExpr(Key, invalidExprs);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
                         VariableDictionary vdNew = new VariableDictionary();
                         lock (svs.Dict)
                         {
                             VariableDictionary vd = svs.GetDictVariable(sourcename, false);
-                            ctx.varName = (_Persistent ? "pdvar:" : "dvar:") + sourcename;
+                            ctx.varName = (Persistent ? "pdvar:" : "dvar:") + sourcename;
 
                             if (isLengthMode)
                             {   // should only use ${_idx} to generate each key/value
@@ -570,7 +524,7 @@ namespace Triggernometry.Core.Actions
                                 }
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictsetallbyindex",
                                     "{4} key value pairs in {1}dictionary ({0}) set to ({2}): ({3})",
-                                    sourcename, sPersist, _Key, _Value, length));
+                                    sourcename, sPersist, Key, Value, length));
                             }
                             else
                             {   // should only use ${_key} and ${_val} to rewrite the list
@@ -584,7 +538,7 @@ namespace Triggernometry.Core.Actions
                                 }
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictsetall",
                                     "All key value pairs in {1}dictionary ({0}) set to ({2}): ({3})",
-                                    sourcename, sPersist, _Key, _Value));
+                                    sourcename, sPersist, Key, Value));
                             }
                             svs.Dict[sourcename] = vdNew;
                         }

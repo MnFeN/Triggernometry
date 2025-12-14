@@ -159,7 +159,7 @@ namespace Triggernometry.Core
             /// <summary>
             /// Display order number (smallest first)
             /// </summary>
-            internal int _ordernum;
+            internal int _order;
 
             /// <summary>
             /// Type hint for the generic editor, can be different from the underlying datatype.
@@ -173,9 +173,9 @@ namespace Triggernometry.Core
             /// </summary>
             internal SpecialTypeEnum _specialtype;
 
-            public ActionAttribute(int ordernum = 0, Type typehint = null, SpecialTypeEnum specialtype = SpecialTypeEnum.None)
+            public ActionAttribute(int order = 0, Type typehint = null, SpecialTypeEnum specialtype = SpecialTypeEnum.None)
             {
-                _ordernum = ordernum;
+                _order = order;
                 _typehint = typehint;
                 _specialtype = specialtype;
             }
@@ -709,7 +709,7 @@ namespace Triggernometry.Core
                     attr: aa
                 ));
             }
-            results.Sort((a, b) => a.attr._ordernum.CompareTo(b.attr._ordernum));
+            results.Sort((a, b) => a.attr._order.CompareTo(b.attr._order));
             return results;
         }
 

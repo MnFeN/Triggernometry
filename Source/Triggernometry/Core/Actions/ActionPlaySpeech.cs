@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -19,121 +20,79 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Audio target where speech will be directed (None means default)
         /// </summary>
-        [Action(ordernum: 1)]
-        private Configuration.AudioRoutingMethodEnum _AudioTarget { get; set; } = Configuration.AudioRoutingMethodEnum.None;
-        [XmlAttribute]
-        public string AudioTarget
+        [XmlIgnore]
+        [Action(order: 1)]
+        public Configuration.AudioRoutingMethodEnum AudioTarget { get; set; } = Configuration.AudioRoutingMethodEnum.None;
+
+        [XmlAttribute("AudioTarget")]
+        public string Xml_AudioTarget
         {
-            get
-            {
-                if (_AudioTarget != Configuration.AudioRoutingMethodEnum.None)
-                {
-                    return _AudioTarget.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _AudioTarget = (Configuration.AudioRoutingMethodEnum)Enum.Parse(typeof(Configuration.AudioRoutingMethodEnum), value);
-            }
+            get => XmlAttr.Enum(AudioTarget, Configuration.AudioRoutingMethodEnum.None);
+            set => AudioTarget = XmlAttr.Enum<Configuration.AudioRoutingMethodEnum>(value);
         }
 
         /// <summary>
         /// Message expression
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _Message { get; set; } = "";
-        [XmlAttribute]
-        public string Message
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Message { get; set; } = "";
+
+        [XmlAttribute("Message")]
+        public string Xml_Message
         {
-            get
-            {
-                if (_Message == "")
-                {
-                    return null;
-                }
-                return _Message;
-            }
-            set
-            {
-                _Message = value;
-            }
+            get => XmlAttr.String(Message);
+            set => Message = value;
         }
 
         /// <summary>
         /// Volume expression (0 - 100)
         /// </summary>
-        [Action(ordernum: 3, typeof(float))]
-        private string _Volume { get; set; } = "100";
-        [XmlAttribute]
-        public string Volume
+        [XmlIgnore]
+        [Action(order: 3, typeof(float))]
+        public string Volume { get; set; } = "100";
+
+        [XmlAttribute("Volume")]
+        public string Xml_Volume
         {
-            get
-            {
-                if (_Volume == "100")
-                {
-                    return null;
-                }
-                return _Volume;
-            }
-            set
-            {
-                _Volume = value;
-            }
+            get => XmlAttr.String(Volume, "100");
+            set => Volume = value;
         }
 
         /// <summary>
         /// Rate (speech speed) expression
         /// </summary>
-        [Action(ordernum: 4, typeof(int))]
-        private string _Rate { get; set; } = "0";
-        [XmlAttribute]
-        public string Rate
+        [XmlIgnore]
+        [Action(order: 4, typeof(int))]
+        public string Rate { get; set; } = "0";
+
+        [XmlAttribute("Rate")]
+        public string Xml_Rate
         {
-            get
-            {
-                if (_Rate == "0")
-                {
-                    return null;
-                }
-                return _Rate;
-            }
-            set
-            {
-                _Rate = value;
-            }
+            get => XmlAttr.String(Rate, "0");
+            set => Rate = value;
         }
 
         // todo remove?
-        [Action(ordernum: 5)]
-        private bool _ExclusivePlayer { get; set; } = true;
-        [XmlAttribute]
-        public string ExclusivePlayer
+        [XmlIgnore]
+        [Action(order: 5)]
+        public bool ExclusivePlayer { get; set; } = true;
+
+        [XmlAttribute("ExclusivePlayer")]
+        public string Xml_ExclusivePlayer
         {
-            get
-            {
-                if (_ExclusivePlayer == true)
-                {
-                    return null;
-                }
-                return _ExclusivePlayer.ToString();
-            }
-            set
-            {
-                _ExclusivePlayer = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(ExclusivePlayer, true);
+            set => ExclusivePlayer = XmlAttr.Bool(value);
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            return I18n.Translate("internal/Action/desctts", "say ({0}) at volume ({1}) %, using speed ({2})", _Message, _Volume, _Rate);
+            return I18n.Translate("internal/Action/desctts", "say ({0}) at volume ({1}) %, using speed ({2})", Message, Volume, Rate);
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)

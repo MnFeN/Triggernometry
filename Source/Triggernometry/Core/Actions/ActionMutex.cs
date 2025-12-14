@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -19,7 +20,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Mutex operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             Release,
             Acquire
@@ -28,62 +29,44 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the mutex operation
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.Release;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.Release;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.Release)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.Release);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Name of the mutex
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _Name { get; set; } = "";
-        [XmlAttribute]
-        public string Name
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Name { get; set; } = "";
+
+        [XmlAttribute("Name")]
+        public string Xml_Name
         {
-            get
-            {
-                if (_Name == "")
-                {
-                    return null;
-                }
-                return _Name;
-            }
-            set
-            {
-                _Name = value;
-            }
+            get => XmlAttr.String(Name);
+            set => Name = value;
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.Release:
-                    return I18n.Translate("internal/Action/mutexrelease", "release mutex ({0})", _Name);
+                    return I18n.Translate("internal/Action/mutexrelease", "release mutex ({0})", Name);
                 case OperationEnum.Acquire:
-                    return I18n.Translate("internal/Action/mutexacquire", "acquire mutex ({0})", _Name);
+                    return I18n.Translate("internal/Action/mutexacquire", "acquire mutex ({0})", Name);
             }
             return "";
         }
@@ -91,8 +74,8 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            string mn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Name);
-            switch (_Operation)
+            string mn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
+            switch (Operation)
             {
                 case OperationEnum.Acquire:
                     {

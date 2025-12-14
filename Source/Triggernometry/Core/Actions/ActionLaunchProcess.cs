@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -19,135 +21,101 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Window style to launch the process with
         /// </summary>
-        [Action(ordernum: 1)]
-        private System.Diagnostics.ProcessWindowStyle _WindowStyle { get; set; } = System.Diagnostics.ProcessWindowStyle.Normal;
-        [XmlAttribute]
-        public string WindowStyle
+        [XmlIgnore]
+        [Action(order: 1)]
+        public ProcessWindowStyle WindowStyle { get; set; } = ProcessWindowStyle.Normal;
+
+        [XmlAttribute("WindowStyle")]
+        public string Xml_WindowStyle
         {
-            get
-            {
-                if (_WindowStyle != System.Diagnostics.ProcessWindowStyle.Normal)
-                {
-                    return _WindowStyle.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _WindowStyle = (System.Diagnostics.ProcessWindowStyle)Enum.Parse(typeof(System.Diagnostics.ProcessWindowStyle), value);
-            }
+            get => XmlAttr.Enum(WindowStyle, ProcessWindowStyle.Normal);
+            set => WindowStyle = XmlAttr.Enum<ProcessWindowStyle>(value);
         }
 
         /// <summary>
         /// Path to the process to launch
         /// </summary>
-        [Action(ordernum: 2, specialtype: ActionAttribute.SpecialTypeEnum.ExecutableSelector)]
-        private string _Path { get; set; } = "";
-        [XmlAttribute]
-        public string Path
+        [XmlIgnore]
+        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.ExecutableSelector)]
+        public string Path { get; set; } = "";
+
+        [XmlAttribute("Path")]
+        public string Xml_Path
         {
-            get
-            {
-                if (_Path == "")
-                {
-                    return null;
-                }
-                return _Path;
-            }
-            set
-            {
-                _Path = value;
-            }
+            get => XmlAttr.String(Path);
+            set => Path = value;
         }
 
         /// <summary>
         /// Command line arguments to pass to the process
         /// </summary>
-        [Action(ordernum: 3)]
-        private string _Arguments { get; set; } = "";
-        [XmlAttribute]
-        public string Arguments
+        [XmlIgnore]
+        [Action(order: 3)]
+        public string Arguments { get; set; } = "";
+
+        [XmlAttribute("Arguments")]
+        public string Xml_Arguments
         {
-            get
-            {
-                if (_Arguments == "")
-                {
-                    return null;
-                }
-                return _Arguments;
-            }
-            set
-            {
-                _Arguments = value;
-            }
+            get => XmlAttr.String(Arguments);
+            set => Arguments = value;
         }
 
         /// <summary>
         /// Working directory
         /// </summary>
-        [Action(ordernum: 4)]
-        private string _WorkingDirectory { get; set; } = "";
-        [XmlAttribute]
-        public string WorkingDirectory
+        [XmlIgnore]
+        [Action(order: 4)]
+        public string WorkingDirectory { get; set; } = "";
+
+        [XmlAttribute("WorkingDirectory")]
+        public string Xml_WorkingDirectory
         {
-            get
-            {
-                if (_WorkingDirectory == "")
-                {
-                    return null;
-                }
-                return _WorkingDirectory;
-            }
-            set
-            {
-                _WorkingDirectory = value;
-            }
+            get => XmlAttr.String(WorkingDirectory);
+            set => WorkingDirectory = value;
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
             string tempt = "";
-            switch (_WindowStyle)
+            switch (WindowStyle)
             {
-                case System.Diagnostics.ProcessWindowStyle.Hidden:
-                    tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Hidden from view]", _WindowStyle.ToString());
+                case ProcessWindowStyle.Hidden:
+                    tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Hidden from view]", WindowStyle.ToString());
                     break;
-                case System.Diagnostics.ProcessWindowStyle.Maximized:
-                    tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Maximized to fullscreen]", _WindowStyle.ToString());
+                case ProcessWindowStyle.Maximized:
+                    tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Maximized to fullscreen]", WindowStyle.ToString());
                     break;
-                case System.Diagnostics.ProcessWindowStyle.Minimized:
-                    tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Minimized to taskbar]", _WindowStyle.ToString());
+                case ProcessWindowStyle.Minimized:
+                    tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Minimized to taskbar]", WindowStyle.ToString());
                     break;
-                case System.Diagnostics.ProcessWindowStyle.Normal:
-                    tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Normal]", _WindowStyle.ToString());
+                case ProcessWindowStyle.Normal:
+                    tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Normal]", WindowStyle.ToString());
                     break;
                 default:
-                    tempt = _WindowStyle.ToString();
+                    tempt = WindowStyle.ToString();
                     break;
             }
             return I18n.Translate("internal/Action/desclaunchprocess", "launch process ({0}) as ({1}) using command line parameters ({2})",
-                Path,
+                Xml_Path,
                 tempt,
-                Arguments
+                Xml_Arguments
             );
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            System.Diagnostics.Process p = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo();
-            psi.Arguments = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Arguments);
-            psi.WindowStyle = _WindowStyle;
-            psi.WorkingDirectory = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _WorkingDirectory);
-            psi.FileName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Path);
+            Process p = new Process();
+            ProcessStartInfo psi = new ProcessStartInfo();
+            psi.Arguments = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Arguments);
+            psi.WindowStyle = WindowStyle;
+            psi.WorkingDirectory = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WorkingDirectory);
+            psi.FileName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Path);
             p.StartInfo = psi;
             p.Start();
             if (Asynchronous == false)

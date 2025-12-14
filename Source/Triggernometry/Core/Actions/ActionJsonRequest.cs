@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
 
@@ -23,7 +24,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Request method
         /// </summary>
-        private enum MethodEnum
+        public enum MethodEnum
         {
             POST,
             GET
@@ -32,192 +33,129 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Remote endpoint expression
         /// </summary>
-        [Action(ordernum: 1)]
-        private string _Endpoint { get; set; } = "";
-        [XmlAttribute]
-        public string Endpoint
+        [XmlIgnore]
+        [Action(order: 1)]
+        public string Endpoint { get; set; } = "";
+
+        [XmlAttribute("Endpoint")]
+        public string Xml_Endpoint
         {
-            get
-            {
-                if (_Endpoint == "")
-                {
-                    return null;
-                }
-                return _Endpoint;
-            }
-            set
-            {
-                _Endpoint = value;
-            }
+            get => XmlAttr.String(Endpoint);
+            set => Endpoint = value;
         }
 
         /// <summary>
         /// Request method to use
         /// </summary>
-        [Action(ordernum: 2)]
-        private MethodEnum _Method { get; set; } = MethodEnum.POST;
-        [XmlAttribute]
-        public string Method
+        [XmlIgnore]
+        [Action(order: 2)]
+        public MethodEnum Method { get; set; } = MethodEnum.POST;
+
+        [XmlAttribute("Method")]
+        public string Xml_Method
         {
-            get
-            {
-                if (_Method == MethodEnum.POST)
-                {
-                    return null;
-                }
-                return _Method.ToString();
-            }
-            set
-            {
-                _Method = (MethodEnum)Enum.Parse(typeof(MethodEnum), value);
-            }
+            get => XmlAttr.Enum(Method, MethodEnum.POST);
+            set => Method = XmlAttr.Enum<MethodEnum>(value);
         }
 
         /// <summary>
         /// Payload expression
         /// </summary>
-        [Action(ordernum: 3)]
-        private string _Payload { get; set; } = "";
-        [XmlAttribute]
-        public string Payload
+        [XmlIgnore]
+        [Action(order: 3)]
+        public string Payload { get; set; } = "";
+
+        [XmlAttribute("Payload")]
+        public string Xml_Payload
         {
-            get
-            {
-                if (_Payload == "")
-                {
-                    return null;
-                }
-                return _Payload;
-            }
-            set
-            {
-                _Payload = value;
-            }
+            get => XmlAttr.String(Payload);
+            set => Payload = value;
         }
 
         /// <summary>
         /// Header expression
         /// </summary>
-        [Action(ordernum: 4)]
-        private string _Headers { get; set; } = "";
-        [XmlAttribute]
-        public string Headers
+        [XmlIgnore]
+        [Action(order: 4)]
+        public string Headers { get; set; } = "";
+
+        [XmlAttribute("Headers")]
+        public string Xml_Headers
         {
-            get
-            {
-                if (_Headers == "")
-                {
-                    return null;
-                }
-                return _Headers;
-            }
-            set
-            {
-                _Headers = value;
-            }
+            get => XmlAttr.String(Headers);
+            set => Headers = value;
         }
 
         /// <summary>
         /// Scalar variable in which the result of the request will be stored
         /// </summary>
-        [Action(ordernum: 5)]
-        private string _ResultVariable { get; set; } = "";
-        [XmlAttribute]
-        public string ResultVariable
+        [XmlIgnore]
+        [Action(order: 5)]
+        public string ResultVariable { get; set; } = "";
+
+        [XmlAttribute("ResultVariable")]
+        public string Xml_ResultVariable
         {
-            get
-            {
-                if (_ResultVariable == "")
-                {
-                    return null;
-                }
-                return _ResultVariable;
-            }
-            set
-            {
-                _ResultVariable = value;
-            }
+            get => XmlAttr.String(ResultVariable);
+            set => ResultVariable = value;
         }
 
         /// <summary>
         /// Expression to be used when the result of the request is intended to be fired as a log event
         /// </summary>
-        [Action(ordernum: 6)]
-        private string _FiringExpression { get; set; } = "";
-        [XmlAttribute]
-        public string FiringExpression
+        [XmlIgnore]
+        [Action(order: 6)]
+        public string FiringExpression { get; set; } = "";
+
+        [XmlAttribute("FiringExpression")]
+        public string Xml_FiringExpression
         {
-            get
-            {
-                if (_FiringExpression == "")
-                {
-                    return null;
-                }
-                return _FiringExpression;
-            }
-            set
-            {
-                _FiringExpression = value;
-            }
+            get => XmlAttr.String(FiringExpression);
+            set => FiringExpression = value;
         }
 
         /// <summary>
         /// If set, Triggernometry will check its cache for a similar request and return that
         /// </summary>
-        [Action(ordernum: 7)]
-        private bool _UseCache { get; set; } = false;
-        [XmlAttribute]
-        public string UseCache
+        [XmlIgnore]
+        [Action(order: 7)]
+        public bool UseCache { get; set; } = false;
+
+        [XmlAttribute("UseCache")]
+        public string Xml_UseCache
         {
-            get
-            {
-                if (_UseCache == false)
-                {
-                    return null;
-                }
-                return _UseCache.ToString();
-            }
-            set
-            {
-                _UseCache = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(UseCache, false);
+            set => UseCache = XmlAttr.Bool(value);
         }
 
         /// <summary>
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
-        [Action(ordernum: 8)] // todo need to couple this with variable on editor
-        private bool _Persistent { get; set; } = false;
-        [XmlAttribute]
-        public string Persistent
+        [XmlIgnore]
+        [Action(order: 8)] // todo need to couple this with variable on editor
+        public bool Persistent { get; set; } = false;
+
+        [XmlAttribute("Persistent")]
+        public string Xml_Persistent
         {
-            get
-            {
-                if (_Persistent == false)
-                {
-                    return null;
-                }
-                return _Persistent.ToString();
-            }
-            set
-            {
-                _Persistent = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(Persistent, false);
+            set => Persistent = XmlAttr.Bool(value);
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            string cache = I18n.TrlCacheFile(_UseCache);
-            if (_FiringExpression != null && _FiringExpression.Trim().Length > 0)
+            string cache = I18n.TrlCacheFile(UseCache);
+            if (FiringExpression != null && FiringExpression.Trim().Length > 0)
             {
                 return I18n.Translate(
                     "internal/Action/descjsonsendrelay",
                     "send JSON payload to endpoint ({0}){1}, and relaying response for further processing",
-                    _Endpoint, cache
+                    Endpoint, cache
                 );
             }
             else
@@ -225,7 +163,7 @@ namespace Triggernometry.Core.Actions
                 return I18n.Translate(
                     "internal/Action/descjsonsend",
                     "send JSON payload to endpoint ({0}){1} and cache the response",
-                    _Endpoint, cache
+                    Endpoint, cache
                 );
             }
         }
@@ -235,17 +173,17 @@ namespace Triggernometry.Core.Actions
             Context ctx = ai.ctx;
             string response = "";
             int responseCode = 0;
-            string endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Endpoint);
-            string payload = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Payload);
-            string headers = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Headers).Trim();
-            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _ResultVariable);
-            string persist = I18n.TrlVarPersist(_Persistent);
+            string endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Endpoint);
+            string payload = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Payload);
+            string headers = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Headers).Trim();
+            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, ResultVariable);
+            string persist = I18n.TrlVarPersist(Persistent);
             List<string> headerslist = new List<string>();
             if (headers.Length > 0)
             {
                 headerslist.AddRange(headers.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
             }
-            if (_UseCache == true)
+            if (UseCache == true)
             {
                 string endpointh = RealPlugin.GenerateHash(endpoint);
                 string payloadh = RealPlugin.GenerateHash(payload);
@@ -271,7 +209,7 @@ namespace Triggernometry.Core.Actions
                 }
                 if (fromcache == false)
                 {
-                    Tuple<int, string> resp = SendJson(ctx, _Method, endpoint, payload, headerslist, false);
+                    Tuple<int, string> resp = SendJson(ctx, Method, endpoint, payload, headerslist, false);
                     responseCode = resp.Item1;
                     response = resp.Item2;
                     File.WriteAllText(fn, response);
@@ -279,13 +217,13 @@ namespace Triggernometry.Core.Actions
             }
             else
             {
-                Tuple<int, string> resp = SendJson(ctx, _Method, endpoint, payload, headerslist, false);
+                Tuple<int, string> resp = SendJson(ctx, Method, endpoint, payload, headerslist, false);
                 responseCode = resp.Item1;
                 response = resp.Item2;
             }
             if (varname != "")
             {
-                VariableStore vs = _Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+                VariableStore vs = Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
                 lock (vs.Scalar) // verified
                 {
                     if (vs.Scalar.ContainsKey(varname) == false)
@@ -309,9 +247,9 @@ namespace Triggernometry.Core.Actions
             }
             ctx.contextResponse = response;
             ctx.contextResponseCode = responseCode;
-            if (_FiringExpression != null && _FiringExpression.Trim().Length > 0)
+            if (FiringExpression != null && FiringExpression.Trim().Length > 0)
             {
-                string firing = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _FiringExpression);
+                string firing = ctx.EvaluateStringExpression(ActionContextLogger, ctx, FiringExpression);
                 if (firing.Length > 0)
                 {
                     ctx.Plugin.LogLineQueuer(firing, "", LogEvent.SourceEnum.Log);

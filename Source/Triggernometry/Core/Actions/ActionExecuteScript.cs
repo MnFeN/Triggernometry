@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -19,48 +20,33 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Comma-separated list of referenced assemblies
         /// </summary>
-        [Action(ordernum: 1)]
-        private string _Assemblies { get; set; } = "";
-        [XmlAttribute]
-        public string Assemblies
+        [XmlIgnore]
+        [Action(order: 1)]
+        public string Assemblies { get; set; } = "";
+
+        [XmlAttribute("Assemblies")]
+        public string Xml_Assemblies
         {
-            get
-            {
-                if (_Assemblies == "")
-                {
-                    return null;
-                }
-                return _Assemblies;
-            }
-            set
-            {
-                _Assemblies = value;
-            }
+            get => XmlAttr.String(Assemblies);
+            set => Assemblies = value;
         }
 
         /// <summary>
         /// Script code expression
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _Script { get; set; } = "";
-        [XmlAttribute]
-        public string Script
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Script { get; set; } = "";
+
+        [XmlAttribute("Script")]
+        public string Xml_Script
         {
-            get
-            {
-                if (_Script == "")
-                {
-                    return null;
-                }
-                return _Script;
-            }
-            set
-            {
-                _Script = value;
-            }
+            get => XmlAttr.String(Script);
+            set => Script = value;
         }
 
         #endregion
+
 
         #region Implementation
 
@@ -72,8 +58,8 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            string scp = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Script);
-            string assy = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Assemblies);
+            string scp = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Script);
+            string assy = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Assemblies);
             while (ctx.Plugin.scriptingInited == false)
             {
                 Thread.Sleep(10);

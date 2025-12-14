@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Parsers;
@@ -26,7 +27,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Table variable operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             Unset,
             Set,
@@ -51,7 +52,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Expression types
         /// </summary>
-        private enum ExpressionTypeEnum
+        public enum ExpressionTypeEnum
         {
             /// <summary>
             /// String expression
@@ -66,239 +67,162 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Table variable operation type
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.Unset;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.Unset;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.Unset)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.Unset);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Type of the value expression
         /// </summary>
-        [Action(ordernum: 2)]
-        private ExpressionTypeEnum _ValueType { get; set; } = ExpressionTypeEnum.String;
-        [XmlAttribute]
-        public string ValueType
+        [XmlIgnore]
+        [Action(order: 2)]
+        public ExpressionTypeEnum ValueType { get; set; } = ExpressionTypeEnum.String;
+
+        [XmlAttribute("ValueType")]
+        public string Xml_ValueType
         {
-            get
-            {
-                if (_ValueType != ExpressionTypeEnum.String)
-                {
-                    return _ValueType.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _ValueType = (ExpressionTypeEnum)Enum.Parse(typeof(ExpressionTypeEnum), value);
-            }
+            get => XmlAttr.Enum(ValueType, ExpressionTypeEnum.String);
+            set => ValueType = XmlAttr.Enum<ExpressionTypeEnum>(value);
         }
 
         /// <summary>
         /// Name of the table variable
         /// </summary>
-        [Action(ordernum: 3)]
-        private string _Name { get; set; } = "";
-        [XmlAttribute]
-        public string Name
+        [XmlIgnore]
+        [Action(order: 3)]
+        public string Name { get; set; } = "";
+
+        [XmlAttribute("Name")]
+        public string Xml_Name
         {
-            get
-            {
-                if (_Name == "")
-                {
-                    return null;
-                }
-                return _Name;
-            }
-            set
-            {
-                _Name = value;
-            }
+            get => XmlAttr.String(Name);
+            set => Name = value;
         }
 
         /// <summary>
         /// Name of the target table variable for some operations
         /// </summary>
-        [Action(ordernum: 4)]
-        private string _TargetName { get; set; } = "";
-        [XmlAttribute]
-        public string TargetName
+        [XmlIgnore]
+        [Action(order: 4)]
+        public string TargetName { get; set; } = "";
+
+        [XmlAttribute("TargetName")]
+        public string Xml_TargetName
         {
-            get
-            {
-                if (_TargetName == "")
-                {
-                    return null;
-                }
-                return _TargetName;
-            }
-            set
-            {
-                _TargetName = value;
-            }
+            get => XmlAttr.String(TargetName);
+            set => TargetName = value;
         }
 
         /// <summary>
         /// Value expression
         /// </summary>
-        [Action(ordernum: 5)]
-        private string _Value { get; set; } = "";
-        [XmlAttribute]
-        public string Value
+        [XmlIgnore]
+        [Action(order: 5)]
+        public string Value { get; set; } = "";
+
+        [XmlAttribute("Value")]
+        public string Xml_Value
         {
-            get
-            {
-                if (_Value == "")
-                {
-                    return null;
-                }
-                return _Value;
-            }
-            set
-            {
-                _Value = value;
-            }
+            get => XmlAttr.String(Value);
+            set => Value = value;
         }
 
         /// <summary>
         /// X (column) reference
         /// </summary>
-        [Action(ordernum: 6)]
-        private string _X { get; set; } = "";
-        [XmlAttribute]
-        public string X
+        [XmlIgnore]
+        [Action(order: 6)]
+        public string X { get; set; } = "";
+
+        [XmlAttribute("X")]
+        public string Xml_X
         {
-            get
-            {
-                if (_X == "")
-                {
-                    return null;
-                }
-                return _X;
-            }
-            set
-            {
-                _X = value;
-            }
+            get => XmlAttr.String(X);
+            set => X = value;
         }
 
         /// <summary>
         /// Y (row) reference
         /// </summary>
-        [Action(ordernum: 7)]
-        private string _Y { get; set; } = "";
-        [XmlAttribute]
-        public string Y
+        [XmlIgnore]
+        [Action(order: 7)]
+        public string Y { get; set; } = "";
+
+        [XmlAttribute("Y")]
+        public string Xml_Y
         {
-            get
-            {
-                if (_Y == "")
-                {
-                    return null;
-                }
-                return _Y;
-            }
-            set
-            {
-                _Y = value;
-            }
+            get => XmlAttr.String(Y);
+            set => Y = value;
         }
 
         /// <summary>
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
-        [Action(ordernum: 8)] // todo need to couple this with variable on editor
-        private bool _Persistent { get; set; } = false;
-        [XmlAttribute]
-        public string Persistent
+        [XmlIgnore]
+        [Action(order: 8)] // todo need to couple this with variable on editor
+        public bool Persistent { get; set; } = false;
+
+        [XmlAttribute("Persistent")]
+        public string Xml_Persistent
         {
-            get
-            {
-                if (_Persistent == false)
-                {
-                    return null;
-                }
-                return _Persistent.ToString();
-            }
-            set
-            {
-                _Persistent = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(Persistent, false);
+            set => Persistent = XmlAttr.Bool(value);
         }
 
         /// <summary>
         /// Indicates whether referenced target variable is persistent or not
         /// </summary>
-        [Action(ordernum: 9)] // todo need to couple this with variable on editor
-        private bool _TargetPersistent { get; set; } = false;
-        [XmlAttribute]
-        public string TargetPersistent
+        [XmlIgnore]
+        [Action(order: 9)] // todo need to couple this with variable on editor
+        public bool TargetPersistent { get; set; } = false;
+
+        [XmlAttribute("TargetPersistent")]
+        public string Xml_TargetPersistent
         {
-            get
-            {
-                if (_TargetPersistent == false)
-                {
-                    return null;
-                }
-                return _TargetPersistent.ToString();
-            }
-            set
-            {
-                _TargetPersistent = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(TargetPersistent, false);
+            set => TargetPersistent = XmlAttr.Bool(value);
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            string sPersistT = I18n.TrlVarPersist(_Persistent);
-            string tPersistT = I18n.TrlVarPersist(_TargetPersistent);
-            string exprTypeT = I18n.TrlExprType(_ValueType == ExpressionTypeEnum.String);
-            switch (_Operation)
+            string sPersistT = I18n.TrlVarPersist(Persistent);
+            string tPersistT = I18n.TrlVarPersist(TargetPersistent);
+            string exprTypeT = I18n.TrlExprType(ValueType == ExpressionTypeEnum.String);
+            switch (Operation)
             {
                 case OperationEnum.Set:
                     return I18n.Translate(
                         "internal/Action/desctableset",
                         "set {1}table variable ({0}) value at ({2},{3}) with {5} expression ({4})",
-                        _Name, sPersistT, _X, _Y, _Value, exprTypeT
+                        Name, sPersistT, X, Y, Value, exprTypeT
                     );                    
                 case OperationEnum.SetAll:
                     {
                         string temp = I18n.Translate(
                             "internal/Action/desctablesetall",
                             "set all values in {1}table ({0}) to {3} expr ({2})",
-                            _Name, sPersistT, _Value, exprTypeT
+                            Name, sPersistT, Value, exprTypeT
                         );
-                        bool givenX = !string.IsNullOrWhiteSpace(_X);
-                        bool givenY = !string.IsNullOrWhiteSpace(_Y);
+                        bool givenX = !string.IsNullOrWhiteSpace(X);
+                        bool givenY = !string.IsNullOrWhiteSpace(Y);
                         if (givenX && givenY)
                         {
                             temp += I18n.Translate(
                                 "internal/Action/desctablesetallresizeXY",
                                 " (resized to width ({0}) height ({1}))",
-                                _X, _Y
+                                X, Y
                             );
                         }
                         else if (givenX && !givenY)
@@ -306,7 +230,7 @@ namespace Triggernometry.Core.Actions
                             temp += I18n.Translate(
                                 "internal/Action/desctablesetallresizeX",
                                 " (resized to width ({0}))",
-                                _X
+                                X
                             );
                         }
                         else if (!givenX && givenY)
@@ -314,7 +238,7 @@ namespace Triggernometry.Core.Actions
                             temp += I18n.Translate(
                                 "internal/Action/desctablesetallresizeY",
                                 " (resized to height ({0}))",
-                                _Y
+                                Y
                             );
                         }
                         return temp;
@@ -323,28 +247,28 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/desctableslicessetall",
                         "set all values in column(s) ({4}) and row(s) ({5}) of {1}table ({0}) to {3} expr ({2})",
-                        _Name, sPersistT, _Value, exprTypeT, _X, _Y
+                        Name, sPersistT, Value, exprTypeT, X, Y
                     );
                 case OperationEnum.Resize:
                     {
                         string temp = I18n.Translate(
                             "internal/Action/desctableresizeprefix",
                             "resize {1}table variable ({0}) to",
-                            _Name, sPersistT
+                            Name, sPersistT
                         );
-                        bool givenCol = !string.IsNullOrWhiteSpace(_X);
-                        bool givenRow = !string.IsNullOrWhiteSpace(_Y);
+                        bool givenCol = !string.IsNullOrWhiteSpace(X);
+                        bool givenRow = !string.IsNullOrWhiteSpace(Y);
                         if (!givenCol && !givenRow)
                         {
                             temp += I18n.Translate("internal/Action/desctableresizeunchanged", " (unchanged)");
                         }
                         if (givenCol)
                         {
-                            temp += I18n.Translate("internal/Action/desctableresizecol", " width ({0})", _X);
+                            temp += I18n.Translate("internal/Action/desctableresizecol", " width ({0})", X);
                         }
                         if (givenRow)
                         {
-                            temp += I18n.Translate("internal/Action/desctableresizerow", " height ({0})", _Y);
+                            temp += I18n.Translate("internal/Action/desctableresizerow", " height ({0})", Y);
                         }
                         return temp;
                     }
@@ -352,7 +276,7 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/desctableunset",
                         "unset {1}table variable ({0})",
-                        _Name, sPersistT
+                        Name, sPersistT
                     );
                 case OperationEnum.UnsetAll:
                     return I18n.Translate(
@@ -364,133 +288,133 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/desctableunsetregex",
                         "unset {1}table variables matching regular expression ({0})",
-                        _Name, sPersistT
+                        Name, sPersistT
                     );
                 case OperationEnum.Copy:
                     return I18n.Translate(
                         "internal/Action/desctablecopy",
                         "copy {2}table variable ({0}) to {3}table variable ({1})",
-                        _Name, _TargetName, sPersistT, tPersistT
+                        Name, TargetName, sPersistT, tPersistT
                     );
                 case OperationEnum.Append:
                     return I18n.Translate("internal/Action/desctableappend",
                         "vertically append {2}table variable ({0}) to {3}table variable ({1})",
-                        _Name, _TargetName, sPersistT, tPersistT
+                        Name, TargetName, sPersistT, tPersistT
                     );
                 case OperationEnum.AppendH:
                     return I18n.Translate(
                         "internal/Action/desctableappendh",
                         "horizontally append {2}table variable ({0}) to {3}table variable ({1})",
-                        _Name, _TargetName, sPersistT, tPersistT
+                        Name, TargetName, sPersistT, tPersistT
                     );
                 case OperationEnum.Build:
-                    int dollarIndex = _Value.IndexOf("$");
-                    int crcIndex = _Value.IndexOf("¡è{");
+                    int dollarIndex = Value.IndexOf("$");
+                    int crcIndex = Value.IndexOf("¡è{");
                     if (
-                        _ValueType == ExpressionTypeEnum.String
+                        ValueType == ExpressionTypeEnum.String
                         && dollarIndex != 0 && dollarIndex != 1 && crcIndex != 0 && crcIndex != 1
                     )
                     {
                         return I18n.Translate(
                             "internal/Action/desctablebuild",
                             "build {1}table variable ({0}) from string ({2}) separated by ({3}) ({4})",
-                            _TargetName, tPersistT,
-                            _Value.Length < 2 ? "" : _Value.Substring(2),
-                            _Value.Length < 1 ? "" : _Value.Substring(0, 1),
-                            _Value.Length < 2 ? "" : _Value.Substring(1, 1)
+                            TargetName, tPersistT,
+                            Value.Length < 2 ? "" : Value.Substring(2),
+                            Value.Length < 1 ? "" : Value.Substring(0, 1),
+                            Value.Length < 2 ? "" : Value.Substring(1, 1)
                         );
                     }
                     return I18n.Translate(
                         "internal/Action/desctablebuildraw",
                         "build {1}table variable ({0}) from {3} expression ({2}) separated by its first 2 characters",
-                        _TargetName, tPersistT, _Value, exprTypeT
+                        TargetName, tPersistT, Value, exprTypeT
                     );
                 case OperationEnum.Filter:
                     return I18n.Translate(
                         "internal/Action/desctablefilter",
                         "Use expression ({4}) to filter {1}table ({0}) into {3}list ({2})",
-                        _Name, sPersistT, _TargetName, tPersistT, _Value
+                        Name, sPersistT, TargetName, tPersistT, Value
                     );
                 case OperationEnum.FilterLine:
                     {
-                        bool isCol = !string.IsNullOrWhiteSpace(_X);
+                        bool isCol = !string.IsNullOrWhiteSpace(X);
                         string lineType = I18n.TrlTableColOrRow(isCol);
                         return I18n.Translate(
                             "internal/Action/desctablefilterline",
                             "Use expression ({4}) to filter the {5}s in {1}table ({0}) into {3}table ({2})",
-                            _Name, sPersistT, _TargetName, tPersistT, isCol ? _X : _Y, lineType
+                            Name, sPersistT, TargetName, tPersistT, isCol ? X : Y, lineType
                         );
                     }
                 case OperationEnum.SetLine:
                     {
-                        string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_X));
-                        string index = !string.IsNullOrWhiteSpace(_X) ? _X : _Y;
+                        string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(X));
+                        string index = !string.IsNullOrWhiteSpace(X) ? X : Y;
                         if (
-                            _ValueType == ExpressionTypeEnum.String
-                            && !_Value.StartsWith("$") && !_Value.StartsWith("¡è{")
+                            ValueType == ExpressionTypeEnum.String
+                            && !Value.StartsWith("$") && !Value.StartsWith("¡è{")
                         )
                         {
                             return I18n.Translate(
                                 "internal/Action/desctablesetline",
                                 "set {1}table ({0}) {2} #({3}) values from string ({4}) separated by ({5})",
-                                _Name, sPersistT, lineType, index,
-                                _Value.Length < 1 ? "" : _Value.Substring(1),
-                                _Value.Length < 1 ? "" : _Value.Substring(0, 1)
+                                Name, sPersistT, lineType, index,
+                                Value.Length < 1 ? "" : Value.Substring(1),
+                                Value.Length < 1 ? "" : Value.Substring(0, 1)
                             );
                         }
                         return I18n.Translate(
                             "internal/Action/desctablesetlineraw",
                             "set {1}table ({0}) {2} #({3}) values from {5} expression ({4}) separated by its first character",
-                            _Name, sPersistT, lineType, index, _Value, exprTypeT
+                            Name, sPersistT, lineType, index, Value, exprTypeT
                         );
                     }
                 case OperationEnum.InsertLine:
                     {
-                        string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_X));
-                        string index = !string.IsNullOrWhiteSpace(_X) ? _X : _Y;
+                        string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(X));
+                        string index = !string.IsNullOrWhiteSpace(X) ? X : Y;
                         if (
-                            _ValueType == ExpressionTypeEnum.String
-                            && !_Value.StartsWith("$") && !_Value.StartsWith("¡è{")
+                            ValueType == ExpressionTypeEnum.String
+                            && !Value.StartsWith("$") && !Value.StartsWith("¡è{")
                         )
                         {
                             return I18n.Translate(
                                 "internal/Action/desctableinsertline",
                                 "at {1}table ({0}) {3} #({2}), insert values from string ({4}) separated by ({5})",
-                                _Name, sPersistT, lineType, index,
-                                _Value.Length < 1 ? "" : _Value.Substring(1),
-                                _Value.Length < 1 ? "" : _Value.Substring(0, 1)
+                                Name, sPersistT, lineType, index,
+                                Value.Length < 1 ? "" : Value.Substring(1),
+                                Value.Length < 1 ? "" : Value.Substring(0, 1)
                             );
                         }
                         return I18n.Translate(
                             "internal/Action/desctableinsertlineraw",
                             "at {1}table ({0}) {3} #({2}), insert values from {5} expression ({4}) separated by its first character",
-                            _Name, sPersistT, lineType, index, _Value, exprTypeT
+                            Name, sPersistT, lineType, index, Value, exprTypeT
                         );
                     }
                 case OperationEnum.RemoveLine:
                     {
-                        string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(_X));
-                        string index = !string.IsNullOrWhiteSpace(_X) ? _X : _Y;
+                        string lineType = I18n.TrlTableColOrRow(!string.IsNullOrWhiteSpace(X));
+                        string index = !string.IsNullOrWhiteSpace(X) ? X : Y;
                         return I18n.Translate(
                             "internal/Action/desctableremoveline",
                             "removed {2} #({3}) from {1}table ({0})",
-                            _Name, sPersistT, lineType, index
+                            Name, sPersistT, lineType, index
                         );
                     }
                 case OperationEnum.SortLine:
                     {
-                        bool isCol = !string.IsNullOrWhiteSpace(_X);
+                        bool isCol = !string.IsNullOrWhiteSpace(X);
                         string lineType = I18n.TrlTableColOrRow(isCol);
                         return I18n.Translate(
                             "internal/Action/desctablesortline",
                             "sort the {2}s of {1}table variable ({0}) by keys ({3})",
-                            _Name, sPersistT, lineType, isCol ? _X : _Y
+                            Name, sPersistT, lineType, isCol ? X : Y
                         );
                     }
                 case OperationEnum.GetAllEntities:
                     {
-                        bool hasFilter = string.IsNullOrWhiteSpace(_Y);
-                        bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(_X);
+                        bool hasFilter = string.IsNullOrWhiteSpace(Y);
+                        bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(X);
                         string keySuffix = (hasFilter ? "1" : "0") + (hasSpecifiedProps ? "1" : "0");
                         string key = $"internal/Action/desctablegetallentities{keySuffix}"; //...00, ...01, ...10, ...11
                         string trl = "";
@@ -501,7 +425,7 @@ namespace Triggernometry.Core.Actions
                             case "01": trl = "Store ({3}) properties of all FFXIV entities in {1}table ({0})"; break;
                             case "00": trl = "Store all properties of all FFXIV entities in {1}table ({0})"; break;
                         }
-                        return I18n.Translate(key, trl, _Name, sPersistT, _Y, _X);
+                        return I18n.Translate(key, trl, Name, sPersistT, Y, X);
                     }
             }
             return "";
@@ -510,19 +434,19 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Name);
-            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _TargetName);
-            VariableStore svs = _Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
-            VariableStore tvs = _TargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
-            string sPersist = I18n.TrlVarPersist(_Persistent);
-            string tPersist = I18n.TrlVarPersist(_TargetPersistent);
+            string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
+            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetName);
+            VariableStore svs = Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+            VariableStore tvs = TargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+            string sPersist = I18n.TrlVarPersist(Persistent);
+            string tPersist = I18n.TrlVarPersist(TargetPersistent);
             string expr;
             string ParseExpr()
             {
-                if (_ValueType == ExpressionTypeEnum.String)
-                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Value);
+                if (ValueType == ExpressionTypeEnum.String)
+                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                 else
-                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Value));
+                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
             }
 
             string vtchanger;
@@ -535,7 +459,7 @@ namespace Triggernometry.Core.Actions
                 vtchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe(ctx));
             }
 
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.UnsetAll:
                     {
@@ -546,15 +470,15 @@ namespace Triggernometry.Core.Actions
                     }
                 case OperationEnum.UnsetRegex:
                     {
-                        svs.UnsetVariableRegex(svs.Table, _Name);
+                        svs.UnsetVariableRegex(svs.Table, Name);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableunsetregex",
-                            "All {1}table variables matching ({0}) unset", _Name, sPersist));
+                            "All {1}table variables matching ({0}) unset", Name, sPersist));
                         break;
                     }
                 case OperationEnum.Resize:
                     {
-                        int w = string.IsNullOrWhiteSpace(_X) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _X);
-                        int h = string.IsNullOrWhiteSpace(_Y) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Y);
+                        int w = string.IsNullOrWhiteSpace(X) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
+                        int h = string.IsNullOrWhiteSpace(Y) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
                         lock (svs.Table) // verified
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, true);
@@ -620,7 +544,7 @@ namespace Triggernometry.Core.Actions
                                 tvs.Table.Add(targetname, new VariableTable());
                             }
                             VariableTable tvt = tvs.Table[targetname];
-                            if (_Operation == OperationEnum.Append)
+                            if (Operation == OperationEnum.Append)
                             {
                                 tvt.AppendVertical(tableToAppend, vtchanger);
                             }
@@ -637,10 +561,10 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Set:
                     {
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
-                        CheckInvalidDymanicExpr(_Value, invalidExprs);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
 
-                        int x = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _X);
-                        int y = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Y);
+                        int x = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
+                        int y = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
 
                         lock (svs.Table) // verified
                         {
@@ -651,7 +575,7 @@ namespace Triggernometry.Core.Actions
                             {
                                 vt.Resize(mx, my);
                             }
-                            ctx.varName = (_Persistent ? "ptvar:" : "tvar:") + _Name;
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;
                             ctx.tableColIndex = x;          // for ${_row}
                             ctx.tableRowIndex = y;          // for ${_col}
                             expr = ParseExpr();
@@ -665,16 +589,16 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.SetAll:
                     {
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
-                        CheckInvalidDymanicExpr(_Value, invalidExprs);
-                        int newWidth = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _X);
-                        int newHeight = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Y);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
+                        int newWidth = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
+                        int newHeight = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
                         VariableTable vtNew = new VariableTable { LastChanger = vtchanger, LastChanged = DateTime.Now };
                         lock (svs.Table)
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
                             newWidth = newWidth <= 0 ? vt.Width : newWidth;
                             newHeight = newHeight <= 0 ? vt.Height : newHeight;
-                            ctx.varName = (_Persistent ? "ptvar:" : "tvar:") + _Name;
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;
                             for (int y = 1; y <= newHeight; y++)     // x/y index starts from 1
                             {
                                 ctx.tableRowIndex = y;          // for ${_row}
@@ -690,24 +614,24 @@ namespace Triggernometry.Core.Actions
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablesetall",
                             "All values in {1}table variable ({0}) set to ({2})",
-                            sourcename, sPersist, _Value));
+                            sourcename, sPersist, Value));
                     }
                     break;
                 case OperationEnum.SlicesSetAll:
                     {
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
-                        CheckInvalidDymanicExpr(_Value, invalidExprs);
-                        string colSlicesStr = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _X);
-                        string rowSlicesStr = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Y);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
+                        string colSlicesStr = ctx.EvaluateStringExpression(ActionContextLogger, ctx, X);
+                        string rowSlicesStr = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Y);
                         VariableTable vtNew;
                         lock (svs.Table)
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
                             vtNew = (VariableTable)vt.Duplicate();
                             // index starts from 0
-                            List<int> colIndices = ArgHelper.GetSliceIndices(colSlicesStr, vt.Width, _X, startIndex: 1);
-                            List<int> rowIndices = ArgHelper.GetSliceIndices(rowSlicesStr, vt.Height, _Y, startIndex: 1);
-                            ctx.varName = (_Persistent ? "ptvar:" : "tvar:") + _Name;
+                            List<int> colIndices = ArgHelper.GetSliceIndices(colSlicesStr, vt.Width, X, startIndex: 1);
+                            List<int> rowIndices = ArgHelper.GetSliceIndices(rowSlicesStr, vt.Height, Y, startIndex: 1);
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;
                             foreach (int rowIndex in rowIndices)
                             {
                                 ctx.tableRowIndex = rowIndex + 1;       // for ${_row}
@@ -722,7 +646,7 @@ namespace Triggernometry.Core.Actions
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableslicessetall",
                             "All values in column ({3}) row ({4}) of {1}table variable ({0}) set to ({2})",
-                            sourcename, sPersist, _Value, colSlicesStr, rowSlicesStr));
+                            sourcename, sPersist, Value, colSlicesStr, rowSlicesStr));
                     }
                     break;
                 case OperationEnum.Build:
@@ -759,11 +683,11 @@ namespace Triggernometry.Core.Actions
                     {
                         VariableList vlResult = new VariableList();
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
-                        CheckInvalidDymanicExpr(_Value, invalidExprs);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
                         lock (svs.Table)
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (_Persistent ? "ptvar:" : "tvar:") + _Name;  // for ${_this}
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;  // for ${_this}
 
                             for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
                             {
@@ -771,7 +695,7 @@ namespace Triggernometry.Core.Actions
                                 for (int colIndex = 0; colIndex < vt.Width; colIndex++)
                                 {
                                     ctx.tableColIndex = colIndex + 1;   // for ${_col}
-                                    double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Value);
+                                    double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
                                     if (!MathParser.IsZero(result))
                                     {
                                         vlResult.Values.Add(vt.Rows[rowIndex].Values[colIndex].Duplicate());
@@ -792,8 +716,8 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.FilterLine:
                     {
-                        bool isCol = !string.IsNullOrWhiteSpace(_X);
-                        string rawExpr = isCol ? _X : _Y;
+                        bool isCol = !string.IsNullOrWhiteSpace(X);
+                        string rawExpr = isCol ? X : Y;
                         string[] invalidExprs = isCol
                             ? new[] { "${_this}", "${_row", "${_idx}", "${_key}", "${_val}" }
                             : new[] { "${_this}", "${_col", "${_idx}", "${_key}", "${_val}" };
@@ -802,7 +726,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.Table)
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (_Persistent ? "ptvar:" : "tvar:") + _Name;  // for ${_this}
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;  // for ${_this}
                             if (isCol)
                             {
                                 for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
@@ -860,9 +784,9 @@ namespace Triggernometry.Core.Actions
                         string separator = expr.Length > 0 ? expr.Substring(0, 1) : "";
                         string splitval = expr.Length > 0 ? expr.Substring(1) : "";
                         string[] newValues = separator.Length > 0 ? splitval.Split(separator[0]) : new string[0];
-                        bool isRow = string.IsNullOrWhiteSpace(_X);
+                        bool isRow = string.IsNullOrWhiteSpace(X);
                         string lineType = I18n.TrlTableColOrRow(!isRow);
-                        int rawIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, isRow ? _Y : _X);
+                        int rawIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, isRow ? Y : X);
 
                         lock (svs.Table) // verified
                         {
@@ -874,7 +798,7 @@ namespace Triggernometry.Core.Actions
                             if (index < 0)
                                 break;
 
-                            if (_Operation == OperationEnum.SetLine)
+                            if (Operation == OperationEnum.SetLine)
                             {
                                 if (isRow)
                                     vt.SetRow(index, newValues, vtchanger);
@@ -901,15 +825,15 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.RemoveLine:
                     {
-                        bool isRow = string.IsNullOrWhiteSpace(_X);
+                        bool isRow = string.IsNullOrWhiteSpace(X);
                         string lineType = I18n.TrlTableColOrRow(!isRow);
 
                         lock (svs.Table) // verified
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, true);
                             int tableLength = isRow ? vt.Height : vt.Width;
-                            int rawIndex = isRow ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Y)
-                                                   : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _X);
+                            int rawIndex = isRow ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y)
+                                                   : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
                             // index start from 0
                             int index = rawIndex < 0 ? rawIndex + tableLength : rawIndex - 1;
 
@@ -924,9 +848,9 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.SortLine:
                     {
-                        bool isCol = !string.IsNullOrWhiteSpace(_X);
+                        bool isCol = !string.IsNullOrWhiteSpace(X);
                         string lineType = I18n.TrlTableColOrRow(isCol);
-                        string rawExpr = isCol ? _X : _Y;
+                        string rawExpr = isCol ? X : Y;
                         string[] invalidExprs = isCol
                             ? new[] { "${_this}", "${_row", "${_idx}", "${_key}", "${_val}" }
                             : new[] { "${_this}", "${_col", "${_idx}", "${_key}", "${_val}" };
@@ -940,7 +864,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.Table)
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (_Persistent ? "ptvar:" : "tvar:") + _Name; // for ${_row[i]}
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name; // for ${_row[i]}
                             if (isCol)
                             {
                                 // Iterate through the columns and evaluate the key expression in the current context
@@ -999,16 +923,16 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.GetAllEntities:
                     {
-                        var entities = string.IsNullOrWhiteSpace(_Y)
+                        var entities = string.IsNullOrWhiteSpace(Y)
                             ? FFXIV.Entity.GetEntities()
                             : XivEntityParser.GetEntitiesFromUserInput(
-                                ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Y),
+                                ctx.EvaluateStringExpression(ActionContextLogger, ctx, Y),
                                 false);
 
-                        var propNames = string.IsNullOrWhiteSpace(_X)
+                        var propNames = string.IsNullOrWhiteSpace(X)
                             ? FFXIV.Entity.RecommendedEntityPropNames.Select(x => x.ToLower()).Concat(FFXIV.Job.LegalJobPropNames).OrderBy(s => s)
-                            : (IEnumerable<string>)ArgHelper.SplitArguments(ctx.EvaluateStringExpression(ActionContextLogger, ctx, _X), false);
-                        if (string.IsNullOrWhiteSpace(_X))
+                            : (IEnumerable<string>)ArgHelper.SplitArguments(ctx.EvaluateStringExpression(ActionContextLogger, ctx, X), false);
+                        if (string.IsNullOrWhiteSpace(X))
                         {
                             var specialKeys = new List<string> { "id", "name", "x", "y", "z", "h", "bnpcid" };
                             propNames = specialKeys.Concat(propNames.Except(specialKeys));

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using static Triggernometry.Core.RealPlugin;
 
@@ -22,7 +23,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Trigger operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             /// <summary>
             /// Fire trigger
@@ -50,7 +51,7 @@ namespace Triggernometry.Core.Actions
         /// Trigger force firing flags
         /// </summary>
         [Flags]
-        private enum ForceEnum
+        public enum ForceEnum
         {
             /// <summary>
             /// Don't skip anything, all restrictions in effect
@@ -89,7 +90,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the zone information
         /// </summary>
-        private enum ZoneTypeEnum
+        public enum ZoneTypeEnum
         {
             /// <summary>
             /// Zone information is a zone name
@@ -104,178 +105,129 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the zone information provided
         /// </summary>
-        [Action(ordernum: 1)]
-        private ZoneTypeEnum _ZoneType { get; set; } = ZoneTypeEnum.ZoneName;
-        [XmlAttribute]
-        public string ZoneType
+        [XmlIgnore]
+        [Action(order: 1)]
+        public ZoneTypeEnum ZoneType { get; set; } = ZoneTypeEnum.ZoneName;
+
+        [XmlAttribute("ZoneType")]
+        public string Xml_ZoneType
         {
-            get
-            {
-                if (_ZoneType != ZoneTypeEnum.ZoneName)
-                {
-                    return _ZoneType.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _ZoneType = (ZoneTypeEnum)Enum.Parse(typeof(ZoneTypeEnum), value);
-            }
+            get => XmlAttr.Enum(ZoneType, ZoneTypeEnum.ZoneName);
+            set => ZoneType = XmlAttr.Enum<ZoneTypeEnum>(value);
         }
 
         /// <summary>
         /// Type of the trigger operation
         /// </summary>
-        [Action(ordernum: 2)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.FireTrigger;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 2)]
+        public OperationEnum Operation { get; set; } = OperationEnum.FireTrigger;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.FireTrigger)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.FireTrigger);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Reference to the trigger
         /// </summary>
-        [Action(ordernum: 3, specialtype: ActionAttribute.SpecialTypeEnum.TriggerReference)]
-        private Guid _TriggerId { get; set; } = Guid.Empty;
-        [XmlAttribute]
-        public string TriggerId
+        [XmlIgnore]
+        [Action(order: 3, specialtype: ActionAttribute.SpecialTypeEnum.TriggerReference)]
+        public Guid TriggerId { get; set; } = Guid.Empty;
+
+        [XmlAttribute("TriggerId")]
+        public string Xml_TriggerId
         {
-            get
-            {
-                if (_TriggerId != Guid.Empty)
-                {
-                    return _TriggerId.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _TriggerId = Guid.Parse(value);
-            }
+            get => XmlAttr.Guid(TriggerId, Guid.Empty);
+            set => TriggerId = XmlAttr.Guid(value);
         }
 
         /// <summary>
         /// Event text the trigger is fired with
         /// </summary>
-        [Action(ordernum: 4)]
-        private string _Text { get; set; } = "";
-        [XmlAttribute]
-        public string Text
+        [XmlIgnore]
+        [Action(order: 4)]
+        public string Text { get; set; } = "";
+
+        [XmlAttribute("Text")]
+        public string Xml_Text
         {
-            get
-            {
-                if (_Text == "")
-                {
-                    return null;
-                }
-                return _Text;
-            }
-            set
-            {
-                _Text = value;
-            }
+            get => XmlAttr.String(Text);
+            set => Text = value;
         }
 
         /// <summary>
         /// Zone information the trigger is fired with
         /// </summary>
-        [Action(ordernum: 5)]
-        private string _Zone { get; set; } = "";
-        [XmlAttribute]
-        public string Zone
+        [XmlIgnore]
+        [Action(order: 5)]
+        public string Zone { get; set; } = "";
+
+        [XmlAttribute("Zone")]
+        public string Xml_Zone
         {
-            get
-            {
-                if (_Zone == "")
-                {
-                    return null;
-                }
-                return _Zone;
-            }
-            set
-            {
-                _Zone = value;
-            }
+            get => XmlAttr.String(Zone);
+            set => Zone = value;
         }
 
         /// <summary>
         /// Action tag (to interrupt actions)
         /// </summary>
-        [Action(ordernum: 6)]
-        internal string _TagRegex { get; set; } = "";
-        [XmlAttribute]
-        public string TagRegex
+        [XmlIgnore]
+        [Action(order: 6)]
+        public string TagRegex { get; set; } = "";
+
+        [XmlAttribute("TagRegex")]
+        public string Xml_TagRegex
         {
-            get => string.IsNullOrWhiteSpace(_TagRegex) ? null : _TagRegex;
-            set => _TagRegex = value;
+            get => XmlAttr.String(TagRegex);
+            set => TagRegex = value;
         }
 
         /// <summary>
         /// Trigger force firing flags
         /// </summary>
-        [Action(ordernum: 7)]
-        private ForceEnum _Force { get; set; } = ForceEnum.NoSkip;
-        [XmlAttribute]
-        public string Force
+        [XmlIgnore]
+        [Action(order: 7)]
+        public ForceEnum Force { get; set; } = ForceEnum.NoSkip;
+
+        [XmlAttribute("Force")]
+        public string Xml_Force
         {
             get
             {
                 List<string> ex = new List<string>();
-                if (_Force == ForceEnum.SkipAll)
+                if (Force == ForceEnum.SkipAll)
                 {
                     ex.Add("true");
                 }
                 else
                 {
-                    if ((_Force & ForceEnum.SkipRegexp) != 0)
+                    if ((Force & ForceEnum.SkipRegexp) != 0)
                     {
                         ex.Add("regexp");
                     }
-                    if ((_Force & ForceEnum.SkipConditions) != 0)
+                    if ((Force & ForceEnum.SkipConditions) != 0)
                     {
                         ex.Add("conditions");
                     }
-                    if ((_Force & ForceEnum.SkipRefire) != 0)
+                    if ((Force & ForceEnum.SkipRefire) != 0)
                     {
                         ex.Add("refire");
                     }
-                    if ((_Force & ForceEnum.SkipParent) != 0)
+                    if ((Force & ForceEnum.SkipParent) != 0)
                     {
                         ex.Add("parent");
                     }
-                    if ((_Force & ForceEnum.SkipActive) != 0)
+                    if ((Force & ForceEnum.SkipActive) != 0)
                     {
                         ex.Add("active");
                     }
                 }
                 string temp = string.Join(",", ex.ToArray());
-                if (temp.Length > 0)
-                {
-                    return temp;
-                }
-                return null;
+                return temp.Length > 0 ? temp : null;
             }
             set
             {
@@ -314,25 +266,26 @@ namespace Triggernometry.Core.Actions
                         newval |= ForceEnum.SkipActive;
                     }
                 }
-                _Force = newval;
+                Force = newval;
             }
         }
 
         #endregion
 
+
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            Trigger t = ctx.Plugin.GetTriggerById(_TriggerId, ctx.Trigger?.Repo);
-            if (t == null && _Operation != OperationEnum.CancelAllTrigger)
+            Trigger t = ctx.Plugin.GetTriggerById(TriggerId, ctx.Trigger?.Repo);
+            if (t == null && Operation != OperationEnum.CancelAllTrigger)
             {
-                return I18n.Translate("internal/Action/desctriginvalidref", "trigger action with an invalid trigger reference ({0})", _TriggerId);
+                return I18n.Translate("internal/Action/desctriginvalidref", "trigger action with an invalid trigger reference ({0})", TriggerId);
             }
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.CancelTrigger:
-                    if (string.IsNullOrWhiteSpace(_TagRegex))
+                    if (string.IsNullOrWhiteSpace(TagRegex))
                     {
                         return I18n.Translate("internal/Action/desctrigcanceltrig",
                             "cancel all actions queued from trigger ({0})",
@@ -342,10 +295,10 @@ namespace Triggernometry.Core.Actions
                     {
                         return I18n.Translate("internal/Action/desctrigcanceltrigtag",
                             "cancel all actions queued from trigger ({0}) with tags matching regex ({1})",
-                            t?.Name ?? "null", _TagRegex);
+                            t?.Name ?? "null", TagRegex);
                     }
                 case OperationEnum.CancelAllTrigger:
-                    if (string.IsNullOrWhiteSpace(_TagRegex))
+                    if (string.IsNullOrWhiteSpace(TagRegex))
                     {
                         return I18n.Translate("internal/Action/desctrigcancelall",
                             "cancel all actions queued from all triggers");
@@ -354,38 +307,38 @@ namespace Triggernometry.Core.Actions
                     {
                         return I18n.Translate("internal/Action/desctrigcanceltag",
                             "cancel all actions queued from all triggers with tags matching regex ({0})",
-                            _TagRegex);
+                            TagRegex);
                     }
                 case OperationEnum.FireTrigger:
                     string temp = I18n.Translate("internal/Action/desctrigfire", "fire trigger ({0})", t?.Name ?? "null");
                     List<string> ex = new List<string>();
-                    if (_Force == ForceEnum.SkipAll)
+                    if (Force == ForceEnum.SkipAll)
                     {
                         ex.Add(I18n.Translate("internal/Action/desctrigignoreall", "all restrictions"));
                     }
                     else
                     {
-                        if ((_Force & ForceEnum.SkipRegexp) != 0)
+                        if ((Force & ForceEnum.SkipRegexp) != 0)
                         {
                             ex.Add(I18n.Translate("internal/Action/desctrigignoreregex", "regular expression"));
                         }
                         else
                         {
-                            temp += " " + I18n.Translate("internal/Action/desctrigfireusing", "with event text ({0}) and zone ({1})", _Text, _Zone);
+                            temp += " " + I18n.Translate("internal/Action/desctrigfireusing", "with event text ({0}) and zone ({1})", Text, Zone);
                         }
-                        if ((_Force & ForceEnum.SkipConditions) != 0)
+                        if ((Force & ForceEnum.SkipConditions) != 0)
                         {
                             ex.Add(I18n.Translate("internal/Action/desctrigignoreconditions", "conditions"));
                         }
-                        if ((_Force & ForceEnum.SkipRefire) != 0)
+                        if ((Force & ForceEnum.SkipRefire) != 0)
                         {
                             ex.Add(I18n.Translate("internal/Action/desctrigignorerefire", "refire delay"));
                         }
-                        if ((_Force & ForceEnum.SkipParent) != 0)
+                        if ((Force & ForceEnum.SkipParent) != 0)
                         {
                             ex.Add(I18n.Translate("internal/Action/desctrigignoreparent", "parent folder settings"));
                         }
-                        if ((_Force & ForceEnum.SkipActive) != 0)
+                        if ((Force & ForceEnum.SkipActive) != 0)
                         {
                             ex.Add(I18n.Translate("internal/Action/desctrigignorestate", "enabled/disabled status"));
                         }
@@ -404,28 +357,28 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.EnableTrigger:
                     return I18n.Translate("internal/Action/desctrigenable", "enable trigger ({0})", t?.Name ?? "null");
                 default:
-                    throw new NotImplementedException(_Operation.ToString());
+                    throw new NotImplementedException(Operation.ToString());
             }
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            Trigger t = ctx.Plugin.GetTriggerById(_TriggerId, ctx.Trigger?.Repo);
-            if (t == null && _Operation != OperationEnum.CancelAllTrigger)
+            Trigger t = ctx.Plugin.GetTriggerById(TriggerId, ctx.Trigger?.Repo);
+            if (t == null && Operation != OperationEnum.CancelAllTrigger)
             {
                 AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/notriggerwithid",
-                    "Trigger operation failed: In trigger ({1}), the specified trigger id ({0}) does not exist.", _TriggerId, ParentTrigger?.FullPath ?? "null"));
+                    "Trigger operation failed: In trigger ({1}), the specified trigger id ({0}) does not exist.", TriggerId, ParentTrigger?.FullPath ?? "null"));
                 return;
             }
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.CancelAllTrigger:
                     {
                         // Specified Tag Regex
-                        if (!string.IsNullOrWhiteSpace(_TagRegex))
+                        if (!string.IsNullOrWhiteSpace(TagRegex))
                         {
-                            var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, _TagRegex);
+                            var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, TagRegex);
                             var regex = new Regex(tag);
                             var removedCount = Instance.CancelQueuedActions(
                                 _qa => regex.IsMatch(_qa?.ParsedTag ?? "")
@@ -449,9 +402,9 @@ namespace Triggernometry.Core.Actions
                     {
                         bool trigFilter(QueuedAction _qa) => _qa?.ctx?.Trigger == t;
 
-                        if (!string.IsNullOrWhiteSpace(_TagRegex))
+                        if (!string.IsNullOrWhiteSpace(TagRegex))
                         {
-                            var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, _TagRegex);
+                            var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, TagRegex);
                             var regex = new Regex(tag);
                             var removedCount = Instance.CancelQueuedActions(
                                 _qa => trigFilter(_qa) && regex.IsMatch(_qa?.ParsedTag ?? "")
@@ -474,9 +427,9 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.FireTrigger:
                     {
                         LogEvent le = new LogEvent();
-                        le.Text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Text);
-                        le.ZoneName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Zone);
-                        if (_ZoneType == ZoneTypeEnum.ZoneIdFFXIV && le.ZoneName.Trim().Length > 0)
+                        le.Text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Text);
+                        le.ZoneName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Zone);
+                        if (ZoneType == ZoneTypeEnum.ZoneIdFFXIV && le.ZoneName.Trim().Length > 0)
                         {
                             le.ZoneId = le.ZoneName;
                         }

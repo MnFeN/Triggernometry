@@ -8,9 +8,9 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Conditions;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
-using Triggernometry.Utilities;
 
 namespace Triggernometry.Core
 {

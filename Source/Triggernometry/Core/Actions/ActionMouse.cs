@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.Utilities;
 
@@ -21,7 +22,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Mouse operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             Move,
             LeftClick,
@@ -32,7 +33,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Coordinate definitions
         /// </summary>
-        private enum CoordinateEnum
+        public enum CoordinateEnum
         {
             /// <summary>
             /// Coordinates are in absolute screen space (0,0 being the top-left corner of screen)
@@ -47,105 +48,68 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the mouse operation
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.Move;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.Move;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.Move)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.Move);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Coordinate system to use
         /// </summary>
-        [Action(ordernum: 2)]
-        private CoordinateEnum _Coordinate { get; set; } = CoordinateEnum.Absolute;
-        [XmlAttribute]
-        public string Coordinate
+        [XmlIgnore]
+        [Action(order: 2)]
+        public CoordinateEnum Coordinate { get; set; } = CoordinateEnum.Absolute;
+
+        [XmlAttribute("Coordinate")]
+        public string Xml_Coordinate
         {
-            get
-            {
-                if (_Coordinate != CoordinateEnum.Absolute)
-                {
-                    return _Coordinate.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Coordinate = (CoordinateEnum)Enum.Parse(typeof(CoordinateEnum), value);
-            }
+            get => XmlAttr.Enum(Coordinate, CoordinateEnum.Absolute);
+            set => Coordinate = XmlAttr.Enum<CoordinateEnum>(value);
         }
 
         /// <summary>
         /// Mouse X position/offset
         /// </summary>
-        [Action(ordernum: 3, typehint: typeof(int))]
-        private string _X { get; set; } = "0";
-        [XmlAttribute]
-        public string X
+        [XmlIgnore]
+        [Action(order: 3, typehint: typeof(int))]
+        public string X { get; set; } = "0";
+
+        [XmlAttribute("X")]
+        public string Xml_X
         {
-            get
-            {
-                if (_X == "0" || _X == "")
-                {
-                    return null;
-                }
-                return _X.ToString();
-            }
-            set
-            {
-                _X = value;
-            }
+            get => XmlAttr.String(X, "0");
+            set => X = value;
         }
 
         /// <summary>
         /// Mouse Y position/offset
         /// </summary>
-        [Action(ordernum: 4, typehint: typeof(int))]
-        private string _Y { get; set; } = "0";
-        [XmlAttribute]
-        public string Y
+        [XmlIgnore]
+        [Action(order: 4, typehint: typeof(int))]
+        public string Y { get; set; } = "0";
+
+        [XmlAttribute("Y")]
+        public string Xml_Y
         {
-            get
-            {
-                if (_Y == "0" || _Y == "")
-                {
-                    return null;
-                }
-                return _Y.ToString();
-            }
-            set
-            {
-                _Y = value;
-            }
+            get => XmlAttr.String(Y, "0");
+            set => Y = value;
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
             string coorddesc = "";
-            switch (_Coordinate)
+            switch (Coordinate)
             {
                 case CoordinateEnum.Absolute:
                     coorddesc = I18n.Translate("internal/Action/descmousecoordabsolute", "to absolute coordinates");
@@ -154,16 +118,16 @@ namespace Triggernometry.Core.Actions
                     coorddesc = I18n.Translate("internal/Action/descmousecoordrelative", "by relative coordinates");
                     break;
             }
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.Move:
-                    return I18n.Translate("internal/Action/descmousemove", "Move mouse {0} X: {1} Y: {2}", coorddesc, _X, _Y);
+                    return I18n.Translate("internal/Action/descmousemove", "Move mouse {0} X: {1} Y: {2}", coorddesc, X, Y);
                 case OperationEnum.LeftClick:
-                    return I18n.Translate("internal/Action/descmouselmb", "Move mouse {0} X: {1} Y: {2} and left click", coorddesc, _X, _Y);
+                    return I18n.Translate("internal/Action/descmouselmb", "Move mouse {0} X: {1} Y: {2} and left click", coorddesc, X, Y);
                 case OperationEnum.MiddleClick:
-                    return I18n.Translate("internal/Action/descmousemmb", "Move mouse {0} X: {1} Y: {2} and middle click", coorddesc, _X, _Y);
+                    return I18n.Translate("internal/Action/descmousemmb", "Move mouse {0} X: {1} Y: {2} and middle click", coorddesc, X, Y);
                 case OperationEnum.RightClick:
-                    return I18n.Translate("internal/Action/descmousermb", "Move mouse {0} X: {1} Y: {2} and right click", coorddesc, _X, _Y);
+                    return I18n.Translate("internal/Action/descmousermb", "Move mouse {0} X: {1} Y: {2} and right click", coorddesc, X, Y);
             }
             return "";
         }
@@ -171,10 +135,10 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            int mousex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _X);
-            int mousey = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Y);
+            int mousex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
+            int mousey = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
             WindowsUtils.MouseEventFlags flags = 0;
-            switch (_Coordinate)
+            switch (Coordinate)
             {
                 case CoordinateEnum.Absolute:
                     flags |= WindowsUtils.MouseEventFlags.ABSOLUTE;
@@ -182,7 +146,7 @@ namespace Triggernometry.Core.Actions
                 case CoordinateEnum.Relative:
                     break;
             }
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.Move:
                     WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.MOVE, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);

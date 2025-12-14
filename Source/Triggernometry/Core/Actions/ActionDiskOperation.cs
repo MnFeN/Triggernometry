@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
 
@@ -25,7 +26,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// File system operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             /// <summary>
             /// Read the contents of a file into a scalar variable
@@ -44,143 +45,101 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the file system operation
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.ReadIntoVariable;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.ReadIntoVariable;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.ReadIntoVariable)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.ReadIntoVariable);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// File name
         /// </summary>
-        [Action(ordernum: 2, specialtype: ActionAttribute.SpecialTypeEnum.FileSelector)]
-        private string _Filename { get; set; } = "";
-        [XmlAttribute]
-        public string Filename
+        [XmlIgnore]
+        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.FileSelector)]
+        public string Filename { get; set; } = "";
+
+        [XmlAttribute("Filename")]
+        public string Xml_Filename
         {
-            get
-            {
-                if (_Filename == "")
-                {
-                    return null;
-                }
-                return _Filename;
-            }
-            set
-            {
-                _Filename = value;
-            }
+            get => XmlAttr.String(Filename);
+            set => Filename = value;
         }
 
         /// <summary>
         /// Target variable name
         /// </summary>
-        [Action(ordernum: 3)]
-        private string _Variable { get; set; } = "";
-        [XmlAttribute]
-        public string Variable
+        [XmlIgnore]
+        [Action(order: 3)]
+        public string Variable { get; set; } = "";
+
+        [XmlAttribute("Variable")]
+        public string Xml_Variable
         {
-            get
-            {
-                if (_Variable == "")
-                {
-                    return null;
-                }
-                return _Variable;
-            }
-            set
-            {
-                _Variable = value;
-            }
+            get => XmlAttr.String(Variable);
+            set => Variable = value;
         }
 
         /// <summary>
         /// If set, instructs Triggernometry to look at its own cache first for the file, reading that instead if found (applies to remote files)
         /// </summary>
-        [Action(ordernum: 4)]
-        private bool _UseCache { get; set; } = false;
-        [XmlAttribute]
-        public string UseCache
+        [XmlIgnore]
+        [Action(order: 4)]
+        public bool UseCache { get; set; } = false;
+
+        [XmlAttribute("UseCache")]
+        public string Xml_UseCache
         {
-            get
-            {
-                if (_UseCache == false)
-                {
-                    return null;
-                }
-                return _UseCache.ToString();
-            }
-            set
-            {
-                _UseCache = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(UseCache, false);
+            set => UseCache = XmlAttr.Bool(value);
         }
 
         /// <summary>
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
-        [Action(ordernum: 5)] // todo need to couple this with variable on editor
-        private bool _Persistent { get; set; } = false;
-        [XmlAttribute]
-        public string Persistent
+        [XmlIgnore]
+        [Action(order: 5)] // todo need to couple this with variable on editor
+        public bool Persistent { get; set; } = false;
+
+        [XmlAttribute("Persistent")]
+        public string Xml_Persistent
         {
-            get
-            {
-                if (_Persistent == false)
-                {
-                    return null;
-                }
-                return _Persistent.ToString();
-            }
-            set
-            {
-                _Persistent = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(Persistent, false);
+            set => Persistent = XmlAttr.Bool(value);
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            string persist = I18n.TrlVarPersist(_Persistent);
-            string cache = I18n.TrlCacheFile(_UseCache);
-            switch (_Operation)
+            string persist = I18n.TrlVarPersist(Persistent);
+            string cache = I18n.TrlCacheFile(UseCache);
+            switch (Operation)
             {
                 case OperationEnum.ReadIntoListVariable:
                     return I18n.Translate(
                         "internal/Action/descfilereadlistvar",
                         "read file ({0}) lines into {2}list variable ({1}){3}",
-                        _Filename, _Variable, persist, cache
+                        Filename, Variable, persist, cache
                     );
                 case OperationEnum.ReadIntoVariable:
                     return I18n.Translate(
                         "internal/Action/descfilereadvar",
                         "read file ({0}) lines into {2}scalar variable ({1}){3}",
-                        _Filename, _Variable, persist, cache
+                        Filename, Variable, persist, cache
                     );
                 case OperationEnum.ReadCSVIntoTableVariable:
                     return I18n.Translate(
                         "internal/Action/descfilereadcsvtable",
                         "read csv file ({0}) into {2}table variable ({1}){3}",
-                        _Filename, _Variable, persist, cache
+                        Filename, Variable, persist, cache
                     );
             }
             return "";
@@ -189,12 +148,12 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            string filename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Filename);
-            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Variable);
-            string persist = I18n.TrlVarPersist(_Persistent);
-            string cache = I18n.TrlCacheFile(_UseCache);
-            VariableStore vs = _Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
-            if (_Operation == OperationEnum.ReadCSVIntoTableVariable || _Operation == OperationEnum.ReadIntoListVariable || _Operation == OperationEnum.ReadIntoVariable)
+            string filename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Filename);
+            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Variable);
+            string persist = I18n.TrlVarPersist(Persistent);
+            string cache = I18n.TrlCacheFile(UseCache);
+            VariableStore vs = Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+            if (Operation == OperationEnum.ReadCSVIntoTableVariable || Operation == OperationEnum.ReadIntoListVariable || Operation == OperationEnum.ReadIntoVariable)
             {
                 Uri u = new Uri(filename);
                 if (u.IsFile == false)
@@ -207,7 +166,7 @@ namespace Triggernometry.Core.Actions
                     string ext = Path.GetExtension(u.LocalPath);
                     fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
                     bool fromcache = false;
-                    if (File.Exists(fn) == true && _UseCache == true)
+                    if (File.Exists(fn) == true && UseCache == true)
                     {
                         FileInfo fi = new FileInfo(fn);
                         DateTime dt = DateTime.Now.AddMinutes(0 - ctx.Plugin.cfg.CacheFileExpiry);
@@ -229,7 +188,7 @@ namespace Triggernometry.Core.Actions
                     }
                 }
             }
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.ReadCSVIntoTableVariable:
                     {

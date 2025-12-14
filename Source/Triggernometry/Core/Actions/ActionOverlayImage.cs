@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -21,7 +22,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Image overlay operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             /// <summary>
             /// Activate image overlay
@@ -48,340 +49,215 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the image overlay operation
         /// </summary>
-        private OperationEnum _Operation { get; set; } = OperationEnum.Activate;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        public OperationEnum Operation { get; set; } = OperationEnum.Activate;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.Activate)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.Activate);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Image sizing mode within overlay
         /// </summary>
-        private PictureBoxSizeMode _SizeMode { get; set; } = PictureBoxSizeMode.Normal;
-        [XmlAttribute]
-        public string SizeMode
+        [XmlIgnore]
+        public PictureBoxSizeMode SizeMode { get; set; } = PictureBoxSizeMode.Normal;
+
+        [XmlAttribute("SizeMode")]
+        public string Xml_SizeMode
         {
-            get
-            {
-                if (_SizeMode != PictureBoxSizeMode.Normal)
-                {
-                    return _SizeMode.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _SizeMode = (PictureBoxSizeMode)Enum.Parse(typeof(PictureBoxSizeMode), value);
-            }
+            get => XmlAttr.Enum(SizeMode, PictureBoxSizeMode.Normal);
+            set => SizeMode = XmlAttr.Enum<PictureBoxSizeMode>(value);
         }
 
         /// <summary>
         /// Name of the image overlay
         /// </summary>
-        private string _Name = "";
-        [XmlAttribute]
-        public string Name
+        [XmlIgnore]
+        public string Name { get; set; } = "";
+
+        [XmlAttribute("Name")]
+        public string Xml_Name
         {
-            get
-            {
-                if (_Name == "")
-                {
-                    return null;
-                }
-                return _Name;
-            }
-            set
-            {
-                _Name = value;
-            }
+            get => XmlAttr.String(Name);
+            set => Name = value;
         }
 
         /// <summary>
         /// Image file name expression
         /// </summary>
-        private string _Filename = "";
-        [XmlAttribute]
-        public string Filename
+        [XmlIgnore]
+        public string Filename { get; set; } = "";
+
+        [XmlAttribute("Filename")]
+        public string Xml_Filename
         {
-            get
-            {
-                if (_Filename == "")
-                {
-                    return null;
-                }
-                return _Filename;
-            }
-            set
-            {
-                _Filename = value;
-            }
+            get => XmlAttr.String(Filename);
+            set => Filename = value;
         }
 
         /// <summary>
         /// Exoression for initializing overlay X position
         /// </summary>
-        private string _XIniExpression = "";
-        [XmlAttribute]
-        public string XIniExpression
+        [XmlIgnore]
+        public string XIniExpression { get; set; } = "";
+
+        [XmlAttribute("XIniExpression")]
+        public string Xml_XIniExpression
         {
-            get
-            {
-                if (_XIniExpression == "")
-                {
-                    return null;
-                }
-                return _XIniExpression;
-            }
-            set
-            {
-                _XIniExpression = value;
-            }
+            get => XmlAttr.String(XIniExpression);
+            set => XIniExpression = value;
         }
 
         /// <summary>
         /// Exoression for initializing overlay Y position
         /// </summary>
-        private string _YIniExpression = "";
-        [XmlAttribute]
-        public string YIniExpression
+        [XmlIgnore]
+        public string YIniExpression { get; set; } = "";
+
+        [XmlAttribute("YIniExpression")]
+        public string Xml_YIniExpression
         {
-            get
-            {
-                if (_YIniExpression == "")
-                {
-                    return null;
-                }
-                return _YIniExpression;
-            }
-            set
-            {
-                _YIniExpression = value;
-            }
+            get => XmlAttr.String(YIniExpression);
+            set => YIniExpression = value;
         }
 
         /// <summary>
         /// Exoression for initializing overlay width
         /// </summary>
-        private string _WIniExpression = "";
-        [XmlAttribute]
-        public string WIniExpression
+        [XmlIgnore]
+        public string WIniExpression { get; set; } = "";
+
+        [XmlAttribute("WIniExpression")]
+        public string Xml_WIniExpression
         {
-            get
-            {
-                if (_WIniExpression == "")
-                {
-                    return null;
-                }
-                return _WIniExpression;
-            }
-            set
-            {
-                _WIniExpression = value;
-            }
+            get => XmlAttr.String(WIniExpression);
+            set => WIniExpression = value;
         }
 
         /// <summary>
         /// Exoression for initializing overlay height
         /// </summary>
-        private string _HIniExpression = "";
-        [XmlAttribute]
-        public string HIniExpression
+        [XmlIgnore]
+        public string HIniExpression { get; set; } = "";
+
+        [XmlAttribute("HIniExpression")]
+        public string Xml_HIniExpression
         {
-            get
-            {
-                if (_HIniExpression == "")
-                {
-                    return null;
-                }
-                return _HIniExpression;
-            }
-            set
-            {
-                _HIniExpression = value;
-            }
+            get => XmlAttr.String(HIniExpression);
+            set => HIniExpression = value;
         }
 
         /// <summary>
         /// Exoression for initializing overlay opacity
         /// </summary>
-        private string _OIniExpression = "";
-        [XmlAttribute]
-        public string OIniExpression
+        [XmlIgnore]
+        public string OIniExpression { get; set; } = "";
+
+        [XmlAttribute("OIniExpression")]
+        public string Xml_OIniExpression
         {
-            get
-            {
-                if (_OIniExpression == "")
-                {
-                    return null;
-                }
-                return _OIniExpression;
-            }
-            set
-            {
-                _OIniExpression = value;
-            }
+            get => XmlAttr.String(OIniExpression);
+            set => OIniExpression = value;
         }
 
         /// <summary>
         /// Exoression for updating overlay X position
         /// </summary>
-        private string _XTickExpression = "";
-        [XmlAttribute]
-        public string XTickExpression
+        [XmlIgnore]
+        public string XTickExpression { get; set; } = "";
+
+        [XmlAttribute("XTickExpression")]
+        public string Xml_XTickExpression
         {
-            get
-            {
-                if (_XTickExpression == "")
-                {
-                    return null;
-                }
-                return _XTickExpression;
-            }
-            set
-            {
-                _XTickExpression = value;
-            }
+            get => XmlAttr.String(XTickExpression);
+            set => XTickExpression = value;
         }
 
         /// <summary>
         /// Exoression for updating overlay Y position
         /// </summary>
-        private string _YTickExpression = "";
-        [XmlAttribute]
-        public string YTickExpression
+        [XmlIgnore]
+        public string YTickExpression { get; set; } = "";
+
+        [XmlAttribute("YTickExpression")]
+        public string Xml_YTickExpression
         {
-            get
-            {
-                if (_YTickExpression == "")
-                {
-                    return null;
-                }
-                return _YTickExpression;
-            }
-            set
-            {
-                _YTickExpression = value;
-            }
+            get => XmlAttr.String(YTickExpression);
+            set => YTickExpression = value;
         }
 
         /// <summary>
         /// Exoression for updating overlay width
         /// </summary>
-        private string _WTickExpression = "";
-        [XmlAttribute]
-        public string WTickExpression
+        [XmlIgnore]
+        public string WTickExpression { get; set; } = "";
+
+        [XmlAttribute("WTickExpression")]
+        public string Xml_WTickExpression
         {
-            get
-            {
-                if (_WTickExpression == "")
-                {
-                    return null;
-                }
-                return _WTickExpression;
-            }
-            set
-            {
-                _WTickExpression = value;
-            }
+            get => XmlAttr.String(WTickExpression);
+            set => WTickExpression = value;
         }
 
         /// <summary>
         /// Exoression for updating overlay height
         /// </summary>
-        private string _HTickExpression = "";
-        [XmlAttribute]
-        public string HTickExpression
+        [XmlIgnore]
+        public string HTickExpression { get; set; } = "";
+
+        [XmlAttribute("HTickExpression")]
+        public string Xml_HTickExpression
         {
-            get
-            {
-                if (_HTickExpression == "")
-                {
-                    return null;
-                }
-                return _HTickExpression;
-            }
-            set
-            {
-                _HTickExpression = value;
-            }
+            get => XmlAttr.String(HTickExpression);
+            set => HTickExpression = value;
         }
 
         /// <summary>
         /// Exoression for updating overlay opacity
         /// </summary>
-        private string _OTickExpression = "";
-        [XmlAttribute]
-        public string OTickExpression
+        [XmlIgnore]
+        public string OTickExpression { get; set; } = "";
+
+        [XmlAttribute("OTickExpression")]
+        public string Xml_OTickExpression
         {
-            get
-            {
-                if (_OTickExpression == "")
-                {
-                    return null;
-                }
-                return _OTickExpression;
-            }
-            set
-            {
-                _OTickExpression = value;
-            }
+            get => XmlAttr.String(OTickExpression);
+            set => OTickExpression = value;
         }
 
         /// <summary>
         /// Exoression for checking overlay life cycle
         /// </summary>
-        private string _TTLTickExpression = "";
-        [XmlAttribute]
-        public string TTLTickExpression
+        [XmlIgnore]
+        public string TTLTickExpression { get; set; } = "";
+
+        [XmlAttribute("TTLTickExpression")]
+        public string Xml_TTLTickExpression
         {
-            get
-            {
-                if (_TTLTickExpression == "")
-                {
-                    return null;
-                }
-                return _TTLTickExpression;
-            }
-            set
-            {
-                _TTLTickExpression = value;
-            }
+            get => XmlAttr.String(TTLTickExpression);
+            set => TTLTickExpression = value;
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.Activate:
-                    return I18n.Translate("internal/Action/descimgoverlayact", "activate image overlay ({0}) with image ({1})", _Name, _Filename);
+                    return I18n.Translate("internal/Action/descimgoverlayact", "activate image overlay ({0}) with image ({1})", Name, Filename);
                 case OperationEnum.Deactivate:
-                    return I18n.Translate("internal/Action/descimgoverlaydeact", "deactivate image overlay ({0})", _Name);
+                    return I18n.Translate("internal/Action/descimgoverlaydeact", "deactivate image overlay ({0})", Name);
                 case OperationEnum.DeactivateAll:
                     return I18n.Translate("internal/Action/descimgoverlaydeactall", "deactivate all image overlays");
                 case OperationEnum.DeactivateRegex:
-                    return I18n.Translate("internal/Action/descimgoverlaydeactrex", "deactivate image overlays matching regular expression ({0})", _Name);
+                    return I18n.Translate("internal/Action/descimgoverlaydeactrex", "deactivate image overlays matching regular expression ({0})", Name);
             }
             return "";
         }

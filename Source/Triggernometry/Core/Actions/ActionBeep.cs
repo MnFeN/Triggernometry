@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -19,46 +20,31 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Frequency of the beep
         /// </summary>
-        [Action(ordernum: 1, typehint: typeof(float))]
-        private string _Frequency { get; set; } = "1046.5"; // freq(C6)
-        [XmlAttribute]
-        public string Frequency
+        [XmlIgnore]
+        [Action(order: 1, typehint: typeof(float))]
+        public string Frequency { get; set; } = "1046.5"; // freq(C6)
+
+        [XmlAttribute("Frequency")]
+        public string Xml_Frequency
         {
-            get
-            {
-                if (_Frequency == "1046.5")
-                {
-                    return null;
-                }
-                return _Frequency;
-            }
-            set
-            {
-                _Frequency = value;
-            }
+            get => XmlAttr.String(Frequency, "1046.5");
+            set => Frequency = value;
         }
 
         /// <summary>
         /// Duration of the beep
         /// </summary>
-        [Action(ordernum: 2, typehint: typeof(int))]
-        private string _Duration { get; set; } = "100";
-        [XmlAttribute]
-        public string Duration
+        [XmlIgnore]
+        [Action(order: 2, typehint: typeof(int))]
+        public string Duration { get; set; } = "100";
+
+        [XmlAttribute("Duration")]
+        public string Xml_Duration
         {
-            get
-            {
-                if (_Duration == "100")
-                {
-                    return null;
-                }
-                return _Duration;
-            }
-            set
-            {
-                _Duration = value;
-            }
+            get => XmlAttr.String(Duration, "100");
+            set => Duration = value;
         }
+
 
         #endregion
 
@@ -66,13 +52,13 @@ namespace Triggernometry.Core.Actions
 
         internal override string DescribeImplementation(Context ctx)
         {
-            return I18n.Translate("internal/Action/descbeep", "Beep at ({0}) hz for ({1}) ms", _Frequency, _Duration);
+            return I18n.Translate("internal/Action/descbeep", "Beep at ({0}) hz for ({1}) ms", Frequency, Duration);
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            double freq = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Frequency);
+            double freq = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Frequency);
             if (freq < 37.0)
             {
                 freq = 37.0;
@@ -83,7 +69,7 @@ namespace Triggernometry.Core.Actions
                 freq = 32767.0;
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqhi", "Beep frequency above limit, capping to {0} ", freq));
             }
-            double len = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _Duration);
+            double len = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Duration);
             if (len < 0.0)
             {
                 len = 0.0;

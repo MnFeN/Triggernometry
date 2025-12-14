@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -16,10 +17,12 @@ namespace Triggernometry.Core.Actions
 
         #region Properties
 
+        #region Properties
+
         /// <summary>
         /// Message box icon types
         /// </summary>
-        private enum MessageBoxIconEnum
+        public enum MessageBoxIconEnum
         {
             None = 0,
             Error = 16,
@@ -31,49 +34,33 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Icon to display on message box
         /// </summary>
-        [Action(ordernum: 1)]
-        private MessageBoxIconEnum _Icon { get; set; } = MessageBoxIconEnum.None;
-        [XmlAttribute]
-        public string Icon
+        [XmlIgnore]
+        [Action(order: 1)]
+        public MessageBoxIconEnum Icon { get; set; } = MessageBoxIconEnum.None;
+
+        [XmlAttribute("Icon")]
+        public string Xml_Icon
         {
-            get
-            {
-                if (_Icon != MessageBoxIconEnum.None)
-                {
-                    return _Icon.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Icon = (MessageBoxIconEnum)Enum.Parse(typeof(MessageBoxIconEnum), value);
-            }
+            get => XmlAttr.Enum(Icon, MessageBoxIconEnum.None);
+            set => Icon = XmlAttr.Enum<MessageBoxIconEnum>(value);
         }
 
         /// <summary>
         /// Text to display on message box
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _Text { get; set; } = "";
-        [XmlAttribute]
-        public string Text
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Text { get; set; } = "";
+
+        [XmlAttribute("Text")]
+        public string Xml_Text
         {
-            get
-            {
-                if (_Text == "")
-                {
-                    return null;
-                }
-                return _Text;
-            }
-            set
-            {
-                _Text = value;
-            }
+            get => XmlAttr.String(Text);
+            set => Text = value;
         }
+
+        #endregion
+
 
         #endregion
 
@@ -81,7 +68,7 @@ namespace Triggernometry.Core.Actions
 
         internal override string DescribeImplementation(Context ctx)
         {
-            return I18n.Translate($"internal/Action/descmsgbox{_Icon}", "show a message box saying ({0}) with icon (" + _Icon.ToString() + ")", _Text);
+            return I18n.Translate($"internal/Action/descmsgbox{Icon}", "show a message box saying ({0}) with icon (" + Icon.ToString() + ")", Text);
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -90,11 +77,11 @@ namespace Triggernometry.Core.Actions
             Form activeForm = Form.ActiveForm;
             if (activeForm != null)
             {
-                MessageBox.Show(activeForm, ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Text), "", MessageBoxButtons.OK, (MessageBoxIcon)_Icon);
+                MessageBox.Show(activeForm, ctx.EvaluateStringExpression(ActionContextLogger, ctx, Text), "", MessageBoxButtons.OK, (MessageBoxIcon)Icon);
             }
             else
             {
-                MessageBox.Show(ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Text), "", MessageBoxButtons.OK, (MessageBoxIcon)_Icon);
+                MessageBox.Show(ctx.EvaluateStringExpression(ActionContextLogger, ctx, Text), "", MessageBoxButtons.OK, (MessageBoxIcon)Icon);
             }
         }
 

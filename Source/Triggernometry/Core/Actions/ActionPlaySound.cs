@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -19,99 +20,65 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Audio target where speech will be directed (None means default)
         /// </summary>
-        [Action(ordernum: 1)]
-        private Configuration.AudioRoutingMethodEnum _AudioTarget { get; set; } = Configuration.AudioRoutingMethodEnum.None;
-        [XmlAttribute]
-        public string AudioTarget
+        [XmlIgnore]
+        [Action(order: 1)]
+        public Configuration.AudioRoutingMethodEnum AudioTarget { get; set; } = Configuration.AudioRoutingMethodEnum.None;
+
+        [XmlAttribute("AudioTarget")]
+        public string Xml_AudioTarget
         {
-            get
-            {
-                if (_AudioTarget != Configuration.AudioRoutingMethodEnum.None)
-                {
-                    return _AudioTarget.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _AudioTarget = (Configuration.AudioRoutingMethodEnum)Enum.Parse(typeof(Configuration.AudioRoutingMethodEnum), value);
-            }
+            get => XmlAttr.Enum(AudioTarget, Configuration.AudioRoutingMethodEnum.None);
+            set => AudioTarget = XmlAttr.Enum<Configuration.AudioRoutingMethodEnum>(value);
         }
 
         /// <summary>
         /// Sound file name expression
         /// </summary>
-        [Action(ordernum: 2, specialtype: ActionAttribute.SpecialTypeEnum.AudioSelector)]
-        private string _Filename { get; set; } = "";
-        [XmlAttribute]
-        public string Filename
+        [XmlIgnore]
+        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.AudioSelector)]
+        public string Filename { get; set; } = "";
+
+        [XmlAttribute("Filename")]
+        public string Xml_Filename
         {
-            get
-            {
-                if (_Filename == "")
-                {
-                    return null;
-                }
-                return _Filename;
-            }
-            set
-            {
-                _Filename = value;
-            }
+            get => XmlAttr.String(Filename);
+            set => Filename = value;
         }
 
         /// <summary>
         /// Volume expression (0 - 100)
         /// </summary>
-        [Action(ordernum: 3, typeof(float))]
-        private string _Volume { get; set; } = "100";
-        [XmlAttribute]
-        public string Volume
+        [XmlIgnore]
+        [Action(order: 3, typeof(float))]
+        public string Volume { get; set; } = "100";
+
+        [XmlAttribute("Volume")]
+        public string Xml_Volume
         {
-            get
-            {
-                if (_Volume == "100")
-                {
-                    return null;
-                }
-                return _Volume;
-            }
-            set
-            {
-                _Volume = value;
-            }
+            get => XmlAttr.String(Volume, "100");
+            set => Volume = value;
         }
 
         // todo remove?
-        [Action(ordernum: 4)]
-        private bool _ExclusivePlayer { get; set; } = true;
-        [XmlAttribute]
-        public string ExclusivePlayer
+        [XmlIgnore]
+        [Action(order: 4)]
+        public bool ExclusivePlayer { get; set; } = true;
+
+        [XmlAttribute("ExclusivePlayer")]
+        public string Xml_ExclusivePlayer
         {
-            get
-            {
-                if (_ExclusivePlayer == true)
-                {
-                    return null;
-                }
-                return _ExclusivePlayer.ToString();
-            }
-            set
-            {
-                _ExclusivePlayer = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(ExclusivePlayer, true);
+            set => ExclusivePlayer = XmlAttr.Bool(value);
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            return I18n.Translate("internal/Action/descplaysound", "play sound file ({0}) at volume ({1}) %", _Filename, _Volume);
+            return I18n.Translate("internal/Action/descplaysound", "play sound file ({0}) at volume ({1}) %", Filename, Volume);
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)

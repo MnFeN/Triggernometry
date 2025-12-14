@@ -8,10 +8,10 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
-using Triggernometry.Utilities;
 using static Triggernometry.Core.ActionOld;
 using static Triggernometry.UI.Forms.ActionForm;
 

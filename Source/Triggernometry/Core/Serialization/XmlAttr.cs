@@ -173,5 +173,22 @@ namespace Triggernometry.Core.Serialization
         {
             return System.Version.Parse(value);
         }
+
+        // ---------- Guid ----------
+
+        /// <summary>Serializes a <see cref="Guid"/> for XML attributes, omitting the specified default value. </summary>
+        public static string Guid(Guid value, Guid omitValue)
+        {
+            if (value == omitValue)
+                return null;
+
+            return value.ToString();
+        }
+
+        /// <summary>Parses a <see cref="Guid"/> from an XML attribute string. </summary>
+        public static Guid Guid(string value)
+        {
+            return System.Guid.Parse(value);
+        }
     }
 }

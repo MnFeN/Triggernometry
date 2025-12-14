@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -32,118 +33,68 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Target stream for the log event to be inserted into
         /// </summary>
-        [Action(ordernum: 1)]
-        private LogEvent.SourceEnum _Target { get; set; } = LogEvent.SourceEnum.Log;
-        [XmlAttribute]
-        public string Target
+        [XmlIgnore]
+        [Action(order: 1)]
+        public LogEvent.SourceEnum Target { get; set; } = LogEvent.SourceEnum.Log;
+
+        [XmlAttribute("Target")]
+        public string Xml_Target
         {
-            get
-            {
-                if (_Target != LogEvent.SourceEnum.Log)
-                {
-                    return _Target.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Target = (LogEvent.SourceEnum)Enum.Parse(typeof(LogEvent.SourceEnum), value);
-            }
+            get => XmlAttr.Enum(Target, LogEvent.SourceEnum.Log);
+            set => Target = XmlAttr.Enum<LogEvent.SourceEnum>(value);
         }
 
-        [Action(ordernum: 2)]
-        private string _Message { get; set; } = "";
-        [XmlAttribute]
-        public string Message
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Message { get; set; } = "";
+
+        [XmlAttribute("Message")]
+        public string Xml_Message
         {
-            get
-            {
-                if (_Message == "")
-                {
-                    return null;
-                }
-                return _Message;
-            }
-            set
-            {
-                _Message = value;
-            }
+            get => XmlAttr.String(Message);
+            set => Message = value;
         }
 
         /// <summary>
         /// If set, the logged message will be processed as if it came to Triggernometry from the specified target
         /// </summary>
-        [Action(ordernum: 3)]
-        private bool _ProcessAsLogline { get; set; } = false;
-        [XmlAttribute]
-        public string ProcessAsLogline
+        [XmlIgnore]
+        [Action(order: 3)]
+        public bool ProcessAsLogline { get; set; } = false;
+
+        [XmlAttribute("ProcessAsLogline")]
+        public string Xml_ProcessAsLogline
         {
-            get
-            {
-                if (_ProcessAsLogline == false)
-                {
-                    return null;
-                }
-                return _ProcessAsLogline.ToString();
-            }
-            set
-            {
-                _ProcessAsLogline = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(ProcessAsLogline, false);
+            set => ProcessAsLogline = XmlAttr.Bool(value);
         }
 
         /// <summary>
         /// If set, the logged message will be inserted into ACT's encounter log
         /// </summary>
-        [Action(ordernum: 4)]
-        private bool _AddToACTEncounter { get; set; } = false;
-        [XmlAttribute]
-        public string AddToACTEncounter
+        [XmlIgnore]
+        [Action(order: 4)]
+        public bool AddToACTEncounter { get; set; } = false;
+
+        [XmlAttribute("AddToACTEncounter")]
+        public string Xml_AddToACTEncounter
         {
-            get
-            {
-                if (_AddToACTEncounter == false)
-                {
-                    return null;
-                }
-                return _AddToACTEncounter.ToString();
-            }
-            set
-            {
-                _AddToACTEncounter = bool.Parse(value);
-            }
+            get => XmlAttr.Bool(AddToACTEncounter, false);
+            set => AddToACTEncounter = XmlAttr.Bool(value);
         }
 
         /// <summary>
         /// Level for the logged message
         /// </summary>
-        [Action(ordernum: 5)]
-        private LogLevelEnum _Level { get; set; } = LogLevelEnum.Error;
-        [XmlAttribute]
-        public string Level
+        [XmlIgnore]
+        [Action(order: 5)]
+        public LogLevelEnum Level { get; set; } = LogLevelEnum.Error;
+
+        [XmlAttribute("Level")]
+        public string Xml_Level
         {
-            get
-            {
-                if (_Level != LogLevelEnum.Error)
-                {
-                    return _Level.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Level = (LogLevelEnum)Enum.Parse(typeof(LogLevelEnum), value);
-                if ((int)_Level == -1)
-                {
-                    _Level = LogLevelEnum.Error;
-                }
-            }
+            get => XmlAttr.Enum(Level, LogLevelEnum.Error);
+            set => Level = XmlAttr.Enum<LogLevelEnum>(value); // 原本有 if _Level == -1 => Error 的防护逻辑，但似乎当前 cbx 设计不可能产生 selectedindex = -1
         }
 
         #endregion
@@ -152,10 +103,10 @@ namespace Triggernometry.Core.Actions
 
         internal override string DescribeImplementation(Context ctx)
         {
-            if (_ProcessAsLogline == true)
+            if (ProcessAsLogline == true)
             {
                 string srcType = "";
-                switch (_Target)
+                switch (Target)
                 {
                     case LogEvent.SourceEnum.ACT: srcType = "ACT event"; break;
                     case LogEvent.SourceEnum.NetworkFFXIV: srcType = "FFXIV network event"; break;
@@ -164,11 +115,11 @@ namespace Triggernometry.Core.Actions
                 srcType = I18n.Translate($"ActionForm/cbxLogMessageTarget[{srcType}]", srcType);
                 return I18n.Translate(
                     "internal/Action/descprocessmessage",
-                    "process message ({0}) as {1}", _Message, srcType
+                    "process message ({0}) as {1}", Message, srcType
                 );
             }
             string level = "";
-            switch (_Level)
+            switch (Level)
             {
                 case LogLevelEnum.Error: level = "Error"; break;
                 case LogLevelEnum.Info: level = "Info"; break;
@@ -180,24 +131,24 @@ namespace Triggernometry.Core.Actions
             level = I18n.Translate($"ActionForm/cbxLogMessageLevel[{level}]", level);
             return I18n.Translate(
                 "internal/Action/desclogmessage",
-                "log message ({0}) with {1} level", _Message, level
+                "log message ({0}) with {1} level", Message, level
             );
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            string message = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Message);
+            string message = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Message);
 
-            if (_ProcessAsLogline)
+            if (ProcessAsLogline)
             {
                 string zone = ctx.EvaluateStringExpression(ActionContextLogger, ctx, ctx.Plugin.currentZone);
-                ctx.Plugin.LogLineQueuer(message, zone, _Target);
+                ctx.Plugin.LogLineQueuer(message, zone, Target);
             }
             else
             {
                 RealPlugin.DebugLevelEnum debugLevel = RealPlugin.DebugLevelEnum.Error;
-                switch (_Level)
+                switch (Level)
                 {
                     case LogLevelEnum.Custom: debugLevel = RealPlugin.DebugLevelEnum.Custom; break;
                     case LogLevelEnum.Custom2: debugLevel = RealPlugin.DebugLevelEnum.Custom2; break;
@@ -208,7 +159,7 @@ namespace Triggernometry.Core.Actions
                 }
                 AddToLog(ctx, debugLevel, message);
             }
-            if (_AddToACTEncounter)
+            if (AddToACTEncounter)
             {
                 ctx.Plugin.ACTEncounterLogHook(message);
             }

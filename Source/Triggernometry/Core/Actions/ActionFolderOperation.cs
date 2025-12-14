@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -20,7 +21,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Folder operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             Enable,
             Disable,
@@ -30,51 +31,29 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the folder operation
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.Enable;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.Enable;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.Enable)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.Enable);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Reference to the folder
         /// </summary>
-        [Action(ordernum: 2, specialtype: ActionAttribute.SpecialTypeEnum.FolderReference)]
-        private Guid _FolderId { get; set; } = Guid.Empty;
-        [XmlAttribute]
-        public string FolderId
+        [XmlIgnore]
+        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.FolderReference)]
+        public Guid FolderId { get; set; } = Guid.Empty;
+
+        [XmlAttribute("FolderId")]
+        public string Xml_FolderId
         {
-            get
-            {
-                if (_FolderId != Guid.Empty)
-                {
-                    return _FolderId.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _FolderId = Guid.Parse(value);
-            }
+            get => XmlAttr.Guid(FolderId, Guid.Empty);
+            set => FolderId = XmlAttr.Guid(value);
         }
 
         #endregion
@@ -83,10 +62,10 @@ namespace Triggernometry.Core.Actions
 
         internal override string DescribeImplementation(Context ctx)
         {
-            Folder f = ctx.Plugin.GetFolderById(_FolderId, ctx.Trigger?.Repo);
+            Folder f = ctx.Plugin.GetFolderById(FolderId, ctx.Trigger?.Repo);
             if (f != null)
             {
-                switch (_Operation)
+                switch (Operation)
                 {
                     case OperationEnum.Disable:
                         return I18n.Translate("internal/Action/descdisablefolder", "disable folder ({0})", f.Name);
@@ -97,16 +76,16 @@ namespace Triggernometry.Core.Actions
                 }
                 return "";
             }
-            return I18n.Translate("internal/Action/descinvalidfolderref", "folder action with an invalid folder reference ({0})", _FolderId);
+            return I18n.Translate("internal/Action/descinvalidfolderref", "folder action with an invalid folder reference ({0})", FolderId);
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            Folder f = ctx.Plugin.GetFolderById(_FolderId, ctx.Trigger?.Repo);
+            Folder f = ctx.Plugin.GetFolderById(FolderId, ctx.Trigger?.Repo);
             if (f != null)
             {
-                switch (_Operation)
+                switch (Operation)
                 {
                     case OperationEnum.Disable:
                         {
@@ -166,7 +145,7 @@ namespace Triggernometry.Core.Actions
             else
             {
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/nofolderwithid",
-                    "Folder operation failed: In trigger ({1}), the specified folder id ({0}) does not exist.", _FolderId, ParentTrigger?.FullPath ?? "null"));
+                    "Folder operation failed: In trigger ({1}), the specified folder id ({0}) does not exist.", FolderId, ParentTrigger?.FullPath ?? "null"));
             }
         }
 

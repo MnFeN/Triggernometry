@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Actions
@@ -19,7 +20,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Repository operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             /// <summary>
             /// Update remote repository containing trigger
@@ -38,51 +39,29 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the repository operation
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.UpdateSelf;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.UpdateSelf;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.UpdateSelf)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.UpdateSelf);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// Reference to remote respository
         /// </summary>
-        [Action(ordernum: 2, specialtype: ActionAttribute.SpecialTypeEnum.RepoReference)]
-        private Guid _RepositoryId { get; set; } = Guid.Empty;
-        [XmlAttribute]
-        public string RepositoryId
+        [XmlIgnore]
+        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.RepoReference)]
+        public Guid RepositoryId { get; set; } = Guid.Empty;
+
+        [XmlAttribute("RepositoryId")]
+        public string Xml_RepositoryId
         {
-            get
-            {
-                if (_RepositoryId != Guid.Empty)
-                {
-                    return _RepositoryId.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _RepositoryId = Guid.Parse(value);
-            }
+            get => XmlAttr.Guid(RepositoryId, Guid.Empty);
+            set => RepositoryId = XmlAttr.Guid(value);
         }
 
         #endregion
@@ -91,17 +70,17 @@ namespace Triggernometry.Core.Actions
 
         internal override string DescribeImplementation(Context ctx)
         {
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.UpdateSelf:
                     return I18n.Translate("internal/Action/repoupdateself", "Update containing repository");                    
                 case OperationEnum.UpdateRepo:
-                    Repository r = ctx.Plugin.GetRepositoryById(_RepositoryId);
+                    Repository r = ctx.Plugin.GetRepositoryById(RepositoryId);
                     if (r != null)
                     {
                         return I18n.Translate("internal/Action/repoupdatespecific", "Update repository ({0})", r.Name);
                     }
-                    return I18n.Translate("internal/Action/descrepoinvalidref", "repository action with an invalid repository reference ({0})", _RepositoryId);
+                    return I18n.Translate("internal/Action/descrepoinvalidref", "repository action with an invalid repository reference ({0})", RepositoryId);
                 case OperationEnum.UpdateAll:
                     return I18n.Translate("internal/Action/repoupdateall", "Update all repositories");                    
             }
@@ -112,13 +91,13 @@ namespace Triggernometry.Core.Actions
         {
             Context ctx = ai.ctx;
             Repository r = null;
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.UpdateSelf:
                     r = ctx.Trigger?.Repo;
                     break;
                 case OperationEnum.UpdateRepo:
-                    r = ctx.Plugin.GetRepositoryById(_RepositoryId);
+                    r = ctx.Plugin.GetRepositoryById(RepositoryId);
                     break;
                 case OperationEnum.UpdateAll:
                     _ = ctx.Plugin.UpdateAllRepositoriesAsync(false);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.PluginBridges.ExternalTools;
 
@@ -20,7 +21,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// OBS control operations
         /// </summary>
-        private enum OperationEnum
+        public enum OperationEnum
         {
             StartStreaming,
             StopStreaming,
@@ -46,145 +47,95 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Type of the OBS control operation
         /// </summary>
-        [Action(ordernum: 1)]
-        private OperationEnum _Operation { get; set; } = OperationEnum.StartStreaming;
-        [XmlAttribute]
-        public string Operation
+        [XmlIgnore]
+        [Action(order: 1)]
+        public OperationEnum Operation { get; set; } = OperationEnum.StartStreaming;
+
+        [XmlAttribute("Operation")]
+        public string Xml_Operation
         {
-            get
-            {
-                if (_Operation != OperationEnum.StartStreaming)
-                {
-                    return _Operation.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), value);
-            }
+            get => XmlAttr.Enum(Operation, OperationEnum.StartStreaming);
+            set => Operation = XmlAttr.Enum<OperationEnum>(value);
         }
 
         /// <summary>
         /// OBS WebSocket endpoint
         /// </summary>
-        [Action(ordernum: 2)]
-        private string _Endpoint { get; set; } = @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}";
-        [XmlAttribute]
-        public string Endpoint
+        [XmlIgnore]
+        [Action(order: 2)]
+        public string Endpoint { get; set; } = @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}";
+
+        [XmlAttribute("Endpoint")]
+        public string Xml_Endpoint
         {
-            get
-            {
-                if (_Endpoint == @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}")
-                {
-                    return null;
-                }
-                return _Endpoint;
-            }
-            set
-            {
-                _Endpoint = value;
-            }
+            get => XmlAttr.String(Endpoint, @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}");
+            set => Endpoint = value;
         }
 
         /// <summary>
         /// Optional password for the OBS endpoint
         /// </summary>
-        [Action(ordernum: 3)]
-        private string _Password { get; set; } = @"${_const[OBSWebsocketPassword]}";
-        [XmlAttribute]
-        public string Password
+        [XmlIgnore]
+        [Action(order: 3)]
+        public string Password { get; set; } = @"${_const[OBSWebsocketPassword]}";
+
+        [XmlAttribute("Password")]
+        public string Xml_Password
         {
-            get
-            {
-                if (_Password == @"${_const[OBSWebsocketPassword]}")
-                {
-                    return null;
-                }
-                return _Password;
-            }
-            set
-            {
-                _Password = value;
-            }
+            get => XmlAttr.String(Password, @"${_const[OBSWebsocketPassword]}");
+            set => Password = value;
         }
 
         /// <summary>
         /// Name of the scene referenced in some operations
         /// </summary>
-        [Action(ordernum: 4)]
-        private string _SceneName { get; set; } = "";
-        [XmlAttribute]
-        public string SceneName
+        [XmlIgnore]
+        [Action(order: 4)]
+        public string SceneName { get; set; } = "";
+
+        [XmlAttribute("SceneName")]
+        public string Xml_SceneName
         {
-            get
-            {
-                if (_SceneName == "")
-                {
-                    return null;
-                }
-                return _SceneName;
-            }
-            set
-            {
-                _SceneName = value;
-            }
+            get => XmlAttr.String(SceneName);
+            set => SceneName = value;
         }
 
         /// <summary>
         /// Name of the source referenced in some operations
         /// </summary>
-        [Action(ordernum: 5)]
-        private string _SourceName { get; set; } = "";
-        [XmlAttribute]
-        public string SourceName
+        [XmlIgnore]
+        [Action(order: 5)]
+        public string SourceName { get; set; } = "";
+
+        [XmlAttribute("SourceName")]
+        public string Xml_SourceName
         {
-            get
-            {
-                if (_SourceName == "")
-                {
-                    return null;
-                }
-                return _SourceName;
-            }
-            set
-            {
-                _SourceName = value;
-            }
+            get => XmlAttr.String(SourceName);
+            set => SourceName = value;
         }
 
         /// <summary>
         /// Custom JSON payload
         /// </summary>
-        [Action(ordernum: 6)]
-        private string _JSONPayload { get; set; } = "";
-        [XmlAttribute]
-        public string JSONPayload
+        [XmlIgnore]
+        [Action(order: 6)]
+        public string JSONPayload { get; set; } = "";
+
+        [XmlAttribute("JSONPayload")]
+        public string Xml_JSONPayload
         {
-            get
-            {
-                if (_JSONPayload == "")
-                {
-                    return null;
-                }
-                return _JSONPayload;
-            }
-            set
-            {
-                _JSONPayload = value;
-            }
+            get => XmlAttr.String(JSONPayload);
+            set => JSONPayload = value;
         }
 
         #endregion
+
 
         #region Implementation
 
         internal override string DescribeImplementation(Context ctx)
         {
-            switch (_Operation)
+            switch (Operation)
             {
                 case OperationEnum.StartStreaming:
                     return I18n.Translate("internal/Action/descobsstartstream", "start streaming on OBS");
@@ -217,11 +168,11 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.SaveReplayBuffer:
                     return I18n.Translate("internal/Action/descobssavereplay", "save OBS replay buffer");
                 case OperationEnum.SetScene:
-                    return I18n.Translate("internal/Action/descobssetscene", "set current OBS scene to ({0})", _SceneName);
+                    return I18n.Translate("internal/Action/descobssetscene", "set current OBS scene to ({0})", SceneName);
                 case OperationEnum.ShowSource:
-                    return I18n.Translate("internal/Action/descobsshowsource", "show source ({0}) on OBS scene ({1})", _SourceName, _SceneName);
+                    return I18n.Translate("internal/Action/descobsshowsource", "show source ({0}) on OBS scene ({1})", SourceName, SceneName);
                 case OperationEnum.HideSource:
-                    return I18n.Translate("internal/Action/descobshidesource", "hide source ({0}) on OBS scene ({1})", _SourceName, _SceneName);
+                    return I18n.Translate("internal/Action/descobshidesource", "hide source ({0}) on OBS scene ({1})", SourceName, SceneName);
                 case OperationEnum.JSONPayload:
                     return I18n.Translate("internal/Action/descobsjsonpayload", "Send custom JSON payload to OBS");
             }
@@ -235,9 +186,9 @@ namespace Triggernometry.Core.Actions
             if (obsController != null)
             {
                 string endpoint = "";
-                if (!string.IsNullOrWhiteSpace(_Endpoint))
+                if (!string.IsNullOrWhiteSpace(Endpoint))
                 {
-                    endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Endpoint);
+                    endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Endpoint);
                 }
                 else
                 {
@@ -247,9 +198,9 @@ namespace Triggernometry.Core.Actions
                 }
 
                 string password = "";
-                if (!string.IsNullOrWhiteSpace(_Password))
+                if (!string.IsNullOrWhiteSpace(Password))
                 {
-                    password = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _Password);
+                    password = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Password);
                 }
                 else
                 {
@@ -264,7 +215,7 @@ namespace Triggernometry.Core.Actions
                         return; // already complaint about errors
                     try
                     {
-                        switch (_Operation)
+                        switch (Operation)
                         {
                             case OperationEnum.StartStreaming:
                                 obsController.StartStreaming();
@@ -313,27 +264,27 @@ namespace Triggernometry.Core.Actions
                                 break;
                             case OperationEnum.SetScene:
                                 {
-                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _SceneName);
+                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
                                     obsController.SetCurrentScene(scn);
                                 }
                                 break;
                             case OperationEnum.ShowSource:
                                 {
-                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _SceneName);
-                                    string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _SourceName);
+                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
+                                    string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SourceName);
                                     obsController.ShowHideSource(scn, src, true);
                                 }
                                 break;
                             case OperationEnum.HideSource:
                                 {
-                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _SceneName);
-                                    string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _SourceName);
+                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
+                                    string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SourceName);
                                     obsController.ShowHideSource(scn, src, false);
                                 }
                                 break;
                             case OperationEnum.JSONPayload:
                                 {
-                                    string json = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _JSONPayload);
+                                    string json = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JSONPayload);
                                     obsController.JSONPayload(json);
                                 }
                                 break;
