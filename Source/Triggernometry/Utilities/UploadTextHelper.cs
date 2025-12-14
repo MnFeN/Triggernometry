@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Triggernometry.Core;
 
 namespace Triggernometry.Utilities
@@ -55,18 +52,11 @@ namespace Triggernometry.Utilities
             catch (WebException ex)
             {
                 // 如果服务器确实有响应，读取错误信息附加上去
-                try
+                using (var resp = (HttpWebResponse)ex.Response)
+                using (var reader = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
                 {
-                    using (var resp = (HttpWebResponse)ex.Response)
-                    using (var reader = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
-                    {
-                        string serverErr = reader.ReadToEnd();
-                        throw new WebException($"网络或服务器错误：{serverErr}", ex);
-                    }
-                }
-                catch
-                {
-                    throw; // 原样抛出
+                    string serverErr = reader.ReadToEnd();
+                    throw new WebException($"网络或服务器错误：{serverErr}", ex);
                 }
             }
         }
@@ -106,7 +96,7 @@ namespace Triggernometry.Utilities
         {
             var id = RealPlugin.Instance.cfg.Id;
             if (id == Guid.Empty)
-                return "？？？？";
+                return "○○○○";
 
             byte[] bytes = id.ToByteArray();
 

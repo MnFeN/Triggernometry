@@ -200,13 +200,12 @@ namespace Triggernometry
                     }
                     stopwatch.Stop();
 
-                    // 记录“每次调用”的平均耗时（毫秒）
-                    double perCallMs = stopwatch.Elapsed.TotalMilliseconds / iterationsPerSample;
-                    results[i].Add(perCallMs);
+                    // 记录“每组调用”的平均耗时（毫秒）
+                    results[i].Add(stopwatch.Elapsed.TotalMilliseconds);
                 }
             }
 
-            // 对每个 action 计算统计量并输出一段字符串
+            // 对每组 action 计算统计量并输出一段字符串
             var output = new string[actionCount];
             for (int i = 0; i < actionCount; i++)
             {
@@ -224,7 +223,7 @@ namespace Triggernometry
                 double p75 = msResults[(int)(n * 0.75)];
                 double p90 = msResults[(int)(n * 0.9)];
 
-                output[i] = $@"Avr: {avr:0.000} ms
+                output[i] = $@"Avr: {avr:0.000} ms / {iterationsPerSample} times ({avr / iterationsPerSample:0.00000} ms / time)
 Min: {min:0.000} ms
 10%: {p10:0.000} ms
 25%: {p25:0.000} ms

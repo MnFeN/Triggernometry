@@ -8,7 +8,7 @@ using System.Globalization;
 namespace Triggernometry.Utilities
 {
 
-    internal class Parser
+    internal class JsonParser
     {
 
         private JsonSerializerOptions opts;
@@ -47,7 +47,7 @@ namespace Triggernometry.Utilities
 
         }
 
-        public Parser()
+        public JsonParser()
         {
             opts = new JsonSerializerOptions();
             opts.Converters.Add(new ObjectConverter());

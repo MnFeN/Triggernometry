@@ -3310,7 +3310,7 @@ namespace Triggernometry.Core
                                     VariableStore vs2 = _VariableTargetPersist == false ? Instance.sessionvars : Instance.cfg.PersistentVariables;
                                     string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _VariableExpression);
                                     JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
-                                    Dictionary<string, object> p = new Parser().Parse(newval);
+                                    Dictionary<string, object> p = new JsonParser().Parse(newval);
                                     IEnumerable<object> result = pc.Select(p, query);
 
                                     VariableScalar x = new VariableScalar();
@@ -3345,7 +3345,7 @@ namespace Triggernometry.Core
                                     VariableStore vs2 = _VariableTargetPersist == false ? Instance.sessionvars : Instance.cfg.PersistentVariables;
                                     string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, _VariableExpression);
                                     JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
-                                    Dictionary<string, object> p = new Parser().Parse(newval);
+                                    Dictionary<string, object> p = new JsonParser().Parse(newval);
                                     IEnumerable<object> result = pc.Select(p, query);
 
                                     VariableList x = new VariableList();

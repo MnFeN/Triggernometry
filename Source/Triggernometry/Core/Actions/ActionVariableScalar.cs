@@ -361,7 +361,7 @@ namespace Triggernometry.Core.Actions
                         VariableStore vs2 = JsonTargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
-                        Dictionary<string, object> p = new Utilities.Parser().Parse(newval);
+                        Dictionary<string, object> p = new Utilities.JsonParser().Parse(newval);
                         IEnumerable<object> result = pc.Select(p, query);
 
                         VariableScalar x = new VariableScalar();
@@ -396,7 +396,7 @@ namespace Triggernometry.Core.Actions
                         VariableStore vs2 = JsonTargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
-                        Dictionary<string, object> p = new Utilities.Parser().Parse(newval);
+                        Dictionary<string, object> p = new Utilities.JsonParser().Parse(newval);
                         IEnumerable<object> result = pc.Select(p, query);
 
                         VariableList x = new VariableList();
