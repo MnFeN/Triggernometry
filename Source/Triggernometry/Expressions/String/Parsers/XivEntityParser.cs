@@ -36,6 +36,15 @@ namespace Triggernometry.Expressions.String.Parsers
 
             var entity = GetEntityFromUserInput(conditionExpr, isParty);
 
+            if (isParty && (expr.Index == "1" || expr.Index == Entity.MyName))
+            {
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning,
+                    $"检测到已弃用的旧版本表达式：{expr.RawExpression}。\n" +
+                    $"请使用 ${{_me.属性}} 代替 ${{_ffxivparty[1].属性}}、${{_ffxivparty[${{_ffxivplayer}}].属性}} 等表达式查询自身属性。\n" +
+                    $"触发器：{ctx?.Trigger?.FullPath ?? "null"}", 
+                    ctx?.Trigger);
+            }
+
             if (!entity.Exist && !rawMemberExprs.Equals("exist", StringComparison.OrdinalIgnoreCase))
             {
                 RealPlugin.Instance.UnfilteredAddToLog(
@@ -71,7 +80,7 @@ namespace Triggernometry.Expressions.String.Parsers
             if (uint.TryParse(inputCondition, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint id) && id >= MinID)
             {
                 var entity = Entity.GetEntityByID(id);
-                if (entity != null && (!isParty || entity.InParty))
+                if (entity != null && (!isParty || entity.InParty || entity.ID == BridgeFFXIV.PlayerId))
                     yield return entity;
                 yield break;
             }

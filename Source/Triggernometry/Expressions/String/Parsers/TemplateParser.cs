@@ -181,7 +181,7 @@ namespace Triggernometry.Expressions.String.Parsers
             ctx = ctx ?? Context.Unbound;
             return KeywordParser.TryParse(templateBody, ctx, isTestModeNumeric) // ${_xxx} ${regexGroup} ${regexIdx}
                 ?? ColonParser.TryParse(templateBody, ctx) // expressions start with "xxx:"
-                ?? IndexPropParser.TryParse(templateBody, ctx); // var, var.prop(arg), var[index], var[index1][index2].prop(arg), ...
+                ?? IndexMemberParser.TryParse(templateBody, ctx); // var, var.prop(arg), var[index], var[index1][index2].prop(arg), ...
         }
 
         /// <summary> Replace all valid currency-sign templates ¤n, ¤{...} to dollar-sign templates $n, ${...} in the given string. </summary>

@@ -14,7 +14,7 @@ using static Triggernometry.Core.Configuration;
 
 namespace Triggernometry.Expressions.String.Parsers
 {
-    internal static class IndexPropParser
+    internal static class IndexMemberParser
     {
         internal static string TryParse(string template, Context ctx)
         {
