@@ -437,6 +437,38 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionVariableScalar(ActionOld oldAction)
+        {
+            var action = new ActionVariableScalar();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._VariableOp;
+            action.Name = oldAction._VariableName;
+            action.JsonTargetName = oldAction._VariableJsonTarget;
+            action.Value = oldAction._VariableExpression;
+            action.JsonTargetPersistent = oldAction._VariableTargetPersist;
+            action.Persistent = oldAction._VariablePersist;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionVariableScalar action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.Variable;
+            oldAction._VariableOp = (ActionOld.VariableOpEnum)(int)action.Operation;
+            oldAction._VariableName = action.Name;
+            oldAction._VariableJsonTarget = action.JsonTargetName;
+            oldAction._VariableExpression = action.Value;
+            oldAction._VariableTargetPersist = action.JsonTargetPersistent;
+            oldAction._VariablePersist = action.Persistent;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

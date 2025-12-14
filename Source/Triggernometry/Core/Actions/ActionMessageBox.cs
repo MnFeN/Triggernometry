@@ -87,6 +87,31 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionMessageBox(ActionOld oldAction)
+        {
+            var action = new ActionMessageBox();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Icon = (MessageBoxIconEnum)(int)oldAction._MessageBoxIconType;
+            action.Text = oldAction._MessageBoxText;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionMessageBox action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.MessageBox;
+            oldAction._MessageBoxIconType = (ActionOld.MessageBoxIconTypeEnum)(int)action.Icon;
+            oldAction._MessageBoxText = action.Text;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

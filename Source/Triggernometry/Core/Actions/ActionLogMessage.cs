@@ -167,6 +167,37 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionLogMessage(ActionOld oldAction)
+        {
+            var action = new ActionLogMessage();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Target = (LogEvent.SourceEnum)(int)oldAction._LogMessageTarget;
+            action.Message = oldAction._LogMessageText;
+            action.ProcessAsLogline = oldAction._LogProcess;
+            action.AddToACTEncounter = oldAction._LogProcessACT;
+            action.Level = (LogLevelEnum)(int)oldAction._LogLevel;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionLogMessage action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.LogMessage;
+            oldAction._LogMessageTarget = (LogEvent.SourceEnum)(int)action.Target;
+            oldAction._LogMessageText = action.Message;
+            oldAction._LogProcess = action.ProcessAsLogline;
+            oldAction._LogProcessACT = action.AddToACTEncounter;
+            oldAction._LogLevel = (ActionOld.LogMessageEnum)(int)action.Level;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

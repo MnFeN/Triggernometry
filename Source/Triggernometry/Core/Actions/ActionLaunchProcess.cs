@@ -127,6 +127,35 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionLaunchProcess(ActionOld oldAction)
+        {
+            var action = new ActionLaunchProcess();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.WindowStyle = oldAction._LaunchProcessWindowStyle;
+            action.Path = oldAction._LaunchProcessPathExpression;
+            action.Arguments = oldAction._LaunchProcessCmdlineExpression;
+            action.WorkingDirectory = oldAction._LaunchProcessWorkingDirExpression;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionLaunchProcess action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.LaunchProcess;
+            oldAction._LaunchProcessWindowStyle = action.WindowStyle;
+            oldAction._LaunchProcessPathExpression = action.Path;
+            oldAction._LaunchProcessCmdlineExpression = action.Arguments;
+            oldAction._LaunchProcessWorkingDirExpression = action.WorkingDirectory;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

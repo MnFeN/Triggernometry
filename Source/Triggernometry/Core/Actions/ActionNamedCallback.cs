@@ -65,6 +65,31 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionNamedCallback(ActionOld oldAction)
+        {
+            var action = new ActionNamedCallback();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Name = oldAction._NamedCallbackName;
+            action.Parameter = oldAction._NamedCallbackParam;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionNamedCallback action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.NamedCallback;
+            oldAction._NamedCallbackName = action.Name;
+            oldAction._NamedCallbackParam = action.Parameter;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

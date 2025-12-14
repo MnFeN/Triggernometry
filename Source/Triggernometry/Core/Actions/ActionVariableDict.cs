@@ -549,6 +549,46 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionVariableDict(ActionOld oldAction)
+        {
+            var action = new ActionVariableDict();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._DictVariableOp;
+            action.KeyType = (ExpressionTypeEnum)(int)oldAction._DictVariableKeyType;
+            action.ValueType = (ExpressionTypeEnum)(int)oldAction._DictVariableValueType;
+            action.Name = oldAction._DictVariableName;
+            action.TargetVariable = oldAction._DictVariableTarget;
+            action.VariableLength = oldAction._DictVariableLength;
+            action.Key = oldAction._DictVariableKey;
+            action.Value = oldAction._DictVariableValue;
+            action.Persistent = oldAction._DictSourcePersist;
+            action.TargetPersistent = oldAction._DictTargetPersist;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionVariableDict action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.DictVariable;
+            oldAction._DictVariableOp = (ActionOld.DictVariableOpEnum)(int)action.Operation;
+            oldAction._DictVariableKeyType = (ActionOld.DictVariableExpTypeEnum)(int)action.KeyType;
+            oldAction._DictVariableValueType = (ActionOld.DictVariableExpTypeEnum)(int)action.ValueType;
+            oldAction._DictVariableName = action.Name;
+            oldAction._DictVariableTarget = action.TargetVariable;
+            oldAction._DictVariableLength = action.VariableLength;
+            oldAction._DictVariableKey = action.Key;
+            oldAction._DictVariableValue = action.Value;
+            oldAction._DictSourcePersist = action.Persistent;
+            oldAction._DictTargetPersist = action.TargetPersistent;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

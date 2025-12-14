@@ -183,6 +183,37 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionKeypress(ActionOld oldAction)
+        {
+            var action = new ActionKeypress();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._KeypressType;
+            action.Keypress = oldAction._KeyPressExpression;
+            action.Keycode = oldAction._KeyPressCode;
+            action.WindowTitle = oldAction._KeyPressWindow;
+            action.ProcessId = oldAction._KeyPressProcId;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionKeypress action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.KeyPress;
+            oldAction._KeypressType = (ActionOld.KeypressTypeEnum)(int)action.Operation;
+            oldAction._KeyPressExpression = action.Keypress;
+            oldAction._KeyPressCode = action.Keycode;
+            oldAction._KeyPressWindow = action.WindowTitle;
+            oldAction._KeyPressProcId = action.ProcessId;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

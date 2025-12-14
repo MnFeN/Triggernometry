@@ -186,6 +186,35 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionMouse(ActionOld oldAction)
+        {
+            var action = new ActionMouse();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._MouseOpType;
+            action.Coordinate = (CoordinateEnum)(int)oldAction._MouseCoordType;
+            action.X = oldAction._MouseX;
+            action.Y = oldAction._MouseY;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionMouse action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.Mouse;
+            oldAction._MouseOpType = (ActionOld.MouseOpEnum)(int)action.Operation;
+            oldAction._MouseCoordType = (ActionOld.MouseCoordEnum)(int)action.Coordinate;
+            oldAction._MouseX = action.X;
+            oldAction._MouseY = action.Y;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

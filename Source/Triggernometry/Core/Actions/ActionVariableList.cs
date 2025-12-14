@@ -865,6 +865,42 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionVariableList(ActionOld oldAction)
+        {
+            var action = new ActionVariableList();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._ListVariableOp;
+            action.ValueType = (ExpressionTypeEnum)(int)oldAction._ListVariableExpressionType;
+            action.Name = oldAction._ListVariableName;
+            action.ValueExpression = oldAction._ListVariableExpression;
+            action.Index = oldAction._ListVariableIndex;
+            action.Target = oldAction._ListVariableTarget;
+            action.Persistent = oldAction._ListSourcePersist;
+            action.TargetPersistent = oldAction._ListTargetPersist;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionVariableList action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.ListVariable;
+            oldAction._ListVariableOp = (ActionOld.ListVariableOpEnum)(int)action.Operation;
+            oldAction._ListVariableExpressionType = (ActionOld.ListVariableExpTypeEnum)(int)action.ValueType;
+            oldAction._ListVariableName = action.Name;
+            oldAction._ListVariableExpression = action.ValueExpression;
+            oldAction._ListVariableIndex = action.Index;
+            oldAction._ListVariableTarget = action.Target;
+            oldAction._ListSourcePersist = action.Persistent;
+            oldAction._ListTargetPersist = action.TargetPersistent;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

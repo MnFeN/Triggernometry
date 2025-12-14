@@ -89,6 +89,34 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionPlaySound(ActionOld oldAction)
+        {
+            var action = new ActionPlaySound();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Filename = oldAction._PlaySoundFileExpression;
+            action.Volume = oldAction._PlaySoundVolumeExpression;
+            action.ExclusivePlayer = oldAction._PlaySoundExclusive;
+            action.AudioTarget = oldAction._SoundRouting;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionPlaySound action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.PlaySound;
+            oldAction._PlaySoundFileExpression = action.Filename;
+            oldAction._PlaySoundVolumeExpression = action.Volume;
+            oldAction._PlaySoundExclusive = action.ExclusivePlayer;
+            oldAction._SoundRouting = action.AudioTarget;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

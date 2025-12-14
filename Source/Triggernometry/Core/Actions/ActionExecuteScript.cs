@@ -76,6 +76,31 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionExecuteScript(ActionOld oldAction)
+        {
+            var action = new ActionExecuteScript();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Assemblies = oldAction._ExecScriptAssembliesExpression;
+            action.Script = oldAction._ExecScriptExpression;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionExecuteScript action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.ExecuteScript;
+            oldAction._ExecScriptAssembliesExpression = action.Assemblies;
+            oldAction._ExecScriptExpression = action.Script;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

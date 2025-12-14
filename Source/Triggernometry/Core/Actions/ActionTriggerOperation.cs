@@ -487,6 +487,40 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionTriggerOperation(ActionOld oldAction)
+        {
+            var action = new ActionTriggerOperation();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.ZoneType = (ZoneTypeEnum)(int)oldAction._TriggerZoneType;
+            action.Operation = (OperationEnum)(int)oldAction._TriggerOp;
+            action.TriggerId = oldAction._TriggerId;
+            action.Text = oldAction._TriggerText;
+            action.Zone = oldAction._TriggerZone;
+            action.TagRegex = oldAction._TriggerTagRegex;
+            action.Force = (ForceEnum)(int)oldAction._TriggerForceType;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionTriggerOperation action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.Trigger;
+            oldAction._TriggerZoneType = (ActionOld.TriggerZoneTypeEnum)(int)action.ZoneType;
+            oldAction._TriggerOp = (ActionOld.TriggerOpEnum)(int)action.Operation;
+            oldAction._TriggerId = action.TriggerId;
+            oldAction._TriggerText = action.Text;
+            oldAction._TriggerZone = action.Zone;
+            oldAction._TriggerTagRegex = action.TagRegex;
+            oldAction._TriggerForceType = (ActionOld.TriggerForceTypeEnum)(int)action.Force;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

@@ -132,6 +132,39 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionLoop(ActionOld oldAction)
+        {
+            var action = new ActionLoop();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.DelayExpression = oldAction._LoopDelayExpression;
+            action.InitExpression = oldAction._LoopInitExpression;
+            action.IncrExpression = oldAction._LoopIncrExpression;
+            action.LoopCondition = (ConditionGroup)oldAction.LoopCondition?.Duplicate() ?? new ConditionGroup();
+            // todo Actions proper type
+            action.LoopActions = oldAction.LoopActions?.Select(x => (ActionBase)new ActionPlaceholder()).ToList() ?? new List<ActionBase>();
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionLoop action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.Loop;
+            oldAction._LoopDelayExpression = action.DelayExpression;
+            oldAction._LoopInitExpression = action.InitExpression;
+            oldAction._LoopIncrExpression = action.IncrExpression;
+            oldAction.LoopCondition = (ConditionGroup)action.LoopCondition?.Duplicate() ?? new ConditionGroup();
+            // todo 
+            // oldAction.LoopActions = action.LoopActions?.Select(x => x.Copy()).ToList() ?? new List<ActionOld>();
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

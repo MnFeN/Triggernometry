@@ -152,6 +152,31 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionLiveSplitControl(ActionOld oldAction)
+        {
+            var action = new ActionLiveSplitControl();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._LSControlType;
+            action.CustomPayload = oldAction._LSCustomPayload;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionLiveSplitControl action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.LiveSplitControl;
+            oldAction._LSControlType = (ActionOld.LiveSplitControlTypeEnum)(int)action.Operation;
+            oldAction._LSCustomPayload = action.CustomPayload;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

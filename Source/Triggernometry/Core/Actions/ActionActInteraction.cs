@@ -55,13 +55,24 @@ namespace Triggernometry.Core.Actions
         /// </summary>
         [XmlIgnore]
         [Action(order: 2)]
-        public string Value { get; set; } = "";
+        public bool BoolParam { get; set; } = false;
 
-        [XmlAttribute("Value")]
-        public string Xml_Value
+        [XmlAttribute("BoolParam")]
+        public string Xml_BoolParam
         {
-            get => XmlAttr.String(Value);
-            set => Value = value;
+            get => XmlAttr.Bool(BoolParam, false);
+            set => BoolParam = XmlAttr.Bool(value);
+        }
+
+        [XmlIgnore]
+        [Action(order: 3)]
+        public string StringParam { get; set; } = "";
+
+        [XmlAttribute("StringParam")]
+        public string Xml_StringParam
+        {
+            get => XmlAttr.String(StringParam);
+            set => StringParam = value;
         }
 
         #endregion
@@ -73,36 +84,64 @@ namespace Triggernometry.Core.Actions
             switch (Operation)
             {
                 case OperationEnum.SetCombatState:
-                    return bool.Parse(Value) == false ? 
-                        I18n.Translate("internal/Action/descactcombatend", "end ACT encounter")
-                        :
-                        I18n.Translate("internal/Action/descactcombatstart", "start ACT encounter");                    
+                    return BoolParam == false 
+                        ? I18n.Translate("internal/Action/descactcombatend", "end ACT encounter")
+                        : I18n.Translate("internal/Action/descactcombatstart", "start ACT encounter");                    
                 case OperationEnum.LogAllNetwork:
-                    return I18n.Translate("internal/Action/descactlogallnetwork", "{0} option: Log all network data", I18n.TranslateEnable(bool.Parse(Value)));
+                    return I18n.Translate("internal/Action/descactlogallnetwork", "{0} option: Log all network data", I18n.TranslateEnable(BoolParam));
                 case OperationEnum.UseDeucalion:
-                    return I18n.Translate("internal/Action/descactusedeucalion", "{0} option: Use Deucalion (injection)", I18n.TranslateEnable(bool.Parse(Value)));
+                    return I18n.Translate("internal/Action/descactusedeucalion", "{0} option: Use Deucalion (injection)", I18n.TranslateEnable(BoolParam));
+                default:
+                    throw new NotImplementedException(nameof(Operation));
             }
-            return "";
         }
-
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             RealPlugin plug = ai.ctx.Plugin;
             switch (Operation)
             {
                 case OperationEnum.SetCombatState:
-                    plug.SetCombatStateHook(bool.Parse(Value));
+                    plug.SetCombatStateHook(BoolParam);
                     break;
                 case OperationEnum.LogAllNetwork:
-                    PluginBridges.BridgeFFXIV.LogAllNetwork(bool.Parse(Value));
+                    PluginBridges.BridgeFFXIV.LogAllNetwork(BoolParam);
                     break;
                 case OperationEnum.UseDeucalion:
-                    PluginBridges.BridgeFFXIV.UseDeucalion(bool.Parse(Value));
+                    PluginBridges.BridgeFFXIV.UseDeucalion(BoolParam);
                     break;
+                default:
+                    throw new NotImplementedException(nameof(Operation));
             }
         }
 
-        #endregion
+        #endregion Implementation
+
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionActInteraction(ActionOld oldAction)
+        {
+            var action = new ActionActInteraction();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._ActOpType;
+            action.BoolParam = oldAction._ActOpBoolParam;
+            action.StringParam = oldAction._ActOpStringParam;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionActInteraction action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.ActInteraction;
+            oldAction._ActOpType = (ActionOld.ActInteractionTypeEnum)(int)action.Operation;
+            oldAction._ActOpBoolParam = action.BoolParam;
+            oldAction._ActOpStringParam = action.StringParam;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
 
     }
 

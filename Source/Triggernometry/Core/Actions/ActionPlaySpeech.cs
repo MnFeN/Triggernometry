@@ -103,6 +103,36 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionPlaySpeech(ActionOld oldAction)
+        {
+            var action = new ActionPlaySpeech();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Message = oldAction._UseTTSTextExpression;
+            action.Volume = oldAction._UseTTSVolumeExpression;
+            action.Rate = oldAction._UseTTSRateExpression;
+            action.ExclusivePlayer = oldAction._UseTTSExclusive;
+            action.AudioTarget = oldAction._TTSRouting;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionPlaySpeech action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.UseTTS;
+            oldAction._UseTTSTextExpression = action.Message;
+            oldAction._UseTTSVolumeExpression = action.Volume;
+            oldAction._UseTTSRateExpression = action.Rate;
+            oldAction._UseTTSExclusive = action.ExclusivePlayer;
+            oldAction._TTSRouting = action.AudioTarget;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

@@ -111,6 +111,30 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionRepository(ActionOld oldAction)
+        {
+            var action = new ActionRepository();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._RepositoryOp;
+            action.RepositoryId = oldAction._RepositoryId;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionRepository action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.Repository;
+            oldAction._RepositoryOp = (ActionOld.RepositoryOpEnum)(int)action.Operation;
+            oldAction._RepositoryId = action.RepositoryId;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

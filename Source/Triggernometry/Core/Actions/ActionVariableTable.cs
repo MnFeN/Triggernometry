@@ -970,6 +970,44 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionVariableTable(ActionOld oldAction)
+        {
+            var action = new ActionVariableTable();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._TableVariableOp;
+            action.ValueType = (ExpressionTypeEnum)(int)oldAction._TableVariableExpressionType;
+            action.Name = oldAction._TableVariableName;
+            action.TargetName = oldAction._TableVariableTarget;
+            action.Value = oldAction._TableVariableExpression;
+            action.X = oldAction._TableVariableX;
+            action.Y = oldAction._TableVariableY;
+            action.Persistent = oldAction._TableSourcePersist;
+            action.TargetPersistent = oldAction._TableTargetPersist;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionVariableTable action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.TableVariable;
+            oldAction._TableVariableOp = (ActionOld.TableVariableOpEnum)(int)action.Operation;
+            oldAction._TableVariableExpressionType = (ActionOld.TableVariableExpTypeEnum)(int)action.ValueType;
+            oldAction._TableVariableName = action.Name;
+            oldAction._TableVariableTarget = action.TargetName;
+            oldAction._TableVariableExpression = action.Value;
+            oldAction._TableVariableX = action.X;
+            oldAction._TableVariableY = action.Y;
+            oldAction._TableSourcePersist = action.Persistent;
+            oldAction._TableTargetPersist = action.TargetPersistent;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

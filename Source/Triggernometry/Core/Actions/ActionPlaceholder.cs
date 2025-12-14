@@ -27,6 +27,26 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionPlaceholder(ActionOld oldAction)
+        {
+            var action = new ActionPlaceholder();
+            oldAction.CopyCommonPropertiesTo(action);
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionPlaceholder action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.Placeholder;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

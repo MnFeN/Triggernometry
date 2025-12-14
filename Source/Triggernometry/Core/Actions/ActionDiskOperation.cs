@@ -295,6 +295,37 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionDiskOperation(ActionOld oldAction)
+        {
+            var action = new ActionDiskOperation();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._DiskFileOp;
+            action.Filename = oldAction._DiskFileOpName;
+            action.Variable = oldAction._DiskFileOpVar;
+            action.UseCache = oldAction._DiskFileCache;
+            action.Persistent = oldAction._DiskPersist;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionDiskOperation action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.DiskFile;
+            oldAction._DiskFileOp = (ActionOld.DiskFileOpEnum)(int)action.Operation;
+            oldAction._DiskFileOpName = action.Filename;
+            oldAction._DiskFileOpVar = action.Variable;
+            oldAction._DiskFileCache = action.UseCache;
+            oldAction._DiskPersist = action.Persistent;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

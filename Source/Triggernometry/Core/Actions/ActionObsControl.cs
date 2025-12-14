@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.PluginBridges.ExternalTools;
+using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core.Actions
 {
@@ -298,8 +299,77 @@ namespace Triggernometry.Core.Actions
             }
         }
 
+        /// <returns>
+        /// <c>true</c> : connected <br /> 
+        /// <c>false</c>: failed <br /> 
+        /// <c>null</c> : not running
+        /// </returns>
+        internal bool? ObsConnector(Context ctx, string endpoint, string password)
+        {
+            lock (plug._obs)
+            {
+                if (plug._obs.IsConnected == true)
+                {
+                    return true;
+                }
+                var state = plug._obs.CheckRunningState();
+                if (state != ObsController.ObsRunningState.Running)
+                {
+                    if (state == ObsController.ObsRunningState.NotRunningFirstlyFound)
+                        AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/obsnotrunning",
+                            "OBS is not running and the OBS action cannot be performed."));
+                    return null;
+                }
+                try
+                {
+                    plug._obs.Connect(endpoint, password);
+                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Action/obsconnectok",
+                        "OBS WebSocket connected successfully"));
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/obsconnecterror",
+                        "Error connecting to OBS WebSocket: {0}", ex.Message));
+                    return false;
+                }
+            }
+        }
+
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionObsControl(ActionOld oldAction)
+        {
+            var action = new ActionObsControl();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._OBSControlType;
+            action.Endpoint = oldAction._OBSEndPoint;
+            action.Password = oldAction._OBSPassword;
+            action.SceneName = oldAction._OBSSceneName;
+            action.SourceName = oldAction._OBSSourceName;
+            action.JSONPayload = oldAction._OBSJSONPayload;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionObsControl action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.ObsControl;
+            oldAction._OBSControlType = (ActionOld.ObsControlTypeEnum)(int)action.Operation;
+            oldAction._OBSEndPoint = action.Endpoint;
+            oldAction._OBSPassword = action.Password;
+            oldAction._OBSSceneName = action.SceneName;
+            oldAction._OBSSourceName = action.SourceName;
+            oldAction._OBSJSONPayload = action.JSONPayload;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

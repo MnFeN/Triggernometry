@@ -259,6 +259,43 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionJsonRequest(ActionOld oldAction)
+        {
+            var action = new ActionJsonRequest();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Endpoint = oldAction._JsonEndpointExpression;
+            action.Method = (MethodEnum)(int)oldAction._JsonOperationType;
+            action.Payload = oldAction._JsonPayloadExpression;
+            action.Headers = oldAction._JsonHeaderExpression;
+            action.ResultVariable = oldAction._JsonResultVariable;
+            action.FiringExpression = oldAction._JsonFiringExpression;
+            action.UseCache = oldAction._JsonCacheRequest;
+            action.Persistent = oldAction._JsonResultVariablePersist;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionJsonRequest action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.GenericJson;
+            oldAction._JsonEndpointExpression = action.Endpoint;
+            oldAction._JsonOperationType = (ActionOld.HTTPMethodEnum)(int)action.Method;
+            oldAction._JsonPayloadExpression = action.Payload;
+            oldAction._JsonHeaderExpression = action.Headers;
+            oldAction._JsonResultVariable = action.ResultVariable;
+            oldAction._JsonFiringExpression = action.FiringExpression;
+            oldAction._JsonCacheRequest = action.UseCache;
+            oldAction._JsonResultVariablePersist = action.Persistent;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
+
     }
 
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -202,7 +204,7 @@ namespace Triggernometry.Core
         /// <summary>
         /// When an action is queued for execution, it's wrapped in an ActionInstance that carries all the relevant data for execution.
         /// </summary>
-        internal class ActionInstance : IComparable
+        public class ActionInstance : IComparable
         {
 
             internal DateTime when { get; set; }
@@ -502,7 +504,7 @@ namespace Triggernometry.Core
         }
 
         internal abstract string DescribeImplementation(Context ctx);
-        internal string Describe(Context ctx)
+        public string Describe(Context ctx)
         {
             if (DescriptionOverride == true)
             {
@@ -551,7 +553,7 @@ namespace Triggernometry.Core
         internal int ExecutionCount { get; set; } = 0;
 
         internal abstract void ExecuteImplementation(ActionInstance ai);
-        internal void Execute(ActionInstance ai)
+        public void Execute(ActionInstance ai)
         {            
             if (Enabled == false)
             {
@@ -651,11 +653,6 @@ namespace Triggernometry.Core
             isAscending = new List<bool>();
             keysExpr = new List<string>();
             values = new List<List<string>>();
-        }
-
-        public bool ObsConnector(Context ctx, string endpoint, string password)
-        {
-            return false;
         }
 
         public bool LiveSplitConnector(Context ctx)
@@ -1051,6 +1048,105 @@ namespace Triggernometry.Core
 
         #endregion
 
+
+        public ActionBase Copy()
+        {
+            var clone = (ActionBase)Activator.CreateInstance(GetType());
+            CopyCommonPropertiesTo(clone);
+            CopySpecificPropertiesTo(clone);
+            return clone;
+        }
+
+        /// <summary>
+        /// Copies all generic, non-attribute-based settings from this action into another <see cref="ActionBase"/> instance.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <c>null</c>.</exception>
+        internal void CopyCommonPropertiesTo(ActionBase action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            action.Enabled = Enabled;
+            action.Id = Id;
+            action.ParentTrigger = ParentTrigger;
+            action.OrderNumber = OrderNumber;
+            action.Condition = (ConditionGroup)Condition?.Duplicate();
+            action.Tag = Tag;
+            action.RefireInterrupt = RefireInterrupt;
+            action.RefireRequeue = RefireRequeue;
+            action.ExecutionDelayExpression = ExecutionDelayExpression;
+            action.Asynchronous = Asynchronous;
+            action.DebugLevel = DebugLevel;
+            action.Description = Description;
+            action.DescBgColor = DescBgColor;
+            action.DescTextColor = DescTextColor;
+            action.DescriptionOverride = DescriptionOverride;
+        }
+
+        internal void CopyCommonPropertiesTo(ActionOld oldAction)
+        {
+            if (oldAction == null)
+                throw new ArgumentNullException(nameof(oldAction));
+
+            oldAction.Enabled = Enabled;
+            oldAction.Id = Id;
+            oldAction.ParentTrigger = ParentTrigger;
+            oldAction.OrderNumber = OrderNumber;
+            oldAction.Condition = (ConditionGroup)Condition?.Duplicate();
+            oldAction.Tag = Tag;
+            oldAction.RefireInterrupt = RefireInterrupt;
+            oldAction.RefireRequeue = RefireRequeue;
+            oldAction.ExecutionDelayExpression = ExecutionDelayExpression;
+            oldAction.Asynchronous = Asynchronous;
+            oldAction.DebugLevel = DebugLevel;
+            oldAction.Description = Description;
+            oldAction.DescBgColor = DescBgColor;
+            oldAction.DescTextColor = DescTextColor;
+            oldAction.DescriptionOverride = DescriptionOverride;
+        }
+
+        /// <summary>
+        /// Thread-safe cache storing compiled property-copy delegates for each <see cref="ActionBase"/> subclass type.
+        /// </summary>
+        private static readonly ConcurrentDictionary<Type, Action<ActionBase, ActionBase>> _copyCache
+            = new ConcurrentDictionary<Type, Action<ActionBase, ActionBase>>();
+
+        /// <summary>
+        /// Copies all subclass-specific properties with <see cref="ActionAttribute"/> from this instance into <paramref name="clone"/>.  <br />
+        /// Builds and caches an optimized compiled delegate per type.
+        /// </summary>
+        internal virtual void CopySpecificPropertiesTo(ActionBase clone)
+        {
+            var type = GetType();
+
+            var copier = _copyCache.GetOrAdd(type, t =>
+            {
+                var src = Expression.Parameter(typeof(ActionBase), "src");
+                var dst = Expression.Parameter(typeof(ActionBase), "dst");
+                var srcCast = Expression.Convert(src, t);
+                var dstCast = Expression.Convert(dst, t);
+
+                var assigns = new List<Expression>();
+                var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+                foreach (var prop in t.GetProperties(flags))
+                {
+                    if (prop.GetCustomAttribute<ActionAttribute>() == null)
+                        continue;
+
+                    // Build dst.Prop = src.Prop;
+                    var srcAccess = Expression.Property(srcCast, prop);
+                    var dstAccess = Expression.Property(dstCast, prop);
+                    assigns.Add(Expression.Assign(dstAccess, srcAccess));
+                }
+
+                var body = Expression.Block(assigns);
+                var lambda = Expression.Lambda<Action<ActionBase, ActionBase>>(body, src, dst);
+                return lambda.Compile();
+            });
+
+            copier(this, clone);
+        }
     }
 
 }

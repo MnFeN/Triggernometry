@@ -379,6 +379,68 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionOverlayText(ActionOld oldAction)
+        {
+            var action = new ActionOverlayText();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._TextAuraOp;
+            action.Name = oldAction._TextAuraName;
+            action.Text = oldAction._TextAuraExpression;
+            action.Alignment = (TextAlignmentEnum)(int)oldAction._TextAuraAlignment;
+            action.XIniExpression = oldAction._TextAuraXIniExpression;
+            action.YIniExpression = oldAction._TextAuraYIniExpression;
+            action.WIniExpression = oldAction._TextAuraWIniExpression;
+            action.HIniExpression = oldAction._TextAuraHIniExpression;
+            action.OIniExpression = oldAction._TextAuraOIniExpression;
+            action.XTickExpression = oldAction._TextAuraXTickExpression;
+            action.YTickExpression = oldAction._TextAuraYTickExpression;
+            action.WTickExpression = oldAction._TextAuraWTickExpression;
+            action.HTickExpression = oldAction._TextAuraHTickExpression;
+            action.OTickExpression = oldAction._TextAuraOTickExpression;
+            action.TTLTickExpression = oldAction._TextAuraTTLTickExpression;
+            action.Font = oldAction._TextAuraFontName;
+            action.FontSize = oldAction._TextAuraFontSize;
+            action.Effect = (EffectEnum)(int)oldAction._TextAuraEffect;
+            action.OutlineColor = oldAction._TextAuraOutlineClInt;
+            action.ForeColor = oldAction._TextAuraForegroundClInt;
+            action.BackColor = oldAction._TextAuraBackgroundClInt;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionOverlayText action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.TextAura;
+            oldAction._TextAuraOp = (ActionOld.AuraOpEnum)(int)action.Operation;
+            oldAction._TextAuraName = action.Name;
+            oldAction._TextAuraExpression = action.Text;
+            oldAction._TextAuraAlignment = (ActionOld.TextAuraAlignmentEnum)(int)action.Alignment;
+            oldAction._TextAuraXIniExpression = action.XIniExpression;
+            oldAction._TextAuraYIniExpression = action.YIniExpression;
+            oldAction._TextAuraWIniExpression = action.WIniExpression;
+            oldAction._TextAuraHIniExpression = action.HIniExpression;
+            oldAction._TextAuraOIniExpression = action.OIniExpression;
+            oldAction._TextAuraXTickExpression = action.XTickExpression;
+            oldAction._TextAuraYTickExpression = action.YTickExpression;
+            oldAction._TextAuraWTickExpression = action.WTickExpression;
+            oldAction._TextAuraHTickExpression = action.HTickExpression;
+            oldAction._TextAuraOTickExpression = action.OTickExpression;
+            oldAction._TextAuraTTLTickExpression = action.TTLTickExpression;
+            oldAction._TextAuraFontName = action.Font;
+            oldAction._TextAuraFontSize = action.FontSize;
+            oldAction._TextAuraEffect = (ActionOld.TextAuraEffectEnum)(int)action.Effect;
+            oldAction._TextAuraOutlineClInt = action.OutlineColor;
+            oldAction._TextAuraForegroundClInt = action.ForeColor;
+            oldAction._TextAuraBackgroundClInt = action.BackColor;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }

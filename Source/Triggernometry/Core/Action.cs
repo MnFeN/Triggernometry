@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using Triggernometry.Common.Audio;
+using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
@@ -77,7 +78,7 @@ namespace Triggernometry.Core
 
             /// <summary>
             /// Deserializes XML containing either an <see cref="ActionBundle"/> or a single <see cref="ActionOld"/>, <br />
-            /// and returns a <see cref="List{Action}"/> of <see cref="ActionOld"/> in its original order.
+            /// and returns a <see cref="List{T}"/> of <see cref="ActionOld"/> in its original order.
             /// </summary>
             internal static List<ActionOld> XmlToActions(string xmlData)
             {
@@ -1395,7 +1396,7 @@ namespace Triggernometry.Core
             }
             return Capitalize(temp);
         }
-
+        #region temp_fold
         internal List<WindowsMediaPlayer> players = new List<WindowsMediaPlayer>();
 
         public ActionOld()
@@ -1672,7 +1673,7 @@ namespace Triggernometry.Core
 
             shouldReturn = continuing == true;
         }
-
+        #endregion temp_fold
         private void ExecutionCore(Context ctx)
         {
             switch (ActionType)
@@ -4145,7 +4146,7 @@ namespace Triggernometry.Core
                     #endregion
             }
         }
-
+        
         internal void Mywmp_PlayStateChange(int NewState)
         {
             if ((WMPPlayState)NewState != WMPPlayState.wmppsStopped)
@@ -4477,6 +4478,103 @@ namespace Triggernometry.Core
                     "This may be because your Triggernometry plugin is not up to date, or the data you are trying to import is corrupted.",
                     enumName, enumValue)
                 );
+        }
+
+        public ActionOld Copy()
+        {
+            var a = new ActionOld();
+            CopySettingsTo(a);
+            return a;
+        }
+
+        internal void CopyCommonPropertiesTo(ActionBase action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            action.Enabled = Enabled;
+            action.Id = Id;
+            action.ParentTrigger = ParentTrigger;
+            action.OrderNumber = OrderNumber;
+            action.Condition = (ConditionGroup)Condition?.Duplicate();
+            action.Tag = Tag;
+            action.RefireInterrupt = RefireInterrupt;
+            action.RefireRequeue = RefireRequeue;
+            action.ExecutionDelayExpression = ExecutionDelayExpression;
+            action.Asynchronous = Asynchronous;
+            action.DebugLevel = DebugLevel;
+            action.Description = Description;
+            action.DescBgColor = DescBgColor;
+            action.DescTextColor = DescTextColor;
+            action.DescriptionOverride = DescriptionOverride;
+        }
+
+        internal ActionBase ConvertToNewAction()
+        {
+            switch (ActionType)
+            {
+                case ActionTypeEnum.ActInteraction:
+                    return (ActionActInteraction)this;
+                case ActionTypeEnum.SystemBeep:
+                    return (ActionBeep)this;
+                case ActionTypeEnum.DiscordWebhook:
+                    return (ActionDiscordWebhook)this;
+                case ActionTypeEnum.DiskFile:
+                    return (ActionDiskOperation)this;
+                case ActionTypeEnum.ExecuteScript:
+                    return (ActionExecuteScript)this;
+                case ActionTypeEnum.Folder:
+                    return (ActionFolderOperation)this;
+                case ActionTypeEnum.GenericJson:
+                    return (ActionJsonRequest)this;
+                case ActionTypeEnum.KeyPress:
+                    return (ActionKeypress)this;
+                case ActionTypeEnum.LaunchProcess:
+                    return (ActionLaunchProcess)this;
+                case ActionTypeEnum.LiveSplitControl:
+                    return (ActionLiveSplitControl)this;
+                case ActionTypeEnum.LogMessage:
+                    return (ActionLogMessage)this;
+                case ActionTypeEnum.Loop:
+                    return (ActionLoop)this;
+                case ActionTypeEnum.MessageBox:
+                    return (ActionMessageBox)this;
+                case ActionTypeEnum.Mouse:
+                    return (ActionMouse)this;
+                case ActionTypeEnum.Mutex:
+                    return (ActionMutex)this;
+                case ActionTypeEnum.NamedCallback:
+                    return (ActionNamedCallback)this;
+                case ActionTypeEnum.ObsControl:
+                    return (ActionObsControl)this;
+                case ActionTypeEnum.Aura:
+                    return (ActionOverlayImage)this;
+                case ActionTypeEnum.TextAura:
+                    return (ActionOverlayText)this;
+                case ActionTypeEnum.Placeholder:
+                    return (ActionPlaceholder)this;
+                case ActionTypeEnum.PlaySound:
+                    return (ActionPlaySound)this;
+                case ActionTypeEnum.UseTTS:
+                    return (ActionPlaySpeech)this;
+                case ActionTypeEnum.Repository:
+                    return (ActionRepository)this;
+                case ActionTypeEnum.Trigger:
+                    return (ActionTriggerOperation)this;
+                case ActionTypeEnum.DictVariable:
+                    return (ActionVariableDict)this;
+                case ActionTypeEnum.ListVariable:
+                    return (ActionVariableList)this;
+                case ActionTypeEnum.Variable:
+                    return (ActionVariableScalar)this;
+                case ActionTypeEnum.TableVariable:
+                    return (ActionVariableTable)this;
+                case ActionTypeEnum.WindowMessage:
+                    return (ActionWindowMessage)this;
+
+                default:
+                    throw new NotSupportedException($"Unknown ActionType: {ActionType}");
+            }
         }
 
     }

@@ -270,6 +270,56 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+        #region Old Action Converter
+
+        // (this)ActionOld
+        public static explicit operator ActionOverlayImage(ActionOld oldAction)
+        {
+            var action = new ActionOverlayImage();
+            oldAction.CopyCommonPropertiesTo(action);
+            action.Operation = (OperationEnum)(int)oldAction._AuraOp;
+            action.Name = oldAction._AuraName;
+            action.Filename = oldAction._AuraImage;
+            action.SizeMode = oldAction._AuraImageMode;
+            action.XIniExpression = oldAction._AuraXIniExpression;
+            action.YIniExpression = oldAction._AuraYIniExpression;
+            action.WIniExpression = oldAction._AuraWIniExpression;
+            action.HIniExpression = oldAction._AuraHIniExpression;
+            action.OIniExpression = oldAction._AuraOIniExpression;
+            action.XTickExpression = oldAction._AuraXTickExpression;
+            action.YTickExpression = oldAction._AuraYTickExpression;
+            action.WTickExpression = oldAction._AuraWTickExpression;
+            action.HTickExpression = oldAction._AuraHTickExpression;
+            action.OTickExpression = oldAction._AuraOTickExpression;
+            action.TTLTickExpression = oldAction._AuraTTLTickExpression;
+            return action;
+        }
+
+        // (ActionOld)this
+        public static explicit operator ActionOld(ActionOverlayImage action)
+        {
+            var oldAction = new ActionOld();
+            action.CopyCommonPropertiesTo(oldAction);
+            oldAction.ActionType = ActionOld.ActionTypeEnum.Aura;
+            oldAction._AuraOp = (ActionOld.AuraOpEnum)(int)action.Operation;
+            oldAction._AuraName = action.Name;
+            oldAction._AuraImage = action.Filename;
+            oldAction._AuraImageMode = action.SizeMode;
+            oldAction._AuraXIniExpression = action.XIniExpression;
+            oldAction._AuraYIniExpression = action.YIniExpression;
+            oldAction._AuraWIniExpression = action.WIniExpression;
+            oldAction._AuraHIniExpression = action.HIniExpression;
+            oldAction._AuraOIniExpression = action.OIniExpression;
+            oldAction._AuraXTickExpression = action.XTickExpression;
+            oldAction._AuraYTickExpression = action.YTickExpression;
+            oldAction._AuraWTickExpression = action.WTickExpression;
+            oldAction._AuraHTickExpression = action.HTickExpression;
+            oldAction._AuraOTickExpression = action.OTickExpression;
+            oldAction._AuraTTLTickExpression = action.TTLTickExpression;
+            return oldAction;
+        }
+
+        #endregion Old Action Converter
     }
 
 }
