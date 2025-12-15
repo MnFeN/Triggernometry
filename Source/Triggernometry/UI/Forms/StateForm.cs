@@ -33,7 +33,7 @@ namespace Triggernometry.UI.Forms
 
         private void VariableForm_Shown(object sender, EventArgs e)
         {
-            RefreshScalarVariables(plug.sessionvars, dgvScalarVariables);
+            RefreshScalarVariables(plug.GetVariableStore(false), dgvScalarVariables);
         }
 
         private void tbcMain_SelectedIndexChanged(object sender, EventArgs e)
@@ -45,22 +45,22 @@ namespace Triggernometry.UI.Forms
                 case 0:
                     tbcScalar.SelectedIndex = 0;
                     dgvScalarVariables.Columns[0].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-                    RefreshScalarVariables(plug.sessionvars, dgvScalarVariables);
+                    RefreshScalarVariables(plug.GetVariableStore(false), dgvScalarVariables);
                     break;
                 case 1:
                     tbcList.SelectedIndex = 0;
                     dgvListVariables.Columns[0].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-                    RefreshListVariables(plug.sessionvars, dgvListVariables);
+                    RefreshListVariables(plug.GetVariableStore(false), dgvListVariables);
                     break;
                 case 2:
                     tbcTable.SelectedIndex = 0;
                     dgvTableVariables.Columns[0].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-                    RefreshTableVariables(plug.sessionvars, dgvTableVariables);
+                    RefreshTableVariables(plug.GetVariableStore(false), dgvTableVariables);
                     break;
                 case 3:
                     tbcDict.SelectedIndex = 0;
                     dgvDictVariables.Columns[0].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-                    RefreshDictVariables(plug.sessionvars, dgvDictVariables);
+                    RefreshDictVariables(plug.GetVariableStore(false), dgvDictVariables);
                     break;
                 case 4:
                     RefreshMutexes();
@@ -82,10 +82,10 @@ namespace Triggernometry.UI.Forms
             switch (tbcScalar.SelectedIndex)
             {
                 case 0:
-                    RefreshScalarVariables(plug.sessionvars, dgvScalarVariables);
+                    RefreshScalarVariables(plug.GetVariableStore(false), dgvScalarVariables);
                     break;
                 case 1:
-                    RefreshScalarVariables(plug.cfg.PersistentVariables, dgvPeScalarVariables);
+                    RefreshScalarVariables(plug.GetVariableStore(true), dgvPeScalarVariables);
                     break;
             }
         }
@@ -95,10 +95,10 @@ namespace Triggernometry.UI.Forms
             switch (tbcList.SelectedIndex)
             {
                 case 0:
-                    RefreshListVariables(plug.sessionvars, dgvListVariables);
+                    RefreshListVariables(plug.GetVariableStore(false), dgvListVariables);
                     break;
                 case 1:
-                    RefreshListVariables(plug.cfg.PersistentVariables, dgvPeListVariables);
+                    RefreshListVariables(plug.GetVariableStore(true), dgvPeListVariables);
                     break;
             }
         }
@@ -108,10 +108,10 @@ namespace Triggernometry.UI.Forms
             switch (tbcTable.SelectedIndex)
             {
                 case 0:
-                    RefreshTableVariables(plug.sessionvars, dgvTableVariables);
+                    RefreshTableVariables(plug.GetVariableStore(false), dgvTableVariables);
                     break;
                 case 1:
-                    RefreshTableVariables(plug.cfg.PersistentVariables, dgvPeTableVariables);
+                    RefreshTableVariables(plug.GetVariableStore(true), dgvPeTableVariables);
                     break;
             }
         }
@@ -121,10 +121,10 @@ namespace Triggernometry.UI.Forms
             switch (tbcDict.SelectedIndex)
             {
                 case 0:
-                    RefreshDictVariables(plug.sessionvars, dgvDictVariables);
+                    RefreshDictVariables(plug.GetVariableStore(false), dgvDictVariables);
                     break;
                 case 1:
-                    RefreshDictVariables(plug.cfg.PersistentVariables, dgvPeDictVariables);
+                    RefreshDictVariables(plug.GetVariableStore(true), dgvPeDictVariables);
                     break;
             }
         }
@@ -176,11 +176,11 @@ namespace Triggernometry.UI.Forms
         {
             string newType = "";
             DataGridView dgv = sender as DataGridView;
-            VariableStore vs = (dgv.Name.StartsWith("dgvPe")) ? plug.cfg.PersistentVariables : plug.sessionvars;
+            VariableStore vs = plug.GetVariableStore(dgv.Name == nameof(dgvPeScalarVariables));
             switch (dgv.Name)
             {
-                case "dgvScalarVariables":
-                case "dgvPeScalarVariables":
+                case nameof(dgvScalarVariables):
+                case nameof(dgvPeScalarVariables):
                     switch (e.ColumnIndex)
                     {
                         case 0: newType = "name"; break;
@@ -191,8 +191,8 @@ namespace Triggernometry.UI.Forms
                     UpdateSortType(newType, dgv, e.ColumnIndex);
                     RefreshScalarVariables(vs, dgv);
                     break;
-                case "dgvListVariables":
-                case "dgvPeListVariables":
+                case nameof(dgvListVariables):
+                case nameof(dgvPeListVariables):
                     switch (e.ColumnIndex)
                     {
                         case 0: newType = "name"; break;
@@ -204,8 +204,8 @@ namespace Triggernometry.UI.Forms
                     UpdateSortType(newType, dgv, e.ColumnIndex);
                     RefreshListVariables(vs, dgv);
                     break;
-                case "dgvTableVariables":
-                case "dgvPeTableVariables":
+                case nameof(dgvTableVariables):
+                case nameof(dgvPeTableVariables):
                     switch (e.ColumnIndex)
                     {
                         case 0: newType = "name"; break;
@@ -217,8 +217,8 @@ namespace Triggernometry.UI.Forms
                     UpdateSortType(newType, dgv, e.ColumnIndex);
                     RefreshTableVariables(vs, dgv);
                     break;
-                case "dgvDictVariables":
-                case "dgvPeDictVariables":
+                case nameof(dgvDictVariables):
+                case nameof(dgvPeDictVariables):
                     switch (e.ColumnIndex)
                     {
                         case 0: newType = "name"; break;
@@ -230,11 +230,11 @@ namespace Triggernometry.UI.Forms
                     UpdateSortType(newType, dgv, e.ColumnIndex);
                     RefreshDictVariables(vs, dgv);
                     break;
-                case "dgvMutexes":
-                case "dgvImage":
-                case "dgvText":
+                case nameof(dgvMutexes):
+                case nameof(dgvImage):
+                case nameof(dgvText):
                     break;
-                case "dgvCallback":
+                case nameof(dgvCallback):
                     switch (e.ColumnIndex)
                     {
                         case 0: newType = "id"; break;
@@ -390,12 +390,12 @@ namespace Triggernometry.UI.Forms
 
         private void dgvScalarVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            ScalarCellValueNeeded(plug.sessionvars, e);
+            ScalarCellValueNeeded(plug.GetVariableStore(false), e);
         }
 
         private void dgvPeScalarVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            ScalarCellValueNeeded(plug.cfg.PersistentVariables, e);
+            ScalarCellValueNeeded(plug.GetVariableStore(true), e);
         }
 
         private void RefreshScalarVariables(VariableStore vs, DataGridView dgv)
@@ -505,52 +505,52 @@ namespace Triggernometry.UI.Forms
 
         private void btnScalarAdd_Click(object sender, EventArgs e)
         {
-            AddScalarVariable(plug.sessionvars, dgvScalarVariables);
+            AddScalarVariable(plug.GetVariableStore(false), dgvScalarVariables);
         }
 
         private void btnScalarEdit_Click(object sender, EventArgs e)
         {
-            EditScalarVariable(plug.sessionvars, dgvScalarVariables);
+            EditScalarVariable(plug.GetVariableStore(false), dgvScalarVariables);
         }
 
         private void btnScalarRemove_Click(object sender, EventArgs e)
         {
-            RemoveScalarVariable(plug.sessionvars, dgvScalarVariables);
+            RemoveScalarVariable(plug.GetVariableStore(false), dgvScalarVariables);
         }
 
         private void btnRefreshScalar_ButtonClick(object sender, EventArgs e)
         {
-            RefreshScalarVariables(plug.sessionvars, dgvScalarVariables);
+            RefreshScalarVariables(plug.GetVariableStore(false), dgvScalarVariables);
         }
 
         private void btnRemoveAllScalar_Click(object sender, EventArgs e)
         {
-            RemoveAllScalarVariables(plug.sessionvars, dgvScalarVariables);
+            RemoveAllScalarVariables(plug.GetVariableStore(false), dgvScalarVariables);
         }
 
         private void btnPeScalarAdd_Click(object sender, EventArgs e)
         {
-            AddScalarVariable(plug.cfg.PersistentVariables, dgvPeScalarVariables);
+            AddScalarVariable(plug.GetVariableStore(true), dgvPeScalarVariables);
         }
 
         private void btnPeScalarEdit_Click(object sender, EventArgs e)
         {
-            EditScalarVariable(plug.cfg.PersistentVariables, dgvPeScalarVariables);
+            EditScalarVariable(plug.GetVariableStore(true), dgvPeScalarVariables);
         }
 
         private void btnPeScalarRemove_Click(object sender, EventArgs e)
         {
-            RemoveScalarVariable(plug.cfg.PersistentVariables, dgvPeScalarVariables);
+            RemoveScalarVariable(plug.GetVariableStore(true), dgvPeScalarVariables);
         }
 
         private void btnPeScalarRefresh_ButtonClick(object sender, EventArgs e)
         {
-            RefreshScalarVariables(plug.cfg.PersistentVariables, dgvPeScalarVariables);
+            RefreshScalarVariables(plug.GetVariableStore(true), dgvPeScalarVariables);
         }
 
         private void btnPeScalarRemoveAll_Click(object sender, EventArgs e)
         {
-            RemoveAllScalarVariables(plug.cfg.PersistentVariables, dgvPeScalarVariables);
+            RemoveAllScalarVariables(plug.GetVariableStore(true), dgvPeScalarVariables);
         }
 
         #endregion
@@ -663,12 +663,12 @@ namespace Triggernometry.UI.Forms
 
         private void dgvListVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            ListCellValueNeeded(plug.sessionvars, e);
+            ListCellValueNeeded(plug.GetVariableStore(false), e);
         }
 
         private void dgvPeListVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            ListCellValueNeeded(plug.cfg.PersistentVariables, e);
+            ListCellValueNeeded(plug.GetVariableStore(true), e);
         }
 
         private void dgvListVariables_SelectionChanged(object sender, EventArgs e)
@@ -790,52 +790,52 @@ namespace Triggernometry.UI.Forms
 
         private void btnListAdd_Click(object sender, EventArgs e)
         {
-            AddListVariable(plug.sessionvars, dgvListVariables);
+            AddListVariable(plug.GetVariableStore(false), dgvListVariables);
         }
 
         private void btnListEdit_Click(object sender, EventArgs e)
         {
-            EditListVariable(plug.sessionvars, dgvListVariables);
+            EditListVariable(plug.GetVariableStore(false), dgvListVariables);
         }
 
         private void btnListRemove_Click(object sender, EventArgs e)
         {
-            RemoveListVariable(plug.sessionvars, dgvListVariables);
+            RemoveListVariable(plug.GetVariableStore(false), dgvListVariables);
         }
 
         private void btnListRefresh_ButtonClick(object sender, EventArgs e)
         {
-            RefreshListVariables(plug.sessionvars, dgvListVariables);
+            RefreshListVariables(plug.GetVariableStore(false), dgvListVariables);
         }
 
         private void btnListRemoveAll_Click(object sender, EventArgs e)
         {
-            RemoveAllListVariables(plug.sessionvars, dgvListVariables);
+            RemoveAllListVariables(plug.GetVariableStore(false), dgvListVariables);
         }
 
         private void btnPeListAdd_Click(object sender, EventArgs e)
         {
-            AddListVariable(plug.cfg.PersistentVariables, dgvPeListVariables);
+            AddListVariable(plug.GetVariableStore(true), dgvPeListVariables);
         }
 
         private void btnPeListEdit_Click(object sender, EventArgs e)
         {
-            EditListVariable(plug.cfg.PersistentVariables, dgvPeListVariables);
+            EditListVariable(plug.GetVariableStore(true), dgvPeListVariables);
         }
 
         private void btnPeListRemove_Click(object sender, EventArgs e)
         {
-            RemoveListVariable(plug.cfg.PersistentVariables, dgvPeListVariables);
+            RemoveListVariable(plug.GetVariableStore(true), dgvPeListVariables);
         }
 
         private void btnPeListRefresh_ButtonClick(object sender, EventArgs e)
         {
-            RefreshListVariables(plug.cfg.PersistentVariables, dgvPeListVariables);
+            RefreshListVariables(plug.GetVariableStore(true), dgvPeListVariables);
         }
 
         private void btnPeListRemoveAll_Click(object sender, EventArgs e)
         {
-            RemoveAllListVariables(plug.cfg.PersistentVariables, dgvPeListVariables);
+            RemoveAllListVariables(plug.GetVariableStore(true), dgvPeListVariables);
         }
 
         #endregion
@@ -947,12 +947,12 @@ namespace Triggernometry.UI.Forms
 
         private void dgvTableVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            TableCellValueNeeded(plug.sessionvars, e);
+            TableCellValueNeeded(plug.GetVariableStore(false), e);
         }
 
         private void dgvPeTableVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            TableCellValueNeeded(plug.cfg.PersistentVariables, e);
+            TableCellValueNeeded(plug.GetVariableStore(true), e);
         }
 
         private void dgvTableVariables_SelectionChanged(object sender, EventArgs e)
@@ -1074,52 +1074,52 @@ namespace Triggernometry.UI.Forms
 
         private void btnTableAdd_Click(object sender, EventArgs e)
         {
-            AddTableVariable(plug.sessionvars, dgvTableVariables);
+            AddTableVariable(plug.GetVariableStore(false), dgvTableVariables);
         }
 
         private void btnTableEdit_Click(object sender, EventArgs e)
         {
-            EditTableVariable(plug.sessionvars, dgvTableVariables);
+            EditTableVariable(plug.GetVariableStore(false), dgvTableVariables);
         }
 
         private void btnTableRemove_Click(object sender, EventArgs e)
         {
-            RemoveTableVariable(plug.sessionvars, dgvTableVariables);
+            RemoveTableVariable(plug.GetVariableStore(false), dgvTableVariables);
         }
 
         private void btnTableRefresh_ButtonClick(object sender, EventArgs e)
         {
-            RefreshTableVariables(plug.sessionvars, dgvTableVariables);
+            RefreshTableVariables(plug.GetVariableStore(false), dgvTableVariables);
         }
 
         private void btnTableRemoveAll_Click(object sender, EventArgs e)
         {
-            RemoveAllTableVariables(plug.sessionvars, dgvTableVariables);
+            RemoveAllTableVariables(plug.GetVariableStore(false), dgvTableVariables);
         }
 
         private void btnPeTableAdd_Click(object sender, EventArgs e)
         {
-            AddTableVariable(plug.cfg.PersistentVariables, dgvPeTableVariables);
+            AddTableVariable(plug.GetVariableStore(true), dgvPeTableVariables);
         }
 
         private void btnPeTableEdit_Click(object sender, EventArgs e)
         {
-            EditTableVariable(plug.cfg.PersistentVariables, dgvPeTableVariables);
+            EditTableVariable(plug.GetVariableStore(true), dgvPeTableVariables);
         }
 
         private void btnPeTableRemove_Click(object sender, EventArgs e)
         {
-            RemoveTableVariable(plug.cfg.PersistentVariables, dgvPeTableVariables);
+            RemoveTableVariable(plug.GetVariableStore(true), dgvPeTableVariables);
         }
 
         private void btnPeTableRefresh_ButtonClick(object sender, EventArgs e)
         {
-            RefreshTableVariables(plug.cfg.PersistentVariables, dgvPeTableVariables);
+            RefreshTableVariables(plug.GetVariableStore(true), dgvPeTableVariables);
         }
 
         private void btnPeTableRemoveAll_Click(object sender, EventArgs e)
         {
-            RemoveAllTableVariables(plug.cfg.PersistentVariables, dgvPeTableVariables);
+            RemoveAllTableVariables(plug.GetVariableStore(true), dgvPeTableVariables);
         }
 
         #endregion
@@ -1232,12 +1232,12 @@ namespace Triggernometry.UI.Forms
 
         private void dgvDictVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            DictCellValueNeeded(plug.sessionvars, e);
+            DictCellValueNeeded(plug.GetVariableStore(false), e);
         }
 
         private void dgvPeDictVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            DictCellValueNeeded(plug.cfg.PersistentVariables, e);
+            DictCellValueNeeded(plug.GetVariableStore(true), e);
         }
 
         private void dgvDictVariables_SelectionChanged(object sender, EventArgs e)
@@ -1359,52 +1359,52 @@ namespace Triggernometry.UI.Forms
 
         private void btnDictAdd_Click(object sender, EventArgs e)
         {
-            AddDictVariable(plug.sessionvars, dgvDictVariables);
+            AddDictVariable(plug.GetVariableStore(false), dgvDictVariables);
         }
 
         private void btnDictEdit_Click(object sender, EventArgs e)
         {
-            EditDictVariable(plug.sessionvars, dgvDictVariables);
+            EditDictVariable(plug.GetVariableStore(false), dgvDictVariables);
         }
 
         private void btnDictRemove_Click(object sender, EventArgs e)
         {
-            RemoveDictVariable(plug.sessionvars, dgvDictVariables);
+            RemoveDictVariable(plug.GetVariableStore(false), dgvDictVariables);
         }
 
         private void btnDictRefresh_ButtonClick(object sender, EventArgs e)
         {
-            RefreshDictVariables(plug.sessionvars, dgvDictVariables);
+            RefreshDictVariables(plug.GetVariableStore(false), dgvDictVariables);
         }
 
         private void btnDictRemoveAll_Click(object sender, EventArgs e)
         {
-            RemoveAllDictVariables(plug.sessionvars, dgvDictVariables);
+            RemoveAllDictVariables(plug.GetVariableStore(false), dgvDictVariables);
         }
 
         private void btnPeDictAdd_Click(object sender, EventArgs e)
         {
-            AddDictVariable(plug.cfg.PersistentVariables, dgvPeDictVariables);
+            AddDictVariable(plug.GetVariableStore(true), dgvPeDictVariables);
         }
 
         private void btnPeDictEdit_Click(object sender, EventArgs e)
         {
-            EditDictVariable(plug.cfg.PersistentVariables, dgvPeDictVariables);
+            EditDictVariable(plug.GetVariableStore(true), dgvPeDictVariables);
         }
 
         private void btnPeDictRemove_Click(object sender, EventArgs e)
         {
-            RemoveDictVariable(plug.cfg.PersistentVariables, dgvPeDictVariables);
+            RemoveDictVariable(plug.GetVariableStore(true), dgvPeDictVariables);
         }
 
         private void btnPeDictRefresh_ButtonClick(object sender, EventArgs e)
         {
-            RefreshDictVariables(plug.cfg.PersistentVariables, dgvPeDictVariables);
+            RefreshDictVariables(plug.GetVariableStore(true), dgvPeDictVariables);
         }
 
         private void btnPeDictRemoveAll_Click(object sender, EventArgs e)
         {
-            RemoveAllDictVariables(plug.cfg.PersistentVariables, dgvPeDictVariables);
+            RemoveAllDictVariables(plug.GetVariableStore(true), dgvPeDictVariables);
         }
 
         #endregion

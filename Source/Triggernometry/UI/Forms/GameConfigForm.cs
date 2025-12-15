@@ -63,7 +63,7 @@ namespace Triggernometry.UI.Forms
             SuspendLayout();
             Info = info;
             // load config
-            Config = RealPlugin.Instance.cfg.PersistentVariables.Dict.TryGetValue(Info.ConfigName, out var cfg) 
+            Config = RealPlugin.Instance.GetVariableStore(true).Dict.TryGetValue(Info.ConfigName, out var cfg) 
                 ? (VariableDictionary)cfg.Duplicate() 
                 : new VariableDictionary();
 
@@ -194,7 +194,7 @@ namespace Triggernometry.UI.Forms
 
         public bool TryGetPreset(int index, out VariableDictionary preset)
         {
-            preset = RealPlugin.Instance.cfg.PersistentVariables.Dict.TryGetValue($"{Info.ConfigName}{index}", out var currentPreset)
+            preset = RealPlugin.Instance.GetVariableStore(true).Dict.TryGetValue($"{Info.ConfigName}{index}", out var currentPreset)
                 ? (VariableDictionary)currentPreset.Duplicate()
                 : null;
             return preset != null;
@@ -212,7 +212,7 @@ namespace Triggernometry.UI.Forms
             Config.SetValue("author", Info.Author);
             Config.SetValue("version", Info.Version);
 
-            RealPlugin.Instance.cfg.PersistentVariables.Dict[Info.ConfigName] = Config;
+            RealPlugin.Instance.GetVariableStore(true).Dict[Info.ConfigName] = Config;
             RealPlugin.Instance.InvokeNamedCallback("command", "/e <se.10>");
             RealPlugin.Instance.InvokeNamedCallback("command", $"/{Config.GetValue("cnlPrivate")} 已保存配置。");
             this.Close();
@@ -227,7 +227,7 @@ namespace Triggernometry.UI.Forms
             }
             preset.SetValue("version", Info.Version);
             preset.SetValue("PresetName", presetName);
-            RealPlugin.Instance.cfg.PersistentVariables.Dict[$"{Info.ConfigName}{presetIdx}"] = preset;
+            RealPlugin.Instance.GetVariableStore(true).Dict[$"{Info.ConfigName}{presetIdx}"] = preset;
         }
 
         void btnSave_Click(object sender, EventArgs e) => SaveToConfig();

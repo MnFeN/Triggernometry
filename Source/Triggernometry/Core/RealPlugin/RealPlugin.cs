@@ -846,6 +846,9 @@ namespace Triggernometry.Core
             }
             return 0;
         }
+
+        public VariableStore GetVariableStore(bool isPersistent)
+            => isPersistent ? cfg.PersistentVariables : sessionvars;
     }
 
 }

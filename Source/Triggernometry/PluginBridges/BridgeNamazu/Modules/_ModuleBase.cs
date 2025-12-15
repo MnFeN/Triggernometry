@@ -190,7 +190,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public static VariableDictionary GetConfigDict()
         {
-            var store = RealPlugin.Instance.cfg.PersistentVariables;
+            var store = RealPlugin.Instance.GetVariableStore(true);
             var cfg = store.GetDictVariable("PNE_cfg", true);
             return cfg;
         }

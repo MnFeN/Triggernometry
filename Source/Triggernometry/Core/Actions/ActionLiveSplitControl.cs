@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.PluginBridges.ExternalTools;
+using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core.Actions
 {
@@ -148,6 +149,28 @@ namespace Triggernometry.Core.Actions
                     }
                 }
             }
+        }
+
+        internal bool LiveSplitConnector(Context ctx)
+        {
+            lock (Instance._livesplit)
+            {
+                if (Instance._livesplit.IsConnected == true)
+                {
+                    return true;
+                }
+                try
+                {
+                    Instance._livesplit.Connect();
+                    AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Action/lsconnectok", "LiveSplit connected successfully"));
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/lsconnecterror", "Error connecting to LiveSplit: {0}", ex.Message));
+                }
+            }
+            return false;
         }
 
         #endregion

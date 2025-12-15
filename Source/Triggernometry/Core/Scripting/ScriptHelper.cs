@@ -63,7 +63,7 @@ namespace Triggernometry.Core.Scripting
 
         public static string GetScalarVariable(bool isPersistent, string varname)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             lock (vs.Scalar)
             {
                 return vs.Scalar.TryGetValue(varname, out var variable) ? variable.Value : null;
@@ -72,7 +72,7 @@ namespace Triggernometry.Core.Scripting
 
         public static VariableList GetListVariable(bool isPersistent, string varname)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             lock (vs.List)
             {
                 return vs.List.TryGetValue(varname, out var variable) ? variable : null;
@@ -81,7 +81,7 @@ namespace Triggernometry.Core.Scripting
 
         public static VariableTable GetTableVariable(bool isPersistent, string varname)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             lock (vs.Table)
             {
                 return vs.Table.TryGetValue(varname, out var variable) ? variable : null;
@@ -90,7 +90,7 @@ namespace Triggernometry.Core.Scripting
 
         public static VariableDictionary GetDictVariable(bool isPersistent, string varname)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             lock (vs.Dict)
             {
                 return vs.Dict.TryGetValue(varname, out var variable) ? variable : null;
@@ -99,7 +99,7 @@ namespace Triggernometry.Core.Scripting
 
         public static void SetScalarVariable(bool isPersistent, string varname, object data)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             lock (vs.Scalar)
             {
                 if (data == null)
@@ -113,7 +113,7 @@ namespace Triggernometry.Core.Scripting
 
         public static void SetListVariable(bool isPersistent, string varname, VariableList data)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             lock (vs.List)
             {
                 if (data == null)
@@ -125,7 +125,7 @@ namespace Triggernometry.Core.Scripting
 
         public static void SetTableVariable(bool isPersistent, string varname, VariableTable data)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             lock (vs.Table)
             {
                 if (data == null)
@@ -137,7 +137,7 @@ namespace Triggernometry.Core.Scripting
 
         public static void SetDictVariable(bool isPersistent, string varname, VariableDictionary data)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             lock (vs.Dict)
             {
                 if (data == null)

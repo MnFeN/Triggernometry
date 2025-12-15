@@ -949,7 +949,7 @@ namespace Triggernometry.UI.CustomControls
             m = rexRowHeader.Match(temp);
             if (m.Success)
             {
-                VariableStore vs = m.Groups["persist"].Value == "p" ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+                VariableStore vs = RealPlugin.Instance.GetVariableStore(m.Groups["persist"].Value == "p");
                 VariableTable vt;
                 string varName = m.Groups["name1"].Value + m.Groups["name2"].Value;
                 if (vs.Table.ContainsKey(varName) && vs.Table[varName].Height > 0)
@@ -986,7 +986,7 @@ namespace Triggernometry.UI.CustomControls
             m = rexColHeader.Match(temp);
             if (m.Success)
             {
-                VariableStore vs = m.Groups["persist"].Value == "p" ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+                VariableStore vs = RealPlugin.Instance.GetVariableStore(m.Groups["persist"].Value == "p");
                 VariableTable vt;
                 string varName = m.Groups["name"].Value;
                 if (vs.Table.ContainsKey(varName) && vs.Table[varName].Width > 0)
@@ -1022,7 +1022,7 @@ namespace Triggernometry.UI.CustomControls
             m = rexDictKey.Match(temp);
             if (m.Success)
             {
-                VariableStore vs = m.Groups["persist"].Value == "p" ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+                VariableStore vs = RealPlugin.Instance.GetVariableStore(m.Groups["persist"].Value == "p");
                 VariableDictionary vd;
                 string varName = m.Groups["name"].Value;
                 if (vs.Dict.ContainsKey(varName) && vs.Dict[varName].Size > 0)
@@ -1483,7 +1483,7 @@ namespace Triggernometry.UI.CustomControls
         /// </summary>
         private static List<string> GetExistingAutofillNameList(AutofillTypeEnum type, bool isPersistent)
         {
-            VariableStore vs = isPersistent ? RealPlugin.Instance.cfg.PersistentVariables : RealPlugin.Instance.sessionvars;
+            VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             switch (type)
             {
                 case AutofillTypeEnum.Scalar: return vs.Scalar.Keys.ToList();

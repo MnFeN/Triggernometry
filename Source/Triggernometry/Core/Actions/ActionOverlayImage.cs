@@ -265,7 +265,7 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            ctx.Plugin.ImageAuraManagement(ctx, null); // todo supposed to be a reference to this action
+            ctx.Plugin.ImageAuraManagement(ctx, (ActionOld)this); // todo supposed to be a reference to this action
         }
 
         #endregion

@@ -380,8 +380,8 @@ namespace Triggernometry.Core.Actions
         {
             Context ctx = ai.ctx;
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
-            VariableStore svs = Persistent ? ctx.Plugin.cfg.PersistentVariables : ctx.Plugin.sessionvars;
-            VariableStore tvs = TargetPersistent ? ctx.Plugin.cfg.PersistentVariables : ctx.Plugin.sessionvars;
+            VariableStore svs = ctx.Plugin.GetVariableStore(Persistent);
+            VariableStore tvs = ctx.Plugin.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(TargetPersistent);
             string changer;

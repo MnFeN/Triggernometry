@@ -84,7 +84,7 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            ctx.soundhook(ctx, null); // todo
+            ctx.soundhook(ctx, (ActionOld)this); // todo
         }
 
         #endregion

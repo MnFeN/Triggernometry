@@ -248,7 +248,7 @@ namespace Triggernometry.Core.Actions
                 changer = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
             }
             string newval;
-            VariableStore vs = Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+            VariableStore vs = ctx.Plugin.GetVariableStore(Persistent);
             switch (Operation)
             {
                 case OperationEnum.UnsetAll:
@@ -342,7 +342,7 @@ namespace Triggernometry.Core.Actions
                         {
                             text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         }
-                        //ClipboardSetText(text); todo
+                        ActionOld.ClipboardSetText(text); // todo
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarclipboard",
                             "Set text ({0}) to clipboard", text));
                         break;
@@ -358,7 +358,7 @@ namespace Triggernometry.Core.Actions
                             }
                         }
                         string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JsonTargetName);
-                        VariableStore vs2 = JsonTargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+                        VariableStore vs2 = ctx.Plugin.GetVariableStore(JsonTargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         Dictionary<string, object> p = new Utilities.JsonParser().Parse(newval);
@@ -393,7 +393,7 @@ namespace Triggernometry.Core.Actions
                             }
                         }
                         string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JsonTargetName);
-                        VariableStore vs2 = JsonTargetPersistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+                        VariableStore vs2 = ctx.Plugin.GetVariableStore(JsonTargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         Dictionary<string, object> p = new Utilities.JsonParser().Parse(newval);

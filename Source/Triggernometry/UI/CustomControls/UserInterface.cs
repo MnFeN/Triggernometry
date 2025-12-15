@@ -1698,21 +1698,22 @@ namespace Triggernometry.UI.CustomControls
 
             if (result != DialogResult.Yes) return;
 
-            lock (plug.sessionvars.Scalar)
+            var store = plug.GetVariableStore(false);
+            lock (store.Scalar)
             {
-                plug.sessionvars.Scalar.Clear();
+                store.Scalar.Clear();
             }
-            lock (plug.sessionvars.List)
+            lock (store.List)
             {
-                plug.sessionvars.List.Clear();
+                store.List.Clear();
             }
-            lock (plug.sessionvars.Table)
+            lock (store.Table)
             {
-                plug.sessionvars.Table.Clear();
+                store.Table.Clear();
             }
-            lock (plug.sessionvars.Dict)
+            lock (store.Dict)
             {
-                plug.sessionvars.Dict.Clear();
+                store.Dict.Clear();
             }
         }
 

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -16,8 +17,10 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Serialization;
+using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
+using static Triggernometry.Core.ActionOld;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core
@@ -632,41 +635,176 @@ namespace Triggernometry.Core
         #region Obsoletes, under construction, etc
 
         public void ActionContextLogger(object o, string msg)
-        {            
-        }
-
-        public IOrderedEnumerable<int> ApplySorting(int elementCount, List<bool> isNumeric, List<bool> isAscending, List<List<string>> values)
         {
-            return null;
+            AddToLog((Context)o, DebugLevelEnum.Verbose, msg);
         }
 
-        public static void CheckInvalidDymanicExpr(string expr, string[] invalidExprs)
+        protected IOrderedEnumerable<int> ApplySorting(int elementCount, List<bool> isNumeric, List<bool> isAscending, List<List<string>> values)
         {
+            // Create an enumeration of indices representing the initial order
+            IEnumerable<int> indices = Enumerable.Range(0, elementCount);
+            IOrderedEnumerable<int> sortedIndices = null;
+
+            // Iterate through the sorting key functions
+            for (int keyIndex = 0; keyIndex < values.Count; keyIndex++)
+            {
+                int k = keyIndex; // local variable for lambda expression
+                // 4 sorting rules: numeric/string × ascending/descending
+                if (keyIndex == 0)
+                {
+                    if (isNumeric[k])
+                    {
+                        sortedIndices = isAscending[k]
+                            ? indices.OrderBy(i => Convert.ToDouble(values[k][i]))
+                            : indices.OrderByDescending(i => Convert.ToDouble(values[k][i]));
+                    }
+                    else
+                    {
+                        sortedIndices = isAscending[k]
+                            ? indices.OrderBy(i => values[k][i])
+                            : indices.OrderByDescending(i => values[k][i]);
+                    }
+                }
+                else
+                {
+                    if (isNumeric[k])
+                    {
+                        sortedIndices = isAscending[k]
+                            ? sortedIndices.ThenBy(i => Convert.ToDouble(values[k][i]))
+                            : sortedIndices.ThenByDescending(i => Convert.ToDouble(values[k][i]));
+                    }
+                    else
+                    {
+                        sortedIndices = isAscending[k]
+                            ? sortedIndices.ThenBy(i => values[k][i])
+                            : sortedIndices.ThenByDescending(i => values[k][i]);
+                    }
+                }
+            }
+            return sortedIndices;
         }
 
-        public void ParseSortKeyFunctions(string rawExpr,
+        protected static void CheckInvalidDymanicExpr(string expr, string[] invalidExprs)
+        {
+            foreach (string word in invalidExprs)
+            {
+                if (expr.Contains(word))
+                    throw new ArgumentException(I18n.Translate("internal/Action/dynamicexprerror",
+                        "The dynamic expression ({0}) is invalid in the current action. Expression: ({1})",
+                        word, expr));
+            }
+        }
+
+        protected void ParseSortKeyFunctions(string rawExpr,
             out List<bool> isNumeric, out List<bool> isAscending,
             out List<string> keysExpr, out List<List<string>> values)
-        {
-            isNumeric = new List<bool>();
-            isAscending = new List<bool>();
-            keysExpr = new List<string>();
-            values = new List<List<string>>();
+        {   // parsing expressions like "n+:key1, s-:key2, s+:key3, ..."
+            string[] rawKeys = ArgHelper.SplitArguments(rawExpr, allowEmptyList: true);
+
+            isNumeric = new List<bool>();       // numeric / string options
+            isAscending = new List<bool>();     // ascending / descending options
+            keysExpr = new List<string>();      // expression of the keys
+            values = new List<List<string>>();  // each sublist contains the evaluated results of one key
+
+            Regex regexSortKeyExpr = new Regex("^ *(?<type>[NnSs]) *(?<order>[-+]?) *:(?<key>.+)$");
+            foreach (string rawKey in rawKeys)
+            {
+                Match keyMatch = regexSortKeyExpr.Match(rawKey);
+                if (keyMatch.Success)
+                {
+                    isNumeric.Add(keyMatch.Groups["type"].Value.ToLower() == "n");
+                    isAscending.Add(keyMatch.Groups["order"].Value != "-");
+                    keysExpr.Add(keyMatch.Groups["key"].Value);
+                    values.Add(new List<string>());
+                }
+                else
+                {
+                    throw new ArgumentException(I18n.Translate("internal/Action/sortkeyexprerror",
+                        "The sorting key functions ({0}) could not be parsed.", rawKey));
+                }
+            }
         }
 
-        public bool LiveSplitConnector(Context ctx)
+        protected Tuple<int, string> SendJson(Context ctx, ActionOld.HTTPMethodEnum method, string url, string json, IEnumerable<string> headers, bool expectNoContent)
         {
-            return false;
+            try
+            {
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                if (headers != null && headers.Count() > 0)
+                {
+                    foreach (string hdr in headers)
+                    {
+                        var sepIndex = hdr.IndexOf(':');
+                        if (sepIndex > 0)
+                        {
+                            var key = hdr.Substring(0, sepIndex).Trim();
+                            var value = hdr.Substring(sepIndex + 1).Trim();
+                            switch (key.ToLower())
+                            {
+                                case "content-type":
+                                    httpWebRequest.ContentType = value;
+                                    break;
+                                case "user-agent":
+                                    httpWebRequest.UserAgent = value;
+                                    break;
+                                case "accept":
+                                    httpWebRequest.Accept = value;
+                                    break;
+                                case "referer":
+                                    httpWebRequest.Referer = value;
+                                    break;
+                                case "host":
+                                    httpWebRequest.Host = value;
+                                    break;
+                                default:
+                                    httpWebRequest.Headers.Add(key, value);
+                                    break;
+                            }
+                        }
+                    }
+                }
+                switch (method)
+                {
+                    case HTTPMethodEnum.POST:
+                        httpWebRequest.ContentType = "application/json";
+                        httpWebRequest.Method = "POST";
+                        using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                        {
+                            streamWriter.Write(json);
+                            streamWriter.Flush();
+                            streamWriter.Close();
+                        }
+                        break;
+                    case HTTPMethodEnum.GET:
+                        httpWebRequest.Method = "GET";
+                        break;
+                }
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                if (httpResponse.StatusCode != HttpStatusCode.NoContent && expectNoContent == true)
+                {
+                    AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/jsonpostunexpectedresponse", "Unexpected response code: {0}", httpResponse.StatusCode));
+                }
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    return new Tuple<int, string>((int)httpResponse.StatusCode, streamReader.ReadToEnd());
+                }
+            }
+            catch (Exception ex)
+            {
+                AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/jsonpostexception", "Couldn't send message due to exception: {0}", ex.Message));
+                return new Tuple<int, string>(-1, "");
+            }
         }
 
-        public Tuple<int, string> SendJson(Context ctx, object method, string url, string json, IEnumerable<string> headers, bool expectNoContent)
+        protected static ArgumentException InvalidEnumException(string enumName, string enumValue)
         {
-            return new Tuple<int, string>(-1, "");
-        }
-
-        public static ArgumentException InvalidEnumException(string enumName, string enumValue)
-        {
-            return new ArgumentException();
+            return new ArgumentException(
+                I18n.Translate(
+                    "internal/Action/invalidEnumType",
+                    "{0} = {1} is not a known enum type.\n\n" +
+                    "This may be because your Triggernometry plugin is not up to date, or the data you are trying to import is corrupted.",
+                    enumName, enumValue)
+                );
         }
 
         #endregion

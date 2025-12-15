@@ -386,475 +386,293 @@ namespace Triggernometry.UI.Forms
             txtTextAuraFont.Text = desc;
         }
 
-        internal void SettingsFromAction(ActionOld a) // to-do 检查这里的 a == null 分支和 new Action() 初始值有何差异，改成 a ?? new ActionOld() 形式
+        internal void SettingsFromAction(ActionOld action)
         {
-            if (a == null)
+            if (action == null)
+                throw new NullReferenceException(nameof(action) + "cannot be null.");
+
+            cbxActionType.SelectedIndex = (int)action.ActionType;
+            expTag.Expression = action.Tag;
+            cbxRefireOption1.SelectedIndex = (action.RefireInterrupt == true ? 0 : 1);
+            cbxRefireOption2.SelectedIndex = (action.RefireRequeue == true ? 1 : 0);
+            expExecutionDelay.Expression = action.ExecutionDelayExpression;
+            chkExecuteAsync.Checked = action.Asynchronous;
+            expBeepFrequency.Expression = action._SystemBeepFreqExpression;
+            expBeepLength.Expression = action._SystemBeepLengthExpression;
+            expSoundFile.Expression = action._PlaySoundFileExpression;
+            expSoundVolume.Expression = action._PlaySoundVolumeExpression;
+            chkSoundExclusive.Checked = action._PlaySoundExclusive;
+            expTextToSay.Expression = action._UseTTSTextExpression;
+            expSpeechVolume.Expression = action._UseTTSVolumeExpression;
+            expSpeechRate.Expression = action._UseTTSRateExpression;
+            chkSpeechExclusive.Checked = action._UseTTSExclusive;
+            expProcessName.Expression = action._LaunchProcessPathExpression;
+            expProcessParameters.Expression = action._LaunchProcessCmdlineExpression;
+            expProcessWorkingDir.Expression = action._LaunchProcessWorkingDirExpression;
+            cbxProcessWindowStyle.SelectedIndex = (int)action._LaunchProcessWindowStyle;
+            expKeypresses.Expression = action._KeyPressExpression;
+            expExecScriptCode.Expression = action._ExecScriptExpression;
+            cbxLoggingLevel.SelectedIndex = (int)action.DebugLevel;
+            expExecScriptAssemblies.Expression = action._ExecScriptAssembliesExpression;
+            cbxMessageBoxIcon.SelectedIndex = ((int)action._MessageBoxIconType) / 16;
+            expMessageBoxText.Expression = action._MessageBoxText;
+            expVariableExpression.Expression = action._VariableExpression;
+            expVariableName.Expression = action._VariableName;
+            expVariableTarget.Expression = action._VariableJsonTarget;
+            cbxVariableOp.SelectedIndex = (int)action._VariableOp;
+            expLvarIndex.Expression = action._ListVariableIndex;
+            expLvarName.Expression = action._ListVariableName;
+            expLvarTarget.Expression = action._ListVariableTarget;
+            expLvarValue.Expression = action._ListVariableExpression;
+            cbxLvarExpType.SelectedIndex = (int)action._ListVariableExpressionType;
+            cbxLvarOperation.SelectedIndex = (int)action._ListVariableOp;
+            if ((action._TriggerForceType & TriggerForceTypeEnum.SkipRegexp) != 0)
             {
-                cbxKeypressMethod.SelectedIndex = 0;
-                expWindowTitle.Expression = "";
-                expKeypress.Expression = "";
-                cbxActionType.SelectedIndex = 0;
-                expTag.Expression = "";
-                cbxRefireOption1.SelectedIndex = 1;
-                cbxRefireOption2.SelectedIndex = 1;
-                expExecutionDelay.Expression = "0";
-                chkExecuteAsync.Checked = Plugin.cfg.ActionAsyncByDefault;
-                expBeepFrequency.Expression = "1046.5"; // C6
-                expBeepLength.Expression = "100";
-                expSoundFile.Expression = "";
-                expSoundVolume.Expression = "100";
-                chkSoundExclusive.Checked = true;
-                expTextToSay.Expression = "";
-                expSpeechVolume.Expression = "100";
-                expSpeechRate.Expression = "0";
-                chkSpeechExclusive.Checked = true;
-                expProcessName.Expression = "";
-                expProcessParameters.Expression = "";
-                expProcessWorkingDir.Expression = "";
-                cbxProcessWindowStyle.SelectedIndex = 0;
-                expKeypresses.Expression = "";
-                expExecScriptCode.Expression = "";
-                expExecScriptAssemblies.Expression = "";
-                cbxMessageBoxIcon.SelectedIndex = 0;
-                expMessageBoxText.Expression = "";
-                expVariableExpression.Expression = "";
-                expVariableName.Expression = "";
-                expVariableTarget.Expression = "";
-                cbxVariableOp.SelectedIndex = 0;
-                expLvarIndex.Expression = "";
-                expLvarName.Expression = "";
-                expLvarTarget.Expression = "";
-                expLvarValue.Expression = "";
-                cbxLvarExpType.SelectedIndex = 0;
-                cbxLvarOperation.SelectedIndex = 0;
-                cbxTriggerOp.SelectedIndex = 0;
-                expTriggerText.Expression = "";
-                expTriggerZone.Expression = "";
-                expTriggerTagRegex.Expression = "";
-                cbxAuraOp.SelectedIndex = 0;
-                cbxAuraDisplay.SelectedIndex = 0;
-                expAuraName.Expression = "";
-                expAuraImage.Expression = "";
-                expAuraXIni.Expression = "";
-                expAuraYIni.Expression = "";
-                expAuraWIni.Expression = "";
-                expAuraHIni.Expression = "";
-                expAuraOIni.Expression = "";
-                expAuraXTick.Expression = "";
-                expAuraYTick.Expression = "";
-                cbxLoggingLevel.SelectedIndex = (int)RealPlugin.DebugLevelEnum.Inherit;
-                expAuraWTick.Expression = "";
-                expAuraHTick.Expression = "";
-                expAuraOTick.Expression = "";
-                expAuraTTLTick.Expression = "";
-                cbxFolderOp.SelectedIndex = 0;
-                expDiscordMessage.Expression = "";
-                expDiscordUrl.Expression = "";
-                cbxDiscordTts.Checked = false;
-                cbxObsOpType.SelectedIndex = 0;
-                expObsEndpoint.Expression = "";
-                expObsPassword.Expression = "";
-                expObsSceneName.Expression = "";
-                expObsSourceName.Expression = "";
-                expObsJSONPayload.Expression = "";
-                cbxLsOpType.SelectedIndex = 0;
-                expLSCustPayload.Expression = "";
-                cbxTextAuraOp.SelectedIndex = 0;
-                cbxTextAuraAlignment.SelectedIndex = (int)TextAuraAlignmentEnum.MiddleCenter;
-                expTextAuraName.Expression = "";
-                expTextAuraText.Expression = "";
-                expTextAuraXIni.Expression = "";
-                expTextAuraYIni.Expression = "";
-                chkProcessLog.Checked = false;
-                chkProcessLogACT.Checked = false;
-                cbxLogMessageTarget.SelectedIndex = 0;
-                expTextAuraWIni.Expression = "";
-                expTextAuraHIni.Expression = "";
-                expTextAuraOIni.Expression = "";
-                expLogMessageText.Expression = "";
-                cbxLogMessageLevel.SelectedIndex = 0;
-                expTextAuraXTick.Expression = "";
-                expTextAuraYTick.Expression = "";
-                expTextAuraWTick.Expression = "";
-                expTextAuraHTick.Expression = "";
-                expTextAuraOTick.Expression = "";
-                expTextAuraTTLTick.Expression = "";
-                cbxJsonType.SelectedIndex = 0;
-                expJsonEndpoint.Expression = "";
-                expJsonFiring.Expression = "";
-                expJsonPayload.Expression = "";
-                cbxJsonCache.Checked = false;
-                expWmsgTitle.Expression = "";
-                expWmsgCode.Expression = "";
-                expWmsgWparam.Expression = "";
-                expWmsgLparam.Expression = "";
-                FontInfoContainer fic = new FontInfoContainer();
-                fic.Name = Font.Name;
-                fic.Size = Font.SizeInPoints;
-                if (Font.Bold == true)
-                {
-                    fic.Effect |= TextAuraEffectEnum.Bold;
-                }
-                if (Font.Italic == true)
-                {
-                    fic.Effect |= TextAuraEffectEnum.Italic;
-                }
-                if (Font.Underline == true)
-                {
-                    fic.Effect |= TextAuraEffectEnum.Underline;
-                }
-                if (Font.Strikeout == true)
-                {
-                    fic.Effect |= TextAuraEffectEnum.Strikeout;
-                }
-                txtTextAuraFont.Tag = fic;
-                colorSelector1.TextColor = Color.Black;
-                colorSelector1.TextOutlineColor = Color.Empty;
-                colorSelector1.BackgroundColor = Color.Transparent;
-                expTextForeColor.Text = "";
-                expTextBackColor.Text = "";
-                expTextOutlineColor.Text = "";
-                UpdateFontDescription();
-                cndCondition.ConditionToEdit = new ConditionGroup() { Enabled = false };
-                expFileOpName.Expression = "";
-                expFileOpVariable.Expression = "";
-                cbxFileOpType.SelectedIndex = 0;
-                cbxFileOpCache.Checked = false;
-                cbxTvarOpType.SelectedIndex = 0;
-                cbxTvarExpType.SelectedIndex = 0;
-                expTvarColumn.Expression = "";
-                expTvarName.Expression = "";
-                expTvarRow.Expression = "";
-                expTvarTarget.Expression = "";
-                expTvarValue.Expression = "";
-                cbxDictOpType.SelectedIndex = 0;
-                cbxDictKeyType.SelectedIndex = 0;
-                cbxDictValueType.SelectedIndex = 0;
-                expDictLength.Expression = "";
-                expDictKey.Expression = "";
-                expDictValue.Expression = "";
-                expDictName.Expression = "";
-                expDictTarget.Expression = "";
-                prsDictSource.IsPersistent = false;
-                prsDictTarget.IsPersistent = false;
-                cbxMutexOp.SelectedIndex = 0;
-                expMutexName.Expression = "";
-                txtDescription.Text = "";
-                chkOverrideDesc.Checked = false;
-                expDescBgColor.Expression = "";
-                expDescTextColor.Expression = "";
-                expCallbackName.Expression = "";
-                expCallbackParam.Expression = "";
-                cbxMouseOp.SelectedIndex = 0;
-                cbxMouseCoord.SelectedIndex = 0;
-                expMouseX.Expression = "";
-                expMouseY.Expression = "";
-                prsFileVariable.IsPersistent = false;
-                prsListSource.IsPersistent = false;
-                prsListTarget.IsPersistent = false;
-                prsScalarName.IsPersistent = false;
-                prsJsonVariable.IsPersistent = false;
-                prsScalarTarget.IsPersistent = false;
-                prsTableSource.IsPersistent = false;
-                prsTableTarget.IsPersistent = false;
-                cndLoopCondition.ConditionToEdit = new ConditionGroup() { Enabled = false };
-                loopActionViewer.Actions = new List<ActionOld>();
-                expLoopIterationDelay.Expression = "";
-                expLoopInit.Expression = "0";
-                expLoopIncr.Expression = "1";
-                cbxActOpType.SelectedIndex = 0;
-                cbxActOpBoolParam.SelectedIndex = 0;
-                expActOpStringParam.Expression = "";
-                cbxRepositoryOp.SelectedIndex = 0;
-                cbxTriggerZoneType.SelectedIndex = 0;
-                expJsonVariable.Expression = "";
-                cbxSoundMethod.SelectedIndex = 0;
-                cbxTtsMethod.SelectedIndex = 0;
+                cbxFiringOptions.SetItemChecked(0, true);
+            }
+            if ((action._TriggerForceType & TriggerForceTypeEnum.SkipConditions) != 0)
+            {
+                cbxFiringOptions.SetItemChecked(1, true);
+            }
+            if ((action._TriggerForceType & TriggerForceTypeEnum.SkipRefire) != 0)
+            {
+                cbxFiringOptions.SetItemChecked(2, true);
+            }
+            if ((action._TriggerForceType & TriggerForceTypeEnum.SkipParent) != 0)
+            {
+                cbxFiringOptions.SetItemChecked(3, true);
+            }
+            if ((action._TriggerForceType & TriggerForceTypeEnum.SkipActive) != 0)
+            {
+                cbxFiringOptions.SetItemChecked(4, true);
+            }
+            TreeNode tn = Plugin.LocateNodeHostingTriggerId(trvTrigger.Nodes[0], action._TriggerId, null);
+            if (tn != null)
+            {
+                tn.EnsureVisible();
+                trvTrigger.SelectedNode = tn;
+                trvTrigger.Update();
+            }
+            cbxTriggerOp.SelectedIndex = (int)action._TriggerOp;
+            tn = Plugin.LocateNodeHostingFolderId(trvFolder.Nodes[0], action._FolderId, null);
+            if (tn != null)
+            {
+                tn.EnsureVisible();
+                trvFolder.SelectedNode = tn;
+                trvFolder.Update();
+            }
+            cbxFolderOp.SelectedIndex = (int)action._FolderOp;
+            expTriggerZone.Expression = action._TriggerZone;
+            expTriggerText.Expression = action._TriggerText;
+            expTriggerTagRegex.Expression = action._TriggerTagRegex;
+            cbxAuraOp.SelectedIndex = (int)action._AuraOp;
+            switch (action._AuraImageMode)
+            {
+                case PictureBoxSizeMode.Normal:
+                    cbxAuraDisplay.SelectedIndex = 0;
+                    break;
+                case PictureBoxSizeMode.StretchImage:
+                    cbxAuraDisplay.SelectedIndex = 1;
+                    break;
+                case PictureBoxSizeMode.CenterImage:
+                    cbxAuraDisplay.SelectedIndex = 2;
+                    break;
+                case PictureBoxSizeMode.Zoom:
+                    cbxAuraDisplay.SelectedIndex = 3;
+                    break;
+            }
+            expAuraName.Expression = action._AuraName;
+            expAuraImage.Expression = action._AuraImage;
+            expAuraXIni.Expression = action._AuraXIniExpression;
+            expAuraYIni.Expression = action._AuraYIniExpression;
+            expAuraWIni.Expression = action._AuraWIniExpression;
+            expAuraHIni.Expression = action._AuraHIniExpression;
+            expAuraOIni.Expression = action._AuraOIniExpression;
+            expAuraXTick.Expression = action._AuraXTickExpression;
+            expAuraYTick.Expression = action._AuraYTickExpression;
+            expAuraWTick.Expression = action._AuraWTickExpression;
+            expAuraHTick.Expression = action._AuraHTickExpression;
+            expAuraOTick.Expression = action._AuraOTickExpression;
+            expAuraTTLTick.Expression = action._AuraTTLTickExpression;
+            expDiscordUrl.Expression = action._DiscordWebhookURL;
+            expDiscordMessage.Expression = action._DiscordWebhookMessage;
+            cbxDiscordTts.Checked = action._DiscordTts;
+            cbxObsOpType.SelectedIndex = (int)action._OBSControlType;
+            expObsEndpoint.Expression = action._OBSEndPoint;
+            expObsPassword.Expression = action._OBSPassword;
+            expObsSceneName.Expression = action._OBSSceneName;
+            expObsSourceName.Expression = action._OBSSourceName;
+            expObsJSONPayload.Expression = action._OBSJSONPayload;
+            cbxLsOpType.SelectedIndex = (int)action._LSControlType;
+            expLSCustPayload.Expression = action._LSCustomPayload;
+            cbxTextAuraOp.SelectedIndex = (int)action._TextAuraOp;
+            cbxJsonType.SelectedIndex = (int)action._JsonOperationType;
+            expJsonEndpoint.Expression = action._JsonEndpointExpression;
+            expJsonFiring.Expression = action._JsonFiringExpression;
+            expJsonPayload.Expression = action._JsonPayloadExpression;
+            expJsonHeaders.Expression = action._JsonHeaderExpression;
+            cbxJsonCache.Checked = action._JsonCacheRequest;
+            expWmsgProcid.Expression = action._WmsgProcId;
+            expWmsgTitle.Expression = action._WmsgTitle;
+            expWmsgCode.Expression = action._WmsgCode;
+            expWmsgWparam.Expression = action._WmsgWparam;
+            expWmsgLparam.Expression = action._WmsgLparam;
+            cbxTextAuraAlignment.SelectedIndex = (int)action._TextAuraAlignment;
+            expTextAuraName.Expression = action._TextAuraName;
+            expTextAuraText.Expression = action._TextAuraExpression;
+            expTextAuraXIni.Expression = action._TextAuraXIniExpression;
+            expTextAuraYIni.Expression = action._TextAuraYIniExpression;
+            expTextAuraWIni.Expression = action._TextAuraWIniExpression;
+            expTextAuraHIni.Expression = action._TextAuraHIniExpression;
+            expTextAuraOIni.Expression = action._TextAuraOIniExpression;
+            expTextAuraXTick.Expression = action._TextAuraXTickExpression;
+            expTextAuraYTick.Expression = action._TextAuraYTickExpression;
+            expTextAuraWTick.Expression = action._TextAuraWTickExpression;
+            expTextAuraHTick.Expression = action._TextAuraHTickExpression;
+            expTextAuraOTick.Expression = action._TextAuraOTickExpression;
+            chkProcessLog.Checked = action._LogProcess;
+            chkProcessLogACT.Checked = action._LogProcessACT;
+            cbxLogMessageTarget.SelectedIndex = (int)action._LogMessageTarget;
+            expTextAuraTTLTick.Expression = action._TextAuraTTLTickExpression;
+            expLogMessageText.Expression = action._LogMessageText;
+            cbxLogMessageLevel.SelectedIndex = (int)action._LogLevel;
+            FontInfoContainer fic = new FontInfoContainer();
+            fic.Name = action._TextAuraFontName;
+            fic.Size = action._TextAuraFontSize;
+            fic.Effect = action._TextAuraEffect;
+            txtTextAuraFont.Tag = fic;
+
+            try
+            {
+                colorSelector1.TextColor = ExpressionTextBox.ParseColor(UiContext.EvaluateStringExpression(null, UiContext, action._TextAuraForegroundClInt), Color.Black);
+            }
+            catch { colorSelector1.TextColor = Color.Black; }
+
+            try
+            {
+                colorSelector1.TextOutlineColor = ExpressionTextBox.ParseColor(UiContext.EvaluateStringExpression(null, UiContext, action._TextAuraOutlineClInt), Color.Empty);
+            }
+            catch { colorSelector1.TextOutlineColor = Color.Empty; }
+
+            try
+            {
+                colorSelector1.BackgroundColor = ExpressionTextBox.ParseColor(UiContext.EvaluateStringExpression(null, UiContext, action._TextAuraBackgroundClInt), Color.Transparent);
+            }
+            catch { colorSelector1.BackgroundColor = Color.Transparent; }
+
+            expTextForeColor.Text = action._TextAuraForegroundClInt;
+            expTextOutlineColor.Text = action._TextAuraOutlineClInt;
+            expTextBackColor.Text = action._TextAuraBackgroundClInt;
+            UpdateFontDescription();
+            ConditionGroup cx;
+            if (action.Condition != null)
+            {
+                cx = (ConditionGroup)action.Condition.Duplicate();
             }
             else
             {
-                cbxActionType.SelectedIndex = (int)a.ActionType;
-                expTag.Expression = a.Tag;
-                cbxRefireOption1.SelectedIndex = (a.RefireInterrupt == true ? 0 : 1);
-                cbxRefireOption2.SelectedIndex = (a.RefireRequeue == true ? 1 : 0);
-                expExecutionDelay.Expression = a.ExecutionDelayExpression;
-                chkExecuteAsync.Checked = a.Asynchronous;
-                expBeepFrequency.Expression = a._SystemBeepFreqExpression;
-                expBeepLength.Expression = a._SystemBeepLengthExpression;
-                expSoundFile.Expression = a._PlaySoundFileExpression;
-                expSoundVolume.Expression = a._PlaySoundVolumeExpression;
-                chkSoundExclusive.Checked = a._PlaySoundExclusive;
-                expTextToSay.Expression = a._UseTTSTextExpression;
-                expSpeechVolume.Expression = a._UseTTSVolumeExpression;
-                expSpeechRate.Expression = a._UseTTSRateExpression;
-                chkSpeechExclusive.Checked = a._UseTTSExclusive;
-                expProcessName.Expression = a._LaunchProcessPathExpression;
-                expProcessParameters.Expression = a._LaunchProcessCmdlineExpression;
-                expProcessWorkingDir.Expression = a._LaunchProcessWorkingDirExpression;
-                cbxProcessWindowStyle.SelectedIndex = (int)a._LaunchProcessWindowStyle;
-                expKeypresses.Expression = a._KeyPressExpression;
-                expExecScriptCode.Expression = a._ExecScriptExpression;
-                cbxLoggingLevel.SelectedIndex = (int)a.DebugLevel;
-                expExecScriptAssemblies.Expression = a._ExecScriptAssembliesExpression;
-                cbxMessageBoxIcon.SelectedIndex = ((int)a._MessageBoxIconType) / 16;
-                expMessageBoxText.Expression = a._MessageBoxText;
-                expVariableExpression.Expression = a._VariableExpression;
-                expVariableName.Expression = a._VariableName;
-                expVariableTarget.Expression = a._VariableJsonTarget;
-                cbxVariableOp.SelectedIndex = (int)a._VariableOp;
-                expLvarIndex.Expression = a._ListVariableIndex;
-                expLvarName.Expression = a._ListVariableName;
-                expLvarTarget.Expression = a._ListVariableTarget;
-                expLvarValue.Expression = a._ListVariableExpression;
-                cbxLvarExpType.SelectedIndex = (int)a._ListVariableExpressionType;
-                cbxLvarOperation.SelectedIndex = (int)a._ListVariableOp;
-                if ((a._TriggerForceType & TriggerForceTypeEnum.SkipRegexp) != 0)
-                {
-                    cbxFiringOptions.SetItemChecked(0, true);
-                }
-                if ((a._TriggerForceType & TriggerForceTypeEnum.SkipConditions) != 0)
-                {
-                    cbxFiringOptions.SetItemChecked(1, true);
-                }
-                if ((a._TriggerForceType & TriggerForceTypeEnum.SkipRefire) != 0)
-                {
-                    cbxFiringOptions.SetItemChecked(2, true);
-                }
-                if ((a._TriggerForceType & TriggerForceTypeEnum.SkipParent) != 0)
-                {
-                    cbxFiringOptions.SetItemChecked(3, true);
-                }
-                if ((a._TriggerForceType & TriggerForceTypeEnum.SkipActive) != 0)
-                {
-                    cbxFiringOptions.SetItemChecked(4, true);
-                }
-                TreeNode tn = Plugin.LocateNodeHostingTriggerId(trvTrigger.Nodes[0], a._TriggerId, null);
-                if (tn != null)
-                {
-                    tn.EnsureVisible();
-                    trvTrigger.SelectedNode = tn;
-                    trvTrigger.Update();
-                }
-                cbxTriggerOp.SelectedIndex = (int)a._TriggerOp;
-                tn = Plugin.LocateNodeHostingFolderId(trvFolder.Nodes[0], a._FolderId, null);
-                if (tn != null)
-                {
-                    tn.EnsureVisible();
-                    trvFolder.SelectedNode = tn;
-                    trvFolder.Update();
-                }
-                cbxFolderOp.SelectedIndex = (int)a._FolderOp;
-                expTriggerZone.Expression = a._TriggerZone;
-                expTriggerText.Expression = a._TriggerText;
-                expTriggerTagRegex.Expression = a._TriggerTagRegex;
-                cbxAuraOp.SelectedIndex = (int)a._AuraOp;
-                switch (a._AuraImageMode)
-                {
-                    case PictureBoxSizeMode.Normal:
-                        cbxAuraDisplay.SelectedIndex = 0;
-                        break;
-                    case PictureBoxSizeMode.StretchImage:
-                        cbxAuraDisplay.SelectedIndex = 1;
-                        break;
-                    case PictureBoxSizeMode.CenterImage:
-                        cbxAuraDisplay.SelectedIndex = 2;
-                        break;
-                    case PictureBoxSizeMode.Zoom:
-                        cbxAuraDisplay.SelectedIndex = 3;
-                        break;
-                }
-                expAuraName.Expression = a._AuraName;
-                expAuraImage.Expression = a._AuraImage;
-                expAuraXIni.Expression = a._AuraXIniExpression;
-                expAuraYIni.Expression = a._AuraYIniExpression;
-                expAuraWIni.Expression = a._AuraWIniExpression;
-                expAuraHIni.Expression = a._AuraHIniExpression;
-                expAuraOIni.Expression = a._AuraOIniExpression;
-                expAuraXTick.Expression = a._AuraXTickExpression;
-                expAuraYTick.Expression = a._AuraYTickExpression;
-                expAuraWTick.Expression = a._AuraWTickExpression;
-                expAuraHTick.Expression = a._AuraHTickExpression;
-                expAuraOTick.Expression = a._AuraOTickExpression;
-                expAuraTTLTick.Expression = a._AuraTTLTickExpression;
-                expDiscordUrl.Expression = a._DiscordWebhookURL;
-                expDiscordMessage.Expression = a._DiscordWebhookMessage;
-                cbxDiscordTts.Checked = a._DiscordTts;
-                cbxObsOpType.SelectedIndex = (int)a._OBSControlType;
-                expObsEndpoint.Expression = a._OBSEndPoint;
-                expObsPassword.Expression = a._OBSPassword;
-                expObsSceneName.Expression = a._OBSSceneName;
-                expObsSourceName.Expression = a._OBSSourceName;
-                expObsJSONPayload.Expression = a._OBSJSONPayload;
-                cbxLsOpType.SelectedIndex = (int)a._LSControlType;
-                expLSCustPayload.Expression = a._LSCustomPayload;
-                cbxTextAuraOp.SelectedIndex = (int)a._TextAuraOp;
-                cbxJsonType.SelectedIndex = (int)a._JsonOperationType;
-                expJsonEndpoint.Expression = a._JsonEndpointExpression;
-                expJsonFiring.Expression = a._JsonFiringExpression;
-                expJsonPayload.Expression = a._JsonPayloadExpression;
-                expJsonHeaders.Expression = a._JsonHeaderExpression;
-                cbxJsonCache.Checked = a._JsonCacheRequest;
-                expWmsgProcid.Expression = a._WmsgProcId;
-                expWmsgTitle.Expression = a._WmsgTitle;
-                expWmsgCode.Expression = a._WmsgCode;
-                expWmsgWparam.Expression = a._WmsgWparam;
-                expWmsgLparam.Expression = a._WmsgLparam;
-                cbxTextAuraAlignment.SelectedIndex = (int)a._TextAuraAlignment;
-                expTextAuraName.Expression = a._TextAuraName;
-                expTextAuraText.Expression = a._TextAuraExpression;
-                expTextAuraXIni.Expression = a._TextAuraXIniExpression;
-                expTextAuraYIni.Expression = a._TextAuraYIniExpression;
-                expTextAuraWIni.Expression = a._TextAuraWIniExpression;
-                expTextAuraHIni.Expression = a._TextAuraHIniExpression;
-                expTextAuraOIni.Expression = a._TextAuraOIniExpression;
-                expTextAuraXTick.Expression = a._TextAuraXTickExpression;
-                expTextAuraYTick.Expression = a._TextAuraYTickExpression;
-                expTextAuraWTick.Expression = a._TextAuraWTickExpression;
-                expTextAuraHTick.Expression = a._TextAuraHTickExpression;
-                expTextAuraOTick.Expression = a._TextAuraOTickExpression;
-                chkProcessLog.Checked = a._LogProcess;
-                chkProcessLogACT.Checked = a._LogProcessACT;
-                cbxLogMessageTarget.SelectedIndex = (int)a._LogMessageTarget;
-                expTextAuraTTLTick.Expression = a._TextAuraTTLTickExpression;
-                expLogMessageText.Expression = a._LogMessageText;
-                cbxLogMessageLevel.SelectedIndex = (int)a._LogLevel;
-                FontInfoContainer fic = new FontInfoContainer();
-                fic.Name = a._TextAuraFontName;
-                fic.Size = a._TextAuraFontSize;
-                fic.Effect = a._TextAuraEffect;
-                txtTextAuraFont.Tag = fic;
-
-                try
-                {
-                    colorSelector1.TextColor = ExpressionTextBox.ParseColor(UiContext.EvaluateStringExpression(null, UiContext, a._TextAuraForegroundClInt), Color.Black);
-                }
-                catch { colorSelector1.TextColor = Color.Black; }
-
-                try
-                {
-                    colorSelector1.TextOutlineColor = ExpressionTextBox.ParseColor(UiContext.EvaluateStringExpression(null, UiContext, a._TextAuraOutlineClInt), Color.Empty);
-                }
-                catch { colorSelector1.TextOutlineColor = Color.Empty; }
-
-                try
-                {
-                    colorSelector1.BackgroundColor = ExpressionTextBox.ParseColor(UiContext.EvaluateStringExpression(null, UiContext, a._TextAuraBackgroundClInt), Color.Transparent);
-                }
-                catch { colorSelector1.BackgroundColor = Color.Transparent; }
-
-                expTextForeColor.Text = a._TextAuraForegroundClInt;
-                expTextOutlineColor.Text = a._TextAuraOutlineClInt;
-                expTextBackColor.Text = a._TextAuraBackgroundClInt;
-                UpdateFontDescription();
-                ConditionGroup cx;
-                if (a.Condition != null)
-                {
-                    cx = (ConditionGroup)a.Condition.Duplicate();
-                }
-                else
-                {
-                    cx = new ConditionGroup();
-                    cx.Grouping = ConditionGroup.CndGroupingEnum.Or;
-                    cx.Enabled = false;
-                }
-                cndCondition.ConditionToEdit = cx;
-                switch (a._KeypressType)
-                {
-                    case KeypressTypeEnum.SendKeys:
-                        cbxKeypressMethod.SelectedIndex = 0;
-                        break;
-                    case KeypressTypeEnum.WindowMessage:
-                        cbxKeypressMethod.SelectedIndex = 1;
-                        break;
-                    case KeypressTypeEnum.WindowMessageCombo:
-                        cbxKeypressMethod.SelectedIndex = 2;
-                        break;
-                }
-                expKeypress.Expression = a._KeyPressCode;
-                expWindowTitle.Expression = a._KeyPressWindow;
-                expKeypressProcId.Expression = a._KeyPressProcId;
-                expFileOpName.Expression = a._DiskFileOpName;
-                expFileOpVariable.Expression = a._DiskFileOpVar;
-                cbxFileOpType.SelectedIndex = (int)a._DiskFileOp;
-                cbxTvarOpType.SelectedIndex = (int)a._TableVariableOp;
-                cbxTvarExpType.SelectedIndex = (int)a._TableVariableExpressionType;
-                expTvarColumn.Expression = a._TableVariableX;
-                expTvarName.Expression = a._TableVariableName;
-                expTvarRow.Expression = a._TableVariableY;
-                expTvarTarget.Expression = a._TableVariableTarget;
-                expTvarValue.Expression = a._TableVariableExpression;
-                cbxDictOpType.SelectedIndex = (int)a._DictVariableOp;
-                cbxDictKeyType.SelectedIndex = (int)a._DictVariableKeyType;
-                cbxDictValueType.SelectedIndex = (int)a._DictVariableValueType;
-                expDictLength.Expression = a._DictVariableLength;
-                expDictKey.Expression = a._DictVariableKey;
-                expDictValue.Expression = a._DictVariableValue;
-                expDictName.Expression = a._DictVariableName;
-                expDictTarget.Expression = a._DictVariableTarget;
-                prsDictSource.IsPersistent = a._DictSourcePersist;
-                prsDictTarget.IsPersistent = a._DictTargetPersist;
-                cbxFileOpCache.Checked = a._DiskFileCache;
-                cbxMutexOp.SelectedIndex = (int)a._MutexOpType;
-                expMutexName.Expression = a._MutexName;
-                txtDescription.Text = a.Description;
-                chkOverrideDesc.Checked = a.DescriptionOverride;
-                expDescBgColor.Expression = a.DescBgColor;
-                expDescTextColor.Expression = a.DescTextColor;
-                expCallbackName.Expression = a._NamedCallbackName;
-                expCallbackParam.Expression = a._NamedCallbackParam;
-                cbxMouseOp.SelectedIndex = (int)a._MouseOpType;
-                cbxMouseCoord.SelectedIndex = (int)a._MouseCoordType;
-                expMouseX.Expression = a._MouseX;
-                expMouseY.Expression = a._MouseY;
-                prsFileVariable.IsPersistent = a._DiskPersist;
-                prsListSource.IsPersistent = a._ListSourcePersist;
-                prsListTarget.IsPersistent = a._ListTargetPersist;
-                prsScalarName.IsPersistent = a._VariablePersist;
-                prsScalarTarget.IsPersistent = a._VariableTargetPersist;
-                prsJsonVariable.IsPersistent = a._JsonResultVariablePersist;
-                prsTableSource.IsPersistent = a._TableSourcePersist;
-                prsTableTarget.IsPersistent = a._TableTargetPersist;
-                if (a.LoopCondition != null)
-                {
-                    cx = (ConditionGroup)a.LoopCondition.Duplicate();
-                }
-                else
-                {
-                    cx = new ConditionGroup();
-                    cx.Grouping = ConditionGroup.CndGroupingEnum.Or;
-                    cx.Enabled = false;
-                }
-                cndLoopCondition.ConditionToEdit = cx;
-                loopActionViewer.Actions = new List<ActionOld>();
-                var ix = from tx in a.LoopActions
-                         orderby tx.OrderNumber ascending
-                         select tx;
-                foreach (ActionOld ax in ix)
-                {
-                    ActionOld b = new ActionOld();
-                    ax.CopySettingsTo(b);
-                    loopActionViewer.Actions.Add(b);
-                }
-                loopActionViewer.RefreshDgv();
-                expLoopIterationDelay.Expression = a._LoopDelayExpression;
-                expLoopIncr.Expression = a._LoopIncrExpression;
-                expLoopInit.Expression = a._LoopInitExpression;
-                cbxActOpType.SelectedIndex = (int)a._ActOpType;
-                cbxActOpBoolParam.SelectedIndex = a._ActOpBoolParam ? 1 : 0;
-                expActOpStringParam.Expression = a._ActOpStringParam;
-                tn = Plugin.LocateNodeHostingRepositoryId(trvRepositoryLink.Nodes[0], a._RepositoryId);
-                if (tn != null)
-                {
-                    tn.EnsureVisible();
-                    trvRepositoryLink.SelectedNode = tn;
-                    trvRepositoryLink.Update();
-                }
-                cbxRepositoryOp.SelectedIndex = (int)a._RepositoryOp;
-                cbxTriggerZoneType.SelectedIndex = (int)a._TriggerZoneType;
-                expJsonVariable.Expression = a._JsonResultVariable;
-                cbxSoundMethod.SelectedIndex = (int)a._SoundRouting;
-                cbxTtsMethod.SelectedIndex = (int)a._TTSRouting;
+                cx = new ConditionGroup();
+                cx.Grouping = ConditionGroup.CndGroupingEnum.Or;
+                cx.Enabled = false;
             }
+            cndCondition.ConditionToEdit = cx;
+            switch (action._KeypressType)
+            {
+                case KeypressTypeEnum.SendKeys:
+                    cbxKeypressMethod.SelectedIndex = 0;
+                    break;
+                case KeypressTypeEnum.WindowMessage:
+                    cbxKeypressMethod.SelectedIndex = 1;
+                    break;
+                case KeypressTypeEnum.WindowMessageCombo:
+                    cbxKeypressMethod.SelectedIndex = 2;
+                    break;
+            }
+            expKeypress.Expression = action._KeyPressCode;
+            expWindowTitle.Expression = action._KeyPressWindow;
+            expKeypressProcId.Expression = action._KeyPressProcId;
+            expFileOpName.Expression = action._DiskFileOpName;
+            expFileOpVariable.Expression = action._DiskFileOpVar;
+            cbxFileOpType.SelectedIndex = (int)action._DiskFileOp;
+            cbxTvarOpType.SelectedIndex = (int)action._TableVariableOp;
+            cbxTvarExpType.SelectedIndex = (int)action._TableVariableExpressionType;
+            expTvarColumn.Expression = action._TableVariableX;
+            expTvarName.Expression = action._TableVariableName;
+            expTvarRow.Expression = action._TableVariableY;
+            expTvarTarget.Expression = action._TableVariableTarget;
+            expTvarValue.Expression = action._TableVariableExpression;
+            cbxDictOpType.SelectedIndex = (int)action._DictVariableOp;
+            cbxDictKeyType.SelectedIndex = (int)action._DictVariableKeyType;
+            cbxDictValueType.SelectedIndex = (int)action._DictVariableValueType;
+            expDictLength.Expression = action._DictVariableLength;
+            expDictKey.Expression = action._DictVariableKey;
+            expDictValue.Expression = action._DictVariableValue;
+            expDictName.Expression = action._DictVariableName;
+            expDictTarget.Expression = action._DictVariableTarget;
+            prsDictSource.IsPersistent = action._DictSourcePersist;
+            prsDictTarget.IsPersistent = action._DictTargetPersist;
+            cbxFileOpCache.Checked = action._DiskFileCache;
+            cbxMutexOp.SelectedIndex = (int)action._MutexOpType;
+            expMutexName.Expression = action._MutexName;
+            txtDescription.Text = action.Description;
+            chkOverrideDesc.Checked = action.DescriptionOverride;
+            expDescBgColor.Expression = action.DescBgColor;
+            expDescTextColor.Expression = action.DescTextColor;
+            expCallbackName.Expression = action._NamedCallbackName;
+            expCallbackParam.Expression = action._NamedCallbackParam;
+            cbxMouseOp.SelectedIndex = (int)action._MouseOpType;
+            cbxMouseCoord.SelectedIndex = (int)action._MouseCoordType;
+            expMouseX.Expression = action._MouseX;
+            expMouseY.Expression = action._MouseY;
+            prsFileVariable.IsPersistent = action._DiskPersist;
+            prsListSource.IsPersistent = action._ListSourcePersist;
+            prsListTarget.IsPersistent = action._ListTargetPersist;
+            prsScalarName.IsPersistent = action._VariablePersist;
+            prsScalarTarget.IsPersistent = action._VariableTargetPersist;
+            prsJsonVariable.IsPersistent = action._JsonResultVariablePersist;
+            prsTableSource.IsPersistent = action._TableSourcePersist;
+            prsTableTarget.IsPersistent = action._TableTargetPersist;
+            if (action.LoopCondition != null)
+            {
+                cx = (ConditionGroup)action.LoopCondition.Duplicate();
+            }
+            else
+            {
+                cx = new ConditionGroup();
+                cx.Grouping = ConditionGroup.CndGroupingEnum.Or;
+                cx.Enabled = false;
+            }
+            cndLoopCondition.ConditionToEdit = cx;
+            loopActionViewer.Actions = new List<ActionOld>();
+            var ix = from tx in action.LoopActions
+                     orderby tx.OrderNumber ascending
+                     select tx;
+            foreach (ActionOld ax in ix)
+            {
+                ActionOld b = new ActionOld();
+                ax.CopySettingsTo(b);
+                loopActionViewer.Actions.Add(b);
+            }
+            loopActionViewer.RefreshDgv();
+            expLoopIterationDelay.Expression = action._LoopDelayExpression;
+            expLoopIncr.Expression = action._LoopIncrExpression;
+            expLoopInit.Expression = action._LoopInitExpression;
+            cbxActOpType.SelectedIndex = (int)action._ActOpType;
+            cbxActOpBoolParam.SelectedIndex = action._ActOpBoolParam ? 1 : 0;
+            expActOpStringParam.Expression = action._ActOpStringParam;
+            tn = Plugin.LocateNodeHostingRepositoryId(trvRepositoryLink.Nodes[0], action._RepositoryId);
+            if (tn != null)
+            {
+                tn.EnsureVisible();
+                trvRepositoryLink.SelectedNode = tn;
+                trvRepositoryLink.Update();
+            }
+            cbxRepositoryOp.SelectedIndex = (int)action._RepositoryOp;
+            cbxTriggerZoneType.SelectedIndex = (int)action._TriggerZoneType;
+            expJsonVariable.Expression = action._JsonResultVariable;
+            cbxSoundMethod.SelectedIndex = (int)action._SoundRouting;
+            cbxTtsMethod.SelectedIndex = (int)action._TTSRouting;
+
             chkProcessLog_CheckedChanged(null, null);
         }
 

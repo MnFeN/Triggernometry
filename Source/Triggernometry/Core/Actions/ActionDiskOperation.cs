@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
@@ -152,8 +151,10 @@ namespace Triggernometry.Core.Actions
             string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Variable);
             string persist = I18n.TrlVarPersist(Persistent);
             string cache = I18n.TrlCacheFile(UseCache);
-            VariableStore vs = Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
-            if (Operation == OperationEnum.ReadCSVIntoTableVariable || Operation == OperationEnum.ReadIntoListVariable || Operation == OperationEnum.ReadIntoVariable)
+            VariableStore vs = ctx.Plugin.GetVariableStore(Persistent);
+            if (Operation == OperationEnum.ReadCSVIntoTableVariable || 
+                Operation == OperationEnum.ReadIntoListVariable || 
+                Operation == OperationEnum.ReadIntoVariable)
             {
                 Uri u = new Uri(filename);
                 if (u.IsFile == false)
@@ -195,18 +196,16 @@ namespace Triggernometry.Core.Actions
                         List<string[]> data = new List<string[]>();
                         int datawidth = 0;
                         using (StreamReader sr = new StreamReader(filename))
+                        using (CsvReader csv = new CsvReader(sr, CultureInfo.InvariantCulture))
                         {
-                            using (CsvReader csv = new CsvReader(sr, CultureInfo.InvariantCulture))
+                            while (csv.Parser.Read() == true)
                             {
-                                while (csv.Parser.Read() == true)
+                                string[] x = csv.Parser.Record;
+                                if (x.Length > datawidth)
                                 {
-                                    string[] x = csv.Parser.Record;
-                                    if (x.Length > datawidth)
-                                    {
-                                        datawidth = x.Length;
-                                    }
-                                    data.Add(x);
+                                    datawidth = x.Length;
                                 }
+                                data.Add(x);
                             }
                         }
                         VariableTable vt = vs.GetTableVariable(varname, true);

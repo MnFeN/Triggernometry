@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Common.Audio;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core.Actions
 {
@@ -58,24 +60,34 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            double freq = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Frequency);
-            if (freq < 37.0)
+
+            double beepLength = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Duration);
+            if (beepLength < 0.0)
             {
-                freq = 37.0;
-                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqlo", "Beep frequency below limit, capping to {0}", freq));
+                beepLength = 0.0;
+                AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/beeplengthlo", "Beep length below limit, capping to {0}", beepLength));
             }
-            if (freq > 32767.0)
+
+            double frequency = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Frequency);
+            bool useLegacy = true; // to-do: options
+            if (!useLegacy)
             {
-                freq = 32767.0;
-                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqhi", "Beep frequency above limit, capping to {0} ", freq));
+                WaveGenerator.PlaySyncBeep((int)Math.Ceiling(frequency), (int)Math.Ceiling(beepLength)); // to-do
             }
-            double len = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Duration);
-            if (len < 0.0)
+            else // Console.Beep
             {
-                len = 0.0;
-                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/beeplengthlo", "Beep length below limit, capping to {0}", len));
+                if (frequency < 37.0)
+                {
+                    frequency = 37.0;
+                    AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqlo", "Beep frequency below limit, capping to {0}", frequency));
+                }
+                if (frequency > 32767.0)
+                {
+                    frequency = 32767.0;
+                    AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqhi", "Beep frequency above limit, capping to {0} ", frequency));
+                }
+                Console.Beep((int)Math.Ceiling(frequency), (int)Math.Ceiling(beepLength));
             }
-            Console.Beep((int)Math.Ceiling(freq), (int)Math.Ceiling(len));
         }
 
         #endregion

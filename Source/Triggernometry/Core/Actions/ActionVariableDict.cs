@@ -70,7 +70,7 @@ namespace Triggernometry.Core.Actions
         public string Xml_Operation
         {
             get => XmlAttr.Enum(Operation, OperationEnum.Unset);
-            set => Operation = XmlAttr.Enum<OperationEnum>(value); // 似乎没有处理旧的两个 enum？
+            set => Operation = XmlAttr.Enum<OperationEnum>(value); // todo 似乎没有处理旧的两个 enum？
         }
 
         /// <summary>
@@ -310,8 +310,8 @@ namespace Triggernometry.Core.Actions
             Context ctx = ai.ctx;
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
             string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVariable);
-            VariableStore svs = Persistent ? ctx.Plugin.cfg.PersistentVariables : ctx.Plugin.sessionvars;
-            VariableStore tvs = TargetPersistent ? ctx.Plugin.cfg.PersistentVariables : ctx.Plugin.sessionvars;
+            VariableStore svs = ctx.Plugin.GetVariableStore(Persistent);
+            VariableStore tvs = ctx.Plugin.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(TargetPersistent);
 

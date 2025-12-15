@@ -98,7 +98,14 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai.ctx;
-            ctx.ttshook(ctx, null); // todo
+            ctx.ttshook(ctx, (ActionOld)this); // todo
+
+            /* to-do: cactbot-like 文本显示
+            if (plug.cfg.GenerateTTSEventLog)
+            {
+                plug.LogLineQueuer(this._UseTTSTextExpression, "", LogEvent.SourceEnum.ACT);
+            }
+            */
         }
 
         #endregion

@@ -162,7 +162,7 @@ namespace Triggernometry.UI.CustomControls
 
         public void LoadFromConfig()
         {
-            if (!RealPlugin.Instance.sessionvars.List.TryGetValue(PlayerIdsLvarName, out VariableList savedList) || savedList.Size != PlayerCount)
+            if (!RealPlugin.Instance.GetVariableStore(false).List.TryGetValue(PlayerIdsLvarName, out VariableList savedList) || savedList.Size != PlayerCount)
                 return;
 
             List<string> storedPlayerIDs = savedList.Values.Select(var => var.ToString()).ToList();
@@ -213,11 +213,11 @@ namespace Triggernometry.UI.CustomControls
                 if (BridgeFFXIV.PlayerHexId == label.HexID) // var:myIdx
                 {
                     var idx = label.Order + 1;
-                    RealPlugin.Instance.sessionvars.Scalar[PlayerIdxVarName] = new VariableScalar(idx);
+                    RealPlugin.Instance.GetVariableStore(false).Scalar[PlayerIdxVarName] = new VariableScalar(idx);
                 }
             }
-            RealPlugin.Instance.sessionvars.List[PlayerIdsLvarName] = hexIDList;
-            RealPlugin.Instance.sessionvars.List[PlayerNamesLvarName] = nameList;
+            RealPlugin.Instance.GetVariableStore(false).List[PlayerIdsLvarName] = hexIDList;
+            RealPlugin.Instance.GetVariableStore(false).List[PlayerNamesLvarName] = nameList;
         }
 
         public class PlayerLabel : Label

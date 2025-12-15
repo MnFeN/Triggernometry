@@ -37,9 +37,9 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "et": case "etvar": case "ept": case "eptvar":
                 case "ed": case "edvar": case "epd": case "epdvar":
                     {
-                        var isPersisent = prefixLower.StartsWith("ep");
-                        var varType = prefixLower[isPersisent ? 2 : 1]; // 'v' 'l' 't' 'd'
-                        var varStore = isPersisent ? plug?.cfg.PersistentVariables : plug?.sessionvars;
+                        var isPersistent = prefixLower.StartsWith("ep");
+                        var varType = prefixLower[isPersistent ? 2 : 1]; // 'v' 'l' 't' 'd'
+                        var varStore = plug?.GetVariableStore(isPersistent);
                         
                         switch (varType)
                         {
@@ -306,7 +306,7 @@ namespace Triggernometry.Expressions.String.Parsers
             isTemp = prefixLower.StartsWith("?");
             int pPos = mustExist ? 1 : 0;
             var isPersistent = prefixLower.Length > pPos && prefixLower[pPos] == 'p';
-            store = isPersistent ? ctx?.Plugin?.cfg.PersistentVariables : ctx?.Plugin?.sessionvars;
+            store = ctx?.Plugin?.GetVariableStore(isPersistent);
         }
 
         private static T GetVariableWithCondition<T>(VariableStore store, Dictionary<string, T> variables, string varName, bool mustExist)

@@ -223,7 +223,7 @@ namespace Triggernometry.Core.Actions
             }
             if (varname != "")
             {
-                VariableStore vs = Persistent == false ? ctx.Plugin.sessionvars : ctx.Plugin.cfg.PersistentVariables;
+                VariableStore vs = ctx.Plugin.GetVariableStore(Persistent);
                 lock (vs.Scalar) // verified
                 {
                     if (vs.Scalar.ContainsKey(varname) == false)

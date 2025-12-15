@@ -342,11 +342,11 @@ namespace Triggernometry.Core.Conditions
                         }
                     case CndTypeEnum.ListContains:
                         {
-                            lock (ctx.Plugin.sessionvars.List)
+                            lock (ctx.Plugin.GetVariableStore(false).List)
                             {
-                                if (ctx.Plugin.sessionvars.List.ContainsKey(lval) == true)
+                                if (ctx.Plugin.GetVariableStore(false).List.ContainsKey(lval) == true)
                                 {
-                                    if (ctx.Plugin.sessionvars.List[lval].IndexOf(rval) > 0)
+                                    if (ctx.Plugin.GetVariableStore(false).List[lval].IndexOf(rval) > 0)
                                     {
                                         return true;
                                     }
@@ -356,11 +356,11 @@ namespace Triggernometry.Core.Conditions
                         }
                     case CndTypeEnum.ListDoesNotContain:
                         {
-                            lock (ctx.Plugin.sessionvars.List)
+                            lock (ctx.Plugin.GetVariableStore(false).List)
                             {
-                                if (ctx.Plugin.sessionvars.List.ContainsKey(lval) == true)
+                                if (ctx.Plugin.GetVariableStore(false).List.ContainsKey(lval) == true)
                                 {
-                                    if (ctx.Plugin.sessionvars.List[lval].IndexOf(rval) > 0)
+                                    if (ctx.Plugin.GetVariableStore(false).List[lval].IndexOf(rval) > 0)
                                     {
                                         return false;
                                     }
