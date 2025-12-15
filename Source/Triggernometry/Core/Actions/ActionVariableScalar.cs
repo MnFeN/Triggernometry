@@ -234,7 +234,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(JsonTargetPersistent);

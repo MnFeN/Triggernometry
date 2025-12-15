@@ -363,7 +363,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             Trigger t = ctx.Plugin.GetTriggerById(TriggerId, ctx.Trigger?.Repo);
             if (t == null && Operation != OperationEnum.CancelAllTrigger)
             {

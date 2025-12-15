@@ -75,8 +75,8 @@
             this.btnUiFont = new System.Windows.Forms.Button();
             this.capAppearance = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabAudio = new System.Windows.Forms.TabPage();
-            this.panel22 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.panelAudioTts = new System.Windows.Forms.Panel();
+            this.tableAudioTts = new System.Windows.Forms.TableLayoutPanel();
             this.lblTtsRepV = new System.Windows.Forms.Label();
             this.trbTtsRepetition = new System.Windows.Forms.TrackBar();
             this.lblTtsRepetition = new System.Windows.Forms.Label();
@@ -93,9 +93,9 @@
             this.panel21 = new System.Windows.Forms.Panel();
             this.lblExternalTtsWarn = new System.Windows.Forms.Label();
             this.lblActTtsWarn = new System.Windows.Forms.Label();
-            this.prettyCaption2 = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.capAudioTts = new Triggernometry.UI.CustomControls.PrettyCaption();
+            this.panelAudioSound = new System.Windows.Forms.Panel();
+            this.tableAudioSound = new System.Windows.Forms.TableLayoutPanel();
             this.lblSoundRepV = new System.Windows.Forms.Label();
             this.trbSoundRepetition = new System.Windows.Forms.TrackBar();
             this.lblSoundRepetition = new System.Windows.Forms.Label();
@@ -111,7 +111,16 @@
             this.lblSoundVolume = new System.Windows.Forms.Label();
             this.cbxSoundMethod = new System.Windows.Forms.ComboBox();
             this.txtSoundPath = new System.Windows.Forms.TextBox();
-            this.prettyCaption1 = new Triggernometry.UI.CustomControls.PrettyCaption();
+            this.capAudioSound = new Triggernometry.UI.CustomControls.PrettyCaption();
+            this.panelAudioBeep = new System.Windows.Forms.Panel();
+            this.tableAudioBeep = new System.Windows.Forms.TableLayoutPanel();
+            this.btnBeepTest = new System.Windows.Forms.Button();
+            this.lblBeepVolP = new System.Windows.Forms.Label();
+            this.trbBeepVolume = new System.Windows.Forms.TrackBar();
+            this.lblBeepVolume = new System.Windows.Forms.Label();
+            this.chkUseSimulatedBeep = new System.Windows.Forms.CheckBox();
+            this.lblUseSimulatedBeep = new System.Windows.Forms.Label();
+            this.capAudioBeep = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabLogging = new System.Windows.Forms.TabPage();
             this.panel23 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
@@ -332,13 +341,15 @@
             this.panel31.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.tabAudio.SuspendLayout();
-            this.panel22.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
+            this.panelAudioTts.SuspendLayout();
+            this.tableAudioTts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbTtsRepetition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbTtsVolume)).BeginInit();
             this.panel21.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.panelAudioSound.SuspendLayout();
+            this.tableAudioSound.SuspendLayout();
+            this.panelAudioBeep.SuspendLayout();
+            this.tableAudioBeep.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbSoundRepetition)).BeginInit();
             this.panel30.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbSoundVolume)).BeginInit();
@@ -1008,10 +1019,12 @@
             // tabAudio
             // 
             this.tabAudio.AutoScroll = true;
-            this.tabAudio.Controls.Add(this.panel22);
-            this.tabAudio.Controls.Add(this.prettyCaption2);
-            this.tabAudio.Controls.Add(this.panel4);
-            this.tabAudio.Controls.Add(this.prettyCaption1);
+            this.tabAudio.Controls.Add(this.panelAudioTts);
+            this.tabAudio.Controls.Add(this.capAudioTts);
+            this.tabAudio.Controls.Add(this.panelAudioSound);
+            this.tabAudio.Controls.Add(this.capAudioSound);
+            this.tabAudio.Controls.Add(this.panelAudioBeep);
+            this.tabAudio.Controls.Add(this.capAudioBeep);
             this.tabAudio.Location = new System.Drawing.Point(4, 25);
             this.tabAudio.Name = "tabAudio";
             this.tabAudio.Size = new System.Drawing.Size(640, 516);
@@ -1019,50 +1032,50 @@
             this.tabAudio.Text = "Audio";
             this.tabAudio.UseVisualStyleBackColor = true;
             // 
-            // panel22
+            // panelAudioTts
             // 
-            this.panel22.AutoSize = true;
-            this.panel22.Controls.Add(this.tableLayoutPanel3);
-            this.panel22.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel22.Location = new System.Drawing.Point(0, 277);
-            this.panel22.Name = "panel22";
-            this.panel22.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
-            this.panel22.Size = new System.Drawing.Size(623, 269);
-            this.panel22.TabIndex = 12;
+            this.panelAudioTts.AutoSize = true;
+            this.panelAudioTts.Controls.Add(this.tableAudioTts);
+            this.panelAudioTts.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelAudioTts.Location = new System.Drawing.Point(0, 277);
+            this.panelAudioTts.Name = "panelAudioTts";
+            this.panelAudioTts.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
+            this.panelAudioTts.Size = new System.Drawing.Size(623, 269);
+            this.panelAudioTts.TabIndex = 12;
             // 
-            // tableLayoutPanel3
+            // tableAudioTts
             // 
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.ColumnCount = 3;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel3.Controls.Add(this.lblTtsRepV, 2, 2);
-            this.tableLayoutPanel3.Controls.Add(this.trbTtsRepetition, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.lblTtsRepetition, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.txtTtsPathArgs, 1, 5);
-            this.tableLayoutPanel3.Controls.Add(this.lblTtsPathArgs, 0, 5);
-            this.tableLayoutPanel3.Controls.Add(this.btnTtsPath, 2, 4);
-            this.tableLayoutPanel3.Controls.Add(this.txtTtsPath, 1, 4);
-            this.tableLayoutPanel3.Controls.Add(this.cbxTtsMethod, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.lblTtsPath, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.lblTtsMethod, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.lblTtsVolP, 2, 1);
-            this.tableLayoutPanel3.Controls.Add(this.trbTtsVolume, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.lblTtsVolume, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.panel21, 1, 3);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 8);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 6;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(623, 261);
-            this.tableLayoutPanel3.TabIndex = 1;
+            this.tableAudioTts.AutoSize = true;
+            this.tableAudioTts.ColumnCount = 3;
+            this.tableAudioTts.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableAudioTts.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableAudioTts.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.tableAudioTts.Controls.Add(this.lblTtsRepV, 2, 2);
+            this.tableAudioTts.Controls.Add(this.trbTtsRepetition, 1, 2);
+            this.tableAudioTts.Controls.Add(this.lblTtsRepetition, 0, 2);
+            this.tableAudioTts.Controls.Add(this.txtTtsPathArgs, 1, 5);
+            this.tableAudioTts.Controls.Add(this.lblTtsPathArgs, 0, 5);
+            this.tableAudioTts.Controls.Add(this.btnTtsPath, 2, 4);
+            this.tableAudioTts.Controls.Add(this.txtTtsPath, 1, 4);
+            this.tableAudioTts.Controls.Add(this.cbxTtsMethod, 1, 0);
+            this.tableAudioTts.Controls.Add(this.lblTtsPath, 0, 4);
+            this.tableAudioTts.Controls.Add(this.lblTtsMethod, 0, 0);
+            this.tableAudioTts.Controls.Add(this.lblTtsVolP, 2, 1);
+            this.tableAudioTts.Controls.Add(this.trbTtsVolume, 1, 1);
+            this.tableAudioTts.Controls.Add(this.lblTtsVolume, 0, 1);
+            this.tableAudioTts.Controls.Add(this.panel21, 1, 3);
+            this.tableAudioTts.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableAudioTts.Location = new System.Drawing.Point(0, 8);
+            this.tableAudioTts.Name = "tableAudioTts";
+            this.tableAudioTts.RowCount = 6;
+            this.tableAudioTts.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioTts.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioTts.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioTts.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioTts.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioTts.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioTts.Size = new System.Drawing.Size(623, 261);
+            this.tableAudioTts.TabIndex = 1;
             // 
             // lblTtsRepV
             // 
@@ -1109,7 +1122,7 @@
             // 
             // txtTtsPathArgs
             // 
-            this.tableLayoutPanel3.SetColumnSpan(this.txtTtsPathArgs, 2);
+            this.tableAudioTts.SetColumnSpan(this.txtTtsPathArgs, 2);
             this.txtTtsPathArgs.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtTtsPathArgs.Location = new System.Drawing.Point(159, 238);
             this.txtTtsPathArgs.Name = "txtTtsPathArgs";
@@ -1151,7 +1164,7 @@
             // 
             // cbxTtsMethod
             // 
-            this.tableLayoutPanel3.SetColumnSpan(this.cbxTtsMethod, 2);
+            this.tableAudioTts.SetColumnSpan(this.cbxTtsMethod, 2);
             this.cbxTtsMethod.Dock = System.Windows.Forms.DockStyle.Top;
             this.cbxTtsMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxTtsMethod.FormattingEnabled = true;
@@ -1235,7 +1248,7 @@
             // panel21
             // 
             this.panel21.AutoSize = true;
-            this.tableLayoutPanel3.SetColumnSpan(this.panel21, 2);
+            this.tableAudioTts.SetColumnSpan(this.panel21, 2);
             this.panel21.Controls.Add(this.lblExternalTtsWarn);
             this.panel21.Controls.Add(this.lblActTtsWarn);
             this.panel21.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1275,64 +1288,64 @@
     "eech actions to be ignored.";
             this.lblActTtsWarn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // prettyCaption2
+            // capAudioTts
             // 
-            this.prettyCaption2.Caption = "Text-to-speech";
-            this.prettyCaption2.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.prettyCaption2.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.prettyCaption2.Collapsed = false;
-            this.prettyCaption2.Collapsee = null;
-            this.prettyCaption2.Collapsible = false;
-            this.prettyCaption2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.prettyCaption2.Location = new System.Drawing.Point(0, 247);
-            this.prettyCaption2.Name = "prettyCaption2";
-            this.prettyCaption2.Size = new System.Drawing.Size(623, 30);
-            this.prettyCaption2.TabIndex = 11;
+            this.capAudioTts.Caption = "Text-to-speech";
+            this.capAudioTts.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.capAudioTts.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.capAudioTts.Collapsed = false;
+            this.capAudioTts.Collapsee = null;
+            this.capAudioTts.Collapsible = false;
+            this.capAudioTts.Dock = System.Windows.Forms.DockStyle.Top;
+            this.capAudioTts.Location = new System.Drawing.Point(0, 247);
+            this.capAudioTts.Name = "capAudioTts";
+            this.capAudioTts.Size = new System.Drawing.Size(623, 30);
+            this.capAudioTts.TabIndex = 11;
             // 
-            // panel4
+            // panelAudioSound
             // 
-            this.panel4.AutoSize = true;
-            this.panel4.Controls.Add(this.tableLayoutPanel1);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(0, 30);
-            this.panel4.Name = "panel4";
-            this.panel4.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
-            this.panel4.Size = new System.Drawing.Size(623, 217);
-            this.panel4.TabIndex = 10;
+            this.panelAudioSound.AutoSize = true;
+            this.panelAudioSound.Controls.Add(this.tableAudioSound);
+            this.panelAudioSound.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelAudioSound.Location = new System.Drawing.Point(0, 30);
+            this.panelAudioSound.Name = "panelAudioSound";
+            this.panelAudioSound.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
+            this.panelAudioSound.Size = new System.Drawing.Size(623, 217);
+            this.panelAudioSound.TabIndex = 10;
             // 
-            // tableLayoutPanel1
+            // tableAudioSound
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel1.Controls.Add(this.lblSoundRepV, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.trbSoundRepetition, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lblSoundRepetition, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.txtSoundPathArgs, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.lblSoundPathArgs, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.panel30, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.btnSoundPath, 2, 4);
-            this.tableLayoutPanel1.Controls.Add(this.lblSoundPath, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.lblSoundMethod, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lblSoundVolP, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.trbSoundVolume, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblSoundVolume, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.cbxSoundMethod, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtSoundPath, 1, 4);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 8);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 6;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(623, 201);
-            this.tableLayoutPanel1.TabIndex = 1;
+            this.tableAudioSound.AutoSize = true;
+            this.tableAudioSound.ColumnCount = 3;
+            this.tableAudioSound.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableAudioSound.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableAudioSound.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.tableAudioSound.Controls.Add(this.lblSoundRepV, 2, 2);
+            this.tableAudioSound.Controls.Add(this.trbSoundRepetition, 1, 2);
+            this.tableAudioSound.Controls.Add(this.lblSoundRepetition, 0, 2);
+            this.tableAudioSound.Controls.Add(this.txtSoundPathArgs, 1, 5);
+            this.tableAudioSound.Controls.Add(this.lblSoundPathArgs, 0, 5);
+            this.tableAudioSound.Controls.Add(this.panel30, 1, 3);
+            this.tableAudioSound.Controls.Add(this.btnSoundPath, 2, 4);
+            this.tableAudioSound.Controls.Add(this.lblSoundPath, 0, 4);
+            this.tableAudioSound.Controls.Add(this.lblSoundMethod, 0, 0);
+            this.tableAudioSound.Controls.Add(this.lblSoundVolP, 2, 1);
+            this.tableAudioSound.Controls.Add(this.trbSoundVolume, 1, 1);
+            this.tableAudioSound.Controls.Add(this.lblSoundVolume, 0, 1);
+            this.tableAudioSound.Controls.Add(this.cbxSoundMethod, 1, 0);
+            this.tableAudioSound.Controls.Add(this.txtSoundPath, 1, 4);
+            this.tableAudioSound.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableAudioSound.Location = new System.Drawing.Point(0, 8);
+            this.tableAudioSound.Name = "tableAudioSound";
+            this.tableAudioSound.RowCount = 6;
+            this.tableAudioSound.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioSound.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioSound.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioSound.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioSound.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioSound.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioSound.Size = new System.Drawing.Size(623, 201);
+            this.tableAudioSound.TabIndex = 1;
             // 
             // lblSoundRepV
             // 
@@ -1379,7 +1392,7 @@
             // 
             // txtSoundPathArgs
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.txtSoundPathArgs, 2);
+            this.tableAudioSound.SetColumnSpan(this.txtSoundPathArgs, 2);
             this.txtSoundPathArgs.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtSoundPathArgs.Location = new System.Drawing.Point(159, 178);
             this.txtSoundPathArgs.Name = "txtSoundPathArgs";
@@ -1402,7 +1415,7 @@
             // panel30
             // 
             this.panel30.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.panel30, 2);
+            this.tableAudioSound.SetColumnSpan(this.panel30, 2);
             this.panel30.Controls.Add(this.lblExternalSoundWarn);
             this.panel30.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel30.Location = new System.Drawing.Point(159, 86);
@@ -1506,7 +1519,7 @@
             // 
             // cbxSoundMethod
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.cbxSoundMethod, 2);
+            this.tableAudioSound.SetColumnSpan(this.cbxSoundMethod, 2);
             this.cbxSoundMethod.Dock = System.Windows.Forms.DockStyle.Top;
             this.cbxSoundMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxSoundMethod.FormattingEnabled = true;
@@ -1529,19 +1542,133 @@
             this.txtSoundPath.Size = new System.Drawing.Size(401, 20);
             this.txtSoundPath.TabIndex = 21;
             // 
-            // prettyCaption1
+            // capAudioSound
             // 
-            this.prettyCaption1.Caption = "Sound playback";
-            this.prettyCaption1.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.prettyCaption1.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.prettyCaption1.Collapsed = false;
-            this.prettyCaption1.Collapsee = null;
-            this.prettyCaption1.Collapsible = false;
-            this.prettyCaption1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.prettyCaption1.Location = new System.Drawing.Point(0, 0);
-            this.prettyCaption1.Name = "prettyCaption1";
-            this.prettyCaption1.Size = new System.Drawing.Size(623, 30);
-            this.prettyCaption1.TabIndex = 9;
+            this.capAudioSound.Caption = "Sound playback";
+            this.capAudioSound.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.capAudioSound.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.capAudioSound.Collapsed = false;
+            this.capAudioSound.Collapsee = null;
+            this.capAudioSound.Collapsible = false;
+            this.capAudioSound.Dock = System.Windows.Forms.DockStyle.Top;
+            this.capAudioSound.Location = new System.Drawing.Point(0, 0);
+            this.capAudioSound.Name = "capAudioSound";
+            this.capAudioSound.Size = new System.Drawing.Size(623, 30);
+            this.capAudioBeep.TabStop = false;
+            // 
+            // panelAudioBeep
+            // 
+            this.panelAudioBeep.AutoSize = true;
+            this.panelAudioBeep.Controls.Add(this.tableAudioBeep);
+            this.panelAudioBeep.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelAudioBeep.Location = new System.Drawing.Point(0, 30);
+            this.panelAudioBeep.Name = "panelAudioBeep";
+            this.panelAudioBeep.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
+            this.panelAudioBeep.Size = new System.Drawing.Size(623, 217);
+            this.panelAudioBeep.TabStop = false;
+            // 
+            // tableAudioBeep
+            // 
+            this.tableAudioBeep.AutoSize = true;
+            this.tableAudioBeep.ColumnCount = 3;
+            this.tableAudioBeep.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableAudioBeep.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableAudioBeep.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.tableAudioBeep.Controls.Add(this.lblUseSimulatedBeep, 0, 0);
+            this.tableAudioBeep.Controls.Add(this.chkUseSimulatedBeep, 1, 0);
+            this.tableAudioBeep.Controls.Add(this.lblBeepVolume, 0, 1);
+            this.tableAudioBeep.Controls.Add(this.trbBeepVolume, 1, 1);
+            this.tableAudioBeep.Controls.Add(this.lblBeepVolP, 2, 1);
+            this.tableAudioBeep.Controls.Add(this.btnBeepTest, 2, 2);
+            this.tableAudioBeep.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableAudioBeep.Location = new System.Drawing.Point(0, 8);
+            this.tableAudioBeep.Name = "tableAudioBeep";
+            this.tableAudioBeep.RowCount = 3;
+            this.tableAudioBeep.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioBeep.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioBeep.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAudioBeep.Size = new System.Drawing.Size(623, 201);
+            this.tableAudioBeep.TabStop = false;
+            // 
+            // btnBeepTest
+            // 
+            this.btnBeepTest.AutoSize = true;
+            this.btnBeepTest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnBeepTest.Name = "btnBeepTest";
+            this.btnBeepTest.TabStop = false;
+            this.btnBeepTest.Text = "Test";
+            this.btnBeepTest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnBeepTest.UseVisualStyleBackColor = true;
+            this.btnBeepTest.Click += new System.EventHandler(this.btnBeepTest_Click);
+            // 
+            // lblBeepVolP
+            // 
+            this.lblBeepVolP.AutoEllipsis = true;
+            this.lblBeepVolP.AutoSize = true;
+            this.lblBeepVolP.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblBeepVolP.Name = "lblBeepVolP";
+            this.lblBeepVolP.Text = "100 %";
+            this.lblBeepVolP.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // trbBeepVolume
+            // 
+            this.trbBeepVolume.AutoSize = false;
+            this.trbBeepVolume.Dock = System.Windows.Forms.DockStyle.Top;
+            this.trbBeepVolume.Maximum = 100;
+            this.trbBeepVolume.Name = "trbBeepVolume";
+            this.trbBeepVolume.Size = new System.Drawing.Size(401, 22);
+            this.trbBeepVolume.TabIndex = 6;
+            this.trbBeepVolume.TabStop = false;
+            this.trbBeepVolume.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trbBeepVolume.Value = 100;
+            this.trbBeepVolume.Scroll += new System.EventHandler(this.trbBeepVolume_Scroll);
+            this.trbBeepVolume.ValueChanged += new System.EventHandler(this.trbBeepVolume_ValueChanged);
+            // 
+            // lblBeepVolume
+            // 
+            this.lblBeepVolume.AutoEllipsis = true;
+            this.lblBeepVolume.AutoSize = true;
+            this.lblBeepVolume.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblBeepVolume.MinimumSize = new System.Drawing.Size(150, 0);
+            this.lblBeepVolume.Name = "lblBeepVolume";
+            this.lblBeepVolume.Text = "Volume";
+            this.lblBeepVolume.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // chkUseSimulatedBeep
+            // 
+            this.tableAudioBeep.SetColumnSpan(this.chkUseSimulatedBeep, 2);
+            this.chkUseSimulatedBeep.AutoSize = true;
+            this.chkUseSimulatedBeep.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkUseSimulatedBeep.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkUseSimulatedBeep.Name = "chkUseSimulatedBeep";
+            this.chkUseSimulatedBeep.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.chkUseSimulatedBeep.TabStop = false;
+            this.chkUseSimulatedBeep.UseVisualStyleBackColor = true;
+            this.chkUseSimulatedBeep.CheckedChanged += new System.EventHandler(this.chkUseSimulatedBeep_CheckedChanged);
+            // 
+            // lblUseSimulatedBeep
+            // 
+            this.lblUseSimulatedBeep.AutoEllipsis = true;
+            this.lblUseSimulatedBeep.AutoSize = true;
+            this.lblUseSimulatedBeep.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblUseSimulatedBeep.MinimumSize = new System.Drawing.Size(150, 0);
+            this.lblUseSimulatedBeep.Name = "lblUseSimulatedBeep";
+            this.lblUseSimulatedBeep.Text = "Use Simulated Beep";
+            this.lblUseSimulatedBeep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // capAudioBeep
+            // 
+            this.capAudioBeep.Caption = "Beep";
+            this.capAudioBeep.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.capAudioBeep.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.capAudioBeep.Collapsed = false;
+            this.capAudioBeep.Collapsee = null;
+            this.capAudioBeep.Collapsible = false;
+            this.capAudioBeep.Dock = System.Windows.Forms.DockStyle.Top;
+            this.capAudioBeep.Location = new System.Drawing.Point(0, 0);
+            this.capAudioBeep.Name = "capAudioBeep";
+            this.capAudioBeep.Size = new System.Drawing.Size(623, 30);
+            this.capAudioBeep.TabStop = false;
             // 
             // tabLogging
             // 
@@ -4454,17 +4581,21 @@
             this.tableLayoutPanel6.PerformLayout();
             this.tabAudio.ResumeLayout(false);
             this.tabAudio.PerformLayout();
-            this.panel22.ResumeLayout(false);
-            this.panel22.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
+            this.panelAudioTts.ResumeLayout(false);
+            this.panelAudioTts.PerformLayout();
+            this.tableAudioTts.ResumeLayout(false);
+            this.tableAudioTts.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbTtsRepetition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbTtsVolume)).EndInit();
             this.panel21.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.panelAudioSound.ResumeLayout(false);
+            this.panelAudioSound.PerformLayout();
+            this.panelAudioBeep.ResumeLayout(false);
+            this.panelAudioBeep.PerformLayout();
+            this.tableAudioSound.ResumeLayout(false);
+            this.tableAudioSound.PerformLayout();
+            this.tableAudioBeep.ResumeLayout(false);
+            this.tableAudioBeep.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbSoundRepetition)).EndInit();
             this.panel30.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trbSoundVolume)).EndInit();
@@ -4633,9 +4764,18 @@
         private System.Windows.Forms.ToolStrip tlsStartupTrigger;
         private System.Windows.Forms.ToolStripButton btnClearSelection;
         private System.Windows.Forms.ToolStripLabel lblFolderReminder;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private CustomControls.PrettyCaption prettyCaption1;
+        private System.Windows.Forms.Panel panelAudioSound;
+        private System.Windows.Forms.TableLayoutPanel tableAudioSound;
+        private CustomControls.PrettyCaption capAudioSound;
+        private System.Windows.Forms.Panel panelAudioBeep;
+        private System.Windows.Forms.TableLayoutPanel tableAudioBeep;
+        private System.Windows.Forms.Button btnBeepTest;
+        private System.Windows.Forms.Label lblBeepVolP;
+        private System.Windows.Forms.TrackBar trbBeepVolume;
+        private System.Windows.Forms.Label lblBeepVolume;
+        private System.Windows.Forms.CheckBox chkUseSimulatedBeep;
+        private System.Windows.Forms.Label lblUseSimulatedBeep;
+        private CustomControls.PrettyCaption capAudioBeep;
         private System.Windows.Forms.Panel panel11;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelShortCutExpression;
         private System.Windows.Forms.CheckBox chkShortcutEnableTemplates;
@@ -4712,12 +4852,12 @@
         private System.Windows.Forms.Panel panel18;
         private System.Windows.Forms.Button btnUnlockSecurity;
         private CustomControls.PrettyCaption capScripting;
-        private System.Windows.Forms.Panel panel22;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Panel panelAudioTts;
+        private System.Windows.Forms.TableLayoutPanel tableAudioTts;
         private System.Windows.Forms.Label lblTtsVolP;
         private System.Windows.Forms.TrackBar trbTtsVolume;
         private System.Windows.Forms.Label lblTtsVolume;
-        private CustomControls.PrettyCaption prettyCaption2;
+        private CustomControls.PrettyCaption capAudioTts;
         private System.Windows.Forms.Label lblSoundVolP;
         private System.Windows.Forms.TrackBar trbSoundVolume;
         private System.Windows.Forms.Label lblSoundVolume;

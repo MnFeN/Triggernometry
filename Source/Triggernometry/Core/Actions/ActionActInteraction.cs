@@ -97,7 +97,8 @@ namespace Triggernometry.Core.Actions
         }
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            RealPlugin plug = ai.ctx.Plugin;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
             switch (Operation)
             {
                 case OperationEnum.SetCombatState:

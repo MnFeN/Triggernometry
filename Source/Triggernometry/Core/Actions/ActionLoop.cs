@@ -97,7 +97,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             if (ctx.loopActionId == Id)
             {
                 ctx.loopIterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, IncrExpression);

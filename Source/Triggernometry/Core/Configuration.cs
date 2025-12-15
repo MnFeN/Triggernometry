@@ -112,6 +112,34 @@ namespace Triggernometry.Core
 
         #region Audio
 
+        /// <summary>
+        /// Use simulated wave generator instead of Console.Beep() for ActionBeep. <br/>
+        /// Console.Beep() might cause lagging on some PC. <br/>
+        /// The simulated method also supports volume adjustment.
+        /// </summary>
+        [XmlIgnore]
+        public bool UseSimulatedBeep { get; set; } = true;
+
+        [XmlAttribute("UseSimulatedBeep")]
+        public string Xml_UseSimulatedBeep
+        {
+            get => XmlAttr.Bool(UseSimulatedBeep, true);
+            set => XmlAttr.Bool(value);
+        }
+
+        /// <summary>
+        /// Volume of the simulated beep (1-100). Only effective when using simulated beep instead of Console.Beep(). <br/>
+        /// </summary>
+        [XmlIgnore]
+        public int SimulatedBeepVolume { get; set; } = 100;
+
+        [XmlAttribute("SimulatedBeepVolume")]
+        public string Xml_SimulatedBeepVolume
+        {
+            get => XmlAttr.Int(SimulatedBeepVolume, 100);
+            set => XmlAttr.Int(value);
+        }
+
         public enum AudioRoutingMethodEnum
         {
             None,

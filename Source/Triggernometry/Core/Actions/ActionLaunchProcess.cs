@@ -109,7 +109,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             Process p = new Process();
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.Arguments = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Arguments);

@@ -146,7 +146,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             string filename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Filename);
             string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Variable);
             string persist = I18n.TrlVarPersist(Persistent);

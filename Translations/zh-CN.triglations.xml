@@ -638,6 +638,7 @@
     <TranslationEntry Key="BenchmarkProgressForm" Translation="在进程中性能基准测试" />
     <TranslationEntry Key="BenchmarkProgressForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="ConfigurationForm2" Translation="配置" />
+    <TranslationEntry Key="ConfigurationForm2/btnBeepTest" Translation="测试" />
     <TranslationEntry Key="ConfigurationForm2/btnAudio" Translation="声音" />
     <TranslationEntry Key="ConfigurationForm2/btnCacheFileBrowse" Translation="浏览" />
     <TranslationEntry Key="ConfigurationForm2/btnCacheFileClear" Translation="清空缓存" />
@@ -741,6 +742,7 @@
     <TranslationEntry Key="ConfigurationForm2/lblAutoComplete" Translation="输入表达式时启用自动补全" />
     <TranslationEntry Key="ConfigurationForm2/lblAutosaveConfig" Translation="启用自动保存配置" />
     <TranslationEntry Key="ConfigurationForm2/lblAutosaveInterval" Translation="自动保存间隔（分钟）" />
+    <TranslationEntry Key="ConfigurationForm2/lblBeepVolume" Translation="音量" />
     <TranslationEntry Key="ConfigurationForm2/lblCacheFileCount" Translation="当前文件数量" />
     <TranslationEntry Key="ConfigurationForm2/lblCacheFileExpiry" Translation="过期时限（分钟）" />
     <TranslationEntry Key="ConfigurationForm2/lblCacheFileSize" Translation="当前文件大小（字节）" />
@@ -793,6 +795,7 @@
     <TranslationEntry Key="ConfigurationForm2/lblUpdateChannelUrl" Translation="更新链接" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdateMethod" Translation="更新方式" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdates" Translation="启动时检查更新" />
+    <TranslationEntry Key="ConfigurationForm2/lblUseSimulatedBeep" Translation="使用模拟音效替代" />
     <TranslationEntry Key="ConfigurationForm2/lblWarnAdmin" Translation="在非管理员模式下运行 ACT 时显示警告" />
     <TranslationEntry Key="ConfigurationForm2/lblWelcome" Translation="启动时显示欢迎屏幕" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Arcanist]" Translation="秘术师" />
@@ -813,7 +816,7 @@
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Monk]" Translation="武僧" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Ninja]" Translation="忍者" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Paladin]" Translation="骑士" />
-    <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Pictomancer]" Translation="Pictomancer" />
+    <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Pictomancer]" Translation="绘灵法师" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Pugilist]" Translation="格斗家" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Reaper]" Translation="钐镰客" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Red Mage]" Translation="赤魔法师" />
@@ -823,11 +826,12 @@
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Scholar]" Translation="学者" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Summoner]" Translation="召唤师" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Thaumaturge]" Translation="咒术师" />
-    <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Viper]" Translation="Viper" />
+    <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Viper]" Translation="钐镰客" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Warrior]" Translation="战士" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[White Mage]" Translation="白魔法师" />
-    <TranslationEntry Key="ConfigurationForm2/prettyCaption1/lblContent" Translation="音频文件" />
-    <TranslationEntry Key="ConfigurationForm2/prettyCaption2/lblContent" Translation="TTS 文本转语音" />
+    <TranslationEntry Key="ConfigurationForm2/capAudioBeep/lblContent" Translation="蜂鸣音" />
+    <TranslationEntry Key="ConfigurationForm2/capAudioSound/lblContent" Translation="音频文件" />
+    <TranslationEntry Key="ConfigurationForm2/capAudioTts/lblContent" Translation="TTS 文本转语音" />
     <TranslationEntry Key="ConfigurationForm2/prettyCaption3/lblContent" Translation="历史记录" />
     <TranslationEntry Key="ConfigurationForm2/tabFFXIV" Translation="最终幻想 XIV" />
     <TranslationEntry Key="ConfigurationForm2/tlsEndpointHistoryRecv" Translation="条消息 (telegram) 已接收" />

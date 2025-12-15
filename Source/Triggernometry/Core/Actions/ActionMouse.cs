@@ -134,7 +134,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             int mousex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
             int mousey = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
             WindowsUtils.MouseEventFlags flags = 0;

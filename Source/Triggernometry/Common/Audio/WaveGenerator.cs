@@ -21,7 +21,7 @@ namespace Triggernometry.Common.Audio
                 return t < 0.5 ? 4 * t - 1 : -4 * t + 3;
             };
 
-        public static short[] GenerateWave(Func<double, double> waveFunc, int freq, int durationMs, int sampleRate)
+        public static short[] GenerateWave(Func<double, double> waveFunc, int freq, int durationMs, int sampleRate, double volume = 1.0)
         {
             int samples = (int)(sampleRate * durationMs / 1000.0);
             short[] buffer = new short[samples];
@@ -29,16 +29,16 @@ namespace Triggernometry.Common.Audio
             for (int i = 0; i < samples; i++)
             {
                 double t = (double)i / sampleRate; // t/s
-                double x = waveFunc(2 * PI * freq * t);
+                double x = waveFunc(2 * PI * freq * t) * volume;
                 buffer[i] = (short)(x * short.MaxValue);
             }
 
             return buffer;
         }
 
-        private static byte[] GenerateWavBytes(Func<double, double> waveFunc, int frequency, int durationMs, int sampleRate = 44100)
+        private static byte[] GenerateWavBytes(Func<double, double> waveFunc, int frequency, int durationMs, int sampleRate = 44100, double volume = 1.0)
         {
-            var buffer = GenerateWave(waveFunc, frequency, durationMs, sampleRate);
+            var buffer = GenerateWave(waveFunc, frequency, durationMs, sampleRate, volume);
             using (var memStream = new MemoryStream())
             using (var binWriter = new BinaryWriter(memStream))
             {
@@ -76,11 +76,11 @@ namespace Triggernometry.Common.Audio
             }
         }
 
-        public static void PlaySyncWav(Func<double, double> waveFunc, int frequency, int durationMs, int sampleRate = 44100)
-            => PlaySyncWav(GenerateWavBytes(waveFunc, frequency, durationMs, sampleRate));
+        public static void PlaySyncWav(Func<double, double> waveFunc, int frequency, int durationMs, int sampleRate = 44100, double volume = 1.0)
+            => PlaySyncWav(GenerateWavBytes(waveFunc, frequency, durationMs, sampleRate, volume));
         
-        public static void PlaySyncBeep(int frequency, int durationMs)
-            => PlaySyncWav(SineWaveFunc, frequency, durationMs);
+        public static void PlaySyncBeep(int frequency, int durationMs, double volume = 1.0)
+            => PlaySyncWav(SineWaveFunc, frequency, durationMs, volume: volume);
 
     }
 

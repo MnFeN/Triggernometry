@@ -102,7 +102,8 @@ namespace Triggernometry.UI.CustomControls
 
         private void btnAddAction_Click(object sender, EventArgs e)
         {
-            using (ActionForm af = new ActionForm(null, UiContext, TreeView, Images))
+            var a = new ActionOld();
+            using (ActionForm af = new ActionForm(a, UiContext, TreeView, Images))
             {
                 if (IsReadonly == true)
                 {
@@ -112,7 +113,6 @@ namespace Triggernometry.UI.CustomControls
                 af.btnOk.Text = I18n.Translate("internal/TriggerForm/add", "Add");                
                 if (af.ShowDialog() == DialogResult.OK)
                 {
-                    var a = new ActionOld();
                     af.SettingsToAction(a);
                     a.Enabled = true;
                     int insertIndex = (dgvActions.Rows.Count > 0 && dgvActions.SelectedRows.Count > 0) ? (dgvActions.SelectedRows[0].Index + 1) : dgvActions.Rows.Count;

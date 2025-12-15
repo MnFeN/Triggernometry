@@ -46,6 +46,7 @@ namespace Triggernometry.UI.Forms
                 tbcMain.SizeMode = TabSizeMode.Fixed;
             }
             SetupFfxivJobOrder(null);
+            lblBeepVolP.Tag = I18n.DoNotTranslate;
             lblSoundVolP.Tag = I18n.DoNotTranslate;
             lblTtsVolP.Tag = I18n.DoNotTranslate;
             lblSoundRepV.Tag = I18n.DoNotTranslate;
@@ -81,6 +82,8 @@ namespace Triggernometry.UI.Forms
         internal void SettingsFromConfiguration(Configuration cfg)
         {
             cfg = cfg ?? new Configuration();
+            chkUseSimulatedBeep.Checked = cfg.UseSimulatedBeep;
+            trbBeepVolume.Value = cfg.SimulatedBeepVolume;
             trbSoundVolume.Value = cfg.SfxVolumeAdjustment;
             trbTtsVolume.Value = cfg.TtsVolumeAdjustment;
             trbSoundRepetition.Value = cfg.SoundRepCooldown;
@@ -169,6 +172,8 @@ namespace Triggernometry.UI.Forms
 
         internal void SettingsToConfiguration(Configuration cfg)
         {
+            cfg.UseSimulatedBeep = chkUseSimulatedBeep.Checked;
+            cfg.SimulatedBeepVolume = trbBeepVolume.Value;
             cfg.SfxVolumeAdjustment = trbSoundVolume.Value;
             cfg.TtsVolumeAdjustment = trbTtsVolume.Value;
             cfg.SoundRepCooldown = trbSoundRepetition.Value;
@@ -429,9 +434,19 @@ namespace Triggernometry.UI.Forms
 
         #region Audio
 
+        private void trbBeepVolume_Scroll(object sender, EventArgs e)
+        {
+            lblBeepVolP.Text = trbBeepVolume.Value + "%";
+        }
+
+        private void trbBeepVolume_ValueChanged(object sender, EventArgs e)
+        {
+            trbBeepVolume_Scroll(null, null);
+        }
+
         private void trbSoundVolume_Scroll(object sender, EventArgs e)
         {
-            lblSoundVolP.Text = trbSoundVolume.Value + " %";
+            lblSoundVolP.Text = trbSoundVolume.Value + "%";
         }
 
         private void trbSoundVolume_ValueChanged(object sender, EventArgs e)
@@ -441,7 +456,7 @@ namespace Triggernometry.UI.Forms
 
         private void trbTtsVolume_Scroll(object sender, EventArgs e)
         {
-            lblTtsVolP.Text = trbSoundVolume.Value + " %";
+            lblTtsVolP.Text = trbSoundVolume.Value + "%";
         }
 
         private void trbTtsVolume_ValueChanged(object sender, EventArgs e)
@@ -469,6 +484,14 @@ namespace Triggernometry.UI.Forms
             lblSoundRepV.Text = trbSoundRepetition.Value + " ms";
         }
 
+        private void chkUseSimulatedBeep_CheckedChanged(object sender, EventArgs e)
+        {
+            var enabled = chkUseSimulatedBeep.Checked;
+            lblBeepVolume.Enabled = enabled;
+            trbBeepVolume.Enabled = enabled;
+            lblBeepVolP.Enabled = enabled;
+        }
+
         private void cbxSoundMethod_SelectedIndexChanged(object sender, EventArgs e)
         {
             lblSoundVolume.Enabled = (cbxSoundMethod.SelectedIndex != 0);
@@ -494,6 +517,15 @@ namespace Triggernometry.UI.Forms
             btnTtsPath.Enabled = lblTtsPath.Enabled;
             lblTtsPathArgs.Enabled = lblTtsPath.Enabled;
             txtTtsPathArgs.Enabled = lblTtsPath.Enabled;
+        }
+
+        private void btnBeepTest_Click(object sender, EventArgs e)
+        {
+            var frequency = 1046.5; // C6
+            var beepLength = 200;
+            var volume = trbBeepVolume.Value / 100.0;
+            var useSimulatedBeep = chkUseSimulatedBeep.Checked;
+            Core.Actions.ActionBeep.Beep(frequency, beepLength, volume, useSimulatedBeep);
         }
 
         #endregion

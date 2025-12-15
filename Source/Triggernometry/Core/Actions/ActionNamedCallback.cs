@@ -56,7 +56,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             string cbname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
             string cbparm = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Parameter);
             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/callbackinvoke", "Invoking named callback ({0}) with parameter ({1})", cbname, cbparm));

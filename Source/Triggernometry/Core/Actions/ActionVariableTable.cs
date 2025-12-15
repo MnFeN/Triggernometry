@@ -433,7 +433,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
             string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetName);
             VariableStore svs = ctx.Plugin.GetVariableStore(Persistent);

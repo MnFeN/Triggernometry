@@ -83,7 +83,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             string msg = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Message);
             string url = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WebhookURL);
             if (UseTTS == true)

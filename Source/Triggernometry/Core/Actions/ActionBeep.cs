@@ -59,7 +59,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+            bool useSimulatedBeep = plug.cfg.UseSimulatedBeep;
 
             double beepLength = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Duration);
             if (beepLength < 0.0)
@@ -69,12 +71,7 @@ namespace Triggernometry.Core.Actions
             }
 
             double frequency = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Frequency);
-            bool useLegacy = true; // to-do: options
-            if (!useLegacy)
-            {
-                WaveGenerator.PlaySyncBeep((int)Math.Ceiling(frequency), (int)Math.Ceiling(beepLength)); // to-do
-            }
-            else // Console.Beep
+            if (!useSimulatedBeep)
             {
                 if (frequency < 37.0)
                 {
@@ -86,6 +83,20 @@ namespace Triggernometry.Core.Actions
                     frequency = 32767.0;
                     AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/beepfreqhi", "Beep frequency above limit, capping to {0} ", frequency));
                 }
+            }
+
+            double volume = ctx.Plugin.cfg.SimulatedBeepVolume / 100.0;
+            Beep(frequency, beepLength, volume, useSimulatedBeep);
+        }
+
+        public static void Beep(double frequency, double beepLength, double volume, bool useSimulatedBeep)
+        {
+            if (useSimulatedBeep)
+            {
+                WaveGenerator.PlaySyncBeep((int)Math.Ceiling(frequency), (int)Math.Ceiling(beepLength), volume);
+            }
+            else // Console.Beep
+            {
                 Console.Beep((int)Math.Ceiling(frequency), (int)Math.Ceiling(beepLength));
             }
         }

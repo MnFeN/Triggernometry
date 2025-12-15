@@ -81,7 +81,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
+            Context ctx = ai?.ctx ?? Context.Unbound;
+            RealPlugin plug = ctx.Plugin;
+
             Folder f = ctx.Plugin.GetFolderById(FolderId, ctx.Trigger?.Repo);
             if (f != null)
             {
