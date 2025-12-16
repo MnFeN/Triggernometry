@@ -295,8 +295,8 @@ namespace Triggernometry.Core.Actions
                     }
                     catch (Exception ex)
                     {
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/obscontrolexception", "Can't execute OBS control action due to exception: {0}" + ex.Message));
-                    }
+                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/obscontrolexception", 
+                        "Can't execute OBS control action due to exception: {0}", ex.Message));
                 }
             }
         }
