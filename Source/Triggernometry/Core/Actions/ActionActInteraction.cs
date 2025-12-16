@@ -92,7 +92,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.UseDeucalion:
                     return I18n.Translate("internal/Action/descactusedeucalion", "{0} option: Use Deucalion (injection)", I18n.TranslateEnable(BoolParam));
                 default:
-                    throw new NotImplementedException(nameof(Operation));
+                    return NotImplementedEnumMessage(Operation);
             }
         }
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -111,7 +111,7 @@ namespace Triggernometry.Core.Actions
                     PluginBridges.BridgeFFXIV.UseDeucalion(BoolParam);
                     break;
                 default:
-                    throw new NotImplementedException(nameof(Operation));
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

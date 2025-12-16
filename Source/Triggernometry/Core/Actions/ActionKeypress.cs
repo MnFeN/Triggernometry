@@ -146,8 +146,9 @@ namespace Triggernometry.Core.Actions
                         return I18n.Translate("internal/Action/desckeypress", "send keycode ({0}) to {1}", Keycode, target);
                     }
                     return I18n.Translate("internal/Action/desckeypresscombo", "send keycodes ({0}) to {1}", Keycode, target);
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -180,6 +181,8 @@ namespace Triggernometry.Core.Actions
                         WindowsUtils.SendKeycodes(procid, window, keycodes);
                     }
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

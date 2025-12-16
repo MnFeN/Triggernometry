@@ -301,8 +301,9 @@ namespace Triggernometry.Core.Actions
                         "unset all {0}dict variables matching regular expression ({1})",
                         sPersistD, Name
                     );
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -546,6 +547,8 @@ namespace Triggernometry.Core.Actions
                         }
                     }
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

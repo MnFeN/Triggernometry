@@ -97,8 +97,7 @@ namespace Triggernometry.Core.Actions
                     tempt = I18n.Lookup("ActionForm/cbxProcessWindowStyle[Normal]", WindowStyle.ToString());
                     break;
                 default:
-                    tempt = WindowStyle.ToString();
-                    break;
+                    return NotImplementedEnumMessage(WindowStyle);
             }
             return I18n.Translate("internal/Action/desclaunchprocess", "launch process ({0}) as ({1}) using command line parameters ({2})",
                 Xml_Path,

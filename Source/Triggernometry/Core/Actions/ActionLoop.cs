@@ -97,6 +97,7 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
+            throw new NotImplementedException("Loop action should be handled specially for now.");
             Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 

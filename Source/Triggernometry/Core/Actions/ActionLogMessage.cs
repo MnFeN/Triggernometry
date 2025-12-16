@@ -111,6 +111,7 @@ namespace Triggernometry.Core.Actions
                     case LogEvent.SourceEnum.ACT: srcType = "ACT event"; break;
                     case LogEvent.SourceEnum.NetworkFFXIV: srcType = "FFXIV network event"; break;
                     case LogEvent.SourceEnum.Log: srcType = "Normal log line"; break;
+                    default: return NotImplementedEnumMessage(Target);
                 }
                 srcType = I18n.Translate($"ActionForm/cbxLogMessageTarget[{srcType}]", srcType);
                 return I18n.Translate(
@@ -118,7 +119,7 @@ namespace Triggernometry.Core.Actions
                     "process message ({0}) as {1}", Message, srcType
                 );
             }
-            string level = "";
+            string level;
             switch (Level)
             {
                 case LogLevelEnum.Error: level = "Error"; break;
@@ -127,6 +128,7 @@ namespace Triggernometry.Core.Actions
                 case LogLevelEnum.Warning: level = "Warning"; break;
                 case LogLevelEnum.Custom: level = "Custom"; break;
                 case LogLevelEnum.Custom2: level = "Custom 2"; break;
+                default: return NotImplementedEnumMessage(Level);
             }
             level = I18n.Translate($"ActionForm/cbxLogMessageLevel[{level}]", level);
             return I18n.Translate(
@@ -158,6 +160,7 @@ namespace Triggernometry.Core.Actions
                     case LogLevelEnum.Info: debugLevel = RealPlugin.DebugLevelEnum.Info; break;
                     case LogLevelEnum.Verbose: debugLevel = RealPlugin.DebugLevelEnum.Verbose; break;
                     case LogLevelEnum.Warning: debugLevel = RealPlugin.DebugLevelEnum.Warning; break;
+                    default: throw NotImplementedEnumException(Level);
                 }
                 AddToLog(ctx, debugLevel, message);
             }

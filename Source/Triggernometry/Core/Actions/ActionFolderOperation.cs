@@ -73,8 +73,9 @@ namespace Triggernometry.Core.Actions
                         return I18n.Translate("internal/Action/descenablefolder", "enable folder ({0})", f.Name);
                     case OperationEnum.CancelTriggers:
                         return I18n.Translate("internal/Action/desccancelfolder", "cancel all actions from folder ({0})", f.Name);
+                    default:
+                        return NotImplementedEnumMessage(Operation);
                 }
-                return "";
             }
             return I18n.Translate("internal/Action/descinvalidfolderref", "folder action with an invalid folder reference ({0})", FolderId);
         }
@@ -85,69 +86,69 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             Folder f = ctx.Plugin.GetFolderById(FolderId, ctx.Trigger?.Repo);
-            if (f != null)
-            {
-                switch (Operation)
-                {
-                    case OperationEnum.Disable:
-                        {
-                            f.Enabled = false;
-
-                            ctx.Plugin.ui.Invoke((System.Action)(() =>
-                            {
-                                bool isLocal = ctx.Trigger?.Repo == null;
-                                TreeNode tn = ctx.Plugin.LocateNodeHostingFolder(ctx.Plugin.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
-
-                                if (tn != null)
-                                {
-                                    tn.Checked = false;
-                                }
-                                else
-                                {
-                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodefolderwithid", "Didn't find a tree node for folder ({0}) with id ({1})", f.Name, f.Id));
-                                }
-                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/disabledfolderwithid", "Disabled folder ({0}) with id ({1})", f.Name, f.Id));
-                            }));
-                        }
-                        break;
-                    case OperationEnum.Enable:
-                        {
-                            f.Enabled = true;
-
-                            ctx.Plugin.ui.Invoke((System.Action)(() =>
-                            {
-                                bool isLocal = ctx.Trigger?.Repo == null;
-                                TreeNode tn = ctx.Plugin.LocateNodeHostingFolder(ctx.Plugin.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
-
-                                if (tn != null)
-                                {
-                                    tn.Checked = true;
-                                }
-                                else
-                                {
-                                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodefolderwithid", "Didn't find a tree node for folder ({0}) with id ({1})", f.Name, f.Id));
-                                }
-                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/enabledfolderwithid", "Enabled folder ({0}) with id ({1})", f.Name, f.Id));
-                            }));
-                        }
-                        break;
-                    case OperationEnum.CancelTriggers:
-                        {
-                            var triggersInFolder = new HashSet<Trigger>(f.RecursiveGetTriggers());
-                            int removed = RealPlugin.Instance.CancelQueuedActions(
-                                _qa => _qa?.ctx?.Trigger != null && triggersInFolder.Contains(_qa.ctx.Trigger)
-                            );
-                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfolder",
-                                "Cancelled {1} queued action(s) from {2} triggers in folder ({0})",
-                                f.Name, removed, triggersInFolder.Count));
-                        }
-                        break;
-                }
-            }
-            else
+            if (f == null)
             {
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/nofolderwithid",
                     "Folder operation failed: In trigger ({1}), the specified folder id ({0}) does not exist.", FolderId, ParentTrigger?.FullPath ?? "null"));
+                return;
+            }
+            switch (Operation)
+            {
+                case OperationEnum.Disable:
+                    {
+                        f.Enabled = false;
+
+                        ctx.Plugin.ui.Invoke((System.Action)(() =>
+                        {
+                            bool isLocal = ctx.Trigger?.Repo == null;
+                            TreeNode tn = ctx.Plugin.LocateNodeHostingFolder(ctx.Plugin.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
+
+                            if (tn != null)
+                            {
+                                tn.Checked = false;
+                            }
+                            else
+                            {
+                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodefolderwithid", "Didn't find a tree node for folder ({0}) with id ({1})", f.Name, f.Id));
+                            }
+                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/disabledfolderwithid", "Disabled folder ({0}) with id ({1})", f.Name, f.Id));
+                        }));
+                    }
+                    break;
+                case OperationEnum.Enable:
+                    {
+                        f.Enabled = true;
+
+                        ctx.Plugin.ui.Invoke((System.Action)(() =>
+                        {
+                            bool isLocal = ctx.Trigger?.Repo == null;
+                            TreeNode tn = ctx.Plugin.LocateNodeHostingFolder(ctx.Plugin.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
+
+                            if (tn != null)
+                            {
+                                tn.Checked = true;
+                            }
+                            else
+                            {
+                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodefolderwithid", "Didn't find a tree node for folder ({0}) with id ({1})", f.Name, f.Id));
+                            }
+                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/enabledfolderwithid", "Enabled folder ({0}) with id ({1})", f.Name, f.Id));
+                        }));
+                    }
+                    break;
+                case OperationEnum.CancelTriggers:
+                    {
+                        var triggersInFolder = new HashSet<Trigger>(f.RecursiveGetTriggers());
+                        int removed = RealPlugin.Instance.CancelQueuedActions(
+                            _qa => _qa?.ctx?.Trigger != null && triggersInFolder.Contains(_qa.ctx.Trigger)
+                        );
+                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfolder",
+                            "Cancelled {1} queued action(s) from {2} triggers in folder ({0})",
+                            f.Name, removed, triggersInFolder.Count));
+                    }
+                    break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

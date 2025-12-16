@@ -360,8 +360,9 @@ namespace Triggernometry.Core.Actions
                         "unset {1}list variables matching regular expression ({0})",
                         Name, sPersistL
                     );
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         private string GetListExpressionValue(Context ctx, ExpressionTypeEnum typ, string expr)
@@ -862,6 +863,8 @@ namespace Triggernometry.Core.Actions
                             "All {1}list variables matching ({0}) unset", Name, sPersist));
                         break;
                     }
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

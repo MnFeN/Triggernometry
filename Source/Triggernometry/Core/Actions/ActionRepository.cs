@@ -82,9 +82,10 @@ namespace Triggernometry.Core.Actions
                     }
                     return I18n.Translate("internal/Action/descrepoinvalidref", "repository action with an invalid repository reference ({0})", RepositoryId);
                 case OperationEnum.UpdateAll:
-                    return I18n.Translate("internal/Action/repoupdateall", "Update all repositories");                    
+                    return I18n.Translate("internal/Action/repoupdateall", "Update all repositories");
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -104,6 +105,8 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.UpdateAll:
                     _ = ctx.Plugin.UpdateAllRepositoriesAsync(false);
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
             if (r != null)
             {

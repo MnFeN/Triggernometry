@@ -67,8 +67,9 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate("internal/Action/mutexrelease", "release mutex ({0})", Name);
                 case OperationEnum.Acquire:
                     return I18n.Translate("internal/Action/mutexacquire", "acquire mutex ({0})", Name);
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -91,6 +92,8 @@ namespace Triggernometry.Core.Actions
                         mi.Release(ctx);
                     }
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

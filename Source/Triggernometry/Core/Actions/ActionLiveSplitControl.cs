@@ -90,8 +90,9 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate("internal/Action/desclsresume", "Resume run on LiveSplit");
                 case OperationEnum.CustomPayload:
                     return I18n.Translate("internal/Action/desclscustompayload", "Send custom payload to LiveSplit");
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -100,55 +101,52 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             LiveSplitController livesplitController = ctx.Plugin._livesplit;
-            if (livesplitController != null)
+            if (livesplitController == null) return;
+
+            lock (livesplitController)
             {
-                lock (livesplitController)
+                if (LiveSplitConnector(ctx) != true)
                 {
-                    if (LiveSplitConnector(ctx) == true)
+                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/lscontrolerror", "Can't execute LiveSplit control action due to error"));
+                    return;
+                }
+                try
+                {
+                    switch (Operation)
                     {
-                        try
-                        {
-                            switch (Operation)
-                            {
-                                case OperationEnum.StartOrSplit:
-                                    livesplitController.StartOrSplit();
-                                    break;
-                                case OperationEnum.Start:
-                                    livesplitController.Start();
-                                    break;
-                                case OperationEnum.Split:
-                                    livesplitController.Split();
-                                    break;
-                                case OperationEnum.UndoSplit:
-                                    livesplitController.UndoSplit();
-                                    break;
-                                case OperationEnum.SkipSplit:
-                                    livesplitController.SkipSplit();
-                                    break;
-                                case OperationEnum.Reset:
-                                    livesplitController.Reset();
-                                    break;
-                                case OperationEnum.Pause:
-                                    livesplitController.Pause();
-                                    break;
-                                case OperationEnum.Resume:
-                                    livesplitController.Resume();
-                                    break;
-                                case OperationEnum.CustomPayload:
-                                    string lscommand = ctx.EvaluateStringExpression(ActionContextLogger, ctx, CustomPayload);
-                                    livesplitController.SendCommand(lscommand);
-                                    break;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/lscontrolexception", "Can't execute LiveSplit control action due to exception: " + ex.Message));
-                        }
+                        case OperationEnum.StartOrSplit:
+                            livesplitController.StartOrSplit();
+                            break;
+                        case OperationEnum.Start:
+                            livesplitController.Start();
+                            break;
+                        case OperationEnum.Split:
+                            livesplitController.Split();
+                            break;
+                        case OperationEnum.UndoSplit:
+                            livesplitController.UndoSplit();
+                            break;
+                        case OperationEnum.SkipSplit:
+                            livesplitController.SkipSplit();
+                            break;
+                        case OperationEnum.Reset:
+                            livesplitController.Reset();
+                            break;
+                        case OperationEnum.Pause:
+                            livesplitController.Pause();
+                            break;
+                        case OperationEnum.Resume:
+                            livesplitController.Resume();
+                            break;
+                        case OperationEnum.CustomPayload:
+                            string lscommand = ctx.EvaluateStringExpression(ActionContextLogger, ctx, CustomPayload);
+                            livesplitController.SendCommand(lscommand);
+                            break;
                     }
-                    else
-                    {
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/lscontrolerror", "Can't execute LiveSplit control action due to error"));
-                    }
+                }
+                catch (Exception ex)
+                {
+                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/lscontrolexception", "Can't execute LiveSplit control action due to exception: " + ex.Message));
                 }
             }
         }

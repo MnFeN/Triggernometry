@@ -176,8 +176,9 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate("internal/Action/descobshidesource", "hide source ({0}) on OBS scene ({1})", SourceName, SceneName);
                 case OperationEnum.JSONPayload:
                     return I18n.Translate("internal/Action/descobsjsonpayload", "Send custom JSON payload to OBS");
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -186,115 +187,117 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             ObsController obsController = ctx.Plugin._obs;
-            if (obsController != null)
+            if (obsController == null) return;
+
+            string endpoint = "";
+            if (!string.IsNullOrWhiteSpace(Endpoint))
             {
-                string endpoint = "";
-                if (!string.IsNullOrWhiteSpace(Endpoint))
-                {
-                    endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Endpoint);
-                }
-                else
-                {
-                    var constants = RealPlugin.Instance.cfg.Constants;
-                    if (constants.TryGetValue("OBSWebsocketEndpoint", out var e) && constants.TryGetValue("OBSWebsocketPort", out var p))
-                        endpoint = $"ws://{e}:{p}";
-                }
+                endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Endpoint);
+            }
+            else
+            {
+                var constants = RealPlugin.Instance.cfg.Constants;
+                if (constants.TryGetValue("OBSWebsocketEndpoint", out var e) && constants.TryGetValue("OBSWebsocketPort", out var p))
+                    endpoint = $"ws://{e}:{p}";
+            }
 
-                string password = "";
-                if (!string.IsNullOrWhiteSpace(Password))
-                {
-                    password = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Password);
-                }
-                else
-                {
-                    var constants = RealPlugin.Instance.cfg.Constants;
-                    if (constants.TryGetValue("OBSWebsocketPassword", out var pw))
-                        password = pw.ToString();
-                }
+            string password = "";
+            if (!string.IsNullOrWhiteSpace(Password))
+            {
+                password = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Password);
+            }
+            else
+            {
+                var constants = RealPlugin.Instance.cfg.Constants;
+                if (constants.TryGetValue("OBSWebsocketPassword", out var pw))
+                    password = pw.ToString();
+            }
 
-                lock (obsController)
+            lock (obsController)
+            {
+                if (ObsConnector(ctx, endpoint, password) != true)
+                    return; // already complaint about errors
+                try
                 {
-                    if (ObsConnector(ctx, endpoint, password) != true)
-                        return; // already complaint about errors
-                    try
+                    switch (Operation)
                     {
-                        switch (Operation)
-                        {
-                            case OperationEnum.StartStreaming:
-                                obsController.StartStreaming();
-                                break;
-                            case OperationEnum.StopStreaming:
-                                obsController.StopStreaming();
-                                break;
-                            case OperationEnum.ToggleStreaming:
-                                obsController.ToggleStreaming();
-                                break;
-                            case OperationEnum.StartRecording:
-                                obsController.StartRecording();
-                                break;
-                            case OperationEnum.StopRecording:
-                                obsController.StopRecording();
-                                break;
-                            case OperationEnum.ToggleRecording:
-                                obsController.ToggleRecording();
-                                break;
-                            case OperationEnum.RestartRecording:
-                                obsController.RestartRecording();
-                                break;
-                            case OperationEnum.RestartRecordingIfActive:
-                                obsController.RestartRecordingIfActive();
-                                break;
-                            case OperationEnum.ResumeRecording:
-                                obsController.ResumeRecording();
-                                break;
-                            case OperationEnum.PauseRecording:
-                                obsController.PauseRecording();
-                                break;
-                            case OperationEnum.ToggleRecordPause:
-                                obsController.ToggleRecordPause();
-                                break;
-                            case OperationEnum.StartReplayBuffer:
-                                obsController.StartReplayBuffer();
-                                break;
-                            case OperationEnum.StopReplayBuffer:
-                                obsController.StopReplayBuffer();
-                                break;
-                            case OperationEnum.ToggleReplayBuffer:
-                                obsController.ToggleReplayBuffer();
-                                break;
-                            case OperationEnum.SaveReplayBuffer:
-                                obsController.SaveReplayBuffer();
-                                break;
-                            case OperationEnum.SetScene:
-                                {
-                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
-                                    obsController.SetCurrentScene(scn);
-                                }
-                                break;
-                            case OperationEnum.ShowSource:
-                                {
-                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
-                                    string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SourceName);
-                                    obsController.ShowHideSource(scn, src, true);
-                                }
-                                break;
-                            case OperationEnum.HideSource:
-                                {
-                                    string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
-                                    string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SourceName);
-                                    obsController.ShowHideSource(scn, src, false);
-                                }
-                                break;
-                            case OperationEnum.JSONPayload:
-                                {
-                                    string json = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JSONPayload);
-                                    obsController.JSONPayload(json);
-                                }
-                                break;
-                        }
+                        case OperationEnum.StartStreaming:
+                            obsController.StartStreaming();
+                            break;
+                        case OperationEnum.StopStreaming:
+                            obsController.StopStreaming();
+                            break;
+                        case OperationEnum.ToggleStreaming:
+                            obsController.ToggleStreaming();
+                            break;
+                        case OperationEnum.StartRecording:
+                            obsController.StartRecording();
+                            break;
+                        case OperationEnum.StopRecording:
+                            obsController.StopRecording();
+                            break;
+                        case OperationEnum.ToggleRecording:
+                            obsController.ToggleRecording();
+                            break;
+                        case OperationEnum.RestartRecording:
+                            obsController.RestartRecording();
+                            break;
+                        case OperationEnum.RestartRecordingIfActive:
+                            obsController.RestartRecordingIfActive();
+                            break;
+                        case OperationEnum.ResumeRecording:
+                            obsController.ResumeRecording();
+                            break;
+                        case OperationEnum.PauseRecording:
+                            obsController.PauseRecording();
+                            break;
+                        case OperationEnum.ToggleRecordPause:
+                            obsController.ToggleRecordPause();
+                            break;
+                        case OperationEnum.StartReplayBuffer:
+                            obsController.StartReplayBuffer();
+                            break;
+                        case OperationEnum.StopReplayBuffer:
+                            obsController.StopReplayBuffer();
+                            break;
+                        case OperationEnum.ToggleReplayBuffer:
+                            obsController.ToggleReplayBuffer();
+                            break;
+                        case OperationEnum.SaveReplayBuffer:
+                            obsController.SaveReplayBuffer();
+                            break;
+                        case OperationEnum.SetScene:
+                            {
+                                string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
+                                obsController.SetCurrentScene(scn);
+                            }
+                            break;
+                        case OperationEnum.ShowSource:
+                            {
+                                string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
+                                string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SourceName);
+                                obsController.ShowHideSource(scn, src, true);
+                            }
+                            break;
+                        case OperationEnum.HideSource:
+                            {
+                                string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
+                                string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SourceName);
+                                obsController.ShowHideSource(scn, src, false);
+                            }
+                            break;
+                        case OperationEnum.JSONPayload:
+                            {
+                                string json = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JSONPayload);
+                                obsController.JSONPayload(json);
+                            }
+                            break;
+                        default:
+                            throw NotImplementedEnumException(Operation);
                     }
-                    catch (Exception ex)
-                    {
+                }
+                catch (Exception ex)
+                {
                     AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/obscontrolexception", 
                         "Can't execute OBS control action due to exception: {0}", ex.Message));
                 }
@@ -308,13 +311,15 @@ namespace Triggernometry.Core.Actions
         /// </returns>
         internal bool? ObsConnector(Context ctx, string endpoint, string password)
         {
-            lock (plug._obs)
+            var obsController = ctx.Plugin._obs;
+
+            lock (obsController)
             {
-                if (plug._obs.IsConnected == true)
+                if (obsController.IsConnected == true)
                 {
                     return true;
                 }
-                var state = plug._obs.CheckRunningState();
+                var state = obsController.CheckRunningState();
                 if (state != ObsController.ObsRunningState.Running)
                 {
                     if (state == ObsController.ObsRunningState.NotRunningFirstlyFound)
@@ -324,7 +329,7 @@ namespace Triggernometry.Core.Actions
                 }
                 try
                 {
-                    plug._obs.Connect(endpoint, password);
+                    obsController.Connect(endpoint, password);
                     AddToLog(ctx, RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Action/obsconnectok",
                         "OBS WebSocket connected successfully"));
                     return true;

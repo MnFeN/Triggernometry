@@ -427,8 +427,9 @@ namespace Triggernometry.Core.Actions
                         }
                         return I18n.Translate(key, trl, Name, sPersistT, Y, X);
                     }
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -578,8 +579,8 @@ namespace Triggernometry.Core.Actions
                                 vt.Resize(mx, my);
                             }
                             ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;
-                            ctx.tableColIndex = x;          // for ${_row}
-                            ctx.tableRowIndex = y;          // for ${_col}
+                            ctx.tableColIndex = x;          // for ${_col}
+                            ctx.tableRowIndex = y;          // for ${_row}
                             expr = ParseExpr();
                             vt.Set(x, y, expr, vtchanger);
                         }
@@ -967,6 +968,8 @@ namespace Triggernometry.Core.Actions
                             sourcename, sPersist, vt.Rows.Count - 1));
                     }
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

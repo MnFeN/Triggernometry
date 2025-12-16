@@ -117,6 +117,8 @@ namespace Triggernometry.Core.Actions
                 case CoordinateEnum.Relative:
                     coorddesc = I18n.Translate("internal/Action/descmousecoordrelative", "by relative coordinates");
                     break;
+                default:
+                    return NotImplementedEnumMessage(Coordinate);
             }
             switch (Operation)
             {
@@ -128,11 +130,12 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate("internal/Action/descmousemmb", "Move mouse {0} X: {1} Y: {2} and middle click", coorddesc, X, Y);
                 case OperationEnum.RightClick:
                     return I18n.Translate("internal/Action/descmousermb", "Move mouse {0} X: {1} Y: {2} and right click", coorddesc, X, Y);
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(ActionInstance ai) // todo: avoid Sleep
         {
             Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
@@ -147,6 +150,8 @@ namespace Triggernometry.Core.Actions
                     break;
                 case CoordinateEnum.Relative:
                     break;
+                default:
+                    throw NotImplementedEnumException(Coordinate);
             }
             switch (Operation)
             {
@@ -183,6 +188,8 @@ namespace Triggernometry.Core.Actions
                         WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.RIGHTUP, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
                     });
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

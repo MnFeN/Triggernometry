@@ -227,9 +227,10 @@ namespace Triggernometry.Core.Actions
                         "internal/Action/descscalarqueryjsonlist",
                         "query {1} variable ({0}) with JSON path ({2}) and store result to {4}list variable ({3})",
                         Name, sPersist, Value, JsonTargetName, tPersist
-                    );                    
+                    );
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -434,6 +435,8 @@ namespace Triggernometry.Core.Actions
                             "{2}List variable ({0}) value set to ({1})", tgtname, newval, tPersist));
                     }
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

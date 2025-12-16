@@ -357,7 +357,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.EnableTrigger:
                     return I18n.Translate("internal/Action/desctrigenable", "enable trigger ({0})", t?.Name ?? "null");
                 default:
-                    throw new NotImplementedException(Operation.ToString());
+                    return NotImplementedEnumMessage(Operation);
             }
         }
 
@@ -382,18 +382,18 @@ namespace Triggernometry.Core.Actions
                         {
                             var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, TagRegex);
                             var regex = new Regex(tag);
-                            var removedCount = Instance.CancelQueuedActions(
+                            var removedCount = plug.CancelQueuedActions(
                                 _qa => regex.IsMatch(_qa?.ParsedTag ?? "")
                             );
-                            Instance.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcanceltag",
                                 "{0} queued action(s) with tags matching '{1}' cancelled",
                                 removedCount, tag));
                         }
                         else
                         {
-                            var removedCount = Instance.CancelQueuedActions();
-                            Instance.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                            var removedCount = plug.CancelQueuedActions();
+                            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcancelall",
                                 "All {0} queued action(s) cancelled",
                                 removedCount));
@@ -408,18 +408,18 @@ namespace Triggernometry.Core.Actions
                         {
                             var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, TagRegex);
                             var regex = new Regex(tag);
-                            var removedCount = Instance.CancelQueuedActions(
+                            var removedCount = plug.CancelQueuedActions(
                                 _qa => trigFilter(_qa) && regex.IsMatch(_qa?.ParsedTag ?? "")
                             );
-                            Instance.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcanceltrigtag",
                                 "{0} queued action(s) from trigger '{1}' with tags matching '{2}' cancelled",
                                 removedCount, t.LogName, tag));
                         }
                         else
                         {
-                            var removedCount = Instance.CancelQueuedActions(queuedAction => trigFilter(queuedAction));
-                            Instance.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                            var removedCount = plug.CancelQueuedActions(queuedAction => trigFilter(queuedAction));
+                            plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcanceltrig",
                                 "{0} queued action(s) from trigger '{1}' cancelled",
                                 removedCount, t.LogName));
@@ -484,6 +484,8 @@ namespace Triggernometry.Core.Actions
                         }));
                     }
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

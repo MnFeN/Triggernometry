@@ -367,14 +367,15 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate("internal/Action/desctextauradeactall", "deactivate all text overlays");
                 case OperationEnum.DeactivateRegex:
                     return I18n.Translate("internal/Action/desctextauradeactrex", "deactivate text overlays matching regular expression ({0})", Name);
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai?.ctx ?? Context.Unbound;
-            RealPlugin plug = ctx.Plugin;
+            // RealPlugin plug = ctx.Plugin;
 
             ctx.Plugin.TextAuraManagement(ctx, (ActionOld)this); // todo supposed to be a reference to this action
         }

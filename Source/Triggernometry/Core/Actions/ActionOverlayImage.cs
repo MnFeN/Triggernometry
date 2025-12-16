@@ -258,14 +258,15 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate("internal/Action/descimgauradeactall", "deactivate all image overlays");
                 case OperationEnum.DeactivateRegex:
                     return I18n.Translate("internal/Action/descimgauradeactrex", "deactivate image overlays matching regular expression ({0})", Name);
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai?.ctx ?? Context.Unbound;
-            RealPlugin plug = ctx.Plugin;
+            // RealPlugin plug = ctx.Plugin;
 
             ctx.Plugin.ImageAuraManagement(ctx, (ActionOld)this); // todo supposed to be a reference to this action
         }

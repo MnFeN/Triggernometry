@@ -140,8 +140,9 @@ namespace Triggernometry.Core.Actions
                         "read csv file ({0}) into {2}table variable ({1}){3}",
                         Filename, Variable, persist, cache
                     );
+                default:
+                    return NotImplementedEnumMessage(Operation);
             }
-            return "";
         }        
 
         internal override void ExecuteImplementation(ActionInstance ai)
@@ -291,6 +292,8 @@ namespace Triggernometry.Core.Actions
                             varname, filename, persist));
                     }
                     break;
+                default:
+                    throw NotImplementedEnumException(Operation);
             }
         }
 

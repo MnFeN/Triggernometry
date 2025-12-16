@@ -84,7 +84,7 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai?.ctx ?? Context.Unbound;
-            RealPlugin plug = ctx.Plugin;
+            // RealPlugin plug = ctx.Plugin;
 
             ctx.soundhook(ctx, (ActionOld)this); // todo
         }

@@ -807,6 +807,14 @@ namespace Triggernometry.Core
                 );
         }
 
+        /// <summary> "Not implemented for [ActionType] enum [EnumName]." </summary>
+        protected string NotImplementedEnumMessage<T>(T @enum) where T : Enum
+            => $"Not implemented for {GetType().Name} enum {@enum}.";
+
+        /// <summary> "Not implemented for [ActionType] enum [EnumName]." </summary>
+        protected Exception NotImplementedEnumException<T>(T @enum) where T : Enum
+            => new NotImplementedException(NotImplementedEnumMessage(@enum));
+
         #endregion
 
         #region Action-specific property management
