@@ -338,7 +338,7 @@ namespace Triggernometry.Core.Actions
                         if (isName)
                             lock (vs.Scalar)
                             {
-                                text = vs.Scalar[varname].Value;
+                                text = vs.GetScalarVariable(varname, false).Value;
                             }
                         else
                         {
