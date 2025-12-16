@@ -383,8 +383,8 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
-            VariableStore svs = ctx.Plugin.GetVariableStore(Persistent);
-            VariableStore tvs = ctx.Plugin.GetVariableStore(TargetPersistent);
+            VariableStore svs = plug.GetVariableStore(Persistent);
+            VariableStore tvs = plug.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(TargetPersistent);
             string changer;
@@ -619,7 +619,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.List)
                         {
                             VariableList vl = svs.GetListVariable(sourcename, false);
-                            vl.SortFfxivPartyAsc(ctx.Plugin.cfg, changer);
+                            vl.SortFfxivPartyAsc(plug.cfg, changer);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortffxiv",
                             "{1}List variable ({0}) sorted in FFXIV party {2} order", sourcename, sPersist, order));
@@ -631,7 +631,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.List)
                         {
                             VariableList vl = svs.GetListVariable(sourcename, false);
-                            vl.SortFfxivPartyDesc(ctx.Plugin.cfg, changer);
+                            vl.SortFfxivPartyDesc(plug.cfg, changer);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortffxiv",
                             "{1}List variable ({0}) sorted in FFXIV party {2} order", sourcename, sPersist, order));

@@ -100,7 +100,7 @@ namespace Triggernometry.Core.Actions
             Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
-            LiveSplitController livesplitController = ctx.Plugin._livesplit;
+            LiveSplitController livesplitController = plug._livesplit;
             if (livesplitController == null) return;
 
             lock (livesplitController)
@@ -153,15 +153,16 @@ namespace Triggernometry.Core.Actions
 
         internal bool LiveSplitConnector(Context ctx)
         {
-            lock (Instance._livesplit)
+            var liveSplitController = ctx.Plugin._livesplit;
+            lock (liveSplitController)
             {
-                if (Instance._livesplit.IsConnected == true)
+                if (liveSplitController.IsConnected == true)
                 {
                     return true;
                 }
                 try
                 {
-                    Instance._livesplit.Connect();
+                    liveSplitController.Connect();
                     AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Action/lsconnectok", "LiveSplit connected successfully"));
                     return true;
                 }

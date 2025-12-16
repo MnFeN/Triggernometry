@@ -85,7 +85,7 @@ namespace Triggernometry.Core.Actions
                 }
             }
 
-            double volume = ctx.Plugin.cfg.SimulatedBeepVolume / 100.0;
+            double volume = plug.cfg.SimulatedBeepVolume / 100.0;
             Beep(frequency, beepLength, volume, useSimulatedBeep);
         }
 

@@ -146,8 +146,8 @@ namespace Triggernometry.Core.Actions
 
             if (ProcessAsLogline)
             {
-                string zone = ctx.EvaluateStringExpression(ActionContextLogger, ctx, ctx.Plugin.currentZone);
-                ctx.Plugin.LogLineQueuer(message, zone, Target);
+                string zone = ctx.EvaluateStringExpression(ActionContextLogger, ctx, plug.currentZone);
+                plug.LogLineQueuer(message, zone, Target);
             }
             else
             {
@@ -166,7 +166,7 @@ namespace Triggernometry.Core.Actions
             }
             if (AddToACTEncounter)
             {
-                ctx.Plugin.ACTEncounterLogHook(message);
+                plug.ACTEncounterLogHook(message);
             }
         }
 

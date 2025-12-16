@@ -100,17 +100,17 @@ namespace Triggernometry.Core.Actions
                     r = ctx.Trigger?.Repo;
                     break;
                 case OperationEnum.UpdateRepo:
-                    r = ctx.Plugin.GetRepositoryById(RepositoryId);
+                    r = plug.GetRepositoryById(RepositoryId);
                     break;
                 case OperationEnum.UpdateAll:
-                    _ = ctx.Plugin.UpdateAllRepositoriesAsync(false);
+                    _ = plug.UpdateAllRepositoriesAsync(false);
                     break;
                 default:
                     throw NotImplementedEnumException(Operation);
             }
             if (r != null)
             {
-                _ = ctx.Plugin.UpdateSingleRepositoryAsync(r);
+                _ = plug.UpdateSingleRepositoryAsync(r);
             }
         }
 

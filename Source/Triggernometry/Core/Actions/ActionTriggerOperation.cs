@@ -366,7 +366,7 @@ namespace Triggernometry.Core.Actions
             Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
-            Trigger t = ctx.Plugin.GetTriggerById(TriggerId, ctx.Trigger?.Repo);
+            Trigger t = plug.GetTriggerById(TriggerId, ctx.Trigger?.Repo);
             if (t == null && Operation != OperationEnum.CancelAllTrigger)
             {
                 AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/notriggerwithid",
@@ -447,10 +447,10 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.EnableTrigger:
                     {
                         t.Enabled = true;
-                        ctx.Plugin.ui.Invoke((System.Action)(() =>
+                        plug.ui.Invoke((System.Action)(() =>
                         {
                             bool isLocal = ctx.Trigger == null || ctx.Trigger.Repo == null;
-                            TreeNode tn = ctx.Plugin.LocateNodeHostingTrigger(ctx.Plugin.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
+                            TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
 
                             if (tn != null)
                             {
@@ -467,10 +467,10 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.DisableTrigger:
                     {
                         t.Enabled = false;
-                        ctx.Plugin.ui.Invoke((System.Action)(() =>
+                        plug.ui.Invoke((System.Action)(() =>
                         {
                             bool isLocal = ctx.Trigger == null || ctx.Trigger.Repo == null;
-                            TreeNode tn = ctx.Plugin.LocateNodeHostingTrigger(ctx.Plugin.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
+                            TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
 
                             if (tn != null)
                             {

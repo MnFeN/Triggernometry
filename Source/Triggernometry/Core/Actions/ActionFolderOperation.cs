@@ -85,7 +85,7 @@ namespace Triggernometry.Core.Actions
             Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
-            Folder f = ctx.Plugin.GetFolderById(FolderId, ctx.Trigger?.Repo);
+            Folder f = plug.GetFolderById(FolderId, ctx.Trigger?.Repo);
             if (f == null)
             {
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/nofolderwithid",
@@ -98,10 +98,10 @@ namespace Triggernometry.Core.Actions
                     {
                         f.Enabled = false;
 
-                        ctx.Plugin.ui.Invoke((System.Action)(() =>
+                        plug.ui.Invoke((System.Action)(() =>
                         {
                             bool isLocal = ctx.Trigger?.Repo == null;
-                            TreeNode tn = ctx.Plugin.LocateNodeHostingFolder(ctx.Plugin.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
+                            TreeNode tn = plug.LocateNodeHostingFolder(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
 
                             if (tn != null)
                             {
@@ -119,10 +119,10 @@ namespace Triggernometry.Core.Actions
                     {
                         f.Enabled = true;
 
-                        ctx.Plugin.ui.Invoke((System.Action)(() =>
+                        plug.ui.Invoke((System.Action)(() =>
                         {
                             bool isLocal = ctx.Trigger?.Repo == null;
-                            TreeNode tn = ctx.Plugin.LocateNodeHostingFolder(ctx.Plugin.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
+                            TreeNode tn = plug.LocateNodeHostingFolder(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
 
                             if (tn != null)
                             {

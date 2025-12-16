@@ -62,13 +62,13 @@ namespace Triggernometry.Core.Actions
 
             string scp = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Script);
             string assy = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Assemblies);
-            while (ctx.Plugin.scriptingInited == false)
+            while (plug.scriptingInited == false)
             {
                 Thread.Sleep(10);
             }
-            if (ctx.Plugin?.scripting.Ready == true)
+            if (plug?.scripting.Ready == true)
             {
-                ctx.Plugin.scripting.Evaluate(scp, assy, ctx);
+                plug.scripting.Evaluate(scp, assy, ctx);
             }
             else
             {

@@ -82,13 +82,13 @@ namespace Triggernometry.Core.Actions
             {
                 case OperationEnum.Acquire:
                     {
-                        RealPlugin.MutexInformation mi = ctx.Plugin.GetMutex(mn);
+                        RealPlugin.MutexInformation mi = plug.GetMutex(mn);
                         mi.Acquire(ctx);
                     }
                     break;
                 case OperationEnum.Release:
                     {
-                        RealPlugin.MutexInformation mi = ctx.Plugin.GetMutex(mn);
+                        RealPlugin.MutexInformation mi = plug.GetMutex(mn);
                         mi.Release(ctx);
                     }
                     break;

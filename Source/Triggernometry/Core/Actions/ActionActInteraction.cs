@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.PluginBridges;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
@@ -105,10 +106,10 @@ namespace Triggernometry.Core.Actions
                     plug.SetCombatStateHook(BoolParam);
                     break;
                 case OperationEnum.LogAllNetwork:
-                    PluginBridges.BridgeFFXIV.LogAllNetwork(BoolParam);
+                    BridgeFFXIV.LogAllNetwork(BoolParam);
                     break;
                 case OperationEnum.UseDeucalion:
-                    PluginBridges.BridgeFFXIV.UseDeucalion(BoolParam);
+                    BridgeFFXIV.UseDeucalion(BoolParam);
                     break;
                 default:
                     throw NotImplementedEnumException(Operation);

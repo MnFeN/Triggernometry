@@ -313,8 +313,8 @@ namespace Triggernometry.Core.Actions
 
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
             string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVariable);
-            VariableStore svs = ctx.Plugin.GetVariableStore(Persistent);
-            VariableStore tvs = ctx.Plugin.GetVariableStore(TargetPersistent);
+            VariableStore svs = plug.GetVariableStore(Persistent);
+            VariableStore tvs = plug.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(TargetPersistent);
 

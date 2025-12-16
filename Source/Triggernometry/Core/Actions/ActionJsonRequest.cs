@@ -206,7 +206,7 @@ namespace Triggernometry.Core.Actions
                 string payloadh = RealPlugin.GenerateHash(payload);
                 string headersh = RealPlugin.GenerateHash(headers);
                 string fh = RealPlugin.GenerateHash(endpointh + payloadh + headersh);
-                string fn = Path.Combine(ctx.Plugin.ConfigPath, "TriggernometryJsonCache");
+                string fn = Path.Combine(plug.ConfigPath, "TriggernometryJsonCache");
                 if (Directory.Exists(fn) == false)
                 {
                     Directory.CreateDirectory(fn);
@@ -216,7 +216,7 @@ namespace Triggernometry.Core.Actions
                 if (File.Exists(fn) == true)
                 {
                     FileInfo fi = new FileInfo(fn);
-                    DateTime dt = DateTime.Now.AddMinutes(0 - ctx.Plugin.cfg.CacheJsonExpiry);
+                    DateTime dt = DateTime.Now.AddMinutes(0 - plug.cfg.CacheJsonExpiry);
                     if (fi.LastWriteTime > dt)
                     {
                         responseCode = (int)HttpStatusCode.OK;
@@ -240,7 +240,7 @@ namespace Triggernometry.Core.Actions
             }
             if (varname != "")
             {
-                VariableStore vs = ctx.Plugin.GetVariableStore(Persistent);
+                VariableStore vs = plug.GetVariableStore(Persistent);
                 lock (vs.Scalar) // verified
                 {
                     if (vs.Scalar.ContainsKey(varname) == false)
@@ -269,7 +269,7 @@ namespace Triggernometry.Core.Actions
                 string firing = ctx.EvaluateStringExpression(ActionContextLogger, ctx, FiringExpression);
                 if (firing.Length > 0)
                 {
-                    ctx.Plugin.LogLineQueuer(firing, "", LogEvent.SourceEnum.Log);
+                    plug.LogLineQueuer(firing, "", LogEvent.SourceEnum.Log);
                 }
             }
         }

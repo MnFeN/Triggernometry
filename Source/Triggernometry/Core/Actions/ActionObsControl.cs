@@ -186,7 +186,7 @@ namespace Triggernometry.Core.Actions
             Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
-            ObsController obsController = ctx.Plugin._obs;
+            ObsController obsController = plug._obs;
             if (obsController == null) return;
 
             string endpoint = "";

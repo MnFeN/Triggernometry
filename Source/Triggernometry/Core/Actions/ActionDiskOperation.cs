@@ -154,7 +154,7 @@ namespace Triggernometry.Core.Actions
             string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Variable);
             string persist = I18n.TrlVarPersist(Persistent);
             string cache = I18n.TrlCacheFile(UseCache);
-            VariableStore vs = ctx.Plugin.GetVariableStore(Persistent);
+            VariableStore vs = plug.GetVariableStore(Persistent);
             if (Operation == OperationEnum.ReadCSVIntoTableVariable || 
                 Operation == OperationEnum.ReadIntoListVariable || 
                 Operation == OperationEnum.ReadIntoVariable)
@@ -162,7 +162,7 @@ namespace Triggernometry.Core.Actions
                 Uri u = new Uri(filename);
                 if (u.IsFile == false)
                 {
-                    string fn = Path.Combine(ctx.Plugin.ConfigPath, "TriggernometryFileCache");
+                    string fn = Path.Combine(plug.ConfigPath, "TriggernometryFileCache");
                     if (Directory.Exists(fn) == false)
                     {
                         Directory.CreateDirectory(fn);
@@ -173,7 +173,7 @@ namespace Triggernometry.Core.Actions
                     if (File.Exists(fn) == true && UseCache == true)
                     {
                         FileInfo fi = new FileInfo(fn);
-                        DateTime dt = DateTime.Now.AddMinutes(0 - ctx.Plugin.cfg.CacheFileExpiry);
+                        DateTime dt = DateTime.Now.AddMinutes(0 - plug.cfg.CacheFileExpiry);
                         if (fi.LastWriteTime > dt)
                         {
                             filename = fn;
