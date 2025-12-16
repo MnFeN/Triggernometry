@@ -352,27 +352,20 @@ namespace Triggernometry.Core.Actions
                     }
                 case OperationEnum.QueryJsonPath:
                     {
-                        newval = "";
-                        lock (vs.Scalar) // verified
-                        {
-                            if (vs.Scalar.ContainsKey(varname) == true)
-                            {
-                                newval = vs.Scalar[varname].Value;
-                            }
-                        }
+                        newval = vs.GetScalarVariable(varname, false).Value;
                         string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JsonTargetName);
                         VariableStore vs2 = plug.GetVariableStore(JsonTargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         Dictionary<string, object> p = new Utilities.JsonParser().Parse(newval);
-                        IEnumerable<object> result = pc.Select(p, query);
+                        object[] result = pc.Select(p, query).ToArray();
 
                         VariableScalar x = new VariableScalar();
-                        switch (result.Count())
+                        switch (result.Length)
                         {
                             case 0: x.Value = ""; break;
-                            case 1: x.Value = result.First().ToString(); break;
-                            default: x.Value = JsonSerializer.Serialize(result.ToArray()); break;
+                            case 1: x.Value = result[0].ToString(); break; // to-do: do not support complex types properly now, same for query list
+                            default: x.Value = JsonSerializer.Serialize(result); break;
                         }
                         x.LastChanger = changer;
                         x.LastChanged = DateTime.Now;
@@ -382,43 +375,36 @@ namespace Triggernometry.Core.Actions
                             vs2.Scalar[tgtname] = x;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarset",
-                            "{2}Scalar variable ({0}) value set to ({1})", tgtname, newval, tPersist));
+                            "{2}Scalar variable ({0}) value set to ({1})", tgtname, x.Value, tPersist));
                     }
                     break;
                 case OperationEnum.QueryJsonPathList:
                     {
-                        newval = "";
-                        lock (vs.Scalar) // verified
-                        {
-                            if (vs.Scalar.ContainsKey(varname) == true)
-                            {
-                                newval = vs.Scalar[varname].Value;
-                            }
-                        }
+                        newval = vs.GetScalarVariable(varname, false).Value;
                         string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JsonTargetName);
                         VariableStore vs2 = plug.GetVariableStore(JsonTargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         Dictionary<string, object> p = new Utilities.JsonParser().Parse(newval);
-                        IEnumerable<object> result = pc.Select(p, query);
+                        object[] result = pc.Select(p, query).ToArray();
 
                         VariableList x = new VariableList();
                         x.LastChanger = changer;
                         x.LastChanged = DateTime.Now;
-                        switch (result.Count())
+                        switch (result.Length)
                         {
                             case 0: break;
-                            case 1: x.Push(new VariableScalar() { Value = result.First().ToString(), LastChanged = x.LastChanged, LastChanger = changer }, changer); break;
+                            case 1: x.Push(new VariableScalar { Value = result[0].ToString(), LastChanged = x.LastChanged, LastChanger = changer }, changer); break;
                             default:
                                 foreach (object o in result)
                                 {
-                                    if (o is object[])
+                                    if (o is object[] array)
                                     {
-                                        x.Push(new VariableScalar() { Value = JsonSerializer.Serialize((object[])o), LastChanged = x.LastChanged, LastChanger = changer }, changer);
+                                        x.Push(new VariableScalar { Value = JsonSerializer.Serialize(array), LastChanged = x.LastChanged, LastChanger = changer }, changer);
                                     }
-                                    else if (o is Dictionary<string, object>)
+                                    else if (o is Dictionary<string, object> dict)
                                     {
-                                        x.Push(new VariableScalar() { Value = JsonSerializer.Serialize((Dictionary<string, object>)o), LastChanged = x.LastChanged, LastChanger = changer }, changer);
+                                        x.Push(new VariableScalar { Value = JsonSerializer.Serialize(dict), LastChanged = x.LastChanged, LastChanger = changer }, changer);
                                     }
                                     else
                                     {
@@ -432,7 +418,7 @@ namespace Triggernometry.Core.Actions
                             vs2.List[tgtname] = x;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listset",
-                            "{2}List variable ({0}) value set to ({1})", tgtname, newval, tPersist));
+                            "{2}List variable ({0}) value set with ({1}) items", tgtname, x.Size, tPersist));
                     }
                     break;
                 default:
