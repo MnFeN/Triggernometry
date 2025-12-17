@@ -14,7 +14,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             ScanMethod = () =>
             {
                 // E8 在此仅用于定位 不跳转！
-                PatchPtr = Scanner.ScanText("E8 ? ? ? ? 85 C0 75 02 33 C0", nameof(PatchPtr)) + 0x4B;
+                PatchPtr = Scanner.ScanText("E8 ? ? ? ? 85 C0 75 02 33 C0 4C 8D 9C 24", nameof(PatchPtr)) + 0x4B;
             };
         }
 

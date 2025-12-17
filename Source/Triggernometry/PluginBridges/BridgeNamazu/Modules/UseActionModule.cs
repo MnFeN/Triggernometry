@@ -19,9 +19,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 // https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/Game/ActionManager.cs
                 UseActionPtr = Scanner.TryScan(
                     "E8 * * * * B0 01 EB B6", nameof(UseActionPtr));
+                UseActionLocationPtr = IntPtr.Zero;
+                /*
                 UseActionLocationPtr = Scanner.TryScanMultiple(new string[] {
                     "E8 * * * * 40 3A C7 0F 85", // 7.3
+                                                 // todo 7.4 炸了 
                 }, nameof(UseActionLocationPtr));
+                */
                 ActionManagerPtr = Scanner.TryScan(
                     "48 8D 0D * * * * F3 0F 10 13", nameof(ActionManagerPtr));
                 // https://github.com/zfxsquare/PostNamazuFra/blob/main/PostNamazu/Actions/Tp.cs
@@ -70,7 +74,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public bool UseActionLocation(ActionType actionType, uint actionId, float x, float y, float z, uint extraParam = 0)
         {
-            CheckIfAnyZeroPtr(UseActionPtr, ActionManagerPtr);
+            CheckIfAnyZeroPtr(UseActionLocationPtr, ActionManagerPtr);
             uint targetId = HexOrDecId.Default;
             IntPtr posPtr = default;
             bool result = default;
