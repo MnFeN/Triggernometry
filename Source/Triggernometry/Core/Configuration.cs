@@ -124,7 +124,7 @@ namespace Triggernometry.Core
         public string Xml_UseSimulatedBeep
         {
             get => XmlAttr.Bool(UseSimulatedBeep, true);
-            set => XmlAttr.Bool(value);
+            set => UseSimulatedBeep = XmlAttr.Bool(value);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Triggernometry.Core
         public string Xml_SimulatedBeepVolume
         {
             get => XmlAttr.Int(SimulatedBeepVolume, 100);
-            set => XmlAttr.Int(value);
+            set => SimulatedBeepVolume = XmlAttr.Int(value);
         }
 
         public enum AudioRoutingMethodEnum
