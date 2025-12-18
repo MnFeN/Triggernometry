@@ -233,7 +233,16 @@ namespace Triggernometry.PluginBridges
             }
             // public override bool IsFriend => _entity.IsFriend;
             public override byte WeaponID => _entity.WeaponId;
-            public override uint TargetID => _entity.TargetID;
+            //public override uint TargetID => _entity.TargetID; // 7.4 Overlay 没修复
+            public override uint TargetID
+            {
+                get
+                {
+                    var xivCombatant = BridgeFFXIV.GetIdEntity(HexID);
+                    return uint.Parse(xivCombatant.GetValue("targetid").ToString(), System.Globalization.NumberStyles.HexNumber);
+                }
+            }
+
             public override uint BNpcNameID => _entity.BNpcNameID;
             public override ushort CurrentWorldID => _entity.CurrentWorldID;
             public override ushort WorldID => _entity.WorldID;
