@@ -19,13 +19,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 // https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/Game/ActionManager.cs
                 UseActionPtr = Scanner.TryScan(
                     "E8 * * * * B0 01 EB B6", nameof(UseActionPtr));
-                UseActionLocationPtr = IntPtr.Zero;
+                // todo 7.4 炸了 
                 /*
                 UseActionLocationPtr = Scanner.TryScanMultiple(new string[] {
                     "E8 * * * * 40 3A C7 0F 85", // 7.3
-                                                 // todo 7.4 炸了 
                 }, nameof(UseActionLocationPtr));
                 */
+                UseActionLocationPtr = IntPtr.Zero;
+
                 ActionManagerPtr = Scanner.TryScan(
                     "48 8D 0D * * * * F3 0F 10 13", nameof(ActionManagerPtr));
                 // https://github.com/zfxsquare/PostNamazuFra/blob/main/PostNamazu/Actions/Tp.cs
