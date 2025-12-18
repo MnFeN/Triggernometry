@@ -441,7 +441,7 @@ namespace Triggernometry.Core.Actions
                             le.TestMode = true;
                             le.ZoneId = ctx.zoneIdOverride;
                         }
-                        //ctx.plug.TestTrigger(t, le, _Force); todo
+                        plug.TestTrigger(t, le, (ActionOld.TriggerForceTypeEnum)(int)Force);
                     }
                     break;
                 case OperationEnum.EnableTrigger:
