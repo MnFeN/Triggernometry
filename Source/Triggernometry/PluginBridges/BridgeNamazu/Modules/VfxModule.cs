@@ -189,7 +189,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     try
                     {
                         vfx.Removed = true;
-                        Memory.CallInjected64(ActorVfxRemovePtr, vfxPtr, /*(char)*/(ushort)1);
+                        Memory.CallInjected64(ActorVfxRemovePtr, vfxPtr, /*(char)*/(ushort)1); // a2: bool freeMemory
                     }
                     finally
                     {

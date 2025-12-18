@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,10 +44,12 @@ namespace Triggernometry.PluginBridges
             Ready = true;
         }
 
-        // public JToken CallHandler(JObject e)
-        public static object CallOverlayHandler(object jObject)
+        public static JToken CallOverlayHandler(JObject jObject)
+            => CallOverlayHandler((object)jObject);
+
+        public static JToken CallOverlayHandler(object jObject)
         {
-            return _callHandlerMethod.Invoke(_eventDispatcher, new object[] { jObject });
+            return (JToken)_callHandlerMethod.Invoke(_eventDispatcher, new object[] { jObject });
         }
 
     }

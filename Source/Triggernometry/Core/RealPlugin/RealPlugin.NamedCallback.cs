@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Triggernometry.PluginBridges;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core
 {
@@ -150,6 +152,13 @@ namespace Triggernometry.Core
                 }
                 callbacksByName.Remove(name);
             }
+        }
+
+        private void RegisterDefaultNamedCallbacks()
+        {
+            _ = RegisterNamedCallback("UploadText", (Action<object, string>)UploadTextHelper.UploadTextV1Callback, registrant: nameof(RealPlugin));
+            _ = RegisterNamedCallback("UploadTextV2", (Action<object, string>)UploadTextHelper.UploadTextV2Callback, registrant: nameof(RealPlugin));
+            _ = RegisterNamedCallback("DisableCactbotTriggerSetsTts", (Action<object, string>)BridgeCactbot.DisableTriggerSetsTtsCallback, registrant: nameof(RealPlugin));
         }
 
     }

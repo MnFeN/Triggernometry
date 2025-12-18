@@ -408,8 +408,7 @@ namespace Triggernometry.Core
                 {
                     ui.AddDefaultRepoCN();
                 }
-                _ = RegisterNamedCallback("UploadText", (Action<object, string>)UploadTextHelper.UploadTextV1Callback, registrant: nameof(RealPlugin));
-                _ = RegisterNamedCallback("UploadTextV2", (Action<object, string>)UploadTextHelper.UploadTextV2Callback, registrant: nameof(RealPlugin));
+                RegisterDefaultNamedCallbacks();
                 // end
                 _ = Task.Run(() => UpdateAllRepositoriesAsync(true));
                 isInitialized = true;
