@@ -36,6 +36,9 @@
     <DesignTimeBuild>true</DesignTimeBuild>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -50,10 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserScripts\Class1.cs" />
-    <Compile Include="UserScripts\Class2.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\TriggernometryProxy\TriggernometryProxy.csproj">
       <Project>{aa747357-8f4a-4633-a631-b421ca05bc26}</Project>
       <Name>TriggernometryProxy</Name>
@@ -65,7 +64,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="UserScripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="UserScript\Class1 - 复制.cs" />
+    <Compile Include="UserScript\Class1.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
