@@ -52,7 +52,10 @@ namespace Triggernometry.Utilities
             catch (WebException ex)
             {
                 // 如果服务器确实有响应，读取错误信息附加上去
-                using (var resp = (HttpWebResponse)ex.Response)
+                var resp = ex.Response as HttpWebResponse
+                    ?? throw new WebException($"网络或服务器错误：{ex.Message}", ex);
+
+                using (resp)
                 using (var reader = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
                 {
                     string serverErr = reader.ReadToEnd();
