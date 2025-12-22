@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using Triggernometry.UI.CustomControls;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
 using Triggernometry.Utilities;
-using static Triggernometry.Core.RepositoryList;
 
 namespace Triggernometry.Core
 {

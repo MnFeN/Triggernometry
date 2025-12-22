@@ -13,8 +13,6 @@ namespace Triggernometry.Core
     public partial class RealPlugin
     {
 
-        public void FixConfigurationCN() => FixConfigurationOnStartCN();
-
         private void FixConfigurationOnStartCN()
         {
             cfg.ShowWelcome = false;
@@ -24,7 +22,7 @@ namespace Triggernometry.Core
             cfg.AutosaveEnabled = true;
             cfg.UpdateNotifications = Configuration.UpdateNotificationsEnum.Yes;
             cfg.UpdateCheckMethod = Configuration.UpdateCheckMethodEnum.External;
-            cfg.UpdateExternalChannelUrl = "https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml";
+            cfg.UpdateExternalChannelUrl = "https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml";
             cfg.AutoUpdate = true;
             var apis = (List<Configuration.APIUsage>)cfg?.GetType()?.GetProperty("_APIUsages", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(cfg);
             var utilities = apis?.FirstOrDefault(a => a.Name == "Triggernometry.Utilities");

@@ -2078,7 +2078,8 @@ namespace Triggernometry.UI.CustomControls
 
         private static readonly List<string> _legalRepoPrefixes = new List<string> {
             "https://github.com/paissaheavyindustries/Triggernometry",
-            "https://vip.123pan.cn/1824544011/"
+            "https://vip.123pan.cn/1824544011/",
+            "https://1824544011.v.123pan.cn/",
         };
 
         public void AddRepo(Repository r, bool shouldUpdate)
@@ -2163,10 +2164,10 @@ namespace Triggernometry.UI.CustomControls
                 Invoke(new System.Action(() => RemoveRepo(partialUrl)));
                 return;
             }
-            partialUrl = partialUrl.Trim().ToLower();
+            partialUrl = partialUrl.Trim();
             RepositoryFolder rfo = (RepositoryFolder)treeView1.Nodes[1].Tag;
             var nodes = rfo.Repositories
-                .Where(repo => repo.Address.ToLower().Contains(partialUrl))
+                .Where(repo => repo.Address.IndexOf(partialUrl, StringComparison.OrdinalIgnoreCase) >= 0)
                 .Select(repo => treeView1.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == repo))
                 .ToList();
 
@@ -2200,28 +2201,28 @@ namespace Triggernometry.UI.CustomControls
         {
             var repos = new List<Repository>
             {
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/SelfTest.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/SelfTest.xml",
                     "[工具] 问题自检工具箱 + 使用教程　　有问题请自行在此解决", 60),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/Utils.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/Utils.xml",
                     "[工具] 运行支持库（必需）", 60),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7a.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/S7a.xml",
                     "7.0 M1-4 阿卡狄亚轻量级", 60 * 24),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7b.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/S7b.xml",
                     "7.2 M5-8 阿卡狄亚中量级", 60 * 24),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/S7c.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/S7c.xml",
                     "7.4 M9-12 阿卡狄亚重量级", 60),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/Ex7.xml",
-                    "7.X 极神", 60),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/temp.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/Ex7.xml",
+                    "7.X 极神", 60 * 6),
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/temp.xml",
                     "临时推送", 60 * 24),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/U7a.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/U7a.xml",
                     "7.1 绝伊甸", 60 * 24),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/field.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/field.xml",
                     "特殊场景探索", 60 * 24),
-                DefaultRepoCN("https://vip.123pan.cn/1824544011/Remote_Triggers/dungeon.xml",
+                DefaultRepoCN("https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/dungeon.xml",
                     "深宫", 60 * 24)
             };
-            RemoveRepo("vip.123pan.cn/1824544011/Remote_Triggers/AdvWm.xml"); // old
+            RemoveRepo("vip.123pan.cn/1824544011"); // old
             AddRepos(repos, shouldUpdate);
         }
 

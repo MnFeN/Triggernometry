@@ -765,7 +765,7 @@
     <TranslationEntry Key="ConfigurationForm2/lblEndpointStartup" Translation="插件启动时启动终端" />
     <TranslationEntry Key="ConfigurationForm2/lblExternalSoundWarn" Translation="此选项会使 Triggernometry 启动外部应用程序。这可能会使系统面临恶意软件的风险，请仅在您了解自己在做什么的情况下谨慎使用此选项。Windows 系统一般无需使用此选项。" />
     <TranslationEntry Key="ConfigurationForm2/lblExternalTtsWarn" Translation="此选项会使 Triggernometry 启动外部应用程序。这可能会使系统面临恶意软件的风险，请仅在您了解自己在做什么的情况下谨慎使用此选项。Windows 系统一般无需使用此选项。" />
-    <TranslationEntry Key="ConfigurationForm2/lblExternalUpdateWarn" Translation="第三方更新渠道不受 Triggernometry 官方管理，请谨慎使用，仅对可信的更新来源启用此功能。&#xD;&#xA;注：建议使用以下链接更新，包含国服远程触发器等额外功能。&#xD;&#xA;https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml" />
+    <TranslationEntry Key="ConfigurationForm2/lblExternalUpdateWarn" Translation="第三方更新渠道不受 Triggernometry 官方管理，请谨慎使用，仅对可信的更新来源启用此功能。&#xD;&#xA;注：建议使用以下链接更新，包含国服远程触发器等额外功能。&#xD;&#xA;https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivJobMethod" Translation="排序方式" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivJobOrder" Translation="职业排序" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivLogNetwork" Translation="记录网络日志" />
@@ -1466,7 +1466,7 @@
     <TranslationEntry Key="internal/Plugin/inifilename" Translation="确定文件名" />
     <TranslationEntry Key="internal/Plugin/inilanguages" Translation="读取翻译文件时" />
     <TranslationEntry Key="internal/Plugin/iniready" Translation="已成功启动" />
-    <TranslationEntry Key="internal/Plugin/iniscripterror" Translation="初始化脚本环境时出错。&#xD;&#xA;&#xD;&#xA;检查 ACT 插件列表（或 插件中心-高级管理），&#xD;&#xA;将 Triggernometry 向上调整至 FFXIV_ACT_Plugin 后面、&#xD;&#xA;Cafe.Matcha（抹茶，如果有的话）前面，再重启 ACT。&#xD;&#xA;&#xD;&#xA;添加或更新插件后也需要重启 ACT。&#xD;&#xA;&#xD;&#xA;错误信息：{0}" />
+    <TranslationEntry Key="internal/Plugin/iniscripterror" Translation="初始化脚本环境时出错，可能是插件加载顺序不正确，导致初始化失败。&#xD;&#xA;&#xD;&#xA;检查 ACT 插件列表（或 插件中心-高级管理），&#xD;&#xA;请确认插件列表中前几项依次为：&#xD;&#xA;- CafeStore（没有的话可忽略）&#xD;&#xA;- FFXIV_ACT_Plugin（必备）&#xD;&#xA;- OverlayPlugin（必备）&#xD;&#xA;- Triggernometry（本插件）&#xD;&#xA;调整后重启 ACT 即可。&#xD;&#xA;&#xD;&#xA;错误信息：{0}" />
     <TranslationEntry Key="internal/Plugin/inited" Translation="初始化结束" />
     <TranslationEntry Key="internal/Plugin/initing" Translation="初始化中" />
     <TranslationEntry Key="internal/Plugin/initoasts" Translation="设置气泡提示时" />
