@@ -743,18 +743,20 @@ namespace Triggernometry.UI.CustomControls
         private void ctxAction_Opening(object sender, CancelEventArgs e)
         {
             bool isSingleActionSelected = dgvActions.SelectedRows.Count == 1;
+            bool hasSelection = dgvActions.SelectedRows.Count > 0;
             ctxAddAction.Enabled = isSingleActionSelected;
             ctxEditAction.Enabled = isSingleActionSelected;
             ctxEditPropCopyCnd.Enabled = isSingleActionSelected;
             ctxEditPropPasteCnd.Enabled = ActionViewer.copiedCondition != null;
             ctxTestAction.Enabled = isSingleActionSelected && SelectedActions()[0].ActionType != Core.ActionOld.ActionTypeEnum.Placeholder;
-            bool allowMoveAndRemove = IsReadonly == false && (dgvActions.SelectedRows.Count > 0);
-            ctxCopyAction.Enabled = allowMoveAndRemove;
-            ctxMoveUp.Enabled = allowMoveAndRemove;
-            ctxMoveDown.Enabled = allowMoveAndRemove;
-            ctxMoveTop.Enabled = allowMoveAndRemove;
-            ctxMoveBottom.Enabled = allowMoveAndRemove;
-            ctxRemoveAction.Enabled = allowMoveAndRemove;
+            
+            bool allowMutate = IsReadonly == false && hasSelection;
+            ctxCopyAction.Enabled = hasSelection;
+            ctxMoveUp.Enabled = allowMutate;
+            ctxMoveDown.Enabled = allowMutate;
+            ctxMoveTop.Enabled = allowMutate;
+            ctxMoveBottom.Enabled = allowMutate;
+            ctxRemoveAction.Enabled = allowMutate;
             ctxUndo.Enabled = btnUndo.Enabled;
             ctxPasteAction.Enabled = OkToPasteAction();
         }

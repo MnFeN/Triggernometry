@@ -142,18 +142,18 @@ namespace Triggernometry.UI.Forms
             txtDescription.ReadOnly = true;
             txtEvent.ReadOnly = true;
             cbxTriggerSource.Enabled = false;
-            expTag.Enabled = false;
+            expTag.ReadOnly = true;
             cbxRefireOption1.Enabled = false;
             cbxRefireOption2.Enabled = false;
             cbxScheduleFrom.Enabled = false;
             cbxRefireWithinPeriod.Enabled = false;
-            expRefirePeriod.Enabled = false;
+            expRefirePeriod.ReadOnly = true;
             cbxEditAutofire.Enabled = false;
             cbxEditAutofireAllowCondition.Enabled = false;
             cbxSequential.Enabled = false;
             cndCondition.Enabled = false;
             panel5.Visible = true;
-            expMutexName.Enabled = false;
+            expMutexName.ReadOnly = true;
             chkReadmeTrigger.Enabled = false;
             actionViewer1.SetReadOnly();
         }
