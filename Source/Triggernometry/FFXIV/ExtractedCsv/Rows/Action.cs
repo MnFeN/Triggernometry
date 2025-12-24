@@ -16,11 +16,11 @@ namespace Triggernometry.FFXIV.ExtractedCsv.Rows
         public ActionTimeline AnimationStart => ActionCastTimeline.ActionTimeline;
         public Vfx AnimationStartVfx => ActionCastTimeline.Vfx;
 
-        public ushort AnimationEndId => Get<ushort>("Animation{End}"); // ActionTimeline
-        public ActionTimeline AnimationEnd => GetRow<ActionTimeline>(AnimationEndId);
+        public short AnimationEndId => Get<short>("Animation{End}"); // ActionTimeline
+        public ActionTimeline AnimationEnd => GetRow<ActionTimeline>(AnimationEndId < 0 ? 0 : AnimationEndId);
 
-        public ushort ActionTimelineHitId => Get<ushort>("ActionTimeline{Hit}"); // ActionTimeline
-        public ActionTimeline ActionTimelineHit => GetRow<ActionTimeline>(ActionTimelineHitId);
+        public short ActionTimelineHitId => Get<short>("ActionTimeline{Hit}"); // ActionTimeline
+        public ActionTimeline ActionTimelineHit => GetRow<ActionTimeline>(ActionTimelineHitId < 0 ? 0 : ActionTimelineHitId);
 
         public sbyte Range => Get<sbyte>("Range");
         public byte ShapeType => Get<byte>("CastType");
