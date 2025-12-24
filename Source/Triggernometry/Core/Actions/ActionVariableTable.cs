@@ -413,7 +413,7 @@ namespace Triggernometry.Core.Actions
                     }
                 case OperationEnum.GetAllEntities:
                     {
-                        bool hasFilter = string.IsNullOrWhiteSpace(Y);
+                        bool hasFilter = !string.IsNullOrWhiteSpace(Y);
                         bool hasSpecifiedProps = !string.IsNullOrWhiteSpace(X);
                         string keySuffix = (hasFilter ? "1" : "0") + (hasSpecifiedProps ? "1" : "0");
                         string key = $"internal/Action/desctablegetallentities{keySuffix}"; //...00, ...01, ...10, ...11
