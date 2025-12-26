@@ -479,24 +479,36 @@ namespace Triggernometry.UI.CustomControls
                 {
                     Folder f = new Folder();
                     ff.SettingsToFolder(f);
-                    TreeNode tn = new TreeNode();
-                    tn.Text = f.Name;
-                    tn.Tag = f;
-                    tn.Checked = f.Enabled;
-                    tn.ImageIndex = (int)GetImageIndexForClosedFolder(f);
+                    TreeNode tn = new TreeNode
+                    {
+                        Text = f.Name,
+                        Tag = f,
+                        Checked = f.Enabled,
+                        ImageIndex = (int)GetImageIndexForClosedFolder(f)
+                    };
                     tn.SelectedImageIndex = tn.ImageIndex;
                     TreeNode parent = treeView1.SelectedNode;
                     if (parent.Tag is Trigger)
                     {
                         parent = parent.Parent;
                     }
-                    parent.Nodes.Add(tn);
-                    parent.Expand();
+
+                    treeView1.BeginUpdate();
+                    try
+                    {
+                        parent.Nodes.Add(tn);
+                        parent.Expand();
+                        ResortNodeWithinParent(tn);
+                        treeView1.SelectedNode = tn;
+                    }
+                    finally
+                    {
+                        treeView1.EndUpdate();
+                    }
+
                     f.Parent = (Folder)parent.Tag;
                     f.Parent.Folders.Add(f);
                     RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true);
-                    treeView1.Sort();
-                    treeView1.SelectedNode = tn;
                 }
             }
         }
@@ -517,23 +529,35 @@ namespace Triggernometry.UI.CustomControls
                 {
                     newTrigger.Enabled = true;
                     tf.SettingsToTrigger(newTrigger);
-                    TreeNode tn = new TreeNode();
-                    tn.Text = newTrigger.Name;
-                    tn.Tag = newTrigger;
-                    tn.Checked = newTrigger.Enabled;
-                    tn.ImageIndex = (int)ImageIndices.Bolt;
+                    TreeNode tn = new TreeNode
+                    {
+                        Text = newTrigger.Name,
+                        Tag = newTrigger,
+                        Checked = newTrigger.Enabled,
+                        ImageIndex = (int)ImageIndices.Bolt
+                    };
                     tn.SelectedImageIndex = tn.ImageIndex;
                     TreeNode parent = treeView1.SelectedNode;
                     if (parent.Tag is Trigger)
                     {
                         parent = parent.Parent;
                     }
-                    parent.Nodes.Add(tn);
-                    parent.Expand();
+
+                    treeView1.BeginUpdate();
+                    try
+                    {
+                        parent.Nodes.Add(tn);
+                        parent.Expand();
+                        ResortNodeWithinParent(tn);
+                        treeView1.SelectedNode = tn;
+                    }
+                    finally
+                    {
+                        treeView1.EndUpdate();
+                    }
+
                     newTrigger.Parent = (Folder)parent.Tag;
                     newTrigger.Parent.Triggers.Add(newTrigger);
-                    treeView1.Sort();
-                    treeView1.SelectedNode = tn;
                     newTrigger.ZoneBlocked = (newTrigger.PassesZoneRestriction(plug.currentZone) == false);
                     plug.AddTrigger(newTrigger, newTrigger.Parent.ParentsEnabled());
                     RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true);
@@ -657,10 +681,7 @@ namespace Triggernometry.UI.CustomControls
                             else
                                 ForceFireTrigger(t, ActionOld.TriggerForceTypeEnum.SkipAll);
                         }
-                        TreeNode tn = treeView1.SelectedNode;
-                        tn.Text = t.Name;
-                        treeView1.Sort();
-                        treeView1.SelectedNode = tn;
+                        ApplyNodeNameAndResort(treeView1.SelectedNode, t.Name);
                     }
                 }
             }
@@ -675,10 +696,7 @@ namespace Triggernometry.UI.CustomControls
                     if (rf.ShowDialog() == DialogResult.OK)
                     {
                         rf.SettingsToRepository(r);
-                        TreeNode tn = treeView1.SelectedNode;
-                        tn.Text = r.Name;
-                        treeView1.Sort();
-                        treeView1.SelectedNode = tn;
+                        ApplyNodeNameAndResort(treeView1.SelectedNode, r.Name);
                     }
                 }
             }
@@ -698,22 +716,68 @@ namespace Triggernometry.UI.CustomControls
                     {                        
                         ff.SettingsToFolder(f);
                         TreeNode tn = treeView1.SelectedNode;
-                        tn.Text = f.Name;
                         if (tn.ImageIndex == (int)ImageIndices.FolderClosed || tn.ImageIndex == (int)ImageIndices.LimitedFolderClosed)
                         {
-                            tn.ImageIndex = (int)GetImageIndexForClosedFolder(f);                            
+                            tn.ImageIndex = (int)GetImageIndexForClosedFolder(f);
                         }
                         else if (tn.ImageIndex == (int)ImageIndices.FolderOpen || tn.ImageIndex == (int)ImageIndices.LimitedFolderOpen)
                         {
                             tn.ImageIndex = (int)GetImageIndexForOpenFolder(f);
                         }
                         tn.SelectedImageIndex = tn.ImageIndex;
-                        treeView1.Sort();
-                        treeView1.SelectedNode = tn;
+                        ApplyNodeNameAndResort(tn, f.Name);
                     }
                     plug.ZoneChanged(plug.currentZone);
                 }
             }
+        }
+
+        private void ApplyNodeNameAndResort(TreeNode tn, string newName, bool globalSort = false)
+        {
+            if (tn == null) return;
+
+            treeView1.BeginUpdate();
+            try
+            {
+                bool textChanged = tn.Text != newName;
+                tn.Text = newName ?? "";
+
+                if (textChanged)
+                {
+                    if (globalSort)
+                        treeView1.Sort();
+                    else
+                        ResortNodeWithinParent(tn);
+                }
+
+                if (!ReferenceEquals(treeView1.SelectedNode, tn))
+                    treeView1.SelectedNode = tn;
+            }
+            finally
+            {
+                treeView1.EndUpdate();
+            }
+        }
+
+        private void ResortNodeWithinParent(TreeNode node)
+        {
+            if (node == null) return;
+
+            TreeNodeCollection siblings = node.Parent?.Nodes ?? treeView1.Nodes;
+            if (siblings == null || siblings.Count <= 1) return;
+
+            if (!(treeView1.TreeViewNodeSorter is IComparer comparer)) return;
+
+            var list = siblings.Cast<TreeNode>().Where(n => n != node).ToList();
+
+            int targetIndex = 0;
+            while (targetIndex < list.Count && comparer.Compare(node, list[targetIndex]) > 0)
+                targetIndex++;
+
+            if (node.Index == targetIndex) return;
+
+            siblings.Remove(node);
+            siblings.Insert(targetIndex, node);
         }
 
         internal void folderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2036,8 +2100,8 @@ namespace Triggernometry.UI.CustomControls
                         r.Parent = rfo;
                         treeView1.Nodes[1].Nodes.Add(tn);
                         treeView1.Nodes[1].Expand();
-                        RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true);
-                        treeView1.Sort();
+                        RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true); 
+                        treeView1.Sort(); // better sort later
                         ForceUpdateRepository(tn);
                     }
                 }
