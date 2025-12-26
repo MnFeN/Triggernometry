@@ -519,7 +519,7 @@ namespace Triggernometry.UI.CustomControls
             if (cfg.UseTemplateTrigger)
             {
                 cfg.TemplateTrigger?.CopySettingsTo(newTrigger);
-                newTrigger.Id = new Guid();
+                newTrigger.Id = Guid.NewGuid();
             }
 
             using (Forms.TriggerForm tf = new Forms.TriggerForm(newTrigger, treeView1, imageList1))
