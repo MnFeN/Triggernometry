@@ -12,6 +12,8 @@ Triggernometry 是 [Advanced Combat Tracker](https://advancedcombattracker.com/)
 
 · [一键安装器下载链接](https://www.123865.com/s/1xRXjv-340BH)
 
+（此安装脚本源码见：[链接](https://github.com/MnFeN/Triggernometry/blob/readme/%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%A7%A6%E5%8F%91%E5%99%A8%EF%BC%8FPostNamazu/%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%A7%A6%E5%8F%91%E5%99%A8%EF%BC%8FPostNamazu.py)）
+
 如果你倾向于自己安装，可以使用：
 
 · [插件本体下载链接](https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/Triggernometry.dll) 
