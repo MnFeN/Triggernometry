@@ -58,7 +58,8 @@ namespace Triggernometry.FFXIV
         DE = 2,
         FR = 3,
         CN = 4,
-        KR = 5,
+        KR = 6,
+        TCN = 7,
         None = 0xFF
     }
 }
