@@ -35,3 +35,23 @@ Triggernometry 是 [Advanced Combat Tracker](https://advancedcombattracker.com/)
 Triggernometry Wiki 中包含了一些有用的信息和文档说明：
 
 https://github.com/MnFeN/Triggernometry/wiki
+
+## 编译
+
+本项目使用 .NET Framework 4.8.1。
+
+解决方案包含三个项目：
+
+- `Triggernometry`：
+  
+  核心，编译生成 `TriggernometryPlugin.dll`
+  
+- `TriggernometryProxy`：
+
+  包装核心功能的 ACT 插件，编译生成 `Triggernometry.dll`，用于导入 ACT。
+  
+- `TriggernometryScripting`：
+  
+  并非实际项目，不参与编译。提供前两个项目代码的智能补全提示环境，方便开发者编写触发器 C# 脚本动作的代码。
+
+编译时直接生成 `TriggernometryProxy` 项目即可。
