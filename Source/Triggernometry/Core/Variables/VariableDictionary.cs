@@ -263,7 +263,7 @@ namespace Triggernometry.Core.Variables
             return string.Join(joiner, keys.Select(k => Values.TryGetValue(k, out Variable v) ? v.ToString() : ""));
         }
 
-        public string JoinValues(string joiner, params string[] keys) => JoinValues(joiner, keys);
+        public string JoinValues(string joiner, params string[] keys) => JoinValues(joiner, (IEnumerable<string>)keys);
 
         public string JoinAll(string kvJoiner, string pairJoiner)
         {
@@ -275,7 +275,7 @@ namespace Triggernometry.Core.Variables
             return string.Join(pairJoiner, keys.Select(k => Values.TryGetValue(k, out Variable v) ? $"{k}{kvJoiner}{v}" : ""));
         }
 
-        public string JoinAll(string kvJoiner, string pairJoiner, params string[] keys) => JoinAll(kvJoiner, pairJoiner, keys);
+        public string JoinAll(string kvJoiner, string pairJoiner, params string[] keys) => JoinAll(kvJoiner, pairJoiner, (IEnumerable<string>)keys);
 
         public void Merge(VariableDictionary sourceDict, bool overwriteExistingKeys = true)
         {
