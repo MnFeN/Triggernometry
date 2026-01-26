@@ -12,7 +12,7 @@ Triggernometry 是 [Advanced Combat Tracker](https://advancedcombattracker.com/)
 
 此安装程序包含了 Triggernometry 插件本体、汉化文件、及很多触发器功能需要依赖的[鲶鱼精邮差](https://github.com/Natsukage/PostNamazu)插件。
 
-· [一键安装器下载链接](https://www.123865.com/s/1xRXjv-340BH)
+· [一键安装器下载链接](https://www.123865.com/s/1xRXjv-n9qBH)
 
 （此安装脚本源码见：[链接](https://github.com/MnFeN/Triggernometry/blob/readme/%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%A7%A6%E5%8F%91%E5%99%A8%EF%BC%8FPostNamazu/%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%A7%A6%E5%8F%91%E5%99%A8%EF%BC%8FPostNamazu.py)）
 
