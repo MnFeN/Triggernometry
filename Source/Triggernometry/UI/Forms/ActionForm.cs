@@ -2470,6 +2470,7 @@ namespace Triggernometry.UI.Forms
                     expDictTarget.AutofillType = ExpressionTextBox.AutofillTypeEnum.Dict;
                     break;
                 case (int)DictVariableOpEnum.Merge:
+                case (int)DictVariableOpEnum.MergeHard:
                     expDictName.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.String;
                     expDictName.Enabled = true;
                     prsDictSource.Enabled = true;
@@ -2479,19 +2480,6 @@ namespace Triggernometry.UI.Forms
                     cbxDictValueType.Enabled = false;
                     expDictValue.Enabled = false;
                     expDictTarget.Enabled = true;
-                    expDictName.AutofillType = ExpressionTextBox.AutofillTypeEnum.Dict;
-                    expDictTarget.AutofillType = ExpressionTextBox.AutofillTypeEnum.Dict;
-                    break;
-                case (int)DictVariableOpEnum.MergeHard:
-                    expDictName.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.String;
-                    expDictName.Enabled = true;
-                    prsDictSource.Enabled = true;
-                    expDictLength.Enabled = false;
-                    cbxDictKeyType.Enabled = false;
-                    expDictKey.Enabled = false;
-                    cbxDictValueType.Enabled = true;
-                    expDictValue.Enabled = false;
-                    expDictTarget.Enabled = false;
                     expDictName.AutofillType = ExpressionTextBox.AutofillTypeEnum.Dict;
                     expDictTarget.AutofillType = ExpressionTextBox.AutofillTypeEnum.Dict;
                     break;

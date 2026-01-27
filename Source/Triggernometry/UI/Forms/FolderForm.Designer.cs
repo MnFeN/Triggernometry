@@ -583,6 +583,6 @@
         private System.Windows.Forms.Label lblFfxivZoneId;
         private System.Windows.Forms.CheckBox chkFfxivZoneFilter;
         private CustomControls.ExpressionTextBox expFfxivZoneFilterRegex;
-        private System.Windows.Forms.TextBox txtEnvironment;
+        private Triggernometry.UI.CustomControls.ExpressionTextBox.TextBox txtEnvironment;
     }
 }
