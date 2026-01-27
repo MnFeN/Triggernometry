@@ -331,11 +331,11 @@ namespace Triggernometry.FFXIV
                     return Math.Atan2(MathParser.Parse(args[0]) - e.PosX, MathParser.Parse(args[1]) - e.PosY);
                 },
 
-                // Relative angle from entity heading to given point (-π ~ π)
+                // Relative angle from entity to given point, using heading as relative north (-π ~ π)
                 ["LocalAngleTo"] = (e, args) => {
                     CheckArgCount("2", "LocalAngleTo", args);
                     var theta = Math.Atan2(MathParser.Parse(args[0]) - e.PosX, MathParser.Parse(args[1]) - e.PosY);
-                    return MathParser.ModFunction(theta - e.Heading + Math.PI, 2 * Math.PI) - Math.PI;
+                    return MathParser.ModFunction(theta - e.Heading, 2 * Math.PI) - Math.PI;
                 },
 
                 // Quantized direction from given point to entity
@@ -385,6 +385,27 @@ namespace Triggernometry.FFXIV
                     var z = (float)(e.PosZ + dz);
                     return new Vector3(x, y, z);
                 },
+
+                // Convert world coordinates to local-space offset using entity pos and heading.
+                ["WorldToLocal"] = (e, args) => {
+                    CheckArgCount("2-3", "WorldToLocal", args);
+
+                    var heading = e.Heading;
+                    var sin = Math.Sin(heading);
+                    var cos = Math.Cos(heading);
+
+                    var dxWorld = MathParser.Parse(args[0]) - e.PosX;
+                    var dyWorld = MathParser.Parse(args[1]) - e.PosY;
+                    var dx = (float)(-cos * dxWorld + sin * dyWorld);
+                    var dy = (float)(-sin * dxWorld - cos * dyWorld);
+
+                    if (args.Length == 2)
+                        return new Vector2(dx, dy);
+
+                    var dz = (float)(MathParser.Parse(args[2]) - e.PosZ);
+                    return new Vector3(dx, dy, dz);
+                },
+
             };
 
         /// <summary>

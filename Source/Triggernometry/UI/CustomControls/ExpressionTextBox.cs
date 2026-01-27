@@ -171,8 +171,8 @@ namespace Triggernometry.UI.CustomControls
             "DirFrom(x, y, ±divisions, digits=0)",
             "DirTo(x, y, ±divisions, digits=0)",
             "LocalDirTo(x, y, ±divisions, digits=0)",
-            "LocalToWorld(dx, dy)",
-            "LocalToWorld(dx, dy, dz)",
+            "LocalToWorld(dx, dy)", "LocalToWorld(dx, dy, dz)",
+            "WorldToLocal(dx, dy)", "WorldToLocal(dx, dy, dz)",
         }.Concat(FFXIV.Entity.ValidEntityPropNames).Concat(FFXIV.Job.LegalJobPropNames).ToList();
         
         // Job, Role, etc.
