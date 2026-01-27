@@ -301,6 +301,80 @@ namespace Triggernometry.FFXIV
                 ["PercentMP"] = (e, args) => PercentXP("PercentMP", e.CurrentMP, e.MaxMP, args),
                 ["PercentCP"] = (e, args) => PercentXP("PercentCP", e.CurrentCP, e.MaxCP, args),
                 ["PercentGP"] = (e, args) => PercentXP("PercentGP", e.CurrentGP, e.MaxGP, args),
+
+                // Distance from entity to target point (2D or 3D)
+                ["DistanceTo"] = (e, args) => {
+                    CheckArgCount("2-3", "DistanceTo", args);
+                    var xSquare = Math.Pow(e.PosX - MathParser.Parse(args[0]), 2);
+                    var ySquare = Math.Pow(e.PosY - MathParser.Parse(args[1]), 2);
+                    var zSquare = args.Length == 2 ? 0
+                                : Math.Pow(e.PosZ - MathParser.Parse(args[2]), 2);
+                    return Math.Sqrt(xSquare + ySquare + zSquare);
+                },
+
+                // Absolute angle from given point to entity
+                ["AngleFrom"] = (e, args) => {
+                    CheckArgCount("2", "AngleFrom", args);
+                    return Math.Atan2(e.PosX - MathParser.Parse(args[0]), e.PosY - MathParser.Parse(args[1]));
+                },
+
+                // Absolute angle from entity to given point
+                ["AngleTo"] = (e, args) => {
+                    CheckArgCount("2", "AngleTo", args);
+                    return Math.Atan2(MathParser.Parse(args[0]) - e.PosX, MathParser.Parse(args[1]) - e.PosY);
+                },
+
+                // Relative angle from entity heading to given point (-π ~ π)
+                ["LocalAngleTo"] = (e, args) => {
+                    CheckArgCount("2", "LocalAngleTo", args);
+                    var theta = Math.Atan2(MathParser.Parse(args[0]) - e.PosX, MathParser.Parse(args[1]) - e.PosY);
+                    return MathParser.ModFunction(theta - e.Heading + Math.PI, 2 * Math.PI) - Math.PI;
+                },
+
+                // Quantized direction from given point to entity
+                ["DirFrom"] = (e, args) => {
+                    CheckArgCount("3-4", "DirFrom", args);
+                    var roundvecArgs = args.Select(MathParser.Parse).ToArray();
+                    roundvecArgs[0] = e.PosX - roundvecArgs[0];
+                    roundvecArgs[1] = e.PosY - roundvecArgs[1];
+                    return MathParser.RoundvecFunction(roundvecArgs);
+                },
+
+                // Quantized direction from entity to given point
+                ["DirTo"] = (e, args) => {
+                    CheckArgCount("3-4", "DirTo", args);
+                    var roundvecArgs = args.Select(MathParser.Parse).ToArray();
+                    roundvecArgs[0] = roundvecArgs[0] - e.PosX;
+                    roundvecArgs[1] = roundvecArgs[1] - e.PosY;
+                    return MathParser.RoundvecFunction(roundvecArgs);
+                },
+
+                // Quantized relative direction from entity to given point, using heading as relative north
+                ["LocalDirTo"] = (e, args) => {
+                    CheckArgCount("3-4", "LocalDirTo", args);
+                    var theta = Math.Atan2(MathParser.Parse(args[0]) - e.PosX, MathParser.Parse(args[1]) - e.PosY);
+                    var rel = theta - e.Heading + Math.PI;
+                    var roundirArgs = new double[] { rel }.Concat(args.Select(MathParser.Parse).Skip(2)).ToArray();
+                    return MathParser.RoundirFunction(roundirArgs);
+                },
+
+                // 
+                ["LocalToWorldXY"] = (e, args) => {
+                    CheckArgCount("2", "LocalToWorldXY", args);
+                    var x0 = e.PosX;
+                    var y0 = e.PosY;
+                    var heading = e.Heading;
+
+                    var dx = MathParser.Parse(args[0]);
+                    var dy = MathParser.Parse(args[1]);
+                    var sin = Math.Sin(heading);
+                    var cos = Math.Cos(heading);
+
+                    return new Vector2(
+                        (float)(x0 - cos * dx - sin * dy),
+                        (float)(y0 + sin * dx - cos * dy)
+                    );
+                },
             };
 
         /// <summary>
