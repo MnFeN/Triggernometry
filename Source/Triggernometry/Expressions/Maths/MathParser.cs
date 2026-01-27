@@ -99,7 +99,8 @@ namespace Triggernometry.Expressions.Maths
             LocalFunctions.Add("atan2", x => Math.Atan2(x[0], x[1]));
             LocalFunctions.Add("radtodeg", x => x[0] / Math.PI * 180.0);
             LocalFunctions.Add("degtorad", x => x[0] / 180.0 * Math.PI);
-            LocalFunctions.Add("dir2rad", DirectionToRadFunction);
+            LocalFunctions.Add("DirToRad", DirectionToRadFunction);
+            LocalFunctions.Add("dir2rad", DirectionToRadFunction); // old name
             LocalFunctions.Add("distance", DistanceFunction);
             LocalFunctions.Add("d", DistanceFunction);
             LocalFunctions.Add("manhattandistance", L1DistanceFunction);
@@ -117,9 +118,9 @@ namespace Triggernometry.Expressions.Maths
             LocalFunctions.Add("relθ", x => ModFunction(x[1] - x[0] + Math.PI, 2 * Math.PI) - Math.PI);
             LocalFunctions.Add("isanglebetween", IsAngleBetweenFunction);
             LocalFunctions.Add("isθbetween", IsAngleBetweenFunction);
-            LocalFunctions.Add("rad2dir", RoundirFunction);
+            LocalFunctions.Add("RadToDir", RoundirFunction);
             LocalFunctions.Add("roundir", RoundirFunction); // old name
-            LocalFunctions.Add("vec2dir", RoundvecFunction);
+            LocalFunctions.Add("VecToDir", RoundvecFunction);
             LocalFunctions.Add("roundvec", RoundvecFunction); // old name
             LocalFunctions.Add("random", x => RandomNumber(x[0], x[1]));
             LocalFunctions.Add("sqrt", x => Math.Sqrt(x[0]));

@@ -41,25 +41,27 @@ namespace Triggernometry.UI.CustomControls
             "sinh(x)", "cosh(x)", "tanh(x)",
 
             // numeric func: distance
-            "distance(x0, y0, x1, y1)", "distance(x0, y0, z0..., x1, y1, z1...)",
-            "d(x0, y0, x1, y1)", "d(x0, y0, z0..., x1, y1, z1...)",
-            "l1d(x0, y0, z0..., x1, y1, z1...)", "l∞d(x0, y0, z0..., x1, y1, z1...)",
-            "manhattandistance(x0, y0, z0..., x1, y1, z1...)", "chebyshevdistance(x0, y0, z0..., x1, y1, z1...)",
-            "projd(srcX, srcY, θ, tgtX, tgtY)", "projh(srcX, srcY, θ, tgtX, tgtY)", "ispointinray(srcX, srcY, θ, width, tgtX, tgtY)",
-            "projectdistance(srcX, srcY, θ, tgtX, tgtY)", "projectheight(srcX, srcY, θ, tgtX, tgtY)",
+            "Distance(x0, y0, x1, y1)", "d(x0, y0, x1, y1)", 
+            "Distance(x0, y0, z0..., x1, y1, z1...)", "d(x0, y0, z0..., x1, y1, z1...)",
+            "ManhattanDistance(x0, y0, z0..., x1, y1, z1...)", "L1d(x0, y0, z0..., x1, y1, z1...)",
+            "ChebyshevDistance(x0, y0, z0..., x1, y1, z1...)", "L∞d(x0, y0, z0..., x1, y1, z1...)",
+            "ProjD(srcX, srcY, θ, tgtX, tgtY)", "ProjectHeight(srcX, srcY, θ, tgtX, tgtY)",
+            "ProjH(srcX, srcY, θ, tgtX, tgtY)", "ProjectDistance(srcX, srcY, θ, tgtX, tgtY)",
+            "IsPointInRay(srcX, srcY, θ, width, tgtX, tgtY)",
 
             // numeric func: angle
-            "radtodeg(rad)", "degtorad(deg)",
-            "angle(srcX, srcY, tgtX, tgtY)", "θ(srcX, srcY, tgtX, tgtY)", 
-            "relangle(srcθ, tgtθ)", "relθ(srcθ, tgtθ)",
-            "rad2dir(θ, ±divisions, digits=0)",      "roundir(θ, ±divisions, digits=0)",
-            "vec2dir(dx, dy, ±divisions, digits=0)", "roundvec(dx, dy, ±divisions, digits=0)", 
-            "dir2rad(direction, ±divisions)",
-            "isanglebetween(θ, minθ, maxθ)", "isθbetween(θ, minθ, maxθ)",
+            "RadToDeg(rad)", "DegToRad(deg)",
+            "Angle(srcX, srcY, tgtX, tgtY)", "θ(srcX, srcY, tgtX, tgtY)", 
+            "RelAngle(srcθ, tgtθ)", "Relθ(srcθ, tgtθ)",
+            "RadToDir(θ, ±divisions, digits=0)",
+            "VecToDir(dx, dy, ±divisions, digits=0)",
+            "DirToRad(dir, ±divisions)",
+            "IsAngleBetween(θ, minθ, maxθ)", "IsθBetween(θ, minθ, maxθ)",
 
             // numeric string func
-            "hex2dec(hex)", "hex2float(hex)", "hex2double(hex)", "X8float(hex)", "parsedmg(hex)", "len(alphanumstr)",
-            "freq(note, semitones=0)", "nextETms(XX:XX)", "nextETms(ETmin)",
+            "hex2dec(hex)", "hex2float(hex)", "hex2double(hex)", "X8float(hex)", "ParseDmg(hex)", 
+            "len(alphanumstr)",
+            "Freq(note, semitones=0)", "NextETms(XX:XX)", "NextETms(ETmin)",
         };
 
         public static List<string> prefixes = new List<string>() // right after "${"
