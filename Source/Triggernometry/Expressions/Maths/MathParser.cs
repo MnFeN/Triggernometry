@@ -608,13 +608,14 @@ namespace Triggernometry.Expressions.Maths
 
         /// <summary> All functions that you want to define should be inside this property. </summary>
         public static Dictionary<string, Func<double[], double>> LocalFunctions { get; set; } =
-            new Dictionary<string, Func<double[], double>>();
+            new Dictionary<string, Func<double[], double>>(StringComparer.OrdinalIgnoreCase);
 
         public static Dictionary<string, Func<string[], double>> LocalStringFunctions { get; set; } =
-            new Dictionary<string, Func<string[], double>>();
+            new Dictionary<string, Func<string[], double>>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary> All variables that you want to define should be inside this property. </summary>
-        public static Dictionary<string, double> LocalVariables { get; set; } = new Dictionary<string, double>();
+        public static Dictionary<string, double> LocalVariables { get; set; } 
+            = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// When converting the result from the Parse method or ProgrammaticallyParse method ToString(),
@@ -822,7 +823,7 @@ namespace Triggernometry.Expressions.Maths
                 }
                 else if (LocalStringFunctions.Keys.Contains(functionName))
                 {
-                    if (exprTokens.Contains(",") && functionName != "len")
+                    if (exprTokens.Contains(",") && !functionName.Equals("len", StringComparison.OrdinalIgnoreCase))
                     {
                         // converting all arguments into a decimal array
                         for (var i = 0; i < exprTokens.Count; i++)
