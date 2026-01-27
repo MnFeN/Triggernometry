@@ -406,7 +406,7 @@ namespace Triggernometry.Core
                 // start
                 if (I18n.IsChineseEnvironment)
                 {
-                    ui.AddDefaultRepoCN();
+                    AddDefaultRepoCN();
                 }
                 RegisterDefaultNamedCallbacks();
                 // end
