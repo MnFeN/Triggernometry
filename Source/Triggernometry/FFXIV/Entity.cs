@@ -251,9 +251,16 @@ namespace Triggernometry.FFXIV
         internal readonly static Dictionary<string, Func<Entity, string[], object>> _methodAccessors
             = new Dictionary<string, Func<Entity, string[], object>>(StringComparer.OrdinalIgnoreCase)
             {
-                // true if entity has any of the specified status IDs
+                // true if entity has the specified status ID
                 ["HasStatus"] = (e, args) => {
-                    CheckArgCount(">=1", "HasStatus", args);
+                    CheckArgCount("1", "HasStatus", args);
+                    var id = (ushort)MathParser.Parse(args[0]);
+                    return e.Statuses.Any(s => s.StatusID == id);
+                },
+
+                // true if entity has any of the specified status IDs
+                ["HasAnyStatus"] = (e, args) => {
+                    CheckArgCount(">=1", "HasAnyStatus", args);
                     var ids = args.Select(a => (ushort)MathParser.Parse(a)).ToArray();
                     var currentStatuses = new HashSet<ushort>(e.Statuses.Select(s => s.StatusID));
                     return ids.Any(id => currentStatuses.Contains(id));
@@ -358,22 +365,25 @@ namespace Triggernometry.FFXIV
                     return MathParser.RoundirFunction(roundirArgs);
                 },
 
-                // 
-                ["LocalToWorldXY"] = (e, args) => {
-                    CheckArgCount("2", "LocalToWorldXY", args);
-                    var x0 = e.PosX;
-                    var y0 = e.PosY;
-                    var heading = e.Heading;
+                // Convert a local-space offset to world coordinates using entity pos and heading.
+                ["LocalToWorld"] = (e, args) => {
+                    CheckArgCount("2-3", "LocalToWorld", args);
 
-                    var dx = MathParser.Parse(args[0]);
-                    var dy = MathParser.Parse(args[1]);
+                    var heading = e.Heading;
                     var sin = Math.Sin(heading);
                     var cos = Math.Cos(heading);
 
-                    return new Vector2(
-                        (float)(x0 - cos * dx - sin * dy),
-                        (float)(y0 + sin * dx - cos * dy)
-                    );
+                    var dx = MathParser.Parse(args[0]);
+                    var dy = MathParser.Parse(args[1]);
+                    var x = (float)(e.PosX - cos * dx - sin * dy);
+                    var y = (float)(e.PosY + sin * dx - cos * dy);
+
+                    if (args.Length == 2)
+                        return new Vector2(x, y);
+
+                    var dz = MathParser.Parse(args[2]);
+                    var z = (float)(e.PosZ + dz);
+                    return new Vector3(x, y, z);
                 },
             };
 

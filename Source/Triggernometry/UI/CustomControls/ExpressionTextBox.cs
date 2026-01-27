@@ -51,7 +51,9 @@ namespace Triggernometry.UI.CustomControls
             // numeric func: angle
             "radtodeg(rad)", "degtorad(deg)",
             "angle(srcX, srcY, tgtX, tgtY)", "θ(srcX, srcY, tgtX, tgtY)", "relangle(srcθ, tgtθ)", "relθ(srcθ, tgtθ)",
-            "roundir(θ, ±n, digits=0)", "roundvec(dx, dy, ±n, digits=0)", "dir2rad(direction, ±n)",
+            "roundir(θ, ±divisions, digits=0)", 
+            "roundvec(dx, dy, ±divisions, digits=0)", 
+            "dir2rad(direction, ±divisions)",
             "isanglebetween(θ, minθ, maxθ)", "isθbetween(θ, minθ, maxθ)",
 
             // numeric string func
@@ -155,8 +157,21 @@ namespace Triggernometry.UI.CustomControls
 
         // Name, X, Job, Role, etc.
         public static List<string> XivEntityProps = new List<string> { 
-            "HasStatus(statusId)", "StatusTimer(statusId)", "StatusStack(statusId)",
-            "PercentHP(digits=-1)", "PercentMP(digits=-1)", "PercentCP(digits=-1)","PercentGP(digits=-1)",
+            "HasStatus(statusId)",
+            "HasAnyStatus(statusIds...)",
+            "HasAllStatus(statusIds...)", 
+            "HasTankStance",
+            "StatusTimer(statusId, default=-1)", 
+            "StatusStack(statusId, default=-1)",
+            "PercentHP(digits=-1)", "PercentMP(digits=-1)", 
+            "PercentCP(digits=-1)", "PercentGP(digits=-1)",
+            "DistanceTo(x, y)", "DistanceTo(x, y, z)",
+            "AngleFrom(x, y)", "AngleTo(x, y)", "LocalAngleTo(x, y)",
+            "DirFrom(x, y, ±divisions, digits=0)",
+            "DirTo(x, y, ±divisions, digits=0)",
+            "LocalDirTo(x, y, ±divisions, digits=0)",
+            "LocalToWorld(dx, dy)",
+            "LocalToWorld(dx, dy, dz)",
         }.Concat(FFXIV.Entity.ValidEntityPropNames).Concat(FFXIV.Job.LegalJobPropNames).ToList();
         
         // Job, Role, etc.
