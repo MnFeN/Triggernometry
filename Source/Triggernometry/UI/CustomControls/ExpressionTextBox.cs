@@ -45,8 +45,8 @@ namespace Triggernometry.UI.CustomControls
             "Distance(x0, y0, z0..., x1, y1, z1...)", "d(x0, y0, z0..., x1, y1, z1...)",
             "ManhattanDistance(x0, y0, z0..., x1, y1, z1...)", "L1d(x0, y0, z0..., x1, y1, z1...)",
             "ChebyshevDistance(x0, y0, z0..., x1, y1, z1...)", "L∞d(x0, y0, z0..., x1, y1, z1...)",
-            "ProjD(srcX, srcY, θ, tgtX, tgtY)", "ProjectHeight(srcX, srcY, θ, tgtX, tgtY)",
-            "ProjH(srcX, srcY, θ, tgtX, tgtY)", "ProjectDistance(srcX, srcY, θ, tgtX, tgtY)",
+            "ProjD(srcX, srcY, θ, tgtX, tgtY)", "ProjectDistance(srcX, srcY, θ, tgtX, tgtY)",
+            "ProjH(srcX, srcY, θ, tgtX, tgtY)", "ProjectHeight(srcX, srcY, θ, tgtX, tgtY)",
             "IsPointInRay(srcX, srcY, θ, width, tgtX, tgtY)",
 
             // numeric func: angle
