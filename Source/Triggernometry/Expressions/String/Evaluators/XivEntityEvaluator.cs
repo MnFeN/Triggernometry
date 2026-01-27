@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Triggernometry.Expressions.String.Models;
 using Triggernometry.Expressions.String.Utils;
@@ -24,10 +25,39 @@ namespace Triggernometry.Expressions.String.Evaluators
             if (!expr.Member.HasValue) 
                 throw new ArgumentException($"实体表达式 {expr.RawExpression} 未包含属性", nameof(expr.Member));
 
+            // raw: "X, Y, DistanceTo(0, 0)"
+            var raw = expr.Member.RawExpression;
+
             // Entity expressions allow multiple members (properties/methods) separated with comma,
+            // such as "_entity[10000000].X, Y, DistanceTo(0, 0)"
             // so we need to split the raw expression of the member part.
-            var memberExpressions = ArgHelper.SplitArguments(expr.Member.RawExpression);
-            return BuildEvaluator(memberExpressions, expr.RawExpression);
+
+            var memberExpressions = new List<string>();
+            int parenDepth = 0;
+            int prevEnd = 0;
+
+            for (int i = 0; i < raw.Length; i++)
+            {
+                char c = raw[i];
+
+                if (c == '(') parenDepth++;
+                else if (c == ')') parenDepth--;
+                else if (c == ',' && parenDepth == 0)
+                {
+                    var part = raw.Substring(prevEnd, i - prevEnd).Trim();
+                    if (part.Length > 0)
+                        memberExpressions.Add(part);
+                    prevEnd = i + 1;
+                }
+            }
+
+            // Append the trailing member after the last comma
+            var tail = raw.Substring(prevEnd).Trim();
+            if (tail.Length > 0)
+                memberExpressions.Add(tail);
+
+            // memberExpressions: [ "X", "Y", "DistanceTo(0, 0)" ]
+            return BuildEvaluator(memberExpressions.ToArray(), expr.RawExpression);
         }
 
         internal static Func<Entity, string[]> BuildEvaluator(string[] memberExpressions, string rawExprForErrorOverride = null)
