@@ -50,9 +50,10 @@ namespace Triggernometry.UI.CustomControls
 
             // numeric func: angle
             "radtodeg(rad)", "degtorad(deg)",
-            "angle(srcX, srcY, tgtX, tgtY)", "θ(srcX, srcY, tgtX, tgtY)", "relangle(srcθ, tgtθ)", "relθ(srcθ, tgtθ)",
-            "roundir(θ, ±divisions, digits=0)", 
-            "roundvec(dx, dy, ±divisions, digits=0)", 
+            "angle(srcX, srcY, tgtX, tgtY)", "θ(srcX, srcY, tgtX, tgtY)", 
+            "relangle(srcθ, tgtθ)", "relθ(srcθ, tgtθ)",
+            "rad2dir(θ, ±divisions, digits=0)",      "roundir(θ, ±divisions, digits=0)",
+            "vec2dir(dx, dy, ±divisions, digits=0)", "roundvec(dx, dy, ±divisions, digits=0)", 
             "dir2rad(direction, ±divisions)",
             "isanglebetween(θ, minθ, maxθ)", "isθbetween(θ, minθ, maxθ)",
 

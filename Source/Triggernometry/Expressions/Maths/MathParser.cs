@@ -117,8 +117,10 @@ namespace Triggernometry.Expressions.Maths
             LocalFunctions.Add("relθ", x => ModFunction(x[1] - x[0] + Math.PI, 2 * Math.PI) - Math.PI);
             LocalFunctions.Add("isanglebetween", IsAngleBetweenFunction);
             LocalFunctions.Add("isθbetween", IsAngleBetweenFunction);
-            LocalFunctions.Add("roundir", RoundirFunction);
-            LocalFunctions.Add("roundvec", RoundvecFunction);
+            LocalFunctions.Add("rad2dir", RoundirFunction);
+            LocalFunctions.Add("roundir", RoundirFunction); // old name
+            LocalFunctions.Add("vec2dir", RoundvecFunction);
+            LocalFunctions.Add("roundvec", RoundvecFunction); // old name
             LocalFunctions.Add("random", x => RandomNumber(x[0], x[1]));
             LocalFunctions.Add("sqrt", x => Math.Sqrt(x[0]));
             LocalFunctions.Add("rem", x => Math.IEEERemainder(x[0], x[1]));
