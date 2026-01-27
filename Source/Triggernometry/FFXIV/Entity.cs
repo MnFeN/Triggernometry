@@ -171,7 +171,7 @@ namespace Triggernometry.FFXIV
             { "Name",           e => e.Name },
             { "ID",             e => e.HexID },
             { "IsSelf",         e => e.ID == Entity.GetMyself().ID },
-            { "IsPlayer",       e => e.ID == Entity.GetMyself().ID },
+            { "IsPlayer",       e => e.Type == EntityType.Pc },
             { "BNpcID",         e => e.BNpcID },
             { "OwnerID",        e => e.OwnerHexID },
             { "TypeName",       e => e.Type },
@@ -218,6 +218,7 @@ namespace Triggernometry.FFXIV
             { "IsFriend",       e => e.IsFriend },
             { "WeaponID",       e => e.WeaponID },
             { "TargetID",       e => e.TargetHexID },
+            { "IsTargetingSelf",e => e.TargetID == GetMyself().TargetID },
             { "BNpcNameID",     e => e.BNpcNameID },
             { "CurrentWorldID", e => e.CurrentWorldID },
             { "WorldID",        e => e.WorldID },
@@ -250,21 +251,52 @@ namespace Triggernometry.FFXIV
         internal readonly static Dictionary<string, Func<Entity, string[], object>> _methodAccessors
             = new Dictionary<string, Func<Entity, string[], object>>(StringComparer.OrdinalIgnoreCase)
             {
+                // true if entity has any of the specified status IDs
                 ["HasStatus"] = (e, args) => {
-                    CheckArgCount("1", "HasStatus", args);
-                    var statusID = (ushort)MathParser.Parse(args[0]);
-                    return e.Statuses.Any(s => s.StatusID == statusID);
+                    CheckArgCount(">=1", "HasStatus", args);
+                    var ids = args.Select(a => (ushort)MathParser.Parse(a)).ToArray();
+                    var currentStatuses = new HashSet<ushort>(e.Statuses.Select(s => s.StatusID));
+                    return ids.Any(id => currentStatuses.Contains(id));
                 },
+
+                // true if entity has all specified status IDs
+                ["HasAllStatus"] = (e, args) => {
+                    CheckArgCount(">=1", "HasAllStatus", args);
+                    var ids = args.Select(a => (ushort)MathParser.Parse(a)).ToArray();
+                    var currentStatuses = new HashSet<ushort>(e.Statuses.Select(s => s.StatusID));
+                    return ids.All(id => currentStatuses.Contains(id));
+                },
+
+                // remaining timer of status, or default if missing
                 ["StatusTimer"] = (e, args) => {
-                    CheckArgCount("1", "StatusTimer", args);
+                    CheckArgCount("1-2", "StatusTimer", args);
                     var statusID = (ushort)MathParser.Parse(args[0]);
-                    return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Timer ?? -1f;
+                    var def = args.Length >= 2 ? MathParser.Parse(args[1]) : -1;
+                    return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Timer ?? def;
                 },
+
+                // stack count (extraParam) of status, or default if missing
                 ["StatusStack"] = (e, args) => {
-                    CheckArgCount("1", "StatusStack", args);
+                    CheckArgCount("1-2", "StatusStack", args);
                     var statusID = (ushort)MathParser.Parse(args[0]);
-                    return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Stack ?? -1;
+                    var def = args.Length >= 2 ? MathParser.Parse(args[1]) : -1;
+                    return e.Statuses.FirstOrDefault(s => s.StatusID == statusID)?.Stack ?? def;
                 },
+
+                ["HasTankStance"] = (e, args) => {
+                    CheckArgCount("0", "HasTankStance", args);
+                    switch (e.Job.JobType)
+                    {
+                        case JobEnum.PLD: return e.Statuses.Any(s => s.StatusID == 0x4F);
+                        case JobEnum.WAR: return e.Statuses.Any(s => s.StatusID == 0x5B);
+                        case JobEnum.DRK: return e.Statuses.Any(s => s.StatusID == 0x2E7);
+                        case JobEnum.GNB: return e.Statuses.Any(s => s.StatusID == 0x729);
+                        case JobEnum.BLU: return e.Statuses.Any(s => s.StatusID == 0x6B7);
+                        default: return false;
+                    }
+                },
+
+                // XP percentage (current / max)
                 ["PercentHP"] = (e, args) => PercentXP("PercentHP", e.CurrentHP, e.MaxHP, args),
                 ["PercentMP"] = (e, args) => PercentXP("PercentMP", e.CurrentMP, e.MaxMP, args),
                 ["PercentCP"] = (e, args) => PercentXP("PercentCP", e.CurrentCP, e.MaxCP, args),
