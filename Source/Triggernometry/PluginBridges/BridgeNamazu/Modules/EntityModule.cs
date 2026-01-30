@@ -270,9 +270,12 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             IntPtr modelAddress = Memory.Read<IntPtr>(objectAddress + ModelOffset());
             Memory.Write(objectAddress + PosOffset() + 0x10, h);
-            // 四元数
-            Memory.Write(modelAddress + ModelPosOffset() + 0x14, (float)Math.Sin(h / 2));
-            Memory.Write(modelAddress + ModelPosOffset() + 0x1C, (float)Math.Cos(h / 2));
+            if (modelAddress != IntPtr.Zero)
+            {
+                // 四元数
+                Memory.Write(modelAddress + ModelPosOffset() + 0x14, (float)Math.Sin(h / 2));
+                Memory.Write(modelAddress + ModelPosOffset() + 0x1C, (float)Math.Cos(h / 2));
+            }
         }
 
         public void SetDefaultHeading(IntPtr objectAddress, float h)
