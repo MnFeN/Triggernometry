@@ -19,10 +19,12 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public IntPtr GetStatusIndexPtr;
         public IntPtr RemoveStatusPtr;
         public IntPtr EObjAnimationPtr;
+        public IntPtr PlayActionTimelinePtr;
+        public int TimelineContainerOffset;
 
         /*Plugin.IsCN ? xx : xx*/
         /// <summary> 实体初始坐标相对于实体地址的偏移。</summary>
-        public Func<int> DefaultPosOffset = () => 0x10;
+        public Func<int> DefaultPosOffset = () => 0x10; 
         /// <summary> 实体 ID 相对于实体地址的偏移。</summary>
         public Func<int> IdOffset = () => 0x78; // 6.0 / 7.3
         /// <summary> 实体坐标相对于实体地址的偏移。</summary>
@@ -79,6 +81,30 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     "45 33 C9 0F B7 54 24 ?? 48 8B CB E8 * * * *", // 7.4
                 }, nameof(EObjAnimationPtr));
 
+                /* 收包函数 case ActorControl -> case PlayActionTimeline (0x197) 调用的函数
+                 
+                case 0x197u:
+                case 0x19Cu:
+                    if (v15)
+                        sub_1408929F0(v15 + 2608, (unsigned __int16)v971, 0, 0);
+                    return;
+                
+                4D 85 F6;                test r14, r14
+                0F 84 A7 41 00 00;       jz + 0x41A7
+                0F B7 54 24 70;          movzx edx, word ptr[rsp + 70h]
+                49 8D 8E 30 0A 00 00;    lea rcx, [r14 + 0A30h]
+                45 33 C9;                xor r9d, r9d
+                45 33 C0;                xor r8d, r8d
+                E8 F9 E4 CF FF;          call<rel32>
+                E9 8B 41 00 00;          jmp + 0x418B
+                */
+                var playActionTimelineCasePtr = Scanner.TryScanMultiple(new string[] {
+                    "0F B7 54 24 ? 49 8D 8E ? ? ? ? 45 33 C9 45 33 C0", // 7.4
+                }, nameof(PlayActionTimelinePtr));
+                // 49 8D 8E ? ? ? ? 的偏移
+                TimelineContainerOffset = Memory.Read<int>(playActionTimelineCasePtr + 8);
+                // E8 * * * * 的相对寻址
+                PlayActionTimelinePtr = playActionTimelineCasePtr + 23 + Memory.Read<int>(playActionTimelineCasePtr + 19); 
             };
         }
 
@@ -261,6 +287,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             Memory.ExecuteWithLock(() => EObjAnimation(objectPtr, animationId, slotMask, context));
         }
 
+        [CallbackMethod("PlayActionTimeline")]
+        internal void CbPlayActionTimeline(string cmd)
+        {
+            CheckBeforeExecution(cmd);
+            var (objectPtr, timelineId, a3, a4) = cmd.ParseArgs<IntPtr, ushort, long, bool>((2, 0L), (3, false));
+            Memory.ExecuteWithLock(() => PlayActionTimeline(objectPtr, timelineId, a3, a4));
+        }
+
         public void SetPos(IntPtr objectAddress, float x, float y, float z)
         {
             CheckIfAnyZeroPtr(objectAddress);
@@ -416,6 +450,15 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 throw new Exception($"[EObjAnimation] 指定实体 \"{obj.Name}\" ({obj.ID:X8}) @ {(long)objectPtr:X} 类型 {obj.Type} 不是 EventObject");
             }
             _ = Memory.CallInjected64<IntPtr>(EObjAnimationPtr, objectPtr, animationId, slotMask, context);
+        }
+
+        public bool PlayActionTimeline(IntPtr objectPtr, ushort timelineId, long a3 = 0, bool a4 = false)
+        {
+            // a4: should skip mount/submodel timeline
+            // 原函数是 实体->TimelineContainer 的方法，这里封装改用了实体本身的地址
+            CheckIfAnyZeroPtr(objectPtr, PlayActionTimelinePtr);
+            var timelineContainerPtr = objectPtr + TimelineContainerOffset;
+            return Memory.CallInjected64<bool>(PlayActionTimelinePtr, timelineContainerPtr, timelineId, a3, a4);
         }
     }
 }
