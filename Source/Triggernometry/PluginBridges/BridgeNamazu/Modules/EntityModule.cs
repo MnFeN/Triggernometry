@@ -19,25 +19,26 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public IntPtr GetStatusIndexPtr;
         public IntPtr RemoveStatusPtr;
 
+        /*Plugin.IsCN ? xx : xx*/
         /// <summary> 实体初始坐标相对于实体地址的偏移。</summary>
         public Func<int> DefaultPosOffset = () => 0x10;
         /// <summary> 实体 ID 相对于实体地址的偏移。</summary>
-        public Func<int> IdOffset = () => Plugin.IsCN ? 0x78 : 0x78; // 6.0 / 7.3
+        public Func<int> IdOffset = () => 0x78; // 6.0 / 7.3
         /// <summary> 实体坐标相对于实体地址的偏移。</summary>
-        public Func<int> PosOffset = () => Plugin.IsCN ? 0xB0 : 0xB0; // 7.2 / 7.3
+        public Func<int> PosOffset = () => 0xB0; // 7.2 / 7.3
         /// <summary> 实体缩放倍率相对于实体地址的偏移。</summary>
-        public Func<int> ScaleOffset = () => Plugin.IsCN ? 0xC4 : 0xC4; // 7.2 / 7.3
+        public Func<int> ScaleOffset = () => 0xC4; // 7.2 / 7.3
         /// <summary> 实体模型的相对偏移相对于实体地址的偏移。相对坐标偏移会影响实体绘制的模型显示的位置。</summary>
-        public Func<int> ModelRelPosOffset = () => Plugin.IsCN ? 0xE0 : 0xE0; // 7.2 / 7.3
+        public Func<int> ModelRelPosOffset = () => 0xE0; // 7.2 / 7.3
         /// <summary> 实体模型（DrawObject*）相对于实体地址的偏移。</summary>
-        public Func<int> ModelOffset = () => Plugin.IsCN ? 0x100 : 0x100; // 7.2 / 7.3
+        public Func<int> ModelOffset = () => 0x100; // 7.2 / 7.3
         /// <summary> 实体 StatusLoopVfx ID 相对于实体地址的偏移。</summary>
-        public Func<int> StatusLoopVfxOffset = () => Plugin.IsCN ? 0x1C8 : 0x1C8; // 7.2 / 7.3
+        public Func<int> StatusLoopVfxOffset = () => 0x1C8; // 7.2 / 7.3
         /// <summary> 实体透明度相对于实体地址的偏移。</summary>
         public Func<int> OpacityOffset = () => 0x22E8; // 7.4; 7.3 0x22D8 
         /// <summary> 实体 ModelStatus (RenderFlags) 相对于实体地址的偏移。</summary>
         /// https://github.com/xivdev/Penumbra/blob/master/Penumbra/Interop/Structs/DrawState.cs
-        public Func<int> ModelStatusOffset = () => Plugin.IsCN ? 0x118 : 0x118; // 7.2 / 7.3
+        public Func<int> ModelStatusOffset = () => 0x118; // 7.2 / 7.3
 
         /// <summary> 硬目标地址相对于实体 TargetSystem 地址的偏移（SoftTarget 地址在此基础上 +0x8）。</summary>
         public Func<int> HardTargetOffset = () => 0x80; // 7.0
@@ -247,6 +248,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public void SetPos(IntPtr objectAddress, float x, float y, float z)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             Vector3 pos = new Vector3(x, z, y); // 注意 Y Z 轴交换
             IntPtr modelAddress = Memory.Read<IntPtr>(objectAddress + ModelOffset());
             Memory.Write(objectAddress + PosOffset(), pos);
@@ -256,18 +258,21 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public void SetDefaultPos(IntPtr objectAddress, float x, float y, float z)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             Vector3 pos = new Vector3(x, z, y); // 注意 Y Z 轴交换
             Memory.Write(objectAddress + DefaultPosOffset(), pos);
         }
 
         public void SetModelRelPos(IntPtr objectAddress, float dx, float dy, float dz)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             Vector3 relPos = new Vector3(dx, dz, dy); // 注意 Y Z 轴交换
             Memory.Write(objectAddress + ModelRelPosOffset(), relPos);
         }
 
         public void SetHeading(IntPtr objectAddress, float h)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             IntPtr modelAddress = Memory.Read<IntPtr>(objectAddress + ModelOffset());
             Memory.Write(objectAddress + PosOffset() + 0x10, h);
             if (modelAddress != IntPtr.Zero)
@@ -280,12 +285,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public void SetDefaultHeading(IntPtr objectAddress, float h)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             Memory.Write(objectAddress + DefaultPosOffset() + 0x10, h);
         }
 
         public void Target(IntPtr address, bool hard = true, bool soft = true)
         {   // FFXIVClientStructs/FFXIV/Client/Game/Control/TargetSystem.cs
-            CheckIfAnyZeroPtr(TargetSystemPtr);
+            CheckIfAnyZeroPtr(address, TargetSystemPtr);
             if (hard) Memory.Write(TargetSystemPtr + HardTargetOffset(), address);
             if (soft) Memory.Write(TargetSystemPtr + HardTargetOffset() + 8, address);
         }
@@ -301,17 +307,21 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         /// </param>
         public void SetModelStatus(IntPtr objectAddress, int status)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             Memory.Write(objectAddress + ModelStatusOffset(), status);
         }
 
         public void SetObjectScaleTemp(IntPtr objectAddress, float scaleX, float scaleY, float scaleZ)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             IntPtr drawObjectAddress = Memory.Read<IntPtr>(objectAddress + ModelOffset());
+            CheckIfAnyZeroPtr(drawObjectAddress);
             Memory.Write<Vector3>(drawObjectAddress + ModelScaleOffset(), new Vector3(scaleX, scaleZ, scaleY));
         }
 
         public void SetObjectScale(IntPtr objectAddress, float scale)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             Memory.Write<float>(objectAddress + ScaleOffset(), scale);
             ReDraw(objectAddress);
         }
@@ -319,11 +329,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         // FFXIVClientStructs/FFXIV/Client/Game/Character/Character.cs    public float Alpha;
         public void SetOpacity(IntPtr objectAddress, float opacity)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             Memory.Write<float>(objectAddress + OpacityOffset(), opacity);
         }
 
         public void SetStatusLoopVfx(IntPtr objectAddress, ushort id)
         {
+            CheckIfAnyZeroPtr(objectAddress);
             Memory.Write<ushort>(objectAddress + StatusLoopVfxOffset(), id);
             ReDraw(objectAddress);
         }
@@ -360,7 +372,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public void RemoveStatus(IntPtr address, ushort statusId)
         {
-            CheckIfAnyZeroPtr(GetStatusIndexPtr, RemoveStatusPtr);
+            CheckIfAnyZeroPtr(address, GetStatusIndexPtr, RemoveStatusPtr);
             IntPtr statusManagerPtr = GetStatusManagerPtr(address);
             if (statusManagerPtr == IntPtr.Zero)
             {
