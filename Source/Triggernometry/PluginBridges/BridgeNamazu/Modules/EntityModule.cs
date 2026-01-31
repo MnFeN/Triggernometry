@@ -18,6 +18,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         // public IntPtr HasStatusPtr;
         public IntPtr GetStatusIndexPtr;
         public IntPtr RemoveStatusPtr;
+        public IntPtr EObjAnimationPtr;
 
         /*Plugin.IsCN ? xx : xx*/
         /// <summary> 实体初始坐标相对于实体地址的偏移。</summary>
@@ -72,6 +73,12 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 RemoveStatusPtr = Scanner.TryScanMultiple(new string[] {
                     "83 FA 3C 73 ?? 53 48 83 EC 30 48 8B D9", // 7.2
                 }, nameof(RemoveStatusPtr));
+
+                // 收包函数 case ActorControl -> case EObjAnimation (0x1A2) 调用的函数
+                EObjAnimationPtr = Scanner.TryScanMultiple(new string[] {
+                    "45 33 C9 0F B7 54 24 ?? 48 8B CB E8 * * * *", // 7.4
+                }, nameof(EObjAnimationPtr));
+
             };
         }
 
@@ -246,6 +253,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             Memory.ExecuteWithLock(() => RemoveStatus(objectPtr, statusId));
         }
 
+        [CallbackMethod("EObjAnimation")]
+        internal void CbEObjAnimation(string cmd)
+        {
+            CheckBeforeExecution(cmd);
+            var (objectPtr, animationId, slotMask, context) = cmd.ParseArgs<IntPtr, ushort, ushort, long>((3, 0L));
+            Memory.ExecuteWithLock(() => EObjAnimation(objectPtr, animationId, slotMask, context));
+        }
+
         public void SetPos(IntPtr objectAddress, float x, float y, float z)
         {
             CheckIfAnyZeroPtr(objectAddress);
@@ -385,6 +400,22 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 // throw new Exception($"Status 0x{statusId:X} does not exist for entity at {(long)address:X}");
             }
             Memory.CallInjected64(RemoveStatusPtr, statusManagerPtr, statusIndex, 0);
+        }
+
+        public void EObjAnimation(IntPtr objectPtr, ushort animationId, ushort slotMask, long context = 0)
+        {
+            CheckIfAnyZeroPtr(objectPtr, EObjAnimationPtr);
+            var obj = Entity.GetEntities(e => e.Address == objectPtr).FirstOrDefault();
+            if (obj == null)
+            {
+                WarningLog("[EObjAnimation] 未找到对应的实体");
+                return;
+            }
+            if (obj.Type != EntityType.EventObj)
+            {
+                throw new Exception($"[EObjAnimation] 指定实体 \"{obj.Name}\" ({obj.ID:X8}) @ {(long)objectPtr:X} 类型 {obj.Type} 不是 EventObject");
+            }
+            _ = Memory.CallInjected64<IntPtr>(EObjAnimationPtr, objectPtr, animationId, slotMask, context);
         }
     }
 }
