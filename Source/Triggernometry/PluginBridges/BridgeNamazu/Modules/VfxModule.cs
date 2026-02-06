@@ -155,7 +155,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             if ((long)srcAddress <= 0xFFFF || (long)tgtAddress <= 0xFFFF)
                 throw new Exception($"[鲶鱼精邮差扩展] ActorVfxCreate ({fullPath}) 实体地址无效：src = {(long)srcAddress:X}, tgt = {(long)tgtAddress:X}");
             var vfxPtr = Memory.WithAllocatedString(fullPath, Encoding.UTF8, pathPtr => Memory.CallInjected64<IntPtr>(
-                ActorVfxCreatePtr, pathPtr, srcAddress, tgtAddress, -1f, /*(char)*/(ushort)0, 0, /*(char)*/(ushort)0
+                ActorVfxCreatePtr, pathPtr, srcAddress, tgtAddress, -1f, (byte)0, 0, (byte)0
             ));
             var vfx = new ActorVfx()
             {
@@ -189,7 +189,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     try
                     {
                         vfx.Removed = true;
-                        Memory.CallInjected64(ActorVfxRemovePtr, vfxPtr, /*(char)*/(ushort)1); // a2: bool freeMemory
+                        Memory.CallInjected64(ActorVfxRemovePtr, vfxPtr, (byte)1); // a2: bool freeMemory
                     }
                     finally
                     {
