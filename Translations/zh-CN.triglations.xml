@@ -1539,7 +1539,7 @@
     <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="窗口消息" /> 
     <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="位于 {1} 的仓库 {0} 数据格式无法解析。请确认远程仓库本身未过时，且 Triggernometry 为最新版本。" /> 
     <TranslationEntry Key="internal/Repository/updateex" Translation="无法更新仓库 {0}：{1}" /> 
-    <TranslationEntry Key="internal/Repository/updatetimeout" Translation="无法更新仓库 {0}：网络错误或请求超时。请检查网络或切换代理设置后尝试手动更新仓库（右键-更新）。异常信息：{1}" />
+    <TranslationEntry Key="internal/Repository/updatetimeout" Translation="无法更新仓库 {0}：网络错误或请求超时。请确认仓库有效，检查网络或切换代理设置后尝试手动更新仓库（右键-更新）。异常信息：{1}" />
     <TranslationEntry Key="internal/Repository/updating" Translation="正在从 {1} 下载仓库 {0}。" /> 
     <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="允许远程触发器操作文件可能存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
     <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="允许远程触发器控制 OBS 可能存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />

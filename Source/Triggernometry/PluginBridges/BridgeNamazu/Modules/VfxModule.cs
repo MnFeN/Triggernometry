@@ -37,7 +37,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             get
             {
-                lock (_actorVfxs)
+                lock (_staticVfxs)
                 {
                     return new Dictionary<IntPtr, StaticVfx>(_staticVfxs);
                 }
