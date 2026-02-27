@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Triggernometry.Core;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.PluginBridges.BridgeNamazu.Vfx;
-using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -99,7 +98,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             if (GetConfig<bool>("ActorVfx") == false) return; // ignored
             var (tgtAddress, vfxName, duration) = cmd.ParseArgs<IntPtr, string, double>((2, -1.0)); // 默认不移除
             CheckIfVfxNameTooShort(vfxName, "LockOn");
-            IntPtr vfxPtr = LockOnCreate(tgtAddress, vfxName).Ptr;
+            var vfx = Memory.ExecuteWithLock(() => LockOnCreate(tgtAddress, vfxName));
+            IntPtr vfxPtr = vfx.Ptr;
             ScheduleActorVfxRemove(vfxPtr, duration);
         }
 
@@ -111,7 +111,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             if (GetConfig<bool>("ActorVfx") == false) return; // ignored
             var (srcAddress, tgtAddress, vfxName, duration) = cmd.ParseArgs<IntPtr, IntPtr, string, double>((3, 3.0)); // 默认持续时间 3 秒
             CheckIfVfxNameTooShort(vfxName, "Channeling");
-            IntPtr vfxPtr = ChannelingCreate(srcAddress, tgtAddress, vfxName).Ptr;
+            var vfx = Memory.ExecuteWithLock(() => ChannelingCreate(srcAddress, tgtAddress, vfxName));
+            IntPtr vfxPtr = vfx.Ptr;
             ScheduleActorVfxRemove(vfxPtr, duration);
         }
 
@@ -123,7 +124,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             if (GetConfig<bool>("ActorVfx") == false) return; // ignored
             var (srcAddress, vfxName, duration) = cmd.ParseArgs<IntPtr, string, double>((2, 3.0)); // 默认持续时间 3 秒
             CheckIfVfxNameTooShort(vfxName, "CastVfx");
-            IntPtr vfxPtr = CastVfxCreate(srcAddress, vfxName).Ptr;
+            var vfx = Memory.ExecuteWithLock(() => CastVfxCreate(srcAddress, vfxName));
+            IntPtr vfxPtr = vfx.Ptr;
             ScheduleActorVfxRemove(vfxPtr, duration);
         }
 
@@ -135,7 +137,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             if (GetConfig<bool>("ActorVfx") == false) return; // ignored
             var (srcAddress, tgtAddress, vfxName, duration) = cmd.ParseArgs<IntPtr, IntPtr, string, double>((3, 3.0)); // 默认持续时间 3 秒
             CheckIfVfxNameTooShort(vfxName, "ActorVfx");
-            IntPtr vfxPtr = ActorVfxCreate(srcAddress, tgtAddress, vfxName).Ptr;
+            var vfx = Memory.ExecuteWithLock(() => ActorVfxCreate(srcAddress, tgtAddress, vfxName));
+            IntPtr vfxPtr = vfx.Ptr;
             ScheduleActorVfxRemove(vfxPtr, duration);
         }
 
@@ -148,14 +151,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public ActorVfx CastVfxCreate(IntPtr srcAddress, string vfxName, string tag = Vfx.Vfx.DefaultTag)
             => ActorVfxCreate(srcAddress, srcAddress, $"vfx/common/eff/{vfxName}.avfx", tag);
 
-        public ActorVfx ActorVfxCreate(IntPtr srcAddress, IntPtr tgtAddress, string fullPath, string tag = Vfx.Vfx.DefaultTag, bool autoRemoved = false)
+        public ActorVfx ActorVfxCreate(IntPtr srcAddress, IntPtr tgtAddress, string fullPath, string tag = Vfx.Vfx.DefaultTag, bool autoRemovedByGame = false, float unknownParamTest = -1f)
         {
             CheckIfAnyZeroPtr(ActorVfxCreatePtr);
-            if (!autoRemoved) CheckIfAnyZeroPtr(ActorVfxRemovePtr);
+            if (!autoRemovedByGame) CheckIfAnyZeroPtr(ActorVfxRemovePtr);
             if ((long)srcAddress <= 0xFFFF || (long)tgtAddress <= 0xFFFF)
                 throw new Exception($"[鲶鱼精邮差扩展] ActorVfxCreate ({fullPath}) 实体地址无效：src = {(long)srcAddress:X}, tgt = {(long)tgtAddress:X}");
             var vfxPtr = Memory.WithAllocatedString(fullPath, Encoding.UTF8, pathPtr => Memory.CallInjected64<IntPtr>(
-                ActorVfxCreatePtr, pathPtr, srcAddress, tgtAddress, -1f, (byte)0, 0, (byte)0
+                ActorVfxCreatePtr, pathPtr, srcAddress, tgtAddress, /*-1f*/unknownParamTest, (byte)0, 0, (byte)0
             ));
             var vfx = new ActorVfx()
             {
@@ -163,7 +166,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 Path = fullPath,
                 Tag = tag
             };
-            if (!autoRemoved) // 临时应对方式，暂时未能检测 LockOn 是否已经被移除，所以不主动注册
+            if (!autoRemovedByGame) // 临时应对方式，暂时未能检测 LockOn 是否已经被移除，所以不主动注册
             {
                 lock (_actorVfxs)
                 {
@@ -205,7 +208,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             if (duration >= 0 && vfxPtr != IntPtr.Zero)
             {
-                Task.Delay((int)(duration * 1000)).ContinueWith(_ => TryActorVfxRemove(vfxPtr));
+                Task.Delay((int)(duration * 1000)).ContinueWith(_ => Memory.ExecuteWithLock(() => TryActorVfxRemove(vfxPtr)));
             }
         }
 

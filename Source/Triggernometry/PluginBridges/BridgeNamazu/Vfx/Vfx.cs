@@ -28,7 +28,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                     try
                     {
                         await Task.Delay(TimeSpan.FromSeconds(duration)).ConfigureAwait(false);
-                        TryRemove();
+                        Memory.ExecuteWithLock(() => TryRemove());
                     }
                     catch (Exception ex)
                     {

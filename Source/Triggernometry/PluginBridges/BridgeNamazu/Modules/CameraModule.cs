@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Triggernometry.Expressions.Maths;
-using static Triggernometry.Expressions.String.Utils.DataStringHelper;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 {
@@ -78,6 +77,11 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public void SetParam(string param, float newValue)
         {
+            if (CameraPtr == IntPtr.Zero)
+            {
+                WarningLog($"[鲶鱼精邮差扩展] CameraPtr 为 0，无法设置 {param} 参数");
+                return;
+            }
             switch (param.ToLower())
             {
                 case "angleh": AngleH = newValue; break;

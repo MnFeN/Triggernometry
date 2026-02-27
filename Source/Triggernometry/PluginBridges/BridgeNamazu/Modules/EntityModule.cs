@@ -104,7 +104,12 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 // 49 8D 8E ? ? ? ? 的偏移
                 TimelineContainerOffset = Memory.Read<int>(playActionTimelineCasePtr + 8);
                 // E8 * * * * 的相对寻址
-                PlayActionTimelinePtr = playActionTimelineCasePtr + 23 + Memory.Read<int>(playActionTimelineCasePtr + 19); 
+                PlayActionTimelinePtr = playActionTimelineCasePtr + 23 + Memory.Read<int>(playActionTimelineCasePtr + 19);
+                /* FFXIVClientStructs/FFXIV/Client/Game/Character/TimelineContainer.cs
+                PlayActionTimelinePtr = Scanner.TryScanMultiple(new string[] {
+                    "E8 * * * * 48 8D 8F ? ? ? ? B2 12", // 7.4
+                }, nameof(PlayActionTimelinePtr));
+                */
             };
         }
 
@@ -295,35 +300,35 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             Memory.ExecuteWithLock(() => PlayActionTimeline(objectPtr, timelineId, a3, a4));
         }
 
-        public void SetPos(IntPtr objectAddress, float x, float y, float z)
+        public void SetPos(IntPtr objectPtr, float x, float y, float z)
         {
-            CheckIfAnyZeroPtr(objectAddress);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetPos))) return;
             Vector3 pos = new Vector3(x, z, y); // 注意 Y Z 轴交换
-            IntPtr modelAddress = Memory.Read<IntPtr>(objectAddress + ModelOffset());
-            Memory.Write(objectAddress + PosOffset(), pos);
+            IntPtr modelAddress = Memory.Read<IntPtr>(objectPtr + ModelOffset());
+            Memory.Write(objectPtr + PosOffset(), pos);
             if (modelAddress != IntPtr.Zero)
                 Memory.Write(modelAddress + ModelPosOffset(), pos);
         }
 
-        public void SetDefaultPos(IntPtr objectAddress, float x, float y, float z)
+        public void SetDefaultPos(IntPtr objectPtr, float x, float y, float z)
         {
-            CheckIfAnyZeroPtr(objectAddress);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetDefaultPos))) return;
             Vector3 pos = new Vector3(x, z, y); // 注意 Y Z 轴交换
-            Memory.Write(objectAddress + DefaultPosOffset(), pos);
+            Memory.Write(objectPtr + DefaultPosOffset(), pos);
         }
 
-        public void SetModelRelPos(IntPtr objectAddress, float dx, float dy, float dz)
+        public void SetModelRelPos(IntPtr objectPtr, float dx, float dy, float dz)
         {
-            CheckIfAnyZeroPtr(objectAddress);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetModelRelPos))) return;
             Vector3 relPos = new Vector3(dx, dz, dy); // 注意 Y Z 轴交换
-            Memory.Write(objectAddress + ModelRelPosOffset(), relPos);
+            Memory.Write(objectPtr + ModelRelPosOffset(), relPos);
         }
 
-        public void SetHeading(IntPtr objectAddress, float h)
+        public void SetHeading(IntPtr objectPtr, float h)
         {
-            CheckIfAnyZeroPtr(objectAddress);
-            IntPtr modelAddress = Memory.Read<IntPtr>(objectAddress + ModelOffset());
-            Memory.Write(objectAddress + PosOffset() + 0x10, h);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetHeading))) return;
+            IntPtr modelAddress = Memory.Read<IntPtr>(objectPtr + ModelOffset());
+            Memory.Write(objectPtr + PosOffset() + 0x10, h);
             if (modelAddress != IntPtr.Zero)
             {
                 // 四元数
@@ -332,17 +337,19 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             }
         }
 
-        public void SetDefaultHeading(IntPtr objectAddress, float h)
+        public void SetDefaultHeading(IntPtr objectPtr, float h)
         {
-            CheckIfAnyZeroPtr(objectAddress);
-            Memory.Write(objectAddress + DefaultPosOffset() + 0x10, h);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetDefaultHeading))) return;
+            Memory.Write(objectPtr + DefaultPosOffset() + 0x10, h);
         }
 
-        public void Target(IntPtr address, bool hard = true, bool soft = true)
+        public void Target(IntPtr objectPtr, bool hard = true, bool soft = true)
         {   // FFXIVClientStructs/FFXIV/Client/Game/Control/TargetSystem.cs
-            CheckIfAnyZeroPtr(address, TargetSystemPtr);
-            if (hard) Memory.Write(TargetSystemPtr + HardTargetOffset(), address);
-            if (soft) Memory.Write(TargetSystemPtr + HardTargetOffset() + 8, address);
+            CheckIfAnyZeroPtr(TargetSystemPtr);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(Target))) return;
+
+            if (hard) Memory.Write(TargetSystemPtr + HardTargetOffset(), objectPtr);
+            if (soft) Memory.Write(TargetSystemPtr + HardTargetOffset() + 8, objectPtr);
         }
 
         /// <summary> 见 status 参数描述 </summary>
@@ -354,51 +361,52 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         /// 8192: 不重绘：有模型无名牌、不可选；重绘/移动/攻击：恢复 0 <br />
         /// 16384: 不重绘：有模型无名牌、不可选；重绘：不变，刷新模型 <br />
         /// </param>
-        public void SetModelStatus(IntPtr objectAddress, int status)
+        public void SetModelStatus(IntPtr objectPtr, int status)
         {
-            CheckIfAnyZeroPtr(objectAddress);
-            Memory.Write(objectAddress + ModelStatusOffset(), status);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetModelStatus))) return;
+            Memory.Write(objectPtr + ModelStatusOffset(), status);
         }
 
-        public void SetObjectScaleTemp(IntPtr objectAddress, float scaleX, float scaleY, float scaleZ)
+        public void SetObjectScaleTemp(IntPtr objectPtr, float scaleX, float scaleY, float scaleZ)
         {
-            CheckIfAnyZeroPtr(objectAddress);
-            IntPtr drawObjectAddress = Memory.Read<IntPtr>(objectAddress + ModelOffset());
-            CheckIfAnyZeroPtr(drawObjectAddress);
-            Memory.Write<Vector3>(drawObjectAddress + ModelScaleOffset(), new Vector3(scaleX, scaleZ, scaleY));
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetObjectScaleTemp))) return;
+            IntPtr drawObjectPtr = Memory.Read<IntPtr>(objectPtr + ModelOffset());
+            CheckIfAnyZeroPtr(drawObjectPtr);
+            Memory.Write<Vector3>(drawObjectPtr + ModelScaleOffset(), new Vector3(scaleX, scaleZ, scaleY));
         }
 
-        public void SetObjectScale(IntPtr objectAddress, float scale)
+        public void SetObjectScale(IntPtr objectPtr, float scale)
         {
-            CheckIfAnyZeroPtr(objectAddress);
-            Memory.Write<float>(objectAddress + ScaleOffset(), scale);
-            ReDraw(objectAddress);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetObjectScale))) return;
+            Memory.Write<float>(objectPtr + ScaleOffset(), scale);
+            ReDraw(objectPtr);
         }
 
         // FFXIVClientStructs/FFXIV/Client/Game/Character/Character.cs    public float Alpha;
-        public void SetOpacity(IntPtr objectAddress, float opacity)
+        public void SetOpacity(IntPtr objectPtr, float opacity)
         {
-            CheckIfAnyZeroPtr(objectAddress);
-            Memory.Write<float>(objectAddress + OpacityOffset(), opacity);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetOpacity))) return;
+            Memory.Write<float>(objectPtr + OpacityOffset(), opacity);
         }
 
-        public void SetStatusLoopVfx(IntPtr objectAddress, ushort id)
+        public void SetStatusLoopVfx(IntPtr objectPtr, ushort id)
         {
-            CheckIfAnyZeroPtr(objectAddress);
-            Memory.Write<ushort>(objectAddress + StatusLoopVfxOffset(), id);
-            ReDraw(objectAddress);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(SetStatusLoopVfx))) return;
+            Memory.Write<ushort>(objectPtr + StatusLoopVfxOffset(), id);
+            ReDraw(objectPtr);
         }
 
-        public void EnableDraw(IntPtr address)
-            => CallEntityVirtualFunction(address, EnableDrawVTableIdx());
+        public void EnableDraw(IntPtr objectPtr)
+            => CallEntityVirtualFunction(objectPtr, EnableDrawVTableIdx());
 
-        public void DisableDraw(IntPtr address)
-            => CallEntityVirtualFunction(address, DisableDrawVTableIdx());
+        public void DisableDraw(IntPtr objectPtr)
+            => CallEntityVirtualFunction(objectPtr, DisableDrawVTableIdx());
 
-        public void ReDraw(IntPtr address)
+        public void ReDraw(IntPtr objectPtr)
         {
-            DisableDraw(address);
-            EnableDraw(address);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(ReDraw))) return;
+            DisableDraw(objectPtr);
+            EnableDraw(objectPtr);
         }
 
         public void SetHighlightColor(IntPtr address, byte color)
@@ -419,26 +427,29 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public void CallEntityVirtualFunction(IntPtr entityAddress, int vFuncIndex, params object[] args)
             => CallEntityVirtualFunction<IntPtr>(entityAddress, vFuncIndex, args);
 
-        public void RemoveStatus(IntPtr address, ushort statusId)
+        public void RemoveStatus(IntPtr objectPtr, ushort statusId)
         {
-            CheckIfAnyZeroPtr(address, GetStatusIndexPtr, RemoveStatusPtr);
-            IntPtr statusManagerPtr = GetStatusManagerPtr(address);
+            CheckIfAnyZeroPtr(objectPtr, GetStatusIndexPtr, RemoveStatusPtr);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(RemoveStatus))) return;
+
+            IntPtr statusManagerPtr = GetStatusManagerPtr(objectPtr);
             if (statusManagerPtr == IntPtr.Zero)
             {
-                throw new Exception($"StatusManagerPtr is null for entity at {(long)address:X}");
+                throw new Exception($"StatusManagerPtr is null for entity at {(long)objectPtr:X}");
             }
             int statusIndex = Memory.CallInjected64<int>(GetStatusIndexPtr, statusManagerPtr, statusId, 0xE0000000);
             if (statusIndex < 0)
             {
                 return;
-                // throw new Exception($"Status 0x{statusId:X} does not exist for entity at {(long)address:X}");
             }
             Memory.CallInjected64(RemoveStatusPtr, statusManagerPtr, statusIndex, 0);
         }
 
         public void EObjAnimation(IntPtr objectPtr, ushort animationId, ushort slotMask, long context = 0)
         {
-            CheckIfAnyZeroPtr(objectPtr, EObjAnimationPtr);
+            CheckIfAnyZeroPtr(EObjAnimationPtr);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(EObjAnimation))) return;
+
             var obj = Entity.GetEntities(e => e.Address == objectPtr).FirstOrDefault();
             if (obj == null)
             {
@@ -456,9 +467,22 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             // a4: should skip mount/submodel timeline
             // 原函数是 实体->TimelineContainer 的方法，这里封装改用了实体本身的地址
-            CheckIfAnyZeroPtr(objectPtr, PlayActionTimelinePtr);
+            CheckIfAnyZeroPtr(PlayActionTimelinePtr);
+            if (!CheckIfValidEntityPtr(objectPtr, nameof(PlayActionTimeline))) return false;
+
             var timelineContainerPtr = objectPtr + TimelineContainerOffset;
-            return Memory.CallInjected64<bool>(PlayActionTimelinePtr, timelineContainerPtr, timelineId, a3, a4);
+            var byte_a4 = a4 ? (byte)1 : (byte)0;
+            return Memory.CallInjected64<bool>(PlayActionTimelinePtr, timelineContainerPtr, timelineId, a3, byte_a4);
+        }
+
+        public bool CheckIfValidEntityPtr(IntPtr objectPtr, string funcName)
+        {
+            var isValid = objectPtr != IntPtr.Zero;
+            if (!isValid)
+            {
+                WarningLog($"[鲶鱼精邮差扩展] 调用 {funcName} 时实体地址为空。");
+            }
+            return isValid;
         }
     }
 }

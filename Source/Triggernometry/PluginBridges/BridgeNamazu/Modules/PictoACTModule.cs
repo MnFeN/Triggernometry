@@ -451,9 +451,9 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             
             // 执行移除
             if (isActor && GetConfig<bool>("ActorVfx") != false)
-                ActorVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => vfx.TryRemove());
+                ActorVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => Memory.ExecuteWithLock(() => vfx.TryRemove()));
             if (isStatic && GetConfig<bool>("StaticVfx") != false)
-                StaticVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => vfx.TryRemove());
+                StaticVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => Memory.ExecuteWithLock(() => vfx.TryRemove()));
         }
 
         private void ParseTypeAndPath(MultiLineRawArgs data, out VfxType vfxType, out string vfxPath, out bool isActor)
