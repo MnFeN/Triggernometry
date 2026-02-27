@@ -625,7 +625,7 @@ namespace Triggernometry.Core
             {
                 return;
             }
-            Instance.UnfilteredAddToLog(level, message);
+            Instance.UnfilteredAddToLog(level, message, ParentTrigger); // to-do: should pass Action instance as well
         }
 
         // todo should get rid of this maybe
