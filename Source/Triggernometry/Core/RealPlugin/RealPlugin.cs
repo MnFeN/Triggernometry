@@ -333,6 +333,7 @@ namespace Triggernometry.Core
                 exwhere = I18n.Translate("internal/Plugin/iniwelcome", "preparing welcome");
                 ui.pnlWelcome.Dock = DockStyle.Fill;
                 ui.pnlUi.Dock = DockStyle.Fill;
+                FixConfigurationOnStartCN(); // start
                 if (cfg != null && cfg.ShowWelcome == true)
                 {
                     ui.pnlUi.Visible = false;
@@ -345,7 +346,6 @@ namespace Triggernometry.Core
                     ui.pnlWelcome.Visible = false;
                     ui.btnOptions.Enabled = true;
                 }
-                FixConfigurationOnStartCN(); // start
                 if (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes)
                 {
                     exwhere = I18n.Translate("internal/Plugin/iniupdates", "checking for updates");
