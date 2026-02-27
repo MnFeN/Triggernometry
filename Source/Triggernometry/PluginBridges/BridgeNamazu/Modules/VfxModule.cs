@@ -100,7 +100,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckIfVfxNameTooShort(vfxName, "LockOn");
             var vfx = Memory.ExecuteWithLock(() => LockOnCreate(tgtAddress, vfxName));
             IntPtr vfxPtr = vfx.Ptr;
-            ScheduleActorVfxRemove(vfxPtr, duration);
+            ScheduleActorVfxRemove(vfxPtr, duration, true);
         }
 
         /// <summary> 连线特效 </summary>
@@ -151,10 +151,10 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public ActorVfx CastVfxCreate(IntPtr srcAddress, string vfxName, string tag = Vfx.Vfx.DefaultTag)
             => ActorVfxCreate(srcAddress, srcAddress, $"vfx/common/eff/{vfxName}.avfx", tag);
 
-        public ActorVfx ActorVfxCreate(IntPtr srcAddress, IntPtr tgtAddress, string fullPath, string tag = Vfx.Vfx.DefaultTag, bool autoRemovedByGame = false, float unknownParamTest = -1f)
+        public ActorVfx ActorVfxCreate(IntPtr srcAddress, IntPtr tgtAddress, string fullPath, string tag = Vfx.Vfx.DefaultTag, bool scheduleRemovalByGame = false, float unknownParamTest = -1f)
         {
             CheckIfAnyZeroPtr(ActorVfxCreatePtr);
-            if (!autoRemovedByGame) CheckIfAnyZeroPtr(ActorVfxRemovePtr);
+            if (!scheduleRemovalByGame) CheckIfAnyZeroPtr(ActorVfxRemovePtr);
             if ((long)srcAddress <= 0xFFFF || (long)tgtAddress <= 0xFFFF)
                 throw new Exception($"[鲶鱼精邮差扩展] ActorVfxCreate ({fullPath}) 实体地址无效：src = {(long)srcAddress:X}, tgt = {(long)tgtAddress:X}");
             var vfxPtr = Memory.WithAllocatedString(fullPath, Encoding.UTF8, pathPtr => Memory.CallInjected64<IntPtr>(
@@ -166,7 +166,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 Path = fullPath,
                 Tag = tag
             };
-            if (!autoRemovedByGame) // 临时应对方式，暂时未能检测 LockOn 是否已经被移除，所以不主动注册
+            if (!scheduleRemovalByGame) // 临时应对方式，暂时未能检测 LockOn 是否已经被移除，所以不主动注册
             {
                 lock (_actorVfxs)
                 {
@@ -177,12 +177,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             return vfx;
         }
 
-        public bool TryActorVfxRemove(IntPtr vfxPtr) // 待优化：判断是否存在 vfx
+        public bool TryActorVfxRemove(IntPtr vfxPtr, bool scheduleRemovalByGame = false) // 待优化：判断是否存在 vfx
         {
             CheckIfAnyZeroPtr(ActorVfxRemovePtr);
+            ActorVfx vfx = null;
             lock (_actorVfxs)
             {
-                if (!_actorVfxs.TryGetValue(vfxPtr, out var vfx))
+                if (!scheduleRemovalByGame && !_actorVfxs.TryGetValue(vfxPtr, out vfx))
                 {
                     Custom2Log($"[ActorVfx] 移除特效：（已移除）@{(long)vfxPtr:X}");
                     return false;
@@ -191,24 +192,24 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 {
                     try
                     {
-                        vfx.Removed = true;
+                        if (vfx != null) vfx.Removed = true;
                         Memory.CallInjected64(ActorVfxRemovePtr, vfxPtr, (byte)1); // a2: bool freeMemory
                     }
                     finally
                     {
                         _actorVfxs.Remove(vfxPtr);
-                        Custom2Log($"[ActorVfx] 移除特效：{vfx.Path} @ {(long)vfxPtr:X}");
+                        Custom2Log($"[ActorVfx] 移除特效：{vfx?.Path ?? "unknown"} @ {(long)vfxPtr:X}");
                     }
                     return true;
                 }
             }
         }
 
-        public void ScheduleActorVfxRemove(IntPtr vfxPtr, double duration)
+        public void ScheduleActorVfxRemove(IntPtr vfxPtr, double duration, bool scheduleRemovalByGame = false)
         {
             if (duration >= 0 && vfxPtr != IntPtr.Zero)
             {
-                Task.Delay((int)(duration * 1000)).ContinueWith(_ => Memory.ExecuteWithLock(() => TryActorVfxRemove(vfxPtr)));
+                Task.Delay((int)(duration * 1000)).ContinueWith(_ => Memory.ExecuteWithLock(() => TryActorVfxRemove(vfxPtr, scheduleRemovalByGame)));
             }
         }
 
