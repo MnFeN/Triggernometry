@@ -643,6 +643,9 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 vfx.PrevKeepX = keepX ?? vfx.PrevKeepX;
                 vfx.PrevKeepY = keepY ?? vfx.PrevKeepY;
 
+                if (vfx.PrevPos == null || vfx.PrevAngles == null) // 只 create 但还没设置参数，忽略本次修改
+                    return;
+
                 var newPos = vfx.PrevPos.Duplicate();
                 var newθ = vfx.PrevAngles.X;
                 // flip
