@@ -159,6 +159,7 @@ namespace Triggernometry.Core
             _ = RegisterNamedCallback("UploadText", (Action<object, string>)UploadTextHelper.UploadTextV1Callback, registrant: nameof(RealPlugin));
             _ = RegisterNamedCallback("UploadTextV2", (Action<object, string>)UploadTextHelper.UploadTextV2Callback, registrant: nameof(RealPlugin));
             _ = RegisterNamedCallback("DisableCactbotTriggerSetsTts", (Action<object, string>)BridgeCactbot.DisableTriggerSetsTtsCallback, registrant: nameof(RealPlugin));
+            _ = RegisterNamedCallback("RegisterActorControlCategories", (Action<object, string>)ActorControlPatcher.RegisterCategoriesCallback, registrant: nameof(RealPlugin));
         }
 
     }
