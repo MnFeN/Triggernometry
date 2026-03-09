@@ -24,7 +24,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv.Rows
 
         public sbyte Range => Get<sbyte>("Range");
         public byte ShapeType => Get<byte>("CastType");
-        public ShapeEnum Shape => ShapeMap[ShapeType];
+        public ShapeEnum Shape => ShapeMap.TryGetValue(ShapeType, out var shape) ? shape : ShapeEnum.Unknown;
 
         /// <summary> 技能范围，即圆/扇形技能的半径、矩形技能的半长，相当于特效的 y 参数。</summary>
         public byte ScaleY => Get<byte>("EffectRange");
@@ -66,6 +66,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv.Rows
 
         public enum ShapeEnum : byte
         {
+            Unknown,
             None,
             Circle,
             Fan,
@@ -75,6 +76,8 @@ namespace Triggernometry.FFXIV.ExtractedCsv.Rows
             Ring,
             Cross,
             Triangle,
+            RightRectTo,
+            LeftRectTo
         }
 
         public static Dictionary<byte, ShapeEnum> ShapeMap = new Dictionary<byte, ShapeEnum>()
@@ -95,6 +98,8 @@ namespace Triggernometry.FFXIV.ExtractedCsv.Rows
             [13] = ShapeEnum.Fan,
             [14] = ShapeEnum.Triangle,
             [15] = ShapeEnum.RectThrough,
+            [16] = ShapeEnum.RightRectTo,
+            [17] = ShapeEnum.LeftRectTo,
         };
 
         public enum AttackTypeEnum : sbyte
