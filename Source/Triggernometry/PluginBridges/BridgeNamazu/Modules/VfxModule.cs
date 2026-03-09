@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Triggernometry.Core;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.PluginBridges.BridgeNamazu.Vfx;
@@ -155,6 +157,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckIfAnyZeroPtr(ActorVfxCreatePtr);
             if (!scheduleRemovalByGame) CheckIfAnyZeroPtr(ActorVfxRemovePtr);
+            CheckIfVfxPathValid(fullPath);
             if ((long)srcAddress <= 0xFFFF || (long)tgtAddress <= 0xFFFF)
                 throw new Exception($"[鲶鱼精邮差扩展] ActorVfxCreate ({fullPath}) 实体地址无效：src = {(long)srcAddress:X}, tgt = {(long)tgtAddress:X}");
             var vfxPtr = Memory.WithAllocatedString(fullPath, Encoding.UTF8, pathPtr => Memory.CallInjected64<IntPtr>(
@@ -255,6 +258,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public StaticVfx StaticVfxCreate(string fullPath, string tag = Vfx.Vfx.DefaultTag)
         {
             CheckIfAnyZeroPtr(StaticVfxCreatePtr, StaticVfxRunPtr, StaticVfxRemovePtr);
+            CheckIfVfxPathValid(fullPath);
             const string pool = "Client.System.Scheduler.Instance.VfxObject";
             var vfxPtr = Memory.WithAllocatedString2(fullPath, pool, Encoding.UTF8, 
                 (fullPathPtr, poolPtr) => {
@@ -336,6 +340,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         { 
             if (vfxName.Length <= 8)
                 throw new Exception($"[鲶鱼精邮差扩展] {methodName} vfxName 参数过短：{vfxName}");
+        }
+
+        private void CheckIfVfxPathValid(string vfxPath)
+        {
+            if (!vfxPath.EndsWith(".avfx", StringComparison.OrdinalIgnoreCase))
+                throw new Exception($"[鲶鱼精邮差扩展] vfxName 不以 \".avfx\" 结尾：{vfxPath}");
+            if (Regex.IsMatch(vfxPath, @"\.(?!avfx)", RegexOptions.IgnoreCase))
+                throw new Exception($"[鲶鱼精邮差扩展] vfxName 包含错误的扩展名：{vfxPath}");
         }
 
     }
