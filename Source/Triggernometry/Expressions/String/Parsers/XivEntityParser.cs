@@ -28,20 +28,20 @@ namespace Triggernometry.Expressions.String.Parsers
             return string.Join(", ", evaluator(entity));
         }
 
-        internal static string Parse(IndexMemberExpression expr, Context ctx)
+        internal static Entity GetEntity(IndexMemberExpression expr, Context ctx)
         {
             var conditionExpr = expr.Index;
             var isParty = expr.Name.EndsWith("party");
             var rawMemberExprs = expr.Member.RawExpression;
 
-            var entity = GetEntityFromUserInput(conditionExpr, isParty);
+            var entity = GetEntityByCondition(conditionExpr, isParty);
 
             if (isParty && (expr.Index == "1" || expr.Index == Entity.MyName))
             {
                 RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning,
                     $"检测到已弃用的旧版本表达式：{expr.RawExpression}。\n" +
                     $"请使用 ${{_me.属性}} 代替 ${{_ffxivparty[1].属性}}、${{_ffxivparty[${{_ffxivplayer}}].属性}} 等表达式查询自身属性。\n" +
-                    $"触发器：{ctx?.Trigger?.FullPath ?? "null"}", 
+                    $"触发器：{ctx?.Trigger?.FullPath ?? "null"}",
                     ctx?.Trigger);
             }
 
@@ -53,15 +53,13 @@ namespace Triggernometry.Expressions.String.Parsers
                         expr.RawExpression, ctx?.Trigger?.FullPath ?? "null"),
                     ctx?.Trigger);
             }
-
-            var evaluator = XivEntityEvaluator.BuildEvaluator(rawMemberExprs);
-            return string.Join(", ", evaluator(entity));
+            return entity;
         }
 
-        internal static Entity GetEntityFromUserInput(string inputCondition, bool isParty = false)
-            => GetEntitiesFromUserInput(inputCondition, isParty).FirstOrDefault() ?? Entity.NullEntity();
+        internal static Entity GetEntityByCondition(string inputCondition, bool isParty = false)
+            => GetEntitiesByCondition(inputCondition, isParty).FirstOrDefault() ?? Entity.NullEntity();
 
-        internal static IEnumerable<Entity> GetEntitiesFromUserInput(string inputCondition, bool isParty = false)
+        internal static IEnumerable<Entity> GetEntitiesByCondition(string inputCondition, bool isParty = false)
         {
             // 1. party index: ffxivparty[n]
             if (isParty && int.TryParse(inputCondition, out int partyIdx) && partyIdx >= 1 && partyIdx <= 8)

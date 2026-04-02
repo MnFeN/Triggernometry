@@ -417,7 +417,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.GetEntity:
                     {
                         string filterExpr = ParseValue();
-                        var entity = XivEntityParser.GetEntityFromUserInput(filterExpr);
+                        var entity = XivEntityParser.GetEntityByCondition(filterExpr);
 
                         var memberExprs = string.IsNullOrWhiteSpace(Key)
                             ? FFXIV.Entity.RecommendedEntityPropNames.Concat(FFXIV.Job.LegalJobPropNames)

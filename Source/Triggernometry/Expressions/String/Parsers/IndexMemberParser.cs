@@ -38,16 +38,17 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
                     else
                     {
+                        var entity = Entity.GetMyself();
                         var evaluator = XivEntityEvaluator.BuildEvaluator(expr);
-                        return string.Join(", ", evaluator(Entity.GetMyself()));
+                        return string.Join(", ", evaluator(entity));
                     }
 
                 case "_tgt": // ${_tgt.prop}
                     {
                         var targetID = Entity.GetMyself().TargetID;
-                        var tgt = Entity.GetEntityByID(targetID) ?? Entity.NullEntity();
+                        var entity = Entity.GetEntityByID(targetID) ?? Entity.NullEntity();
                         var evaluator = XivEntityEvaluator.BuildEvaluator(expr);
-                        return string.Join(", ", evaluator(tgt));
+                        return string.Join(", ", evaluator(entity));
                     }
 
                 case "_ffxivparty":
@@ -55,7 +56,9 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "_ffxiventity":
                 case "_entity":
                     {
-                        return XivEntityParser.Parse(expr, ctx);
+                        var entity = XivEntityParser.GetEntity(expr, ctx);
+                        var evaluator = XivEntityEvaluator.BuildEvaluator(expr);
+                        return string.Join(", ", evaluator(entity));
                     }
 
                 case "_job": // ${_job[jobid].prop} or ${_job[Name].prop}

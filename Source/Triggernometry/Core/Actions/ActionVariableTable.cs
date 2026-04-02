@@ -928,7 +928,7 @@ namespace Triggernometry.Core.Actions
                     {
                         var entities = string.IsNullOrWhiteSpace(Y)
                             ? FFXIV.Entity.GetEntities()
-                            : XivEntityParser.GetEntitiesFromUserInput(
+                            : XivEntityParser.GetEntitiesByCondition(
                                 ctx.EvaluateStringExpression(ActionContextLogger, ctx, Y),
                                 false);
 

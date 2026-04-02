@@ -16,7 +16,7 @@ namespace Triggernometry.Expressions.String.Evaluators
         /// </summary>
         internal static Func<Entity, string[]> BuildEvaluator(string rawMemberExpressions)
         {
-            var memberExpressions = ArgHelper.SplitArguments(rawMemberExpressions);
+            var memberExpressions = SplitMemberExpressions(rawMemberExpressions);
             return BuildEvaluator(memberExpressions, $"Entity.{rawMemberExpressions}");
         }
 
@@ -28,6 +28,35 @@ namespace Triggernometry.Expressions.String.Evaluators
             // raw: "X, Y, DistanceTo(0, 0)"
             var raw = expr.Member.RawExpression;
 
+            // memberExpressions: [ "X", "Y", "DistanceTo(0, 0)" ]
+            var memberExpressions = SplitMemberExpressions(raw);
+
+            return BuildEvaluator(memberExpressions.ToArray(), expr.RawExpression);
+        }
+
+        private static Func<Entity, string[]> BuildEvaluator(string[] memberExpressions, string rawExprForErrorOverride = null)
+        {
+            var rawExpr = rawExprForErrorOverride ?? $"Entity.{string.Join(", ", memberExpressions)}";
+            var accessors = memberExpressions
+                .Select(raw => new MemberExpression(raw))
+                .Select(member => GetSingleAccessor(member)); // GetSingleAccessor would throw error if not found
+
+            return entity => accessors.Select(accessor => {
+                try
+                {
+                    return accessor(entity).ToDataString();
+                }
+                catch (Exception ex)
+                {
+                    throw new ArgumentException(I18n.Translate("internal/FFXIV/Entity/？？？？？？？？",
+                        "Failed to evaluate entity property/method expression '{0}': {1}",
+                        rawExpr, ex.Message), ex);
+                }
+            }).ToArray();
+        }
+
+        private static string[] SplitMemberExpressions(string raw)
+        {
             // Entity expressions allow multiple members (properties/methods) separated with comma,
             // such as "_entity[10000000].X, Y, DistanceTo(0, 0)"
             // so we need to split the raw expression of the member part.
@@ -56,30 +85,7 @@ namespace Triggernometry.Expressions.String.Evaluators
             if (tail.Length > 0)
                 memberExpressions.Add(tail);
 
-            // memberExpressions: [ "X", "Y", "DistanceTo(0, 0)" ]
-            return BuildEvaluator(memberExpressions.ToArray(), expr.RawExpression);
-        }
-
-        internal static Func<Entity, string[]> BuildEvaluator(string[] memberExpressions, string rawExprForErrorOverride = null)
-        {
-            var rawExpr = rawExprForErrorOverride ?? $"Entity.{string.Join(", ", memberExpressions)}";
-            var accessors = memberExpressions
-                .Select(raw => new MemberExpression(raw))
-                .Select(member => GetSingleAccessor(member)); // GetSingleAccessor would throw error if not found
-
-            return entity => accessors.Select(a => {
-                try
-                {
-                    return a(entity).ToDataString();
-                }
-                catch (Exception ex)
-                {
-                    throw new ArgumentException(I18n.Translate("internal/FFXIV/Entity/？？？？？？？？",
-                        "Failed to evaluate entity property/method expression '{0}': {1}",
-                        rawExpr, ex.Message), ex);
-
-                }
-            }).ToArray();
+            return memberExpressions.ToArray();
         }
 
         internal static Func<Entity, object> GetSingleAccessor(MemberExpression expr)
