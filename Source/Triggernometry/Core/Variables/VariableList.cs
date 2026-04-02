@@ -195,14 +195,14 @@ namespace Triggernometry.Core.Variables
             }
         }
 
-        public Variable Peek(int rawIndex)
+        public Variable Peek(int rawIndex, string defaultValue = "")
         {
             int idx = ProcessRawIndex(rawIndex);
-            if (idx >= 0 && idx < Values.Count)
+            if (idx < 0 || idx >= Values.Count)
             {
-                return Values[idx];
+                return new VariableScalar(defaultValue);
             }
-            return new VariableScalar();
+            return Values[idx] ?? new VariableScalar(defaultValue);
         }
 
         public void RemoveAll(string changer)

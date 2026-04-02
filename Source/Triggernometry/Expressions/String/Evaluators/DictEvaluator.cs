@@ -65,7 +65,6 @@ namespace Triggernometry.Expressions.String.Evaluators
                             return exist ? trueStr : falseStr;
                         };
                     }
-
                 case "count": // count(value)
                     CheckArgCountLocal("1");
                     {
@@ -73,11 +72,20 @@ namespace Triggernometry.Expressions.String.Evaluators
                         return vd => vd.Count(value).ToString();
                     }
 
+                case "get":
+                    CheckArgCountLocal("2");
+                    {
+                        string key = args[0];
+                        string defaultValue = args[1];
+                        return vd => vd.Values.TryGetValue(key, out var val) ? val.ToString() : defaultValue;
+                    }
+
                 case "keyof":
-                    CheckArgCountLocal("1");
+                    CheckArgCountLocal("1-2");
                     {
                         string value = args[0];
-                        return vd => vd.KeyOf(value);
+                        string defaultKey = GetArgument(args, 1, "");
+                        return vd => vd.KeyOf(value, defaultKey);
                     }
 
                 case "keysof":

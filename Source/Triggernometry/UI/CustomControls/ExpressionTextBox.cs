@@ -114,6 +114,7 @@ namespace Triggernometry.UI.CustomControls
         public static List<string> lvarProps = new List<string>()
         {
             "size", "length", "indexof(str)", "i(str)", "lastindexof(str)",
+            "get(idx, default)", 
             "indicesof(str, joiner=',', slices='::')",
             "sum(slices='::')", "count(str, slices='::')",
             "join(joiner=',', slices='::')",
@@ -125,6 +126,7 @@ namespace Triggernometry.UI.CustomControls
         public static List<string> tvarProps = new List<string>()
         {
             "w", "width", "h", "height",
+            "get(colIndex, rowIIndex, default)",
             "hjoin()", "hjoin(joiner1=',', joiner2='⏎', colSlices='::', rowSlices='::')",
             "vjoin()", "vjoin(joiner1=',', joiner2='⏎', colSlices='::', rowSlices='::')",
             "hlookup(str, rowIndex, colSlices='::')",
@@ -141,7 +143,8 @@ namespace Triggernometry.UI.CustomControls
         public static List<string> dvarProps = new List<string>()
         {
             "size", "length", "ekey(key)", "evalue(value)", "ifekey(key, t, f)", "ifevalue(value, t, f)",
-            "keyof(value)", "keysof(value, joiner=',')",
+            "get(key, default)",
+            "keyof(value)", "keyof(value, default)", "keysof(value, joiner=',')",
             "joinall(kvjoiner='=', pairjoiner=',')", "joinall(kvjoiner='=', pairjoiner=',', selectedKeys...)",
             "joinkeys(joiner=',')", "joinvalues(joiner=',')", "joinvalues(joiner=',', selectedKeys...)",
             "sumkeys", "sum", "count(value)",

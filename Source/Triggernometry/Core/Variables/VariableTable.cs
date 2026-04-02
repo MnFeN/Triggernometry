@@ -201,16 +201,15 @@ namespace Triggernometry.Core.Variables
             LastChanged = DateTime.Now;
         }
 
-        public Variable Peek(int x, int y)
+        public Variable Peek(int x, int y, string defaultValue = "")
         {
-            x = ProcessColIndex(x);
-            y = ProcessRowIndex(y);
-            if (x < 0 || y < 0 || x >= Width || y >= Height)
+            var col = ProcessColIndex(x);
+            var row = ProcessRowIndex(y);
+            if (col < 0 || row < 0 || col >= Width || row >= Height)
             {
-                return new VariableScalar();
+                return new VariableScalar(defaultValue);
             }
-            Variable v = Rows[y].Values[x];
-            return v != null ? v : new VariableScalar();
+            return Rows[row].Values[col] ?? new VariableScalar(defaultValue);
         }
 
         public void AppendVertical(VariableTable vt, string changer)

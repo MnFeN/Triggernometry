@@ -234,11 +234,12 @@ namespace Triggernometry.Core.Variables
             return min;
         }
 
-        public string KeyOf(string value)
+        public string KeyOf(string value, string defaultResult)
         {
-            var keys = Values.Where(pair => pair.Value.ToString() == value)
-                             .Select(pair => pair.Key);
-            return keys.FirstOrDefault() ?? "";
+            return Values
+                .Where(pair => pair.Value.ToString() == value)
+                .Select(pair => pair.Key)
+                .FirstOrDefault() ?? defaultResult;
         }
 
         public string KeysOf(string value, string joiner)

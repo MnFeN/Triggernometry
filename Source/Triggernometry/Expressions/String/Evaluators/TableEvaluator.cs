@@ -52,6 +52,15 @@ namespace Triggernometry.Expressions.String.Evaluators
                     CheckArgCountLocal("0");
                     return vt => vt.Height.ToString();
 
+                case "get":
+                    {
+                        CheckArgCountLocal("3");
+                        int col = (int)MathParser.Parse(args[0]);
+                        int row = (int)MathParser.Parse(args[1]);
+                        string defaultValue = args[2];
+                        return vt => vt.Peek(col, row, defaultValue).ToString();
+                    }
+
                 case "hjoin": // .hjoin(joiner1 = ",", joiner2 = LINEBREAK_PLACEHOLDER, colSlices = ":", rowSlices = ":")
                 case "vjoin": // .vjoin(joiner1 = ",", joiner2 = LINEBREAK_PLACEHOLDER, colSlices = ":", rowSlices = ":")
                     CheckArgCountLocal("0-4");

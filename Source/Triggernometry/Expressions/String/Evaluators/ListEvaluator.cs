@@ -3,6 +3,7 @@ using System.Linq;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Models;
+using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
 using static Triggernometry.Expressions.String.Utils.ArgHelper;
 using static Triggernometry.Expressions.String.Utils.ParserCommon;
@@ -38,6 +39,14 @@ namespace Triggernometry.Expressions.String.Evaluators
                 case "size":
                 case "length":
                     return vl => vl.Size.ToString();
+
+                case "get":
+                    {
+                        CheckArgCountLocal("2");
+                        int idx = (int)MathParser.Parse(args[0]);
+                        string defaultValue = args[1];
+                        return vl => vl.Peek(idx, defaultValue).ToString();
+                    }
 
                 case "indexof":
                 case "i":
