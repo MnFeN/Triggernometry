@@ -15,7 +15,7 @@ namespace Triggernometry.Expressions.String.Evaluators
         {
             // invalid (only name)
             if (expr.Indexes.Length == 0 && !expr.Member.HasValue)
-                throw new NotImplementedException("table");
+                throw new Exception($"Table variable must include an index or property in expression '{expr.RawExpression}'.");
 
             // tvar:Name[Col][Row]
             if (expr.Indexes.Length > 0)

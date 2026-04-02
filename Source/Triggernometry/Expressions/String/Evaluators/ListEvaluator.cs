@@ -15,7 +15,7 @@ namespace Triggernometry.Expressions.String.Evaluators
         {
             // invalid (only name)
             if (expr.Indexes.Length == 0 && !expr.Member.HasValue)
-                throw new NotImplementedException("list");
+                throw new Exception($"Listt variable must include an index or property in expression '{expr.RawExpression}'.");
 
             // lvar:Name[Index]
             if (expr.Indexes.Length > 0)
