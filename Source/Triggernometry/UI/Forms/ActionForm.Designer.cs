@@ -5811,7 +5811,8 @@ namespace Triggernometry.UI.Forms
             this.cbxTriggerZoneType.Size = new System.Drawing.Size(635, 21);
             this.cbxTriggerZoneType.TabIndex = 1;
             this.cbxTriggerZoneType.TabStop = false;
-            this.cbxTriggerZoneType.SelectedIndexChanged += new System.EventHandler(this.cbxZoneType_SelectedIndexChanged);
+            this.cbxTriggerZoneType.EnabledChanged += new System.EventHandler(this.cbxZoneType_SelectedIndexChanged);
+            this.cbxTriggerZoneType.SelectedIndexChanged += new System.EventHandler(this.cbxZoneType_EnabledChanged);
             // 
             // lblTriggerZone
             // 

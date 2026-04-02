@@ -1028,12 +1028,19 @@ namespace Triggernometry.UI.Forms
 
         private void cbxTriggerOp_SelectedIndexChanged(object sender, EventArgs e)
         {
-            expTriggerText.Enabled = (cbxTriggerOp.SelectedIndex == 0 && cbxFiringOptions.CheckedIndices.Contains(0) == false);
-            expTriggerZone.Enabled = (cbxTriggerOp.SelectedIndex == 0 && cbxFiringOptions.CheckedIndices.Contains(0) == false);
-            expTriggerTagRegex.Enabled = cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.CancelAllTrigger
-                                       || cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.CancelTrigger;
-            cbxFiringOptions.Enabled = (cbxTriggerOp.SelectedIndex == 0);
-            trvTrigger.Enabled = (cbxTriggerOp.SelectedIndex != 4);
+            var isFire = cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.FireTrigger;
+            cbxFiringOptions.Enabled = isFire;
+
+            var isRegexIgnored = cbxFiringOptions.CheckedIndices.Contains(0);
+            var isEventTextEnabled = isFire && !isRegexIgnored;
+            expTriggerText.Enabled = isEventTextEnabled;
+            expTriggerZone.Enabled = isEventTextEnabled;
+            cbxTriggerZoneType.Enabled = isEventTextEnabled;
+
+            var isCancel = cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.CancelTrigger;
+            var isCancelAll = cbxTriggerOp.SelectedIndex == (int)TriggerOpEnum.CancelAllTrigger;
+            expTriggerTagRegex.Enabled = isCancel || isCancelAll;
+            trvTrigger.Enabled = !isCancelAll;
         }
 
         private void cbxFileOpType_SelectedIndexChanged(object sender, EventArgs e)
@@ -1904,6 +1911,10 @@ namespace Triggernometry.UI.Forms
         private void expTriggerText_EnabledChanged(object sender, EventArgs e)
         {
             lblTriggerText.Enabled = expTriggerText.Enabled;
+        }
+        private void cbxZoneType_EnabledChanged(object sender, EventArgs e)
+        {
+            lblTriggerZoneType.Enabled = cbxTriggerZoneType.Enabled;
         }
 
         private void expTriggerActionTag_EnabledChanged(object sender, EventArgs e)
