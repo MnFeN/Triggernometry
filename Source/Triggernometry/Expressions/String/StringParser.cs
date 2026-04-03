@@ -57,7 +57,8 @@ namespace Triggernometry.Expressions.String
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"解析文本表达式时出错：{ex.Message}。\n完整表达式：{expr}\n触发器：{ctx?.Trigger?.LogName ?? (null)}", ex);
+                    throw new Exception($"解析文本表达式时出错：{ex.Message}。\n完整表达式：{expr}", ex);
+                    //\n触发器：{ctx?.Trigger?.LogName ?? (null)}
                 }
             }
 

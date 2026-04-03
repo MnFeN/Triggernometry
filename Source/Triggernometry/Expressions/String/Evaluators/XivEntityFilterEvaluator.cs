@@ -23,9 +23,9 @@ namespace Triggernometry.Expressions.String.Evaluators
 
         private static List<Func<Entity, string>> BuildEntityTokenPipeline(string rawFilterExpression)
         {
-            // "X=0 && HasStatus(0x32)"
+            // "X=0 && HasStatus(min(0x32, 0x33), 0x34)"
             var rawTokenList = MathParser.Lexer(rawFilterExpression);
-            // "X"   "="   "0"   "&&"   "HasStatus"   " *"   "("   "0x32"   ")"
+            // "X"   "="   "0"   "&&"   "HasStatus"    " *"   "("  "min"   "("   "0x32"   ","   "0x33"   ")"   ","   "0x34"   ")"
             var funcTokens = new List<Func<Entity, string>>();
             for (int i = 0; i < rawTokenList.Count; i++)
             {
@@ -39,13 +39,14 @@ namespace Triggernometry.Expressions.String.Evaluators
                     var possibleMemberExpr = new MemberExpression(token, null, token);
                     var accessor = XivEntityEvaluator.TryGetSingleAccessor(possibleMemberExpr);
                     if (accessor != null) // found
-                        funcTokens.Add(e => accessor(e).ToDataString().Replace(" ", "")); // why replace?
+                        funcTokens.Add(e => accessor(e).ToDataString().Replace(" ", "")); // to-do: spaces in MathParser
                     else
                         funcTokens.Add(e => token); // normal numeric token
                     continue;
                 }
 
                 // token followed by parentheses
+                // "HasStatus"    " *"   "("  "min"   "("   "0x32"   ","   "0x33"   ")"   ","   "0x34"   ")"
                 if (!Entity.ValidEntityMethodNames.Contains(token))   // normal numeric tokens
                 {
                     funcTokens.Add(e => token);
@@ -55,23 +56,45 @@ namespace Triggernometry.Expressions.String.Evaluators
                 // entity method with args: search for the matching ")"
                 int depth = 1;
                 bool paired = false;
+                var methodArgs = new List<string>();
+                var currentArgTokens = new List<string>();
                 for (int j = i + 3; j < rawTokenList.Count; j++) // start from the token after "("
                 {
-                    if (rawTokenList[j] == "(")
+                    var currentToken = rawTokenList[j];
+                    if (currentToken == "," && depth == 1) // split args by comma at depth 1
+                    {
+                        methodArgs.Add(string.Join("", currentArgTokens));
+                        currentArgTokens.Clear();
+                        continue;
+                    }
+                    else if (currentToken == "(")
+                    {
                         depth++;
-                    else if (rawTokenList[j] == ")")
+                        currentArgTokens.Add(currentToken);
+                    }
+                    else if (currentToken == ")")
                     {
                         depth--;
                         if (depth == 0) // closed
                         {
-                            var methodArgs = rawTokenList.GetRange(i + 3, j - i - 3).ToArray(); // between (...)
-                            var methodExpr = new MemberExpression(token, methodArgs);
+                            if (currentArgTokens.Count > 0 || methodArgs.Count > 0) // not empty args like "HasStatus()"
+                            {
+                                methodArgs.Add(string.Join("", currentArgTokens)); // add the last arg
+                            }
+
+                            // token: "HasStatus", methodArgs: ["min(0x32,0x33)", "0x34"]
+                            var methodExpr = new MemberExpression(token, methodArgs.ToArray());
                             var accessor = XivEntityEvaluator.GetSingleAccessor(methodExpr);
-                            funcTokens.Add(e => accessor(e).ToDataString().Replace(" ", "")); // to-do: spaces in numeric expressions
+                            funcTokens.Add(e => accessor(e).ToDataString().Replace(" ", "")); // to-do: spaces in MathParser
                             i = j;
                             paired = true;
                             break;
                         }
+                        currentArgTokens.Add(currentToken);
+                    }
+                    else
+                    {
+                        currentArgTokens.Add(currentToken);
                     }
                 }
                 if (!paired) funcTokens.Add(e => token);
