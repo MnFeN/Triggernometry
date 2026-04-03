@@ -401,16 +401,17 @@ namespace Triggernometry.Core
                 {
                     _ep.Start();
                 }
+                RegisterDefaultNamedCallbacks();
                 pluginStatusText.Text = I18n.Translate("internal/Plugin/iniready", "Ready");
                 FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/inited", "Initialized"));
-                // start
-                if (I18n.IsChineseEnvironment)
+                _ = Task.Run(async () =>
                 {
-                    AddDefaultRepoCN();
-                }
-                RegisterDefaultNamedCallbacks();
-                // end
-                _ = Task.Run(() => UpdateAllRepositoriesAsync(true));
+                    if (I18n.IsChineseEnvironment)
+                    {
+                        LoadDefaultRepoCN();
+                    }
+                    await UpdateAllRepositoriesAsync(true);
+                });
                 isInitialized = true;
             }
             catch (Exception ex)
