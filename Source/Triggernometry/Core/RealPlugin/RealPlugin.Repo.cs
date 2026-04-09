@@ -14,7 +14,7 @@ namespace Triggernometry.Core
     {
 
         private const string DefaultRepoManifestUrl =
-            "https://1824544011.v.123pan.cn/1824544011/Remote_Triggers/RepositoryManifest.xml";
+            "https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/RepositoryManifest.xml";
 
         private static RepositoryManifest LoadRepositoryManifest(string url)
         {
