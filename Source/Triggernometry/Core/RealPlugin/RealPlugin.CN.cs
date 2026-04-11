@@ -13,7 +13,7 @@ namespace Triggernometry.Core
 
     public partial class RealPlugin
     {
-        internal const string UpdateRemotePathCN = "https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN";
+        internal const string UpdateRemotePathCN = "https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/";
         private void FixConfigurationOnStartCN()
         {
             cfg.ShowWelcome = false;
