@@ -340,7 +340,6 @@ namespace Triggernometry.Core
             });
         }
 
-        private static readonly string _updateRemotePathCN = "https://vip.123pan.cn/1824544011/Triggernometry_Release_CN/";
         public void UpdatePostNamazu(string remoteVersion)
         {
             var plug = InstanceHook(null, "PostNamazu.PostNamazu");
@@ -371,7 +370,7 @@ namespace Triggernometry.Core
                     string tmpPath = filePath + ".tmp";
                     using (HttpClient client = new HttpClient())
                     {
-                        byte[] fileBytes = await client.GetByteArrayAsync(_updateRemotePathCN + "PostNamazu.dll");
+                        byte[] fileBytes = await client.GetByteArrayAsync(UpdateRemotePathCN + "PostNamazu.dll");
                         File.WriteAllBytes(tmpPath, fileBytes);
                     }
                     if (File.Exists(filePath))
