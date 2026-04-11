@@ -32,11 +32,6 @@ namespace Triggernometry.Expressions.String.Parsers
                 // ===== FFXIV =====
 
                 case "_me": // ${_me.prop}
-                    if (expr.Member.Name.ToLowerInvariant() == "id" && !string.IsNullOrWhiteSpace(BridgeFFXIV.PlayerHexId))
-                    {
-                        return BridgeFFXIV.PlayerHexId;
-                    }
-                    else
                     {
                         var entity = Entity.GetMyself();
                         var evaluator = XivEntityEvaluator.BuildEvaluator(expr);
