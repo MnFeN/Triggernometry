@@ -1269,8 +1269,9 @@ namespace Triggernometry.UI.CustomControls
 
             if (AutofillType != AutofillTypeEnum.None)
             {
-                var names = GetExistingAutofillNameList(AutofillType, IsPersistent);
-                names.AddRange(GetDynamicAutofillNameList(AutofillType, IsPersistent) ?? new List<string>());
+                var names = new HashSet<string>(GetExistingAutofillNameList(AutofillType, IsPersistent));
+                names.UnionWith(GetDynamicAutofillNameList(AutofillType, IsPersistent) ?? Enumerable.Empty<string>());
+
                 matchedStrings = GetAutocompleteSuggestions(names, temp);
                 if (matchedStrings != null && matchedStrings.Count() > 0)
                 {
