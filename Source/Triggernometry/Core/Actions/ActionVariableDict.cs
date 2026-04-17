@@ -334,11 +334,9 @@ namespace Triggernometry.Core.Actions
                     return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
             }
 
-            string vdchanger;
-            if (ctx.Trigger != null)
-                vdchanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
-            else
-                vdchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
+            string changer = ctx.Trigger != null
+                ? I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe())
+                : I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
 
             switch (Operation)
             {
@@ -372,7 +370,7 @@ namespace Triggernometry.Core.Actions
                             VariableDictionary vd = svs.GetDictVariable(sourcename, true);
                             ctx.dictValue = vd.GetValue(key).ToString(); // for ${_val}
                             value = ParseValue();
-                            vd.SetValue(key, value, vdchanger);
+                            vd.SetValue(key, value, changer);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictset",
                             "Value of key ({2}) in {1}dict variable ({0}) set to ({3})", sourcename, sPersist, key, value));
@@ -384,7 +382,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.Dict)
                         {
                             VariableDictionary vd = svs.GetDictVariable(sourcename, true);
-                            vd.RemoveKey(key, vdchanger);
+                            vd.RemoveKey(key, changer);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictremove",
                             "Removed key ({2}) from {1}dict variable ({0})", sourcename, sPersist, key));
@@ -403,6 +401,8 @@ namespace Triggernometry.Core.Actions
                         {
                             VariableDictionary tvd = tvs.GetDictVariable(targetname, true);
                             tvd.Merge(svdCopy, overwriteExistingKeys: shouldOverwrite);
+                            tvd.LastChanged = DateTime.Now;
+                            tvd.LastChanger = changer;
                         }
                         if (shouldOverwrite)
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictmergehard",
@@ -427,6 +427,7 @@ namespace Triggernometry.Core.Actions
                             member => member,
                             member => XivEntityParser.EvaluateEntityMember(entity, member)
                         ));
+                        vd.LastChanger = changer;
 
                         lock (svs.Dict)
                         {
@@ -454,7 +455,7 @@ namespace Triggernometry.Core.Actions
                             char kvSeparator = expr[0];
                             char pairSeparator = expr[1];
                             string splitval = expr.Substring(2);
-                            vt = VariableDictionary.Build(splitval, kvSeparator, pairSeparator, vdchanger);
+                            vt = VariableDictionary.Build(splitval, kvSeparator, pairSeparator, changer);
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictbuild",
                                 "{1}Dictionary ({0}) built from expression ({2}) splitted by ({3}) ({4})",
                                 targetname, tPersist, splitval, kvSeparator, pairSeparator));
@@ -490,7 +491,7 @@ namespace Triggernometry.Core.Actions
                                 }
                             }
                         }
-                        vdResult.LastChanger = vdchanger;
+                        vdResult.LastChanger = changer;
                         vdResult.LastChanged = DateTime.Now;
                         lock (tvs.Dict)
                         {
@@ -523,7 +524,7 @@ namespace Triggernometry.Core.Actions
                                     ctx.dictValue = i < vd.Size ? vd.Values.ElementAt(i).Value.ToString() : "";
                                     string k = ParseKey();
                                     string v = ParseValue();
-                                    vdNew.SetValue(k, v, vdchanger);
+                                    vdNew.SetValue(k, v, changer);
                                 }
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictsetallbyindex",
                                     "{4} key value pairs in {1}dictionary ({0}) set to ({2}): ({3})",
@@ -537,7 +538,7 @@ namespace Triggernometry.Core.Actions
                                     ctx.dictValue = pair.Value.ToString();
                                     string k = ParseKey();
                                     string v = ParseValue();
-                                    vdNew.SetValue(k, v, vdchanger);
+                                    vdNew.SetValue(k, v, changer);
                                 }
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictsetall",
                                     "All key value pairs in {1}dictionary ({0}) set to ({2}): ({3})",
