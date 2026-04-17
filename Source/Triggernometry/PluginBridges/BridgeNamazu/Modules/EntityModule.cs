@@ -378,8 +378,11 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public void SetObjectScale(IntPtr objectPtr, float scale)
         {
             if (!CheckIfValidEntityPtr(objectPtr, nameof(SetObjectScale))) return;
-            Memory.Write<float>(objectPtr + ScaleOffset(), scale);
+            var scalePtr = objectPtr + ScaleOffset();
+            var old = Memory.Read<float>(scalePtr);
+            Memory.Write<float>(scalePtr, scale);
             ReDraw(objectPtr);
+            Custom2Log($"SetObjectScale: {old} → {scale} @ {(long)objectPtr:X}");
         }
 
         // FFXIVClientStructs/FFXIV/Client/Game/Character/Character.cs    public float Alpha;
