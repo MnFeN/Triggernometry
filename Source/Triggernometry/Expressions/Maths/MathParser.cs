@@ -163,6 +163,10 @@ namespace Triggernometry.Expressions.Maths
             LocalVariables.Add("pi0125", Math.PI / 8);
             LocalVariables.Add("pitorad", 180.0 / Math.PI);
             LocalVariables.Add("piofrad", Math.PI / 180.0);
+            // to-do:
+            // hex2dec(e) 按现在的逻辑会将 e 处理为常数而报错。
+            // 鉴于 Math.E 在 FF14 触发器中几乎不会使用，且 hex2dec() 进制转换方法已有 "0x" 前缀替代，
+            // 暂时不因此大改解析逻辑中的替换顺序，重构 MathParser 时再考虑。
             LocalVariables.Add("e", Math.E);
             LocalVariables.Add("phi", (Math.Sqrt(5) + 1) / 2);
             LocalVariables.Add("major", (Math.Sqrt(5) - 1) / 2);
@@ -614,9 +618,10 @@ namespace Triggernometry.Expressions.Maths
         public static Dictionary<string, Func<string[], double>> LocalStringFunctions { get; set; } =
             new Dictionary<string, Func<string[], double>>(StringComparer.OrdinalIgnoreCase);
 
+        // 暂时不用 OrdinalIgnoreCase，详见添加常数 Math.E 处注释
         /// <summary> All variables that you want to define should be inside this property. </summary>
         public static Dictionary<string, double> LocalVariables { get; set; } 
-            = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+            = new Dictionary<string, double>(/*StringComparer.OrdinalIgnoreCase*/);
 
         /// <summary>
         /// When converting the result from the Parse method or ProgrammaticallyParse method ToString(),
