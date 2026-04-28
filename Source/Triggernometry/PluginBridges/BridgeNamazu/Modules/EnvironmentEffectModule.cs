@@ -27,10 +27,16 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             {
                 // ECommons/ECommons/Hooks/MapEffect.cs
                 // 原始 sig: 48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 8B FA 41 0F B7 E8
-                MapEffectOldFunctionPtr = Scanner.TryScan("44 0F B7 40 ? E9 * * * * C3", nameof(MapEffectOldFunctionPtr));
+                MapEffectOldFunctionPtr = Scanner.TryScanMultiple(new string[] {
+                    "44 0F B7 40 ? E9 * * * * C3", // 原版
+                    "E9 * * * * C3 CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC 4C 8B 81 E8 0C 00 00 4D 85 C0 74" // 7.2TC
+                }, nameof(MapEffectOldFunctionPtr));
                 // 上面函数的下一层
                 // 原始 sig：48 89 6C 24 ?? 56 48 83 EC ?? 8B C2 41 0F B7 E8 45 33 C0 48 8D 14 40 48 8B 81 ?? ?? ?? ?? B1 ??
-                MapEffectFunctionPtr = Scanner.TryScan("E8 * * * * 3C ? 75 ? 80 64 B3 ? ?", nameof(MapEffectFunctionPtr));
+                MapEffectFunctionPtr = Scanner.TryScanMultiple(new string[] {
+                    "E8 * * * * 3C ? 75 ? 80 64 B3 ? ?", // 原版
+                    "44 0F B7 C5 8B D7 48 8B CE E8 * * * * 3A C3 75 ? 32 DB" // 7.2TC
+                }, nameof(MapEffectFunctionPtr));
                 // ffcs EventFramework.Instance
                 EventFrameworkPtrPtr = Scanner.TryScan("48 83 3D * * * * * 74 ? E8 ? ? ? ? 48 8B C8 E8 ? ? ? ? 3C", nameof(EventFrameworkPtrPtr)); // 7.3 兼容7.2
                 EnvManagerPtrPtr = Scanner.TryScan("0F 28 F2 48 8B 05 * * * *", nameof(EnvManagerPtrPtr));
