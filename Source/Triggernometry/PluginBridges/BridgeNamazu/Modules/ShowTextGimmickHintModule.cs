@@ -28,6 +28,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     "48 85 D2 0F 84 ?? ?? ?? ?? 4C 8B DC 49 89 6B ?? 56", // 7.3 原始
                     "44 8B CB 45 33 C0 48 8B D0 48 8B CF E8 * * * * E9", // 7.3
                     "44 8B CB 41 B0 01 48 8B D0 48 8B CF E8 * * * * E9", // 7.3 备用签名
+                    "44 8B CE 48 8B C8 48 8B D7 E8 * * * * E9 ? ? ? ? 66 0F BA E6 0A 0F 83 ? ? ? ?", // 7.2TC
                 }, nameof(ShowTextGimmickHintPtr));
             };
         }

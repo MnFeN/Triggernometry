@@ -23,6 +23,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 UseActionLocationPtr = Scanner.TryScanMultiple(new string[] {
                     "E8 * * * * 48 8B BC 24 ? ? ? ? 44 0F B6 F8 B0", // 7.4
                     "E8 * * * * 40 3A C7 0F 85", // 7.3
+                    "E8 * * * * 41 3A C5 0F 85", // 7.2 TC
                 }, nameof(UseActionLocationPtr));
 
                 ActionManagerPtr = Scanner.TryScan(
