@@ -22,34 +22,34 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public IntPtr PlayActionTimelinePtr;
         public int TimelineContainerOffset;
 
-        /*Plugin.IsCN ? xx : xx*/
+        /*Plugin.IsTC ? TC : Global*/
         /// <summary> 实体初始坐标相对于实体地址的偏移。</summary>
-        public Func<int> DefaultPosOffset = () => 0x10; 
+        public Func<int> DefaultPosOffset = () => Plugin.IsTC ? 0x10 : 0x10;
         /// <summary> 实体 ID 相对于实体地址的偏移。</summary>
-        public Func<int> IdOffset = () => 0x78; // 6.0 / 7.3
+        public Func<int> IdOffset = () => Plugin.IsTC ? 0x74 : 0x78; // 6.0 / 7.3
         /// <summary> 实体坐标相对于实体地址的偏移。</summary>
-        public Func<int> PosOffset = () => 0xB0; // 7.2 / 7.3
+        public Func<int> PosOffset = () => Plugin.IsTC ? 0xA0 : 0xB0; // 7.2 / 7.3
         /// <summary> 实体缩放倍率相对于实体地址的偏移。</summary>
-        public Func<int> ScaleOffset = () => 0xC4; // 7.2 / 7.3
+        public Func<int> ScaleOffset = () => Plugin.IsTC ? 0xB4 : 0xC4; // 7.2 / 7.3
         /// <summary> 实体模型的相对偏移相对于实体地址的偏移。相对坐标偏移会影响实体绘制的模型显示的位置。</summary>
-        public Func<int> ModelRelPosOffset = () => 0xE0; // 7.2 / 7.3
+        public Func<int> ModelRelPosOffset = () => Plugin.IsTC ? 0xD0 : 0xE0; // 7.2 / 7.3
         /// <summary> 实体模型（DrawObject*）相对于实体地址的偏移。</summary>
-        public Func<int> ModelOffset = () => 0x100; // 7.2 / 7.3
+        public Func<int> ModelOffset = () => Plugin.IsTC ? 0xF0 : 0x100; // 7.2 / 7.3
         /// <summary> 实体 StatusLoopVfx ID 相对于实体地址的偏移。</summary>
-        public Func<int> StatusLoopVfxOffset = () => 0x1C8; // 7.2 / 7.3
+        public Func<int> StatusLoopVfxOffset = () => Plugin.IsTC ? 0x28 : 0x1C8; // 7.2 / 7.3
         /// <summary> 实体透明度相对于实体地址的偏移。</summary>
-        public Func<int> OpacityOffset = () => 0x22E8; // 7.4; 7.3 0x22D8 
+        public Func<int> OpacityOffset = () => Plugin.IsTC ? 0x2258 : 0x22E8; // 7.4; 7.3 0x22D8 
         /// <summary> 实体 ModelStatus (RenderFlags) 相对于实体地址的偏移。</summary>
         /// https://github.com/xivdev/Penumbra/blob/master/Penumbra/Interop/Structs/DrawState.cs
-        public Func<int> ModelStatusOffset = () => 0x118; // 7.2 / 7.3
+        public Func<int> ModelStatusOffset = () => Plugin.IsTC ? 0x108 : 0x118; // 7.2 / 7.3
 
         /// <summary> 硬目标地址相对于实体 TargetSystem 地址的偏移（SoftTarget 地址在此基础上 +0x8）。</summary>
-        public Func<int> HardTargetOffset = () => 0x80; // 7.0
+        public Func<int> HardTargetOffset = () => Plugin.IsTC ? 0x80 : 0x80; // 7.0
 
         /// <summary> 模型坐标相对于模型地址的偏移。</summary>
-        public Func<int> ModelPosOffset = () => 0x50; // 6.0
+        public Func<int> ModelPosOffset = () => Plugin.IsTC ? 0x50 : 0x50; // 6.0
         /// <summary> 模型缩放倍率相对于模型地址的偏移。</summary>
-        public Func<int> ModelScaleOffset = () => 0x70; // 6.0
+        public Func<int> ModelScaleOffset = () => Plugin.IsTC ? 0x70 : 0x70; // 6.0
 
         /// <summary> EnableDraw 虚函数索引。</summary>
         public Func<int> EnableDrawVTableIdx = () => 12; // 7.0
