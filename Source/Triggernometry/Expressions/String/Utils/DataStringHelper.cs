@@ -15,21 +15,6 @@ namespace Triggernometry.Expressions.String.Utils
 {
     public static class DataStringHelper
     {
-        public static string ToStringInv(this int value)
-            => value.ToString(CultureInfo.InvariantCulture);
-
-        public static string ToStringInv(this uint value)
-            => value.ToString(CultureInfo.InvariantCulture);
-
-        public static string ToStringInv(this long value)
-            => value.ToString(CultureInfo.InvariantCulture);
-
-        public static string ToStringInv(this ulong value)
-            => value.ToString(CultureInfo.InvariantCulture);
-
-        public static string ToStringInv(this float value)
-            => value.ToString(CultureInfo.InvariantCulture);
-
         public static string ToDataString(this object prop)
         {
             if (prop == null) return "";
@@ -42,13 +27,13 @@ namespace Triggernometry.Expressions.String.Utils
                 case Enum e:
                     return e.ToString();
                 case Vector2 v2:
-                    return $"{I18n.ThingToString(v2.X)}, {I18n.ThingToString(v2.Y)}";
+                    return $"{v2.X.ToStringInvariant()}, {v2.Y.ToStringInvariant()}";
                 case Vector3 v3:
-                    return $"{I18n.ThingToString(v3.X)}, {I18n.ThingToString(v3.Y)}, {I18n.ThingToString(v3.Z)}";
+                    return $"{v3.X.ToStringInvariant()}, {v3.Y.ToStringInvariant()}, {v3.Z.ToStringInvariant()}";
                 case float f:
                     try
                     {
-                        return I18n.ThingToString(f);
+                        return f.ToStringInvariant();
                     }
                     catch (Exception)
                     {
@@ -58,7 +43,7 @@ namespace Triggernometry.Expressions.String.Utils
                 case double d:
                     try
                     {
-                        return I18n.ThingToString(d);
+                        return d.ToStringInvariant();
                     }
                     catch (Exception)
                     {
