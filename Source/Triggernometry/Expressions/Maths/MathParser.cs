@@ -1112,6 +1112,14 @@ namespace Triggernometry.Expressions.Maths
                         op, string.Join(" ", tokens), string.Join(" ", originalTokens)));
                 }
             }
+
+            if (tokens.Count != 1)
+            {
+                throw new ArithmeticException(I18n.Translate("internal/MathParser/basicMathExprError",
+                    "The basic math expression: '{0}' could not be parsed. Original expression: '{1}'",
+                    string.Join(" ", tokens), string.Join(" ", originalTokens)));
+            }
+
             return double.Parse(tokens[0], CultureInfo);
         }
         /// <summary> Combine the plus/minus and the next number in the tokens list. </summary>
