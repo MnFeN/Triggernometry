@@ -53,10 +53,19 @@ namespace Triggernometry.UI.CustomControls
             "RadToDeg(rad)", "DegToRad(deg)",
             "Angle(srcX, srcY, tgtX, tgtY)", "θ(srcX, srcY, tgtX, tgtY)", 
             "RelAngle(srcθ, tgtθ)", "Relθ(srcθ, tgtθ)",
-            "RadToDir(θ, ±divisions, digits=0)",
-            "VecToDir(dx, dy, ±divisions, digits=0)",
-            "DirToRad(dir, ±divisions)",
+            "RadToDir(θ, ±segments, digits=0)",
+            "VecToDir(dx, dy, ±segments, digits=0)",
+            "DirToRad(dir, ±segments)",
             "IsAngleBetween(θ, minθ, maxθ)", "IsθBetween(θ, minθ, maxθ)",
+
+            // numeric func: Lerp
+            "Lerp(start, end, ratio)",
+            "LerpAngle(start, end, ratio)",
+            "LerpAngleCW(start, end, ratio)",
+            "LerpAngleCCW(start, end, ratio)",
+            "LerpDir(start, end, ±segments, ratio)",
+            "LerpDirCW(start, end, ±segments, ratio)",
+            "LerpDirCCW(start, end, ±segments, ratio)",
 
             // numeric string func
             "hex2dec(hex)", "hex2float(hex)", "hex2double(hex)", "X8float(hex)", "ParseDmg(hex)", 
@@ -173,9 +182,9 @@ namespace Triggernometry.UI.CustomControls
             "PercentCP(digits=-1)", "PercentGP(digits=-1)",
             "DistanceTo(x, y)", "DistanceTo(x, y, z)",
             "AngleFrom(x, y)", "AngleTo(x, y)", "LocalAngleTo(x, y)",
-            "DirFrom(x, y, ±divisions, digits=0)",
-            "DirTo(x, y, ±divisions, digits=0)",
-            "LocalDirTo(x, y, ±divisions, digits=0)",
+            "DirFrom(x, y, ±segments, digits=0)",
+            "DirTo(x, y, ±segments, digits=0)",
+            "LocalDirTo(x, y, ±segments, digits=0)",
             "LocalToWorld(dx, dy)", "LocalToWorld(dx, dy, dz)",
             "WorldToLocal(dx, dy)", "WorldToLocal(dx, dy, dz)",
         }.Concat(FFXIV.Entity.ValidEntityPropNames).Concat(FFXIV.Job.LegalJobPropNames).ToList();

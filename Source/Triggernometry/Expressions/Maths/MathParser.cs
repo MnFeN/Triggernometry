@@ -133,6 +133,13 @@ namespace Triggernometry.Expressions.Maths
             LocalFunctions.Add("round", RoundFunction);
             LocalFunctions.Add("max", MaxFunction);
             LocalFunctions.Add("min", MinFunction);
+            LocalFunctions.Add("Lerp", LerpFunction);
+            LocalFunctions.Add("LerpAngle", LerpAngleFunction);
+            LocalFunctions.Add("LerpAngleCW", LerpAngleCWFunction);
+            LocalFunctions.Add("LerpAngleCCW", LerpAngleCCWFunction);
+            LocalFunctions.Add("LerpDir", LerpDirFunction);
+            LocalFunctions.Add("LerpDirCW", LerpDirCWFunction);
+            LocalFunctions.Add("LerpDirCCW", LerpDirCCWFunction);
             LocalFunctions.Add("truncate", x => Truncate(x[0]));
             LocalFunctions.Add("floor", x => Math.Floor(x[0] + TOLERANCE));
             LocalFunctions.Add("ceiling", x => Math.Ceiling(x[0] - TOLERANCE));
@@ -457,6 +464,93 @@ namespace Triggernometry.Expressions.Maths
                 min = Math.Min(input[i], min);
             }
             return min;
+        }
+
+        public static double LerpFunction(double[] input)
+        {
+            double a = input[0];
+            double b = input[1];
+            double t = input[2];
+
+            return a + (b - a) * t;
+        }
+
+        public static double LerpAngleFunction(double[] input)
+        {
+            double a = input[0];
+            double b = input[1];
+            double t = input[2];
+
+            return NormalizeRad(a + NormalizeRad(b - a) * t);
+        }
+
+        public static double LerpAngleCWFunction(double[] input)
+        {
+            double a = input[0];
+            double b = input[1];
+            double t = input[2];
+
+            return NormalizeRad(a - ModFunction(a - b, 2 * Math.PI) * t);
+        }
+
+        public static double LerpAngleCCWFunction(double[] input)
+        {
+            double a = input[0];
+            double b = input[1];
+            double t = input[2];
+
+            return NormalizeRad(a + ModFunction(b - a, 2 * Math.PI) * t);
+        }
+
+        private static double NormalizeRad(double rad)
+        {
+            return ModFunction(rad + Math.PI, 2 * Math.PI) - Math.PI;
+        }
+
+        public static double LerpDirFunction(double[] input)
+        {
+            double a = input[0];
+            double b = input[1];
+            double n = input[2];
+            double t = input[3];
+
+            return NormalizeDirValue(a + NormalizeDirDelta(b - a, n) * t, n);
+        }
+
+        public static double LerpDirCWFunction(double[] input)
+        {
+            double a = input[0];
+            double b = input[1];
+            double n = input[2];
+            double t = input[3];
+
+            double segments = Math.Abs(n);
+            return NormalizeDirValue(a - ModFunction(a - b, segments) * t, n);
+        }
+
+        public static double LerpDirCCWFunction(double[] input)
+        {
+            double a = input[0];
+            double b = input[1];
+            double n = input[2];
+            double t = input[3];
+
+            double segments = Math.Abs(n);
+            return NormalizeDirValue(a + ModFunction(b - a, segments) * t, n);
+        }
+
+        private static double NormalizeDirValue(double dir, double n)
+        {
+            double segments = Math.Abs(n);
+            return n > 0 
+                ? ModFunction(dir, segments) 
+                : ModFunction(dir + 0.5, segments) - 0.5;
+        }
+
+        private static double NormalizeDirDelta(double delta, double n)
+        {
+            double segments = Math.Abs(n);
+            return ModFunction(delta + segments / 2.0, segments) - segments / 2.0;
         }
 
         #endregion
