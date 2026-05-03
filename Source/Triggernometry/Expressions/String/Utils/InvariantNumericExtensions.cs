@@ -422,7 +422,7 @@ namespace Triggernometry.Expressions.String.Utils
         /// Always use <see cref="CultureInfo.InvariantCulture"/>. 
         /// </summary>
         public static string ToStringInvariant(this float result)
-            => result.ToString(CultureInfo.InvariantCulture);
+            => result.ToString("0.########", CultureInfo.InvariantCulture);
 
         /// <summary> 
         /// Convert a <see cref="float"/> to a <see cref="string"/> with the specified format.  <br />
@@ -473,7 +473,7 @@ namespace Triggernometry.Expressions.String.Utils
         /// Always use <see cref="CultureInfo.InvariantCulture"/>. 
         /// </summary>
         public static string ToStringInvariant(this double result)
-            => result.ToString(CultureInfo.InvariantCulture);
+            => result.ToString("0.########", CultureInfo.InvariantCulture);
 
         /// <summary> 
         /// Convert a <see cref="double"/> to a <see cref="string"/> with the specified format.  <br />
@@ -524,7 +524,7 @@ namespace Triggernometry.Expressions.String.Utils
         /// Always use <see cref="CultureInfo.InvariantCulture"/>. 
         /// </summary>
         public static string ToStringInvariant(this decimal result)
-            => result.ToString(CultureInfo.InvariantCulture);
+            => result.ToString("0.########", CultureInfo.InvariantCulture);
 
         /// <summary> 
         /// Convert a <see cref="decimal"/> to a <see cref="string"/> with the specified format.  <br />
