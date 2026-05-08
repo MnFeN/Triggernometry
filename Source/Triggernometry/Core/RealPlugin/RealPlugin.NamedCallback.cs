@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Triggernometry.PluginBridges;
+using Triggernometry.PluginBridges.BridgeMachina;
 using Triggernometry.Utilities;
 
 namespace Triggernometry.Core
@@ -160,6 +161,7 @@ namespace Triggernometry.Core
             _ = RegisterNamedCallback("UploadTextV2", (Action<object, string>)UploadTextHelper.UploadTextV2Callback, registrant: nameof(RealPlugin));
             _ = RegisterNamedCallback("DisableCactbotTriggerSetsTts", (Action<object, string>)BridgeCactbot.DisableTriggerSetsTtsCallback, registrant: nameof(RealPlugin));
             _ = RegisterNamedCallback("RegisterActorControlCategories", (Action<object, string>)ActorControlPatcher.RegisterCategoriesCallback, registrant: nameof(RealPlugin));
+            _ = RegisterNamedCallback("SideloadMachinaOpcodes", (Action<object, string>)OpcodeSideloader.Callback, registrant: nameof(RealPlugin));
         }
 
     }
