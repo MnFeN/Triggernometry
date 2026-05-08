@@ -18,6 +18,11 @@ namespace Triggernometry.FFXIV.Vfx
         [FieldOffset(0x60)] public Quaternion Rotation;
         [FieldOffset(0x70)] public Vector3 Scale;
 
+        // 以下三个是 StaticVfxRemove 的时候调用的
+        [FieldOffset(0x80)] public IntPtr Unk80; // 如果非空，会调用某个全局 cleanup，然后清零
+        [FieldOffset(0x88)] public byte State88;
+        [FieldOffset(0x89)] public byte State89;
+
         [FieldOffset(0x128)] public int ActorCaster;
         [FieldOffset(0x130)] public int ActorTarget;
 
@@ -25,7 +30,10 @@ namespace Triggernometry.FFXIV.Vfx
         [FieldOffset(0x1C0)] public int StaticTarget;
         [FieldOffset(0x2A0)] public Apricot* Apricot;
 
+        // 0x248: flag, 0x40 bit 在 fadeout 时设为 1
         [FieldOffset(0x250)] public float Speed;
+        [FieldOffset(0x258)] public float FadeOutTimer; // 1f = 0.0167 s
+        // 0x25C: int, fadeout 时设为 0
         [FieldOffset(0x260)] public Vector4 Color;
     }
     /*
