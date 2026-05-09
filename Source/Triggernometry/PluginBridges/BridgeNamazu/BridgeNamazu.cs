@@ -19,7 +19,16 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
         private static RealPlugin.PluginWrapper _wrappedPlugin;
         
         public static NamazuPlugin NamazuPlugin
-            => _namazuPlugin ?? (_namazuPlugin = new NamazuPlugin(WrappedPlugin.pluginObj));
+        {
+            get
+            {
+                if (_namazuPlugin == null && WrappedPlugin.pluginObj != null)
+                { 
+                    _namazuPlugin = new NamazuPlugin(WrappedPlugin.pluginObj);
+                }
+                return _namazuPlugin;
+            }
+        }
         private static NamazuPlugin _namazuPlugin;
         
         public static IReadOnlyDictionary<Type, ModuleBase> Modules => _modules;
