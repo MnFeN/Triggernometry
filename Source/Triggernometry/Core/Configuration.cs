@@ -603,8 +603,6 @@ namespace Triggernometry.Core
         [XmlAttribute]
         public string PluginVersion { get; set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-        [XmlIgnore]
-        public string PrevPluginVersion { get; set; }
 
         internal bool isnew = true;
         internal DateTime lastWrite = DateTime.Now;
