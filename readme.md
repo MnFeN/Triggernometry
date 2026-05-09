@@ -32,6 +32,10 @@ Triggernometry 是 [Advanced Combat Tracker](https://advancedcombattracker.com/)
 
 成功使用上述安装程序添加插件后，便可以使用此远程仓库解决使用过程中可能遇到的大部分问题。
 
+## 更新日志
+
+[Triggernometry 更新日志](https://github.com/MnFeN/Triggernometry/wiki/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97)（2.0.0.0 版以后）
+
 ## 文档
 
 Triggernometry Wiki 中包含了一些有用的信息和文档说明：
