@@ -106,7 +106,8 @@ namespace Triggernometry.UI.Forms
             cbxTestLive.Checked = cfg.TestLiveByDefault;
             cbxTestIgnoreConditions.Checked = cfg.TestIgnoreConditionsByDefault;
             cbxActionAsync.Checked = cfg.ActionAsyncByDefault;
-            chkUpdates.Checked = (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes);
+            chkUpdates.Checked = cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes;
+            nudUpdateInterval.Value = cfg.UpdateInterval;
             cbxUpdateMethod.SelectedIndex = (int)cfg.UpdateCheckMethod;
             txtUpdateChannelUrl.Text = cfg.UpdateExternalChannelUrl;
             chkLogNormalEvents.Checked = cfg.LogNormalEvents;
@@ -213,30 +214,21 @@ namespace Triggernometry.UI.Forms
             cfg.UseTemplateTrigger = cbxTriggerTemplate.Checked;
             template.CopySettingsTo(cfg.TemplateTrigger);
             cfg.FfxivPartyOrdering = (Configuration.FfxivPartyOrderingEnum)cbxFfxivJobMethod.SelectedIndex;
-            if (chkUpdates.Checked == true)
-            {
-                cfg.UpdateNotifications = Configuration.UpdateNotificationsEnum.Yes;
-            }
-            else
-            {
-                if (cfg.UpdateNotifications != Configuration.UpdateNotificationsEnum.Undefined)
-                {
-                    cfg.UpdateNotifications = Configuration.UpdateNotificationsEnum.No;
-                }
-            }
+            cfg.UpdateNotifications = chkUpdates.Checked ? Configuration.UpdateNotificationsEnum.Yes : Configuration.UpdateNotificationsEnum.No;
+            cfg.UpdateInterval = (int)nudUpdateInterval.Value;
             cfg.UpdateCheckMethod = (Configuration.UpdateCheckMethodEnum)cbxUpdateMethod.SelectedIndex;
             cfg.UpdateExternalChannelUrl = txtUpdateChannelUrl.Text;
             TreeNode tn = trvTrigger.SelectedNode;
             if (tn != null)
             {
-                if (tn.Tag is Trigger)
+                if (tn.Tag is Trigger t)
                 {
-                    cfg.StartupTriggerId = ((Trigger)tn.Tag).Id;
+                    cfg.StartupTriggerId = t.Id;
                     cfg.StartupTriggerType = Configuration.StartupTriggerTypeEnum.Trigger;
                 }
-                if (tn.Tag is Folder)
+                else if (tn.Tag is Folder f)
                 {
-                    cfg.StartupTriggerId = ((Folder)tn.Tag).Id;
+                    cfg.StartupTriggerId = f.Id;
                     cfg.StartupTriggerType = Configuration.StartupTriggerTypeEnum.Folder;
                 }
             }

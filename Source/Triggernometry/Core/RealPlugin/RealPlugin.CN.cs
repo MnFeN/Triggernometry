@@ -24,7 +24,6 @@ namespace Triggernometry.Core
             cfg.UpdateNotifications = Configuration.UpdateNotificationsEnum.Yes;
             cfg.UpdateCheckMethod = Configuration.UpdateCheckMethodEnum.External;
             cfg.UpdateExternalChannelUrl = UpdateRemotePathCN + "UpdateManifest.xml";
-            cfg.AutoUpdate = true;
             var apis = (List<Configuration.APIUsage>)cfg?.GetType()?.GetProperty("_APIUsages", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(cfg);
             var utilities = apis?.FirstOrDefault(a => a.Name == "Triggernometry.Utilities");
             if (utilities != null)

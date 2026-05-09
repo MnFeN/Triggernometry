@@ -88,6 +88,7 @@
             this.btnSearch = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.btnUpdateCheck = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnShowChangeLog = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.btnLanguages = new System.Windows.Forms.ToolStripDropDownButton();
@@ -499,6 +500,7 @@
             this.btnSearch,
             this.toolStripSeparator6,
             this.btnUpdateCheck,
+            this.btnShowChangeLog,
             this.btnAbout});
             this.btnOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnOptions.Image")));
             this.btnOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -664,6 +666,14 @@
             this.btnUpdateCheck.Size = new System.Drawing.Size(286, 22);
             this.btnUpdateCheck.Text = "Check for updates";
             this.btnUpdateCheck.Click += new System.EventHandler(this.btnUpdateCheck_Click);
+            // 
+            // btnShowChangeLog
+            // 
+            this.btnShowChangeLog.Image = ((System.Drawing.Image)(resources.GetObject("btnShowChangeLog.Image")));
+            this.btnShowChangeLog.Name = "btnShowChangeLog";
+            this.btnShowChangeLog.Size = new System.Drawing.Size(286, 22);
+            this.btnShowChangeLog.Text = "Show Change Log";
+            this.btnShowChangeLog.Click += new System.EventHandler(this.btnShowChangeLog_Click);
             // 
             // btnAbout
             // 
@@ -1169,6 +1179,7 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.ToolStripMenuItem btnUpdateCheck;
+        private System.Windows.Forms.ToolStripMenuItem btnShowChangeLog;
         private System.Windows.Forms.Timer timer1;
     }
 }

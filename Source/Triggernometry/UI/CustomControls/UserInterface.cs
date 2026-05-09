@@ -2235,10 +2235,6 @@ namespace Triggernometry.UI.CustomControls
             OpenSearchForm();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-        }
-
         internal void LocateTreeNode(TreeNode tn)
         {
             treeView1.SelectedNode = tn;
@@ -2257,8 +2253,19 @@ namespace Triggernometry.UI.CustomControls
             plug.CheckForUpdates(isManual: true);
         }
 
+        private void btnShowChangeLog_Click(object sender, EventArgs e)
+        {
+            plug.ShowChangeLog();
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes &&
+                plug.UpdateLastChecked.AddMinutes(cfg.UpdateInterval) < DateTime.Now)
+            {
+                plug.CheckForUpdates(isManual: false);
+            }
+
             RepositoryFolder rfo = (RepositoryFolder)treeView1.Nodes[1].Tag;
             List<Repository> upds = new List<Repository>();
             foreach (Repository r in rfo.Repositories)

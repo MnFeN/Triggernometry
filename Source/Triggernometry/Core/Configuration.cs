@@ -60,11 +60,7 @@ namespace Triggernometry.Core
         [XmlAttribute]
         public bool ShowWelcome
         {
-            get
-            {
-
-                return _ShowWelcome;
-            }
+            get => _ShowWelcome;
             set
             {
                 _ShowWelcome = value;
@@ -82,14 +78,21 @@ namespace Triggernometry.Core
             External
         }
 
+        /// <summary> Whether to check for updates and show update notifications. </summary>
         [XmlAttribute]
-        public UpdateNotificationsEnum UpdateNotifications { get; set; } = UpdateNotificationsEnum.Undefined;
+        public UpdateNotificationsEnum UpdateNotifications { get; set; } = UpdateNotificationsEnum.Yes;
+
+        internal int UpdateInterval = 60;
+
+        [XmlAttribute("UpdateInterval")]
+        public int Xml_UpdateInterval 
+        { 
+            get => UpdateInterval;
+            set => UpdateInterval = (value < 5) ? 5 : value;
+        }
 
         [XmlAttribute]
         public UpdateCheckMethodEnum UpdateCheckMethod { get; set; } = UpdateCheckMethodEnum.ACT;
-
-        [XmlAttribute]
-        public bool AutoUpdate { get; set; }
 
         [XmlAttribute]
         public string UpdateExternalChannelUrl { get; set; } = "";

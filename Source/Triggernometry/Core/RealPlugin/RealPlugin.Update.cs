@@ -24,8 +24,11 @@ namespace Triggernometry.Core
 
         #region Plugin Update
 
+        internal DateTime UpdateLastChecked = DateTime.MinValue;
+
         internal void CheckForUpdates(bool isManual = false)
         {
+            UpdateLastChecked = DateTime.Now;
             switch (cfg.UpdateCheckMethod)
             {
                 case Configuration.UpdateCheckMethodEnum.ACT:
@@ -218,7 +221,7 @@ namespace Triggernometry.Core
                     FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/verchecknew",
                         "Version check: A new version {0} is available to replace current version {1}", remoteVersion, localVersion));
 
-                    if (forceAutoUpdate || cfg.AutoUpdate)
+                    if (forceAutoUpdate || cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes)
                     {
                         UpdatePluginExternal(um, localVersion);
                         return;
