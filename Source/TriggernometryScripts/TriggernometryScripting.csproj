@@ -69,9 +69,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserScript\Class1 - 复制.cs" />
-    <Compile Include="UserScript\Class1.cs" />
-    <Compile Include="UserScript\Class2 - 复制.cs" />
     <Compile Include="UserScript\Class2.cs" />
   </ItemGroup>
   <ItemGroup>
