@@ -82,13 +82,12 @@ namespace Triggernometry.Core
         [XmlAttribute]
         public UpdateNotificationsEnum UpdateNotifications { get; set; } = UpdateNotificationsEnum.Yes;
 
-        internal int UpdateInterval = 60;
-
-        [XmlAttribute("UpdateInterval")]
-        public int Xml_UpdateInterval 
-        { 
-            get => UpdateInterval;
-            set => UpdateInterval = (value < 5) ? 5 : value;
+        private int _UpdateInterval = 60;
+        [XmlAttribute]
+        public int UpdateInterval
+        {
+            get => _UpdateInterval;
+            set => _UpdateInterval = value < 5 ? 5 : value;
         }
 
         [XmlAttribute]

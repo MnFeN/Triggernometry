@@ -670,6 +670,7 @@
     <TranslationEntry Key="ConfigurationForm2/btnOk" Translation="确定" />
     <TranslationEntry Key="ConfigurationForm2/btnSecurity" Translation="安全" />
     <TranslationEntry Key="ConfigurationForm2/btnShortcuts" Translation="快捷键" />
+    <TranslationEntry Key="ConfigurationForm2/btnShowChangeLog" Translation="查看更新日志" />
     <TranslationEntry Key="ConfigurationForm2/btnStartup" Translation="启动" />
     <TranslationEntry Key="ConfigurationForm2/btnSubAdd" Translation="添加替换项" />
     <TranslationEntry Key="ConfigurationForm2/btnSubEdit" Translation="编辑替换项" />
@@ -793,8 +794,9 @@
     <TranslationEntry Key="ConfigurationForm2/lblUiFont" Translation="自定义字体" />
     <TranslationEntry Key="ConfigurationForm2/lblUiFontDefault" Translation="使用默认字体" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdateChannelUrl" Translation="更新链接" />
+    <TranslationEntry Key="ConfigurationForm2/lblUpdateInterval" Translation="自动检查间隔（分钟）" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdateMethod" Translation="更新方式" />
-    <TranslationEntry Key="ConfigurationForm2/lblUpdates" Translation="启动时检查更新" />
+    <TranslationEntry Key="ConfigurationForm2/lblUpdates" Translation="自动检查更新" />
     <TranslationEntry Key="ConfigurationForm2/lblUseSimulatedBeep" Translation="使用模拟音效替代" />
     <TranslationEntry Key="ConfigurationForm2/lblWarnAdmin" Translation="在非管理员模式下运行 ACT 时显示警告" />
     <TranslationEntry Key="ConfigurationForm2/lblWelcome" Translation="启动时显示欢迎屏幕" />

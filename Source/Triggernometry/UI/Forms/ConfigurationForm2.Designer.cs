@@ -3099,7 +3099,7 @@
             this.lblExternalUpdateWarn.Size = new System.Drawing.Size(640, 80);
             this.lblExternalUpdateWarn.TabIndex = 29;
             this.lblExternalUpdateWarn.Text = resources.GetString("lblExternalUpdateWarn.Text");
-            this.lblExternalUpdateWarn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblExternalUpdateWarn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtUpdateChannelUrl
             // 
@@ -3156,12 +3156,15 @@
             // 
             // btnUpdateCheck
             // 
+            this.btnUpdateCheck.AutoSize = true;
+            this.btnUpdateCheck.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnUpdateCheck.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnUpdateCheck.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdateCheck.Image")));
             this.btnUpdateCheck.Location = new System.Drawing.Point(212, 266);
             this.btnUpdateCheck.Margin = new System.Windows.Forms.Padding(4, 10, 4, 10);
             this.btnUpdateCheck.Name = "btnUpdateCheck";
-            this.btnUpdateCheck.Size = new System.Drawing.Size(640, 27);
+            this.btnUpdateCheck.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.btnUpdateCheck.Size = new System.Drawing.Size(640, 29);
             this.btnUpdateCheck.TabIndex = 30;
             this.btnUpdateCheck.Text = "Check for updates";
             this.btnUpdateCheck.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

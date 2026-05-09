@@ -670,6 +670,7 @@
     <TranslationEntry Key="ConfigurationForm2/btnOk" Translation="OK" />
     <TranslationEntry Key="ConfigurationForm2/btnSecurity" Translation="Security" />
     <TranslationEntry Key="ConfigurationForm2/btnShortcuts" Translation="Shortcuts" />
+    <TranslationEntry Key="ConfigurationForm2/btnShowChangeLog" Translation="Show Change Log" />
     <TranslationEntry Key="ConfigurationForm2/btnStartup" Translation="Startup" />
     <TranslationEntry Key="ConfigurationForm2/btnSubAdd" Translation="Add substitution" />
     <TranslationEntry Key="ConfigurationForm2/btnSubEdit" Translation="Edit substitution" />
@@ -793,8 +794,9 @@
     <TranslationEntry Key="ConfigurationForm2/lblUiFont" Translation="Custom font" />
     <TranslationEntry Key="ConfigurationForm2/lblUiFontDefault" Translation="Use default font" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdateChannelUrl" Translation="Channel URL" />
+    <TranslationEntry Key="ConfigurationForm2/lblUpdateInterval" Translation="Check Interval (min)" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdateMethod" Translation="Update method" />
-    <TranslationEntry Key="ConfigurationForm2/lblUpdates" Translation="Check for updates" />
+    <TranslationEntry Key="ConfigurationForm2/lblUpdates" Translation="Auto Check" />
     <TranslationEntry Key="ConfigurationForm2/lblUseSimulatedBeep" Translation="Use Simulated Beep" />
     <TranslationEntry Key="ConfigurationForm2/lblWarnAdmin" Translation="Warn if not running as Administrator" />
     <TranslationEntry Key="ConfigurationForm2/lblWelcome" Translation="Show Welcome Screen" />

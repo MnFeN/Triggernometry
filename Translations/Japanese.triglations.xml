@@ -670,6 +670,7 @@
     <TranslationEntry Key="ConfigurationForm2/btnOk" Translation="OK" />
     <TranslationEntry Key="ConfigurationForm2/btnSecurity" Translation="Security" />
     <TranslationEntry Key="ConfigurationForm2/btnShortcuts" Translation="Shortcuts" />
+    <TranslationEntry Key="ConfigurationForm2/btnShowChangeLog" Translation="Show Change Log" />
     <TranslationEntry Key="ConfigurationForm2/btnStartup" Translation="Startup" />
     <TranslationEntry Key="ConfigurationForm2/btnSubAdd" Translation="置換ルールの新規作成" />
     <TranslationEntry Key="ConfigurationForm2/btnSubEdit" Translation="置換ルールの編集" />
@@ -793,8 +794,9 @@
     <TranslationEntry Key="ConfigurationForm2/lblUiFont" Translation="Custom font" />
     <TranslationEntry Key="ConfigurationForm2/lblUiFontDefault" Translation="Use default font" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdateChannelUrl" Translation="Channel URL" />
+    <TranslationEntry Key="ConfigurationForm2/lblUpdateInterval" Translation="Check Interval (min)" />
     <TranslationEntry Key="ConfigurationForm2/lblUpdateMethod" Translation="Update method" />
-    <TranslationEntry Key="ConfigurationForm2/lblUpdates" Translation="起動時に更新を確認" />
+    <TranslationEntry Key="ConfigurationForm2/lblUpdates" Translation="Auto Check" />
     <TranslationEntry Key="ConfigurationForm2/lblUseSimulatedBeep" Translation="Use Simulated Beep" />
     <TranslationEntry Key="ConfigurationForm2/lblWarnAdmin" Translation="管理者権限で起動していない場合に警告を表示" />
     <TranslationEntry Key="ConfigurationForm2/lblWelcome" Translation="起動時にようこそ画面を表示" />
