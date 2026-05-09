@@ -2258,10 +2258,12 @@ namespace Triggernometry.UI.CustomControls
             plug.ShowChangeLog();
         }
 
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes &&
-                plug.UpdateLastChecked.AddMinutes(cfg.UpdateInterval) < DateTime.Now)
+                plug.UpdateLastChecked.AddMinutes(cfg.UpdateInterval) < DateTime.Now &&
+                !plug.hasAutoUpdated)
             {
                 plug.CheckForUpdates(isManual: false);
             }

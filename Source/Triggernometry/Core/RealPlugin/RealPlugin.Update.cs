@@ -190,8 +190,8 @@ namespace Triggernometry.Core
 
         public void CheckForUpdatesExternal(string manifestUrl = null, bool alwaysNotify = false, bool forceAutoUpdate = false)
         {
-            if (manifestUrl == null)
-                manifestUrl = cfg.UpdateExternalChannelUrl;
+            manifestUrl = manifestUrl ?? cfg.UpdateExternalChannelUrl;
+
             Task.Run(async () =>
             {
                 try
@@ -248,6 +248,8 @@ namespace Triggernometry.Core
             });
         }
 
+        internal bool hasAutoUpdated = false;
+
         private void UpdatePluginExternal(UpdateManifest um, Version localVersion)
         {
             var filePath = Path.Combine(pluginPath, $"{pluginName}.dll");
@@ -262,6 +264,8 @@ namespace Triggernometry.Core
                     {
                         UpdateTranslationExternal(um);
                     }
+                    
+                    hasAutoUpdated = true;
 
                     string msg;
                     var isUrgent = um.LowestAllowedVersion != null && um.LowestAllowedVersion > localVersion;
