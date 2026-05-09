@@ -34,6 +34,7 @@ namespace Triggernometry.Core
                 utilities.AllowAdmin = true;
             }
             // 删除 CafeStore 中旧版插件信息（如果存在）
+            /*
             try
             {
                 var result = PluginBridges.BridgeCafe.AutoRemoveTriggernometryFromCafeStore();
@@ -43,6 +44,7 @@ namespace Triggernometry.Core
             {
                 Instance.UnfilteredAddToLog(DebugLevelEnum.Warning, "处理 CafeStore 旧版 Triggernometry 信息时出错：" + ex.Message);
             }
+            */
         }
 
         public static void CopyMissingTranslations()

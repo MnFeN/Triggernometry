@@ -295,7 +295,7 @@ namespace Triggernometry.Core
                 SetupDefaultSecurity();
                 AutofixConfiguration();
                 ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-                BackupConfiguration();
+                HandleVersionUpdate();
                 FixDuplicateFolderReferences(null, cfg, null);
                 PluginBridges.BridgeFFXIV.cfg = cfg;
                 // start

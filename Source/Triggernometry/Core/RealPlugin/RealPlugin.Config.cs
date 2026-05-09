@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +8,8 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using static Triggernometry.UI.CustomControls.Toast;
 
 namespace Triggernometry.Core
 {
@@ -58,28 +61,60 @@ namespace Triggernometry.Core
             cfg.Constants["TriggernometryVersionRevision"] = new VariableScalar() { Value = v.Revision.ToString() };
         }
 
-        public void BackupConfiguration()
+        public void HandleVersionUpdate()
         {
-            string curver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            string cfgver = cfg.PluginVersion ?? "pre1.0.4.4";
-            cfg.PrevPluginVersion = cfgver;
-            if (cfgver != curver)
+            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string prevVersion = cfg.PluginVersion ?? "pre1.0.4.4";
+            if (prevVersion != currentVersion)
             {
-                string oldfn = Path.Combine(ConfigPath, pluginName + ".config.xml");
-                string bacfn = Path.Combine(ConfigPath, pluginName + "." + cfgver + ".config.xml");
-                if (File.Exists(oldfn) == true)
+                ToastChangeLog(currentVersion);
+                BackupConfiguration(prevVersion, currentVersion);
+                cfg.PluginVersion = currentVersion;
+            }
+        }
+
+        private void ToastChangeLog(string currentVersion)
+        {
+            var toast = new Toast 
+            { 
+                ToastText = $"Triggernometry 已更新至 {currentVersion}，是否查看更新日志？",
+                ToastType = ToastTypeEnum.YesNo
+            };
+            toast.OnYes += (_toast, _result) => ShowChangeLog();
+            ui.QueueToast(toast);
+        }
+
+        public void ShowChangeLog()
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://docs.qq.com/doc/DTFZFZFF0dGh2eWhm",
+                UseShellExecute = true
+            });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://github.com/MnFeN/Triggernometry/wiki/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97",
+                UseShellExecute = true
+            });
+        }
+
+        private void BackupConfiguration(string prevVersion, string currentVersion)
+        {
+            string oldfn = Path.Combine(ConfigPath, pluginName + ".config.xml");
+            string bacfn = Path.Combine(ConfigPath, pluginName + "." + prevVersion + ".config.xml");
+            if (File.Exists(oldfn) == true)
+            {
+                if (File.Exists(bacfn) == false)
                 {
-                    if (File.Exists(bacfn) == false)
-                    {
-                        FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cfgbackupupdate", "Plugin updated from {0} to {1}, backing up configuration as {2}", cfgver, curver, bacfn));
-                        File.Copy(oldfn, bacfn, false);
-                    }
-                    else
-                    {
-                        FilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Plugin/cfgbackupdatewarn", "Plugin updated from {0} to {1}, but a backup configuration file already exists, not overwriting", cfgver, curver));
-                    }
+                    FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cfgbackupupdate", "Plugin updated from {0} to {1}, backing up configuration as {2}", 
+                        prevVersion, currentVersion, bacfn));
+                    File.Copy(oldfn, bacfn, false);
                 }
-                cfg.PluginVersion = curver;
+                else
+                {
+                    FilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Plugin/cfgbackupdatewarn", "Plugin updated from {0} to {1}, but a backup configuration file already exists, not overwriting", 
+                        prevVersion, currentVersion));
+                }
             }
         }
 
