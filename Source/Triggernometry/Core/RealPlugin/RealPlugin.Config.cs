@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Variables;
@@ -67,21 +68,28 @@ namespace Triggernometry.Core
             string prevVersion = cfg.PluginVersion ?? "pre1.0.4.4";
             if (prevVersion != currentVersion)
             {
-                ToastChangeLog(currentVersion);
+                AskAboutChangeLog(currentVersion);
                 BackupConfiguration(prevVersion, currentVersion);
                 cfg.PluginVersion = currentVersion;
             }
         }
 
-        private void ToastChangeLog(string currentVersion)
+        private void AskAboutChangeLog(string currentVersion)
         {
-            var toast = new Toast 
-            { 
-                ToastText = $"Triggernometry 已更新至 {currentVersion}，是否查看更新日志？",
-                ToastType = ToastTypeEnum.YesNo
-            };
-            toast.OnYes += (_toast, _result) => ShowChangeLog();
-            ui.QueueToast(toast);
+            Task.Run(() =>
+            {
+                var result = MessageBox.Show(
+                    $"Triggernometry 已更新至 {currentVersion}，是否查看更新日志？",
+                    "Triggernometry 更新",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information
+                );
+
+                if (result == DialogResult.Yes)
+                {
+                    ShowChangeLog();
+                }
+            });
         }
 
         public void ShowChangeLog()

@@ -288,8 +288,10 @@ namespace Triggernometry.Core
                 exwhere = I18n.Translate("internal/Plugin/inifilename", "determining filename");
                 pluginName = Path.GetFileNameWithoutExtension(pluginName);
                 FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/filenameis", "Plugin filename is '{0}' at '{1}'", pluginName, pluginPath));
+                
                 exwhere = I18n.Translate("internal/Plugin/inilanguages", "loading languages");
                 LoadLanguages();
+
                 exwhere = I18n.Translate("internal/Plugin/inicfg", "loading configuration");
                 _cfg = LoadConfigFromFile(Path.Combine(ConfigPath, pluginName + ".config.xml"));
                 SetupDefaultSecurity();
