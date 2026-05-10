@@ -1619,6 +1619,9 @@
     <TranslationEntry Key="internal/TestInputForm/debugspeedex" Translation="输入的值无法解析为正数。" />
     <TranslationEntry Key="internal/TestInputForm/debugwarning" Translation="警告：" />
     <TranslationEntry Key="internal/TestInputForm/debugwarningformat" Translation="日志行 #{0}：{1}&#xD;&#xA;数据：{2}" />
+    <TranslationEntry Key="internal/TraySlider/Button1" Translation="确认" />
+    <TranslationEntry Key="internal/TraySlider/Button2" Translation="取消" />
+    <TranslationEntry Key="internal/TraySlider/Button3" Translation="" />
     <TranslationEntry Key="internal/Trigger/beforelastfired" Translation="当前时间在上次触发触发器之前 '{0}'" />
     <TranslationEntry Key="internal/Trigger/delayingrefire" Translation="延迟触发器 '{0}' 再次触发 {1}" />
     <TranslationEntry Key="internal/Trigger/firingexception" Translation="触发器 '{0}' 触发失败：{1}" />

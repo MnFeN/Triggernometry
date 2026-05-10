@@ -1619,6 +1619,9 @@
     <TranslationEntry Key="internal/TestInputForm/debugspeedex" Translation="The given value is not a positive number." />
     <TranslationEntry Key="internal/TestInputForm/debugwarning" Translation="Warning:" />
     <TranslationEntry Key="internal/TestInputForm/debugwarningformat" Translation="Logline #{0}: {1}&#xD;&#xA;Data: {2}" />
+    <TranslationEntry Key="internal/TraySlider/Button1" Translation="Confirm" />
+    <TranslationEntry Key="internal/TraySlider/Button2" Translation="Cancel" />
+    <TranslationEntry Key="internal/TraySlider/Button3" Translation="" />
     <TranslationEntry Key="internal/Trigger/beforelastfired" Translation="Current time is before last fired for trigger '{0}'" />
     <TranslationEntry Key="internal/Trigger/delayingrefire" Translation="Delaying trigger '{0}' refire to {1}" />
     <TranslationEntry Key="internal/Trigger/firingexception" Translation="Trigger '{0}' didn't fire due to exception: {1}" />
