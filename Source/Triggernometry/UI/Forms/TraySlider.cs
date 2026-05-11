@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Xml.Linq;
+using Triggernometry.Core;
 using Triggernometry.Localization;
 
 namespace Triggernometry.UI.Forms
 {
-    public partial class TraySlider : Form
+    internal partial class TraySliderForm : Form
     {
         private struct RECT
         {
@@ -17,6 +18,10 @@ namespace Triggernometry.UI.Forms
             public int bottom;
         }
 
+        public Action OnClick1 { get; set; }
+        public Action OnClick2 { get; set; }
+        public Action OnClick3 { get; set; }
+
         private const int SW_SHOWNOACTIVATE = 4;
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         private const uint SWP_NOACTIVATE = 16u;
@@ -24,21 +29,19 @@ namespace Triggernometry.UI.Forms
         private bool _activated;
         private bool _choiceClicked;
         private bool _hasMouse;
-        
-
-        private bool ForceShow { get; set; } = true;
+        private bool _forceShow;
 
         protected override bool ShowWithoutActivation => true;
 
-        public TraySlider(int buttonCount, int durationMs = 15000, bool forceShow = true)
+        internal TraySliderForm(int buttonCount, int durationMs, bool forceShow)
         {
-            if (buttonCount > 3)
+            if (buttonCount > 3 || buttonCount < 0)
                 throw new ArgumentOutOfRangeException(nameof(buttonCount), "Button count must be 0-3.");
 
             InitializeComponent();
 
             tmrFade.Interval = durationMs;
-            ForceShow = forceShow;
+            _forceShow = forceShow;
 
             Button1.Text = I18n.Translate("internal/TraySlider/Button1", "Confirm");
             Button2.Text = I18n.Translate("internal/TraySlider/Button2", "Cancel");
@@ -47,10 +50,10 @@ namespace Triggernometry.UI.Forms
             ConfigureButtons(buttonCount);
             BindMouseEvents(this);
 
-            var handle = Handle;
+            _ = Handle; // Force handle creation to avoid issues with showing the form before it's fully initialized.
         }
 
-        public void ShowTraySlider(string message, string title = "")
+        internal void ShowTraySlider(string message, string title = "")
         {
             lblTitle.Text = title ?? "";
             rtbText.Text = message ?? "";
@@ -61,19 +64,20 @@ namespace Triggernometry.UI.Forms
 
         private void ApplyDefaultFont()
         {
-            var textFont = new Font(SystemFonts.MessageBoxFont.FontFamily, 11f, FontStyle.Regular);
-            var titleFont = new Font(SystemFonts.MessageBoxFont.FontFamily, 11f, FontStyle.Bold);
+            var btnfont = new Font(SystemFonts.MessageBoxFont.FontFamily, 9f, FontStyle.Regular);
+            var textFont = new Font(SystemFonts.MessageBoxFont.FontFamily, 10f, FontStyle.Regular);
+            var titleFont = new Font(SystemFonts.MessageBoxFont.FontFamily, 10f, FontStyle.Bold);
 
             lblTitle.Font = titleFont;
             rtbText.Font = textFont;
-            Button1.Font = textFont;
-            Button2.Font = textFont;
-            Button3.Font = textFont;
+            Button1.Font = btnfont;
+            Button2.Font = btnfont;
+            Button3.Font = btnfont;
         }
 
         private void ConfigureButtons(int buttonCount)
         {
-            if (buttonCount > 3)
+            if (buttonCount > 3 || buttonCount < 0)
                 throw new ArgumentOutOfRangeException(nameof(buttonCount), "Button count must be 0-3.");
 
             var buttons = new[] { Button1, Button2, Button3 };
@@ -97,6 +101,42 @@ namespace Triggernometry.UI.Forms
             tlpButtons.ResumeLayout(true);
         }
 
+        internal void SetLevel(TraySliderLevel level)
+        {
+            Color titleBgColor;
+            switch (level)
+            {
+                case TraySliderLevel.Info:
+                    titleBgColor = Color.FromArgb(135, 180, 225);
+                    break;
+                case TraySliderLevel.Warning:
+                    titleBgColor = Color.FromArgb(235, 200, 135);
+                    break;
+                case TraySliderLevel.Error:
+                    titleBgColor = Color.FromArgb(225, 150, 150);
+                    break;
+                default:
+                    return;
+            }
+            var formBgColor = Color.FromArgb(
+                (titleBgColor.R + 7 * 255) / 8,
+                (titleBgColor.G + 7 * 255) / 8,
+                (titleBgColor.B + 7 * 255) / 8
+            );
+            var min = Math.Min(titleBgColor.R, Math.Min(titleBgColor.G, titleBgColor.B));
+            var titleForeColor = Color.FromArgb(
+                (titleBgColor.R - min) / 2,
+                (titleBgColor.G - min) / 2,
+                (titleBgColor.B - min) / 2
+            );
+
+            BackColor = formBgColor;
+            tlpMain.BackColor = formBgColor;
+            rtbText.BackColor = formBgColor;
+            lblTitle.BackColor = titleBgColor;
+            lblTitle.ForeColor = titleForeColor;
+        }
+
         private void BindMouseEvents(Control control)
         {
             control.MouseEnter += TraySlider_MouseEnter;
@@ -111,7 +151,7 @@ namespace Triggernometry.UI.Forms
             if (!_activated)
                 return;
 
-            if (IsForegroundFullScreen() && !ForceShow)
+            if (IsForegroundFullScreen() && !_forceShow)
                 return;
 
             _activated = false;
@@ -164,7 +204,7 @@ namespace Triggernometry.UI.Forms
 
         private void tmrFade_Tick(object sender, EventArgs e)
         {
-            if (!_hasMouse && (!IsForegroundFullScreen() || ForceShow))
+            if (!_hasMouse && (!IsForegroundFullScreen() || _forceShow))
                 FadeOut();
         }
 
@@ -206,6 +246,20 @@ namespace Triggernometry.UI.Forms
         {
             _choiceClicked = true;
             FadeOut();
+
+            try
+            {
+                if (sender == Button1)
+                    OnClick1?.Invoke();
+                else if (sender == Button2)
+                    OnClick2?.Invoke();
+                else if (sender == Button3)
+                    OnClick3?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, ex.Message);
+            }
         }
 
         private void TraySlider_FormClosing(object sender, FormClosingEventArgs e)
@@ -256,6 +310,96 @@ namespace Triggernometry.UI.Forms
                 rect.bottom - rect.top);
 
             return foreground.Contains(screen.Bounds);
+        }
+    }
+
+    public enum TraySliderLevel
+    {
+        Info,
+        Warning,
+        Error
+    }
+
+    /// <summary>
+    /// Wrapper class for thread-safe showing a tray slider notification.
+    /// </summary>
+    public class TraySlider
+    {
+        public string Message { get; set; }
+        public string Title { get; set; } = "";
+        public int ButtonCount { get; set; } = 0;
+        public int DurationMs { get; set; } = 15000;
+        public bool ForceShow { get; set; } = true;
+        public TraySliderLevel Level { get; set; } = TraySliderLevel.Info;
+
+        public string Button1Text { get; set; }
+        public string Button2Text { get; set; }
+        public string Button3Text { get; set; }
+
+        public Action OnClick1 { get; set; }
+        public Action OnClick2 { get; set; }
+        public Action OnClick3 { get; set; }
+
+        public TraySlider(int buttonCount, string message, string title = "", TraySliderLevel level = TraySliderLevel.Info, int durationMs = 15000, bool forceShow = true)
+        {
+            if (buttonCount > 3)
+                buttonCount = 3;
+            if (buttonCount < 0)
+                buttonCount = 0;
+            Message = message;
+            Title = title;
+            Level = level;
+            ButtonCount = buttonCount;
+            DurationMs = durationMs;
+            ForceShow = forceShow;
+        }
+
+        /// <summary> Create a <see cref="TraySliderLevel.Info"/> level <see cref="TraySlider"/> instance.</summary>
+        public static TraySlider Info(int buttonCount, string message, string title = "", int durationMs = 15000, bool forceShow = true)
+            => new TraySlider(buttonCount, message, title, TraySliderLevel.Info, durationMs, forceShow);
+
+        /// <summary> Create a <see cref="TraySliderLevel.Warning"/> level <see cref="TraySlider"/> instance.</summary>
+        public static TraySlider Warning(int buttonCount, string message, string title = "", int durationMs = 15000, bool forceShow = true)
+            => new TraySlider(buttonCount, message, title, TraySliderLevel.Warning, durationMs, forceShow);
+
+        /// <summary> Create a <see cref="TraySliderLevel.Error"/> level <see cref="TraySlider"/> instance.</summary>
+        public static TraySlider Error(int buttonCount, string message, string title = "", int durationMs = 15000, bool forceShow = true)
+            => new TraySlider(buttonCount, message, title, TraySliderLevel.Error, durationMs, forceShow);
+
+        /// <summary> Thread-safe create and show a <see cref="TraySliderForm"/> from the <see cref="TraySlider"/> info. </summary>
+        public void Show()
+        {
+            var mainForm = Application.OpenForms
+                .Cast<Form>()
+                .OrderByDescending(f => f.GetType().FullName == "Advanced_Combat_Tracker.FormActMain")
+                .FirstOrDefault()
+                ?? throw new InvalidOperationException("No UI form was created.");
+
+            Action show = () =>
+            {
+                var form = new TraySliderForm(ButtonCount, DurationMs, ForceShow)
+                {
+                    OnClick1 = OnClick1,
+                    OnClick2 = OnClick2,
+                    OnClick3 = OnClick3,
+                };
+
+                form.SetLevel(Level);
+
+                if (Button1Text != null)
+                    form.Button1.Text = Button1Text;
+                if (Button2Text != null)
+                    form.Button2.Text = Button2Text;
+                if (Button3Text != null)
+                    form.Button3.Text = Button3Text;
+
+                form.ShowTraySlider(Message, Title);
+            };
+
+            if (mainForm.InvokeRequired)
+                mainForm.BeginInvoke(show);
+            else
+                show();
         }
     }
 }
