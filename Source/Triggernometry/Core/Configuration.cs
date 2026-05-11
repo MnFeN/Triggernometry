@@ -600,8 +600,8 @@ namespace Triggernometry.Core
         #endregion
 
         /// <summary>
-        /// Used to determine whether to inform the user to view the update log on ACT startup. <br />
-        /// If the user has already been notified during the last startup (auto update), it will not show again. 
+        /// Last plugin version for which the changelog prompt has already been shown. <br />
+        /// Used to avoid showing the same changelog prompt again after an auto-update or restart.
         /// </summary>
         [XmlAttribute]
         public string PreviousNotifiedPluginVersion { get; set; } = "1";

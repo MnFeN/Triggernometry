@@ -61,14 +61,14 @@ namespace Triggernometry.Core
             {
                 // Inform the user to view the update log on ACT startup.
                 // If the user has already been notified during the last startup (auto update), it will not show again. 
-                AskChangeLogOnShart(prevVersion, currentVersion);
+                AskChangeLogOnStart(prevVersion, currentVersion);
 
                 BackupConfiguration(prevVersion, currentVersion);
                 cfg.PluginVersion = currentVersion;
             }
         }
 
-        private void AskChangeLogOnShart(string prevVersion, string currentVersion)
+        private void AskChangeLogOnStart(string prevVersion, string currentVersion)
         {
             if (cfg.PreviousNotifiedPluginVersion != currentVersion)
             {

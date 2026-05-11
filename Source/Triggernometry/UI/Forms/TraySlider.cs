@@ -265,7 +265,7 @@ namespace Triggernometry.UI.Forms
             }
             catch (Exception ex)
             {
-                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, ex.Message);
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, ex.ToString());
             }
         }
 
@@ -379,28 +379,40 @@ namespace Triggernometry.UI.Forms
             var mainForm = Application.OpenForms
                 .Cast<Form>()
                 .OrderByDescending(f => f.GetType().FullName == "Advanced_Combat_Tracker.FormActMain")
-                .FirstOrDefault()
-                ?? throw new InvalidOperationException("No UI form was created.");
+                .FirstOrDefault();
+
+            if (mainForm == null)
+            {
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, $"No main form found to show tray slider: [{Title}] {Message}");
+                return;
+            }
 
             Action show = () =>
             {
-                var form = new TraySliderForm(ButtonCount, DurationMs, ForceShow)
+                try
                 {
-                    OnClick1 = OnClick1,
-                    OnClick2 = OnClick2,
-                    OnClick3 = OnClick3,
-                };
+                    var form = new TraySliderForm(ButtonCount, DurationMs, ForceShow)
+                    {
+                        OnClick1 = OnClick1,
+                        OnClick2 = OnClick2,
+                        OnClick3 = OnClick3,
+                    };
 
-                form.SetLevel(Level);
+                    form.SetLevel(Level);
 
-                if (Button1Text != null)
-                    form.Button1.Text = Button1Text;
-                if (Button2Text != null)
-                    form.Button2.Text = Button2Text;
-                if (Button3Text != null)
-                    form.Button3.Text = Button3Text;
+                    if (Button1Text != null)
+                        form.Button1.Text = Button1Text;
+                    if (Button2Text != null)
+                        form.Button2.Text = Button2Text;
+                    if (Button3Text != null)
+                        form.Button3.Text = Button3Text;
 
-                form.ShowTraySlider(Message, Title);
+                    form.ShowTraySlider(Message, Title);
+                }
+                catch (Exception ex)
+                { 
+                    RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error, ex.ToString());
+                }
             };
 
             if (mainForm.InvokeRequired)

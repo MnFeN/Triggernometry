@@ -261,36 +261,6 @@ namespace Triggernometry.Core
                     {
                         UpdateTranslationExternal(um);
                     }
-                    
-                    hasAutoUpdated = true;
-
-                    var isUrgent = um.LowestAllowedVersion != null && um.LowestAllowedVersion > localVersion;
-
-                    string msg;
-                    TraySliderLevel level;
-
-                    if (isUrgent) // recommend restart immediately
-                    {
-                        msg = I18n.Translate("internal/Plugin/extpluginupdatedurgenttrue",
-                                "The plugin is updated from {0} to {1}, including an urgent update. It is recommended to restart immediately.\r\n\r\nWould you like to view the changelog?",
-                                localVersion, um.Version);
-                        level = TraySliderLevel.Warning;
-                    }
-                    else
-                    {
-                        msg = I18n.Translate("internal/Plugin/extpluginupdatedurgentfalse",
-                            "The plugin is updated from {0} to {1}. This is a non-urgent update. You can restart ACT at your convenience.\r\n\r\nWould you like to view the changelog?",
-                            localVersion, um.Version);
-                        level = TraySliderLevel.Info;
-                    }
-
-                    var title = I18n.Translate("internal/Plugin/triggernometryupdate", "Triggernometry Update");
-                    new TraySlider(2, msg, title, level, 600000)
-                    {
-                        OnClick1 = () => ShowChangeLog(),
-                    }.Show();
-
-                    cfg.PreviousNotifiedPluginVersion = um.Version.ToString();
                 }
                 catch (Exception ex)
                 {
@@ -298,6 +268,45 @@ namespace Triggernometry.Core
                         "Couldn't update plugin file from {0}: {1}", um.Url, ex.Message);
                     Instance.FilteredAddToLog(DebugLevelEnum.Error, err);
                 }
+
+                
+                hasAutoUpdated = true;
+
+                var isUrgent = um.LowestAllowedVersion != null && um.LowestAllowedVersion > localVersion;
+
+                string msg;
+                TraySliderLevel level;
+
+                if (isUrgent) // recommend restart immediately
+                {
+                    msg = I18n.Translate("internal/Plugin/extpluginupdatedurgenttrue",
+                            "The plugin is updated from {0} to {1}, including an urgent update. It is recommended to restart immediately.\r\n\r\nWould you like to view the changelog?",
+                            localVersion, um.Version);
+                    level = TraySliderLevel.Warning;
+                }
+                else
+                {
+                    msg = I18n.Translate("internal/Plugin/extpluginupdatedurgentfalse",
+                        "The plugin is updated from {0} to {1}. This is a non-urgent update. You can restart ACT at your convenience.\r\n\r\nWould you like to view the changelog?",
+                        localVersion, um.Version);
+                    level = TraySliderLevel.Info;
+                }
+
+                var title = I18n.Translate("internal/Plugin/triggernometryupdate", "Triggernometry Update");
+
+                try
+                {
+                    new TraySlider(2, msg, title, level, 600000)
+                    {
+                        OnClick1 = () => ShowChangeLog(),
+                    }.Show();
+                }
+                catch (Exception ex)
+                {
+                    Instance.FilteredAddToLog(DebugLevelEnum.Error, ex.ToString());
+                    Instance.FilteredAddToLog(DebugLevelEnum.Warning, msg);
+                }
+                cfg.PreviousNotifiedPluginVersion = um.Version.ToString();
             });
         }
 
