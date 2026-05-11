@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Triggernometry.Core;
@@ -18,9 +19,11 @@ namespace Triggernometry.UI.Forms
             public int bottom;
         }
 
-        public Action OnClick1 { get; set; }
-        public Action OnClick2 { get; set; }
-        public Action OnClick3 { get; set; }
+        internal Action OnClick1 { get; set; }
+        internal Action OnClick2 { get; set; }
+        internal Action OnClick3 { get; set; }
+
+        private SystemSound _sound;
 
         private const int SW_SHOWNOACTIVATE = 4;
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
@@ -60,6 +63,7 @@ namespace Triggernometry.UI.Forms
             rtbText.SelectionStart = 0;
             rtbText.SelectionLength = 0;
             _activated = true;
+            _sound?.Play();
         }
 
         private void ApplyDefaultFont()
@@ -108,12 +112,15 @@ namespace Triggernometry.UI.Forms
             {
                 case TraySliderLevel.Info:
                     titleBgColor = Color.FromArgb(135, 180, 225);
+                    _sound = null;
                     break;
                 case TraySliderLevel.Warning:
                     titleBgColor = Color.FromArgb(235, 200, 135);
+                    _sound = SystemSounds.Exclamation;
                     break;
                 case TraySliderLevel.Error:
                     titleBgColor = Color.FromArgb(225, 150, 150);
+                    _sound = SystemSounds.Asterisk;
                     break;
                 default:
                     return;
@@ -401,5 +408,32 @@ namespace Triggernometry.UI.Forms
             else
                 show();
         }
+
+        internal static void CallbackInfo(object _, string s)
+        { 
+            var (title, message) = ParseTitleAndMessage(s);
+            Info(1, message, title).Show();
+        }
+
+        internal static void CallbackWarning(object _, string s)
+        {
+            var (title, message) = ParseTitleAndMessage(s);
+            Warning(1, message, title).Show();
+        }
+
+        internal static void CallbackError(object _, string s)
+        {
+            var (title, message) = ParseTitleAndMessage(s);
+            Error(1, message, title).Show();
+        }
+
+        private static (string, string) ParseTitleAndMessage(string s)
+        {
+            var parts = (s ?? "").Split(new[] { "\r\n", "\r", "\n" }, 2, StringSplitOptions.None);
+            var title = parts.Length > 1 ? parts[0] : "";
+            var message = parts.Length > 1 ? parts[1] : parts[0];
+            return (title, message);
+        }
+
     }
 }

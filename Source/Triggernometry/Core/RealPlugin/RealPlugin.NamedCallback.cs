@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Triggernometry.PluginBridges;
 using Triggernometry.PluginBridges.BridgeMachina;
+using Triggernometry.UI.Forms;
 using Triggernometry.Utilities;
 
 namespace Triggernometry.Core
@@ -162,6 +163,9 @@ namespace Triggernometry.Core
             _ = RegisterNamedCallback("DisableCactbotTriggerSetsTts", (Action<object, string>)BridgeCactbot.DisableTriggerSetsTtsCallback, registrant: nameof(RealPlugin));
             _ = RegisterNamedCallback("RegisterActorControlCategories", (Action<object, string>)ActorControlPatcher.RegisterCategoriesCallback, registrant: nameof(RealPlugin));
             _ = RegisterNamedCallback("SideloadMachinaOpcodes", (Action<object, string>)OpcodeSideloader.Callback, registrant: nameof(RealPlugin));
+            _ = RegisterNamedCallback("TraySliderInfo", (Action<object, string>)TraySlider.CallbackInfo, registrant: nameof(RealPlugin));
+            _ = RegisterNamedCallback("TraySliderWarning", (Action<object, string>)TraySlider.CallbackWarning, registrant: nameof(RealPlugin));
+            _ = RegisterNamedCallback("TraySliderError", (Action<object, string>)TraySlider.CallbackError, registrant: nameof(RealPlugin));
         }
 
     }
