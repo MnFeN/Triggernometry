@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
+using Triggernometry.UI.Forms;
 using Triggernometry.Utilities;
 
 namespace Triggernometry.Core
@@ -38,7 +39,7 @@ namespace Triggernometry.Core
                     CheckForUpdatesBuiltin(alwaysNotify: isManual);
                     break;
                 case Configuration.UpdateCheckMethodEnum.External:
-                    CheckForUpdatesExternal(cfg.UpdateExternalChannelUrl, alwaysNotify: isManual);
+                    CheckForUpdatesExternal(cfg.UpdateExternalChannelUrl, notifyIfLatest: isManual);
                     break;
             }
         }
@@ -188,7 +189,7 @@ namespace Triggernometry.Core
 
         }
 
-        public void CheckForUpdatesExternal(string manifestUrl = null, bool alwaysNotify = false, bool forceAutoUpdate = false)
+        public void CheckForUpdatesExternal(string manifestUrl = null, bool notifyIfLatest = false, bool forceAutoUpdate = false)
         {
             manifestUrl = manifestUrl ?? cfg.UpdateExternalChannelUrl;
 
@@ -211,7 +212,7 @@ namespace Triggernometry.Core
                         string info = I18n.Translate("internal/Plugin/verchecksame",
                             "Version check: Newest version {0} is the same or older than current version {1}", remoteVersion, localVersion);
                         Instance.FilteredAddToLog(DebugLevelEnum.Info, info);
-                        if (alwaysNotify)
+                        if (notifyIfLatest)
                         {
                             ui.QueueToast(new Toast { ToastText = info, ToastType = Toast.ToastTypeEnum.OK });
                         }
@@ -227,17 +228,13 @@ namespace Triggernometry.Core
                         return;
                     }
 
-                    var msg = um.Message?.Replace("{0}", $"{localVersion}").Replace("{1}", $"{remoteVersion}")
-                        ?? I18n.Translate("internal/Plugin/verchecknew", 
-                            "Version check: A new version {0} is available to replace current version {1}", remoteVersion, localVersion);
+                    var msg = um.Message?.Replace("{0}", $"{localVersion}").Replace("{1}", $"{remoteVersion}") // in case the message template is broken
+                        ?? I18n.Translate("internal/Plugin/verchecknew", "Version check: A new version {0} is available to replace current version {1}", remoteVersion, localVersion);
 
-                    Toast t = new Toast 
-                    { 
-                        ToastText = msg,
-                        ToastType = Toast.ToastTypeEnum.YesNo 
-                    }; 
-                    t.OnYes += (_, __) => UpdatePluginExternal(um, localVersion); 
-                    ui.QueueToast(t);
+                    new TraySlider(2, msg, "Triggernometry Update", TraySliderLevel.Info, 600000)
+                    {
+                        OnClick1 = () => UpdatePluginExternal(um, localVersion),
+                    }.Show();
                 }
                 catch (Exception ex)
                 {
@@ -267,41 +264,39 @@ namespace Triggernometry.Core
                     
                     hasAutoUpdated = true;
 
-                    string msg;
                     var isUrgent = um.LowestAllowedVersion != null && um.LowestAllowedVersion > localVersion;
+
+                    string msg;
+                    TraySliderLevel level;
+
                     if (isUrgent) // recommend restart immediately
                     {
                         msg = I18n.Translate("internal/Plugin/extpluginupdatedurgenttrue",
-                                "The plugin has been updated from {0} to {1} (urgent). \n\nIt is recommended to restart immediately.",
+                                "The plugin is updated from {0} to {1}, including an urgent update. It is recommended to restart immediately.\r\n\r\nWould you like to view the changelog?",
                                 localVersion, um.Version);
-                        ui.Invoke((System.Action)(() =>
-                        {
-                            MessageBox.Show(msg, "Triggernometry Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }));
+                        level = TraySliderLevel.Warning;
                     }
                     else
                     {
                         msg = I18n.Translate("internal/Plugin/extpluginupdatedurgentfalse",
-                            "The plugin has been updated from {0} to {1} (non-urgent). \n\nYou may restart ACT at your convenience.",
+                            "The plugin is updated from {0} to {1}. This is a non-urgent update. You can restart ACT at your convenience.\r\n\r\nWould you like to view the changelog?",
                             localVersion, um.Version);
+                        level = TraySliderLevel.Info;
                     }
-                    ui.QueueToast(new Toast
+
+                    var title = I18n.Translate("internal/Plugin/triggernometryupdate", "Triggernometry Update");
+                    new TraySlider(2, msg, title, level, 600000)
                     {
-                        ToastText = msg.Replace("\n", "").Replace("\r", ""),
-                        ToastType = Toast.ToastTypeEnum.OK
-                    });
+                        OnClick1 = () => ShowChangeLog(),
+                    }.Show();
+
+                    cfg.PreviousNotifiedPluginVersion = um.Version.ToString();
                 }
                 catch (Exception ex)
                 {
-                    string err = I18n.Translate("internal/Plugin/extpluginupdatefailed",
+                    var err = I18n.Translate("internal/Plugin/extpluginupdatefailed",
                         "Couldn't update plugin file from {0}: {1}", um.Url, ex.Message);
-
                     Instance.FilteredAddToLog(DebugLevelEnum.Error, err);
-                    ui.QueueToast(new Toast
-                    {
-                        ToastText = err,
-                        ToastType = Toast.ToastTypeEnum.OK
-                    });
                 }
             });
         }
@@ -400,7 +395,21 @@ namespace Triggernometry.Core
                 }
             });
         }
-        
+
+        public void ShowChangeLog()
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://docs.qq.com/doc/DTFZFZFF0dGh2eWhm",
+                UseShellExecute = true
+            });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://github.com/MnFeN/Triggernometry/wiki/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97",
+                UseShellExecute = true
+            });
+        }
+
         #endregion Plugin Update (External)
 
         #region Repo Update

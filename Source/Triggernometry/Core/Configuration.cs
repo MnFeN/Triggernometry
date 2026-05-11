@@ -599,12 +599,15 @@ namespace Triggernometry.Core
 
         #endregion
 
+        /// <summary>
+        /// Used to determine whether to inform the user to view the update log on ACT startup. <br />
+        /// If the user has already been notified during the last startup (auto update), it will not show again. 
+        /// </summary>
         [XmlAttribute]
-        public int Version { get; set; } = 1;
+        public string PreviousNotifiedPluginVersion { get; set; } = "1";
 
         [XmlAttribute]
         public string PluginVersion { get; set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
 
         internal bool isnew = true;
         internal DateTime lastWrite = DateTime.Now;

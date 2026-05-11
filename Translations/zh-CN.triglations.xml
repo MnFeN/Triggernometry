@@ -1451,8 +1451,8 @@
     <TranslationEntry Key="internal/Plugin/exception" Translation="异常" />
     <TranslationEntry Key="internal/Plugin/extplugincheckfailed" Translation="无法从 {0} 更新插件文件：{1}" />
     <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="无法从 {0} 更新插件文件：{1}" />
-    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgentfalse" Translation="Triggernometry 插件版本已从 {0} 更新到 {1}（非重要更新）。&#xD;&#xA;&#xD;&#xA;请在方便时重启 ACT。" />
-    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgenttrue" Translation="Triggernometry 插件版本已从 {0} 更新到 {1}（重要更新）。&#xD;&#xA;&#xD;&#xA;建议立即重启 ACT。" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgentfalse" Translation="Triggernometry 插件版本已从 {0} 更新到 {1}（非重要更新），可以在方便时重启 ACT。&#xD;&#xA;&#xD;&#xA;是否查看更新日志？" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgenttrue" Translation="Triggernometry 插件版本已从 {0} 更新到 {1}（包含重要更新），建议立即重启 ACT。&#xD;&#xA;&#xD;&#xA;是否查看更新日志？" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdated" Translation="翻译文件已更新，请重启 ACT 以使更改生效。" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdatefail" Translation="无法从 {0} 更新翻译文件：{1}" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworklogline" Translation="网络日志：({0})" />
@@ -1502,6 +1502,8 @@
     <TranslationEntry Key="internal/Plugin/splitlogline" Translation="拆分日志行：({0})" />
     <TranslationEntry Key="internal/Plugin/trigaddbook" Translation="触发器 '{0}' 已添加到记录中" />
     <TranslationEntry Key="internal/Plugin/trigfiring" Translation="触发的触发器 '{0}'" />
+    <TranslationEntry Key="internal/Plugin/triggernometryupdate" Translation="Triggernometry 更新" />
+    <TranslationEntry Key="internal/Plugin/triggernometryupdated" Translation="插件已从 {0} 更新至 {1}。&#xD;&#xA;是否查看更新日志？" />
     <TranslationEntry Key="internal/Plugin/trigmatches" Translation="触发器 '{0}' 匹配日志 '{1}'" />
     <TranslationEntry Key="internal/Plugin/trignotactive" Translation="触发器 '{0}' 未设为触发" />
     <TranslationEntry Key="internal/Plugin/trigparentfail" Translation="触发器 '{0}' 没有通过父分组 '{1}' 的过滤器：{2}" />

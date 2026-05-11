@@ -1300,6 +1300,7 @@ namespace Triggernometry.UI.Forms
 
         private void btnUpdateCheck_Click(object sender, EventArgs e)
         {
+            plug.UpdateLastChecked = DateTime.Now;
             switch (cbxUpdateMethod.SelectedIndex)
             {
                 case 0:
@@ -1309,7 +1310,7 @@ namespace Triggernometry.UI.Forms
                     plug.CheckForUpdatesACT();
                     break;
                 case 2:
-                    plug.CheckForUpdatesExternal(txtUpdateChannelUrl.Text, alwaysNotify: true);
+                    plug.CheckForUpdatesExternal(txtUpdateChannelUrl.Text, notifyIfLatest: true);
                     break;
             }
         }

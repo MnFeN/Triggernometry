@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
-using Triggernometry.UI.CustomControls;
-using static Triggernometry.UI.CustomControls.Toast;
+using Triggernometry.UI.Forms;
 
 namespace Triggernometry.Core
 {
@@ -19,13 +16,7 @@ namespace Triggernometry.Core
     {
 
         private Configuration _cfg;
-        internal Configuration cfg
-        {
-            get
-            {
-                return _cfg;
-            }
-        }
+        internal Configuration cfg => _cfg;
 
         internal bool configBroken = false;
         internal DateTime lastConfigSave = DateTime.Now;
@@ -68,42 +59,28 @@ namespace Triggernometry.Core
             string prevVersion = cfg.PluginVersion ?? "pre1.0.4.4";
             if (prevVersion != currentVersion)
             {
-                AskAboutChangeLog(currentVersion);
+                // Inform the user to view the update log on ACT startup.
+                // If the user has already been notified during the last startup (auto update), it will not show again. 
+                AskChangeLogOnShart(prevVersion, currentVersion);
+
                 BackupConfiguration(prevVersion, currentVersion);
                 cfg.PluginVersion = currentVersion;
             }
         }
 
-        private void AskAboutChangeLog(string currentVersion)
+        private void AskChangeLogOnShart(string prevVersion, string currentVersion)
         {
-            Task.Run(() =>
+            if (cfg.PreviousNotifiedPluginVersion != currentVersion)
             {
-                var result = MessageBox.Show(
-                    $"Triggernometry 已更新至 {currentVersion}，是否查看更新日志？",
-                    "Triggernometry 更新",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Information
-                );
-
-                if (result == DialogResult.Yes)
-                {
-                    ShowChangeLog();
-                }
-            });
-        }
-
-        public void ShowChangeLog()
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://docs.qq.com/doc/DTFZFZFF0dGh2eWhm",
-                UseShellExecute = true
-            });
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://github.com/MnFeN/Triggernometry/wiki/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97",
-                UseShellExecute = true
-            });
+                cfg.PreviousNotifiedPluginVersion = currentVersion;
+                var title = I18n.Translate("internal/Plugin/triggernometryupdate", "Triggernometry Update");
+                var msg = I18n.Translate("internal/Plugin/triggernometryupdated",
+                        "The plugin had been updated from {0} to {1}. \r\nWould you like to view the changelog?",
+                        prevVersion, currentVersion);
+                var tray = TraySlider.Info(2, msg, title);
+                tray.OnClick1 = () => ShowChangeLog();
+                tray.Show();
+            }
         }
 
         private void BackupConfiguration(string prevVersion, string currentVersion)

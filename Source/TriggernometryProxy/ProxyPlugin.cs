@@ -358,7 +358,7 @@ namespace TriggernometryProxy
 
         public string ExportLastEncounter()
         {
-            Advanced_Combat_Tracker.FormActMain act = Advanced_Combat_Tracker.ActGlobals.oFormActMain;
+            FormActMain act = ActGlobals.oFormActMain;
             FieldInfo fi = act.GetType().GetField("defaultTextFormat", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
             dynamic texf = fi.GetValue(act);
             if (texf != null)
@@ -381,7 +381,7 @@ namespace TriggernometryProxy
 
         public string ExportActiveEncounter()
         {
-            Advanced_Combat_Tracker.FormActMain act = Advanced_Combat_Tracker.ActGlobals.oFormActMain;
+            FormActMain act = ActGlobals.oFormActMain;
             FieldInfo fi = act.GetType().GetField("defaultTextFormat", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
             dynamic texf = fi.GetValue(act);
             return act.GetTextExport(act.ActiveZone.ActiveEncounter, texf);
@@ -394,18 +394,12 @@ namespace TriggernometryProxy
 
         public void InvokeTtsMethod(string tts)
         {
-            if (ActGlobals.oFormActMain.PlayTtsMethod != null)
-            {
-                ActGlobals.oFormActMain.PlayTtsMethod(tts);
-            }
+            ActGlobals.oFormActMain.PlayTtsMethod?.Invoke(tts);
         }
 
         public void InvokeSoundMethod(string filename, int volume)
         {
-            if (ActGlobals.oFormActMain.PlaySoundMethod != null)
-            {
-                ActGlobals.oFormActMain.PlaySoundMethod(filename, volume);
-            }
+            ActGlobals.oFormActMain.PlaySoundMethod?.Invoke(filename, volume);
         }
 
         public bool HasCustomTriggers()
@@ -418,7 +412,7 @@ namespace TriggernometryProxy
             List<RealPlugin.CustomTriggerCategoryProxy> alltrigs = new List<RealPlugin.CustomTriggerCategoryProxy>(); ;
             var trigs = from ix in ActGlobals.oFormActMain.CustomTriggers
                         group ix by new { ix.Value.Category, ix.Value.RestrictToCategoryZone } into ixs
-                        select new { Key = ixs.Key, Items = ixs.ToList() };
+                        select new { ixs.Key, Items = ixs.ToList() };
             foreach (var trig in trigs)
             {
                 RealPlugin.CustomTriggerCategoryProxy ctp = new RealPlugin.CustomTriggerCategoryProxy();

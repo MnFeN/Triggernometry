@@ -1451,8 +1451,8 @@
     <TranslationEntry Key="internal/Plugin/exception" Translation="Exception" />
     <TranslationEntry Key="internal/Plugin/extplugincheckfailed" Translation="Couldn't process update manifest from {0}, error: {1}" />
     <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="Couldn't update plugin file from {0}: {1}" />
-    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgentfalse" Translation="The plugin has been updated from {0} to {1} (non-urgent).&#xD;&#xA;&#xD;&#xA;You may restart ACT at your convenience." />
-    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgenttrue" Translation="The plugin has been updated from {0} to {1} (urgent).&#xD;&#xA;&#xD;&#xA;It is recommended to restart ACT immediately." />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgentfalse" Translation="The plugin is updated from {0} to {1}. This is a non-urgent update. You can restart ACT at your convenience.&#xD;&#xA;&#xD;&#xA;Would you like to view the changelog?" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatedurgenttrue" Translation="The plugin is updated from {0} to {1}, including an urgent update. It is recommended to restart immediately.&#xD;&#xA;&#xD;&#xA;Would you like to view the changelog?" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdated" Translation="Translation file updated, restart ACT for changes to take effect." />
     <TranslationEntry Key="internal/Plugin/exttranslationupdatefail" Translation="Couldn't update translation file from {0}: {1}" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworklogline" Translation="Network log line: ({0})" />
@@ -1502,6 +1502,8 @@
     <TranslationEntry Key="internal/Plugin/splitlogline" Translation="Split log line: ({0})" />
     <TranslationEntry Key="internal/Plugin/trigaddbook" Translation="Trigger '{0}' added to bookkeeping" />
     <TranslationEntry Key="internal/Plugin/trigfiring" Translation="Firing trigger '{0}'" />
+    <TranslationEntry Key="internal/Plugin/triggernometryupdate" Translation="Triggernometry Update" />
+    <TranslationEntry Key="internal/Plugin/triggernometryupdated" Translation="The plugin had been updated from {0} to {1}. &#xD;&#xA;Would you like to view the changelog?" />
     <TranslationEntry Key="internal/Plugin/trigmatches" Translation="Trigger '{0}' matches log line '{1}'" />
     <TranslationEntry Key="internal/Plugin/trignotactive" Translation="Trigger '{0}' is not active for firing" />
     <TranslationEntry Key="internal/Plugin/trigparentfail" Translation="Trigger '{0}' doesn't pass parent folder '{1}' filter(s): {2}" />
