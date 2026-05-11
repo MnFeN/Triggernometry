@@ -5,5 +5,5 @@
 /Translations/olddefault.triglations.xml
 /.vs
 /Source/Triggernometry/PluginBridges/BridgeNamazu/Modules/ExecuteCommandModule.cs
-/Source/TriggernometryScripts/UserScripts/*
-!/Source/TriggernometryScripting/UserScripts/.keep
+/Source/TriggernometryScripts/UserScript/*
+!/Source/TriggernometryScripts/UserScript/.keep
