@@ -267,6 +267,7 @@ namespace Triggernometry.Core
                     var err = I18n.Translate("internal/Plugin/extpluginupdatefailed",
                         "Couldn't update plugin file from {0}: {1}", um.Url, ex.Message);
                     Instance.FilteredAddToLog(DebugLevelEnum.Error, err);
+                    return;
                 }
 
                 

@@ -59,8 +59,8 @@ namespace Triggernometry.Core
             string prevVersion = cfg.PluginVersion ?? "pre1.0.4.4";
             if (prevVersion != currentVersion)
             {
-                // Inform the user to view the update log on ACT startup.
-                // If the user has already been notified during the last startup (auto update), it will not show again. 
+                // Inform the user to view the changelog after a version change.
+                // If this version was already notified after an auto-update, do not show it again.
                 AskChangeLogOnStart(prevVersion, currentVersion);
 
                 BackupConfiguration(prevVersion, currentVersion);
