@@ -19,45 +19,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
         public IntPtr StaticVfxCreatePtr;
         public IntPtr StaticVfxRunPtr;
-        // public IntPtr StaticVfxRemovePtr;
         public IntPtr StaticVfxFadeOutPtr;
-
-        private static readonly Dictionary<IntPtr, ActorVfx> _actorVfxs = new Dictionary<IntPtr, ActorVfx>();
-        private static readonly Dictionary<IntPtr, StaticVfx> _staticVfxs = new Dictionary<IntPtr, StaticVfx>();
-
-        public static IReadOnlyDictionary<IntPtr, ActorVfx> ActorVfxs
-        { 
-            get
-            {
-                lock (_actorVfxs)
-                {
-                    return new Dictionary<IntPtr, ActorVfx>(_actorVfxs);
-                }
-            }
-        }
-
-        public static IReadOnlyDictionary<IntPtr, StaticVfx> StaticVfxs
-        {
-            get
-            {
-                lock (_staticVfxs)
-                {
-                    return new Dictionary<IntPtr, StaticVfx>(_staticVfxs);
-                }
-            }
-        }
-
-        public static void ClearVfxCache()
-        {
-            _actorVfxs.Clear();
-            _staticVfxs.Clear();
-        }
 
         public VfxModule()
         {
             ScanMethod = () =>
             {
-                ClearVfxCache();
+                VfxManager.Clear();
+
                 // 40 53 55 56 57 48 81 EC 08 02 00 00 0F 29 B4 24 F0 01 00 00 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 E0 01 00 00 0F B6 ??
                 ActorVfxCreatePtr = Scanner.TryScan(
                     "E8 * * * * 48 8B D8 48 85 C0 74 ?? 0F B6 57 ?? 48 8B C8 C0 EA 02 80 E2 01", nameof(ActorVfxCreatePtr));
@@ -82,18 +51,6 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     "0F 28 CA E8 * * * * 80 A3", // 某个传参时间非 0 的 xref
                     "83 89 ? ? ? ? ? F3 0F 11 89",
                 }, nameof(StaticVfxFadeOutPtr));
-                /*
-                // 40 53 48 81 EC D0 01 00 00 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 C0 01 00 00 80 A1 88 00 00 00 FB 48 8B D9 80 A1 89 ?? ?? ?? ??
-                try
-                {
-                    StaticVfxRemovePtr = Scanner.ScanText(
-                        "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 28 33 D2 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9");
-                }
-                catch  // 这个函数没有相对寻址的 xref，用前一个函数定位，相隔 0xB0
-                {
-                    StaticVfxRemovePtr = Scanner.ScanText("E8 * * * * F7 05 ? ? ? ? ? ? ? ? 74 ? 48 8B 05", nameof(StaticVfxRemovePtr)) + 0xB0;
-                }
-                */
             };
         }
 
@@ -187,10 +144,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             };
             if (!scheduleRemovalByGame) // 临时应对方式，暂时未能检测 LockOn 是否已经被移除，所以不主动注册
             {
-                lock (_actorVfxs)
-                {
-                    _actorVfxs[vfxPtr] = vfx;
-                }
+                VfxManager.Register(vfx);
             }
             Custom2Log($"[ActorVfxCreate] {fullPath} @ {(long)vfxPtr:X}");
             return vfx;
@@ -199,29 +153,25 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         public bool TryActorVfxRemove(IntPtr vfxPtr, bool scheduleRemovalByGame = false) // 待优化：判断是否存在 vfx
         {
             CheckIfAnyZeroPtr(ActorVfxRemovePtr);
-            ActorVfx vfx = null;
-            lock (_actorVfxs)
+
+            var found = VfxManager.TryUnregisterActor(vfxPtr, out var vfx);
+
+            if (!found && !scheduleRemovalByGame)
             {
-                if (!scheduleRemovalByGame && !_actorVfxs.TryGetValue(vfxPtr, out vfx))
-                {
-                    Custom2Log($"[ActorVfx] 移除特效：（已移除）@{(long)vfxPtr:X}");
-                    return false;
-                }
-                else
-                {
-                    try
-                    {
-                        if (vfx != null) vfx.Removed = true;
-                        Plugin.Call(ActorVfxRemovePtr, vfxPtr, (byte)1); // a2: bool freeMemory
-                    }
-                    finally
-                    {
-                        _actorVfxs.Remove(vfxPtr);
-                        Custom2Log($"[ActorVfx] 移除特效：{vfx?.Path ?? "unknown"} @ {(long)vfxPtr:X}");
-                    }
-                    return true;
-                }
+                Custom2Log($"[ActorVfx] 移除特效：（已移除）@{(long)vfxPtr:X}");
+                return false;
             }
+
+            try
+            {
+                Plugin.Call(ActorVfxRemovePtr, vfxPtr, (byte)1); // a2: bool freeMemory
+            }
+            finally
+            {
+                Custom2Log($"[ActorVfx] 移除特效：{vfx?.Path ?? "unknown"} @ {(long)vfxPtr:X}");
+            }
+
+            return true;
         }
 
         public void ScheduleActorVfxRemove(IntPtr vfxPtr, double duration, bool scheduleRemovalByGame = false)
@@ -256,8 +206,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var scales = new Vector3(scaleX, rawScaleY ?? scaleX, rawScaleZ ?? scaleX);
             var color = new Vector4(r, g, b, a);
 
-            var vfx = StaticVfxCreate(vfxPath);
-            vfx.Run();
+            var vfx = VfxManager.InitStatic(vfxPath, Vfx.Vfx.DefaultTag);
 
             vfx.Pos = pos;
             vfx.Angle = h;
@@ -268,26 +217,18 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             vfx.ScheduleRemove(t);
         }
 
-        public StaticVfx StaticVfxCreate(string fullPath, string tag = Vfx.Vfx.DefaultTag)
+        public IntPtr StaticVfxCreate(string fullPath)
         {
             CheckIfAnyZeroPtr(StaticVfxCreatePtr, StaticVfxRunPtr, StaticVfxFadeOutPtr);
             CheckIfVfxPathValid(fullPath);
+
             const string pool = "Client.System.Scheduler.Instance.VfxObject";
-            var vfxPtr = Memory.WithAllocatedString2(fullPath, pool, Encoding.UTF8, 
+            var vfxPtr = Memory.WithAllocatedString2(fullPath, pool, Encoding.UTF8,
                 (fullPathPtr, poolPtr) => Plugin.Call<IntPtr>(StaticVfxCreatePtr, fullPathPtr, poolPtr)
             );
-            var vfx = new StaticVfx()
-            {
-                Ptr = vfxPtr,
-                Path = fullPath,
-                Tag = tag
-            };
-            lock (_staticVfxs)
-            {
-                _staticVfxs[vfxPtr] = vfx;
-            }
+
             Custom2Log($"[StaticVfxCreate] {fullPath} @ {(long)vfxPtr:X}");
-            return vfx;
+            return vfxPtr;
         }
 
         public void StaticVfxRun(IntPtr vfxPtr)
@@ -303,24 +244,16 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckIfAnyZeroPtr(StaticVfxFadeOutPtr);
             _ = Plugin.Call<IntPtr>(StaticVfxFadeOutPtr, vfxPtr, fadeFrames60);
-            // _ = Plugin.Call<IntPtr>(StaticVfxRemovePtr, vfxPtr);
         }
 
         public bool TryStaticVfxRemove(IntPtr vfxPtr)
         {
             CheckIfAnyZeroPtr(StaticVfxFadeOutPtr);
 
-            StaticVfx vfx;
-            lock (_staticVfxs)
+            if (!VfxManager.TryUnregisterStatic(vfxPtr, out var vfx))
             {
-                if (!_staticVfxs.TryGetValue(vfxPtr, out vfx))
-                {
-                    Custom2Log($"[StaticVfx] 移除特效：（已移除）@{(long)vfxPtr:X}");
-                    return false;
-                }
-
-                vfx.Removed = true;
-                _staticVfxs.Remove(vfxPtr);
+                Custom2Log($"[StaticVfx] 移除特效：（已移除）@{(long)vfxPtr:X}");
+                return false;
             }
 
             StaticVfxFadeout(vfxPtr, 10f);

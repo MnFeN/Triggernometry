@@ -192,8 +192,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             string tag = ParseTag(data);
             // 创建并运行
-            var vfx = StaticVfx.Create(vfxPath, tag);
-            vfx.Run();
+            var vfx = VfxManager.InitStatic(vfxPath, tag);
 
             // 设置 vfx 参数并更新
             var modifiers = ParseStaticVfxModifiers(data, true);
@@ -203,16 +202,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             }
 
             // 如果提供了时间参数，则安排移除
-            _ = data.TryGet(out string rawTime, "Time", "t");
-            if (rawTime != null)
+            if (data.TryGet(out string rawTime, "Time", "t"))
             {
-                vfx.ScheduleRemove(rawTime.ParseData<double>());
+                var duration = rawTime.ParseData<double>();
+                vfx.ScheduleRemove(duration);
             }
             // 额外的修饰（目前用于延迟执行额外操作）
-            if (createModifier != null)
-            {
-                createModifier(vfx);
-            }
+            createModifier?.Invoke(vfx);
             return vfx;
         }
 
@@ -243,8 +239,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             // 对每个剖分出的等腰三角形创建 vfx
             foreach (var tri in isoscelesTriangles)
             {
-                var vfx = StaticVfx.Create(vfxPath, tag);
-                vfx.Run();
+                var vfx = VfxManager.InitStatic(vfxPath, tag);
                 vfxs[vfx] = tri;
             }
             foreach (var pair in vfxs)

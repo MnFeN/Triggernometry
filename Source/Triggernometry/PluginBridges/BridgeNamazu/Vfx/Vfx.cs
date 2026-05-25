@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Threading;
-using System.Threading.Tasks;
 using Triggernometry.PluginBridges.BridgeNamazu.Modules;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
@@ -14,109 +12,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         public string Path { get; set; }
         public string Tag { get; set; }
         public bool Removed { get; set; } = false;
+        public DateTime? ExpireAtUtc { get; internal set; }
 
         public const string DefaultTag = "Auto";
-        public static VfxModule Module => BridgeNamazu.GetModule<VfxModule>();
         public static GreyMagicExternalProcessMemory Memory => BridgeNamazu.NamazuPlugin.Memory;
         public abstract bool TryRemove();
 
-        private static readonly object RemoveQueueLock = new object();
-        private static readonly Queue<Vfx> RemoveQueue = new Queue<Vfx>();
-        private static readonly AutoResetEvent RemoveQueueEvent = new AutoResetEvent(false);
-        private static bool RemoveWorkerStarted;
-
-        private static void EnsureRemoveWorkerStarted()
-        {
-            lock (RemoveQueueLock)
-            {
-                if (RemoveWorkerStarted)
-                    return;
-
-                RemoveWorkerStarted = true;
-
-                var thread = new Thread(RemoveWorkerLoop)
-                {
-                    IsBackground = true,
-                    Name = "PNE VFX Remove Worker"
-                };
-
-                thread.Start();
-            }
-        }
-
-        private static void EnqueueRemove(Vfx vfx)
-        {
-            if (vfx == null || vfx.Ptr == IntPtr.Zero)
-                return;
-
-            EnsureRemoveWorkerStarted();
-
-            lock (RemoveQueueLock)
-            {
-                RemoveQueue.Enqueue(vfx);
-            }
-
-            RemoveQueueEvent.Set();
-        }
-
-        private static void RemoveWorkerLoop()
-        {
-            while (true)
-            {
-                RemoveQueueEvent.WaitOne();
-
-                List<Vfx> batch;
-                lock (RemoveQueueLock)
-                {
-                    batch = RemoveQueue.ToList();
-                    RemoveQueue.Clear();
-                }
-
-                if (batch.Count == 0)
-                    continue;
-
-                try
-                {
-                    foreach (var vfx in batch)
-                    {
-                        try
-                        {
-                            vfx.TryRemove();
-                        }
-                        catch (Exception ex)
-                        {
-                            Module.ErrorLog($"[PictoACT] 延迟移除时出错：\n{ex}");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Module.ErrorLog($"[PictoACT] 批量延迟移除时出错：\n{ex}");
-                }
-            }
-        }
-
-
         public void ScheduleRemove(double duration)
-        {
-            if (duration > 0 && Ptr != IntPtr.Zero)
-            {
-                _ = RemoveAfterDelay(duration);
-            }
-        }
-
-        private async Task RemoveAfterDelay(double duration)
-        {
-            try
-            {
-                await Task.Delay(TimeSpan.FromSeconds(duration)).ConfigureAwait(false);
-                EnqueueRemove(this);
-            }
-            catch (Exception ex)
-            {
-                Module.ErrorLog($"[PictoACT] 延迟移除入队时出错：\n{ex}");
-            }
-        }
+            => VfxManager.ScheduleRemove(this, duration);
 
         public void Update()
         { 
