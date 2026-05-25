@@ -195,6 +195,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             return cfg;
         }
 
+
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]

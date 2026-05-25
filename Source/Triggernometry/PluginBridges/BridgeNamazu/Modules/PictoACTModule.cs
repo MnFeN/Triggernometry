@@ -196,9 +196,6 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             vfx.Run();
 
             // 设置 vfx 参数并更新
-
-            // to-do：这里才设置初始几何参数，如果在创建和设置之间有其他动作异步 Modify 时调用初始参数就会出问题
-            // vfx 加一个 ready 参数？
             var modifiers = ParseStaticVfxModifiers(data, true);
             foreach (var mod in modifiers)
             {
@@ -451,9 +448,9 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             
             // 执行移除
             if (isActor && GetConfig<bool>("ActorVfx") != false)
-                ActorVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => Memory.ExecuteWithLock(() => vfx.TryRemove()));
+                ActorVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => vfx.TryRemove());
             if (isStatic && GetConfig<bool>("StaticVfx") != false)
-                StaticVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => Memory.ExecuteWithLock(() => vfx.TryRemove()));
+                StaticVfx.Storage.Values.Where(vfx => filter(vfx.Tag)).ToList().ForEach(vfx => vfx.TryRemove());
         }
 
         private void ParseTypeAndPath(MultiLineRawArgs data, out VfxType vfxType, out string vfxPath, out bool isActor)

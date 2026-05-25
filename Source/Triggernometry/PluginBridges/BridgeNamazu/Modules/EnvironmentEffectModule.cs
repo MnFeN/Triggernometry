@@ -93,23 +93,21 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     continue;
                 }
             }
-            Memory.ExecuteWithLock(() => {
-                foreach (var (index, unknownFlag, flag) in args)
+            foreach (var (index, unknownFlag, flag) in args)
+            {
+                if (!unknownFlag.HasValue)
                 {
-                    if (!unknownFlag.HasValue)
-                    {
-                        NamazuLog($"[MapEffect] index = {index}, flag = {flag} ({flag:X4}????:{index:X2})");
-                        MapEffect(index, flag);
-                    }
-                    else
-                    {
-                        NamazuLog($"[MapEffect] index = {index}, flag = {flag} ({flag:X4}{unknownFlag:X4}:{index:X2})");
-#pragma warning disable CS0618 // 使用弃用方法的警告
-                        MapEffectOld(index, unknownFlag.Value, flag);
-#pragma warning restore CS0618
-                    }
+                    NamazuLog($"[MapEffect] index = {index}, flag = {flag} ({flag:X4}????:{index:X2})");
+                    MapEffect(index, flag);
                 }
-            });
+                else
+                {
+                    NamazuLog($"[MapEffect] index = {index}, flag = {flag} ({flag:X4}{unknownFlag:X4}:{index:X2})");
+#pragma warning disable CS0618 // 使用弃用方法的警告
+                    MapEffectOld(index, unknownFlag.Value, flag);
+#pragma warning restore CS0618
+                }
+            }
         }
 
         /// <summary> MapEffect 底层函数。 </summary>
@@ -120,7 +118,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var contentDirectorPtr = ContentDirectorPtr;
             if (contentDirectorPtr != IntPtr.Zero)
             {
-                bool success = Memory.CallInjected64<bool>(MapEffectFunctionPtr, contentDirectorPtr, index, flag);
+                bool success = Plugin.Call<bool>(MapEffectFunctionPtr, contentDirectorPtr, index, flag);
                 if (!success)
                 {
                     WarningLog($"[鲶鱼精邮差扩展] 当前地图 {BridgeFFXIV.ZoneID} 中 MapEffect ({index}, {flag}) 调用失败。");
@@ -143,7 +141,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var contentDirectorPtr = ContentDirectorPtr;
             if (contentDirectorPtr != IntPtr.Zero)
             {
-                Memory.CallInjected64<IntPtr>(MapEffectOldFunctionPtr, contentDirectorPtr, index, unknownFlag, flag);
+                Plugin.Call<IntPtr>(MapEffectOldFunctionPtr, contentDirectorPtr, index, unknownFlag, flag);
             }
             else
             {
@@ -157,7 +155,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var weatherId = command.ParseData<byte>();
             CheckBeforeExecution(command);
             NamazuLog($"[ChangeWeather] {weatherId}");
-            Memory.ExecuteWithLock(() => ChangeWeather(weatherId));
+            ChangeWeather(weatherId);
         }
 
         // FFXIVClientStructs/FFXIV/Client/Graphics/Environment/EnvManager.cs

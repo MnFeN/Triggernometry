@@ -43,29 +43,29 @@ public class LocalEntityModule : ModuleBase
 
     public int CreateBattleCharacter(int index = -1, byte param = 0)
     {
-        return Memory.CallInjected64<int>(CreateBattleCharacterFuncPtr, ClientObjectManagerPtr, index, param);
+        return Plugin.Call<int>(CreateBattleCharacterFuncPtr, ClientObjectManagerPtr, index, param);
     }
 
     public IntPtr GetObjectByIndex(int idx)
     {
-        return Memory.CallInjected64<IntPtr>(GetObjectByIndexFuncPtr, ClientObjectManagerPtr, (ushort)idx);
+        return Plugin.Call<IntPtr>(GetObjectByIndexFuncPtr, ClientObjectManagerPtr, (ushort)idx);
     }
 
     public IntPtr DeleteObjectByIndex(int idx, byte param)
     {
-        return Memory.CallInjected64<IntPtr>(DeleteObjectByIndexFuncPtr, ClientObjectManagerPtr, (ushort)idx, param);
+        return Plugin.Call<IntPtr>(DeleteObjectByIndexFuncPtr, ClientObjectManagerPtr, (ushort)idx, param);
     }
 
     public IntPtr CopyFromCharacter(IntPtr targetPtr, IntPtr sourcePtr, CopyFlags flags)
     {
         var characterSetupContainerPtr = targetPtr + CharacterSetupContainerOffset();
-        return Memory.CallInjected64<IntPtr>(CopyFromCharacterFuncPtr, characterSetupContainerPtr, sourcePtr, (uint)flags);
+        return Plugin.Call<IntPtr>(CopyFromCharacterFuncPtr, characterSetupContainerPtr, sourcePtr, (uint)flags);
     }
 
     public void SetupBNpc(IntPtr targetPtr, uint bNpcBaseId, uint bNpcNameId = 0)
     {
         var characterSetupContainerPtr = targetPtr + CharacterSetupContainerOffset();
-        Memory.CallInjected64(SetupBNpcFuncPtr, characterSetupContainerPtr, bNpcBaseId, bNpcNameId);
+        Plugin.Call(SetupBNpcFuncPtr, characterSetupContainerPtr, bNpcBaseId, bNpcNameId);
     }
 
     public IntPtr CreateLocalEntity(Vector3 pos, float heading = 0)

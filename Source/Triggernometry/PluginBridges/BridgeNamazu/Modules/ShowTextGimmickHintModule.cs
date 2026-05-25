@@ -49,18 +49,18 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             int timeIn100Ms = Math.Max(0, (int)(MathParser.Parse(rawTime) * 10));
             NamazuLog((isHint ? "[Hint]" : "[Warn]") + $": ({timeIn100Ms / 10.0:F1} s) {text}");
 
-            Memory.ExecuteWithLock(() => ShowTextGimmickHint(isHint, text, timeIn100Ms));
+            ShowTextGimmickHint(isHint, text, timeIn100Ms);
         }
 
         public void ShowTextGimmickHint(bool isHint, string text, int timeIn100Ms)
         {
             CheckIfAnyZeroPtr(FrameworkPtrPtr, GetUiModulePtr, ShowTextGimmickHintPtr);
             var frameworkPtr = Memory.Read<IntPtr>(FrameworkPtrPtr);
-            var uiModulePtr = Memory.CallInjected64<IntPtr>(GetUiModulePtr, frameworkPtr);
-            var raptureAtkModulePtr = Memory.CallVirtualFunction<IntPtr>(uiModulePtr, 7);
+            var uiModulePtr = Plugin.Call<IntPtr>(GetUiModulePtr, frameworkPtr);
+            var raptureAtkModulePtr = Plugin.CallVirtualFunction<IntPtr>(uiModulePtr, 7);
             Memory.WithAllocatedString(text, Encoding.UTF8, stringPtr => 
             {
-                Memory.CallInjected64(ShowTextGimmickHintPtr, raptureAtkModulePtr, stringPtr, isHint ? 1 : 0, timeIn100Ms);
+                Plugin.Call(ShowTextGimmickHintPtr, raptureAtkModulePtr, stringPtr, isHint ? 1 : 0, timeIn100Ms);
             });
         }
     }

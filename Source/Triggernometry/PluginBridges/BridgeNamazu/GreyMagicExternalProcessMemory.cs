@@ -56,18 +56,23 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
         public void EnableCache() => _externalMem.EnableCache();
 
         // Injected calls
+        [Obsolete]
         public T CallInjected64<T>(IntPtr address, params object[] args) where T : struct
             => WrapInjectedCall(() => (T)_externalMem.CallInjected64<T>(address, args));
 
+        [Obsolete]
         public void CallInjected64(IntPtr address, params object[] args)
             => _ = CallInjected64<IntPtr>(address, args);
 
+        [Obsolete]
         public T CallInjected64ROP<T>(IntPtr address, params object[] args) where T : struct
             => WrapInjectedCall(() => (T)_externalMem.CallInjected64ROP<T>(address, args));
 
+        [Obsolete]
         public void CallInjected64ROP(IntPtr address, params object[] args)
             => _ = CallInjected64ROP<IntPtr>(address, args);
 
+        [Obsolete]
         private T WrapInjectedCall<T>(Func<T> func)
         {
             try
@@ -82,46 +87,6 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
 
         public void ClearCallCache()
             => _externalMem.ClearCallCache();
-
-        public void CallVirtualFunction(IntPtr objAddress, int vFuncIndex, params object[] args)
-            => CallVirtualFunction<IntPtr>(objAddress, vFuncIndex, args);
-
-        public T CallVirtualFunction<T>(IntPtr objAddress, int vFuncIndex, params object[] args) where T : struct
-        {
-            IntPtr vTablePtr = Read<IntPtr>(objAddress);
-            IntPtr vFuncPtr = Read<IntPtr>(vTablePtr + 8 * vFuncIndex);
-            return CallInjected64<T>(vFuncPtr, new object[] { objAddress }.Concat(args).ToArray());
-        }
-
-        public void ExecuteWithLock(System.Action action)
-        {
-            bool lockTaken = false;
-            object assmLock = _externalMem.Executor.AssemblyLock;
-            try
-            {
-                Monitor.Enter(assmLock, ref lockTaken);
-                action();
-            }
-            finally
-            {
-                if (lockTaken) Monitor.Exit(assmLock);
-            }
-        }
-
-        public T ExecuteWithLock<T>(Func<T> function)
-        {
-            bool lockTaken = false;
-            object assmLock = _externalMem.Executor.AssemblyLock;
-            try
-            {
-                Monitor.Enter(assmLock, ref lockTaken);
-                return function();
-            }
-            finally
-            {
-                if (lockTaken) Monitor.Exit(assmLock);
-            }
-        }
 
         public void WithAllocatedString(string text, Encoding encoding, Action<IntPtr> action)
         {

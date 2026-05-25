@@ -150,7 +150,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, x, y, z) = cmd.ParseArgs<IntPtr, float, float, float>();
-            Memory.ExecuteWithLock(() => SetDefaultPos(objectPtr, x, y, z));
+            SetDefaultPos(objectPtr, x, y, z);
         }
 
         [CallbackMethod("SetPos", tag: "Kairos")]
@@ -158,7 +158,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, x, y, z) = cmd.ParseArgs<IntPtr, float, float, float>();
-            Memory.ExecuteWithLock(() => SetPos(objectPtr, x, y, z));
+            SetPos(objectPtr, x, y, z);
         }
 
         [CallbackMethod("SetModelRelPos")]
@@ -166,7 +166,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, dx, dy, dz) = cmd.ParseArgs<IntPtr, float, float, float>();
-            Memory.ExecuteWithLock(() => SetModelRelPos(objectPtr, dx, dy, dz));
+            SetModelRelPos(objectPtr, dx, dy, dz);
         }
 
         [CallbackMethod("Teleport", tag: "Kairos")]
@@ -175,7 +175,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckBeforeExecution(cmd);
             var objectPtr = Triggernometry.FFXIV.Entity.GetMyself().Address;
             var (x, y, z) = cmd.ParseArgs<float, float, float>();
-            Memory.ExecuteWithLock(() => SetPos(objectPtr, x, y, z));
+            SetPos(objectPtr, x, y, z);
         }
 
         [CallbackMethod("SetDefaultHeading")]
@@ -183,7 +183,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, heading) = cmd.ParseArgs<IntPtr, float>();
-            Memory.ExecuteWithLock(() => SetDefaultHeading(objectPtr, heading));
+            SetDefaultHeading(objectPtr, heading);
         }
 
         [CallbackMethod("SetHeading")]
@@ -191,7 +191,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, heading) = cmd.ParseArgs<IntPtr, float>();
-            Memory.ExecuteWithLock(() => SetHeading(objectPtr, heading));
+            SetHeading(objectPtr, heading);
         }
 
         [CallbackMethod("Target")]
@@ -217,7 +217,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, modelStatus) = cmd.ParseArgs<IntPtr, int>();
-            Memory.ExecuteWithLock(() => SetModelStatus(objectPtr, modelStatus));
+            SetModelStatus(objectPtr, modelStatus);
         }
 
         // 新方法 直接修改实体参数并重绘
@@ -227,7 +227,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("ObjectScale") == false) return; // ignored
             var (objectPtr, scale) = cmd.ParseArgs<IntPtr, float>();
-            Memory.ExecuteWithLock(() => SetObjectScale(objectPtr, scale));
+            SetObjectScale(objectPtr, scale);
         }
 
         // 旧方法 临时修改已经绘制生成的实体模型
@@ -237,7 +237,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("ObjectScale") == false) return; // ignored
             var (objectPtr, scaleX, scaleY, scaleZ) = cmd.ParseArgs<IntPtr, float, float?, float?>((2, null), (3, null));
-            Memory.ExecuteWithLock(() => SetObjectScaleTemp(objectPtr, scaleX, scaleY ?? scaleX, scaleZ ?? scaleX));
+            SetObjectScaleTemp(objectPtr, scaleX, scaleY ?? scaleX, scaleZ ?? scaleX);
         }
 
         [CallbackMethod("SetOpacity")]
@@ -246,7 +246,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckBeforeExecution(cmd);
             if (GetConfig<bool>("Opacity") == false) return; // ignored
             var (objectPtr, opacity) = cmd.ParseArgs<IntPtr, float>();
-            Memory.ExecuteWithLock(() => SetOpacity(objectPtr, opacity));
+            SetOpacity(objectPtr, opacity);
         }
 
         [CallbackMethod("SetStatusLoopVfx")]
@@ -254,10 +254,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, vfxId) = cmd.ParseArgs<IntPtr, ushort>();
-            Memory.ExecuteWithLock(() => {
-                SetStatusLoopVfx(objectPtr, vfxId);
-                ReDraw(objectPtr);
-            });
+            SetStatusLoopVfx(objectPtr, vfxId);
+            ReDraw(objectPtr);
         }
 
         [CallbackMethod("Redraw")]
@@ -265,7 +263,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var objectPtr = cmd.ParseData<IntPtr>();
-            Memory.ExecuteWithLock(() => ReDraw(objectPtr));
+            ReDraw(objectPtr);
         }
 
         [CallbackMethod("SetHighlightColor")]
@@ -273,7 +271,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, color) = cmd.ParseArgs<IntPtr, byte>();
-            Memory.ExecuteWithLock(() => SetHighlightColor(objectPtr, color));
+            SetHighlightColor(objectPtr, color);
         }
 
         [CallbackMethod("RemoveStatus")]
@@ -281,7 +279,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, statusId) = cmd.ParseArgs<IntPtr, ushort>();
-            Memory.ExecuteWithLock(() => RemoveStatus(objectPtr, statusId));
+            RemoveStatus(objectPtr, statusId);
         }
 
         [CallbackMethod("EObjAnimation")]
@@ -289,7 +287,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, animationId, slotMask, context) = cmd.ParseArgs<IntPtr, ushort, ushort, long>((3, 0L));
-            Memory.ExecuteWithLock(() => EObjAnimation(objectPtr, animationId, slotMask, context));
+            EObjAnimation(objectPtr, animationId, slotMask, context);
         }
 
         [CallbackMethod("PlayActionTimeline")]
@@ -297,7 +295,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var (objectPtr, timelineId, a3, a4) = cmd.ParseArgs<IntPtr, ushort, long, bool>((2, 0L), (3, false));
-            Memory.ExecuteWithLock(() => PlayActionTimeline(objectPtr, timelineId, a3, a4));
+            PlayActionTimeline(objectPtr, timelineId, a3, a4);
         }
 
         public void SetPos(IntPtr objectPtr, float x, float y, float z)
@@ -424,7 +422,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             if ((long)entityAddress < 0xFFFF)
                 throw new Exception($"[鲶鱼精邮差扩展] 传入实体虚函数 {vFuncIndex} 的地址 {entityAddress} 无效。");
-            return Memory.CallVirtualFunction<T>(entityAddress, vFuncIndex, args);
+            return Plugin.CallVirtualFunction<T>(entityAddress, vFuncIndex, args);
         }
 
         public void CallEntityVirtualFunction(IntPtr entityAddress, int vFuncIndex, params object[] args)
@@ -440,12 +438,12 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             {
                 throw new Exception($"StatusManagerPtr is null for entity at {(long)objectPtr:X}");
             }
-            int statusIndex = Memory.CallInjected64<int>(GetStatusIndexPtr, statusManagerPtr, statusId, 0xE0000000);
+            int statusIndex = Plugin.Call<int>(GetStatusIndexPtr, statusManagerPtr, statusId, 0xE0000000);
             if (statusIndex < 0)
             {
                 return;
             }
-            Memory.CallInjected64(RemoveStatusPtr, statusManagerPtr, statusIndex, 0);
+            Plugin.Call(RemoveStatusPtr, statusManagerPtr, statusIndex, 0);
         }
 
         public void EObjAnimation(IntPtr objectPtr, ushort animationId, ushort slotMask, long context = 0)
@@ -463,7 +461,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             {
                 throw new Exception($"[EObjAnimation] 指定实体 \"{obj.Name}\" ({obj.ID:X8}) @ {(long)objectPtr:X} 类型 {obj.Type} 不是 EventObject");
             }
-            _ = Memory.CallInjected64<IntPtr>(EObjAnimationPtr, objectPtr, animationId, slotMask, context);
+            _ = Plugin.Call<IntPtr>(EObjAnimationPtr, objectPtr, animationId, slotMask, context);
         }
 
         public bool PlayActionTimeline(IntPtr objectPtr, ushort timelineId, long a3 = 0, bool a4 = false)
@@ -475,7 +473,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
             var timelineContainerPtr = objectPtr + TimelineContainerOffset;
             var byte_a4 = a4 ? (byte)1 : (byte)0;
-            return Memory.CallInjected64<bool>(PlayActionTimelinePtr, timelineContainerPtr, timelineId, a3, byte_a4);
+            return Plugin.Call<bool>(PlayActionTimelinePtr, timelineContainerPtr, timelineId, a3, byte_a4);
         }
 
         public bool CheckIfValidEntityPtr(IntPtr objectPtr, string funcName)

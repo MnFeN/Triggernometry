@@ -21,13 +21,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         {
             CheckBeforeExecution(cmd);
             var shouldForceQuit = cmd.ParseDataOrDefault(false);
-            Memory.ExecuteWithLock(() => QuitInstance(shouldForceQuit));
+            QuitInstance(shouldForceQuit);
         }
 
         public void QuitInstance(bool shouldForceQuit)
         {
             CheckIfAnyZeroPtr(QuitInstancePtr);
-            Memory.CallInjected64(QuitInstancePtr, shouldForceQuit ? 1 : 0);
+            Plugin.Call(QuitInstancePtr, shouldForceQuit ? 1 : 0);
         }
     }
 }

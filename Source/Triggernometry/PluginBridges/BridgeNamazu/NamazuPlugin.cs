@@ -158,5 +158,45 @@ namespace Triggernometry.PluginBridges.BridgeNamazu
         public bool IsTC => FFXIV.GameLanguage.Language == FFXIV.GameLanguageEnum.TCN;
         public IntPtr FrameworkPtr => _plugin.FrameworkPtr;
 
+        public void ExecuteInFrameLock(Action action)
+        {
+            _plugin.ExecuteInFrameLock(action);
+        }
+
+        public T ExecuteInFrameLock<T>(Func<T> func)
+        {
+            return _plugin.ExecuteInFrameLock<T>(func);
+        }
+
+        public void Call(IntPtr ptr, params object[] args)
+        {
+            _plugin.Call(ptr, args);
+        }
+
+        public T Call<T>(IntPtr ptr, params object[] args) where T : struct
+        {
+            return _plugin.Call<T>(ptr, args);
+        }
+
+        public void DirectCall(IntPtr ptr, params object[] args)
+        {
+            _plugin.DirectCall(ptr, args);
+        }
+
+        public T DirectCall<T>(IntPtr ptr, params object[] args) where T : struct
+        {
+            return _plugin.DirectCall<T>(ptr, args);
+        }
+
+        public void CallVirtualFunction(IntPtr objAddress, int vFuncIndex, params object[] args)
+            => CallVirtualFunction<IntPtr>(objAddress, vFuncIndex, args);
+
+        public T CallVirtualFunction<T>(IntPtr objAddress, int vFuncIndex, params object[] args) where T : struct
+        {
+            IntPtr vTablePtr = Memory.Read<IntPtr>(objAddress);
+            IntPtr vFuncPtr = Memory.Read<IntPtr>(vTablePtr + 8 * vFuncIndex);
+            return Call<T>(vFuncPtr, new object[] { objAddress }.Concat(args).ToArray());
+        }
+
     }
 }

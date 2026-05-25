@@ -43,7 +43,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     (2, 0xE0000000),
                     (3, UseActionMode.None)
                 );
-            Memory.ExecuteWithLock(() => UseAction(actionType, actionId, targetId, mode));
+            UseAction(actionType, actionId, targetId, mode);
         }
 
         public bool UseAction(ActionType actionType, uint actionId, uint targetId, UseActionMode mode = UseActionMode.None)
@@ -51,7 +51,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckIfAnyZeroPtr(UseActionPtr, ActionManagerPtr);
             uint extraParam = (uint)(actionType == ActionType.Item ? 0xFFFF : 0);
             uint comboRouteID = 0;
-            var result = Memory.CallInjected64<bool>(UseActionPtr, ActionManagerPtr, (int)actionType, actionId, targetId, extraParam, (int)mode, comboRouteID, 0);
+            var result = Plugin.Call<bool>(UseActionPtr, ActionManagerPtr, (int)actionType, actionId, targetId, extraParam, (int)mode, comboRouteID, 0);
             if (result)
             {
                 NamazuLog($"[UseAction] {actionType} ({(int)actionType}), action = {actionId} (0x{actionId:X}), target = {targetId:X}, mode = {mode} ({(int)mode})");
@@ -69,7 +69,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                     (2, 0), (3, 0), (4, 0),
                     (5, 0)
                 );
-            Memory.ExecuteWithLock(() => UseActionLocation(actionType, actionId, x, y, z, extraParam));
+            UseActionLocation(actionType, actionId, x, y, z, extraParam);
         }
 
         public bool UseActionLocation(ActionType actionType, uint actionId, float x, float y, float z, uint extraParam = 0)
@@ -82,7 +82,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             {
                 posPtr = Memory.AllocateMemory(0x10);
                 Memory.Write(posPtr, new Vector3(x, z, y));
-                result = Memory.CallInjected64<bool>(UseActionLocationPtr, ActionManagerPtr, 
+                result = Plugin.Call<bool>(UseActionLocationPtr, ActionManagerPtr, 
                     (byte)actionType, actionId, targetId, posPtr, extraParam, /*unknown bool*/(byte)0);
             }
             finally
@@ -108,7 +108,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             try
             {
                 resultPtr = Memory.AllocateMemory(0x20);
-                Memory.CallInjected64<long>(MouseToWorldPtr, ActionManagerPtr, actionId, (byte)actionType, resultPtr);
+                Plugin.Call<long>(MouseToWorldPtr, ActionManagerPtr, actionId, (byte)actionType, resultPtr);
                 // bool canUseAction = Memory.Read<bool>(resultPtr + 0x1); 似乎代表这个位置是否视线未遮挡
                 if (Memory.Read<bool>(resultPtr + 0x0)) // 代表确实指向了一个有效位置（一定距离内已加载的有碰撞的模型）
                 {
@@ -134,7 +134,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             try
             {
                 resultPtr = Memory.AllocateMemory(0x20);
-                Memory.CallInjected64<long>(MouseToWorldPtr, ActionManagerPtr, actionId, (byte)actionType, resultPtr);
+                Plugin.Call<long>(MouseToWorldPtr, ActionManagerPtr, actionId, (byte)actionType, resultPtr);
                 return Memory.Read<bool>(resultPtr + 0x1);
             }
             finally
