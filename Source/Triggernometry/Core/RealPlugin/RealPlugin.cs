@@ -298,9 +298,6 @@ namespace Triggernometry.Core
                 SetupDefaultSecurity();
                 AutofixConfiguration();
                 ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-                HandleVersionUpdate();
-                FixDuplicateFolderReferences(null, cfg, null);
-                PluginBridges.BridgeFFXIV.cfg = cfg;
                 // start
                 /*
                 if (cfg.Language != null)
@@ -310,6 +307,10 @@ namespace Triggernometry.Core
                 */
                 ChangeLanguage("简体中文 (zh-CN)");
                 // end
+                HandleVersionUpdate();
+                FixDuplicateFolderReferences(null, cfg, null);
+                PluginBridges.BridgeFFXIV.cfg = cfg;
+                
                 exwhere = I18n.Translate("internal/Plugin/iniactui", "setting up ACT ui");
                 mytp = pluginScreenSpace;
                 pluginScreenSpace.Text = "Triggernometry";

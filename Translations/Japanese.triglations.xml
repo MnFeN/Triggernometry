@@ -1777,6 +1777,7 @@
     <TranslationEntry Key="Plugin/UserInterface/btnRemoveTrigger" Translation="削除" />
     <TranslationEntry Key="Plugin/UserInterface/btnSaveConfig" Translation="現在の設定を保存する" />
     <TranslationEntry Key="Plugin/UserInterface/btnSearch" Translation="検索" />
+    <TranslationEntry Key="Plugin/UserInterface/btnShowChangeLog" Translation="Show Change Log" />
     <TranslationEntry Key="Plugin/UserInterface/btnTestInput" Translation="入力をテストする" />
     <TranslationEntry Key="Plugin/UserInterface/btnTryInterrupt" Translation="実行中のアクションに割り込む" />
     <TranslationEntry Key="Plugin/UserInterface/btnUpdate" Translation="更新" />

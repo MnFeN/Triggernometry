@@ -22,7 +22,7 @@ namespace Triggernometry.Core
         {
             FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/langchange", "Changing language from '{0}' to '{1}'",
                 I18n.CurrentLanguage != null ? I18n.CurrentLanguage.LanguageName : "(not set)",
-                langname != null ? langname : "(default)"
+                langname ?? "(default)"
             ));
             if (I18n.ChangeLanguage(langname) == true)
             {
@@ -45,7 +45,7 @@ namespace Triggernometry.Core
             {
                 FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/langchangefail", "Couldn't change language from '{0}' to '{1}'",
                     I18n.CurrentLanguage != null ? I18n.CurrentLanguage.LanguageName : "(not set)",
-                    langname != null ? langname : "(default)"
+                    langname ?? "(default)"
                 ));
             }
         }
