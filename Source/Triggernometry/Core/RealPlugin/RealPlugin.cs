@@ -12,6 +12,7 @@ using Triggernometry.Localization;
 using Triggernometry.Utilities;
 using Triggernometry.Core.Variables;
 using Triggernometry.PluginBridges.ExternalTools;
+using Triggernometry.PluginBridges.BridgeNamazu.Vfx;
 
 namespace Triggernometry.Core
 {
@@ -492,6 +493,7 @@ namespace Triggernometry.Core
                 ExitEvent.Dispose();
                 ExitEvent = null;
             }
+            VfxManager.Shutdown();
             _instance = null;
         }
 

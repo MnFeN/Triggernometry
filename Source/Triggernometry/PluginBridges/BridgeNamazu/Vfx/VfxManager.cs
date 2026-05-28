@@ -136,8 +136,10 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
 
         #region 延迟移除
 
-        private static readonly object RemoveWorkerLock = new object();
-        private static bool RemoveWorkerStarted;
+        private static Thread WorkerThread;
+        private static volatile bool WorkerStopping;
+        private static readonly object WorkerLock = new object();
+        private static bool WorkerStarted;
 
         public static void ScheduleRemove(Vfx vfx, double duration)
         {
@@ -186,6 +188,26 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
 
         private static void RemoveExpiredVfxs()
         {
+
+        public static void Shutdown()
+        {
+            WorkerStopping = true;
+
+            lock (DelayedActionLock)
+            {
+                DelayedActions.Clear();
+            }
+
+            lock (_actorVfxs)
+            {
+                _actorVfxs.Clear();
+            }
+
+            lock (_staticVfxs)
+            {
+                _staticVfxs.Clear();
+            }
+        }
             var now = DateTime.UtcNow;
 
             List<Vfx> expired = new List<Vfx>();
