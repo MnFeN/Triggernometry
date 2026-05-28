@@ -77,6 +77,13 @@ namespace Triggernometry.Expressions.String.Utils
             throw new ArgumentException($"无法将字符串 '{input}' 转换为 {targetType.Name} 类型。");
         }
 
+        public static bool TryParseData<T>(this string input, out T result)
+        {
+            var success = TryParseData(input, typeof(T), out var obj);
+            result = success ? (T)obj : default;
+            return success;
+        }
+
         public static bool TryParseData(string input, Type targetType, out object result)
         {
             result = null;
