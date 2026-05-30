@@ -65,6 +65,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                 (float)Z.Resolve(distance));
         }
 
+        public ScaleArg Duplicate() => new ScaleArg(X.Duplicate(), Y.Duplicate(), Z.Duplicate());
 
         private sealed class ScaleTerm
         {
@@ -110,6 +111,10 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             public double Resolve(double distance) => _hasDistanceToken
                 ? _replaceDistance(distance).ParseData<double>()
                 : _value;
+
+            public ScaleTerm Duplicate() => _hasDistanceToken
+                ? new ScaleTerm(_expression)
+                : new ScaleTerm(_value);
         }
     }
 
