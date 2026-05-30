@@ -36,7 +36,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         /// <summary> 实体模型（DrawObject*）相对于实体地址的偏移。</summary>
         public Func<int> ModelOffset = () => Plugin.IsTC ? 0xF0 : 0x100; // 7.2 / 7.3
         /// <summary> 实体 StatusLoopVfx ID 相对于实体地址的偏移。</summary>
-        public Func<int> StatusLoopVfxOffset = () => Plugin.IsTC ? 0x28 : 0x1C8; // 7.2 / 7.3
+        public Func<int> StatusLoopVfxOffset = () => Plugin.IsTC ? 0x1B8 : 0x1C8; // 7.2 / 7.3
         /// <summary> 实体透明度相对于实体地址的偏移。</summary>
         public Func<int> OpacityOffset = () => Plugin.IsTC ? 0x2258 : 0x22E8; // 7.4; 7.3 0x22D8 
         /// <summary> 实体 ModelStatus (RenderFlags) 相对于实体地址的偏移。</summary>
