@@ -46,7 +46,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             UseAction(actionType, actionId, targetId, mode);
         }
 
-        public bool UseAction(ActionType actionType, uint actionId, uint targetId, UseActionMode mode = UseActionMode.None)
+        public bool UseAction(ActionType actionType, uint actionId, HexOrDecId targetId, UseActionMode mode = UseActionMode.None)
         {
             CheckIfAnyZeroPtr(UseActionPtr, ActionManagerPtr);
             uint extraParam = (uint)(actionType == ActionType.Item ? 0xFFFF : 0);
@@ -54,7 +54,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var result = Plugin.Call<bool>(UseActionPtr, ActionManagerPtr, (int)actionType, actionId, targetId, extraParam, (int)mode, comboRouteID, 0);
             if (result)
             {
-                NamazuLog($"[UseAction] {actionType} ({(int)actionType}), action = {actionId} (0x{actionId:X}), target = {targetId:X}, mode = {mode} ({(int)mode})");
+                NamazuLog($"[UseAction] {actionType} ({(int)actionType}), action = {actionId} (0x{actionId:X}), target = {(uint)targetId:X}, mode = {mode} ({(int)mode})");
             }
             return result;
         }
