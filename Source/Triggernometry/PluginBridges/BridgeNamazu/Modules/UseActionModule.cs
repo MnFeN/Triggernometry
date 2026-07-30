@@ -38,15 +38,15 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
         internal void CbUseAction(string command)
         {
             CheckBeforeExecution(command);
-            var (actionType, actionId, targetId, mode)
-                = command.ParseArgs<ActionType, uint, uint, UseActionMode>(
+            (ActionType actionType, uint actionId, uint targetId, UseActionMode mode)
+                = command.ParseArgs<ActionType, uint, HexOrDecId, UseActionMode>(
                     (2, 0xE0000000),
                     (3, UseActionMode.None)
                 );
             UseAction(actionType, actionId, targetId, mode);
         }
 
-        public bool UseAction(ActionType actionType, uint actionId, HexOrDecId targetId, UseActionMode mode = UseActionMode.None)
+        public bool UseAction(ActionType actionType, uint actionId, uint targetId, UseActionMode mode = UseActionMode.None)
         {
             CheckIfAnyZeroPtr(UseActionPtr, ActionManagerPtr);
             uint extraParam = (uint)(actionType == ActionType.Item ? 0xFFFF : 0);
