@@ -102,6 +102,13 @@ namespace Triggernometry.FFXIV
 
         #endregion Basic Properties
 
+        /// <summary>
+        /// Get the memory offset of a field in the OverlayPlugin combatant structure. 
+        /// Useful for low-level memory access or debugging purposes.
+        /// </summary>
+        public static int? FieldOffset(string fieldName)
+            => ModuleCombatants.GetCombatantMemoryFieldOffset(fieldName);
+
         #region Get Entities
 
         public static IEnumerable<Entity> GetEntities(Func<Entity, bool> filter)

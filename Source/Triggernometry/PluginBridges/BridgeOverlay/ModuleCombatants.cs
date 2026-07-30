@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Triggernometry.FFXIV;
 using System.Text;
 using Triggernometry.Localization;
@@ -39,6 +40,10 @@ namespace Triggernometry.PluginBridges
 
         private static MethodInfo _getMobFromByteArrayMethod;
 
+
+        private static Dictionary<string, int> _combatantOffsets 
+            = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
         static ModuleCombatants()
         {
             Initialize();
@@ -72,6 +77,8 @@ namespace Triggernometry.PluginBridges
                 }
                 Ready = true;
 
+                BuidCombatantMemoryOffsets();
+
                 var combatantMemoryType = _currentCombatantMemory.GetType().BaseType;
                 _memoryField = combatantMemoryType.GetField("memory", BindingFlags.NonPublic | BindingFlags.Instance)
                     ?? throw new ReflectionNotFoundException("CombatantMemory.memory");
@@ -95,6 +102,35 @@ namespace Triggernometry.PluginBridges
                 return;
             }
             Ready = true;
+        }
+
+        private static void BuidCombatantMemoryOffsets()
+        {
+            var versionMemoryType = _currentCombatantMemory.GetType();
+
+            // OverlayPlugin: private unsafe struct CombatantMemory
+            var rawMemoryType = versionMemoryType.GetNestedType("CombatantMemory", BindingFlags.Public | BindingFlags.NonPublic) 
+                ?? throw new ReflectionNotFoundException(versionMemoryType.FullName + ".CombatantMemory");
+
+            var offsets = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var field in rawMemoryType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                var offset = field.GetCustomAttribute<FieldOffsetAttribute>();
+
+                if (offset != null)
+                    offsets[field.Name] = offset.Value;
+            }
+
+            _combatantOffsets = offsets;
+        }
+
+        internal static int? GetCombatantMemoryFieldOffset(string fieldName)
+        { 
+            if (_combatantOffsets.TryGetValue(fieldName, out int offset))
+                return offset;
+            else
+                return null;
         }
 
         // use the original method from OverlayPlugin
