@@ -20,9 +20,9 @@ Triggernometry 是 [Advanced Combat Tracker](https://advancedcombattracker.com/)
 
 如果你倾向于自己安装，可以使用：
 
-· [插件本体下载链接](https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/Triggernometry.dll) 
+· [插件本体下载链接](https://1824544011.cdn.123clouddisk.com/1824544011/Triggernometry_Release_CN/Triggernometry.dll) 
 
-· [汉化文件下载链接](https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/zh-CN.triglations.xml)  
+· [汉化文件下载链接](https://1824544011.cdn.123clouddisk.com/1824544011/Triggernometry_Release_CN/zh-CN.triglations.xml)  
 
 默认设置下，插件会在每次启动 ACT 时自动检查并安装更新。
 
