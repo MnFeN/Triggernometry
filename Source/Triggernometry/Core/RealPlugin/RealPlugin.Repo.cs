@@ -14,7 +14,7 @@ namespace Triggernometry.Core
     {
 
         private const string DefaultRepoManifestUrl =
-            "https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/RepositoryManifest.xml";
+            "https://1824544011.cdn.123clouddisk.com/1824544011/Triggernometry_Release_CN/RepositoryManifest.xml";
 
         private static RepositoryManifest LoadRepositoryManifest(string url)
         {
@@ -33,6 +33,7 @@ namespace Triggernometry.Core
             "https://github.com/paissaheavyindustries/Triggernometry",
             "https://vip.123pan.cn/1824544011/",
             "https://1824544011.v.123pan.cn/",
+            "https://1824544011.cdn.123clouddisk.com/",
         };
 
         public void AddRepositoryManifestItem(RepositoryManifestItem item, bool shouldUpdate)

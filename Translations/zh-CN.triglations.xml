@@ -766,7 +766,7 @@
     <TranslationEntry Key="ConfigurationForm2/lblEndpointStartup" Translation="插件启动时启动终端" />
     <TranslationEntry Key="ConfigurationForm2/lblExternalSoundWarn" Translation="此选项会使 Triggernometry 启动外部应用程序。这可能会使系统面临恶意软件的风险，请仅在您了解自己在做什么的情况下谨慎使用此选项。Windows 系统一般无需使用此选项。" />
     <TranslationEntry Key="ConfigurationForm2/lblExternalTtsWarn" Translation="此选项会使 Triggernometry 启动外部应用程序。这可能会使系统面临恶意软件的风险，请仅在您了解自己在做什么的情况下谨慎使用此选项。Windows 系统一般无需使用此选项。" />
-    <TranslationEntry Key="ConfigurationForm2/lblExternalUpdateWarn" Translation="第三方更新渠道不受 Triggernometry 官方管理，请谨慎使用，仅对可信的更新来源启用此功能。&#xD;&#xA;注：建议使用以下链接更新，包含国服远程触发器等额外功能。&#xD;&#xA;https://1824544011.v.123pan.cn/1824544011/Triggernometry_Release_CN/UpdateManifest.xml" />
+    <TranslationEntry Key="ConfigurationForm2/lblExternalUpdateWarn" Translation="第三方更新渠道不受 Triggernometry 官方管理，请谨慎使用，仅对可信的更新来源启用此功能。&#xD;&#xA;注：建议使用以下链接更新，包含国服远程触发器等额外功能。&#xD;&#xA;https://1824544011.cdn.123clouddisk.com/1824544011/Triggernometry_Release_CN/UpdateManifest.xml" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivJobMethod" Translation="排序方式" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivJobOrder" Translation="职业排序" />
     <TranslationEntry Key="ConfigurationForm2/lblFfxivLogNetwork" Translation="记录网络日志" />
