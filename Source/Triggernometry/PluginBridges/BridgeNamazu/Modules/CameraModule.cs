@@ -176,19 +176,19 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             { "MaxAngleV", 0x15C },
         };
         
-        // https://github.com/UnknownX7/Hypostasis/blob/c885579451307c18a019bd9dd9933e97a3970f17/Game/Structures/GameCamera.cs
-        public Dictionary<string, int> OffsetsTC = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase) // TC 7.2
+        // https://github.com/UnknownX7/Hypostasis/commit/8cd758e77253311500a98950b2a567eee9673346#diff-cfbdb525f196e4ff287513e1feda16b047956eac0bec29eeab6eea354aeb1c6b
+        public Dictionary<string, int> OffsetsTC = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase) // TC 7.3
         {
-            { "Distance", 0x114 },
-            { "MinDistance", 0x118 },
-            { "MaxDistance", 0x11C },
-            { "FoV", 0x120 },
-            { "MinFoV", 0x124 },
-            { "MaxFoV", 0x128 },
-            { "AngleH", 0x130 },
-            { "AngleV", 0x134 },
-            { "MinAngleV", 0x148 },
-            { "MaxAngleV", 0x14C },
+            { "Distance", 0x124 },
+            { "MinDistance", 0x128 },
+            { "MaxDistance", 0x12C },
+            { "FoV", 0x130 },
+            { "MinFoV", 0x134 },
+            { "MaxFoV", 0x138 },
+            { "AngleH", 0x140 },
+            { "AngleV", 0x144 },
+            { "MinAngleV", 0x158 },
+            { "MaxAngleV", 0x15C },
         };
         
         // 游戏默认
