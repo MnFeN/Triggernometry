@@ -9,7 +9,7 @@ using Triggernometry.Utilities.Maths;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
 {
-    internal static class VfxManager
+    public static class VfxManager
     {
         private static readonly Dictionary<IntPtr, ActorVfx> _actorVfxs = new Dictionary<IntPtr, ActorVfx>();
 
@@ -224,7 +224,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             }
         }
 
-        public static void Shutdown()
+        internal static void Shutdown()
         {
             WorkerStopping = true;
 
@@ -373,7 +373,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         /// 可提供缓存的实体列表 entities，以供解析位姿和线性变换参数时查询实体坐标和朝向。<br />
         /// 若未提供，则每次解析时直接查找实体。
         /// </summary>
-        public static bool ApplyResolvedStaticState(StaticVfx vfx, IReadOnlyDictionary<uint, Entity> entities)
+        internal static bool ApplyResolvedStaticState(StaticVfx vfx, IReadOnlyDictionary<uint, Entity> entities)
         {
             if (vfx == null || vfx.Ptr == IntPtr.Zero || vfx.Removed)
                 return false;
