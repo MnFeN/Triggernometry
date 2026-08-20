@@ -46,6 +46,7 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.ctxCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxPaste = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxCopyRegex = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.ctxImport = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxExport = new System.Windows.Forms.ToolStripMenuItem();
@@ -161,6 +162,7 @@
             this.toolStripSeparator7,
             this.ctxCopy,
             this.ctxPaste,
+            this.ctxCopyRegex,
             this.toolStripSeparator4,
             this.ctxImport,
             this.ctxExport,
@@ -171,7 +173,7 @@
             this.ctxCollapse,
             this.ctxReadme});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(245, 342);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(245, 364);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // ctxFire
@@ -287,6 +289,16 @@
             this.ctxPaste.Size = new System.Drawing.Size(244, 22);
             this.ctxPaste.Text = "Paste";
             this.ctxPaste.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+            // 
+            // ctxCopyRegex
+            // 
+            this.ctxCopyRegex.Image = ((System.Drawing.Image)(resources.GetObject("ctxCopy.Image")));
+            this.ctxCopyRegex.Name = "ctxCopyRegex";
+            this.ctxCopyRegex.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.C)));
+            this.ctxCopyRegex.Size = new System.Drawing.Size(244, 22);
+            this.ctxCopyRegex.Text = "Copy Regex";
+            this.ctxCopyRegex.Click += new System.EventHandler(this.ctxCopyRegex_Click);
             // 
             // toolStripSeparator4
             // 
@@ -1129,6 +1141,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem ctxCopy;
         private System.Windows.Forms.ToolStripMenuItem ctxPaste;
+        private System.Windows.Forms.ToolStripMenuItem ctxCopyRegex;
         private System.Windows.Forms.ToolStripMenuItem btnClearVars;
         private System.Windows.Forms.ToolStripSeparator errCountSeparator;
         private System.Windows.Forms.ToolStripLabel errThing1;

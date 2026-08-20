@@ -324,6 +324,7 @@
     <TranslationEntry Key="ActionForm/cndCondition/ctxAddGroup" Translation="条件式グループ" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxCollapseAll" Translation="Collapse All" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxCopy" Translation="コピー" />
+    <TranslationEntry Key="ActionForm/cndCondition/ctxCopyRegex" Translation="Copy Regex" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxExpandAll" Translation="Expand All" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxPaste" Translation="貼り付け" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxPasteOver" Translation="貼り付けて上書き" />
@@ -1340,6 +1341,7 @@
     <TranslationEntry Key="internal/ffxiv/procexception" Translation="Exception in FFXIV process retrieve: {0}" />
     <TranslationEntry Key="internal/ffxiv/updateexception" Translation="Exception in FFXIV state update: {0} at stage {1}" />
     <TranslationEntry Key="internal/FFXIV/Entity/wrongProp" Translation="({0}) is not a valid entity property expression. Full expression: {1}" />
+    <TranslationEntry Key="internal/Folder/envvariablekvptoolong" Translation="The raw environment variable key-value pair expression contains more than 2 parts. &#xD;&#xA;Folder: {0}; &#xD;&#xA;Expression: {1}" />
     <TranslationEntry Key="internal/I18n/bool" Translation="bool" />
     <TranslationEntry Key="internal/I18n/char" Translation="char" />
     <TranslationEntry Key="internal/I18n/charcode" Translation="charcode" />

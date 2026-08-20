@@ -324,6 +324,7 @@
     <TranslationEntry Key="ActionForm/cndCondition/ctxAddGroup" Translation="条件组" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxCollapseAll" Translation="全部折叠" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxCopy" Translation="复制" />
+    <TranslationEntry Key="ActionForm/cndCondition/ctxCopyRegex" Translation="复制正则" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxExpandAll" Translation="全部展开" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxPaste" Translation="粘贴" />
     <TranslationEntry Key="ActionForm/cndCondition/ctxPasteOver" Translation="粘贴" />
@@ -1340,6 +1341,7 @@
     <TranslationEntry Key="internal/ffxiv/procexception" Translation="搜索 FFXIV 进程时出现异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/updateexception" Translation="FFXIV 状态更新中，阶段 {1} 发生异常：{0}" />
     <TranslationEntry Key="internal/FFXIV/Entity/wrongProp" Translation="({0}) 不是有效的实体属性或方法名。完整表达式：({1})" />
+    <TranslationEntry Key="internal/Folder/envvariablekvptoolong" Translation="文件夹的环境变量中，键值对表达式超过两部分。&#xD;&#xA;分组：{0}; &#xD;&#xA;表达式：{1}" />
     <TranslationEntry Key="internal/I18n/bool" Translation="布尔值" />
     <TranslationEntry Key="internal/I18n/char" Translation="字符" />
     <TranslationEntry Key="internal/I18n/charcode" Translation="字符码" />

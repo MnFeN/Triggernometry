@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Speech.Synthesis;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggernometry.Core;
@@ -835,6 +836,7 @@ namespace Triggernometry.UI.CustomControls
                 ctxExport.Visible = false;
                 ctxCopy.Visible = false;
                 ctxPaste.Visible = false;
+                ctxCopyRegex.Visible = true;
                 ctxDelete.Visible = false;
                 ctxReadme.Visible = true;
                 toolStripSeparator2.Visible = false;
@@ -859,6 +861,7 @@ namespace Triggernometry.UI.CustomControls
                 ctxExport.Visible = true;
                 ctxCopy.Visible = true;
                 ctxPaste.Visible = true;
+                ctxCopyRegex.Visible = true;
                 ctxDelete.Visible = true;
                 ctxReadme.Visible = false;
                 toolStripSeparator2.Visible = true;
@@ -885,6 +888,7 @@ namespace Triggernometry.UI.CustomControls
                 toolStripSeparator12.Visible = true; // cfg.DeveloperMode;
                 ctxCopy.Enabled = (treeView1.SelectedNode != null);
                 ctxPaste.Enabled = (ctxAddTrigger.Enabled == true && System.Windows.Forms.Clipboard.ContainsText() == true);
+                ctxCopyRegex.Enabled = (treeView1.SelectedNode != null);
                 if (treeView1.SelectedNode != null)
                 {
                     ctxCollapse.Enabled = (treeView1.SelectedNode.Nodes.Count > 0);
@@ -1726,7 +1730,11 @@ namespace Triggernometry.UI.CustomControls
 
         private void treeView1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control)
+            if (e.KeyCode == Keys.C && e.Modifiers == (Keys.Control | Keys.Shift))
+            {
+                ctxCopyRegex_Click(sender, e);
+            }
+            else if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control)
             {
                 CopySelected();
             }
@@ -1757,6 +1765,64 @@ namespace Triggernometry.UI.CustomControls
             {
                 PasteSelected();
             }
+        }
+
+        private void ctxCopyRegex_Click(object sender, EventArgs e)
+        {
+            var regexes = new HashSet<string>(StringComparer.Ordinal);
+
+            void AddTrigger(Trigger t)
+            {
+                if (!string.IsNullOrWhiteSpace(t.RegularExpression))
+                    regexes.Add(t.RegularExpression);
+            }
+
+            void AddFolder(Folder f, bool ignoreSelfEnabled)
+            {
+                if (!ignoreSelfEnabled && !f.Enabled)
+                    return;
+
+                foreach (var t in f.Triggers)
+                {
+                    if (t.Enabled)
+                        AddTrigger(t);
+                }
+
+                foreach (var sub in f.Folders)
+                    AddFolder(sub, false);
+            }
+
+            var tag = treeView1.SelectedNode?.Tag;
+
+            if (tag is Trigger trigger)
+            {
+                AddTrigger(trigger);
+            }
+            else if (tag is Folder folder)
+            {
+                AddFolder(folder, true);
+            }
+            else if (tag is Repository repo)
+            {
+                AddFolder(repo.Root, true);
+            }
+            else if (tag is RepositoryFolder repoFolder)
+            {
+                foreach (var r in repoFolder.Repositories)
+                {
+                    if (r.Enabled)
+                        AddFolder(r.Root, true);
+                }
+            }
+
+            if (regexes.Count == 0)
+                return;
+
+            var merged = string.Join("|", regexes
+                .Select(r => Regex.Replace(r, @"\(\?<[^>]+>", "(?:"))
+                .Distinct());
+
+            Clipboard.SetText(merged);
         }
 
         internal void ClearAllVariables()
