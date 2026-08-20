@@ -154,5 +154,27 @@ namespace Triggernometry.Core.Scripting
         public static Process XivProcess => Utilities.Memory.XivProc;
         public static void RegisterXivProcessUpdatedAction(string key, Action action)
             => Utilities.Memory.RegisterXivProcUpdatedAction(key, action);
+
+        public static void QueueLogACT(string log, bool addToACTEncounter = false, string zoneName = null)
+            => QueueLogLine(LogEvent.SourceEnum.Log, log, addToACTEncounter, zoneName);
+
+        public static void QueueLogNetwork(string log, bool addToACTEncounter = false, string zoneName = null)
+            => QueueLogLine(LogEvent.SourceEnum.NetworkFFXIV, log, addToACTEncounter, zoneName);
+
+        public static void QueueLogEndpoint(string log, bool addToACTEncounter = false, string zoneName = null)
+            => QueueLogLine(LogEvent.SourceEnum.Endpoint, log, addToACTEncounter, zoneName);
+
+        public static void QueueLogACTEvent(string log, bool addToACTEncounter = false, string zoneName = null)
+            => QueueLogLine(LogEvent.SourceEnum.ACT, log, addToACTEncounter, zoneName);
+
+        private static void QueueLogLine(LogEvent.SourceEnum target, string log, bool addToACTEncounter, string zoneName)
+        {
+            zoneName = zoneName ?? RealPlugin.Instance.currentZone ?? "";
+            RealPlugin.Instance.LogLineQueuer(log, zoneName, target);
+            if (addToACTEncounter)
+            {
+                RealPlugin.Instance.ACTEncounterLogHook(log);
+            }
+        }
     }
 }
