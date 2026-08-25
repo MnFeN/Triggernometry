@@ -13,7 +13,7 @@ namespace Triggernometry.Core.Actions
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
     [XmlRoot(ElementName = "LaunchProcess")]
-    internal class ActionLaunchProcess : ActionBase
+    public class ActionLaunchProcess : ActionBase
     {
 
         #region Properties

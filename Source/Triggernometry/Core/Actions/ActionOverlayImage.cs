@@ -12,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Overlay)]
     [XmlRoot(ElementName = "OverlayImage")]
-    internal class ActionOverlayImage : ActionBase
+    public class ActionOverlayImage : ActionBase
     {
 
         #region Properties

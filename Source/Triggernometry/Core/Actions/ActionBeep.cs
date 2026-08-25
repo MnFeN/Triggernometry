@@ -14,7 +14,7 @@ namespace Triggernometry.Core.Actions
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Audio)]
     [XmlRoot(ElementName = "Beep")]
-    internal class ActionBeep : ActionBase
+    public class ActionBeep : ActionBase
     {
 
         #region Properties

@@ -13,7 +13,7 @@ namespace Triggernometry.Core.Actions
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
     [XmlRoot(ElementName = "DiscordWebhook")]
-    internal class ActionDiscordWebhook : ActionBase
+    public class ActionDiscordWebhook : ActionBase
     {
 
         #region Properties

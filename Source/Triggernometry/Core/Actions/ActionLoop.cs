@@ -15,7 +15,7 @@ namespace Triggernometry.Core.Actions
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
     [XmlRoot(ElementName = "Loop")]
-    internal class ActionLoop : ActionBase
+    public class ActionLoop : ActionBase
     {
 
         #region Properties

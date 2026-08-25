@@ -17,7 +17,7 @@ namespace Triggernometry.Core.Actions
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.File)]
     [XmlRoot(ElementName = "DiskOperation")]
-    internal class ActionDiskOperation : ActionBase
+    public class ActionDiskOperation : ActionBase
     {
 
         #region Properties

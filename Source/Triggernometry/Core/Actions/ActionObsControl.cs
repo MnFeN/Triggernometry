@@ -14,7 +14,7 @@ namespace Triggernometry.Core.Actions
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
     [XmlRoot(ElementName = "ObsControl")]
-    internal class ActionObsControl : ActionBase
+    public class ActionObsControl : ActionBase
     {
 
         #region Properties
