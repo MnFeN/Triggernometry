@@ -52,6 +52,10 @@ namespace Triggernometry.Core
         internal void TtsPlaybackAct(Context ctx, ActionOld a)
         {
             string text = TtsPlaybackGetTextFromAction(ctx, a);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
             lock (TtsRepetitions)
             {
                 if (RegisterRepetition(TtsRepetitions, cfg.TtsRepCooldown, text) == false)
@@ -97,6 +101,10 @@ namespace Triggernometry.Core
         internal void TtsPlaybackSelf(Context ctx, ActionOld a)
         {
             string text = TtsPlaybackGetTextFromAction(ctx, a);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
             lock (TtsRepetitions)
             {
                 if (RegisterRepetition(TtsRepetitions, cfg.TtsRepCooldown, text) == false)
@@ -105,16 +113,6 @@ namespace Triggernometry.Core
                 }
             }
             SpeechSynthesizer mytts = new SpeechSynthesizer();
-            /*
-            if (a._UseTTSExclusive == true)
-            {
-                mytts = new SpeechSynthesizer();
-            }
-            else
-            {
-                mytts = tts;
-            }
-            */
             double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a._UseTTSVolumeExpression);
             vol *= ctx.Plugin.cfg.TtsVolumeAdjustment / 100.0;
             if (vol < 0.0)
@@ -186,6 +184,10 @@ namespace Triggernometry.Core
                 return;
             }
             string text = TtsPlaybackGetTextFromAction(ctx, a);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
             lock (TtsRepetitions)
             {
                 if (RegisterRepetition(TtsRepetitions, cfg.TtsRepCooldown, text) == false)
