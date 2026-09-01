@@ -72,12 +72,15 @@ namespace Triggernometry.Expressions.String.Evaluators
                         return vd => vd.Count(value).ToString();
                     }
 
-                case "get":
-                    CheckArgCountLocal("2");
+                case "get": // get(key, defaultValue)
+                    CheckArgCountLocal("1-2");
                     {
                         string key = args[0];
-                        string defaultValue = args[1];
-                        return vd => vd.Values.TryGetValue(key, out var val) ? val.ToString() : defaultValue;
+                        string defaultValue = GetArgument(args, 1, null);
+
+                        return vd => vd.Values.TryGetValue(key, out var val) 
+                            ? val.ToString() 
+                            : defaultValue ?? throw new Exception($"Key '{key}' not found in dictionary variable '{expr.Name}'.");
                     }
 
                 case "keyof":

@@ -42,10 +42,12 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "get":
                     {
-                        CheckArgCountLocal("2");
+                        CheckArgCountLocal("1-2");
                         int idx = (int)MathParser.Parse(args[0]);
-                        string defaultValue = args[1];
-                        return vl => vl.Peek(idx, defaultValue).ToString();
+                        string defaultValue = GetArgument(args, 1, null);
+
+                        return vl => vl.Peek(idx, defaultValue)?.ToString()
+                            ?? throw new Exception($"Index '{idx}' not found in list variable '{expr.Name}'.");
                     }
 
                 case "indexof":
