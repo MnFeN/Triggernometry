@@ -173,7 +173,7 @@ namespace Triggernometry.Core.Scripting
             RealPlugin.Instance.LogLineQueuer(log, zoneName, target);
             if (addToACTEncounter)
             {
-                RealPlugin.Instance.ACTEncounterLogHook(log);
+                RealPlugin.Instance.ACTEncounterLogHook?.Invoke(log);
             }
         }
     }

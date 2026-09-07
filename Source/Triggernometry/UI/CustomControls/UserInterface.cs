@@ -1807,7 +1807,7 @@ namespace Triggernometry.UI.CustomControls
                 return;
 
             var merged = string.Join("|", regexes
-                .Select(r => Regex.Replace(r, @"\(\?<[^>]+>", "(?:"))
+                .Select(r => Regex.Replace(r, @"\(\?<[^>]+>", "(?:")) // to-do: 这会破坏反向引用
                 .Distinct());
 
             Clipboard.SetText(merged);

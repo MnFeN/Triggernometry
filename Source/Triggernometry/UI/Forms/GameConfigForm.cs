@@ -159,13 +159,15 @@ namespace Triggernometry.UI.Forms
             table.SetColumnSpan(separator, 2);
         }
 
-        /// <summary> 在 GroupBox 中的 Table 末尾添加一个文本 Label。 </summary>
-        public Label AddLabel(string desc, TableLayoutPanel table, string hint = null)
+        public OptionLbl AddLabelItem(string desc, TableLayoutPanel table, string hint = null)
         {
-            var dummyOption = new OptionLbl(desc, hint);
-            dummyOption.AppendToTable(table); // 不用 AddOption，因为不需要保存到配置
-            return dummyOption.Label;
+            var item = new OptionLbl(desc, hint);
+            item.AppendToTable(table);
+            return item;
         }
+
+        public Label AddLabel(string desc, TableLayoutPanel table, string hint = null)
+            => AddLabelItem(desc, table, hint).Label;
 
         public Control AddControl(Control ctrl, TableLayoutPanel table)
         {

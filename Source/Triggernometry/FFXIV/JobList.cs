@@ -62,6 +62,7 @@ namespace Triggernometry.FFXIV
         public static Job SGE => GetJob(JobEnum.SGE);
         public static Job VPR => GetJob(JobEnum.VPR);
         public static Job PCT => GetJob(JobEnum.PCT);
+        public static Job BST => GetJob(JobEnum.BST);
 
         static Job()
         {
@@ -819,7 +820,7 @@ namespace Triggernometry.FFXIV
             {
                 PLD, GLA, WAR, MRD, DRK, GNB,
                 WHM, CNJ, SCH, AST, SGE,
-                MNK, PGL, DRG, LNC, NIN, ROG, SAM, RPR, VPR,
+                MNK, PGL, DRG, LNC, NIN, ROG, SAM, RPR, VPR, BST,
                 BRD, ARC, MCH, DNC,
                 BLM, THM, SMN, ACN, RDM, PCT, BLU,
                 CRP, BSM, ARM, GSM, LTW, WVR, ALC, CUL,

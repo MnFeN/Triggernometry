@@ -13,7 +13,7 @@ namespace Triggernometry.FFXIV.LogTranscribe
         private static readonly object StateLock = new object();
         private static int _generation = 0;
 
-        internal static void Reset()
+        internal static void Reset(bool clearTerritoryRecord)
         {
             lock (StateLock)
             {
@@ -22,8 +22,12 @@ namespace Triggernometry.FFXIV.LogTranscribe
                     _generation++;
                 }
 
-                _territoryId = "";
-                _territoryName = "";
+                if (clearTerritoryRecord)
+                {
+                    _territoryId = "";
+                    _territoryName = "";
+                }
+                
                 CombatantSeenUntil.Clear();
             }
         }
@@ -107,25 +111,27 @@ namespace Triggernometry.FFXIV.LogTranscribe
             string id = m.Groups["id"].Value;
             string name = m.Groups["name"].Value;
 
-            string previousId;
-            string previousName;
+            string prevId;
+            string prevName;
 
             lock (StateLock)
             {
-                previousId = _territoryId;
-                previousName = _territoryName;
+                prevId = _territoryId;
+                prevName = _territoryName;
 
                 _territoryId = id;
                 _territoryName = name;
             }
 
             // 同一 Territory 重复出现时不转录。
-            if (string.Equals(id, previousId, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(id, prevId, StringComparison.OrdinalIgnoreCase))
                 return;
+
+            prevId.TryParseHexInt(out var prevIdValue); // init: "" → 0
 
             QueueLog(
                 $"{m.Groups["time"].Value} _Territory 1001:" +
-                $"{id.ParseHexInt()}:{name}:{previousId.ParseHexInt()}:{previousName}",
+                $"{id.ParseHexInt()}:{name}:{prevIdValue}:{prevName}",
                 zone);
         }
 
@@ -219,7 +225,7 @@ namespace Triggernometry.FFXIV.LogTranscribe
             new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
 
         private static readonly Regex CombatantRegex = new Regex(
-            @"^(?<time>.{14}) \S+ 105:Add:(?<id>4.{7}):(?<data>.*Type:(?<type>\d+).*)",
+            @"^(?<time>.{14}) \S+ 105:Add:(?<id>4.{7}):(?<data>.*(?<=:)Type:(?<type>\d+).*)",
             RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private static void ProcessCombatant(string logLine, string zone)
@@ -236,10 +242,10 @@ namespace Triggernometry.FFXIV.LogTranscribe
 
             string id = m.Groups["id"].Value;
 
-            if (!TryMarkCombatantSeen(id))
-                return;
-
             var data = Parse105KVPairs(m.Groups["data"].Value);
+
+            if (data.TryGetValue("OwnerID", out var ownerId) && ownerId.StartsWith("10"))
+                return;
 
             string name = data.TryGetValue("Name", out var rawName) ? rawName : "";
             string bnpcId = data.TryGetValue("BNpcID", out var rawBnpcId) ? rawBnpcId : "0";
@@ -247,6 +253,10 @@ namespace Triggernometry.FFXIV.LogTranscribe
             string y = data.TryGetValue("PosY", out var rawY) ? FormatF4(rawY) : "0.0000";
             string z = data.TryGetValue("PosZ", out var rawZ) ? FormatF4(rawZ) : "0.0000";
             string h = data.TryGetValue("Heading", out var rawH) ? FormatF4(rawH) : "0.0000";
+
+            // 放在 Parse 后，防止解析出错提前 Mark（日志重复是极其罕见的情况 可忽略重复解析）
+            if (!TryMarkCombatantSeen(id))
+                return;
 
             QueueLog(
                 $"{m.Groups["time"].Value} _SpawnObject 1105:" +

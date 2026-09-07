@@ -393,7 +393,7 @@ namespace Triggernometry.Core
                     }
                 }
                 FilteredAddToLog(DebugLevelEnum.Info, string.Format("*: {0},{1} - {2},{3}", MinX, MinY, MaxX, MaxY));
-                LogTranscriber.Reset();
+                LogTranscriber.Reset(true);
                 InitActionQueue();
                 EventQueueThread = new Thread(new ThreadStart(LogLineProcessorThread));
                 EventQueueThread.Name = "EventQueueThread";
@@ -460,7 +460,7 @@ namespace Triggernometry.Core
             }
             Memory.DisposeXivProcHandle();
             ExitEvent?.Set();
-            LogTranscriber.Reset();
+            LogTranscriber.Reset(true);
             DeinitActionQueue();
             if (EventQueueThread != null)
             {
@@ -742,7 +742,7 @@ namespace Triggernometry.Core
             if (currentZone == null || detectedZone != currentZone)
             {
                 currentZone = detectedZone;
-                LogTranscriber.Reset();
+                LogTranscriber.Reset(false);
                 ZoneChanged(currentZone);
             }
             try
@@ -768,7 +768,7 @@ namespace Triggernometry.Core
             if (currentZone == null || detectedZone != currentZone)
             {
                 currentZone = detectedZone;
-                LogTranscriber.Reset();
+                LogTranscriber.Reset(false);
                 ZoneChanged(currentZone);
             }
             if (string.IsNullOrEmpty(logLine) || logLine.EndsWith("] FB:", StringComparison.Ordinal))
@@ -790,11 +790,12 @@ namespace Triggernometry.Core
             }
         }
 
-        public void ZoneChangeDelegate(uint ZoneID, string ZoneName) 
+        public void ZoneChangeDelegate(uint ZoneID, string ZoneName) // zoneName 没用到？
         {
             PluginBridges.BridgeFFXIV.ZoneID = ZoneID;
             PluginBridges.BridgeFFXIV.UpdateState(); // fix player id, etc. after travelling to a new server
             FFXIV.Entity.UpdateMySnapshot();
+            // currentZone = ZoneName; 需要测试
             ZoneChanged(currentZone);
         }
 

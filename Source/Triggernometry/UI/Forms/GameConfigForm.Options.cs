@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
+using Triggernometry.Expressions.String.Utils;
 
 namespace Triggernometry.UI.Forms
 {
@@ -117,11 +118,11 @@ namespace Triggernometry.UI.Forms
             public Label Label => Lbl;
 
             /// <summary>
-            /// 生成一个占据整行的 Label。
+            /// 生成一个占据整行的 Label。脚本不应直接调用此构造函数。
             /// </summary>
             /// <param name="text">Label 文本</param>
             /// <param name="hint">鼠标悬停时显示的提示文本</param>
-            public OptionLbl(string text, string hint = null)
+            internal OptionLbl(string text, string hint = null)
             {
                 Lbl = new MyLabel { Text = text };
                 Ctrl = null;
@@ -285,10 +286,10 @@ namespace Triggernometry.UI.Forms
 
             public override string Data
             {
-                get => Nud.Value.ToString();
+                get => Nud.Value.ToStringInvariant();
                 set
                 {
-                    if (decimal.TryParse(value.Trim(), out var result))
+                    if (value.TryParseDecimal(out var result))
                         Nud.Value = Math.Max(Nud.Minimum, Math.Min(Nud.Maximum, result));
                 }
             }

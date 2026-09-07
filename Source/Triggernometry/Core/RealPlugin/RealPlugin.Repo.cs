@@ -169,16 +169,30 @@ namespace Triggernometry.Core
 
             foreach (var repo in rfo.Repositories)
             {
-                if (repo?.Address?.Contains(from) != true)
+                if (string.IsNullOrEmpty(repo?.Address) ||
+                    repo.Address.IndexOf(from, StringComparison.OrdinalIgnoreCase) < 0)
+                {
                     continue;
+                }
 
-                string newAddress = repo.Address.Replace(from, to);
+                string newAddress = ReplaceIgnoreCase(repo.Address, from, to);
 
                 if (DetectLegalAddress(newAddress))
                 {
                     repo.Address = newAddress;
                 }
             }
+        }
+
+        private static string ReplaceIgnoreCase(string source, string oldValue, string newValue)
+        {
+            int index = source.IndexOf(oldValue, StringComparison.OrdinalIgnoreCase);
+            while (index >= 0)
+            {
+                source = source.Remove(index, oldValue.Length).Insert(index, newValue);
+                index = source.IndexOf(oldValue, index + newValue.Length, StringComparison.OrdinalIgnoreCase);
+            }
+            return source;
         }
 
         private void CheckDuplicateRepoAddresses()
