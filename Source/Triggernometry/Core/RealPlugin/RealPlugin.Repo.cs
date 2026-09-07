@@ -28,13 +28,29 @@ namespace Triggernometry.Core
             }
         }
 
-
         private static readonly List<string> _legalRepoPrefixes = new List<string> {
-            "https://github.com/paissaheavyindustries/Triggernometry",
+            "https://github.com/paissaheavyindustries/Triggernometry/",
             "https://vip.123pan.cn/1824544011/",
             "https://1824544011.v.123pan.cn/",
             "https://1824544011.cdn.123clouddisk.com/",
         };
+
+        private bool DetectLegalAddress(string address)
+        {
+            var isLegal = _legalRepoPrefixes.Any(prefix =>
+                address?.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) == true);
+
+            if (!isLegal)
+            {
+                UnfilteredAddToLog(DebugLevelEnum.Error,
+                    I18n.IsChineseEnvironment
+                        ? $"远程仓库地址 {address} 未在信任列表内，已跳过操作。"
+                        : $"The repository address {address} is not trusted. The operation has been skipped."
+                );
+            }
+
+            return isLegal;
+        }
 
         public void AddRepositoryManifestItem(RepositoryManifestItem item, bool shouldUpdate)
         {
@@ -43,19 +59,17 @@ namespace Triggernometry.Core
                 ui.Invoke(new Action(() => AddRepositoryManifestItem(item, shouldUpdate)));
                 return;
             }
-            if (!_legalRepoPrefixes.Any(prefix => item.Address.StartsWith(prefix)))
+            if (!DetectLegalAddress(item.Address))
             {
-                UnfilteredAddToLog(DebugLevelEnum.Error,
-                    I18n.IsChineseEnvironment
-                    ? $"正在尝试添加的远程仓库地址 {item.Address} 未在信任列表内，你需要手动添加此远程仓库。"
-                    : $"The repository address {item.Address} you are trying to add is not a trusted address and needs to be added manually."
-                );
                 return;
             }
 
             RepositoryFolder rfo = (RepositoryFolder)ui.treeView1.Nodes[1].Tag;
             TreeNode tn = rfo.Repositories
-                .Where(r => r.Address == item.Address)
+                .Where(r => string.Equals(
+                    r.Address?.Trim(),
+                    item.Address?.Trim(),
+                    StringComparison.OrdinalIgnoreCase))
                 .Select(r => ui.treeView1.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == r))
                 .FirstOrDefault();
 
@@ -114,10 +128,18 @@ namespace Triggernometry.Core
                 ui.Invoke(new Action(() => RemoveRepo(partialUrl)));
                 return;
             }
-            partialUrl = partialUrl.Trim();
+
+            partialUrl = partialUrl?.Trim();
+            if (string.IsNullOrEmpty(partialUrl))
+            {
+                return;
+            }
+
             RepositoryFolder rfo = (RepositoryFolder)ui.treeView1.Nodes[1].Tag;
             var nodes = rfo.Repositories
-                .Where(repo => repo.Address.IndexOf(partialUrl, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Where(repo =>
+                    !string.IsNullOrEmpty(repo?.Address) &&
+                    repo.Address.IndexOf(partialUrl, StringComparison.OrdinalIgnoreCase) >= 0)
                 .Select(repo => ui.treeView1.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == repo))
                 .ToList();
 
@@ -132,13 +154,74 @@ namespace Triggernometry.Core
             }
         }
 
+        public void ReplaceRepo(string from, string to)
+        {
+            if (ui.InvokeRequired)
+            {
+                ui.Invoke(new Action(() => ReplaceRepo(from, to)));
+                return;
+            }
+
+            if (string.IsNullOrEmpty(from))
+                return;
+
+            RepositoryFolder rfo = (RepositoryFolder)ui.treeView1.Nodes[1].Tag;
+
+            foreach (var repo in rfo.Repositories)
+            {
+                if (repo?.Address?.Contains(from) != true)
+                    continue;
+
+                string newAddress = repo.Address.Replace(from, to);
+
+                if (DetectLegalAddress(newAddress))
+                {
+                    repo.Address = newAddress;
+                }
+            }
+        }
+
+        private void CheckDuplicateRepoAddresses()
+        {
+            if (ui.InvokeRequired)
+            {
+                ui.Invoke(new Action(CheckDuplicateRepoAddresses));
+                return;
+            }
+
+            RepositoryFolder rfo = (RepositoryFolder)ui.treeView1.Nodes[1].Tag;
+
+            var duplicates = rfo.Repositories
+                .Where(repo => !string.IsNullOrWhiteSpace(repo.Address))
+                .GroupBy(
+                    repo => repo.Address.Trim(),
+                    StringComparer.OrdinalIgnoreCase)
+                .Where(group => group.Count() > 1);
+
+            foreach (var group in duplicates)
+            {
+                UnfilteredAddToLog(
+                    DebugLevelEnum.Error,
+                    $"检测到重复的远程仓库地址：{group.Key}");
+            }
+        }
+
         public void LoadDefaultRepoCN(bool shouldUpdate = false)
         {
             try
             {
                 RepositoryManifest repoManifest = LoadRepositoryManifest(DefaultRepoManifestUrl);
-                repoManifest.Remove.ForEach(partialUrl => RemoveRepo(partialUrl));
-                repoManifest.Add.ForEach(item => AddRepositoryManifestItem(item, shouldUpdate));
+
+                repoManifest.Replace.ForEach(item =>
+                    ReplaceRepo(item.From, item.To));
+
+                repoManifest.Remove.ForEach(partialUrl =>
+                    RemoveRepo(partialUrl));
+
+                repoManifest.Add.ForEach(item =>
+                    AddRepositoryManifestItem(item, shouldUpdate));
+
+                CheckDuplicateRepoAddresses();
             }
             catch (Exception ex)
             {
@@ -156,6 +239,20 @@ namespace Triggernometry.Core
             [XmlArray("Remove")]
             [XmlArrayItem("Item")]
             public List<string> Remove { get; set; } = new List<string>();
+
+            [XmlArray("Replace")]
+            [XmlArrayItem("Item")]
+            public List<RepositoryManifestReplaceItem> Replace { get; set; }
+                = new List<RepositoryManifestReplaceItem>();
+
+            public class RepositoryManifestReplaceItem
+            {
+                [XmlAttribute]
+                public string From { get; set; } = "";
+
+                [XmlAttribute]
+                public string To { get; set; } = "";
+            }
         }
 
         public class RepositoryManifestItem
