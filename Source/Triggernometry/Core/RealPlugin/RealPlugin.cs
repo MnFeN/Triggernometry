@@ -708,14 +708,14 @@ namespace Triggernometry.Core
             {
                 case "OnCombatStart":
                 case "OnCombatEnd":
-                    LogLineQueuer(data[0], currentZone != null ? currentZone : "", LogEvent.SourceEnum.ACT);
+                    LogLineQueuer(data[0], currentZone ?? "", LogEvent.SourceEnum.ACT);
                     break;
             }
         }
 
         public void EndpointReceive(string data)
         {
-            string detectedZone = currentZone != null ? currentZone : "";
+            string detectedZone = currentZone ?? "";
             try
             {
                 if (cfg.LogEndpoint == true)
@@ -766,16 +766,17 @@ namespace Triggernometry.Core
                 currentZone = detectedZone;
                 ZoneChanged(currentZone);
             }
+            if (string.IsNullOrEmpty(logLine) || logLine.EndsWith("] FB:", StringComparison.Ordinal))
+            {
+                return;
+            }
             try
             {
-                if (logLine != "" && (logLine.Length < 5 || logLine.Substring(logLine.Length - 5) != "] FB:"))
+                if (cfg.LogNormalEvents == true)
                 {
-                    if (cfg.LogNormalEvents == true)
-                    {
-                        FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/logline", "Log line: ({0})", logLine));
-                    }
-                    LogLineQueuer(logLine, detectedZone, LogEvent.SourceEnum.Log);
+                    FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/logline", "Log line: ({0})", logLine));
                 }
+                LogLineQueuer(logLine, detectedZone, LogEvent.SourceEnum.Log);
             }
             catch (Exception ex)
             {
