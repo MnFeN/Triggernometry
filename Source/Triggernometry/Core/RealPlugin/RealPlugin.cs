@@ -440,6 +440,7 @@ namespace Triggernometry.Core
 
         public void DeInitPlugin()
         {
+            PluginBridges.BridgeFFXIV.ZoneChanged -= ZoneChangeDelegate;
             ui?.CloseForms();
             if (_ep != null)
             {
@@ -613,7 +614,7 @@ namespace Triggernometry.Core
         {
             if (firstevent == true)
             {
-                PluginBridges.BridgeFFXIV.SubscribeToZoneChanged(this);
+                PluginBridges.BridgeFFXIV.ZoneChanged += ZoneChangeDelegate;
                 firstevent = false;
             }
             switch (le.Source)

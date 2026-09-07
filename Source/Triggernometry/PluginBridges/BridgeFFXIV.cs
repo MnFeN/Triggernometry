@@ -112,42 +112,59 @@ namespace Triggernometry.PluginBridges
             }
         }
 
-        public static void SubscribeToZoneChanged(RealPlugin p)
+        public static event Action<uint, string> ZoneChanged
+        {
+            add
+            {
+                ModifyZoneChangedSubscription(value, true);
+            }
+            remove
+            {
+                ModifyZoneChangedSubscription(value, false);
+            }
+        }
+        private static void ModifyZoneChangedSubscription(Action<uint, string> callback, bool isSubscribe)
         {
             try
             {
                 object ffxivPlug = GetInstance()
                     ?? throw new ArgumentException("No plugin instance available");
 
-                PropertyInfo pi = ffxivPlug.GetType().GetProperty(
-                    "DataSubscription",
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                PropertyInfo pi = ffxivPlug.GetType().GetProperty("DataSubscription",
+                    BindingFlags.Public |
+                    BindingFlags.NonPublic |
+                    BindingFlags.Instance)
                     ?? throw new ArgumentException("No DataSubscription found");
 
                 object subs = pi.GetValue(ffxivPlug)
                     ?? throw new ArgumentException("DataSubscription not initialized");
 
-                EventInfo zoneChangedEventInfo = subs.GetType().GetEvent(
-                    "ZoneChanged",
+                EventInfo zoneChangedEventInfo = subs.GetType().GetEvent("ZoneChanged",
                     BindingFlags.Public | BindingFlags.Instance)
                     ?? throw new ArgumentException(I18n.Translate(
                         "internal/ffxiv/ffxivnozonechanged",
                         "No ZoneChanged found"));
 
-                Action<uint, string> callback = p.ZoneChangeDelegate;
                 Delegate handler = Delegate.CreateDelegate(
                     zoneChangedEventInfo.EventHandlerType,
                     callback.Target,
                     callback.Method);
 
-                zoneChangedEventInfo.AddEventHandler(subs, handler);
+                if (isSubscribe)
+                    zoneChangedEventInfo.AddEventHandler(subs, handler);
+                else
+                    zoneChangedEventInfo.RemoveEventHandler(subs, handler);
             }
             catch (Exception ex)
             {
-                LogMessage(RealPlugin.DebugLevelEnum.Error,
-                    I18n.Translate(
+                LogMessage(RealPlugin.DebugLevelEnum.Error, isSubscribe
+                    ? I18n.Translate(
                         "internal/ffxiv/ffxivzonechangedexception",
                         "Could not subscribe to FFXIV zone change due to an exception: {0}",
+                        ex.Message)
+                    : I18n.Translate(
+                        "internal/ffxiv/ffxivzonechangedexception-",
+                        "Could not unsubscribe from FFXIV zone change due to an exception: {0}",
                         ex.Message));
             }
         }
