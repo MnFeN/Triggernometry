@@ -152,7 +152,14 @@ namespace Triggernometry.UI.Forms
             Regex rex = null;
             if (rexSearch.Text != null && rexSearch.Text.Trim().Length > 0)
             {
-                rex = new Regex(rexSearch.Text, RegexOptions.IgnoreCase);
+                try
+                {
+                    rex = new Regex(rexSearch.Text, RegexOptions.IgnoreCase);
+                }
+                catch (ArgumentException)
+                {
+                    return new List<InternalLog>();
+                }
             }
             return logData.Where(ix =>
                 (
