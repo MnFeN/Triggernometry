@@ -7,12 +7,13 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Triggernometry.UI.CustomControls;
-using Triggernometry.Localization;
-using Triggernometry.Utilities;
 using Triggernometry.Core.Variables;
-using Triggernometry.PluginBridges.ExternalTools;
+using Triggernometry.FFXIV.LogTranscribe;
+using Triggernometry.Localization;
 using Triggernometry.PluginBridges.BridgeNamazu.Vfx;
+using Triggernometry.PluginBridges.ExternalTools;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core
 {
@@ -392,6 +393,7 @@ namespace Triggernometry.Core
                     }
                 }
                 FilteredAddToLog(DebugLevelEnum.Info, string.Format("*: {0},{1} - {2},{3}", MinX, MinY, MaxX, MaxY));
+                LogTranscriber.Reset();
                 InitActionQueue();
                 EventQueueThread = new Thread(new ThreadStart(LogLineProcessorThread));
                 EventQueueThread.Name = "EventQueueThread";
@@ -439,7 +441,6 @@ namespace Triggernometry.Core
         public void DeInitPlugin()
         {
             ui?.CloseForms();
-            PluginBridges.BridgeFFXIV.UnsubscribeFromNetworkEvents(this);
             if (_ep != null)
             {
                 _ep.Stop();
@@ -458,6 +459,7 @@ namespace Triggernometry.Core
             }
             Memory.DisposeXivProcHandle();
             ExitEvent?.Set();
+            LogTranscriber.Reset();
             DeinitActionQueue();
             if (EventQueueThread != null)
             {
@@ -739,6 +741,7 @@ namespace Triggernometry.Core
             if (currentZone == null || detectedZone != currentZone)
             {
                 currentZone = detectedZone;
+                LogTranscriber.Reset();
                 ZoneChanged(currentZone);
             }
             try
@@ -764,6 +767,7 @@ namespace Triggernometry.Core
             if (currentZone == null || detectedZone != currentZone)
             {
                 currentZone = detectedZone;
+                LogTranscriber.Reset();
                 ZoneChanged(currentZone);
             }
             if (string.IsNullOrEmpty(logLine) || logLine.EndsWith("] FB:", StringComparison.Ordinal))
@@ -777,6 +781,7 @@ namespace Triggernometry.Core
                     FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/logline", "Log line: ({0})", logLine));
                 }
                 LogLineQueuer(logLine, detectedZone, LogEvent.SourceEnum.Log);
+                LogTranscriber.Process(logLine, detectedZone);
             }
             catch (Exception ex)
             {
