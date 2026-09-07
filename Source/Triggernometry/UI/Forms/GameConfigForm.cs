@@ -76,7 +76,7 @@ namespace Triggernometry.UI.Forms
             Controls.Add(mainPanel);
             Controls.Add(bottomPanel);
             bottomPanel.Controls.Add(btnSave);
-            bottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+
             // events
             Shown += (sender, e) =>
             {
@@ -104,9 +104,6 @@ namespace Triggernometry.UI.Forms
             mainPanel.Controls.Add(panel);
             panel.Controls.Add(group);
             group.Controls.Add(table);
-
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
 
             return table;
         }
