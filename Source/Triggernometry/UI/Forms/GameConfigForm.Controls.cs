@@ -163,10 +163,13 @@ namespace Triggernometry.UI.Forms
         {
             public MyToolTip() : base()
             {
-                InitialDelay = 0;
-                AutoPopDelay = 30000;
-                ReshowDelay = 0;
+                InitialDelay = 500;
+                AutoPopDelay = 60000;
+                ReshowDelay = 100;
                 ShowAlways = true;
+                IsBalloon = true;
+                ToolTipIcon = ToolTipIcon.Info;
+                ToolTipTitle = "提示";
             }
         }
     }
