@@ -116,73 +116,45 @@ namespace Triggernometry.PluginBridges
         {
             try
             {
-                object plug = GetInstance() 
+                object ffxivPlug = GetInstance()
                     ?? throw new ArgumentException("No plugin instance available");
-                PropertyInfo pi = plug.GetType().GetProperty("DataSubscription", BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    ?? throw new ArgumentException("No DataSubscription found");
-                object subs = pi.GetValue(plug) 
-                    ?? throw new ArgumentException("DataSubscription not initialized");
-                EventInfo ei = subs.GetType().GetEvent("ZoneChanged", BindingFlags.GetField | BindingFlags.Public | BindingFlags.Instance);
-                if (ei != null)
-                {
-                    MethodInfo mix = p.GetType().GetMethod("ZoneChangeDelegate");
-                    Type deltype = ei.EventHandlerType;
-                    Delegate handler = Delegate.CreateDelegate(deltype, p, mix);
-                    ei.AddEventHandler(subs, handler);
-                }
-                else
-                {
-                    LogMessage(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ffxiv/ffxivnozonechanged", "No ZoneChanged found"));
-                }
-            }
-            catch (Exception ex)
-            {
-                LogMessage(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ffxiv/ffxivzonechangedexception", "Could not subscribe to FFXIV zone change due to an exception: {0}", ex.Message));
-            }
-        }
 
-        public static void UnsubscribeFromNetworkEvents(RealPlugin p)
-        {
-            try
-            {
-                object plug = GetInstance();
-                if (plug == null)
-                {
-                    throw new ArgumentException("No plugin instance available");
-                }
-                PropertyInfo pi = plug.GetType().GetProperty("DataSubscription", BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                if (pi == null)
-                {
-                    throw new ArgumentException("No DataSubscription found");
-                }
-                dynamic subs = pi.GetValue(plug);
-                if (subs == null)
-                {
-                    throw new ArgumentException("DataSubscription not initialized");
-                }
-                EventInfo ei = subs.GetType().GetEvent("ParsedLogLine", BindingFlags.GetField | BindingFlags.Public | BindingFlags.Instance);
-                if (subs == null)
-                {
-                    throw new ArgumentException("No ParsedLogLine found");
-                }
-                MethodInfo mix = p.GetType().GetMethod("NetworkLogLineReceiver");
-                Type deltype = ei.EventHandlerType;
-                Delegate handler = Delegate.CreateDelegate(deltype, p, mix);
-                ei.RemoveEventHandler(subs, handler);
-                LogMessage(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/ffxiv/networkunsubok", "Unsubscribed from FFXIV network events"));
+                PropertyInfo pi = ffxivPlug.GetType().GetProperty(
+                    "DataSubscription",
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                    ?? throw new ArgumentException("No DataSubscription found");
+
+                object subs = pi.GetValue(ffxivPlug)
+                    ?? throw new ArgumentException("DataSubscription not initialized");
+
+                EventInfo zoneChangedEventInfo = subs.GetType().GetEvent(
+                    "ZoneChanged",
+                    BindingFlags.Public | BindingFlags.Instance)
+                    ?? throw new ArgumentException(I18n.Translate(
+                        "internal/ffxiv/ffxivnozonechanged",
+                        "No ZoneChanged found"));
+
+                Action<uint, string> callback = p.ZoneChangeDelegate;
+                Delegate handler = Delegate.CreateDelegate(
+                    zoneChangedEventInfo.EventHandlerType,
+                    callback.Target,
+                    callback.Method);
+
+                zoneChangedEventInfo.AddEventHandler(subs, handler);
             }
             catch (Exception ex)
             {
-                LogMessage(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ffxiv/networkunsubexception", "Could not unsubscribe from FFXIV network events due to an exception: {0}", ex.Message));
+                LogMessage(RealPlugin.DebugLevelEnum.Error,
+                    I18n.Translate(
+                        "internal/ffxiv/ffxivzonechangedexception",
+                        "Could not subscribe to FFXIV zone change due to an exception: {0}",
+                        ex.Message));
             }
         }
 
         private static void LogMessage(RealPlugin.DebugLevelEnum level, string message)
         {
-            if (OnLogEvent != null)
-            {
-                OnLogEvent(level, message);
-            }
+            OnLogEvent?.Invoke(level, message);
         }
 
         #region Actions
@@ -516,26 +488,14 @@ namespace Triggernometry.PluginBridges
             }
         }
 
-        /*private static void DebugPlayerSorting(string header, IEnumerable<VariableClump> vc)
-        {
-            int ro = 1;
-            foreach (VariableClump a in vc)
-            {
-                System.Diagnostics.Debug.WriteLine(header + ": " + ro + " -- " + a.GetValue("name") + ", " + a.GetValue("job") + " --> " + a.GetValue("order") + " / " + cfg.GetPartyOrderValue(a.GetValue("jobid")));
-                ro++;
-            }
-        }*/
-
         public static int SortPlayersSelf(VariableDictionary a, VariableDictionary b)
         {
             if (a == Myself && b != Myself)
             {
-                //System.Diagnostics.Debug.WriteLine(a.GetValue("name") + " (ME) < " + b.GetValue("name"));
                 return -1;
             }
             if (b == Myself && a != Myself)
             {
-                //System.Diagnostics.Debug.WriteLine(a.GetValue("name") + " > " + b.GetValue("name") + " (ME)");
                 return 1;
             }
             return SortPlayers(a, b);
@@ -547,15 +507,12 @@ namespace Triggernometry.PluginBridges
             int bv = cfg.GetPartyOrderValue(b.GetValue("jobid").ToString());
             if (av < bv)
             {
-                //System.Diagnostics.Debug.WriteLine(a.GetValue("name") + " (" + av + ") < " + b.GetValue("name") + " (" + bv + ")");
                 return -1;
             }
             if (av > bv)
             {
-                //System.Diagnostics.Debug.WriteLine(a.GetValue("name") + " (" + av + ") > " + b.GetValue("name") + " (" + bv + ")");
                 return 1;
             }
-            //System.Diagnostics.Debug.WriteLine(a.GetValue("name") + " (" + av + ") -(" + a.GetValue("name").CompareTo(b.GetValue("name")) + ")- " + b.GetValue("name") + " (" + bv + ")");
             // https://github.com/paissaheavyindustries/Triggernometry/issues/9
             return b.GetValue("id").CompareTo(a.GetValue("id"));
         }

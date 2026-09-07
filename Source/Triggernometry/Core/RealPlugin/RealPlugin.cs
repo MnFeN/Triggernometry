@@ -789,7 +789,6 @@ namespace Triggernometry.Core
             }
         }
 
-        /// <summary> Invoked by <see cref="PluginBridges.BridgeFFXIV.SubscribeToZoneChanged" /></summary>
         public void ZoneChangeDelegate(uint ZoneID, string ZoneName) 
         {
             PluginBridges.BridgeFFXIV.ZoneID = ZoneID;
