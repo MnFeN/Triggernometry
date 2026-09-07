@@ -693,13 +693,16 @@ namespace Triggernometry.UI.Forms
         public BijectDictionary<TKey, TValue> ShallowCopy()
         {
             var duplicate = new BijectDictionary<TKey, TValue>();
-            foreach (var kvp in _dict)
+
+            foreach (var key in _keys)
             {
-                duplicate._dict.Add(kvp.Key, kvp.Value);
-                duplicate._revDict.Add(kvp.Value, kvp.Key);
-                duplicate._keys.Add(kvp.Key);
-                duplicate._values.Add(kvp.Value);
+                var value = _dict[key];
+                duplicate._dict.Add(key, value);
+                duplicate._revDict.Add(value, key);
+                duplicate._keys.Add(key);
+                duplicate._values.Add(value);
             }
+
             return duplicate;
         }
 
