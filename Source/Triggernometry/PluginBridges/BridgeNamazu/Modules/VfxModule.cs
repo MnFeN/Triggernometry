@@ -43,6 +43,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
 
                 // 48 89 5C 24 10 48 89 74 24 20 57 48 81 EC 90 00 00 00 0F 29 B4 24 80 00 00 00 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ??
                 StaticVfxRunPtr = Scanner.TryScanMultiple(new string[] {
+                    "E8 * * * * B0 02 EB 02", // 7.56
                     "e8 * * * * 0f ? ? ? ? ? ? 66 ? ? ? 74 ?", // 7.3
                     "E8 * * * * 8B 4B 7C 85 C9", // 7.0
                 }, nameof(StaticVfxRunPtr));
