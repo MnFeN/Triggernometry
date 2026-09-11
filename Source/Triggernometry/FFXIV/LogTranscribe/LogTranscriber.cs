@@ -99,7 +99,7 @@ namespace Triggernometry.FFXIV.LogTranscribe
         private static string _territoryName = "";
 
         private static readonly Regex TerritoryRegex = new Regex(
-            @"^(?<time>.{14}) \S+ 01:(?<id>[^:]*):(?<name>[^:]*)",
+            @"^(?<time>.{14}) \S+ 01:(?<id>[^:]*):(?<name>(?:[^:]|: )*)",
             RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private static void ProcessTerritory(string logLine, string zone)
@@ -131,7 +131,7 @@ namespace Triggernometry.FFXIV.LogTranscribe
 
             QueueLog(
                 $"{m.Groups["time"].Value} _Territory 1001:" +
-                $"{id.ParseHexInt()}:{name}:{prevIdValue}:{prevName}",
+                $"{id.ParseHexInt()}:{ReplaceColon(name)}:{prevIdValue}:{ReplaceColon(prevName)}",
                 zone);
         }
 
@@ -247,7 +247,7 @@ namespace Triggernometry.FFXIV.LogTranscribe
             if (data.TryGetValue("OwnerID", out var ownerId) && ownerId.StartsWith("10"))
                 return;
 
-            string name = data.TryGetValue("Name", out var rawName) ? rawName : "";
+            string name = data.TryGetValue("Name", out var rawName) ? ReplaceColon(rawName) : "";
             string bnpcId = data.TryGetValue("BNpcID", out var rawBnpcId) ? rawBnpcId : "0";
             string x = data.TryGetValue("PosX", out var rawX) ? FormatF4(rawX) : "0.0000";
             string y = data.TryGetValue("PosY", out var rawY) ? FormatF4(rawY) : "0.0000";
@@ -269,11 +269,22 @@ namespace Triggernometry.FFXIV.LogTranscribe
             string[] parts = data.Split(':');
 
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            // in case there are fields containing ':' like "...:Name:XXX:YYY:PosX:0.000:..."
+
             for (int i = 0; i + 1 < parts.Length; i++)
             {
-                result[parts[i]] = parts[i + 1];
+                string key = parts[i];
+                string value = parts[i + 1];
+
+                // in case there are fields containing ':' like "...:Name:XXX: YYY:PosX:0.000:..."
+                while (i + 2 < parts.Length && parts[i + 2].StartsWith(" ", StringComparison.Ordinal))
+                {
+                    value += ":" + parts[i + 2];
+                    i++;
+                }
+
+                result[key] = value;
             }
+
             return result;
         }
 
@@ -402,10 +413,10 @@ namespace Triggernometry.FFXIV.LogTranscribe
                 { "0031", new ActorControlData("Unknown49", "10031") },
                 { "003E", new ActorControlData("AnimationState", "1003E") },
                 { "003F", new ActorControlData("WeaponId", "1003F") },
+                { "00B8", new ActorControlData("TargetVfx", "100B8") },
                 { "0197", new ActorControlData("PlayActionTimeline", "10197") },
                 { "019D", new ActorControlData("EObjAnimation", "1019D") },
                 { "01F8", new ActorControlData("StatusUpdate", "101F8") },
-                { "00B8", new ActorControlData("TargetVfx", "100B8") },
             };
 
         private static void ProcessActorControl(string logLine, string zone)
@@ -447,14 +458,14 @@ namespace Triggernometry.FFXIV.LogTranscribe
         {
             uint bnpcNameId = forceBNpcNameIdZero ? 0 : entity.BNpcNameID;
 
-            return $"{entity.Name}:{bnpcNameId}:{entity.BNpcID}:" +
+            return $"{ReplaceColon(entity.Name)}:{bnpcNameId}:{entity.BNpcID}:" +
                    $"{FormatF4(entity.PosX)}:{FormatF4(entity.PosY)}:{FormatF4(entity.PosZ)}:{FormatF4(entity.Heading)}";
         }
 
         private static string FormatEntityIdentity(Entity entity, bool forceBNpcNameIdZero = false)
         {
             uint bnpcNameId = forceBNpcNameIdZero ? 0 : entity.BNpcNameID;
-            return $"{entity.Name}:{bnpcNameId}:{entity.BNpcID}";
+            return $"{ReplaceColon(entity.Name)}:{bnpcNameId}:{entity.BNpcID}";
         }
 
         private static string FormatF4(float value)
@@ -470,6 +481,8 @@ namespace Triggernometry.FFXIV.LogTranscribe
             return value.ParseFloat().ToString("F4", CultureInfo.InvariantCulture);
         }
 
+        private static string ReplaceColon(string raw) => raw?.Replace(":", "：") ?? string.Empty;
+
         private static void QueueLog(
             string message,
             string zone,
@@ -477,10 +490,7 @@ namespace Triggernometry.FFXIV.LogTranscribe
         {
             RealPlugin plugin = RealPlugin.Instance;
 
-            plugin.LogLineQueuer(
-                message,
-                zone ?? "",
-                LogEvent.SourceEnum.Log);
+            plugin.LogLineQueuer(message, zone ?? "", LogEvent.SourceEnum.Log);
 
             if (addToACTEncounter)
                 plugin.ACTEncounterLogHook?.Invoke(message);
