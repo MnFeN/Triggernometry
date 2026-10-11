@@ -125,7 +125,7 @@ namespace Triggernometry.Expressions.Maths
             LocalFunctions.Add("random", x => RandomNumber(x[0], x[1]));
             LocalFunctions.Add("sqrt", x => Math.Sqrt(x[0]));
             LocalFunctions.Add("rem", x => Math.IEEERemainder(x[0], x[1]));
-            LocalFunctions.Add("mod", x => ModFunction(x[0], x[1]));
+            LocalFunctions.Add("mod", x => ModFunction(x[0], x[1], x.Length > 2 ? x[2] : 0));
             LocalFunctions.Add("root", x => Math.Pow(x[0], 1.0 / x[1]));
             LocalFunctions.Add("pow", x => Math.Pow(x[0], x[1]));
             LocalFunctions.Add("exp", x => Math.Exp(x[0]));
@@ -205,9 +205,9 @@ namespace Triggernometry.Expressions.Maths
                 return (long)(x - tolerance);
         }
 
-        public static double ModFunction(double a, double b)
+        public static double ModFunction(double a, double b, double min = 0)
         {
-            return (a % b + b) % b;
+            return ((a - min) % b + b) % b + min;
         }
 
         public static double IfFunction(double a, double b, double c)

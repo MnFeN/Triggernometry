@@ -31,7 +31,7 @@ namespace Triggernometry.UI.CustomControls
 
             // numeric func: basic
             "sqrt(x)", "pow(x, y)", "root(x, y)", "exp(x)", "log(x, base=e)",
-            "abs(x)", "sign(x)", "rem(x, y)", "mod(x, y)", "random(start, end)",
+            "abs(x)", "sign(x)", "rem(x, y)", "mod(x, y)", "mod(x, y, min)", "random(start, end)",
             "truncate(x)", "floor(x)", "ceiling(x)", "round(x, digits=0)",
             "max(...)", "min(...)", "or(...)", "and(...)", "if(condition, trueVal, falseVal)",
 
