@@ -236,7 +236,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             if (args.Action == StaticVfxAction.Create)
             {
                 if (args.Scale?.HasDistanceToken == true && args.Target == null)
-                    throw new ArgumentException("[PictoACT] 创建 VFX 时若在 Scale 中使用 _d，必须指定 Target。");
+                    throw new ArgumentException("[PictoACT] 创建 VFX 时若在 Scale 中使用 _d 或 _d3，必须指定 Target。");
 
                 if (args.TransformNorthTarget != null && args.TransformCenter == null)
                     throw new ArgumentException("[PictoACT] θ 指定为坐标或实体 id 时，必须同时指定 O/Center。");

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Triggernometry.Expressions.String.Utils;
 
 namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
@@ -57,25 +53,26 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                 ScaleTerm.Parse(z ?? x));
         }
 
-        public Vector3 Resolve(double distance)
+        public Vector3 Resolve(double distance2D, double distance3D)
         {
             return new Vector3(
-                (float)X.Resolve(distance),
-                (float)Y.Resolve(distance),
-                (float)Z.Resolve(distance));
+                (float)X.Resolve(distance2D, distance3D),
+                (float)Y.Resolve(distance2D, distance3D),
+                (float)Z.Resolve(distance2D, distance3D));
         }
 
         public ScaleArg Duplicate() => new ScaleArg(X.Duplicate(), Y.Duplicate(), Z.Duplicate());
 
         private sealed class ScaleTerm
         {
+            // _d 表示二维距离，_d3 表示三维距离；要求匹配完整标记。
             private static readonly Regex DistanceTokenRegex =
-                new Regex(@"\b_d\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+                new Regex(@"\b_d3?\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
             private readonly bool _hasDistanceToken;
             private readonly double _value;
             private readonly string _expression;
-            private readonly Func<double, string> _replaceDistance;
+            private readonly Func<double, double, string> _replaceDistance;
 
             public bool HasDistanceToken => _hasDistanceToken;
 
@@ -92,7 +89,11 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
 
                 _hasDistanceToken = true;
                 _expression = expression.Trim();
-                _replaceDistance = distance => DistanceTokenRegex.Replace(_expression, distance.ToDataString());
+                _replaceDistance = (distance2D, distance3D) =>
+                    DistanceTokenRegex.Replace(_expression, match =>
+                        match.Value.Equals("_d3", StringComparison.OrdinalIgnoreCase)
+                            ? distance3D.ToDataString()
+                            : distance2D.ToDataString());
             }
 
             public static ScaleTerm Parse(string raw)
@@ -108,8 +109,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                 return new ScaleTerm(raw);
             }
 
-            public double Resolve(double distance) => _hasDistanceToken
-                ? _replaceDistance(distance).ParseData<double>()
+            public double Resolve(double distance2D, double distance3D) => _hasDistanceToken
+                ? _replaceDistance(distance2D, distance3D).ParseData<double>()
                 : _value;
 
             public ScaleTerm Duplicate() => _hasDistanceToken

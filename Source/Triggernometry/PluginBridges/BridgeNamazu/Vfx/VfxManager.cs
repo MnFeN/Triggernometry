@@ -379,8 +379,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                 return false;
 
             var changed = false;
-            changed |= RefreshPoseAndTransform(vfx, entities, out double? distance);
-            changed |= RefreshScale(vfx, distance);
+            changed |= RefreshPoseAndTransform(vfx, entities, out double? distance2D, out double? distance3D);
+            changed |= RefreshScale(vfx, distance2D, distance3D);
 
             return changed;
         }
@@ -388,16 +388,17 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         /// <summary>
         /// 自动解析位姿和线性变换参数，并写回 vfx.Pos / vfx.Angles。
         /// </summary>
-        private static bool RefreshPoseAndTransform(StaticVfx vfx, IReadOnlyDictionary<uint, Entity> entities, out double? distance)
+        private static bool RefreshPoseAndTransform(StaticVfx vfx, IReadOnlyDictionary<uint, Entity> entities, out double? distance2D, out double? distance3D)
         {
-            distance = null;
+            distance2D = null;
+            distance3D = null;
 
             // 防御性检验，完整创建的实体不会没有 Pos
             if (vfx.PosArg == null)
                 return false;
 
             var pos = ResolveCoordArg(entities, vfx.PosArg);
-            var angles = ResolveAngles(vfx, entities, pos, out distance);
+            var angles = ResolveAngles(vfx, entities, pos, out distance2D, out distance3D);
 
             // 尚未指定过位姿参数，跳过后续流程（说明 Create 流程还没结束，可能出现于异步创建和修改的情况）
             if (pos == null || !angles.HasValue)
@@ -425,9 +426,10 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         /// <summary>
         /// 自动解析两点位姿模式（如果指定了 Target）或单点位姿模式（如果指定了 Angle3D），并返回最终朝向。若两者都未指定，则返回 null。
         /// </summary>
-        private static Vector3? ResolveAngles(StaticVfx vfx, IReadOnlyDictionary<uint, Entity> entities, XIVCoord resolvedPos, out double? distance)
+        private static Vector3? ResolveAngles(StaticVfx vfx, IReadOnlyDictionary<uint, Entity> entities, XIVCoord resolvedPos, out double? distance2D, out double? distance3D)
         {
-            distance = null;
+            distance2D = null;
+            distance3D = null;
 
             // 给定了 Target，则为两点位姿模式，以 Pos - Target 方向作为朝向，同时输出距离供后续使用。
             if (vfx.TargetArg != null)
@@ -441,7 +443,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                     return null;
 
                 var theta = AngleFromTo(pos, target);
-                distance = Distance(pos, target);
+                distance2D = Distance2D(pos, target);
+                distance3D = Distance3D(pos, target);
                 return new Vector3(theta, 0, 0);
             }
 
@@ -501,7 +504,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             return transform;
         }
 
-        private static bool RefreshScale(StaticVfx vfx, double? distance)
+        private static bool RefreshScale(StaticVfx vfx, double? distance2D, double? distance3D)
         {
             if (vfx.ScaleArg == null)
                 return false;
@@ -511,11 +514,11 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                 if (vfx.TargetArg == null)
                     return false;
 
-                if (!distance.HasValue)
+                if (!distance2D.HasValue || !distance3D.HasValue)
                     return false;
             }
 
-            vfx.Scales = vfx.ScaleArg.Resolve(distance ?? 0.0);
+            vfx.Scales = vfx.ScaleArg.Resolve(distance2D ?? 0.0, distance3D ?? 0.0);
             return true;
         }
 
@@ -686,7 +689,21 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             return result;
         }
 
-        private static double Distance(XIVCoord a, XIVCoord b)
+        // Pos 与 Target 的 XY 平面距离，对应 Scale 中的 _d。
+        private static double Distance2D(XIVCoord a, XIVCoord b)
+        {
+            if (a == null || b == null)
+                return 0;
+
+            var va = a.ToCartesian();
+            var vb = b.ToCartesian();
+            var dx = va.X - vb.X;
+            var dy = va.Y - vb.Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        // Pos 与 Target 的三维距离，对应 Scale 中的 _d3。
+        private static double Distance3D(XIVCoord a, XIVCoord b)
         {
             if (a == null || b == null)
                 return 0;

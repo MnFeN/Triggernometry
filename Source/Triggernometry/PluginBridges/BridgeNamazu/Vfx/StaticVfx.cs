@@ -19,7 +19,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         /// <summary> 当前设置的相对朝向参数；如果 TargetArg 非空，则优先使用两点位姿模式 </summary>
         internal Vector3? Angle3DArg;
 
-        /// <summary> 当前设置的 VFX 自身缩放参数；允许使用 _d 表示 Pos-Target 距离 </summary>
+        /// <summary> 当前设置的 VFX 自身缩放参数；允许使用 _d 表示 Pos-Target 二维距离，_d3 表示三维距离 </summary>
         internal ScaleArg ScaleArg;
 
         /// <summary> 当前设置的线性变换坐标系中心 O / Center，可以是固定坐标或实体 id </summary>
@@ -175,7 +175,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         {
             // 当前状态校验：_d 依赖两点距离，因此最终状态中必须有 Target。
             if (ScaleArg?.HasDistanceToken == true && TargetArg == null)
-                throw new ArgumentException("[PictoACT] Scale 使用 _d 时，当前 VFX 必须已有 Target，或本次指定 Target。");
+                throw new ArgumentException("[PictoACT] Scale 使用 _d 或 _d3 时，当前 VFX 必须已有 Target，或本次指定 Target。");
         }
     
     }
