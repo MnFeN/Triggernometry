@@ -535,7 +535,11 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             if (entity == null)
                 return null;
 
-            return new CartesianCoord(entity.PosX, entity.PosY, entity.PosZ);
+            return new CartesianCoord(
+                arg.OverrideX ?? entity.PosX,
+                arg.OverrideY ?? entity.PosY,
+                arg.OverrideZ ?? entity.PosZ
+            );
         }
 
         private static float? ResolveEntityHeading(IReadOnlyDictionary<uint, Entity> entities, uint entityId)

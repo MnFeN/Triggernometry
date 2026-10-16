@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -183,8 +182,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                 // 如 θ: 120, 100, 0（相对 O 指向的坐标）
                 try
                 {
-                    var coord = XIVCoord.ParseRawData(rawNorth);
-                    args.TransformNorthTarget = DynamicCoordArg.FromCoord(coord);
+                    args.TransformNorthTarget = DynamicCoordArg.Parse(rawNorth);
                     return;
                 }
                 catch (Exception ex)

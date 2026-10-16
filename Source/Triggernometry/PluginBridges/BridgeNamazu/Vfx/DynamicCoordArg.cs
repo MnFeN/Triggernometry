@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Utilities.Maths;
 
@@ -17,6 +18,9 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         public XIVCoord FixedCoord { get; private set; }
 
         public uint EntityId { get; private set; }
+        public double? OverrideX { get; private set; }
+        public double? OverrideY { get; private set; }
+        public double? OverrideZ { get; private set; }
 
         public bool IsFixed => Kind == CoordArgKind.Fixed;
         public bool IsDynamic => Kind == CoordArgKind.EntityId;
@@ -53,9 +57,34 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
 
             raw = raw.Trim();
 
+            // 纯实体 ID
             if (TryParseEntityId(raw, out var entityId))
                 return FromEntityId(entityId);
 
+            // 实体 ID + 指定坐标分量，如 10001234, y=10, z = 0
+            var parts = Regex.Split(raw, @",\s*(?=[xyz]\s*=)", RegexOptions.IgnoreCase);
+            if (parts.Length > 1 && TryParseEntityId(parts[0], out entityId))
+            {
+                var result = FromEntityId(entityId);
+
+                for (int i = 1; i < parts.Length; i++)
+                {
+                    int eq = parts[i].IndexOf('=');
+                    string axis = parts[i].Substring(0, eq).Trim().ToLowerInvariant();
+                    double value = parts[i].Substring(eq + 1).Trim().ParseData<double>();
+
+                    switch (axis)
+                    {
+                        case "x": result.OverrideX = value; break;
+                        case "y": result.OverrideY = value; break;
+                        case "z": result.OverrideZ = value; break;
+                    }
+                }
+
+                return result;
+            }
+
+            // 普通坐标
             return FromCoord(XIVCoord.ParseRawData(raw));
         }
 
@@ -64,7 +93,14 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             if (Kind == CoordArgKind.Fixed)
                 return FromCoord(FixedCoord.Duplicate());
 
-            return FromEntityId(EntityId);
+            return new DynamicCoordArg
+            {
+                Kind = Kind,
+                EntityId = EntityId,
+                OverrideX = OverrideX,
+                OverrideY = OverrideY,
+                OverrideZ = OverrideZ,
+            };
         }
 
         internal static bool TryParseEntityId(string raw, out uint entityId)
