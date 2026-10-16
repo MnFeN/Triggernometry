@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
+using Triggernometry.Expressions.Maths;
 using static System.Math;
 
 namespace Triggernometry.Utilities.Maths
@@ -88,27 +90,27 @@ namespace Triggernometry.Utilities.Maths
             return new Vector3((float)cart.X, (float)cart.Y, (float)cart.Z);
         }
 
-        private static Regex rexOpKeywords = new Regex(@"\b(plus|minus|polar|minuspolar)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex rexOpKeywords = new Regex(
+            @"\b(plus|minus|polar|minuspolar|polardirN?\d+)\b",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
+        private static readonly Regex rexDirKeyword = new Regex(
+            @"^polardir(?<isNegative>N)?(?<segments>\d+)$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
         /// <summary>
-        /// 将一串直角坐标、极坐标、或混合方式指定的坐标解析并叠加，如：<br /><br />
-        /// <paramref str="A"/>: 10, -10, 0 <br />
-        /// <paramref str="A"/>: <paramref str="polar"/> 20, -45°, 0<br />
-        /// <paramref str="A"/>: 10, -10, 0 <paramref str="polar"/> 20, -45°（在直角坐标基础上叠加极坐标结果）<br /><br />
-        /// 字符串格式详见 <paramref str="rawCoords"/>。
+        /// 将直角坐标、极坐标及离散方向坐标解析并叠加。<br/><br/>
+        /// 例如：<br/>
+        /// 10, -10, 0<br/>
+        /// polar 20, -45°, 0<br/>
+        /// 100, 100, 0 polardirN4 10, 2（从给定点向右下偏移 10）<br/>
+        /// polardir8 10, 1（按八方向中的第 1 个方向偏移 10）<br/><br/>
+        /// 各组坐标可使用 plus、minus、polar、minuspolar、polardirN? 等关键字连接。
+        /// polardirN? 与 polardir? 的方向规则一致，但序号增加 0.5，序号以 0 为起点。
         /// </summary>
-        /// <param str="rawCoords">
-        /// 一串坐标字符串，可包含多组坐标。<br />
-        /// 每组坐标之间以关键字连接，坐标分量之间以逗号连接。如：<br /><br />
-        /// <paramref str="A"/>:     x, y, z  
-        /// <paramref str="plus"/>   x2, y2  
-        /// <paramref str="minus"/>  x3, y3, z3  
-        /// <paramref str="polar"/>  r1, θ1
-        /// <paramref str="minuspolar"/> r2, θ2, z2<br />
-        /// </param>
         public static XIVCoord ParseRawData(string rawCoords)
         {
-            // 例：x, y, z plus x2, y2 minus x3, y3, z3 polar r1, θ1 minuspolar r2, θ2, z2
+            // 例：x, y, z plus x2, y2 minus x3, y3, z3 polar r, θ polardirN4 r2, index2
 
             List<string> parts = new List<string>();
             string currentPart = "";
@@ -137,59 +139,84 @@ namespace Triggernometry.Utilities.Maths
                 throw new Exception($"坐标参数存在 {Abs(depth)} 个未闭合的{(depth > 0 ? "左" : "右")}括号。表达式：{rawCoords}");
             }
 
-            // 此时：[x] [y] [z plus x2] [y2 minus x3] [y3] [z3 polar r] [θ] [z]
-
             List<XIVCoord> coords = new List<XIVCoord>();
             bool isCurrentPolar = false;
             bool isCurrentPlus = true;
+            int currentDirSegments = 0;
+            bool currentDirNegative = false;
             List<string> currentParams = new List<string>();
 
             foreach (string part in parts)
             {
                 string[] splitParts = rexOpKeywords.Split(part);
 
-                if (splitParts.Length == 3) // 找到操作符，拆分解析
+                if (splitParts.Length == 3)
                 {
                     string beforeOp = splitParts[0].Trim();
                     string operation = splitParts[1].Trim();
                     string afterOp = splitParts[2].Trim();
 
-                    // 处理前部分
-                    if (currentParams.Count != 0 || !string.IsNullOrEmpty(beforeOp)) // 不是形如 "polar ..." 的字符串开始位置
+                    // 先完成前一组坐标的解析，再切换到新的坐标类型。
+                    if (currentParams.Count != 0 || !string.IsNullOrEmpty(beforeOp))
                     {
                         currentParams.Add(beforeOp);
-                        XIVCoord coord = isCurrentPolar
-                            ? PolarCoord.Parse(currentParams.ToArray())
-                            : (XIVCoord)CartesianCoord.Parse(currentParams.ToArray());
+                        XIVCoord coord = ParseCoordPart(currentParams, isCurrentPolar, currentDirSegments, currentDirNegative);
                         coords.Add(isCurrentPlus ? coord : -coord);
                         currentParams.Clear();
                     }
 
-                    // 处理操作符：是否是加法/极坐标操作
-                    isCurrentPlus = !operation.StartsWith("minus");
-                    isCurrentPolar = operation.EndsWith("polar");
+                    var dirMatch = rexDirKeyword.Match(operation);
+                    if (dirMatch.Success)
+                    {
+                        // polardirN4 r, 2 等价于 polar r, π/4；负向分段的序号偏移 0.5。
+                        if (!int.TryParse(dirMatch.Groups["segments"].Value, out currentDirSegments) || currentDirSegments <= 0)
+                            throw new ArgumentException($"坐标方向的分段数必须是正整数：{operation}");
 
-                    // 处理后部分
+                        currentDirNegative = dirMatch.Groups["isNegative"].Success;
+                        isCurrentPolar = true;
+                        isCurrentPlus = true;
+                    }
+                    else
+                    {
+                        currentDirSegments = 0;
+                        currentDirNegative = false;
+                        isCurrentPlus = !operation.StartsWith("minus", StringComparison.OrdinalIgnoreCase);
+                        isCurrentPolar = operation.EndsWith("polar", StringComparison.OrdinalIgnoreCase);
+                    }
+
                     currentParams.Add(afterOp);
                 }
-                else if (splitParts.Length == 1) // 未找到操作符，直接添加
+                else if (splitParts.Length == 1)
                 {
                     currentParams.Add(splitParts[0].Trim());
                 }
-                else // 偷个懒，坐标最少两个参数，而只要有两个就会被逗号预先拆分，所以正常不会出现 1 3 以外的情况
+                else
                 {
                     throw new Exception($"坐标参数解析时，关键字之间参数过少。\n表达式：{rawCoords}；\n出错位置：{part}");
                 }
             }
-            XIVCoord finalCoord = isCurrentPolar
-                ? PolarCoord.Parse(currentParams.ToArray())
-                : (XIVCoord)CartesianCoord.Parse(currentParams.ToArray());
+
+            XIVCoord finalCoord = ParseCoordPart(currentParams, isCurrentPolar, currentDirSegments, currentDirNegative);
             coords.Add(isCurrentPlus ? finalCoord : -finalCoord);
 
-            // 此时：[Cartesian1] [Cartesian2] [Cartesian3] [Polar1]
             return coords.Aggregate((c1, c2) => c1 + c2);
         }
 
-    }
+        private static XIVCoord ParseCoordPart(List<string> parameters, bool isPolar, int dirSegments, bool dirNegative)
+        {
+            string[] args = parameters.ToArray();
+            if (dirSegments > 0 && (args.Length == 2 || args.Length == 3))
+            {
+                double index = MathParser.Parse(args[1]);
+                if (dirNegative)
+                    index += 0.5;
 
+                index = (index % dirSegments + dirSegments) % dirSegments;
+                double θ = index / dirSegments * 2 * PI - PI;
+                args[1] = θ.ToString("R", CultureInfo.InvariantCulture);
+            }
+
+            return isPolar ? PolarCoord.Parse(args) : (XIVCoord)CartesianCoord.Parse(args);
+        }
+    }
 }
