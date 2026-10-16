@@ -455,11 +455,12 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         private static LinearTransformArgs ResolveLinearTransformArgs(StaticVfx vfx, IReadOnlyDictionary<uint, Entity> entities)
         {
             var transform = new LinearTransformArgs(false);
+            Entity centerEntity = null;
 
-            // 解析坐标系中心 O
+            // 解析坐标系中心 O，并保留同一次解析得到的实体供默认朝向使用。
             if (vfx.TransformCenterArg != null)
             {
-                var center = ResolveCoordArg(entities, vfx.TransformCenterArg);
+                var center = ResolveCoordArg(entities, vfx.TransformCenterArg, out centerEntity);
                 if (center == null)
                     return null;
 
@@ -481,14 +482,13 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             {
                 transform.Rotation = vfx.TransformNorthAngle.Value;
             }
-            // 如果没指定坐标系正北，但中心是动态实体，则以该实体当前朝向作为坐标系正北
+            // 未指定正北时，沿用 O 实际选中实体的朝向（包括 Target / Near / Far）。
             else if (vfx.TransformCenterArg?.IsDynamic == true)
             {
-                var heading = ResolveEntityHeading(entities, vfx.TransformCenterArg.EntityId);
-                if (!heading.HasValue)
+                if (centerEntity == null)
                     return null;
 
-                transform.Rotation = heading.Value;
+                transform.Rotation = centerEntity.Heading;
             }
 
             // 写入 KeepX / KeepY
@@ -520,39 +520,147 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
         }
 
         private static XIVCoord ResolveCoordArg(IReadOnlyDictionary<uint, Entity> entities, DynamicCoordArg arg)
+            => ResolveCoordArg(entities, arg, out _);
+
+        private static XIVCoord ResolveCoordArg(IReadOnlyDictionary<uint, Entity> entities, DynamicCoordArg arg, out Entity resolvedEntity)
         {
+            resolvedEntity = null;
             if (arg == null)
                 return null;
 
             if (arg.IsFixed)
                 return arg.FixedCoord.Duplicate();
 
-            if (entities?.TryGetValue(arg.EntityId, out var entity) != true)
-            {
-                entity = Entity.GetEntityByID(arg.EntityId);
-            }
-
-            if (entity == null)
+            resolvedEntity = ResolveEntityArg(entities, arg);
+            if (resolvedEntity == null)
                 return null;
 
             return new CartesianCoord(
-                arg.OverrideX ?? entity.PosX,
-                arg.OverrideY ?? entity.PosY,
-                arg.OverrideZ ?? entity.PosZ
+                arg.OverrideX ?? resolvedEntity.PosX,
+                arg.OverrideY ?? resolvedEntity.PosY,
+                arg.OverrideZ ?? resolvedEntity.PosZ
             );
         }
 
-        private static float? ResolveEntityHeading(IReadOnlyDictionary<uint, Entity> entities, uint entityId)
+        /// <summary>
+        /// 根据参数解析最终选中的实体；只有 Near/Far 需要每 100 ms 重新排名。
+        /// 缓存仅记录 ID，实体的坐标和朝向在每次调用时仍从当前实体列表读取。
+        /// </summary>
+        private static Entity ResolveEntityArg(IReadOnlyDictionary<uint, Entity> entities, DynamicCoordArg arg)
         {
-            if (entities?.TryGetValue(entityId, out var entity) != true)
-            {
-                entity = Entity.GetEntityByID(entityId);
-            }
-
-            if (entity == null)
+            if (arg == null || arg.IsFixed)
                 return null;
 
-            return entity.Heading;
+            Entity source = null;
+            if (arg.Kind == CoordArgKind.EntityId)
+            {
+                source = FindEntity(entities, arg.EntityId);
+                if (source == null)
+                    return null;
+            }
+            else if (arg.Kind != CoordArgKind.CoordinateSelector)
+            {
+                return null;
+            }
+
+            switch (arg.SelectMode)
+            {
+                case EntitySelectMode.Direct:
+                    return source;
+
+                case EntitySelectMode.Target:
+                    return source == null ? null : FindEntity(entities, source.TargetID);
+
+                case EntitySelectMode.Near:
+                case EntitySelectMode.Far:
+                    var now = DateTime.UtcNow;
+                    if (now >= arg.NextSelectUtc)
+                    {
+                        // 实体参考点使用其实时位置；固定坐标参考点不受 O、θ 的变换影响。
+                        double referenceX;
+                        double referenceY;
+                        uint? excludedId = null;
+                        if (source != null)
+                        {
+                            referenceX = source.PosX;
+                            referenceY = source.PosY;
+                            excludedId = source.ID;
+                        }
+                        else
+                        {
+                            var reference = arg.FixedCoord.ToCartesian();
+                            referenceX = reference.X;
+                            referenceY = reference.Y;
+                        }
+
+                        arg.CachedSelectedId = SelectEntityByDistance(
+                            entities, referenceX, referenceY, excludedId, arg);
+                        arg.NextSelectUtc = now.AddMilliseconds(100);
+                    }
+
+                    // 只缓存选中的 ID，每轮重新获取实体对象以跟随其最新位置和朝向。
+                    return arg.CachedSelectedId.HasValue
+                        ? FindEntity(entities, arg.CachedSelectedId.Value)
+                        : null;
+
+                default:
+                    return null;
+            }
+        }
+
+        private static Entity FindEntity(IReadOnlyDictionary<uint, Entity> entities, uint id)
+        {
+            if (id == 0 || id == 0xE0000000)
+                return null;
+
+            if (entities?.TryGetValue(id, out Entity entity) != true)
+                entity = Entity.GetEntityByID(id);
+
+            return entity != null && entity.Exist ? entity : null;
+        }
+
+        private static uint? SelectEntityByDistance(IReadOnlyDictionary<uint, Entity> entities,
+            double refX, double refY, uint? excludedId, DynamicCoordArg arg)
+        {
+            // 复用工作循环构建的实体缓存，避免额外读取实体列表。
+            IEnumerable<Entity> candidates = entities?.Values ?? Entity.GetEntities();
+            var eligible = candidates
+                .Where(e => e != null && e.Exist &&
+                    (!excludedId.HasValue || e.ID != excludedId.Value) &&
+                    e.CurrentHP > 0 && MatchesSelectType(e, arg.SelectType))
+                .Select(e => new
+                {
+                    e.ID,
+                    DistanceSquared = ((double)e.PosX - refX) * ((double)e.PosX - refX)
+                                    + ((double)e.PosY - refY) * ((double)e.PosY - refY)
+                });
+
+            var ordered = arg.SelectMode == EntitySelectMode.Near
+                ? eligible.OrderBy(e => e.DistanceSquared).ThenBy(e => e.ID)
+                : eligible.OrderByDescending(e => e.DistanceSquared).ThenBy(e => e.ID);
+
+            return ordered.Skip(arg.SelectIndex - 1).Select(e => (uint?)e.ID).FirstOrDefault();
+        }
+
+        private static bool MatchesSelectType(Entity entity, EntitySelectType? type)
+        {
+            switch (type)
+            {
+                case EntitySelectType.Player:
+                    return entity.Type == EntityType.Pc;
+                case EntitySelectType.Tank:
+                    return entity.Job.IsTank;
+                case EntitySelectType.Healer:
+                    return entity.Job.IsHealer;
+                case EntitySelectType.NonTank:
+                    return entity.Type == EntityType.Pc && !entity.Job.IsTank;
+                case EntitySelectType.DPS:
+                    return entity.Job.IsDPS;
+                case EntitySelectType.Enemy:
+                    return entity.OwnerID == 0 && entity.Type == EntityType.BattleNpc;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>
