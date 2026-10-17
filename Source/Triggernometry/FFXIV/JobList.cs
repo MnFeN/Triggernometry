@@ -11,7 +11,7 @@ namespace Triggernometry.FFXIV
         MIN = 16, BTN = 17, FSH = 18, PLD = 19, MNK = 20, WAR = 21, DRG = 22, BRD = 23,
         WHM = 24, BLM = 25, ACN = 26, SMN = 27, SCH = 28, ROG = 29, NIN = 30, MCH = 31,
         DRK = 32, AST = 33, SAM = 34, RDM = 35, BLU = 36, GNB = 37, DNC = 38, RPR = 39,
-        SGE = 40, VPR = 41, PCT = 42, BST = 43, _44 = 44, _45 = 45,
+        SGE = 40, VPR = 41, PCT = 42, BST = 43, _44 = 44, _45 = 45, _46 = 46, _47 = 47,
     }
 
     public partial class Job
@@ -63,6 +63,10 @@ namespace Triggernometry.FFXIV
         public static Job VPR => GetJob(JobEnum.VPR);
         public static Job PCT => GetJob(JobEnum.PCT);
         public static Job BST => GetJob(JobEnum.BST);
+        private static Job _44 => GetJob(JobEnum._44);
+        private static Job _45 => GetJob(JobEnum._45);
+        private static Job _46 => GetJob(JobEnum._46);
+        private static Job _47 => GetJob(JobEnum._47);
 
         static Job()
         {
@@ -775,23 +779,23 @@ namespace Triggernometry.FFXIV
                 },
                 new Job {
                     JobType = JobEnum._44,
-                    SubRole = RoleType.None,
-                    NameCN1 = "水",
-                    NameCN2 = "四四",
-                    NameJP1 = "水",
-                    NameTCN1 = "水",
-                    NameTCN2 = "四四",
-                    NameCN = "job_44",
-                    NameDE = "job_44",
-                    NameEN = "job_44",
-                    NameFR = "job_44",
-                    NameJP = "job_44",
-                    NameKR = "job_44",
-                    NameTCN = "job_44",
+                    SubRole = RoleType.Tank,
+                    NameCN1 = "坚",
+                    NameCN2 = "坚城",
+                    NameJP1 = "バ",
+                    NameTCN1 = "堅",
+                    NameTCN2 = "堅城",
+                    NameCN = "坚城卫",
+                    NameDE = "Bastion",
+                    NameEN = "Bastion",
+                    NameFR = "Bastion",
+                    NameJP = "バスティオン",
+                    NameKR = "바스티온",
+                    NameTCN = "堅城衛",
                 },
                 new Job {
                     JobType = JobEnum._45,
-                    SubRole = RoleType.None,
+                    SubRole = RoleType.PhysicalRanged,
                     NameCN1 = "玉",
                     NameCN2 = "四五",
                     NameJP1 = "玉",
@@ -805,12 +809,44 @@ namespace Triggernometry.FFXIV
                     NameKR = "job_45",
                     NameTCN = "job_45",
                 },
+                new Job {
+                    JobType = JobEnum._46,
+                    SubRole = RoleType.None,
+                    NameCN1 = "出",
+                    NameCN2 = "四六",
+                    NameJP1 = "出",
+                    NameTCN1 = "出",
+                    NameTCN2 = "四六",
+                    NameCN = "job_46",
+                    NameDE = "job_46",
+                    NameEN = "job_46",
+                    NameFR = "job_46",
+                    NameJP = "job_46",
+                    NameKR = "job_46",
+                    NameTCN = "job_46",
+                },
+                new Job {
+                    JobType = JobEnum._47,
+                    SubRole = RoleType.None,
+                    NameCN1 = "昆",
+                    NameCN2 = "四七",
+                    NameJP1 = "昆",
+                    NameTCN1 = "昆",
+                    NameTCN2 = "四七",
+                    NameCN = "job_47",
+                    NameDE = "job_47",
+                    NameEN = "job_47",
+                    NameFR = "job_47",
+                    NameJP = "job_47",
+                    NameKR = "job_47",
+                    NameTCN = "job_47",
+                },
                 #endregion Other Jobs
             };
 
             foreach (var job in _jobs)
             {
-                foreach (var name in job._names())
+                foreach (var name in job.GetNames())
                 {
                     _jobByNames[name] = job;
                 }
@@ -818,14 +854,15 @@ namespace Triggernometry.FFXIV
 
             XivDefaultOrder = new List<Job>
             {
-                PLD, GLA, WAR, MRD, DRK, GNB,
+                PLD, GLA, _44, WAR, MRD, DRK, GNB,
                 WHM, CNJ, SCH, AST, SGE,
                 MNK, PGL, DRG, LNC, NIN, ROG, SAM, RPR, VPR, BST,
-                BRD, ARC, MCH, DNC,
+                BRD, ARC, MCH, DNC, _45,
                 BLM, THM, SMN, ACN, RDM, PCT, BLU,
+                _46, _47,
                 CRP, BSM, ARM, GSM, LTW, WVR, ALC, CUL,
                 MIN, BTN, FSH,
-                ADV,
+                ADV, 
             };
 
             for (var i = 0; i < XivDefaultOrder.Count; i++)
@@ -834,7 +871,7 @@ namespace Triggernometry.FFXIV
             }
         }
 
-        IEnumerable<string> _names()
+        private IEnumerable<string> GetNames()
         {
             yield return JobID.ToString();
             yield return NameCN; yield return NameDE; yield return NameEN; yield return NameFR;
