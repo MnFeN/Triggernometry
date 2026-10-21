@@ -104,7 +104,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(839, 25);
-            this.toolStrip1.TabIndex = 1;
+            this.toolStrip1.TabStop = false;
             // 
             // btnAdd
             // 
@@ -168,7 +168,7 @@
             this.pnlEditorSingle.Location = new System.Drawing.Point(0, 56);
             this.pnlEditorSingle.Name = "pnlEditorSingle";
             this.pnlEditorSingle.Size = new System.Drawing.Size(200, 220);
-            this.pnlEditorSingle.TabIndex = 2;
+            this.pnlEditorSingle.TabStop = false;
             // 
             // tableLayoutPanel1
             // 
@@ -196,7 +196,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 220);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableLayoutPanel1.TabStop = false;
             // 
             // expRight
             // 
@@ -207,7 +207,7 @@
             this.expRight.Location = new System.Drawing.Point(3, 197);
             this.expRight.Name = "expRight";
             this.expRight.Size = new System.Drawing.Size(194, 20);
-            this.expRight.TabIndex = 7;
+            this.expRight.TabIndex = 5;
             // 
             // cbxExpRType
             // 
@@ -220,7 +220,7 @@
             this.cbxExpRType.Location = new System.Drawing.Point(3, 170);
             this.cbxExpRType.Name = "cbxExpRType";
             this.cbxExpRType.Size = new System.Drawing.Size(194, 21);
-            this.cbxExpRType.TabIndex = 6;
+            this.cbxExpRType.TabIndex = 4;
             this.cbxExpRType.SelectedIndexChanged += new System.EventHandler(this.cbxExpRType_SelectedIndexChanged);
             // 
             // lblOperator
@@ -231,7 +231,7 @@
             this.lblOperator.Name = "lblOperator";
             this.lblOperator.Padding = new System.Windows.Forms.Padding(0, 15, 0, 1);
             this.lblOperator.Size = new System.Drawing.Size(194, 29);
-            this.lblOperator.TabIndex = 1;
+            this.lblOperator.TabStop = false;
             this.lblOperator.Text = "Operator";
             // 
             // lblLeftExpression
@@ -242,7 +242,7 @@
             this.lblLeftExpression.Name = "lblLeftExpression";
             this.lblLeftExpression.Padding = new System.Windows.Forms.Padding(0, 15, 0, 1);
             this.lblLeftExpression.Size = new System.Drawing.Size(194, 29);
-            this.lblLeftExpression.TabIndex = 0;
+            this.lblLeftExpression.TabStop = false;
             this.lblLeftExpression.Text = "Left expression";
             // 
             // cbxExpLType
@@ -256,7 +256,7 @@
             this.cbxExpLType.Location = new System.Drawing.Point(3, 32);
             this.cbxExpLType.Name = "cbxExpLType";
             this.cbxExpLType.Size = new System.Drawing.Size(194, 21);
-            this.cbxExpLType.TabIndex = 3;
+            this.cbxExpLType.TabIndex = 1;
             this.cbxExpLType.SelectedIndexChanged += new System.EventHandler(this.cbxExpLType_SelectedIndexChanged);
             // 
             // expLeft
@@ -268,7 +268,7 @@
             this.expLeft.Location = new System.Drawing.Point(3, 59);
             this.expLeft.Name = "expLeft";
             this.expLeft.Size = new System.Drawing.Size(194, 20);
-            this.expLeft.TabIndex = 4;
+            this.expLeft.TabIndex = 2;
             // 
             // cbxOpType
             // 
@@ -295,7 +295,7 @@
             this.cbxOpType.Location = new System.Drawing.Point(3, 114);
             this.cbxOpType.Name = "cbxOpType";
             this.cbxOpType.Size = new System.Drawing.Size(194, 21);
-            this.cbxOpType.TabIndex = 5;
+            this.cbxOpType.TabIndex = 3;
             this.cbxOpType.SelectedIndexChanged += new System.EventHandler(this.cbxOpType_SelectedIndexChanged);
             // 
             // lblRightExpression
@@ -306,7 +306,7 @@
             this.lblRightExpression.Name = "lblRightExpression";
             this.lblRightExpression.Padding = new System.Windows.Forms.Padding(0, 15, 0, 1);
             this.lblRightExpression.Size = new System.Drawing.Size(194, 29);
-            this.lblRightExpression.TabIndex = 2;
+            this.lblRightExpression.TabStop = false;
             this.lblRightExpression.Text = "Right expression";
             // 
             // pnlEditorGroup
@@ -317,7 +317,7 @@
             this.pnlEditorGroup.Location = new System.Drawing.Point(0, 0);
             this.pnlEditorGroup.Name = "pnlEditorGroup";
             this.pnlEditorGroup.Size = new System.Drawing.Size(200, 56);
-            this.pnlEditorGroup.TabIndex = 3;
+            this.pnlEditorGroup.TabStop = false;
             // 
             // tableLayoutPanel2
             // 
@@ -333,7 +333,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(200, 56);
-            this.tableLayoutPanel2.TabIndex = 0;
+            this.tableLayoutPanel2.TabStop = false;
             // 
             // cbxGroupingType
             // 
@@ -348,7 +348,7 @@
             this.cbxGroupingType.Location = new System.Drawing.Point(3, 32);
             this.cbxGroupingType.Name = "cbxGroupingType";
             this.cbxGroupingType.Size = new System.Drawing.Size(194, 21);
-            this.cbxGroupingType.TabIndex = 4;
+            this.cbxGroupingType.TabIndex = 0;
             this.cbxGroupingType.SelectedIndexChanged += new System.EventHandler(this.cbxGroupingType_SelectedIndexChanged);
             // 
             // lblGroupingType
@@ -359,7 +359,7 @@
             this.lblGroupingType.Name = "lblGroupingType";
             this.lblGroupingType.Padding = new System.Windows.Forms.Padding(0, 15, 0, 1);
             this.lblGroupingType.Size = new System.Drawing.Size(194, 29);
-            this.lblGroupingType.TabIndex = 1;
+            this.lblGroupingType.TabStop = false;
             this.lblGroupingType.Text = "Grouping type";
             // 
             // splitContainer1
@@ -380,7 +380,7 @@
             this.splitContainer1.Panel2MinSize = 200;
             this.splitContainer1.Size = new System.Drawing.Size(839, 576);
             this.splitContainer1.SplitterDistance = 635;
-            this.splitContainer1.TabIndex = 3;
+            this.splitContainer1.TabStop = false;
             // 
             // trvNodes
             // 
@@ -395,7 +395,7 @@
             this.trvNodes.Name = "trvNodes";
             this.trvNodes.SelectedImageIndex = 0;
             this.trvNodes.Size = new System.Drawing.Size(635, 576);
-            this.trvNodes.TabIndex = 0;
+            this.trvNodes.TabStop = false;
             this.trvNodes.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.trvNodes_AfterCheck);
             this.trvNodes.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.trvNodes_ItemDrag);
             this.trvNodes.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvNodes_BeforeSelect);
@@ -533,7 +533,7 @@
             this.panel3.Location = new System.Drawing.Point(0, 30);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(200, 546);
-            this.panel3.TabIndex = 5;
+            this.panel3.TabStop = false;
             // 
             // capProperties
             // 
@@ -544,7 +544,7 @@
             this.capProperties.Location = new System.Drawing.Point(0, 0);
             this.capProperties.Name = "capProperties";
             this.capProperties.Size = new System.Drawing.Size(200, 30);
-            this.capProperties.TabIndex = 4;
+            this.capProperties.TabStop = false;
             // 
             // ConditionViewer
             // 
