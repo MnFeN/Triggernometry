@@ -481,13 +481,13 @@ namespace Triggernometry.Core
 		{
             try
             {
-                if (TryBlockByRepository())
-                    return false;
-
                 if (TryScheduleDeferredFireWithMutexCapture(ctx, mtx))
                     return true;
 
                 if (TryBlockByCondition(ctx))
+                    return false;
+
+                if (TryBlockByRepository())
                     return false;
 
                 DateTime prevLastFired = UpdateFireTiming(ctx);
