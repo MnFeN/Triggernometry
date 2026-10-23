@@ -434,15 +434,15 @@ namespace Triggernometry.UI.CustomControls
         public IButtonControl CancelButton;
 
         public static readonly Regex rexPrefix
-            = new Regex(@"[$¤]\{(?<prefix>[^[$}:.]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{(?<prefix>[^$¤{}\[:.]*)$", RegexOptions.Compiled);
         public static readonly Regex rexFunc
-            = new Regex(@"[$¤]\{f(?:unc)?:(?<funcid>[^(:]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{f(?:unc)?:(?<funcid>[^$¤{}(:]*)$", RegexOptions.Compiled);
         public static readonly Regex rexStorageFunc
-            = new Regex(@"[$¤]\{sfunc:(?<funcid>[^(}]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{sfunc:(?<funcid>[^$¤{}(:]*)$", RegexOptions.Compiled);
         public static readonly Regex rexEnvironment
-            = new Regex(@"[$¤]\{env:(?<key>[^}]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{env:(?<key>[^$¤{}]*)$", RegexOptions.Compiled);
         public static readonly Regex rexVarName
-            = new Regex(@"[$¤]\{(?<e>e?)!?(?<persist>p?)(?<type>[vltd]|text|image|callback|storage)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{(?<e>e?)!?(?<persist>p?)(?<type>[vltd]|text|image|callback|storage)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[{}]*)$", RegexOptions.Compiled);
         public static readonly Regex rexColHeader
             = new Regex(@"[$¤]\{!?(?<persist>p?)t(?:var)?[cd]l:(?<name>[^$¤[]+)\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
         public static readonly Regex rexRowHeader

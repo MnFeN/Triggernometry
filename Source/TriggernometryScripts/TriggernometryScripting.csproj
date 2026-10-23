@@ -83,9 +83,12 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserScript\Class1.cs" />
-    <Compile Include="UserScript\Class3.cs" />
+    <Compile Include="UserScript\ActorControlModule.cs" />
+    <Compile Include="UserScript\_Draft - 复制%282%29.cs" />
+    <Compile Include="UserScript\_Draft - 复制.cs" />
+    <Compile Include="UserScript\_Draft.cs" />
     <Compile Include="UserScript\TpFlag.cs" />
+    <Compile Include="UserScript\ZoneServerModule.cs" />
     <Compile Include="UserScript\技能检索.cs" />
     <Compile Include="UserScript\PacketLogger.cs" />
     <Compile Include="UserScript\MountModule.cs" />
