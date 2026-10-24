@@ -151,7 +151,7 @@ namespace Triggernometry.UI.Forms
             cbxEditAutofire.Enabled = false;
             cbxEditAutofireAllowCondition.Enabled = false;
             cbxSequential.Enabled = false;
-            cndCondition.Enabled = false;
+            cndCondition.SetReadOnly();
             panel5.Visible = true;
             expMutexName.ReadOnly = true;
             chkReadmeTrigger.Enabled = false;

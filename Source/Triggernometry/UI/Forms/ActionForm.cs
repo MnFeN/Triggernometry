@@ -309,21 +309,26 @@ namespace Triggernometry.UI.Forms
 
         internal void SetReadOnlyRecursive(Control c)
         {
+            if (c is ConditionViewer viewer)
+            {
+                viewer.SetReadOnly();
+                return;
+            }
             if (c is CustomControls.ExpressionTextBox)
             {
                 ((CustomControls.ExpressionTextBox)c).ReadOnly = true;
                 return;
             }
-            if (c is TextBox)
+            if (c is TextBoxBase textBox)
             {
-                ((TextBox)c).ReadOnly = true;
+                textBox.ReadOnly = true;
                 return;
             }
             foreach (Control cc in c.Controls)
             {
                 SetReadOnlyRecursive(cc);
             }
-            if (c is Panel || c is TabPage)
+            if (c is Panel || c is TabPage || c is GroupBox)
             {
                 return;
             }

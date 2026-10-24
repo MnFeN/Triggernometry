@@ -24,6 +24,7 @@ namespace Triggernometry.UI.CustomControls
 
         private Dictionary<ConditionComponent, TreeNode> _reverseNodeLookup = new Dictionary<ConditionComponent, TreeNode>();
         private bool _isChanging = false;
+        private bool isReadOnly;
         private Color disabledNodeColor;
 
         /// <summary> Set by parent form. </summary>
@@ -135,6 +136,7 @@ namespace Triggernometry.UI.CustomControls
             trvNodes.DragDrop += trvNodes_DragDrop;
             trvNodes.DragEnter += trvNodes_DragEnter;
             trvNodes.DragOver += trvNodes_DragOver;
+            trvNodes.BeforeCheck += trvNodes_BeforeCheck;
             pnlEditorGroup.Visible = false;
             pnlEditorSingle.Visible = false;            
             PanelStateFromSelection = false;
@@ -144,6 +146,21 @@ namespace Triggernometry.UI.CustomControls
         }
 
         internal event EventHandler ConditionsUpdated;
+
+        /// <summary> Keeps condition navigation and copying available without allowing edits. </summary>
+        internal void SetReadOnly()
+        {
+            isReadOnly = true;
+            expLeft.ReadOnly = expRight.ReadOnly = true;
+            cbxExpLType.Enabled = cbxExpRType.Enabled = cbxOpType.Enabled = cbxGroupingType.Enabled = false;
+            btnAdd.Enabled = btnAddGroup.Enabled = btnAddCondition.Enabled = btnDelete.Enabled = false;
+            trvNodes.AllowDrop = false;
+        }
+
+        private void trvNodes_BeforeCheck(object sender, TreeViewCancelEventArgs e)
+        {
+            if (isReadOnly) e.Cancel = true;
+        }
 
         internal void OnConditionsUpdated()
         {
@@ -228,6 +245,7 @@ namespace Triggernometry.UI.CustomControls
 
         internal void trvNodes_DragOver(object sender, DragEventArgs e)
         {
+            if (isReadOnly) { e.Effect = DragDropEffects.None; return; }
             Point targetPoint = trvNodes.PointToClient(new Point(e.X, e.Y));
             TreeNode tn = trvNodes.GetNodeAt(targetPoint);
             if (tn != null)
@@ -246,6 +264,7 @@ namespace Triggernometry.UI.CustomControls
 
         internal void trvNodes_DragEnter(object sender, DragEventArgs e)
         {
+            if (isReadOnly) { e.Effect = DragDropEffects.None; return; }
             e.Effect = e.AllowedEffect;
             OnConditionsUpdated();
         }
@@ -257,6 +276,7 @@ namespace Triggernometry.UI.CustomControls
 
         internal void trvNodes_DragDrop(object sender, DragEventArgs e)
         {
+            if (isReadOnly) return;
             Point targetPoint = trvNodes.PointToClient(new Point(e.X, e.Y));
             TreeNode targetNode = trvNodes.GetNodeAt(targetPoint);
             TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
@@ -281,6 +301,7 @@ namespace Triggernometry.UI.CustomControls
 
         internal void trvNodes_ItemDrag(object sender, ItemDragEventArgs e)
         {
+            if (isReadOnly) return;
             if (e.Button == MouseButtons.Left)
             {
                 if (e.Item != trvNodes.Nodes[0])
@@ -420,9 +441,9 @@ namespace Triggernometry.UI.CustomControls
                 pnlEditorGroup.Visible = false;
                 PanelStateFromSelection = false;                
             }
-            btnAddGroup.Enabled = true;
-            btnAddCondition.Enabled = true;
-            btnDelete.Enabled = (re.Parent != null);
+            btnAddGroup.Enabled = !isReadOnly;
+            btnAddCondition.Enabled = !isReadOnly;
+            btnDelete.Enabled = !isReadOnly && re.Parent != null;
         }
 
         private void trvNodes_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -804,7 +825,6 @@ namespace Triggernometry.UI.CustomControls
             {
                 string data = ExportSelection();
                 System.Windows.Forms.Clipboard.SetText(data);
-                OnConditionsUpdated();
             }
             catch (Exception ex)
             {
@@ -814,6 +834,7 @@ namespace Triggernometry.UI.CustomControls
 
         internal void PasteSelected(bool overWrite)
         {
+            if (isReadOnly) return;
             string data = null;
             try
             {

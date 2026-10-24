@@ -699,6 +699,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (textBox1.ReadOnly) return;
             if (e.KeyChar == Convert.ToChar(Keys.Enter))
             {
                 e.Handled = true;
@@ -909,7 +910,11 @@ namespace Triggernometry.UI.CustomControls
         private void ProcessAutocomplete()
         {
             acfDebounceTimer.Stop();
-
+            if (textBox1.ReadOnly)
+            {
+                HideAutocomplete();
+                return;
+            }
             if (!textBox1.Focused) return;
 
             string temp = textBox1.Text.Substring(0, textBox1.SelectionStart);
@@ -1598,6 +1603,16 @@ namespace Triggernometry.UI.CustomControls
         public class TextBox : System.Windows.Forms.TextBox
         {
 
+            protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+            {
+                if (ReadOnly && ShortcutsEnabled && keyData == (Keys.Control | Keys.A))
+                {
+                    SelectAll();
+                    return true;
+                }
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
+
             #region Enhanced Double-Click Selection
 
             private int clickCount = 0;
@@ -1663,7 +1678,7 @@ namespace Triggernometry.UI.CustomControls
                         return;
                     }
                 }
-                if (m.Msg == WM_PASTE)
+                if (m.Msg == WM_PASTE && !ReadOnly)
                 {
                     string clipboardText = Clipboard.GetText();
                     if (!Multiline && clipboardText.Contains("\n"))
@@ -1899,6 +1914,11 @@ namespace Triggernometry.UI.CustomControls
             {
                 if (e.Control && e.Shift && !e.Alt && RealPlugin.Instance.cfg.EnableShortcutTemplates)
                 {
+                    if (ReadOnly && e.KeyCode != Keys.A)
+                    {
+                        base.OnKeyDown(e);
+                        return;
+                    }
                     bool handled = true;
                     bool shouldWrap = SelectionLength != 0 && RealPlugin.Instance.cfg.WrapTextWhenSelected;
                     bool useAbbrev = RealPlugin.Instance.cfg.UseAbbrevInTemplates;

@@ -48,6 +48,7 @@ namespace Triggernometry.UI.CustomControls
         internal void SetReadOnly()
         {
             IsReadonly = true;
+            dgvActions.ReadOnly = true;
             btnAddAction.Enabled = false;
             btnActionUp.Enabled = false;
             btnActionDown.Enabled = false;
@@ -374,7 +375,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void dgvActions_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.RowIndex >= Actions.Count)
+            if (IsReadonly || e.RowIndex < 0 || e.RowIndex >= Actions.Count)
             {
                 return;
             }
@@ -397,14 +398,14 @@ namespace Triggernometry.UI.CustomControls
                 btnEditAction_Click(sender, null);
                 return;
             }
-            Actions[e.RowIndex].Enabled = (Actions[e.RowIndex].Enabled == false);
+            if (!IsReadonly) Actions[e.RowIndex].Enabled = (Actions[e.RowIndex].Enabled == false);
         }
 
         private void CopySelectedActions()
         {
             try
             {
-                if (btnRemoveAction.Enabled == true)
+                if (dgvActions.SelectedRows.Count > 0)
                 {
                     var selectedActions = SelectedActions();
                     var xmlData = Core.ActionOld.ActionBundle.ActionsToXml(selectedActions);
@@ -744,10 +745,14 @@ namespace Triggernometry.UI.CustomControls
         {
             bool isSingleActionSelected = dgvActions.SelectedRows.Count == 1;
             bool hasSelection = dgvActions.SelectedRows.Count > 0;
-            ctxAddAction.Enabled = isSingleActionSelected;
+            ctxAddAction.Enabled = !IsReadonly && isSingleActionSelected;
             ctxEditAction.Enabled = isSingleActionSelected;
+            foreach (ToolStripItem item in ctxEditProp.DropDownItems)
+            {
+                if (item is ToolStripMenuItem) item.Enabled = !IsReadonly && hasSelection;
+            }
             ctxEditPropCopyCnd.Enabled = isSingleActionSelected;
-            ctxEditPropPasteCnd.Enabled = ActionViewer.copiedCondition != null;
+            ctxEditPropPasteCnd.Enabled = !IsReadonly && hasSelection && ActionViewer.copiedCondition != null;
             ctxTestAction.Enabled = isSingleActionSelected && SelectedActions()[0].ActionType != Core.ActionOld.ActionTypeEnum.Placeholder;
             
             bool allowMutate = IsReadonly == false && hasSelection;
