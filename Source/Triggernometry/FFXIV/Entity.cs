@@ -453,7 +453,7 @@ namespace Triggernometry.FFXIV
             var percentage = max == 0 ? 0f : (100f * current / max);
             var round = args.Length == 0 ? -1 : (int)MathParser.Parse(args[0]);
             return round < 0
-                ? percentage.ToString(CultureInfo.InvariantCulture)
+                ? percentage.ToStringInvariant()
                 : percentage.ToString("F" + round, CultureInfo.InvariantCulture);
         }
 

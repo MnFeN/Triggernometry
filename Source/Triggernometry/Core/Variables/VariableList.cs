@@ -21,7 +21,7 @@ namespace Triggernometry.Core.Variables
 
         public VariableList() { }
         public VariableList(IEnumerable<string> values) { Values = values.Select(v => (Variable)new VariableScalar(v)).ToList(); }
-        public VariableList(IEnumerable<double> values) : this(values.Select(v => v.ToString(CultureInfo.InvariantCulture))) { }
+        public VariableList(IEnumerable<double> values) : this(values.Select(v => v.ToStringInvariant())) { }
         public VariableList(IEnumerable<int> values) : this(values.Select(v => v.ToString(CultureInfo.InvariantCulture))) { }
 
         public int Size
@@ -33,7 +33,7 @@ namespace Triggernometry.Core.Variables
         {
             foreach (object obj in objs)
             {
-                Values.Add(new VariableScalar() { Value = obj.ToString() });
+                Values.Add(new VariableScalar() { Value = obj is double || obj is float ? obj.ToDataString() : obj.ToString() });
             }
         }
 

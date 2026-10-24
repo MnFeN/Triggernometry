@@ -137,6 +137,8 @@ namespace Triggernometry.Expressions.String.Parsers
                     {
                         node = node[nodeName];
                     }
+                    if (node is double d) return d.ToDataString();
+                    if (node is float f) return f.ToDataString();
                     return node?.ToString() ?? "";
 
                 case "_actionhistory":

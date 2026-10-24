@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.Xml.Serialization;
+using Triggernometry.Expressions.String.Utils;
 
 namespace Triggernometry.Core.Variables
 {
@@ -15,7 +15,7 @@ namespace Triggernometry.Core.Variables
 
         public VariableScalar(string value) { Value = value; }
 
-        public VariableScalar(double value) { Value = value.ToString(CultureInfo.InvariantCulture); }
+        public VariableScalar(double value) { Value = value.ToStringInvariant(); }
         
         public override string ToString()
         {
