@@ -517,6 +517,16 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
+        /// <summary> Gives copied template actions independent queue identities, including loop actions. </summary>
+        private static void ResetActionIds(IEnumerable<Core.ActionOld> actions)
+        {
+            foreach (Core.ActionOld action in actions)
+            {
+                action.Id = Guid.NewGuid();
+                ResetActionIds(action.LoopActions);
+            }
+        }
+
         internal void btnAddTrigger_Click(object sender, EventArgs e)
         {
             Trigger newTrigger = new Trigger();
@@ -524,6 +534,7 @@ namespace Triggernometry.UI.CustomControls
             {
                 cfg.TemplateTrigger?.CopySettingsTo(newTrigger);
                 newTrigger.Id = Guid.NewGuid();
+                ResetActionIds(newTrigger.Actions);
             }
 
             using (Forms.TriggerForm tf = new Forms.TriggerForm(newTrigger, treeView1, imageList1))
