@@ -292,16 +292,23 @@ namespace Triggernometry.Core.Variables
             LastChanger = changer;
         }
 
+        private static int CompareNumeric(Variable a, Variable b)
+        {
+            decimal left = decimal.Parse(a.ToString(), CultureInfo.InvariantCulture);
+            decimal right = decimal.Parse(b.ToString(), CultureInfo.InvariantCulture);
+            return left.CompareTo(right);
+        }
+
         public void SortNumericAsc(string changer)
         {
-            Values.Sort((a, b) => decimal.Parse(a.ToString()).CompareTo(decimal.Parse(b.ToString())));
+            Values.Sort(CompareNumeric);
             LastChanged = DateTime.Now;
             LastChanger = changer;
         }
 
         public void SortNumericDesc(string changer)
         {
-            Values.Sort((a, b) => decimal.Parse(a.ToString()).CompareTo(decimal.Parse(b.ToString())) * -1);
+            Values.Sort((a, b) => CompareNumeric(b, a));
             LastChanged = DateTime.Now;
             LastChanger = changer;
         }
