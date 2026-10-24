@@ -141,6 +141,8 @@ namespace Triggernometry.Core.Variables
         {
             int idx = ProcessRawIndex(rawIndex);
             if (idx < 0) { return; }
+            // Copy before modifying the target, since the source may be this list.
+            var values = srcList.Values.Select(value => value.Duplicate()).ToArray();
             if (idx >= Values.Count)
             {
                 int needcre = idx - Values.Count;
@@ -150,10 +152,7 @@ namespace Triggernometry.Core.Variables
                     needcre--;
                 }
             }
-            for (int i = srcList.Size - 1; i >= 0; i--)
-            {
-                Values.Insert(idx, srcList.Values[i].Duplicate());
-            }
+            Values.InsertRange(idx, values);
             LastChanged = DateTime.Now;
             LastChanger = changer;
         }
