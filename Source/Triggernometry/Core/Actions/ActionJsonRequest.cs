@@ -264,6 +264,8 @@ namespace Triggernometry.Core.Actions
             }
             ctx.contextResponse = response;
             ctx.contextResponseCode = responseCode;
+            ctx.contextJsonResponse = null;
+            ctx.isContextJsonParsed = false;
             if (FiringExpression != null && FiringExpression.Trim().Length > 0)
             {
                 string firing = ctx.EvaluateStringExpression(ActionContextLogger, ctx, FiringExpression);
