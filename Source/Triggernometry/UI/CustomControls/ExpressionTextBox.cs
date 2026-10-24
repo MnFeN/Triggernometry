@@ -85,7 +85,7 @@ namespace Triggernometry.UI.CustomControls
             "tvardl:", "tdl:", "ptvardl:", "ptdl:", "!tvardl:", "!tdl:", "!ptvardl:", "!ptdl:",
             "?l:", "?lvar:", "?t:", "?tvar:", "?d:", "?dvar:",
             "etext:", "eimage:", "ecallback:", "estorage:",
-            "env:",
+            "env:", "reg:", "ereg:", "!reg:",
 
             // special variables
             "_incombat", "_lastencounter", "_activeencounter", "_configpath", "_pluginpath", "_pluginversion",
@@ -442,7 +442,7 @@ namespace Triggernometry.UI.CustomControls
         public static readonly Regex rexEnvironment
             = new Regex(@"[$¤]\{env:(?<key>[^$¤{}]*)$", RegexOptions.Compiled);
         public static readonly Regex rexVarName
-            = new Regex(@"[$¤]\{(?<e>e?)!?(?<persist>p?)(?<type>[vltd]|text|image|callback|storage)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[{}]*)$", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{(?<e>e?)!?(?:(?<type>reg):(?<name>[^$¤{}]*)|(?<persist>p?)(?<type>[vltd]|text|image|callback|storage)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[{}]*))$", RegexOptions.Compiled);
         public static readonly Regex rexColHeader
             = new Regex(@"[$¤]\{!?(?<persist>p?)t(?:var)?[cd]l:(?<name>[^$¤[]+)\[(?<key>[^$¤\]]*)$", RegexOptions.Compiled);
         public static readonly Regex rexRowHeader
@@ -462,9 +462,10 @@ namespace Triggernometry.UI.CustomControls
             = new Regex(@"(?<![[$¤.])\b[\p{L}\w]+$", RegexOptions.Compiled);
 
         private static readonly Regex rexDynamicNames // capture the names in the expressions and store into lists for autofill
-            = new Regex(@"[$¤]\{e?!?(?<persist>p?)(?<type>[vltd]|text|image)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[{}\n]*)[^\${}]*\}", RegexOptions.Compiled);
+            = new Regex(@"[$¤]\{e?!?(?:(?<type>reg):(?<name>[^$¤{}\n]*)|(?<persist>p?)(?<type>[vltd]|text|image)(?:v?ar)?(?:[cdr]l)?:(?<name>[^$¤.[{}\n]*)[^\${}]*)\}", RegexOptions.Compiled);
 
         private string CurrentMatch;
+        private bool isNameAutocomplete;
         private Timer acfDebounceTimer = new Timer();
 
         public Forms.AutoCompleteForm acf = null;
@@ -677,6 +678,25 @@ namespace Triggernometry.UI.CustomControls
                         .OrderBy(a => a);
         }
 
+        /// <summary>
+        /// Completes variable and environment names using the same matching and popup behavior.
+        /// </summary>
+        private void AutocompleteNames(IEnumerable<string> names, string name, string completionSuffix)
+        {
+            var matches = GetAutocompleteSuggestions(names, name).ToList();
+            if (matches.Count > 0)
+            {
+                CurrentMatch = name;
+                suffix = completionSuffix;
+                isNameAutocomplete = true;
+                ShowAutocomplete(matches);
+            }
+            else
+            {
+                HideAutocomplete();
+            }
+        }
+
         private void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == Convert.ToChar(Keys.Enter))
@@ -740,6 +760,11 @@ namespace Triggernometry.UI.CustomControls
 
             // when the autofilled string contains '(' or '[', e.g. method(arg1, arg2)
             // remove the parameters, and trigger the TextChanged event with the correct cursor position
+            if (isNameAutocomplete)
+            {
+                textBox1.Paste(ac);
+                return;
+            }
             int pIndex = ac.IndexOf('(');
             int bIndex = ac.IndexOf("[");
             if (pIndex >= 0)
@@ -890,6 +915,7 @@ namespace Triggernometry.UI.CustomControls
             string temp = textBox1.Text.Substring(0, textBox1.SelectionStart);
             IEnumerable<string> matchedStrings = null;
             suffix = "";
+            isNameAutocomplete = false;
 
             // string after "${" : match prefixes (e.g. "${func:...}") and regex capture groups
             Match m = rexPrefix.Match(temp);
@@ -958,20 +984,8 @@ namespace Triggernometry.UI.CustomControls
                 HashSet<string> varNames = new HashSet<string>(GetExistingAutofillNameList(type, isPersist));
                 varNames.UnionWith(GetDynamicAutofillNameList(type, isPersist) ?? Enumerable.Empty<string>());
 
-                matchedStrings = GetAutocompleteSuggestions(varNames, m.Groups["name"].Value);
-                if (matchedStrings.Count() > 0)
-                {
-                    CurrentMatch = m.Groups["name"].Value;
-                    if (m.Groups["type"].Value == "v" || m.Groups["e"].Value == "e")
-                    {
-                        suffix = "}";
-                    }
-                    ShowAutocomplete(matchedStrings);
-                }
-                else
-                {
-                    HideAutocomplete();
-                }
+                bool closesExpression = type == AutofillTypeEnum.Scalar || type == AutofillTypeEnum.Registered || m.Groups["e"].Value == "e";
+                AutocompleteNames(varNames, m.Groups["name"].Value, closesExpression ? "}" : "");
                 return;
             }
 
@@ -1134,17 +1148,7 @@ namespace Triggernometry.UI.CustomControls
                 }
 
                 var envKeys = trig?.Parent?.RecursiveGetEnvironmentVariables()?.Keys?.ToList() ?? new List<string>();
-                matchedStrings = GetAutocompleteSuggestions(envKeys, key);
-                if (matchedStrings.Count() > 0)
-                {
-                    CurrentMatch = key;
-                    suffix = "}";
-                    ShowAutocomplete(matchedStrings);
-                }
-                else
-                {
-                    HideAutocomplete();
-                }
+                AutocompleteNames(envKeys, key, "}");
                 return;
             }
 
@@ -1281,16 +1285,7 @@ namespace Triggernometry.UI.CustomControls
                 var names = new HashSet<string>(GetExistingAutofillNameList(AutofillType, IsPersistent));
                 names.UnionWith(GetDynamicAutofillNameList(AutofillType, IsPersistent) ?? Enumerable.Empty<string>());
 
-                matchedStrings = GetAutocompleteSuggestions(names, temp);
-                if (matchedStrings != null && matchedStrings.Count() > 0)
-                {
-                    CurrentMatch = temp;
-                    ShowAutocomplete(matchedStrings);
-                }
-                else
-                {
-                    HideAutocomplete();
-                }
+                AutocompleteNames(names, temp, "");
                 return;
             }
 
@@ -1464,6 +1459,7 @@ namespace Triggernometry.UI.CustomControls
 
         #region Store Variable Names Dynamically
 
+        private static List<string> registeredNames = new List<string>();
         private static List<string> tmpScalarNames = new List<string>();
         private static List<string> tmpListNames = new List<string>();
         private static List<string> tmpTableNames = new List<string>();
@@ -1476,10 +1472,11 @@ namespace Triggernometry.UI.CustomControls
         private static List<string> prsTableNames = new List<string>();
         private static List<string> prsDictNames = new List<string>();
 
-        public enum AutofillTypeEnum { None, Scalar, List, Table, Dict, Image, Text, Callback, Storage }
+        public enum AutofillTypeEnum { None, Scalar, List, Table, Dict, Image, Text, Callback, Storage, Registered }
 
         public static Dictionary<string, AutofillTypeEnum> StringToAutofillEnum = new Dictionary<string, AutofillTypeEnum> {
             { "v", AutofillTypeEnum.Scalar },
+            { "reg", AutofillTypeEnum.Registered },
             { "l", AutofillTypeEnum.List },
             { "t", AutofillTypeEnum.Table },
             { "d", AutofillTypeEnum.Dict },
@@ -1499,6 +1496,7 @@ namespace Triggernometry.UI.CustomControls
         {
             switch (type)
             {
+                case AutofillTypeEnum.Registered: return registeredNames;
                 case AutofillTypeEnum.Scalar: return isPersistent ? prsScalarNames : tmpScalarNames;
                 case AutofillTypeEnum.List:   return isPersistent ? prsListNames   : tmpListNames;
                 case AutofillTypeEnum.Table:  return isPersistent ? prsTableNames  : tmpTableNames;
@@ -1517,16 +1515,26 @@ namespace Triggernometry.UI.CustomControls
             VariableStore vs = RealPlugin.Instance.GetVariableStore(isPersistent);
             switch (type)
             {
-                case AutofillTypeEnum.Scalar: return vs.Scalar.Keys.ToList();
-                case AutofillTypeEnum.List: return vs.List.Keys.ToList();
-                case AutofillTypeEnum.Table: return vs.Table.Keys.ToList();
-                case AutofillTypeEnum.Dict: return vs.Dict.Keys.ToList();
-                case AutofillTypeEnum.Text: return (RealPlugin.Instance.sc != null) ? RealPlugin.Instance.sc.textitems.Keys.ToList() : RealPlugin.Instance.textauras.Keys.ToList();
-                case AutofillTypeEnum.Image: return (RealPlugin.Instance.sc != null) ? RealPlugin.Instance.sc.imageitems.Keys.ToList() : RealPlugin.Instance.imageauras.Keys.ToList();
-                case AutofillTypeEnum.Callback: return RealPlugin.Instance.callbacksByName.Keys.ToList();
-                case AutofillTypeEnum.Storage: return RealPlugin.Instance.scriptingStorage.Keys.ToList();
+                case AutofillTypeEnum.Registered: return GetKeysWithLock(RealPlugin.Instance.RegisteredVariables);
+                case AutofillTypeEnum.Scalar: return GetKeysWithLock(vs.Scalar);
+                case AutofillTypeEnum.List: return GetKeysWithLock(vs.List);
+                case AutofillTypeEnum.Table: return GetKeysWithLock(vs.Table);
+                case AutofillTypeEnum.Dict: return GetKeysWithLock(vs.Dict);
+                case AutofillTypeEnum.Text: return (RealPlugin.Instance.sc != null) ? GetKeysWithLock(RealPlugin.Instance.sc.textitems) : GetKeysWithLock(RealPlugin.Instance.textauras);
+                case AutofillTypeEnum.Image: return (RealPlugin.Instance.sc != null) ? GetKeysWithLock(RealPlugin.Instance.sc.imageitems) : GetKeysWithLock(RealPlugin.Instance.imageauras);
+                // Callback names are modified under the ID dictionary's lock.
+                case AutofillTypeEnum.Callback: return GetKeysWithLock(RealPlugin.Instance.callbacksByName, RealPlugin.Instance.callbacksById);
+                case AutofillTypeEnum.Storage: return GetKeysWithLock(RealPlugin.Instance.scriptingStorage);
                 default: return new List<string>();
             }
+        }
+
+        /// <summary>
+        /// Copies current names under the dictionary's synchronization lock.
+        /// </summary>
+        private static List<string> GetKeysWithLock<T>(Dictionary<string, T> variables, object lockObject = null)
+        {
+            lock (lockObject ?? variables) return variables.Keys.ToList();
         }
 
         private void RegisterAutofillNames()

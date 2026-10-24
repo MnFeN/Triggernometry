@@ -91,6 +91,7 @@ namespace Triggernometry.Core
         internal string currentZone = null;
         internal DateTime LastDelayWarning = DateTime.Now;
         internal VariableStore sessionvars = new VariableStore();
+        internal Dictionary<string, VariableScalar> RegisteredVariables = new Dictionary<string, VariableScalar>();
         internal ObsController _obs = null;
         internal LiveSplitController _livesplit = null;
         internal CancellationTokenSource cts = null;
@@ -140,6 +141,27 @@ namespace Triggernometry.Core
             PluginBridges.BridgeFFXIV.OnLogEvent += BridgeFFXIV_OnLogEvent;
             _ep = new Endpoint();
             _ep.OnStatusChange += _ep_OnStatusChange;
+        }
+
+        /// <summary>
+        /// Registers a folder variable and warns when replacing a different value.
+        /// </summary>
+        internal void RegisterVariable(string folderLogName, RegisteredVariable definition)
+        {
+            lock (RegisteredVariables)
+            {
+                if (RegisteredVariables.TryGetValue(definition.Name, out VariableScalar previous) && previous.Value != definition.Value)
+                {
+                    UnfilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/RealPlugin/registeredvariableoverwrite",
+                        "Registered variable key conflict '{0}':\nnew value: '{1}'\nfrom: Folder {2}\nold value: '{3}'\nfrom: Folder {4}",
+                        definition.Name, definition.Value, folderLogName, previous.Value, previous.LastChanger));
+                }
+                RegisteredVariables[definition.Name] = new VariableScalar(definition.Value)
+                {
+                    LastChanged = DateTime.Now,
+                    LastChanger = folderLogName
+                };
+            }
         }
 
         internal static Font CreateFontFromDefinition(string name, float size, ActionOld.TextAuraEffectEnum effect)
@@ -365,6 +387,7 @@ namespace Triggernometry.Core
                 ui.SetupLanguageMenu();
                 isRunningAsAdmin = CheckIfAdministrator(cfg.WarnAdmin);
                 exwhere = I18n.Translate("internal/Plugin/initree", "building internal data");
+                currentZone = CurrentZoneHook?.Invoke();
                 ui.BuildFullTreeFromConfiguration();
                 int PrimaryX = 0, PrimaryY = 0;
                 foreach (Screen s in Screen.AllScreens)
@@ -688,6 +711,8 @@ namespace Triggernometry.Core
             int allowed = 0, restricted = 0;
             lock (Triggers)
             {
+                // Prepare scoped values before unblocking triggers or queuing the region log.
+                UpdateActiveFolderVariables(zone);
                 foreach (Trigger t in Triggers)
                 {
                     bool block = t.PassesZoneRestriction(zone) == false;

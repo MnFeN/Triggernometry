@@ -17,6 +17,9 @@ namespace Triggernometry.Core
 
         internal Repository Repo { get; set; } = null;
 
+        [XmlIgnore]
+        public string LogName => $"{Name} ({(Repo != null ? "@" : "")}{Id})";
+
         internal string FullPath => Parent == null ? Name : $@"{Parent.FullPath}\{Name}"; // recursive
 
 
@@ -222,6 +225,19 @@ namespace Triggernometry.Core
                 }
             }
         }
+
+
+
+        // ============ Registered Variables ============
+
+        [XmlArray("RegisteredVariables")]
+        [XmlArrayItem("Variable")]
+        public List<RegisteredVariable> RegisteredVariables { get; set; } = new List<RegisteredVariable>();
+        public bool ShouldSerializeRegisteredVariables() => RegisteredVariables != null && RegisteredVariables.Count > 0;
+
+        // Last effective state, used to detect activation transitions without caching definitions.
+        [XmlIgnore]
+        internal bool isRegisteredVariableScopeActive;
 
 
 

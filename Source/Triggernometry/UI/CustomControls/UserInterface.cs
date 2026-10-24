@@ -355,6 +355,8 @@ namespace Triggernometry.UI.CustomControls
 
         internal void BuildFullTreeFromConfiguration()
         {
+            plug.RegisterFolderVariables(cfg.Root);
+            plug.UpdateActiveFolderVariables(plug.currentZone);
             BuildTreeFromConfiguration(null, null, false);
             plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/UserInterface/loadedfromconfig", "{0} folder(s) and {1} trigger(s) loaded from configuration", numLoadedFolders, numLoadedTriggers));
             treeView1.Sort();
@@ -509,6 +511,7 @@ namespace Triggernometry.UI.CustomControls
 
                     f.Parent = (Folder)parent.Tag;
                     f.Parent.Folders.Add(f);
+                    plug.RegisterFolderVariables(f);
                     RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true);
                 }
             }
@@ -971,7 +974,7 @@ namespace Triggernometry.UI.CustomControls
                         TreeNode tn = treeView1.SelectedNode;
                         tn.Parent.Nodes.Remove(tn);
                         r.Parent.Repositories.Remove(r);
-                        plug.RemoveTriggersFromFolder(r.Root);
+                        plug.RemoveFolderRuntimeContent(r.Root);
                         return;
                     case DialogResult.No:
                         return;
@@ -1009,7 +1012,7 @@ namespace Triggernometry.UI.CustomControls
                         TreeNode tn = treeView1.SelectedNode;
                         tn.Parent.Nodes.Remove(tn);
                         f.Parent.Folders.Remove(f);
-                        plug.RemoveTriggersFromFolder(f);
+                        plug.RemoveFolderRuntimeContent(f);
                         return;
                     case DialogResult.No:
                         return;
@@ -1051,6 +1054,7 @@ namespace Triggernometry.UI.CustomControls
                 }
                 df.Folders.Add(f);
                 f.Parent = df;
+                plug.RegisterFolderVariables(f);
             }
             if (imf.treeView1.Nodes[0].Tag is Trigger)
             {
@@ -1426,7 +1430,7 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        internal void RecolorStartingFromNode(TreeNode tn, bool pstate, bool refreshActives)
+        internal void RecolorStartingFromNode(TreeNode tn, bool pstate, bool refreshActives, bool shouldUpdateVariables = true)
         {
             object o = tn.Tag;
             TreeNode tnx = tn.Parent;            
@@ -1464,35 +1468,25 @@ namespace Triggernometry.UI.CustomControls
             }
             else
             {
-                if (o is Repository)
+                if (o is Repository r)
                 {
-                    Repository r = (Repository)o;
                     r.Enabled = tn.Checked;
-                    foreach (TreeNode tnn in tn.Nodes)
-                    {
-                        RecolorStartingFromNode(tnn, (tn.Checked == true && pstate == true), refreshActives);
-                    }
+                }
+                else if (o is RepositoryFolder rf)
+                {
+                    rf.Enabled = tn.Checked;
                 }
                 else
                 {
-                    if (o is RepositoryFolder)
-                    {
-                        RepositoryFolder r = (RepositoryFolder)o;
-                        r.Enabled = tn.Checked;
-                        foreach (TreeNode tnn in tn.Nodes)
-                        {
-                            RecolorStartingFromNode(tnn, (tn.Checked == true && pstate == true), refreshActives);
-                        }
-                    }
-                    else
-                    {
-                        Folder f = (Folder)o;
-                        f.Enabled = tn.Checked;
-                        foreach (TreeNode tnn in tn.Nodes)
-                        {
-                            RecolorStartingFromNode(tnn, (tn.Checked == true && pstate == true), refreshActives);
-                        }
-                    }
+                    ((Folder)o).Enabled = tn.Checked;
+                }
+
+                // Apply the variable batch once, before recursively enabling child triggers.
+                if (shouldUpdateVariables) plug.UpdateActiveFolderVariables(plug.currentZone);
+
+                foreach (TreeNode tnn in tn.Nodes)
+                {
+                    RecolorStartingFromNode(tnn, (tn.Checked == true && pstate == true), refreshActives, false);
                 }
             }
         }

@@ -119,10 +119,9 @@ namespace Triggernometry.Localization
                     TranslateSecondaryControl(path, tsic);
                 }
             }
-            else if (tsi is ToolStripDropDownButton)
+            else if (tsi is ToolStripDropDownItem item)
             {
-                ToolStripDropDownButton x = (ToolStripDropDownButton)tsi;
-                foreach (ToolStripItem tsic in x.DropDownItems)
+                foreach (ToolStripItem tsic in item.DropDownItems)
                 {
                     TranslateSecondaryControl(path, tsic);
                 }

@@ -852,6 +852,7 @@
     <TranslationEntry Key="ExportForm/ctxSaveToFile" Translation="Save to file" />
     <TranslationEntry Key="ExportForm/ctxSelectionToClipboard" Translation="Selection to clipboard" />
     <TranslationEntry Key="ExportForm/tslFormat" Translation="Format" />
+    <TranslationEntry Key="FolderForm/btnApplyRegisteredVariables" Translation="Apply all" />
     <TranslationEntry Key="FolderForm/btnCancel" Translation="Cancel" />
     <TranslationEntry Key="FolderForm/btnGetCurFfxivZone" Translation="Retrieve" />
     <TranslationEntry Key="FolderForm/btnGetCurZone" Translation="Retrieve" />
@@ -902,6 +903,9 @@
     <TranslationEntry Key="FolderForm/chkFfxivClassFilterEnabled" Translation="Process events only if currently on one of the specified classes" />
     <TranslationEntry Key="FolderForm/chkFfxivZoneFilter" Translation="Restrict event processing only to when currently in given zone ID (regex)" />
     <TranslationEntry Key="FolderForm/chkZoneFilter" Translation="Restrict event processing only to events with matching zone name (regex)" />
+    <TranslationEntry Key="FolderForm/colRegisteredVariableLoadWhenActive" Translation="Load mode" />
+    <TranslationEntry Key="FolderForm/colRegisteredVariableName" Translation="Key" />
+    <TranslationEntry Key="FolderForm/colRegisteredVariableValue" Translation="Initial value" />
     <TranslationEntry Key="FolderForm/grpFfxivClassFilter" Translation=" Classes " />
     <TranslationEntry Key="FolderForm/grpGeneral" Translation=" General " />
     <TranslationEntry Key="FolderForm/grpSetting" Translation=" Settings " />
@@ -912,6 +916,7 @@
     <TranslationEntry Key="FolderForm/lblZoneFilterRegex" Translation="Zone name" />
     <TranslationEntry Key="FolderForm/tabEnvironment" Translation="Environment" />
     <TranslationEntry Key="FolderForm/tabFilter" Translation="Filter" />
+    <TranslationEntry Key="FolderForm/tabRegisteredVariables" Translation="Registered variables" />
     <TranslationEntry Key="ImportForm" Translation="Import" />
     <TranslationEntry Key="ImportForm/btnBack" Translation="Cancel" />
     <TranslationEntry Key="ImportForm/btnEdit" Translation="Edit" />
@@ -1113,7 +1118,7 @@
     <TranslationEntry Key="internal/Action/descwindowtargetsingle" Translation="the first window whose title match ({0})" />
     <TranslationEntry Key="internal/Action/descwmsg" Translation="send message ({0}) wparam ({1}) lparam ({2}) to {3}" />
     <TranslationEntry Key="internal/Action/dictbuild" Translation="{1}Dictionary ({0}) built from expression ({2}) splitted by ({3}) ({4})" />
-    <TranslationEntry Key="internal/Action/dictbuildfail" Translation="{1}Dictionary ({0}) cannot be built since expression ({2}) length < 2" />
+    <TranslationEntry Key="internal/Action/dictbuildfail" Translation="{1}Dictionary ({0}) cannot be built since expression ({2}) length &lt; 2" />
     <TranslationEntry Key="internal/Action/dictfilter" Translation="Filtered {4} key-value pairs from {1}dict ({0}) into {3}dict ({2})" />
     <TranslationEntry Key="internal/Action/dictgetentity" Translation="Saved the data of entity ({2}) into {1}dict variable ({0})" />
     <TranslationEntry Key="internal/Action/dictgetentityfail" Translation="Entity ({2}) not found when trying to save into {1}dict variable ({0})" />
@@ -1326,6 +1331,12 @@
     <TranslationEntry Key="internal/ExpressionTextBox/numeric1" Translation="This field supports numeric expressions; references to named regular expression groups will be expanded, after which the result will be evaluated as a mathematic expression." />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric2" Translation="The color of the field will also change depending on whether the numeric expression appears to be valid (green) or not (red)." />
     <TranslationEntry Key="internal/ExpressionTextBox/string" Translation="This field supports string expressions; references to named regular expression groups will be expanded." />
+    <TranslationEntry Key="internal/FolderForm/loaddirectly" Translation="Load directly" />
+    <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="Load when active" />
+    <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="Enter a key for each registered variable." />
+    <TranslationEntry Key="internal/FolderForm/deleterenamedregisteredvariable" Translation="Registered variable &#x27;{0}&#x27; was renamed to &#x27;{1}&#x27;.&#xA;Old runtime value: &#x27;{2}&#x27;&#xA;Delete the old key-value pair?" />
+    <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="Registered variables" />
+    <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="Registered variable key conflict &#x27;{0}&#x27;:&#xA;new value: &#x27;{1}&#x27;&#xA;from: Folder {2}&#xA;old value: &#x27;{3}&#x27;&#xA;from: Folder {4}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexception" Translation="Exception in FFXIV all entities retrieve: {0}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexceptionsingle" Translation="Failed to get entity data: name = {0}, id = {1}. Exception: {2}" />
 	  <TranslationEntry Key="internal/ffxiv/ffxivzonechangednoinstance" Translation="Could not subscribe to FFXIV zone change (no plugin instance available)" />
@@ -1930,6 +1941,11 @@
     <TranslationEntry Key="StateForm/btnPeTableRefresh" Translation="Refresh" />
     <TranslationEntry Key="StateForm/btnPeTableRemove" Translation="Remove variable" />
     <TranslationEntry Key="StateForm/btnPeTableRemoveAll" Translation="Remove all variables" />
+    <TranslationEntry Key="StateForm/btnRegisteredAdd" Translation="Add variable" />
+    <TranslationEntry Key="StateForm/btnRegisteredEdit" Translation="Edit variable" />
+    <TranslationEntry Key="StateForm/btnRegisteredRefresh" Translation="Refresh" />
+    <TranslationEntry Key="StateForm/btnRegisteredRemove" Translation="Remove variable" />
+    <TranslationEntry Key="StateForm/btnRegisteredRemoveAll" Translation="Remove all variables" />
     <TranslationEntry Key="StateForm/btnScalarAdd" Translation="Add variable" />
     <TranslationEntry Key="StateForm/btnScalarEdit" Translation="Edit variable" />
     <TranslationEntry Key="StateForm/btnScalarRefresh" Translation="Refresh" />
@@ -1962,6 +1978,10 @@
     <TranslationEntry Key="StateForm/colPeDictName" Translation="Name" />
     <TranslationEntry Key="StateForm/colPeDictSize" Translation="Size" />
     <TranslationEntry Key="StateForm/colPeDictValue" Translation="Value" />
+    <TranslationEntry Key="StateForm/colRegisteredChangedBy" Translation="Changed by" />
+    <TranslationEntry Key="StateForm/colRegisteredLastChanged" Translation="Last changed" />
+    <TranslationEntry Key="StateForm/colRegisteredName" Translation="Name" />
+    <TranslationEntry Key="StateForm/colRegisteredValue" Translation="Value" />
     <TranslationEntry Key="StateForm/colScalarChangedBy" Translation="Changed by" />
     <TranslationEntry Key="StateForm/colScalarLastChanged" Translation="Last changed" />
     <TranslationEntry Key="StateForm/colScalarName" Translation="Name" />
@@ -2006,6 +2026,7 @@
     <TranslationEntry Key="StateForm/tabListSession" Translation="Session" />
     <TranslationEntry Key="StateForm/tabMutexes" Translation="Mutexes" />
     <TranslationEntry Key="StateForm/tabNamedCallbacks" Translation="Named callbacks" />
+    <TranslationEntry Key="StateForm/tabRegisteredVariables" Translation="Registered Variables" />
     <TranslationEntry Key="StateForm/tabScalar" Translation="Scalar variables" />
     <TranslationEntry Key="StateForm/tabScalarPersistent" Translation="Persistent" />
     <TranslationEntry Key="StateForm/tabScalarSession" Translation="Session" />

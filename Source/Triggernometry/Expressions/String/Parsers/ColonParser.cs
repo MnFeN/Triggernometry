@@ -62,9 +62,20 @@ namespace Triggernometry.Expressions.String.Parsers
                         ? ContainsKeyResultWithLock(plug?.sc?.imageitems, body) // new
                         : ContainsKeyResultWithLock(plug?.imageauras, body);    // old
                 case "ecallback":
-                    return ContainsKeyResultWithLock(plug?.callbacksByName, body);
+                    return ContainsKeyResultWithLock(plug?.callbacksByName, body, plug?.callbacksById);
                 case "estorage":
                     return ContainsKeyResultWithLock(plug?.scriptingStorage, body);
+
+                case "ereg":
+                    return ContainsKeyResultWithLock(plug?.RegisteredVariables, body);
+                case "reg": 
+                case "!reg":
+                    if (plug == null) return "";
+                    lock (plug.RegisteredVariables)
+                    {
+                        return plug.RegisteredVariables.TryGetValue(body, out VariableScalar registered) ? registered.Value
+                            : prefixLower == "!reg" ? throw new Exception($"Variable '{body}' does not exist.") : "";
+                    }
 
                 case "env": // folder environment variables
                     Folder f = ctx.Trigger?.Parent;
@@ -288,13 +299,13 @@ namespace Triggernometry.Expressions.String.Parsers
             return null;
         }
 
-        private static string ContainsKeyResultWithLock<TValue>(IDictionary<string, TValue> dict, string key)
+        private static string ContainsKeyResultWithLock<TValue>(IDictionary<string, TValue> dict, string key, object lockObject = null)
         {
             if (dict == null)
             {
                 return "0";
             }
-            lock (dict)
+            lock (lockObject ?? dict)
             {
                 return dict.ContainsKey(key) ? "1" : "0";
             }

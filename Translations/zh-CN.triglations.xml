@@ -852,6 +852,7 @@
     <TranslationEntry Key="ExportForm/ctxSaveToFile" Translation="保存到文件" />
     <TranslationEntry Key="ExportForm/ctxSelectionToClipboard" Translation="复制所选" />
     <TranslationEntry Key="ExportForm/tslFormat" Translation="格式" />
+    <TranslationEntry Key="FolderForm/btnApplyRegisteredVariables" Translation="全部应用" />
     <TranslationEntry Key="FolderForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="FolderForm/btnGetCurFfxivZone" Translation="获取当前" />
     <TranslationEntry Key="FolderForm/btnGetCurZone" Translation="获取当前" />
@@ -902,6 +903,9 @@
     <TranslationEntry Key="FolderForm/chkFfxivClassFilterEnabled" Translation="限制分组工作条件：指定职业" />
     <TranslationEntry Key="FolderForm/chkFfxivZoneFilter" Translation="限制分组工作条件：指定区域 ID（正则）" />
     <TranslationEntry Key="FolderForm/chkZoneFilter" Translation="限制分组工作条件：指定区域名（正则）" />
+    <TranslationEntry Key="FolderForm/colRegisteredVariableLoadWhenActive" Translation="加载方式" />
+    <TranslationEntry Key="FolderForm/colRegisteredVariableName" Translation="键名" />
+    <TranslationEntry Key="FolderForm/colRegisteredVariableValue" Translation="初值" />
     <TranslationEntry Key="FolderForm/grpFfxivClassFilter" Translation="职业列表" />
     <TranslationEntry Key="FolderForm/grpGeneral" Translation=" 通用 " />
     <TranslationEntry Key="FolderForm/grpSetting" Translation=" 设置 " />
@@ -912,6 +916,7 @@
     <TranslationEntry Key="FolderForm/lblZoneFilterRegex" Translation="区域名称" />
     <TranslationEntry Key="FolderForm/tabEnvironment" Translation="环境" />
     <TranslationEntry Key="FolderForm/tabFilter" Translation="过滤" />
+    <TranslationEntry Key="FolderForm/tabRegisteredVariables" Translation="注册变量" />
     <TranslationEntry Key="ImportForm" Translation="导入" />
     <TranslationEntry Key="ImportForm/btnBack" Translation="取消" />
     <TranslationEntry Key="ImportForm/btnEdit" Translation="编辑" />
@@ -1326,6 +1331,12 @@
     <TranslationEntry Key="internal/ExpressionTextBox/numeric1" Translation="该字段支持数值表达式；支持正则捕获组；结果作为数学表达式求值。" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric2" Translation="绿色文本框代表数值表达式合法，红色代表非法。" />
     <TranslationEntry Key="internal/ExpressionTextBox/string" Translation="该字段支持文本表达式；支持正则捕获组。" />
+    <TranslationEntry Key="internal/FolderForm/loaddirectly" Translation="直接加载" />
+    <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="分组生效时加载" />
+    <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="请为每个注册变量填写键名。" />
+    <TranslationEntry Key="internal/FolderForm/deleterenamedregisteredvariable" Translation="注册变量“{0}”已改名为“{1}”。&#xA;旧的运行时值：“{2}”&#xA;是否删除旧键值对？" />
+    <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="注册变量" />
+    <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="注册变量键“{0}”冲突：&#xA;新值：“{1}”&#xA;来自：分组 {2}&#xA;旧值：“{3}”&#xA;来自：分组 {4}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexception" Translation="获取全部 FFXIV 实体时发生异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexceptionsingle" Translation="无法获取该实体信息：名称 ({0})，ID ({1})。异常：{2}" />
 	  <TranslationEntry Key="internal/ffxiv/ffxivzonechangednoinstance" Translation="无法获取 FFXIV 区域变化（插件实例不存在）。" />
@@ -1930,6 +1941,11 @@
     <TranslationEntry Key="StateForm/btnPeTableRefresh" Translation="刷新" />
     <TranslationEntry Key="StateForm/btnPeTableRemove" Translation="销毁变量" />
     <TranslationEntry Key="StateForm/btnPeTableRemoveAll" Translation="全部销毁" />
+    <TranslationEntry Key="StateForm/btnRegisteredAdd" Translation="添加变量" />
+    <TranslationEntry Key="StateForm/btnRegisteredEdit" Translation="编辑变量" />
+    <TranslationEntry Key="StateForm/btnRegisteredRefresh" Translation="刷新" />
+    <TranslationEntry Key="StateForm/btnRegisteredRemove" Translation="销毁变量" />
+    <TranslationEntry Key="StateForm/btnRegisteredRemoveAll" Translation="全部销毁" />
     <TranslationEntry Key="StateForm/btnScalarAdd" Translation="添加变量" />
     <TranslationEntry Key="StateForm/btnScalarEdit" Translation="编辑变量" />
     <TranslationEntry Key="StateForm/btnScalarRefresh" Translation="刷新" />
@@ -1962,6 +1978,10 @@
     <TranslationEntry Key="StateForm/colPeDictName" Translation="名称" />
     <TranslationEntry Key="StateForm/colPeDictSize" Translation="键数" />
     <TranslationEntry Key="StateForm/colPeDictValue" Translation="键值对" />
+    <TranslationEntry Key="StateForm/colRegisteredChangedBy" Translation="修改来源" />
+    <TranslationEntry Key="StateForm/colRegisteredLastChanged" Translation="上次修改" />
+    <TranslationEntry Key="StateForm/colRegisteredName" Translation="名称" />
+    <TranslationEntry Key="StateForm/colRegisteredValue" Translation="值" />
     <TranslationEntry Key="StateForm/colScalarChangedBy" Translation="修改来源" />
     <TranslationEntry Key="StateForm/colScalarLastChanged" Translation="上次修改" />
     <TranslationEntry Key="StateForm/colScalarName" Translation="名称" />
@@ -2006,6 +2026,7 @@
     <TranslationEntry Key="StateForm/tabListSession" Translation="临时变量" />
     <TranslationEntry Key="StateForm/tabMutexes" Translation="互斥锁" />
     <TranslationEntry Key="StateForm/tabNamedCallbacks" Translation="具名回调" />
+    <TranslationEntry Key="StateForm/tabRegisteredVariables" Translation="注册变量" />
     <TranslationEntry Key="StateForm/tabScalar" Translation="标量变量" />
     <TranslationEntry Key="StateForm/tabScalarPersistent" Translation="永久变量" />
     <TranslationEntry Key="StateForm/tabScalarSession" Translation="临时变量" />

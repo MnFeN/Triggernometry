@@ -36,7 +36,7 @@ namespace Triggernometry.Core
         public void InvokeNamedCallback(string name, string val)
         {
             List<NamedCallback> cbs = new List<NamedCallback>();
-            lock (callbacksByName)
+            lock (callbacksById)
             {
                 if (callbacksByName.ContainsKey(name) == true)
                 {
@@ -46,22 +46,6 @@ namespace Triggernometry.Core
             foreach (NamedCallback nc in cbs)
             {
                 nc.Invoke(val);
-                /*
-                try
-                {
-                    nc.Invoke(val);
-                }
-                catch (Exception ex)
-                {
-                    Exception inner = ex;
-                    while (inner.InnerException != null)
-                    {
-                        inner = inner.InnerException;
-                    }
-                    FilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/NamedCallback/exception",
-                        "Exception occurred when invoking named callback {0}:\n {1}", name, inner.ToString()));
-                }
-                 */
             }
         }
 

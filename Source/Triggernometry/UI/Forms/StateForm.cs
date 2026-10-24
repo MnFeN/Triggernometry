@@ -63,15 +63,19 @@ namespace Triggernometry.UI.Forms
                     RefreshDictVariables(plug.GetVariableStore(false), dgvDictVariables);
                     break;
                 case 4:
-                    RefreshMutexes();
+                    dgvRegisteredVariables.Columns[0].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+                    RefreshRegisteredVariables();
                     break;
                 case 5:
-                    RefreshImageAuras();
+                    RefreshMutexes();
                     break;
                 case 6:
-                    RefreshTextAuras();
+                    RefreshImageAuras();
                     break;
                 case 7:
+                    RefreshTextAuras();
+                    break;
+                case 8:
                     RefreshNamedCallbacks();
                     break;
             }
@@ -229,6 +233,17 @@ namespace Triggernometry.UI.Forms
                     }
                     UpdateSortType(newType, dgv, e.ColumnIndex);
                     RefreshDictVariables(vs, dgv);
+                    break;
+                case nameof(dgvRegisteredVariables):
+                    switch (e.ColumnIndex)
+                    {
+                        case 0: newType = "name"; break;
+                        case 1: newType = "value"; break;
+                        case 2: newType = "lastchanged"; break;
+                        case 3: newType = "lastchanger"; break;
+                    }
+                    UpdateSortType(newType, dgv, e.ColumnIndex);
+                    RefreshRegisteredVariables();
                     break;
                 case nameof(dgvMutexes):
                 case nameof(dgvImage):
@@ -1405,6 +1420,224 @@ namespace Triggernometry.UI.Forms
         private void btnPeDictRemoveAll_Click(object sender, EventArgs e)
         {
             RemoveAllDictVariables(plug.GetVariableStore(true), dgvPeDictVariables);
+        }
+
+        #endregion
+
+        #region Registered variables
+
+        private void dgvRegisteredVariables_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (btnRegisteredRemove.Enabled == true)
+                {
+                    btnRegisteredRemove_Click(this, null);
+                }
+            }
+        }
+
+        private void dgvRegisteredVariables_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+            {
+                return;
+            }
+            dgvRegisteredVariables.ClearSelection();
+            dgvRegisteredVariables.Rows[e.RowIndex].Selected = true;
+            btnRegisteredEdit_Click(sender, null);
+        }
+
+        private void dgvRegisteredVariables_SelectionChanged(object sender, EventArgs e)
+        {
+            btnRegisteredEdit.Enabled = (dgvRegisteredVariables.SelectedRows.Count == 1);
+            btnRegisteredRemove.Enabled = (dgvRegisteredVariables.SelectedRows.Count > 0);
+        }
+
+        private void SortRegisteredVariables()
+        {
+            var variables = plug.RegisteredVariables;
+            Func<KeyValuePair<string, VariableScalar>, object> selector;
+
+            switch (sortType)
+            {
+                case "value": selector = kvp => kvp.Value; break;
+                case "lastchanged": selector = kvp => kvp.Value.LastChanged; break;
+                case "lastchanger": selector = kvp => kvp.Value.LastChanger; break;
+                default: selector = kvp => kvp.Key; break;
+            }
+
+            lock (plug.RegisteredVariables)
+            {
+                if (sortAsc)
+                {
+                    sortedVariableKeys = variables.OrderBy(selector).ThenBy(kvp => kvp.Key)
+                        .Select(kvp => kvp.Key).ToList();
+                }
+                else
+                {
+                    sortedVariableKeys = variables.OrderByDescending(selector).ThenBy(kvp => kvp.Key)
+                        .Select(kvp => kvp.Key).ToList();
+                }
+            }
+        }
+
+        private void dgvRegisteredVariables_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        {
+            lock (plug.RegisteredVariables)
+            {
+                if (e.RowIndex >= sortedVariableKeys.Count) return;
+                string key = sortedVariableKeys[e.RowIndex];
+                // Keep the displayed key available if its runtime value was removed.
+                if (e.ColumnIndex == 0)
+                {
+                    e.Value = key;
+                    return;
+                }
+                if (!plug.RegisteredVariables.TryGetValue(key, out VariableScalar varValue)) return;
+                switch (e.ColumnIndex)
+                {
+                    case 1:
+                        e.Value = varValue.Value;
+                        break;
+                    case 2:
+                        e.Value = varValue.LastChanged.ToString();
+                        break;
+                    case 3:
+                        e.Value = varValue.LastChanger;
+                        break;
+                }
+            }
+        }
+
+        private void RefreshRegisteredVariables()
+        {
+            lock (plug.RegisteredVariables)
+            {
+                SortRegisteredVariables();
+                dgvRegisteredVariables.RowCount = plug.RegisteredVariables.Count;
+            }
+            Refresh();
+        }
+
+        // Runtime edits use the scalar editor without changing folder declarations.
+        private void AddRegisteredVariable()
+        {
+            VariableScalar v = new VariableScalar();
+            string varname = "";
+            v = (VariableScalar)OpenVariableEditor(v, ref varname, true);
+            if (v != null)
+            {
+                lock (plug.RegisteredVariables)
+                {
+                    plug.RegisteredVariables[varname] = v;
+                }
+                RefreshRegisteredVariables();
+            }
+        }
+
+        private void EditRegisteredVariable()
+        {
+            string varname = "";
+            foreach (DataGridViewRow r in dgvRegisteredVariables.SelectedRows)
+            {
+                varname = r.Cells[0].Value.ToString();
+            }
+            VariableScalar v = null;
+            lock (plug.RegisteredVariables)
+            {
+                if (plug.RegisteredVariables.ContainsKey(varname) == true)
+                {
+                    v = plug.RegisteredVariables[varname];
+                }
+            }
+            if (v == null)
+            {
+                v = new VariableScalar();
+            }
+            string varname2 = varname;
+            v = (VariableScalar)OpenVariableEditor(v, ref varname2, false);
+            if (v != null)
+            {
+                lock (plug.RegisteredVariables)
+                {
+                    if (varname != varname2)
+                    {
+                        if (plug.RegisteredVariables.ContainsKey(varname) == true)
+                        {
+                            plug.RegisteredVariables.Remove(varname);
+                        }
+                    }
+                    plug.RegisteredVariables[varname2] = v;
+                }
+                RefreshRegisteredVariables();
+            }
+        }
+
+        private void RemoveRegisteredVariable()
+        {
+            string temp;
+            if (dgvRegisteredVariables.SelectedRows.Count > 1)
+            {
+                temp = I18n.Translate("internal/VariableForm/areyousureplural", "Are you sure you want to remove the selected variables?");
+            }
+            else
+            {
+                temp = I18n.Translate("internal/VariableForm/areyousuresingular", "Are you sure you want to remove the selected variable?");
+            }
+            switch (MessageBox.Show(this, temp, I18n.Translate("internal/VariableForm/confirmremoval", "Confirm removal"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
+            {
+                case DialogResult.Yes:
+                    List<string> varnames = new List<string>();
+                    foreach (DataGridViewRow r in dgvRegisteredVariables.SelectedRows)
+                    {
+                        varnames.Add(r.Cells[0].Value.ToString());
+                    }
+                    lock (plug.RegisteredVariables)
+                    {
+                        foreach (string varname in varnames)
+                        {
+                            plug.RegisteredVariables.Remove(varname);
+                        }
+                    }
+                    dgvRegisteredVariables.ClearSelection();
+                    RefreshRegisteredVariables();
+                    break;
+            }
+        }
+
+        private void RemoveAllRegisteredVariables()
+        {
+            lock (plug.RegisteredVariables)
+            {
+                plug.RegisteredVariables.Clear();
+            }
+            RefreshRegisteredVariables();
+        }
+
+        private void btnRegisteredAdd_Click(object sender, EventArgs e)
+        {
+            AddRegisteredVariable();
+        }
+
+        private void btnRegisteredEdit_Click(object sender, EventArgs e)
+        {
+            EditRegisteredVariable();
+        }
+
+        private void btnRegisteredRemove_Click(object sender, EventArgs e)
+        {
+            RemoveRegisteredVariable();
+        }
+
+        private void btnRefreshRegistered_ButtonClick(object sender, EventArgs e)
+        {
+            RefreshRegisteredVariables();
+        }
+
+        private void btnRemoveAllRegistered_Click(object sender, EventArgs e)
+        {
+            RemoveAllRegisteredVariables();
         }
 
         #endregion

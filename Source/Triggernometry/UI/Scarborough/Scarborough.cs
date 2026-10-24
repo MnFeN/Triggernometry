@@ -51,6 +51,7 @@ namespace Scarborough
         internal Triggernometry.Core.RealPlugin plug { get; set; }
         private Queue<ItemAction> ItemActions { get; set; } = new Queue<ItemAction>();
 
+        // UI name completion snapshots these collections under their mutation locks.
         public Dictionary<string, ScarboroughImage> imageitems = new Dictionary<string, ScarboroughImage>();
         public Dictionary<string, ScarboroughText> textitems = new Dictionary<string, ScarboroughText>();
 
@@ -143,7 +144,7 @@ namespace Scarborough
                                     {
                                         ScarboroughImage si = null;
                                         si = imageitems[rem];
-                                        imageitems.Remove(rem);
+                                        lock (imageitems) imageitems.Remove(rem);
                                         if (si != null)
                                         {
                                             si.Dispose();
@@ -158,7 +159,7 @@ namespace Scarborough
                                     {
                                         ScarboroughText si = null;
                                         si = textitems[rem];
-                                        textitems.Remove(rem);
+                                        lock (textitems) textitems.Remove(rem);
                                         if (si != null)
                                         {
                                             si.Dispose();
@@ -181,7 +182,7 @@ namespace Scarborough
                                     {
                                         ScarboroughImage si = null;
                                         si = imageitems[rem];
-                                        imageitems.Remove(rem);
+                                        lock (imageitems) imageitems.Remove(rem);
                                         if (si != null)
                                         {
                                             si.Dispose();
@@ -196,7 +197,7 @@ namespace Scarborough
                                     {
                                         ScarboroughText si = null;
                                         si = textitems[rem];
-                                        textitems.Remove(rem);
+                                        lock (textitems) textitems.Remove(rem);
                                         if (si != null)
                                         {
                                             si.Dispose();
@@ -217,7 +218,7 @@ namespace Scarborough
                                     if (imageitems.ContainsKey(ia.Id) == true)
                                     {
                                         si = imageitems[ia.Id];
-                                        imageitems.Remove(ia.Id);
+                                        lock (imageitems) imageitems.Remove(ia.Id);
                                     }
                                     if (si != null)
                                     {
@@ -231,7 +232,7 @@ namespace Scarborough
                                     if (textitems.ContainsKey(ia.Id) == true)
                                     {
                                         si = textitems[ia.Id];
-                                        textitems.Remove(ia.Id);
+                                        lock (textitems) textitems.Remove(ia.Id);
                                     }
                                     if (si != null)
                                     {
@@ -253,7 +254,7 @@ namespace Scarborough
                                     {
                                         toRem.Add(si.Value);
                                     }
-                                    imageitems.Clear();
+                                    lock (imageitems) imageitems.Clear();
                                     foreach (ScarboroughImage si in toRem)
                                     {
                                         si.Dispose();
@@ -267,7 +268,7 @@ namespace Scarborough
                                     {
                                         toRem.Add(si.Value);
                                     }
-                                    textitems.Clear();
+                                    lock (textitems) textitems.Clear();
                                     foreach (ScarboroughText si in toRem)
                                     {
                                         si.Dispose();
@@ -355,7 +356,7 @@ namespace Scarborough
                 si.Width = si.EvaluateNumericExpression(si.ctx, si.InitWExpression);
                 si.Height = si.EvaluateNumericExpression(si.ctx, si.InitHExpression);
                 si.Opacity = string.IsNullOrWhiteSpace(si.InitOExpression) ? 100 : si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
-                imageitems[id] = si;
+                lock (imageitems) imageitems[id] = si;
             }
         }
 
@@ -400,7 +401,7 @@ namespace Scarborough
                 si.Opacity = string.IsNullOrWhiteSpace(si.InitOExpression) ? 100 : si.EvaluateNumericExpression(si.ctx, si.InitOExpression);
                 si.Text = si.EvaluateStringExpression(si.ctx, si.TextExpression);
                 si.NeedFont = true;
-                textitems[id] = si;
+                lock (textitems) textitems[id] = si;
             }
         }
 
@@ -540,7 +541,7 @@ namespace Scarborough
                         }
                         );
                     }
-                    imageitems.Remove(si);
+                    lock (imageitems) imageitems.Remove(si);
                     sit.Dispose();
                 }
             }
@@ -624,7 +625,7 @@ namespace Scarborough
                         }
                         );
                     }
-                    textitems.Remove(si);
+                    lock (textitems) textitems.Remove(si);
                     sit.Dispose();
                 }
             }
@@ -714,12 +715,12 @@ namespace Scarborough
                     if (si is ScarboroughImage)
                     {
                         var myKey = imageitems.FirstOrDefault(x => x.Value == si).Key;
-                        imageitems.Remove(myKey);
+                        lock (imageitems) imageitems.Remove(myKey);
                     }
                     if (si is ScarboroughText)
                     {
                         var myKey = textitems.FirstOrDefault(x => x.Value == si).Key;
-                        textitems.Remove(myKey);
+                        lock (textitems) textitems.Remove(myKey);
                     }
                     si.Dispose();
                 }

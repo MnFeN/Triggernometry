@@ -61,6 +61,13 @@
             this.lblReadOnly = new System.Windows.Forms.Label();
             this.expFfxivZoneFilterRegex = new Triggernometry.UI.CustomControls.ExpressionTextBox();
             this.txtEnvironment = new Triggernometry.UI.CustomControls.ExpressionTextBox.TextBox();
+            this.tabRegisteredVariables = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanelRegisteredVariables = new System.Windows.Forms.TableLayoutPanel();
+            this.dgvRegisteredVariables = new System.Windows.Forms.DataGridView();
+            this.colRegisteredVariableName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRegisteredVariableValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRegisteredVariableLoadWhenActive = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.btnApplyRegisteredVariables = new System.Windows.Forms.Button();
             this.grpGeneral.SuspendLayout();
             this.tableLayoutPanelGeneral.SuspendLayout();
             this.panelBottom.SuspendLayout();
@@ -73,6 +80,9 @@
             this.grpFfxivClassFilter.SuspendLayout();
             this.panelFfxivClassFilter.SuspendLayout();
             this.panelReadOnly.SuspendLayout();
+            this.tabRegisteredVariables.SuspendLayout();
+            this.tableLayoutPanelRegisteredVariables.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRegisteredVariables)).BeginInit();
             this.SuspendLayout();
             // 
             // grpGeneral
@@ -194,6 +204,7 @@
             // 
             this.tbcMain.Controls.Add(this.tabFilter);
             this.tbcMain.Controls.Add(this.tabEnvironment);
+            this.tbcMain.Controls.Add(this.tabRegisteredVariables);
             this.tbcMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbcMain.Location = new System.Drawing.Point(10, 23);
             this.tbcMain.Name = "tbcMain";
@@ -480,6 +491,80 @@
             this.txtEnvironment.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtEnvironment.TabIndex = 15;
             // 
+            // tabRegisteredVariables
+            //
+            this.tabRegisteredVariables.Controls.Add(this.tableLayoutPanelRegisteredVariables);
+            this.tabRegisteredVariables.Location = new System.Drawing.Point(4, 22);
+            this.tabRegisteredVariables.Name = "tabRegisteredVariables";
+            this.tabRegisteredVariables.Padding = new System.Windows.Forms.Padding(3);
+            this.tabRegisteredVariables.Size = new System.Drawing.Size(536, 317);
+            this.tabRegisteredVariables.TabIndex = 2;
+            this.tabRegisteredVariables.Text = "Registered variables";
+            this.tabRegisteredVariables.UseVisualStyleBackColor = true;
+            //
+            // tableLayoutPanelRegisteredVariables
+            //
+            this.tableLayoutPanelRegisteredVariables.ColumnCount = 1;
+            this.tableLayoutPanelRegisteredVariables.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelRegisteredVariables.Controls.Add(this.dgvRegisteredVariables, 0, 0);
+            this.tableLayoutPanelRegisteredVariables.Controls.Add(this.btnApplyRegisteredVariables, 0, 1);
+            this.tableLayoutPanelRegisteredVariables.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelRegisteredVariables.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanelRegisteredVariables.Name = "tableLayoutPanelRegisteredVariables";
+            this.tableLayoutPanelRegisteredVariables.RowCount = 2;
+            this.tableLayoutPanelRegisteredVariables.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelRegisteredVariables.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelRegisteredVariables.Size = new System.Drawing.Size(530, 311);
+            this.tableLayoutPanelRegisteredVariables.TabIndex = 0;
+            //
+            // dgvRegisteredVariables
+            //
+            this.dgvRegisteredVariables.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvRegisteredVariables.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRegisteredVariables.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colRegisteredVariableName,
+            this.colRegisteredVariableValue,
+            this.colRegisteredVariableLoadWhenActive});
+            this.dgvRegisteredVariables.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvRegisteredVariables.Location = new System.Drawing.Point(3, 3);
+            this.dgvRegisteredVariables.Name = "dgvRegisteredVariables";
+            this.dgvRegisteredVariables.Size = new System.Drawing.Size(524, 276);
+            this.dgvRegisteredVariables.TabIndex = 0;
+            this.dgvRegisteredVariables.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dgvRegisteredVariables_DefaultValuesNeeded);
+            //
+            // colRegisteredVariableName
+            //
+            this.colRegisteredVariableName.HeaderText = "Key";
+            this.colRegisteredVariableName.MinimumWidth = 80;
+            this.colRegisteredVariableName.Name = "colRegisteredVariableName";
+            this.colRegisteredVariableName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            //
+            // colRegisteredVariableValue
+            //
+            this.colRegisteredVariableValue.HeaderText = "Initial value";
+            this.colRegisteredVariableValue.MinimumWidth = 80;
+            this.colRegisteredVariableValue.Name = "colRegisteredVariableValue";
+            this.colRegisteredVariableValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            //
+            // colRegisteredVariableLoadWhenActive
+            //
+            this.colRegisteredVariableLoadWhenActive.HeaderText = "Load mode";
+            this.colRegisteredVariableLoadWhenActive.MinimumWidth = 150;
+            this.colRegisteredVariableLoadWhenActive.Name = "colRegisteredVariableLoadWhenActive";
+            //
+            // btnApplyRegisteredVariables
+            //
+            this.btnApplyRegisteredVariables.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnApplyRegisteredVariables.AutoSize = true;
+            this.btnApplyRegisteredVariables.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnApplyRegisteredVariables.Location = new System.Drawing.Point(471, 285);
+            this.btnApplyRegisteredVariables.Name = "btnApplyRegisteredVariables";
+            this.btnApplyRegisteredVariables.Size = new System.Drawing.Size(56, 23);
+            this.btnApplyRegisteredVariables.TabIndex = 1;
+            this.btnApplyRegisteredVariables.Text = "Apply all";
+            this.btnApplyRegisteredVariables.UseVisualStyleBackColor = true;
+            this.btnApplyRegisteredVariables.Click += new System.EventHandler(this.btnApplyRegisteredVariables_Click);
+            //
             // panelReadOnly
             // 
             this.panelReadOnly.BackColor = System.Drawing.SystemColors.Control;
@@ -544,6 +629,10 @@
             this.grpFfxivClassFilter.ResumeLayout(false);
             this.panelFfxivClassFilter.ResumeLayout(false);
             this.panelReadOnly.ResumeLayout(false);
+            this.tabRegisteredVariables.ResumeLayout(false);
+            this.tableLayoutPanelRegisteredVariables.ResumeLayout(false);
+            this.tableLayoutPanelRegisteredVariables.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRegisteredVariables)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -584,5 +673,12 @@
         private System.Windows.Forms.CheckBox chkFfxivZoneFilter;
         private CustomControls.ExpressionTextBox expFfxivZoneFilterRegex;
         private Triggernometry.UI.CustomControls.ExpressionTextBox.TextBox txtEnvironment;
+        private System.Windows.Forms.TabPage tabRegisteredVariables;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelRegisteredVariables;
+        private System.Windows.Forms.DataGridView dgvRegisteredVariables;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRegisteredVariableName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRegisteredVariableValue;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colRegisteredVariableLoadWhenActive;
+        private System.Windows.Forms.Button btnApplyRegisteredVariables;
     }
 }

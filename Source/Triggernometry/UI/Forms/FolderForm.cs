@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -10,6 +9,8 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using Triggernometry.UI.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Variables;
+using Triggernometry.Localization;
 
 namespace Triggernometry.UI.Forms
 {
@@ -18,6 +19,9 @@ namespace Triggernometry.UI.Forms
     {
 
         public RealPlugin plug;
+
+        private Folder editedFolder;
+        private bool isNewFolder;
 
         public class ClassLink
         {
@@ -47,6 +51,13 @@ namespace Triggernometry.UI.Forms
         public FolderForm()
         {
             InitializeComponent();
+            colRegisteredVariableLoadWhenActive.DisplayMember = "Value";
+            colRegisteredVariableLoadWhenActive.ValueMember = "Key";
+            colRegisteredVariableLoadWhenActive.DataSource = new[]
+            {
+                new KeyValuePair<bool, string>(false, I18n.Translate("internal/FolderForm/loaddirectly", "Load directly")),
+                new KeyValuePair<bool, string>(true, I18n.Translate("internal/FolderForm/loadwhenactive", "Load when active"))
+            };
             AddClass("Job: Astrologian", 33);
             AddClass("Job: Bard", 23);
             AddClass("Job: Black Mage", 25);
@@ -94,6 +105,9 @@ namespace Triggernometry.UI.Forms
 
         internal void SetReadOnly(bool showRemoteBanner = true)
         {
+            dgvRegisteredVariables.ReadOnly = true;
+            dgvRegisteredVariables.AllowUserToAddRows = false;
+            dgvRegisteredVariables.AllowUserToDeleteRows = false;
             btnOk.Enabled = false;
             btnOk.Visible = false;
             btnCancel.Dock = DockStyle.Fill;
@@ -161,7 +175,19 @@ namespace Triggernometry.UI.Forms
 
         internal void SettingsFromFolder(Folder f)
         {
-            f = f ?? new Folder();
+            isNewFolder = f == null;
+            editedFolder = f ?? new Folder();
+            f = editedFolder;
+            dgvRegisteredVariables.Rows.Clear();
+            if (f.RegisteredVariables != null)
+            {
+                foreach (RegisteredVariable variable in f.RegisteredVariables)
+                {
+                    int row = dgvRegisteredVariables.Rows.Add(variable.Name, variable.Value, variable.LoadWhenActive);
+                    // Keep the saved name only in this editor for rename confirmation.
+                    dgvRegisteredVariables.Rows[row].Tag = variable.Name;
+                }
+            }
             txtFolderName.Text = f.Name ?? "";
             chkZoneFilter.Checked = f.ZoneFilterEnabled;
             chkEventFilter.Checked = f.EventFilterEnabled;
@@ -177,6 +203,8 @@ namespace Triggernometry.UI.Forms
 
         internal void SettingsToFolder(Folder f)
         {
+            if (!TryGetRegisteredVariables(out List<RegisteredVariable> variables)) return;
+            if (isNewFolder) f.Id = editedFolder.Id;
             f.Name = txtFolderName.Text;
 			f.ZoneFilterEnabled = chkZoneFilter.Checked;
 			f.EventFilterEnabled = chkEventFilter.Checked;
@@ -187,6 +215,95 @@ namespace Triggernometry.UI.Forms
             f.FFXIVZoneFilterEnabled = chkFfxivZoneFilter.Checked;
             f.FfxivZoneIdRegex = expFfxivZoneFilterRegex.Text;
             f.RawEnvironmentVariables = txtEnvironment.Text;
+            f.RegisteredVariables = variables;
+        }
+
+        private bool TryGetRegisteredVariables(out List<RegisteredVariable> variables)
+        {
+            variables = null;
+            if (!dgvRegisteredVariables.EndEdit()) return false;
+            var rows = new List<RegisteredVariable>();
+            foreach (DataGridViewRow row in dgvRegisteredVariables.Rows)
+            {
+                if (row.IsNewRow) continue;
+                string name = row.Cells[colRegisteredVariableName.Index].Value?.ToString() ?? "";
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    tbcMain.SelectedTab = tabRegisteredVariables;
+                    dgvRegisteredVariables.CurrentCell = row.Cells[colRegisteredVariableName.Index];
+                    MessageBox.Show(this,
+                        I18n.Translate("internal/FolderForm/registeredvariablenamerequired", "Enter a key for each registered variable."),
+                        I18n.Translate("internal/FolderForm/registeredvariables", "Registered variables"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+                rows.Add(new RegisteredVariable
+                {
+                    Name = name,
+                    Value = row.Cells[colRegisteredVariableValue.Index].Value?.ToString() ?? "",
+                    LoadWhenActive = row.Cells[colRegisteredVariableLoadWhenActive.Index].Value is bool loadWhenActive && loadWhenActive
+                });
+            }
+            variables = rows;
+            return true;
+        }
+
+        private void dgvRegisteredVariables_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            e.Row.Cells[colRegisteredVariableLoadWhenActive.Index].Value = false;
+        }
+
+        private void btnApplyRegisteredVariables_Click(object sender, EventArgs e)
+        {
+            if (!TryGetRegisteredVariables(out List<RegisteredVariable> variables)) return;
+            if (isNewFolder) editedFolder.Name = txtFolderName.Text;
+            foreach (RegisteredVariable variable in variables)
+            {
+                (plug ?? RealPlugin.Instance).RegisterVariable(editedFolder.LogName, variable);
+            }
+            foreach (DataGridViewRow row in dgvRegisteredVariables.Rows)
+            {
+                if (!row.IsNewRow && row.Tag == null) row.Tag = row.Cells[colRegisteredVariableName.Index].Value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Offers to delete runtime keys whose configured names were changed.
+        /// </summary>
+        private void ConfirmRenamedRegisteredVariables()
+        {
+            RealPlugin plugin = plug ?? RealPlugin.Instance;
+            foreach (DataGridViewRow row in dgvRegisteredVariables.Rows)
+            {
+                if (row.IsNewRow || !(row.Tag is string oldName)) continue;
+                string newName = row.Cells[colRegisteredVariableName.Index].Value.ToString();
+                if (oldName == newName) continue;
+                bool hasOldRuntimeKey;
+                string oldValue = null;
+                lock (plugin.RegisteredVariables)
+                {
+                    hasOldRuntimeKey = plugin.RegisteredVariables.TryGetValue(oldName, out VariableScalar oldVariable);
+                    if (hasOldRuntimeKey) oldValue = oldVariable.Value;
+                }
+                if (hasOldRuntimeKey && MessageBox.Show(this,
+                    I18n.Translate("internal/FolderForm/deleterenamedregisteredvariable",
+                        "Registered variable '{0}' was renamed to '{1}'.\nOld runtime value: '{2}'\nDelete the old key-value pair?", oldName, newName, oldValue),
+                    I18n.Translate("internal/FolderForm/registeredvariables", "Registered variables"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    lock (plugin.RegisteredVariables) plugin.RegisteredVariables.Remove(oldName);
+                }
+            }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (DialogResult == DialogResult.OK)
+            {
+                if (!TryGetRegisteredVariables(out _)) e.Cancel = true;
+                else ConfirmRenamedRegisteredVariables();
+            }
+            base.OnFormClosing(e);
         }
 
         private void chkZoneFilter_CheckedChanged(object sender, EventArgs e)

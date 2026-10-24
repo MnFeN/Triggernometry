@@ -40,6 +40,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dgvCellStyleDict = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dgvCellStylePeDict = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -174,6 +175,19 @@
             this.btnPeDictRemove = new System.Windows.Forms.ToolStripButton();
             this.btnPeDictRefresh = new System.Windows.Forms.ToolStripSplitButton();
             this.btnPeDictRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabRegisteredVariables = new System.Windows.Forms.TabPage();
+            this.dgvRegisteredVariables = new Triggernometry.UI.CustomControls.DataGridViewEx();
+            this.colRegisteredName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRegisteredValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRegisteredLastChanged = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRegisteredChangedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tlsRegistered = new System.Windows.Forms.ToolStrip();
+            this.btnRegisteredAdd = new System.Windows.Forms.ToolStripButton();
+            this.btnRegisteredEdit = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparatorRegistered = new System.Windows.Forms.ToolStripSeparator();
+            this.btnRegisteredRemove = new System.Windows.Forms.ToolStripButton();
+            this.btnRegisteredRefresh = new System.Windows.Forms.ToolStripSplitButton();
+            this.btnRegisteredRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tabMutexes = new System.Windows.Forms.TabPage();
             this.dgvMutexes = new Triggernometry.UI.CustomControls.DataGridViewEx();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -247,6 +261,9 @@
             this.panelPeDict.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPeDictVariables)).BeginInit();
             this.tlsPeDict.SuspendLayout();
+            this.tabRegisteredVariables.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRegisteredVariables)).BeginInit();
+            this.tlsRegistered.SuspendLayout();
             this.tabMutexes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMutexes)).BeginInit();
             this.tlsMutex.SuspendLayout();
@@ -442,6 +459,7 @@
             this.tbcMain.Controls.Add(this.tabList);
             this.tbcMain.Controls.Add(this.tabTable);
             this.tbcMain.Controls.Add(this.tabDict);
+            this.tbcMain.Controls.Add(this.tabRegisteredVariables);
             this.tbcMain.Controls.Add(this.tabMutexes);
             this.tbcMain.Controls.Add(this.tabImageAura);
             this.tbcMain.Controls.Add(this.tabTextAura);
@@ -664,6 +682,7 @@
             this.imageList1.Images.SetKeyName(7, "appointment-new.png");
             this.imageList1.Images.SetKeyName(8, "media-floppy.png");
             this.imageList1.Images.SetKeyName(9, "var_dict.png");
+            this.imageList1.Images.SetKeyName(10, "var_registered.png");
             // 
             // tabList
             // 
@@ -1732,6 +1751,151 @@
             this.btnPeDictRemoveAll.Text = "Remove all variables";
             this.btnPeDictRemoveAll.Click += new System.EventHandler(this.btnPeDictRemoveAll_Click);
             // 
+            // tabRegisteredVariables
+            //
+            this.tabRegisteredVariables.Controls.Add(this.dgvRegisteredVariables);
+            this.tabRegisteredVariables.Controls.Add(this.tlsRegistered);
+            this.tabRegisteredVariables.ImageKey = "var_registered.png";
+            this.tabRegisteredVariables.Location = new System.Drawing.Point(4, 23);
+            this.tabRegisteredVariables.Name = "tabRegisteredVariables";
+            this.tabRegisteredVariables.Padding = new System.Windows.Forms.Padding(3);
+            this.tabRegisteredVariables.Size = new System.Drawing.Size(706, 419);
+            this.tabRegisteredVariables.TabIndex = 4;
+            this.tabRegisteredVariables.Text = "Registered Variables";
+            this.tabRegisteredVariables.UseVisualStyleBackColor = true;
+            //
+            // dgvRegisteredVariables
+            //
+            this.dgvRegisteredVariables.AllowUserToAddRows = false;
+            this.dgvRegisteredVariables.AllowUserToDeleteRows = false;
+            this.dgvRegisteredVariables.AllowUserToResizeRows = false;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.dgvRegisteredVariables.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle11;
+            this.dgvRegisteredVariables.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRegisteredVariables.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colRegisteredName,
+            this.colRegisteredValue,
+            this.colRegisteredLastChanged,
+            this.colRegisteredChangedBy});
+            this.dgvRegisteredVariables.ContextMenuStrip = this.contextMenuStrip1;
+            this.dgvRegisteredVariables.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvRegisteredVariables.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgvRegisteredVariables.Location = new System.Drawing.Point(3, 28);
+            this.dgvRegisteredVariables.Name = "dgvRegisteredVariables";
+            this.dgvRegisteredVariables.RowHeadersVisible = false;
+            this.dgvRegisteredVariables.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvRegisteredVariables.ShowCellErrors = false;
+            this.dgvRegisteredVariables.ShowEditingIcon = false;
+            this.dgvRegisteredVariables.ShowRowErrors = false;
+            this.dgvRegisteredVariables.Size = new System.Drawing.Size(700, 388);
+            this.dgvRegisteredVariables.TabIndex = 21;
+            this.dgvRegisteredVariables.VirtualMode = true;
+            this.dgvRegisteredVariables.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvRegisteredVariables_CellDoubleClick);
+            this.dgvRegisteredVariables.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dgvRegisteredVariables_CellValueNeeded);
+            this.dgvRegisteredVariables.SelectionChanged += new System.EventHandler(this.dgvRegisteredVariables_SelectionChanged);
+            this.dgvRegisteredVariables.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvRegisteredVariables_KeyDown);
+            this.dgvRegisteredVariables.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvCommon_ColumnHeaderMouseClick);
+            //
+            // colRegisteredName
+            //
+            this.colRegisteredName.Frozen = true;
+            this.colRegisteredName.HeaderText = "Name";
+            this.colRegisteredName.Name = "colRegisteredName";
+            this.colRegisteredName.ReadOnly = true;
+            this.colRegisteredName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colRegisteredName.Width = 160;
+            //
+            // colRegisteredValue
+            //
+            this.colRegisteredValue.HeaderText = "Value";
+            this.colRegisteredValue.Name = "colRegisteredValue";
+            this.colRegisteredValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colRegisteredValue.Width = 160;
+            //
+            // colRegisteredLastChanged
+            //
+            this.colRegisteredLastChanged.HeaderText = "Last changed";
+            this.colRegisteredLastChanged.Name = "colRegisteredLastChanged";
+            this.colRegisteredLastChanged.ReadOnly = true;
+            this.colRegisteredLastChanged.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colRegisteredLastChanged.Width = 125;
+            //
+            // colRegisteredChangedBy
+            //
+            this.colRegisteredChangedBy.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colRegisteredChangedBy.HeaderText = "Changed by";
+            this.colRegisteredChangedBy.Name = "colRegisteredChangedBy";
+            this.colRegisteredChangedBy.ReadOnly = true;
+            this.colRegisteredChangedBy.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            //
+            // tlsRegistered
+            //
+            this.tlsRegistered.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tlsRegistered.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnRegisteredAdd,
+            this.btnRegisteredEdit,
+            this.toolStripSeparatorRegistered,
+            this.btnRegisteredRemove,
+            this.btnRegisteredRefresh});
+            this.tlsRegistered.Location = new System.Drawing.Point(3, 3);
+            this.tlsRegistered.Name = "tlsRegistered";
+            this.tlsRegistered.Size = new System.Drawing.Size(700, 25);
+            this.tlsRegistered.TabIndex = 20;
+            //
+            // btnRegisteredAdd
+            //
+            this.btnRegisteredAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnRegisteredAdd.Image")));
+            this.btnRegisteredAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRegisteredAdd.Name = "btnRegisteredAdd";
+            this.btnRegisteredAdd.Size = new System.Drawing.Size(93, 22);
+            this.btnRegisteredAdd.Text = "Add variable";
+            this.btnRegisteredAdd.Click += new System.EventHandler(this.btnRegisteredAdd_Click);
+            //
+            // btnRegisteredEdit
+            //
+            this.btnRegisteredEdit.Enabled = false;
+            this.btnRegisteredEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnRegisteredEdit.Image")));
+            this.btnRegisteredEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRegisteredEdit.Name = "btnRegisteredEdit";
+            this.btnRegisteredEdit.Size = new System.Drawing.Size(91, 22);
+            this.btnRegisteredEdit.Text = "Edit variable";
+            this.btnRegisteredEdit.Click += new System.EventHandler(this.btnRegisteredEdit_Click);
+            //
+            // toolStripSeparatorRegistered
+            //
+            this.toolStripSeparatorRegistered.Name = "toolStripSeparatorRegistered";
+            this.toolStripSeparatorRegistered.Size = new System.Drawing.Size(6, 25);
+            //
+            // btnRegisteredRemove
+            //
+            this.btnRegisteredRemove.Enabled = false;
+            this.btnRegisteredRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRegisteredRemove.Image")));
+            this.btnRegisteredRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRegisteredRemove.Name = "btnRegisteredRemove";
+            this.btnRegisteredRemove.Size = new System.Drawing.Size(114, 22);
+            this.btnRegisteredRemove.Text = "Remove variable";
+            this.btnRegisteredRemove.Click += new System.EventHandler(this.btnRegisteredRemove_Click);
+            //
+            // btnRegisteredRefresh
+            //
+            this.btnRegisteredRefresh.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnRegisteredRefresh.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnRegisteredRemoveAll});
+            this.btnRegisteredRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRegisteredRefresh.Image")));
+            this.btnRegisteredRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRegisteredRefresh.Name = "btnRegisteredRefresh";
+            this.btnRegisteredRefresh.Size = new System.Drawing.Size(78, 22);
+            this.btnRegisteredRefresh.Text = "Refresh";
+            this.btnRegisteredRefresh.ButtonClick += new System.EventHandler(this.btnRefreshRegistered_ButtonClick);
+            //
+            // btnRegisteredRemoveAll
+            //
+            this.btnRegisteredRemoveAll.Image = ((System.Drawing.Image)(resources.GetObject("btnRegisteredRemoveAll.Image")));
+            this.btnRegisteredRemoveAll.Name = "btnRegisteredRemoveAll";
+            this.btnRegisteredRemoveAll.Size = new System.Drawing.Size(181, 22);
+            this.btnRegisteredRemoveAll.Text = "Remove all variables";
+            this.btnRegisteredRemoveAll.Click += new System.EventHandler(this.btnRemoveAllRegistered_Click);
+            //
             // tabMutexes
             // 
             this.tabMutexes.Controls.Add(this.dgvMutexes);
@@ -2179,6 +2343,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvPeDictVariables)).EndInit();
             this.tlsPeDict.ResumeLayout(false);
             this.tlsPeDict.PerformLayout();
+            this.tabRegisteredVariables.ResumeLayout(false);
+            this.tabRegisteredVariables.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRegisteredVariables)).EndInit();
+            this.tlsRegistered.ResumeLayout(false);
+            this.tlsRegistered.PerformLayout();
             this.tabMutexes.ResumeLayout(false);
             this.tabMutexes.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMutexes)).EndInit();
@@ -2253,6 +2422,19 @@
         private System.Windows.Forms.ToolStripButton btnTableRemove;
         private System.Windows.Forms.ToolStripSplitButton btnTableRefresh;
         private System.Windows.Forms.ToolStripMenuItem btnTableRemoveAll;
+        private System.Windows.Forms.TabPage tabRegisteredVariables;
+        private CustomControls.DataGridViewEx dgvRegisteredVariables;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRegisteredName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRegisteredValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRegisteredLastChanged;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRegisteredChangedBy;
+        private System.Windows.Forms.ToolStrip tlsRegistered;
+        private System.Windows.Forms.ToolStripButton btnRegisteredAdd;
+        private System.Windows.Forms.ToolStripButton btnRegisteredEdit;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorRegistered;
+        private System.Windows.Forms.ToolStripButton btnRegisteredRemove;
+        private System.Windows.Forms.ToolStripSplitButton btnRegisteredRefresh;
+        private System.Windows.Forms.ToolStripMenuItem btnRegisteredRemoveAll;
         private System.Windows.Forms.TabPage tabMutexes;
         private CustomControls.DataGridViewEx dgvMutexes;
         private System.Windows.Forms.ToolStrip tlsMutex;

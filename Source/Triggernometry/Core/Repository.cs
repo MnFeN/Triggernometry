@@ -204,7 +204,7 @@ namespace Triggernometry.Core
         /// </summary>
         public void ClearContent()
         {
-            Instance.RemoveTriggersFromFolder(Root);
+            Instance.RemoveFolderRuntimeContent(Root);
             Root.Folders.Clear();
             Root.Triggers.Clear();
             ReadmeTriggers.Clear();
@@ -379,6 +379,9 @@ namespace Triggernometry.Core
             {
                 restrictions |= ApplySettingsOnFolder(exp.ExportedFolder);
                 Root.Folders.Add(exp.ExportedFolder);
+                exp.ExportedFolder.Parent = Root;
+                Instance.RegisterFolderVariables(exp.ExportedFolder);
+                Instance.UpdateActiveFolderVariables(Instance.currentZone);
                 RegisterFolder(exp.ExportedFolder, Enabled && Instance.ui.treeView1.Nodes[1].Checked);
             }
 
