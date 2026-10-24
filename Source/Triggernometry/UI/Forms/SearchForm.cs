@@ -106,9 +106,12 @@ namespace Triggernometry.UI.Forms
             }
             foreach (ConditionComponent cc in cg.Children)
             {
-                if (cc is ConditionSingle)
+                if (cc is ConditionComment comment && RegexMatches(rex, comment.Text))
                 {
-                    ConditionSingle cs = (ConditionSingle)cc;
+                    return true;
+                }
+                if (cc is ConditionSingle cs)
+                {
                     if (RegexMatches(rex, cs.ExpressionL) == true)
                     {
                         return true;

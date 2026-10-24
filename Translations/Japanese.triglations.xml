@@ -556,6 +556,7 @@
     <TranslationEntry Key="ColorSelector/ctxSetTextColor" Translation="テキストのカラーを設定" />
     <TranslationEntry Key="ColorSelector/ctxSetTextOutline" Translation="アウトラインのカラーを設定" />
     <TranslationEntry Key="ConditionViewer/btnAdd" Translation="追加" />
+    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="コメント" />
     <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="条件式" />
     <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="条件式グループ" />
     <TranslationEntry Key="ConditionViewer/btnDelete" Translation="削除" />
@@ -584,6 +585,7 @@
     <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="リスト検索：左辺のリスト変数に右辺の値が含まれる" />
     <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="リスト検索：左辺のリスト変数に右辺の値が含まれない" />
     <TranslationEntry Key="ConditionViewer/ctxAdd" Translation="新規作成" />
+    <TranslationEntry Key="ConditionViewer/ctxAddComment" Translation="コメント" />
     <TranslationEntry Key="ConditionViewer/ctxAddCondition" Translation="条件式" />
     <TranslationEntry Key="ConditionViewer/ctxAddGroup" Translation="条件式グループ" />
     <TranslationEntry Key="ConditionViewer/ctxCollapseAll" Translation="Collapse All" />
@@ -593,6 +595,7 @@
     <TranslationEntry Key="ConditionViewer/ctxPaste" Translation="貼り付け" />
     <TranslationEntry Key="ConditionViewer/ctxPasteOver" Translation="貼り付けて上書き" />
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="削除" />
+    <TranslationEntry Key="ConditionViewer/lblComment" Translation="コメント内容" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="グループ内の条件式の扱い" />
     <TranslationEntry Key="ConditionViewer/lblLeftExpression" Translation="左辺の式" />
     <TranslationEntry Key="ConditionViewer/lblOperator" Translation="演算子" />
@@ -1241,6 +1244,7 @@
     <TranslationEntry Key="internal/ColonParser/rowlookupindices" Translation="行ヘッダーによるテーブル検索には、2 つのインデックス [行ヘッダー][列インデックス] が必要です：「{0}」" />
     <TranslationEntry Key="internal/ColonParser/variablenotfound" Translation="変数「{0}」は存在しません。" />
     <TranslationEntry Key="internal/ColorSelector/sample" Translation="Sample" />
+    <TranslationEntry Key="internal/ConditionComment/empty" Translation="コメント" />
     <TranslationEntry Key="internal/ConditionGroup/and" Translation="すべての条件式がTRUE" />
     <TranslationEntry Key="internal/ConditionGroup/not" Translation="すべての条件式がTRUEではない" />
     <TranslationEntry Key="internal/ConditionGroup/or" Translation="1つ以上の条件式がTRUE" />
@@ -1264,8 +1268,10 @@
     <TranslationEntry Key="internal/ConditionSingle/stringexpression" Translation="文字列式 {0} " />
     <TranslationEntry Key="internal/ConditionSingle/stringnotequalcase" Translation="は、大文字と小文字を区別した文字列比較で、次の文字列と一致しない" />
     <TranslationEntry Key="internal/ConditionSingle/stringnotequalnocase" Translation="は、大文字と小文字を区別しない文字列比較で、次の文字列と一致しない" />
+    <TranslationEntry Key="internal/ConditionViewer/areyousurecomment" Translation="選択したコメントを削除してもよろしいですか？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuregroup" Translation="選択した条件式グループを削除してもよろしいですか？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuresingle" Translation="選択した条件式を削除してもよろしいですか？" />
+    <TranslationEntry Key="internal/ConditionViewer/commentprops" Translation="コメントのプロパティ" />
     <TranslationEntry Key="internal/ConditionViewer/conditionplural" Translation="{0} 個の条件式" />
     <TranslationEntry Key="internal/ConditionViewer/conditionsingular" Translation="{0} 個の条件式" />
     <TranslationEntry Key="internal/ConditionViewer/condprops" Translation="条件式のプロパティ" />

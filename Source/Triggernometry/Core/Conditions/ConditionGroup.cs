@@ -40,6 +40,7 @@ namespace Triggernometry.Core.Conditions
 
         [XmlElement(typeof(ConditionGroup))]
         [XmlElement(typeof(ConditionSingle))]
+        [XmlElement(typeof(ConditionComment))]
         public List<ConditionComponent> Children { get; set; } = new List<ConditionComponent>();
 
         public void AddChild(ConditionComponent re)
@@ -96,7 +97,8 @@ namespace Triggernometry.Core.Conditions
 
         internal override bool CheckCondition(Context ctx, Context.LoggerDelegate logger, object o)
         {
-            if (Children.Count == 0 && Parent == null)
+            // A root containing only notes behaves like an empty condition tree.
+            if (Parent == null && Children.All(cc => cc is ConditionComment))
             {
                 return true;
             }
@@ -107,6 +109,7 @@ namespace Triggernometry.Core.Conditions
                         bool actives = false;
                         foreach (ConditionComponent cc in Children)
                         {
+                            if (cc is ConditionComment) continue;
                             if (cc.Enabled == false)
                             {
                                 if (System.Diagnostics.Debugger.IsAttached == true)
@@ -139,6 +142,7 @@ namespace Triggernometry.Core.Conditions
                     {
                         foreach (ConditionComponent cc in Children)
                         {
+                            if (cc is ConditionComment) continue;
                             if (cc.Enabled == false)
                             {
                                 if (System.Diagnostics.Debugger.IsAttached == true)
@@ -163,6 +167,7 @@ namespace Triggernometry.Core.Conditions
                         bool truefound = false;
                         foreach (ConditionComponent cc in Children)
                         {
+                            if (cc is ConditionComment) continue;
                             if (cc.Enabled == false)
                             {
                                 if (System.Diagnostics.Debugger.IsAttached == true)
@@ -198,6 +203,7 @@ namespace Triggernometry.Core.Conditions
                     {
                         foreach (ConditionComponent cc in Children)
                         {
+                            if (cc is ConditionComment) continue;
                             if (cc.Enabled == false)
                             {
                                 if (System.Diagnostics.Debugger.IsAttached == true)

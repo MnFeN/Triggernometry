@@ -122,6 +122,7 @@ namespace Triggernometry.UI.CustomControls
             trvNodes.BeforeCheck += trvNodes_BeforeCheck;
             pnlEditorGroup.Visible = false;
             pnlEditorSingle.Visible = false;            
+            pnlEditorComment.Visible = false;
             PanelStateFromSelection = false;
             expLeft.textBox1.TextChanged += expLeft_TextChanged;
             expRight.textBox1.TextChanged += expRight_TextChanged;
@@ -135,14 +136,15 @@ namespace Triggernometry.UI.CustomControls
         {
             isReadOnly = true;
             expLeft.ReadOnly = expRight.ReadOnly = true;
+            txtComment.ReadOnly = true;
             cbxExpLType.Enabled = cbxExpRType.Enabled = cbxOpType.Enabled = cbxGroupingType.Enabled = false;
-            btnAdd.Enabled = btnAddGroup.Enabled = btnAddCondition.Enabled = btnDelete.Enabled = false;
+            btnAdd.Enabled = btnAddGroup.Enabled = btnAddCondition.Enabled = btnAddComment.Enabled = btnDelete.Enabled = false;
             trvNodes.AllowDrop = false;
         }
 
         private void trvNodes_BeforeCheck(object sender, TreeViewCancelEventArgs e)
         {
-            if (isReadOnly) e.Cancel = true;
+            if (isReadOnly || e.Node.Tag is ConditionComment) e.Cancel = true;
         }
 
         internal void OnConditionsUpdated()
@@ -283,6 +285,11 @@ namespace Triggernometry.UI.CustomControls
         private void UpdateNodeIcon(TreeNode tn)
         {
             ConditionComponent re = (ConditionComponent)tn.Tag;
+            if (re is ConditionComment)
+            {
+                tn.ImageKey = "comment";
+                tn.SelectedImageKey = "comment";
+            }
             if (re is ConditionSingle)
             {
                 tn.ImageKey = "function";
@@ -316,7 +323,8 @@ namespace Triggernometry.UI.CustomControls
         {
             tn.Tag = re;
             tn.Text = re.ToString();
-            tn.Checked = re.Enabled;
+            tn.Checked = !(re is ConditionComment) && re.Enabled;
+            if (re is ConditionComment) tn.ForeColor = disabledNodeColor;
             if (re != null)
             {
                 SetReverseLookup(re, tn);
@@ -341,6 +349,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void UpdateEditorToConditionComponent(ConditionComponent re)
         {
+            pnlEditorComment.Visible = false;
             if (re is ConditionSingle)
             {
                 pnlEditorGroup.Visible = false;
@@ -393,6 +402,15 @@ namespace Triggernometry.UI.CustomControls
                 capProperties.Caption = I18n.Translate("internal/ConditionViewer/groupprops", "Group properties");
                 pnlEditorGroup.Visible = true;
             }
+            else if (re is ConditionComment comment)
+            {
+                pnlEditorSingle.Visible = false;
+                pnlEditorGroup.Visible = false;
+                PanelStateFromSelection = true;
+                txtComment.Text = comment.Text;
+                capProperties.Caption = I18n.Translate("internal/ConditionViewer/commentprops", "Comment properties");
+                pnlEditorComment.Visible = true;
+            }
             else
             {
                 pnlEditorSingle.Visible = false;
@@ -401,6 +419,7 @@ namespace Triggernometry.UI.CustomControls
             }
             btnAddGroup.Enabled = !isReadOnly;
             btnAddCondition.Enabled = !isReadOnly;
+            btnAddComment.Enabled = !isReadOnly;
             btnDelete.Enabled = !isReadOnly && re.Parent != null;
         }
 
@@ -471,51 +490,37 @@ namespace Triggernometry.UI.CustomControls
 
         private void btnAddGroup_Click(object sender, EventArgs e)
         {
-            ConditionGroup re = new ConditionGroup();
-            TreeNode tn = new TreeNode();
-            AttachConditionComponentToNode(tn, re);
-            TreeNode tx = trvNodes.SelectedNode;
-            ConditionComponent rx = (ConditionComponent)tx.Tag;
-            if (rx is ConditionSingle)
-            {
-                tx = GetReverseLookup(rx.Parent);
-                re.Parent = rx.Parent;
-            }
-            if (rx is ConditionGroup)
-            {
-                tx = GetReverseLookup(rx);
-                re.Parent = (ConditionGroup)rx;
-            }
-            re.Parent.Children.Add(re);
-            tx.Nodes.Add(tn);
-            RecolorStartingFromNode(tx, tx.Checked);
-            trvNodes.SelectedNode = tn;
-            if (tx.IsExpanded == false)
-            {
-                tx.Expand();
-            }
-            OnConditionsUpdated();
+            AddComponent(new ConditionGroup());
         }
 
         private void btnAddCondition_Click(object sender, EventArgs e)
         {
-            ConditionSingle re = new ConditionSingle();
-            re.ConditionType = ConditionSingle.CndTypeEnum.StringEqualNocase;
+            AddComponent(new ConditionSingle { ConditionType = ConditionSingle.CndTypeEnum.StringEqualNocase });
+            expLeft.Focus();
+        }
+
+        private void btnAddComment_Click(object sender, EventArgs e)
+        {
+            AddComponent(new ConditionComment());
+            txtComment.Focus();
+        }
+
+        private void txtComment_TextChanged(object sender, EventArgs e)
+        {
+            ConditionComment comment = (ConditionComment)trvNodes.SelectedNode.Tag;
+            if (comment.Text == txtComment.Text) return;
+            comment.Text = txtComment.Text;
+            OnConditionsUpdated();
+        }
+
+        /// <summary> Appends an item to the selected group or the selected leaf's parent. </summary>
+        private void AddComponent(ConditionComponent re)
+        {
             TreeNode tn = new TreeNode();
             AttachConditionComponentToNode(tn, re);
             TreeNode tx = trvNodes.SelectedNode;
-            ConditionComponent rx = (ConditionComponent)tx.Tag;
-            if (rx is ConditionSingle)
-            {
-                tx = GetReverseLookup(rx.Parent);
-                re.Parent = rx.Parent;
-            }
-            if (rx is ConditionGroup)
-            {
-                tx = GetReverseLookup(rx);
-                re.Parent = (ConditionGroup)rx;
-            }
-            re.Parent.Children.Add(re);
+            if (!(tx.Tag is ConditionGroup)) tx = tx.Parent;
+            ((ConditionGroup)tx.Tag).AddChild(re);
             tx.Nodes.Add(tn);
             RecolorStartingFromNode(tx, tx.Checked);
             trvNodes.SelectedNode = tn;
@@ -523,7 +528,6 @@ namespace Triggernometry.UI.CustomControls
             {
                 tx.Expand();
             }
-            expLeft.Focus();
             OnConditionsUpdated();
         }
 
@@ -531,9 +535,12 @@ namespace Triggernometry.UI.CustomControls
         {
             TreeNode tn = trvNodes.SelectedNode;
             ConditionComponent re = (ConditionComponent)tn.Tag;
-            if (re is ConditionSingle)
+            if (re is ConditionSingle || re is ConditionComment)
             {
-                if (MessageBox.Show(this, I18n.Translate("internal/ConditionViewer/areyousuresingle", "Are you sure you want to remove the selected condition?") + Environment.NewLine + Environment.NewLine + re.ToString(), I18n.Translate("internal/ConditionViewer/confirm", "Confirm removal"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                string prompt = re is ConditionComment
+                    ? I18n.Translate("internal/ConditionViewer/areyousurecomment", "Are you sure you want to remove the selected comment?")
+                    : I18n.Translate("internal/ConditionViewer/areyousuresingle", "Are you sure you want to remove the selected condition?");
+                if (MessageBox.Show(this, prompt + Environment.NewLine + Environment.NewLine + re.ToString(), I18n.Translate("internal/ConditionViewer/confirm", "Confirm removal"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     RemoveReverseLookup(re);
                     re.Parent.Children.Remove(re);
@@ -582,7 +589,7 @@ namespace Triggernometry.UI.CustomControls
             while (rge.Children.Count > 0)
             {
                 ConditionComponent re = rge.Children[0];
-                if (re is ConditionSingle)
+                if (!(re is ConditionGroup))
                 {
                     RemoveReverseLookup(re);
                     re.Parent = null;
@@ -711,9 +718,9 @@ namespace Triggernometry.UI.CustomControls
                 pstate = tnx.Checked;
                 tnx = tnx.Parent;
             }
-            tn.ForeColor = (tn.Checked == true && pstate == true) ? trvNodes.ForeColor : disabledNodeColor;
+            tn.ForeColor = (!(o is ConditionComment) && tn.Checked && pstate) ? trvNodes.ForeColor : disabledNodeColor;
             ConditionComponent cc = (ConditionComponent)o;
-            cc.Enabled = tn.Checked;
+            if (!(cc is ConditionComment)) cc.Enabled = tn.Checked;
             if (o is ConditionGroup)
             {
                 foreach (TreeNode tnn in tn.Nodes)
@@ -727,12 +734,13 @@ namespace Triggernometry.UI.CustomControls
         {
             ctxAddCondition.Enabled = btnAddCondition.Enabled;
             ctxAddGroup.Enabled = btnAddGroup.Enabled;
+            ctxAddComment.Enabled = btnAddComment.Enabled;
             ctxRemove.Enabled = btnDelete.Enabled;
             ctxCopy.Enabled = (trvNodes.SelectedNode != null);
             ctxPaste.Enabled = (btnAddCondition.Enabled == true && System.Windows.Forms.Clipboard.ContainsText() == true);
             ctxPasteOver.Enabled = ctxPaste.Enabled;
             TreeNode selectedNode = trvNodes.SelectedNode;
-            ctxTest.Enabled = selectedNode != null;
+            ctxTest.Enabled = selectedNode != null && !(selectedNode.Tag is ConditionComment);
             ctxExpandAll.Enabled = selectedNode != null && selectedNode.Tag is ConditionGroup;
             ctxCollapseAll.Enabled = ctxExpandAll.Enabled;
         }
@@ -795,6 +803,10 @@ namespace Triggernometry.UI.CustomControls
                     {
                         xs = new XmlSerializer(typeof(ConditionSingle));
                     }
+                    else if (doc.DocumentElement.Name == "ConditionComment")
+                    {
+                        xs = new XmlSerializer(typeof(ConditionComment));
+                    }
                     else
                     {
                         // doesn't look like valid paste
@@ -812,6 +824,8 @@ namespace Triggernometry.UI.CustomControls
                             (cx is ConditionGroup && target is ConditionGroup)
                             ||
                             (cx is ConditionSingle && target is ConditionSingle)
+                            ||
+                            (cx is ConditionComment && target is ConditionComment)
                         )
                         &&
                         overWrite == true
@@ -848,10 +862,16 @@ namespace Triggernometry.UI.CustomControls
                             RecolorStartingFromNode(tn, tn.Checked);
                             UpdateEditorToConditionComponent(target);
                         }
+                        else if (cx is ConditionComment sc && target is ConditionComment tc)
+                        {
+                            tc.Enabled = sc.Enabled;
+                            tc.Text = sc.Text;
+                            UpdateEditorToConditionComponent(target);
+                        }
                     }
                     else
                     {
-                        if (target is ConditionSingle)
+                        if (!(target is ConditionGroup))
                         {
                             target = target.Parent;
                             tn = tn.Parent;
@@ -911,7 +931,7 @@ namespace Triggernometry.UI.CustomControls
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             string test = "";
             ns.Add("", "");            
-            XmlSerializer xs = new XmlSerializer(cc is ConditionSingle == true ? typeof(ConditionSingle) : typeof(ConditionGroup));
+            XmlSerializer xs = new XmlSerializer(cc.GetType());
             using (MemoryStream ms = new MemoryStream())
             {
                 xs.Serialize(ms, cc, ns);

@@ -4,6 +4,7 @@ namespace Triggernometry.Core.Conditions
 {
 
     [XmlInclude(typeof(ConditionSingle))]
+    [XmlInclude(typeof(ConditionComment))]
     [XmlInclude(typeof(ConditionGroup))]    
     public abstract class ConditionComponent
     {

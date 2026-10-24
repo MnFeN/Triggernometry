@@ -35,6 +35,7 @@
             this.btnAdd = new System.Windows.Forms.ToolStripDropDownButton();
             this.btnAddGroup = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAddCondition = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnAddComment = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDelete = new System.Windows.Forms.ToolStripButton();
             this.btnProperties = new System.Windows.Forms.ToolStripButton();
@@ -52,12 +53,17 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.cbxGroupingType = new System.Windows.Forms.ComboBox();
             this.lblGroupingType = new System.Windows.Forms.Label();
+            this.pnlEditorComment = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblComment = new System.Windows.Forms.Label();
+            this.txtComment = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.trvNodes = new Triggernometry.UI.CustomControls.TreeViewEx();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxAddGroup = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxAddCondition = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxAddComment = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.ctxCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxPaste = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,6 +81,8 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.pnlEditorGroup.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.pnlEditorComment.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -92,6 +100,7 @@
             this.imageList1.Images.SetKeyName(2, "group_or");
             this.imageList1.Images.SetKeyName(3, "group_not");
             this.imageList1.Images.SetKeyName(4, "group_xor");
+            this.imageList1.Images.SetKeyName(5, "comment");
             // 
             // toolStrip1
             // 
@@ -110,7 +119,8 @@
             // 
             this.btnAdd.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddGroup,
-            this.btnAddCondition});
+            this.btnAddCondition,
+            this.btnAddComment});
             this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
             this.btnAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAdd.Name = "btnAdd";
@@ -132,6 +142,14 @@
             this.btnAddCondition.Size = new System.Drawing.Size(162, 22);
             this.btnAddCondition.Text = "Condition";
             this.btnAddCondition.Click += new System.EventHandler(this.btnAddCondition_Click);
+            //
+            // btnAddComment
+            //
+            this.btnAddComment.Image = ((System.Drawing.Image)(resources.GetObject("btnAddComment.Image")));
+            this.btnAddComment.Name = "btnAddComment";
+            this.btnAddComment.Size = new System.Drawing.Size(162, 22);
+            this.btnAddComment.Text = "Comment";
+            this.btnAddComment.Click += new System.EventHandler(this.btnAddComment_Click);
             // 
             // toolStripSeparator1
             // 
@@ -362,6 +380,53 @@
             this.lblGroupingType.TabStop = false;
             this.lblGroupingType.Text = "Grouping type";
             // 
+            // pnlEditorComment
+            //
+            this.pnlEditorComment.Controls.Add(this.tableLayoutPanel3);
+            this.pnlEditorComment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlEditorComment.Location = new System.Drawing.Point(0, 0);
+            this.pnlEditorComment.Name = "pnlEditorComment";
+            this.pnlEditorComment.Size = new System.Drawing.Size(200, 546);
+            this.pnlEditorComment.TabStop = false;
+            //
+            // tableLayoutPanel3
+            //
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.lblComment, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.txtComment, 0, 1);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(200, 546);
+            this.tableLayoutPanel3.TabStop = false;
+            //
+            // lblComment
+            //
+            this.lblComment.AutoSize = true;
+            this.lblComment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblComment.Location = new System.Drawing.Point(3, 0);
+            this.lblComment.Name = "lblComment";
+            this.lblComment.Padding = new System.Windows.Forms.Padding(0, 15, 0, 1);
+            this.lblComment.Size = new System.Drawing.Size(194, 29);
+            this.lblComment.TabStop = false;
+            this.lblComment.Text = "Comment text";
+            //
+            // txtComment
+            //
+            this.txtComment.AcceptsReturn = true;
+            this.txtComment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtComment.Location = new System.Drawing.Point(3, 32);
+            this.txtComment.Multiline = true;
+            this.txtComment.Name = "txtComment";
+            this.txtComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtComment.Size = new System.Drawing.Size(194, 511);
+            this.txtComment.TabIndex = 0;
+            this.txtComment.TextChanged += new System.EventHandler(this.txtComment_TextChanged);
+            //
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -428,7 +493,8 @@
             // 
             this.ctxAdd.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxAddGroup,
-            this.ctxAddCondition});
+            this.ctxAddCondition,
+            this.ctxAddComment});
             this.ctxAdd.Image = ((System.Drawing.Image)(resources.GetObject("ctxAdd.Image")));
             this.ctxAdd.Name = "ctxAdd";
             this.ctxAdd.Size = new System.Drawing.Size(201, 22);
@@ -449,6 +515,14 @@
             this.ctxAddCondition.Size = new System.Drawing.Size(162, 22);
             this.ctxAddCondition.Text = "Condition";
             this.ctxAddCondition.Click += new System.EventHandler(this.ctxBtnCondition_Click);
+            //
+            // ctxAddComment
+            //
+            this.ctxAddComment.Image = ((System.Drawing.Image)(resources.GetObject("ctxAddComment.Image")));
+            this.ctxAddComment.Name = "ctxAddComment";
+            this.ctxAddComment.Size = new System.Drawing.Size(162, 22);
+            this.ctxAddComment.Text = "Comment";
+            this.ctxAddComment.Click += new System.EventHandler(this.btnAddComment_Click);
             // 
             // toolStripSeparator7
             // 
@@ -527,6 +601,7 @@
             // panel3
             // 
             this.panel3.AutoScroll = true;
+            this.panel3.Controls.Add(this.pnlEditorComment);
             this.panel3.Controls.Add(this.pnlEditorSingle);
             this.panel3.Controls.Add(this.pnlEditorGroup);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -564,6 +639,9 @@
             this.pnlEditorGroup.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.pnlEditorComment.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -583,6 +661,7 @@
         private System.Windows.Forms.ToolStripDropDownButton btnAdd;
         private System.Windows.Forms.ToolStripMenuItem btnAddCondition;
         private System.Windows.Forms.ToolStripMenuItem btnAddGroup;
+        private System.Windows.Forms.ToolStripMenuItem btnAddComment;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnDelete;
         private System.Windows.Forms.Panel pnlEditorSingle;
@@ -599,12 +678,17 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.ComboBox cbxGroupingType;
         private System.Windows.Forms.Label lblGroupingType;
+        private System.Windows.Forms.Panel pnlEditorComment;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Label lblComment;
+        private System.Windows.Forms.TextBox txtComment;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ctxAdd;
         private System.Windows.Forms.ToolStripMenuItem ctxAddGroup;
         private System.Windows.Forms.ToolStripMenuItem ctxAddCondition;
+        private System.Windows.Forms.ToolStripMenuItem ctxAddComment;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem ctxCopy;
         private System.Windows.Forms.ToolStripMenuItem ctxPaste;

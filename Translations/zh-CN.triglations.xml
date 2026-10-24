@@ -556,6 +556,7 @@
     <TranslationEntry Key="ColorSelector/ctxSetTextColor" Translation="设置文本颜色" />
     <TranslationEntry Key="ColorSelector/ctxSetTextOutline" Translation="设置文本轮廓颜色" />
     <TranslationEntry Key="ConditionViewer/btnAdd" Translation="添加" />
+    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="注释" />
     <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="条件" />
     <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="条件组" />
     <TranslationEntry Key="ConditionViewer/btnDelete" Translation="移除" />
@@ -584,6 +585,7 @@
     <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="列表：名为 L 的列表包含数据 R" />
     <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="列表：名为 L 的列表不含数据 R" />
     <TranslationEntry Key="ConditionViewer/ctxAdd" Translation="添加" />
+    <TranslationEntry Key="ConditionViewer/ctxAddComment" Translation="注释" />
     <TranslationEntry Key="ConditionViewer/ctxAddCondition" Translation="条件" />
     <TranslationEntry Key="ConditionViewer/ctxAddGroup" Translation="条件组" />
     <TranslationEntry Key="ConditionViewer/ctxCollapseAll" Translation="全部折叠" />
@@ -593,6 +595,7 @@
     <TranslationEntry Key="ConditionViewer/ctxPaste" Translation="粘贴" />
     <TranslationEntry Key="ConditionViewer/ctxPasteOver" Translation="覆盖粘贴" />
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="移除" />
+    <TranslationEntry Key="ConditionViewer/lblComment" Translation="注释内容" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="分组类型" />
     <TranslationEntry Key="ConditionViewer/lblLeftExpression" Translation="左侧表达式 L" />
     <TranslationEntry Key="ConditionViewer/lblOperator" Translation="操作符" />
@@ -1241,6 +1244,7 @@
     <TranslationEntry Key="internal/ColonParser/rowlookupindices" Translation="按行标题查找表格时必须提供两个索引 [行标题][列索引]：“{0}”" />
     <TranslationEntry Key="internal/ColonParser/variablenotfound" Translation="变量“{0}”不存在。" />
     <TranslationEntry Key="internal/ColorSelector/sample" Translation="示例" />
+    <TranslationEntry Key="internal/ConditionComment/empty" Translation="注释" />
     <TranslationEntry Key="internal/ConditionGroup/and" Translation="全部条件为真（与）" />
     <TranslationEntry Key="internal/ConditionGroup/not" Translation="全部条件为假（非）" />
     <TranslationEntry Key="internal/ConditionGroup/or" Translation="至少一个条件为真（或）" />
@@ -1264,8 +1268,10 @@
     <TranslationEntry Key="internal/ConditionSingle/stringexpression" Translation="文本 ({0})" />
     <TranslationEntry Key="internal/ConditionSingle/stringnotequalcase" Translation="文本上 不同于" />
     <TranslationEntry Key="internal/ConditionSingle/stringnotequalnocase" Translation="文本上（不分大小写）不同于" />
+    <TranslationEntry Key="internal/ConditionViewer/areyousurecomment" Translation="确定要移除选中的注释吗？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuregroup" Translation="您确定要移除该条件组吗？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuresingle" Translation="您确定要移除该条件吗？" />
+    <TranslationEntry Key="internal/ConditionViewer/commentprops" Translation="注释属性" />
     <TranslationEntry Key="internal/ConditionViewer/conditionplural" Translation="{0} 条件" />
     <TranslationEntry Key="internal/ConditionViewer/conditionsingular" Translation="{0} 条件" />
     <TranslationEntry Key="internal/ConditionViewer/condprops" Translation="条件属性" />

@@ -556,6 +556,7 @@
     <TranslationEntry Key="ColorSelector/ctxSetTextColor" Translation="Set text color" />
     <TranslationEntry Key="ColorSelector/ctxSetTextOutline" Translation="Set text outline color" />
     <TranslationEntry Key="ConditionViewer/btnAdd" Translation="Add" />
+    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="Comment" />
     <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="Condition" />
     <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="Condition group" />
     <TranslationEntry Key="ConditionViewer/btnDelete" Translation="Remove" />
@@ -584,6 +585,7 @@
     <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="List variable specified on the left side must contain the value on the right side" />
     <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="List variable specified on the left side must not contain the value on the right side" />
     <TranslationEntry Key="ConditionViewer/ctxAdd" Translation="Add" />
+    <TranslationEntry Key="ConditionViewer/ctxAddComment" Translation="Comment" />
     <TranslationEntry Key="ConditionViewer/ctxAddCondition" Translation="Condition" />
     <TranslationEntry Key="ConditionViewer/ctxAddGroup" Translation="Condition group" />
     <TranslationEntry Key="ConditionViewer/ctxCollapseAll" Translation="Collapse All" />
@@ -593,6 +595,7 @@
     <TranslationEntry Key="ConditionViewer/ctxPaste" Translation="Paste" />
     <TranslationEntry Key="ConditionViewer/ctxPasteOver" Translation="Paste over" />
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="Remove" />
+    <TranslationEntry Key="ConditionViewer/lblComment" Translation="Comment text" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="Grouping type" />
     <TranslationEntry Key="ConditionViewer/lblLeftExpression" Translation="Left expression" />
     <TranslationEntry Key="ConditionViewer/lblOperator" Translation="Operator" />
@@ -1241,6 +1244,7 @@
     <TranslationEntry Key="internal/ColonParser/rowlookupindices" Translation="Row-based table lookup expects exactly two indices [Header][ColIndex]: '{0}'" />
     <TranslationEntry Key="internal/ColonParser/variablenotfound" Translation="Variable '{0}' does not exist." />
     <TranslationEntry Key="internal/ColorSelector/sample" Translation="Sample" />
+    <TranslationEntry Key="internal/ConditionComment/empty" Translation="Comment" />
     <TranslationEntry Key="internal/ConditionGroup/and" Translation="All conditions must be true" />
     <TranslationEntry Key="internal/ConditionGroup/not" Translation="None of the conditions may be true" />
     <TranslationEntry Key="internal/ConditionGroup/or" Translation="At least one condition must be true" />
@@ -1264,8 +1268,10 @@
     <TranslationEntry Key="internal/ConditionSingle/stringexpression" Translation="string expression ({0})" />
     <TranslationEntry Key="internal/ConditionSingle/stringnotequalcase" Translation="must not pass case-sensitive string comparison to the string from" />
     <TranslationEntry Key="internal/ConditionSingle/stringnotequalnocase" Translation="must not pass case-insensitive string comparison to the string from" />
+    <TranslationEntry Key="internal/ConditionViewer/areyousurecomment" Translation="Are you sure you want to remove the selected comment?" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuregroup" Translation="Are you sure you want to remove the selected condition group?" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuresingle" Translation="Are you sure you want to remove the selected condition?" />
+    <TranslationEntry Key="internal/ConditionViewer/commentprops" Translation="Comment properties" />
     <TranslationEntry Key="internal/ConditionViewer/conditionplural" Translation="{0} conditions" />
     <TranslationEntry Key="internal/ConditionViewer/conditionsingular" Translation="{0} condition" />
     <TranslationEntry Key="internal/ConditionViewer/condprops" Translation="Condition properties" />
