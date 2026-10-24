@@ -1,51 +1,12 @@
 <?xml version="1.0"?>
 <Language LanguageName="简体中文 (zh-CN)" MissingKeyHandling="DefaultLanguage">
   <Translations>
-    <TranslationEntry Key="AboutForm" Translation=" 关于" />    
+    <TranslationEntry Key="AboutForm" Translation=" 关于" />
     <TranslationEntry Key="AboutForm/btnOk" Translation="确定" />
     <TranslationEntry Key="AboutForm/tabGeneral" Translation="通用" />
     <TranslationEntry Key="AboutForm/tabLicenses" Translation="协议" />
     <TranslationEntry Key="AboutForm/txtGeneral" Translation="Triggernometry（高级触发器）&#xD;&#xA;版本 [VERSIONNUMBER]&#xD;&#xA;&#xD;&#xA;错误汇报及意见建议请加入插件官方 Discord 聊天室讨论:&#xD;&#xA;https://discord.gg/6f9MY55" />''
     <TranslationEntry Key="AboutForm/txtLicenses" Translation="Mathos license:&#xD;&#xA;&#xD;&#xA;Copyright (c) 2012-2016 Mathos Project,&#xD;&#xA;All rights reserved.&#xD;&#xA;&#xD;&#xA;Redistribution and use in source and binary forms, with or without&#xD;&#xA;modification, are permitted provided that the following conditions are met:&#xD;&#xA;&#xD;&#xA;* Redistributions of source code must retain the above copyright notice, this&#xD;&#xA; list of conditions and the following disclaimer.&#xD;&#xA;&#xD;&#xA;* Redistributions in binary form must reproduce the above copyright notice,&#xD;&#xA;  this list of conditions and the following disclaimer in the documentation&#xD;&#xA;  and/or other materials provided with the distribution.&#xD;&#xA;&#xD;&#xA;* Neither the name of Mathos-Parser nor the names of its&#xD;&#xA;  contributors may be used to endorse or promote products derived from&#xD;&#xA;  this software without specific prior written permission.&#xD;&#xA;&#xD;&#xA;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;&#xD;&#xA;AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE&#xD;&#xA;IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE&#xD;&#xA;DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE&#xD;&#xA;FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL&#xD;&#xA;DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR&#xD;&#xA;SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER&#xD;&#xA;CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,&#xD;&#xA;OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE&#xD;&#xA;OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&#xD;&#xA;&#xD;&#xA;=============================&#xD;&#xA;&#xD;&#xA;websocket-sharp license:&#xD;&#xA;&#xD;&#xA;The MIT License (MIT)&#xD;&#xA;&#xD;&#xA;Copyright (c) 2010-2018 sta.blockhead&#xD;&#xA;&#xD;&#xA;Permission is hereby granted, free of charge, to any person obtaining a copy&#xD;&#xA;of this software and associated documentation files (the &quot;Software&quot;), to deal&#xD;&#xA;in the Software without restriction, including without limitation the rights&#xD;&#xA;to use, copy, modify, merge, publish, distribute, sublicense, and/or sell&#xD;&#xA;copies of the Software, and to permit persons to whom the Software is&#xD;&#xA;furnished to do so, subject to the following conditions:&#xD;&#xA;&#xD;&#xA;The above copyright notice and this permission notice shall be included in&#xD;&#xA;all copies or substantial portions of the Software.&#xD;&#xA;&#xD;&#xA;THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR&#xD;&#xA;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,&#xD;&#xA;FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE&#xD;&#xA;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER&#xD;&#xA;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,&#xD;&#xA;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN&#xD;&#xA;THE SOFTWARE." />
-    <TranslationEntry Key="ActionForm/actionViewer1/btnActionBottom" Translation="置底" />
-    <TranslationEntry Key="ActionForm/actionViewer1/btnActionDown" Translation="下移" />
-    <TranslationEntry Key="ActionForm/actionViewer1/btnActionTop" Translation="置顶" />
-    <TranslationEntry Key="ActionForm/actionViewer1/btnActionUp" Translation="上移" />
-    <TranslationEntry Key="ActionForm/actionViewer1/btnAddAction" Translation="添加" />
-    <TranslationEntry Key="ActionForm/actionViewer1/btnEditAction" Translation="编辑" />
-    <TranslationEntry Key="ActionForm/actionViewer1/btnRemoveAction" Translation="移除" />
-    <TranslationEntry Key="ActionForm/actionViewer1/btnUndo" Translation="撤销" />
-    <TranslationEntry Key="ActionForm/actionViewer1/colDescription" Translation="动作描述" />
-    <TranslationEntry Key="ActionForm/actionViewer1/Column1" Translation="　　" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxAddAction" Translation="添加动作" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxCopyAction" Translation="复制" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditAction" Translation="编辑动作" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditProp" Translation="快捷设置" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropAsyncOff" Translation="关闭异步" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropAsyncOn" Translation="开启异步" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropBgColor" Translation="背景颜色" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropCndGroupingAnd" Translation="与" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropCndGroupingNot" Translation="非" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropCndGroupingOr" Translation="或" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropCndGroupingType" Translation="条件组类型" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropCndGroupingXor" Translation="或非" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropCopyCnd" Translation="复制条件组" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropDelay" Translation="延迟时间" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropPasteCnd" Translation="粘贴条件组" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropRemoveCnd" Translation="清空条件" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropRemoveDesc" Translation="清空描述" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxEditPropTextColor" Translation="文本颜色" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxMoveBottom" Translation="置底" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxMoveDown" Translation="下移" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxMoveTop" Translation="置顶" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxMoveUp" Translation="上移" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxPasteAction" Translation="粘贴" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxRemoveAction" Translation="移除动作" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxTestAction" Translation="测试动作" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxTestLive" Translation="使用实时值" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxTestLiveIgnoreCnd" Translation="使用实时值（忽略条件）" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxTestPlaceholder" Translation="使用测试值" />
-    <TranslationEntry Key="ActionForm/actionViewer1/ctxUndo" Translation="撤销" />
     <TranslationEntry Key="ActionForm/btnAuraGuide" Translation="使用即时设置（右键悬浮窗获取更多设置）" />
     <TranslationEntry Key="ActionForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="ActionForm/btnHide" Translation="隐藏" />
@@ -133,15 +94,15 @@
     <TranslationEntry Key="ActionForm/cbxKeypressMethod[SendKeys]" Translation="模拟按键" />
     <TranslationEntry Key="ActionForm/cbxKeypressMethod[Window message]" Translation="向窗口发送键码" />
     <TranslationEntry Key="ActionForm/cbxLoggingLevel[(inherit from trigger)]" Translation="（继承于触发器）" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[Above custom]" Translation="高于用户" />
     <TranslationEntry Key="ActionForm/cbxLoggingLevel[Above custom 2]" Translation="高于用户 2" />
+    <TranslationEntry Key="ActionForm/cbxLoggingLevel[Above custom]" Translation="高于用户" />
     <TranslationEntry Key="ActionForm/cbxLoggingLevel[All informational messages]" Translation="高于消息" />
     <TranslationEntry Key="ActionForm/cbxLoggingLevel[Errors and warnings]" Translation="高于警告" />
     <TranslationEntry Key="ActionForm/cbxLoggingLevel[Errors only]" Translation="仅错误" />
     <TranslationEntry Key="ActionForm/cbxLoggingLevel[Nothing]" Translation="无" />
     <TranslationEntry Key="ActionForm/cbxLoggingLevel[Verbose debug]" Translation="全部" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Custom]" Translation="用户" />
     <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Custom 2]" Translation="用户 2" />
+    <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Custom]" Translation="用户" />
     <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Error]" Translation="错误" />
     <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Info]" Translation="消息" />
     <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Verbose]" Translation="详细" />
@@ -155,8 +116,8 @@
     <TranslationEntry Key="ActionForm/cbxLsOpType[Resume run]" Translation="恢复" />
     <TranslationEntry Key="ActionForm/cbxLsOpType[Skip split]" Translation="跳过拆分" />
     <TranslationEntry Key="ActionForm/cbxLsOpType[Split]" Translation="拆分" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Start run]" Translation="开始" />
     <TranslationEntry Key="ActionForm/cbxLsOpType[Start run or split]" Translation="开始或拆分" />
+    <TranslationEntry Key="ActionForm/cbxLsOpType[Start run]" Translation="开始" />
     <TranslationEntry Key="ActionForm/cbxLsOpType[Undo split]" Translation="撤销拆分" />
     <TranslationEntry Key="ActionForm/cbxLvarExpType[Numeric]" Translation="数值" />
     <TranslationEntry Key="ActionForm/cbxLvarExpType[String]" Translation="文本" />
@@ -214,8 +175,8 @@
     <TranslationEntry Key="ActionForm/cbxObsOpType[Stop recording]" Translation="停止录制" />
     <TranslationEntry Key="ActionForm/cbxObsOpType[Stop replay buffer]" Translation="停止回放缓冲" />
     <TranslationEntry Key="ActionForm/cbxObsOpType[Stop streaming]" Translation="停止直播" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Stop then start recording]" Translation="停止后开始录制" />
     <TranslationEntry Key="ActionForm/cbxObsOpType[Stop then start recording (if currently recording)]" Translation="停止后开始录制（若正在录制）" />
+    <TranslationEntry Key="ActionForm/cbxObsOpType[Stop then start recording]" Translation="停止后开始录制" />
     <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Hidden from view]" Translation="从视图中隐藏" />
     <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Maximized to fullscreen]" Translation="最大化到全屏" />
     <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Minimized to taskbar]" Translation="最小化到任务栏" />
@@ -285,99 +246,12 @@
     <TranslationEntry Key="ActionForm/cbxVariableOp[Unset scalar variables matching regular expression]" Translation="销毁标量（正则）" />
     <TranslationEntry Key="ActionForm/chkExecuteAsync" Translation="异步执行（否则阻塞全部来源的动作直至动作结束）" />
     <TranslationEntry Key="ActionForm/chkOverrideDesc" Translation="覆盖此动作描述" />
-	<TranslationEntry Key="ActionForm/chkProcessLog" Translation="处理为待解析的日志行" />
+    <TranslationEntry Key="ActionForm/chkProcessLog" Translation="处理为待解析的日志行" />
     <TranslationEntry Key="ActionForm/chkProcessLogACT" Translation="将日志添加至 ACT 战斗记录" />
     <TranslationEntry Key="ActionForm/chkSoundExclusive" Translation="使用专用声音播放器，防止与其他声音冲突" />
     <TranslationEntry Key="ActionForm/chkSoundMyOutput" Translation="使用触发器插件输出，忽略 ACT 接口配置" />
     <TranslationEntry Key="ActionForm/chkSpeechExclusive" Translation="使用专用 TTS 语音合成器，防止 TTS 之间冲突" />
     <TranslationEntry Key="ActionForm/chkSpeechMyOutput" Translation="使用触发器插件输出，忽略 ACT 的 TTS 插件（不推荐，会阻塞动作序列）" />
-    <TranslationEntry Key="ActionForm/cndCondition/btnAdd" Translation="添加" />
-    <TranslationEntry Key="ActionForm/cndCondition/btnAddCondition" Translation="条件" />
-    <TranslationEntry Key="ActionForm/cndCondition/btnAddGroup" Translation="条件组" />
-    <TranslationEntry Key="ActionForm/cndCondition/btnDelete" Translation="移除" />
-    <TranslationEntry Key="ActionForm/cndCondition/btnProperties" Translation="显示属性" />
-    <TranslationEntry Key="ActionForm/cndCondition/capProperties/lblContent" Translation="属性" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxExpLType[Numeric]" Translation="数值" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxExpLType[String]" Translation="文本" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxExpRType[Numeric]" Translation="数值" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxExpRType[String]" Translation="文本" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxGroupingType[All conditions must be true (AND)]" Translation="全部条件为真（与）" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxGroupingType[At least one condition must be true (OR)]" Translation="至少一个条件为真（或）" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="全部条件为假（非）" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxGroupingType[Only one condition must be true (XOR)]" Translation="仅一个条件为真（异或）" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Expressions must be numerically equal (X = Y)]" Translation="数值：L = R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Expressions must not be numerically equal (X ≠ Y)]" Translation="数值：L ≠ R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must be numerically greater or equal to (X ≥ Y)]" Translation="数值：L ≥ R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must be numerically greater than (X &gt; Y)]" Translation="数值：L &gt; R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must be numerically less or equal to (X ≤ Y)]" Translation="数值：L ≤ R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must be numerically less than (X &lt; Y)]" Translation="数值：L &lt; R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 匹配" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must not match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 不匹配" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must not pass case-insensitive string comparison with the right side]" Translation="文本：L ≠ R（不分大小写）" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must not pass case-sensitive string comparison with the right side]" Translation="文本：L ≠ R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must pass case-insensitive string comparison with the right side]" Translation="文本：L = R（不分大小写）" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[Left side must pass case-sensitive string comparison with the right side]" Translation="文本：L = R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="列表：名为 L 的列表包含数据 R" />
-    <TranslationEntry Key="ActionForm/cndCondition/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="列表：名为 L 的列表不含数据 R" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxAdd" Translation="添加" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxAddCondition" Translation="条件" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxAddGroup" Translation="条件组" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxCollapseAll" Translation="全部折叠" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxCopy" Translation="复制" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxCopyRegex" Translation="复制正则" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxExpandAll" Translation="全部展开" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxPaste" Translation="粘贴" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxPasteOver" Translation="粘贴" />
-    <TranslationEntry Key="ActionForm/cndCondition/ctxRemove" Translation="移除" />
-    <TranslationEntry Key="ActionForm/cndCondition/lblGroupingType" Translation="分组类型" />
-    <TranslationEntry Key="ActionForm/cndCondition/lblLeftExpression" Translation="左侧表达式 L" />
-    <TranslationEntry Key="ActionForm/cndCondition/lblOperator" Translation="操作符" />
-    <TranslationEntry Key="ActionForm/cndCondition/lblRightExpression" Translation="右侧表达式 R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/btnAdd" Translation="添加" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/btnAddCondition" Translation="条件" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/btnAddGroup" Translation="条件组" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/btnDelete" Translation="移除" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/btnProperties" Translation="显示属性" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/capProperties/lblContent" Translation="属性" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxExpLType[Numeric]" Translation="数值" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxExpLType[String]" Translation="文本" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxExpRType[Numeric]" Translation="数值" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxExpRType[String]" Translation="文本" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxGroupingType[All conditions must be true (AND)]" Translation="全部条件为真（与）" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxGroupingType[At least one condition must be true (OR)]" Translation="至少一个条件为真（或）" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="全部条件为假（非）" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxGroupingType[Only one condition must be true (XOR)]" Translation="仅一个条件为真（异或）" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Expressions must be numerically equal (X = Y)]" Translation="数值：L = R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Expressions must not be numerically equal (X ≠ Y)]" Translation="数值：L ≠ R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must be numerically greater or equal to (X ≥ Y)]" Translation="数值：L ≥ R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must be numerically greater than (X &gt; Y)]" Translation="数值：L &gt; R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must be numerically less or equal to (X ≤ Y)]" Translation="数值：L ≤ R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must be numerically less than (X &lt; Y)]" Translation="数值：L &lt; R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 匹配" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must not match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 不匹配" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must not pass case-insensitive string comparison with the right side]" Translation="文本：L ≠ R（不分大小写）" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must not pass case-sensitive string comparison with the right side]" Translation="文本：L ≠ R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must pass case-insensitive string comparison with the right side]" Translation="文本：L = R（不分大小写）" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[Left side must pass case-sensitive string comparison with the right side]" Translation="文本：L = R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="列表：名为 L 的列表包含数据 R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="列表：名为 L 的列表不含数据 R" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxAdd" Translation="添加" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxAddCondition" Translation="条件" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxAddGroup" Translation="条件组" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxCollapseAll" Translation="全部折叠" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxCopy" Translation="复制" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxExpandAll" Translation="全部展开" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxPaste" Translation="粘贴" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxPasteOver" Translation="粘贴" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/ctxRemove" Translation="移除" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/lblGroupingType" Translation="分组类型" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/lblLeftExpression" Translation="左侧表达式 L" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/lblOperator" Translation="操作符" />
-    <TranslationEntry Key="ActionForm/cndLoopCondition/lblRightExpression" Translation="右侧表达式 R" />
-    <TranslationEntry Key="ActionForm/colorSelector1/ctxSetBackground" Translation="设置背景颜色" />
-    <TranslationEntry Key="ActionForm/colorSelector1/ctxSetBackgroundTransparent" Translation="将背景设置为透明" />
-    <TranslationEntry Key="ActionForm/colorSelector1/ctxSetTextColor" Translation="设置文本颜色" />
-    <TranslationEntry Key="ActionForm/colorSelector1/ctxSetTextOutline" Translation="设置文本轮廓颜色" />
     <TranslationEntry Key="ActionForm/grpGeneralSettings" Translation=" 通用设置" />
     <TranslationEntry Key="ActionForm/label2" Translation="互斥锁名称" />
     <TranslationEntry Key="ActionForm/label3" Translation="操作" />
@@ -443,8 +317,8 @@
     <TranslationEntry Key="ActionForm/lblLoopDelay" Translation="下一次循环开始前延迟 / ms" />
     <TranslationEntry Key="ActionForm/lblLoopIncr" Translation="每次增量" />
     <TranslationEntry Key="ActionForm/lblLoopInit" Translation="循环变量初始值" />
-    <TranslationEntry Key="ActionForm/lblLsOpType" Translation="操作" />
     <TranslationEntry Key="ActionForm/lblLsCustPayload" Translation="消息负载" />
+    <TranslationEntry Key="ActionForm/lblLsOpType" Translation="操作" />
     <TranslationEntry Key="ActionForm/lblLvarExpType" Translation="表达类型" />
     <TranslationEntry Key="ActionForm/lblLvarIndex" Translation="索引号" />
     <TranslationEntry Key="ActionForm/lblLvarName" Translation="源变量" />
@@ -503,8 +377,8 @@
     <TranslationEntry Key="ActionForm/lblTextOutlineColor" Translation="轮廓" />
     <TranslationEntry Key="ActionForm/lblTextToSay" Translation="播读内容" />
     <TranslationEntry Key="ActionForm/lblTrigger" Translation="触发器" />
-    <TranslationEntry Key="ActionForm/lblTriggerTagRegex" Translation="标签正则" />
     <TranslationEntry Key="ActionForm/lblTriggerOp" Translation="操作" />
+    <TranslationEntry Key="ActionForm/lblTriggerTagRegex" Translation="标签正则" />
     <TranslationEntry Key="ActionForm/lblTriggerText" Translation="触发文本" />
     <TranslationEntry Key="ActionForm/lblTriggerZone" Translation="触发的区域名字" />
     <TranslationEntry Key="ActionForm/lblTriggerZoneType" Translation="区域选项" />
@@ -605,6 +479,45 @@
     <TranslationEntry Key="ActionForm/tabDebugging" Translation="调试" />
     <TranslationEntry Key="ActionForm/tabDescription" Translation="描述" />
     <TranslationEntry Key="ActionForm/tabScheduling" Translation="计划任务" />
+    <TranslationEntry Key="ActionViewer/btnActionBottom" Translation="置底" />
+    <TranslationEntry Key="ActionViewer/btnActionDown" Translation="下移" />
+    <TranslationEntry Key="ActionViewer/btnActionTop" Translation="置顶" />
+    <TranslationEntry Key="ActionViewer/btnActionUp" Translation="上移" />
+    <TranslationEntry Key="ActionViewer/btnAddAction" Translation="添加" />
+    <TranslationEntry Key="ActionViewer/btnEditAction" Translation="编辑" />
+    <TranslationEntry Key="ActionViewer/btnRemoveAction" Translation="移除" />
+    <TranslationEntry Key="ActionViewer/btnUndo" Translation="撤销" />
+    <TranslationEntry Key="ActionViewer/colDescription" Translation="动作描述" />
+    <TranslationEntry Key="ActionViewer/Column1" Translation="　　" />
+    <TranslationEntry Key="ActionViewer/ctxAddAction" Translation="添加动作" />
+    <TranslationEntry Key="ActionViewer/ctxCopyAction" Translation="复制" />
+    <TranslationEntry Key="ActionViewer/ctxEditAction" Translation="编辑动作" />
+    <TranslationEntry Key="ActionViewer/ctxEditProp" Translation="快捷设置" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropAsyncOff" Translation="关闭异步" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropAsyncOn" Translation="开启异步" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropBgColor" Translation="背景颜色" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropCndGroupingAnd" Translation="与" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropCndGroupingNot" Translation="非" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropCndGroupingOr" Translation="或" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropCndGroupingType" Translation="条件组类型" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropCndGroupingXor" Translation="或非" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropCopyCnd" Translation="复制条件组" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropDelay" Translation="延迟时间" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropPasteCnd" Translation="粘贴条件组" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropRemoveCnd" Translation="清空条件" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropRemoveDesc" Translation="清空描述" />
+    <TranslationEntry Key="ActionViewer/ctxEditPropTextColor" Translation="文本颜色" />
+    <TranslationEntry Key="ActionViewer/ctxMoveBottom" Translation="置底" />
+    <TranslationEntry Key="ActionViewer/ctxMoveDown" Translation="下移" />
+    <TranslationEntry Key="ActionViewer/ctxMoveTop" Translation="置顶" />
+    <TranslationEntry Key="ActionViewer/ctxMoveUp" Translation="上移" />
+    <TranslationEntry Key="ActionViewer/ctxPasteAction" Translation="粘贴" />
+    <TranslationEntry Key="ActionViewer/ctxRemoveAction" Translation="移除动作" />
+    <TranslationEntry Key="ActionViewer/ctxTestAction" Translation="测试动作" />
+    <TranslationEntry Key="ActionViewer/ctxTestLive" Translation="使用实时值" />
+    <TranslationEntry Key="ActionViewer/ctxTestLiveIgnoreCnd" Translation="使用实时值（忽略条件）" />
+    <TranslationEntry Key="ActionViewer/ctxTestPlaceholder" Translation="使用测试值" />
+    <TranslationEntry Key="ActionViewer/ctxUndo" Translation="撤销" />
     <TranslationEntry Key="AuraDesignForm/alignmentToolStripMenuItem" Translation="对齐" />
     <TranslationEntry Key="AuraDesignForm/bottomCenterToolStripMenuItem" Translation="正下 ↓" />
     <TranslationEntry Key="AuraDesignForm/bottomLeftToolStripMenuItem" Translation="左下 ↙" />
@@ -638,9 +551,55 @@
     <TranslationEntry Key="BenchmarkForm/colRelEvalTime" Translation="相对评估时间" />
     <TranslationEntry Key="BenchmarkProgressForm" Translation="在进程中性能基准测试" />
     <TranslationEntry Key="BenchmarkProgressForm/btnCancel" Translation="取消" />
+    <TranslationEntry Key="ColorSelector/ctxSetBackground" Translation="设置背景颜色" />
+    <TranslationEntry Key="ColorSelector/ctxSetBackgroundTransparent" Translation="将背景设置为透明" />
+    <TranslationEntry Key="ColorSelector/ctxSetTextColor" Translation="设置文本颜色" />
+    <TranslationEntry Key="ColorSelector/ctxSetTextOutline" Translation="设置文本轮廓颜色" />
+    <TranslationEntry Key="ConditionViewer/btnAdd" Translation="添加" />
+    <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="条件" />
+    <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="条件组" />
+    <TranslationEntry Key="ConditionViewer/btnDelete" Translation="移除" />
+    <TranslationEntry Key="ConditionViewer/btnProperties" Translation="显示属性" />
+    <TranslationEntry Key="ConditionViewer/capProperties/lblContent" Translation="属性" />
+    <TranslationEntry Key="ConditionViewer/cbxExpLType[Numeric]" Translation="数值" />
+    <TranslationEntry Key="ConditionViewer/cbxExpLType[String]" Translation="文本" />
+    <TranslationEntry Key="ConditionViewer/cbxExpRType[Numeric]" Translation="数值" />
+    <TranslationEntry Key="ConditionViewer/cbxExpRType[String]" Translation="文本" />
+    <TranslationEntry Key="ConditionViewer/cbxGroupingType[All conditions must be true (AND)]" Translation="全部条件为真（与）" />
+    <TranslationEntry Key="ConditionViewer/cbxGroupingType[At least one condition must be true (OR)]" Translation="至少一个条件为真（或）" />
+    <TranslationEntry Key="ConditionViewer/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="全部条件为假（非）" />
+    <TranslationEntry Key="ConditionViewer/cbxGroupingType[Only one condition must be true (XOR)]" Translation="仅一个条件为真（异或）" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Expressions must be numerically equal (X = Y)]" Translation="数值：L = R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Expressions must not be numerically equal (X ≠ Y)]" Translation="数值：L ≠ R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically greater or equal to (X ≥ Y)]" Translation="数值：L ≥ R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically greater than (X &gt; Y)]" Translation="数值：L &gt; R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically less or equal to (X ≤ Y)]" Translation="数值：L ≤ R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically less than (X &lt; Y)]" Translation="数值：L &lt; R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 匹配" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 不匹配" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not pass case-insensitive string comparison with the right side]" Translation="文本：L ≠ R（不分大小写）" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not pass case-sensitive string comparison with the right side]" Translation="文本：L ≠ R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must pass case-insensitive string comparison with the right side]" Translation="文本：L = R（不分大小写）" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must pass case-sensitive string comparison with the right side]" Translation="文本：L = R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="列表：名为 L 的列表包含数据 R" />
+    <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="列表：名为 L 的列表不含数据 R" />
+    <TranslationEntry Key="ConditionViewer/ctxAdd" Translation="添加" />
+    <TranslationEntry Key="ConditionViewer/ctxAddCondition" Translation="条件" />
+    <TranslationEntry Key="ConditionViewer/ctxAddGroup" Translation="条件组" />
+    <TranslationEntry Key="ConditionViewer/ctxCollapseAll" Translation="全部折叠" />
+    <TranslationEntry Key="ConditionViewer/ctxCopy" Translation="复制" />
+    <TranslationEntry Key="ConditionViewer/ctxCopyRegex" Translation="复制正则" />
+    <TranslationEntry Key="ConditionViewer/ctxExpandAll" Translation="全部展开" />
+    <TranslationEntry Key="ConditionViewer/ctxPaste" Translation="粘贴" />
+    <TranslationEntry Key="ConditionViewer/ctxPasteOver" Translation="覆盖粘贴" />
+    <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="移除" />
+    <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="分组类型" />
+    <TranslationEntry Key="ConditionViewer/lblLeftExpression" Translation="左侧表达式 L" />
+    <TranslationEntry Key="ConditionViewer/lblOperator" Translation="操作符" />
+    <TranslationEntry Key="ConditionViewer/lblRightExpression" Translation="右侧表达式 R" />
     <TranslationEntry Key="ConfigurationForm2" Translation="配置" />
-    <TranslationEntry Key="ConfigurationForm2/btnBeepTest" Translation="测试" />
     <TranslationEntry Key="ConfigurationForm2/btnAudio" Translation="声音" />
+    <TranslationEntry Key="ConfigurationForm2/btnBeepTest" Translation="测试" />
     <TranslationEntry Key="ConfigurationForm2/btnCacheFileBrowse" Translation="浏览" />
     <TranslationEntry Key="ConfigurationForm2/btnCacheFileClear" Translation="清空缓存" />
     <TranslationEntry Key="ConfigurationForm2/btnCacheImageBrowse" Translation="浏览" />
@@ -683,6 +642,9 @@
     <TranslationEntry Key="ConfigurationForm2/btnUpdates" Translation="更新" />
     <TranslationEntry Key="ConfigurationForm2/btnUserInterface" Translation="界面" />
     <TranslationEntry Key="ConfigurationForm2/capAppearance/lblContent" Translation="外观" />
+    <TranslationEntry Key="ConfigurationForm2/capAudioBeep/lblContent" Translation="蜂鸣音" />
+    <TranslationEntry Key="ConfigurationForm2/capAudioSound/lblContent" Translation="音频文件" />
+    <TranslationEntry Key="ConfigurationForm2/capAudioTts/lblContent" Translation="TTS 文本转语音" />
     <TranslationEntry Key="ConfigurationForm2/capAuraManagement/lblContent" Translation="悬浮窗" />
     <TranslationEntry Key="ConfigurationForm2/capAutosaving/lblContent" Translation="自动保存" />
     <TranslationEntry Key="ConfigurationForm2/capBehavior/lblContent" Translation="行为" />
@@ -705,8 +667,8 @@
     <TranslationEntry Key="ConfigurationForm2/cbxFfxivJobMethod[Player first, rest unordered (legacy)]" Translation="自己序首，游戏默认无自定义队伍排序" />
     <TranslationEntry Key="ConfigurationForm2/cbxFfxivJobMethod[Player first, sort the rest by custom party order]" Translation="自己序首，自定义其他人队伍排序" />
     <TranslationEntry Key="ConfigurationForm2/cbxFfxivJobMethod[Sort everyone by custom party order]" Translation="自定义所有人队伍排序" />
-    <TranslationEntry Key="ConfigurationForm2/cbxLoggingLevel[Above custom]" Translation="高于用户" />
     <TranslationEntry Key="ConfigurationForm2/cbxLoggingLevel[Above custom 2]" Translation="高于用户 2" />
+    <TranslationEntry Key="ConfigurationForm2/cbxLoggingLevel[Above custom]" Translation="高于用户" />
     <TranslationEntry Key="ConfigurationForm2/cbxLoggingLevel[All informational messages]" Translation="高于消息" />
     <TranslationEntry Key="ConfigurationForm2/cbxLoggingLevel[Errors and warnings]" Translation="高于警告" />
     <TranslationEntry Key="ConfigurationForm2/cbxLoggingLevel[Errors only]" Translation="仅错误" />
@@ -832,9 +794,6 @@
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Viper]" Translation="钐镰客" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[Warrior]" Translation="战士" />
     <TranslationEntry Key="ConfigurationForm2/lstFfxivJobOrder[White Mage]" Translation="白魔法师" />
-    <TranslationEntry Key="ConfigurationForm2/capAudioBeep/lblContent" Translation="蜂鸣音" />
-    <TranslationEntry Key="ConfigurationForm2/capAudioSound/lblContent" Translation="音频文件" />
-    <TranslationEntry Key="ConfigurationForm2/capAudioTts/lblContent" Translation="TTS 文本转语音" />
     <TranslationEntry Key="ConfigurationForm2/prettyCaption3/lblContent" Translation="历史记录" />
     <TranslationEntry Key="ConfigurationForm2/tabFFXIV" Translation="最终幻想 XIV" />
     <TranslationEntry Key="ConfigurationForm2/tlsEndpointHistoryRecv" Translation="条消息 (telegram) 已接收" />
@@ -845,8 +804,8 @@
     <TranslationEntry Key="ExportForm/btnSaveToFile" Translation="保存到文件" />
     <TranslationEntry Key="ExportForm/btnSelectionToClipboard" Translation="复制所选" />
     <TranslationEntry Key="ExportForm/cbxFormat[HTML encoded]" Translation="HTML 编码的 XML" />
-    <TranslationEntry Key="ExportForm/cbxFormat[Plain]" Translation="纯文本 XML" />
     <TranslationEntry Key="ExportForm/cbxFormat[Plain (no leading spaces)]" Translation="纯文本 XML（移除前导空格）" />
+    <TranslationEntry Key="ExportForm/cbxFormat[Plain]" Translation="纯文本 XML" />
     <TranslationEntry Key="ExportForm/ctxCopy" Translation="复制" />
     <TranslationEntry Key="ExportForm/ctxEverythingToClipboard" Translation="复制所有" />
     <TranslationEntry Key="ExportForm/ctxSaveToFile" Translation="保存到文件" />
@@ -993,9 +952,9 @@
     <TranslationEntry Key="internal/Action/desclistpoptolistset" Translation="将{1}列表 ({0}) 的索引 ({2}) 弹出并设置在{4}列表 ({3}) 的索引 ({5})" />
     <TranslationEntry Key="internal/Action/desclistpush" Translation="在{1}列表 ({0}) 末尾推送{3}表达式 ({2})" />
     <TranslationEntry Key="internal/Action/desclistremove" Translation="从{2}列表 ({1}) 删除索引 ({0})" />
+    <TranslationEntry Key="internal/Action/desclistset" Translation="将{1}列表 ({0}) 的索引 ({4}) 赋值为{3}表达式 ({2})" />
     <TranslationEntry Key="internal/Action/desclistsetall" Translation="将{1}列表 ({0}) 整表赋值为{3}表达式 ({2})" />
     <TranslationEntry Key="internal/Action/desclistsetallresize" Translation="将{1}列表 ({0}) 整表赋值为{3}表达式 ({2})，调整至长度 ({4})" />
-    <TranslationEntry Key="internal/Action/desclistset" Translation="将{1}列表 ({0}) 的索引 ({4}) 赋值为{3}表达式 ({2})" />
     <TranslationEntry Key="internal/Action/desclistsortbykeys" Translation="自定义排序{1}列表 ({0})，全部关键字为 ({2})" />
     <TranslationEntry Key="internal/Action/desclistsortffxiv" Translation="排序{1}列表 ({0})：FFXIV 职业{2}" />
     <TranslationEntry Key="internal/Action/desclistsortnum" Translation="排序{1}列表 ({0})：数值{2}" />
@@ -1237,13 +1196,13 @@
     <TranslationEntry Key="internal/ActionForm/imageloaderror" Translation="无法加载该图像文件，请验证路径和文件名。" />
     <TranslationEntry Key="internal/ActionForm/sendkeyinvalid" Translation="模拟按键模式不支持此键。" />
     <TranslationEntry Key="internal/ActionForm/tempfiledeletefailed" Translation="无法处理临时文件 {0}。异常信息：{1}" />
-    <TranslationEntry Key="internal/ActionForm/urlSendKey" Translation="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.sendkeys.send" />
-    <TranslationEntry Key="internal/ActionForm/urlWinMessage" Translation="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.keys" />
     <TranslationEntry Key="internal/ActionForm/textbold" Translation="粗体" />
     <TranslationEntry Key="internal/ActionForm/textitalic" Translation="斜体" />
     <TranslationEntry Key="internal/ActionForm/textptunit" Translation="号" />
     <TranslationEntry Key="internal/ActionForm/textstrikeout" Translation="删除线" />
     <TranslationEntry Key="internal/ActionForm/textunderline" Translation="下划线" />
+    <TranslationEntry Key="internal/ActionForm/urlSendKey" Translation="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.sendkeys.send" />
+    <TranslationEntry Key="internal/ActionForm/urlWinMessage" Translation="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.keys" />
     <TranslationEntry Key="internal/ActionViewer/setBgColor" Translation="设置动作描述背景颜色" />
     <TranslationEntry Key="internal/ActionViewer/setDelay" Translation="设置动作延迟 / ms" />
     <TranslationEntry Key="internal/ActionViewer/setTextColor" Translation="设置动作描述文本颜色" />
@@ -1353,29 +1312,13 @@
     <TranslationEntry Key="internal/ExpressionTextBox/numeric1" Translation="该字段支持数值表达式；支持正则捕获组；结果作为数学表达式求值。" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric2" Translation="绿色文本框代表数值表达式合法，红色代表非法。" />
     <TranslationEntry Key="internal/ExpressionTextBox/string" Translation="该字段支持文本表达式；支持正则捕获组。" />
+    <TranslationEntry Key="internal/ffxiv/allentitiesexception" Translation="获取全部 FFXIV 实体时发生异常：{0}" />
+    <TranslationEntry Key="internal/ffxiv/allentitiesexceptionsingle" Translation="无法获取该实体信息：名称 ({0})，ID ({1})。异常：{2}" />
     <TranslationEntry Key="internal/FFXIV/Entity/evaluationerror" Translation="无法计算实体属性或方法表达式“{0}”：{1}" />
     <TranslationEntry Key="internal/FFXIV/Entity/invalidmember" Translation="无效的实体属性或方法名称：{0}" />
     <TranslationEntry Key="internal/FFXIV/Entity/memberrequired" Translation="实体表达式“{0}”未包含属性。" />
-    <TranslationEntry Key="internal/FolderForm/loaddirectly" Translation="直接加载" />
-    <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="分组生效时加载" />
-    <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="请为每个注册变量填写键名。" />
-    <TranslationEntry Key="internal/FolderForm/deleterenamedregisteredvariable" Translation="注册变量“{0}”已改名为“{1}”。&#xA;旧的运行时值：“{2}”&#xA;是否删除旧键值对？" />
-    <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="注册变量" />
-    <TranslationEntry Key="internal/I18n/targetmarker" Translation="目标标记" />
-    <TranslationEntry Key="internal/IndexMemberExpression/indexoutofrange" Translation="表达式 {0} 仅包含 {1} 个索引。" />
-    <TranslationEntry Key="internal/InvariantNumericExtensions/context" Translation="上下文：{0}" />
-    <TranslationEntry Key="internal/InvariantNumericExtensions/expression" Translation="表达式：“{0}”" />
-    <TranslationEntry Key="internal/InvariantNumericExtensions/parseerror" Translation="无法将“{0}”解析为 {1}：{2}" />
-    <TranslationEntry Key="internal/ListEvaluator/indexnotfound" Translation="列表变量“{1}”中不存在索引“{0}”。" />
-    <TranslationEntry Key="internal/ListEvaluator/indexorpropertyrequired" Translation="表达式“{0}”中的列表变量必须包含索引或属性。" />
-    <TranslationEntry Key="internal/ListEvaluator/unknownmethod" Translation="表达式“{1}”使用了未知的列表方法“{0}”。" />
-    <TranslationEntry Key="internal/MultiLineRawArgs/duplicatekey" Translation="多行参数中存在重复的键“{0}”。" />
-    <TranslationEntry Key="internal/MultiLineRawArgs/keynotfound" Translation="未找到键“{0}”。" />
-    <TranslationEntry Key="internal/MultiLineRawArgs/keysnotfound" Translation="未找到以下任何键：“{0}”。" />
-    <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="注册变量键“{0}”冲突：&#xA;新值：“{1}”&#xA;来自：分组 {2}&#xA;旧值：“{3}”&#xA;来自：分组 {4}" />
-    <TranslationEntry Key="internal/ffxiv/allentitiesexception" Translation="获取全部 FFXIV 实体时发生异常：{0}" />
-    <TranslationEntry Key="internal/ffxiv/allentitiesexceptionsingle" Translation="无法获取该实体信息：名称 ({0})，ID ({1})。异常：{2}" />
-	  <TranslationEntry Key="internal/ffxiv/ffxivzonechangednoinstance" Translation="无法获取 FFXIV 区域变化（插件实例不存在）。" />
+    <TranslationEntry Key="internal/FFXIV/Entity/wrongProp" Translation="({0}) 不是有效的实体属性或方法名。完整表达式：({1})" />
+    <TranslationEntry Key="internal/ffxiv/ffxivzonechangednoinstance" Translation="无法获取 FFXIV 区域变化（插件实例不存在）。" />
     <TranslationEntry Key="internal/ffxiv/idexception" Translation="以 ID 检索 FFXIV 实体时发生异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/missingactplugin" Translation="找不到具有文件名 ({0}) 或类型 ({1}) 的 FFXIV 解析插件，某些功能可能无法正常工作" />
     <TranslationEntry Key="internal/ffxiv/namedexception" Translation="以名称检索 FFXIV 实体时发生异常：{0}" />
@@ -1387,8 +1330,12 @@
     <TranslationEntry Key="internal/ffxiv/partytoobig" Translation="小队构成中有超过 {0} 名成员" />
     <TranslationEntry Key="internal/ffxiv/procexception" Translation="搜索 FFXIV 进程时出现异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/updateexception" Translation="FFXIV 状态更新中，阶段 {1} 发生异常：{0}" />
-    <TranslationEntry Key="internal/FFXIV/Entity/wrongProp" Translation="({0}) 不是有效的实体属性或方法名。完整表达式：({1})" />
     <TranslationEntry Key="internal/Folder/envvariablekvptoolong" Translation="文件夹的环境变量中，键值对表达式超过两部分。&#xD;&#xA;分组：{0}; &#xD;&#xA;表达式：{1}" />
+    <TranslationEntry Key="internal/FolderForm/deleterenamedregisteredvariable" Translation="注册变量“{0}”已改名为“{1}”。&#xA;旧的运行时值：“{2}”&#xA;是否删除旧键值对？" />
+    <TranslationEntry Key="internal/FolderForm/loaddirectly" Translation="直接加载" />
+    <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="分组生效时加载" />
+    <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="请为每个注册变量填写键名。" />
+    <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="注册变量" />
     <TranslationEntry Key="internal/I18n/bool" Translation="布尔值" />
     <TranslationEntry Key="internal/I18n/char" Translation="字符" />
     <TranslationEntry Key="internal/I18n/charcode" Translation="字符码" />
@@ -1417,6 +1364,7 @@
     <TranslationEntry Key="internal/I18n/slice" Translation="切片" />
     <TranslationEntry Key="internal/I18n/startindex" Translation="起始索引" />
     <TranslationEntry Key="internal/I18n/string" Translation="文本" />
+    <TranslationEntry Key="internal/I18n/targetmarker" Translation="目标标记" />
     <TranslationEntry Key="internal/I18n/time" Translation="时间" />
     <TranslationEntry Key="internal/I18n/times" Translation="次数" />
     <TranslationEntry Key="internal/I18n/translatewordmissingkey" Translation="I18n._wordsToTranslate 不包含翻译键 {0}。如果你看见了这句报错，请向开发人员反馈此问题。" />
@@ -1429,7 +1377,7 @@
     <TranslationEntry Key="internal/ImportForm/dangerDisk" Translation="操作文件" />
     <TranslationEntry Key="internal/ImportForm/dangerProc" Translation="运行进程" />
     <TranslationEntry Key="internal/ImportForm/dangerScript" Translation="执行代码" />
-    <TranslationEntry Key="internal/ImportForm/dangerWmsg" Translation="发送窗口消息代码" />    
+    <TranslationEntry Key="internal/ImportForm/dangerWmsg" Translation="发送窗口消息代码" />
     <TranslationEntry Key="internal/ImportForm/editimportedfolder" Translation="编辑导入的分组 '{0}'" />
     <TranslationEntry Key="internal/ImportForm/editimportedtrigger" Translation="编辑导入的触发器 '{0}'" />
     <TranslationEntry Key="internal/ImportForm/exception" Translation="异常" />
@@ -1452,13 +1400,23 @@
     <TranslationEntry Key="internal/ImportForm/warnacttab" Translation="一些导入的 ACT 触发器包括将结果添加到选项卡的触发器。 但是，目前不支持导入这些选项。 受影响的项目已在下面突出显示。" />
     <TranslationEntry Key="internal/ImportForm/warnacttabtimers" Translation="一些导入的 ACT 触发器包括将结果添加到选项卡和触发计时器的触发器。 但是，目前不支持导入这些选项。 受影响的项目已在下面突出显示。" />
     <TranslationEntry Key="internal/ImportForm/warnacttimers" Translation="一些导入的 ACT 触发器包括触发定时器的触发器。 但是，目前不支持导入这些选项。 受影响的项目已在下面突出显示。" />
+    <TranslationEntry Key="internal/IndexMemberExpression/indexoutofrange" Translation="表达式 {0} 仅包含 {1} 个索引。" />
     <TranslationEntry Key="internal/Interpreter/scriptblocked" Translation="脚本代码因 API 或特性被禁用而未执行。&#xD;&#xA;详见：触发器右上角配置 - 安全 - {1}。&#xD;&#xA;触发器：({0})" />
     <TranslationEntry Key="internal/Interpreter/scriptExecutionError" Translation="脚本代码运行时遇到错误：&#xD;&#xA;{0}" />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/context" Translation="上下文：{0}" />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/expression" Translation="表达式：“{0}”" />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/parseerror" Translation="无法将“{0}”解析为 {1}：{2}" />
+    <TranslationEntry Key="internal/ListEvaluator/indexnotfound" Translation="列表变量“{1}”中不存在索引“{0}”。" />
+    <TranslationEntry Key="internal/ListEvaluator/indexorpropertyrequired" Translation="表达式“{0}”中的列表变量必须包含索引或属性。" />
+    <TranslationEntry Key="internal/ListEvaluator/unknownmethod" Translation="表达式“{1}”使用了未知的列表方法“{0}”。" />
     <TranslationEntry Key="internal/LogForm/displaying" Translation="显示日志数量：{0} / {1}" />
     <TranslationEntry Key="internal/LogForm/exception" Translation="异常" />
     <TranslationEntry Key="internal/MathParser/basicMathExprError" Translation="基础数学表达式“{0}”无法解析。原始表达式：“{1}”" />
     <TranslationEntry Key="internal/MathParser/basicMathExprOpError" Translation="基础数学表达式“{1}”中的运算符 '{0}' 无法运算。原始表达式：“{2}”" />
     <TranslationEntry Key="internal/MathParser/noclosure" Translation="数学表达式“{0}”存在未闭合的括号。原始表达式：“{1}”" />
+    <TranslationEntry Key="internal/MultiLineRawArgs/duplicatekey" Translation="多行参数中存在重复的键“{0}”。" />
+    <TranslationEntry Key="internal/MultiLineRawArgs/keynotfound" Translation="未找到键“{0}”。" />
+    <TranslationEntry Key="internal/MultiLineRawArgs/keysnotfound" Translation="未找到以下任何键：“{0}”。" />
     <TranslationEntry Key="internal/NamedCallback/exception" Translation="调用具名回调 {0} 时发生错误：&#xD;&#xA;{1} " />
     <TranslationEntry Key="internal/PersistenceSwitch/string" Translation="选项：是否为永久变量。永久变量不会随 ACT 重启而重置。" />
     <TranslationEntry Key="internal/Plugin/actimageaura" Translation="激活图像悬浮窗 '{0}'" />
@@ -1499,9 +1457,9 @@
     <TranslationEntry Key="internal/Plugin/exacttextaura" Translation="激活文本悬浮窗 '{1}' 时发生错误 '{0}'" />
     <TranslationEntry Key="internal/Plugin/exception" Translation="异常" />
     <TranslationEntry Key="internal/Plugin/extplugincheckfailed" Translation="无法从 {0} 更新插件文件：{1}" />
-    <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="无法从 {0} 更新插件文件：{1}" />
     <TranslationEntry Key="internal/Plugin/extpluginupdatedurgentfalse" Translation="Triggernometry 插件版本已从 {0} 更新到 {1}（非重要更新），可以在方便时重启 ACT。&#xD;&#xA;&#xD;&#xA;是否查看更新日志？" />
     <TranslationEntry Key="internal/Plugin/extpluginupdatedurgenttrue" Translation="Triggernometry 插件版本已从 {0} 更新到 {1}（包含重要更新），建议立即重启 ACT。&#xD;&#xA;&#xD;&#xA;是否查看更新日志？" />
+    <TranslationEntry Key="internal/Plugin/extpluginupdatefailed" Translation="无法从 {0} 更新插件文件：{1}" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdated" Translation="翻译文件已更新，请重启 ACT 以使更改生效。" />
     <TranslationEntry Key="internal/Plugin/exttranslationupdatefail" Translation="无法从 {0} 更新翻译文件：{1}" />
     <TranslationEntry Key="internal/Plugin/ffxivnetworklogline" Translation="网络日志：({0})" />
@@ -1546,8 +1504,8 @@
     <TranslationEntry Key="internal/Plugin/procex" Translation="发生错误：&#xD;&#xA; ({0}) &#xD;&#xA;日志行：({1}) &#xD;&#xA; 区域： ({2})" />
     <TranslationEntry Key="internal/Plugin/releaseunownedmutex" Translation="尝试在上下文 '{1}' 释放非其所有的独占锁 '{0}' 失败" />
     <TranslationEntry Key="internal/Plugin/repoupdate" Translation="即将更新 {0} 个远程仓库" />
-    <TranslationEntry Key="internal/Plugin/repoupdatedcount" Translation="[{0}/{1}] 远程仓库 {2} 已更新（{3}）" />
     <TranslationEntry Key="internal/Plugin/repoupdatecomplete" Translation="远程仓库更新完成" />
+    <TranslationEntry Key="internal/Plugin/repoupdatedcount" Translation="[{0}/{1}] 远程仓库 {2} 已更新（{3}）" />
     <TranslationEntry Key="internal/Plugin/splitlogline" Translation="拆分日志行：({0})" />
     <TranslationEntry Key="internal/Plugin/trigaddbook" Translation="触发器 '{0}' 已添加到记录中" />
     <TranslationEntry Key="internal/Plugin/trigfiring" Translation="触发的触发器 '{0}'" />
@@ -1563,37 +1521,38 @@
     <TranslationEntry Key="internal/Plugin/verchecksame" Translation="Triggernometry 版本更新：本地版本 {1} 不低于远程版本 {0}，无需更新。" />
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="行 ({0}) 使用 {1} 毫秒进行处理" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="当前区域切换至 '{0}'。区域分组限制：{1} 个触发器处于激活状态，{2} 个触发器未激活" />
+    <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="注册变量键“{0}”冲突：&#xA;新值：“{1}”&#xA;来自：分组 {2}&#xA;旧值：“{3}”&#xA;来自：分组 {4}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="此字段支持正则表达式。绿色代表输入的正则合法，红色代表不合法。" />
+    <TranslationEntry Key="internal/Repository/loadlocalex" Translation="仓库 {0} 的本地备份无法加载。错误：{1}" />
+    <TranslationEntry Key="internal/Repository/localcleared" Translation="已从下列地址删除仓库 {0} 的本地备份：{1}" />
+    <TranslationEntry Key="internal/Repository/localclearex" Translation="仓库 {0} 的本地备份无法删除。错误：{1}" />
+    <TranslationEntry Key="internal/Repository/localclearnotfound" Translation="仓库 {0} 不存在本地备份 {1}" />
+    <TranslationEntry Key="internal/Repository/localloadcorrupted" Translation="仓库 {0} 的本地备份数据格式无法解析。" />
+    <TranslationEntry Key="internal/Repository/localloaded" Translation="已加载仓库 {0} 的本地备份：{1}" />
+    <TranslationEntry Key="internal/Repository/localloading" Translation="尝试加载仓库 {0} 的本地备份：{1}" />
+    <TranslationEntry Key="internal/Repository/localloadnotfound" Translation="仓库 {0} 不存在本地备份 {1}" />
+    <TranslationEntry Key="internal/Repository/localsaved" Translation="已向下列地址保存仓库 {0} 的本地备份：{1}" />
+    <TranslationEntry Key="internal/Repository/localsaveex" Translation="仓库 {0} 的本地备份无法保存。错误：{1}" />
+    <TranslationEntry Key="internal/Repository/localsaving" Translation="正向下列地址保存仓库 {0} 的本地备份：{1}" />
     <TranslationEntry Key="internal/Repository/metadataex" Translation="获取仓库 {0} 元数据失败：{1}" />
     <TranslationEntry Key="internal/Repository/metadatatimeout" Translation="获取仓库 {0} 元数据失败，网络错误或请求超时：{1}" />
-    <TranslationEntry Key="internal/Repository/loadlocalex" Translation="仓库 {0} 的本地备份无法加载。错误：{1}" /> 
-    <TranslationEntry Key="internal/Repository/localcleared" Translation="已从下列地址删除仓库 {0} 的本地备份：{1}" /> 
-    <TranslationEntry Key="internal/Repository/localclearex" Translation="仓库 {0} 的本地备份无法删除。错误：{1}" /> 
-    <TranslationEntry Key="internal/Repository/localclearnotfound" Translation="仓库 {0} 不存在本地备份 {1}" /> 
-    <TranslationEntry Key="internal/Repository/localloadcorrupted" Translation="仓库 {0} 的本地备份数据格式无法解析。" /> 
-    <TranslationEntry Key="internal/Repository/localloaded" Translation="已加载仓库 {0} 的本地备份：{1}" /> 
-    <TranslationEntry Key="internal/Repository/localloading" Translation="尝试加载仓库 {0} 的本地备份：{1}" /> 
-    <TranslationEntry Key="internal/Repository/localloadnotfound" Translation="仓库 {0} 不存在本地备份 {1}" /> 
-    <TranslationEntry Key="internal/Repository/localsaved" Translation="已向下列地址保存仓库 {0} 的本地备份：{1}" /> 
-    <TranslationEntry Key="internal/Repository/localsaveex" Translation="仓库 {0} 的本地备份无法保存。错误：{1}" /> 
-    <TranslationEntry Key="internal/Repository/localsaving" Translation="正向下列地址保存仓库 {0} 的本地备份：{1}" /> 
-    <TranslationEntry Key="internal/Repository/probeinfocache" Translation="[Info] 缓存已过期：{0}" /> 
-    <TranslationEntry Key="internal/Repository/probeinfolocal" Translation="[Info] 本地备份：长度={0}，时间={1}" /> 
-    <TranslationEntry Key="internal/Repository/probeinfolocalmissing" Translation="[Info] 不存在本地备份，需要更新。" /> 
-    <TranslationEntry Key="internal/Repository/probeinforemote" Translation="[Info] 远程数据：长度={0}，时间={1}" /> 
-    <TranslationEntry Key="internal/Repository/probeinforemotefail" Translation="[Info] 无法获取远程数据长度，将强制更新。" /> 
-    <TranslationEntry Key="internal/Repository/proberesultfalse" Translation="仓库 {0} 未发生变更，无需更新。长度：{1}，时间：({2})" /> 
-    <TranslationEntry Key="internal/Repository/proberesulttrue" Translation="仓库 {0} 已发生变更，正在获取新版本。长度：{1} → {2}，时间：({3}) → ({4})" /> 
-    <TranslationEntry Key="internal/Repository/restricted" Translation="远程仓库 ({0}) 未开启以下权限：[{1}]。部分触发器可能无法正常工作。" /> 
-    <TranslationEntry Key="internal/Repository/restrictionenum/DiskOperation" Translation="磁盘操作" /> 
-    <TranslationEntry Key="internal/Repository/restrictionenum/ExecuteScript" Translation="执行脚本" /> 
-    <TranslationEntry Key="internal/Repository/restrictionenum/LaunchProcess" Translation="启动进程" /> 
-    <TranslationEntry Key="internal/Repository/restrictionenum/ObsControl" Translation="OBS 控制" /> 
-    <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="窗口消息" /> 
-    <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="位于 {1} 的仓库 {0} 数据格式无法解析。请确认远程仓库本身未过时，且 Triggernometry 为最新版本。" /> 
-    <TranslationEntry Key="internal/Repository/updateex" Translation="无法更新仓库 {0}：{1}" /> 
+    <TranslationEntry Key="internal/Repository/probeinfocache" Translation="[Info] 缓存已过期：{0}" />
+    <TranslationEntry Key="internal/Repository/probeinfolocal" Translation="[Info] 本地备份：长度={0}，时间={1}" />
+    <TranslationEntry Key="internal/Repository/probeinfolocalmissing" Translation="[Info] 不存在本地备份，需要更新。" />
+    <TranslationEntry Key="internal/Repository/probeinforemote" Translation="[Info] 远程数据：长度={0}，时间={1}" />
+    <TranslationEntry Key="internal/Repository/probeinforemotefail" Translation="[Info] 无法获取远程数据长度，将强制更新。" />
+    <TranslationEntry Key="internal/Repository/proberesultfalse" Translation="仓库 {0} 未发生变更，无需更新。长度：{1}，时间：({2})" />
+    <TranslationEntry Key="internal/Repository/proberesulttrue" Translation="仓库 {0} 已发生变更，正在获取新版本。长度：{1} → {2}，时间：({3}) → ({4})" />
+    <TranslationEntry Key="internal/Repository/restricted" Translation="远程仓库 ({0}) 未开启以下权限：[{1}]。部分触发器可能无法正常工作。" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/DiskOperation" Translation="磁盘操作" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/ExecuteScript" Translation="执行脚本" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/LaunchProcess" Translation="启动进程" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/ObsControl" Translation="OBS 控制" />
+    <TranslationEntry Key="internal/Repository/restrictionenum/WindowMessage" Translation="窗口消息" />
+    <TranslationEntry Key="internal/Repository/updatecorrupted" Translation="位于 {1} 的仓库 {0} 数据格式无法解析。请确认远程仓库本身未过时，且 Triggernometry 为最新版本。" />
+    <TranslationEntry Key="internal/Repository/updateex" Translation="无法更新仓库 {0}：{1}" />
     <TranslationEntry Key="internal/Repository/updatetimeout" Translation="无法更新仓库 {0}：网络错误或请求超时。请确认仓库有效，检查网络或切换代理设置后尝试手动更新仓库（右键-更新）。异常信息：{1}" />
-    <TranslationEntry Key="internal/Repository/updating" Translation="正在从 {1} 下载仓库 {0}。" /> 
+    <TranslationEntry Key="internal/Repository/updating" Translation="正在从 {1} 下载仓库 {0}。" />
     <TranslationEntry Key="internal/RepositoryForm/allowdisk" Translation="允许远程触发器操作文件可能存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
     <TranslationEntry Key="internal/RepositoryForm/allowobswarn" Translation="允许远程触发器控制 OBS 可能存在风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
     <TranslationEntry Key="internal/RepositoryForm/allowprocesswarn" Translation="允许远程触发器启动进程存在高风险。&#xD;&#xA;远程触发器可能包含危险或恶意内容，可能会在更新时自动添加。&#xD;&#xA;请确认你信任远程触发器的提供者。&#xD;&#xA;你确定允许吗？" />
@@ -1673,15 +1632,18 @@
     <TranslationEntry Key="internal/TemplateParser/capturegroupoutofrange" Translation="正则捕获组索引 {0} 超出范围。&#xA;触发器：{1}" />
     <TranslationEntry Key="internal/TemplateParser/unknowntemplate" Translation="文本模板 {0} 无法识别为有效表达式，且不存在此名称的正则捕获组。" />
     <TranslationEntry Key="internal/TestInputForm/debugcopied" Translation="调试触发器已复制到剪贴板，可以直接在主界面粘贴。" />
-    <TranslationEntry Key="internal/TestInputForm/debugdelay--" Translation="明显早于前一行。已根据时间插入到正确的位置。" />
-    <TranslationEntry Key="internal/TestInputForm/debugdelay-" Translation="略早于前一行，可能是不准确的日志时间所致。已调整为前一行的时间。" />
     <TranslationEntry Key="internal/TestInputForm/debugdelay++" Translation="与前一行的时间相差很远。" />
+    <TranslationEntry Key="internal/TestInputForm/debugdelay-" Translation="略早于前一行，可能是不准确的日志时间所致。已调整为前一行的时间。" />
+    <TranslationEntry Key="internal/TestInputForm/debugdelay--" Translation="明显早于前一行。已根据时间插入到正确的位置。" />
     <TranslationEntry Key="internal/TestInputForm/debugfire" Translation="调试触发器会在点击确认后运行。" />
     <TranslationEntry Key="internal/TestInputForm/debugnotime" Translation="未检测到日志行的时间格式，视为无延迟。" />
     <TranslationEntry Key="internal/TestInputForm/debugspeed" Translation="调试日志速度 输入一个正数：" />
     <TranslationEntry Key="internal/TestInputForm/debugspeedex" Translation="输入的值无法解析为正数。" />
     <TranslationEntry Key="internal/TestInputForm/debugwarning" Translation="警告：" />
     <TranslationEntry Key="internal/TestInputForm/debugwarningformat" Translation="日志行 #{0}：{1}&#xD;&#xA;数据：{2}" />
+    <TranslationEntry Key="internal/Toast/no" Translation="否" />
+    <TranslationEntry Key="internal/Toast/ok" Translation="确定" />
+    <TranslationEntry Key="internal/Toast/yes" Translation="是" />
     <TranslationEntry Key="internal/TraySlider/Button1" Translation="确认" />
     <TranslationEntry Key="internal/TraySlider/Button2" Translation="取消" />
     <TranslationEntry Key="internal/TraySlider/Button3" Translation="" />
@@ -1772,20 +1734,20 @@
     <TranslationEntry Key="internal/UserInterface/triggersingular" Translation="{0} 触发器" />
     <TranslationEntry Key="internal/UserInterface/updatenotifs" Translation="当 TriggerNometry 更新时，是否接收通知？" />
     <TranslationEntry Key="internal/UserInterface/warnbeforemanualsave" Translation="启动时加载配置时遇到错误。在此状态下保存配置可能会导致配置损坏，无法修复。确实要保存配置吗？" />
-    <TranslationEntry Key="internal/VariableEditorForm/colvalue" Translation="值" />
     <TranslationEntry Key="internal/VariableEditorForm/coldictkey" Translation="键" />
     <TranslationEntry Key="internal/VariableEditorForm/coldictvalue" Translation="值" />
+    <TranslationEntry Key="internal/VariableEditorForm/colvalue" Translation="值" />
     <TranslationEntry Key="internal/VariableForm/areyousureplural" Translation="你确定你想删除选中的变量吗？" />
     <TranslationEntry Key="internal/VariableForm/areyousuresingular" Translation="你确定你想删除选中的变量吗？" />
     <TranslationEntry Key="internal/VariableForm/confirmremoval" Translation="删除确认" />
     <TranslationEntry Key="internal/VariableForm/keyexists" Translation="键“{0}”已存在于字典中（当前第 {1} 行）" />
+    <TranslationEntry Key="internal/VariableForm/variableeditortag" Translation="变量编辑器" />
     <TranslationEntry Key="internal/XivEntityParser/deprecatedselfquery" Translation="检测到已弃用的旧版本表达式：{0}。&#xA;请使用 ${{_me.属性}} 代替 ${{_ffxivparty[1].属性}}、${{_ffxivparty[${{_ffxivplayer}}].属性}} 等表达式查询自身属性。&#xA;触发器：{1}" />
     <TranslationEntry Key="KeyListenForm" Translation="正在监听键盘按键" />
     <TranslationEntry Key="KeyListenForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="KeyListenForm/btnOk" Translation="确定" />
     <TranslationEntry Key="KeyListenForm/lblKeypress" Translation="（没有键盘输入）" />
     <TranslationEntry Key="KeyListenForm/lblKeypressInfo" Translation="输入键盘按键或组合键，确认结果无误后点击确认" />
-    <TranslationEntry Key="internal/VariableForm/variableeditortag" Translation="变量编辑器" />
     <TranslationEntry Key="LogForm" Translation="触发器日志" />
     <TranslationEntry Key="LogForm/btnClear" Translation="清除" />
     <TranslationEntry Key="LogForm/btnClose" Translation="关闭" />
@@ -1810,71 +1772,6 @@
     <TranslationEntry Key="LogForm/ctxSelectionToClipboard" Translation="复制选择到剪贴板" />
     <TranslationEntry Key="LogForm/lblRegularExpression" Translation="正则表达式" />
     <TranslationEntry Key="LogForm/lblStatus" Translation="状态" />
-    <TranslationEntry Key="plugin/Toast/no" Translation="否" />
-    <TranslationEntry Key="plugin/Toast/ok" Translation="确定" />
-    <TranslationEntry Key="plugin/Toast/yes" Translation="是" />
-    <TranslationEntry Key="Plugin/UserInterface/btnAbout" Translation="关于" />
-    <TranslationEntry Key="Plugin/UserInterface/btnActionQueueDisabled" Translation="禁用" />
-    <TranslationEntry Key="Plugin/UserInterface/btnActionQueueEnabled" Translation="启用" />
-    <TranslationEntry Key="Plugin/UserInterface/btnActionQueueProcessing" Translation="触发器动作队列处理" />
-    <TranslationEntry Key="Plugin/UserInterface/btnAdd" Translation="添加" />
-    <TranslationEntry Key="Plugin/UserInterface/btnAddRepo" Translation="仓库" />
-    <TranslationEntry Key="Plugin/UserInterface/btnAddRepoList" Translation="Github 列表中的仓库" />
-    <TranslationEntry Key="Plugin/UserInterface/btnAddTrigger" Translation="触发器" />
-    <TranslationEntry Key="Plugin/UserInterface/btnAddTriggerFolder" Translation="分组" />
-    <TranslationEntry Key="Plugin/UserInterface/btnBenchmark" Translation="触发器性能基准测试" />
-    <TranslationEntry Key="Plugin/UserInterface/btnClearActionQueue" Translation="清除动作队列" />
-    <TranslationEntry Key="Plugin/UserInterface/btnClearVars" Translation="清空临时变量" />
-    <TranslationEntry Key="Plugin/UserInterface/btnCloseWelcome" Translation="我已阅读! 现在就开始吧!" />
-    <TranslationEntry Key="Plugin/UserInterface/btnCornerPopup" Translation=" " />
-    <TranslationEntry Key="Plugin/UserInterface/btnDeactivateAllAuras" Translation="禁用所有的悬浮窗" />
-    <TranslationEntry Key="Plugin/UserInterface/btnDefaultLanguage" Translation="英文（默认）" />
-    <TranslationEntry Key="Plugin/UserInterface/btnEdit" Translation="编辑" />
-    <TranslationEntry Key="Plugin/UserInterface/btnEditConfig" Translation="编辑配置" />
-    <TranslationEntry Key="Plugin/UserInterface/btnExportTrigger" Translation="导出" />
-    <TranslationEntry Key="Plugin/UserInterface/btnGotoConfig" Translation="转到配置文件夹" />
-    <TranslationEntry Key="Plugin/UserInterface/btnImportTrigger" Translation="导入" />
-    <TranslationEntry Key="Plugin/UserInterface/btnLanguages" Translation="翻译" />
-    <TranslationEntry Key="Plugin/UserInterface/btnOptions" Translation="选项" />
-    <TranslationEntry Key="Plugin/UserInterface/btnRemoveTrigger" Translation="移除" />
-    <TranslationEntry Key="Plugin/UserInterface/btnSaveConfig" Translation="保存配置" />
-    <TranslationEntry Key="Plugin/UserInterface/btnSearch" Translation="搜索触发器" />
-    <TranslationEntry Key="Plugin/UserInterface/btnShowChangeLog" Translation="查看更新日志" />
-    <TranslationEntry Key="Plugin/UserInterface/btnTestInput" Translation="测试输入" />
-    <TranslationEntry Key="Plugin/UserInterface/btnTryInterrupt" Translation="尝试中断执行的动作" />
-    <TranslationEntry Key="Plugin/UserInterface/btnUpdate" Translation="刷新" />
-    <TranslationEntry Key="Plugin/UserInterface/btnUpdateCheck" Translation="检查更新" />
-    <TranslationEntry Key="Plugin/UserInterface/btnViewLog" Translation="查看日志" />
-    <TranslationEntry Key="Plugin/UserInterface/btnViewVariables" Translation="查看变量" />
-    <TranslationEntry Key="Plugin/UserInterface/chkWelcome" Translation="启动插件时显示此欢迎屏幕" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxAdd" Translation="添加" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxAddFolder" Translation="分组" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxAddRepo" Translation="仓库" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxAddRepoList" Translation="Github 列表中的仓库" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxAddTrigger" Translation="触发器" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxCollapse" Translation="折叠全部" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxCopy" Translation="复制" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxDelete" Translation="移除" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxDescendingSort" Translation="降序排列" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxEdit" Translation="编辑" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxExpand" Translation="展开全部" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxExport" Translation="导出" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxFire" Translation="执行（强制）" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxFireAllowCondition" Translation="执行（条件）" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxImport" Translation="导入" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxPaste" Translation="粘贴" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxReadme" Translation="打开使用说明" />
-    <TranslationEntry Key="Plugin/UserInterface/ctxUpdate" Translation="更新" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeImport" Translation="类似于创建触发器操作：关闭此界面后，点击顶部的导入按钮：" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeImportHeader" Translation="我有一个 XML 配置文件，里面可能包含一些触发器设置。 我该如何使用它？" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeIntro" Translation="以下是一些常见问题的答案，可帮助您入门：" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeResources" Translation="触发器增强版拥有一个 Discord 聊天室，您可以在其中提出问题，查找触发器以及获取最新的插件更新。 您还可以找到不同的操作方法和详细信息。 您随时都可以加入我们：" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeResourcesHeader" Translation="我在哪里可以找到更多关于触发器增强版的资源，触发器或帮助？" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeSpse" Translation="SpecialSpellTimer 和 Cactbot 等插件提供了友好的设置界面，设置起来比较容易。&#xD;&#xA;&#xD;&#xA;但触发器增强版更像是一个触发器 DIY 的工具集，为您提供了更大的触发器 DIY 的空间，设置方式可能会更加复杂一些。" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeStart" Translation="第一次打开 Triggernometry 时，你会看见两个空白文件夹“本地触发器”“远程触发器”。你可以右键“远程触发器”，从列表中获取触发器。&#xD;&#xA;&#xD;&#xA;译者注：国内网络环境通常无法访问，请自行在社群、论坛等处获取资源。欢迎加群：556836295" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeStartHeader" Translation="在哪里能找到可用的触发器？" />
-    <TranslationEntry Key="Plugin/UserInterface/lblWelcomeThanks" Translation="感谢您安装使用触发器增强版 Triggernometry！" />
-    <TranslationEntry Key="Plugin/UserInterface/tlsStatus" Translation="准备" />
     <TranslationEntry Key="RepositoryForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="RepositoryForm/btnCopy" Translation="复制" />
     <TranslationEntry Key="RepositoryForm/btnEverythingToClipboard" Translation="复制全部内容" />
@@ -1975,16 +1872,16 @@
     <TranslationEntry Key="StateForm/btnPeDictRefresh" Translation="刷新" />
     <TranslationEntry Key="StateForm/btnPeDictRemove" Translation="销毁变量" />
     <TranslationEntry Key="StateForm/btnPeDictRemoveAll" Translation="全部销毁" />
-    <TranslationEntry Key="StateForm/btnPeScalarAdd" Translation="添加变量" />
-    <TranslationEntry Key="StateForm/btnPeScalarEdit" Translation="编辑变量" />
-    <TranslationEntry Key="StateForm/btnPeScalarRefresh" Translation="刷新" />
-    <TranslationEntry Key="StateForm/btnPeScalarRemove" Translation="销毁变量" />
-    <TranslationEntry Key="StateForm/btnPeScalarRemoveAll" Translation="全部销毁" />
     <TranslationEntry Key="StateForm/btnPeListAdd" Translation="添加变量" />
     <TranslationEntry Key="StateForm/btnPeListEdit" Translation="编辑变量" />
     <TranslationEntry Key="StateForm/btnPeListRefresh" Translation="刷新" />
     <TranslationEntry Key="StateForm/btnPeListRemove" Translation="销毁变量" />
     <TranslationEntry Key="StateForm/btnPeListRemoveAll" Translation="全部销毁" />
+    <TranslationEntry Key="StateForm/btnPeScalarAdd" Translation="添加变量" />
+    <TranslationEntry Key="StateForm/btnPeScalarEdit" Translation="编辑变量" />
+    <TranslationEntry Key="StateForm/btnPeScalarRefresh" Translation="刷新" />
+    <TranslationEntry Key="StateForm/btnPeScalarRemove" Translation="销毁变量" />
+    <TranslationEntry Key="StateForm/btnPeScalarRemoveAll" Translation="全部销毁" />
     <TranslationEntry Key="StateForm/btnPeTableAdd" Translation="添加变量" />
     <TranslationEntry Key="StateForm/btnPeTableEdit" Translation="编辑变量" />
     <TranslationEntry Key="StateForm/btnPeTableRefresh" Translation="刷新" />
@@ -2040,7 +1937,21 @@
     <TranslationEntry Key="StateForm/Column3" Translation="请求独占序列" />
     <TranslationEntry Key="StateForm/Column4" Translation="引用计数" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn1" Translation="名称" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn10" Translation="名称" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn11" Translation="值" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn12" Translation="上次修改" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn13" Translation="修改来源" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn14" Translation="名称" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn15" Translation="长度" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn16" Translation="值" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn17" Translation="上次修改" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn18" Translation="修改来源" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn19" Translation="名称" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn2" Translation="宽" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn20" Translation="宽" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn21" Translation="高" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn22" Translation="上次修改" />
+    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn23" Translation="修改来源" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn3" Translation="名称" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn4" Translation="上次修改" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn5" Translation="修改来源" />
@@ -2048,23 +1959,6 @@
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn7" Translation="创建来源" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn8" Translation="名称" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn9" Translation="创建来源" />
-    <!-- pvar -->
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn10" Translation="名称" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn11" Translation="值" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn12" Translation="上次修改" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn13" Translation="修改来源" />
-    <!-- plvar -->
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn14" Translation="名称" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn15" Translation="长度" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn16" Translation="值" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn17" Translation="上次修改" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn18" Translation="修改来源" />
-    <!-- ptvar -->
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn19" Translation="名称" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn20" Translation="宽" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn21" Translation="高" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn22" Translation="上次修改" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn23" Translation="修改来源" />
     <TranslationEntry Key="StateForm/refreshToolStripMenuItem" Translation="刷新" />
     <TranslationEntry Key="StateForm/tabDict" Translation="字典变量" />
     <TranslationEntry Key="StateForm/tabDictPersistent" Translation="永久变量" />
@@ -2111,56 +2005,20 @@
     <TranslationEntry Key="TestInputForm/lblEventDestination" Translation="发送为" />
     <TranslationEntry Key="TestInputForm/lblZoneName" Translation="区域名" />
     <TranslationEntry Key="TestInputForm/lblZoneType" Translation="区域选项" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/btnActionBottom" Translation="置底" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/btnActionDown" Translation="下移" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/btnActionTop" Translation="置顶" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/btnActionUp" Translation="上移" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/btnAddAction" Translation="添加" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/btnEditAction" Translation="编辑" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/btnRemoveAction" Translation="移除" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/btnUndo" Translation="撤销" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/colDescription" Translation="动作描述" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/Column1" Translation="　　" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxAddAction" Translation="添加动作" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxCopyAction" Translation="复制" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditAction" Translation="编辑动作" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditProp" Translation="快捷设置" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropAsyncOff" Translation="关闭异步" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropAsyncOn" Translation="开启异步" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropBgColor" Translation="背景颜色" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropCndGroupingAnd" Translation="与" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropCndGroupingNot" Translation="非" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropCndGroupingOr" Translation="或" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropCndGroupingType" Translation="条件组类型" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropCndGroupingXor" Translation="或非" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropCopyCnd" Translation="复制条件组" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropDelay" Translation="延迟时间" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropPasteCnd" Translation="粘贴条件组" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropRemoveCnd" Translation="清空条件" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropRemoveDesc" Translation="清空描述" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxEditPropTextColor" Translation="文本颜色" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxMoveBottom" Translation="置底" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxMoveDown" Translation="下移" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxMoveTop" Translation="置顶" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxMoveUp" Translation="上移" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxPasteAction" Translation="粘贴" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxRemoveAction" Translation="移除动作" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxTestAction" Translation="测试动作" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxTestLive" Translation="使用实时值" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxTestLiveIgnoreCnd" Translation="使用实时值（忽略条件）" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxTestPlaceholder" Translation="使用测试值" />
-    <TranslationEntry Key="TriggerForm/actionViewer1/ctxUndo" Translation="撤销" />
     <TranslationEntry Key="TriggerForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="TriggerForm/cbxEditAutofire" Translation="保存更改后自动执行" />
+    <!-- pvar -->
     <TranslationEntry Key="TriggerForm/cbxEditAutofireAllowCondition" Translation="自动执行时遵循触发器及动作条件" />
     <TranslationEntry Key="TriggerForm/cbxLoggingLevel[(inherit from configuration)]" Translation="(继承于配置)" />
-    <TranslationEntry Key="TriggerForm/cbxLoggingLevel[Above custom]" Translation="高于用户" />
     <TranslationEntry Key="TriggerForm/cbxLoggingLevel[Above custom 2]" Translation="高于用户 2" />
+    <TranslationEntry Key="TriggerForm/cbxLoggingLevel[Above custom]" Translation="高于用户" />
+    <!-- plvar -->
     <TranslationEntry Key="TriggerForm/cbxLoggingLevel[All informational messages]" Translation="高于消息" />
     <TranslationEntry Key="TriggerForm/cbxLoggingLevel[Errors and warnings]" Translation="高于警告" />
     <TranslationEntry Key="TriggerForm/cbxLoggingLevel[Errors only]" Translation="仅错误" />
     <TranslationEntry Key="TriggerForm/cbxLoggingLevel[Nothing]" Translation="无" />
     <TranslationEntry Key="TriggerForm/cbxLoggingLevel[Verbose debug]" Translation="全部" />
+    <!-- ptvar -->
     <TranslationEntry Key="TriggerForm/cbxRefireOption1[Interrupt all actions previously queued from this trigger...]" Translation="中断队列中所有旧动作，" />
     <TranslationEntry Key="TriggerForm/cbxRefireOption1[Keep all actions previously queued from this trigger...]" Translation="保留队列中所有旧动作，" />
     <TranslationEntry Key="TriggerForm/cbxRefireOption2[...and allow the trigger to fire again]" Translation="并允许触发器再次触发" />
@@ -2177,47 +2035,6 @@
     <TranslationEntry Key="TriggerForm/cbxTriggerSource[None]" Translation="无" />
     <TranslationEntry Key="TriggerForm/cbxTriggerSource[Normal log lines]" Translation="ACT 解析日志行" />
     <TranslationEntry Key="TriggerForm/chkReadmeTrigger" Translation="将本触发器的描述文本设为仓库使用说明" />
-    <TranslationEntry Key="TriggerForm/cndCondition/btnAdd" Translation="添加" />
-    <TranslationEntry Key="TriggerForm/cndCondition/btnAddCondition" Translation="条件" />
-    <TranslationEntry Key="TriggerForm/cndCondition/btnAddGroup" Translation="条件组" />
-    <TranslationEntry Key="TriggerForm/cndCondition/btnDelete" Translation="移除" />
-    <TranslationEntry Key="TriggerForm/cndCondition/btnProperties" Translation="显示属性" />
-    <TranslationEntry Key="TriggerForm/cndCondition/capProperties/lblContent" Translation="属性" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxExpLType[Numeric]" Translation="数值" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxExpLType[String]" Translation="文本" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxExpRType[Numeric]" Translation="数值" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxExpRType[String]" Translation="文本" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxGroupingType[All conditions must be true (AND)]" Translation="全部条件为真（与）" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxGroupingType[At least one condition must be true (OR)]" Translation="至少一个条件为真（或）" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="全部条件为假（非）" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxGroupingType[Only one condition must be true (XOR)]" Translation="仅一个条件为真（异或）" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Expressions must be numerically equal (X = Y)]" Translation="数值：L = R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Expressions must not be numerically equal (X ≠ Y)]" Translation="数值：L ≠ R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must be numerically greater or equal to (X ≥ Y)]" Translation="数值：L ≥ R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must be numerically greater than (X &gt; Y)]" Translation="数值：L &gt; R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must be numerically less or equal to (X ≤ Y)]" Translation="数值：L ≤ R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must be numerically less than (X &lt; Y)]" Translation="数值：L &lt; R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 匹配" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must not match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 不匹配" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must not pass case-insensitive string comparison with the right side]" Translation="文本：L ≠ R（不分大小写）" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must not pass case-sensitive string comparison with the right side]" Translation="文本：L ≠ R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must pass case-insensitive string comparison with the right side]" Translation="文本：L = R（不分大小写）" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[Left side must pass case-sensitive string comparison with the right side]" Translation="文本：L = R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="列表：名为 L 的列表包含数据 R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="列表：名为 L 的列表不含数据 R" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxAdd" Translation="添加" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxAddCondition" Translation="条件" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxAddGroup" Translation="条件组" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxCollapseAll" Translation="全部折叠" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxCopy" Translation="复制" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxExpandAll" Translation="全部展开" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxPaste" Translation="粘贴" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxPasteOver" Translation="覆盖粘贴" />
-    <TranslationEntry Key="TriggerForm/cndCondition/ctxRemove" Translation="移除" />
-    <TranslationEntry Key="TriggerForm/cndCondition/lblGroupingType" Translation="分组类型" />
-    <TranslationEntry Key="TriggerForm/cndCondition/lblLeftExpression" Translation="左侧表达式 L" />
-    <TranslationEntry Key="TriggerForm/cndCondition/lblOperator" Translation="运算符" />
-    <TranslationEntry Key="TriggerForm/cndCondition/lblRightExpression" Translation="右侧表达式 R" />
     <TranslationEntry Key="TriggerForm/colDescription" Translation="描述" />
     <TranslationEntry Key="TriggerForm/ctxAddAction" Translation="添加动作" />
     <TranslationEntry Key="TriggerForm/ctxCopyAction" Translation="复制" />
@@ -2244,6 +2061,68 @@
     <TranslationEntry Key="TriggerForm/tabScheduling" Translation="计划任务" />
     <TranslationEntry Key="TriggerForm/tabTriggerActions" Translation="触发器动作" />
     <TranslationEntry Key="TriggerForm/tabTriggerCondition" Translation="触发器条件" />
+    <TranslationEntry Key="UserInterface/btnAbout" Translation="关于" />
+    <TranslationEntry Key="UserInterface/btnActionQueueDisabled" Translation="禁用" />
+    <TranslationEntry Key="UserInterface/btnActionQueueEnabled" Translation="启用" />
+    <TranslationEntry Key="UserInterface/btnActionQueueProcessing" Translation="触发器动作队列处理" />
+    <TranslationEntry Key="UserInterface/btnAdd" Translation="添加" />
+    <TranslationEntry Key="UserInterface/btnAddRepo" Translation="仓库" />
+    <TranslationEntry Key="UserInterface/btnAddRepoList" Translation="Github 列表中的仓库" />
+    <TranslationEntry Key="UserInterface/btnAddTrigger" Translation="触发器" />
+    <TranslationEntry Key="UserInterface/btnAddTriggerFolder" Translation="分组" />
+    <TranslationEntry Key="UserInterface/btnBenchmark" Translation="触发器性能基准测试" />
+    <TranslationEntry Key="UserInterface/btnClearActionQueue" Translation="清除动作队列" />
+    <TranslationEntry Key="UserInterface/btnClearVars" Translation="清空临时变量" />
+    <TranslationEntry Key="UserInterface/btnCloseWelcome" Translation="我已阅读! 现在就开始吧!" />
+    <TranslationEntry Key="UserInterface/btnCornerPopup" Translation=" " />
+    <TranslationEntry Key="UserInterface/btnDeactivateAllAuras" Translation="禁用所有的悬浮窗" />
+    <TranslationEntry Key="UserInterface/btnDefaultLanguage" Translation="英文（默认）" />
+    <TranslationEntry Key="UserInterface/btnEdit" Translation="编辑" />
+    <TranslationEntry Key="UserInterface/btnEditConfig" Translation="编辑配置" />
+    <TranslationEntry Key="UserInterface/btnExportTrigger" Translation="导出" />
+    <TranslationEntry Key="UserInterface/btnGotoConfig" Translation="转到配置文件夹" />
+    <TranslationEntry Key="UserInterface/btnImportTrigger" Translation="导入" />
+    <TranslationEntry Key="UserInterface/btnLanguages" Translation="翻译" />
+    <TranslationEntry Key="UserInterface/btnOptions" Translation="选项" />
+    <TranslationEntry Key="UserInterface/btnRemoveTrigger" Translation="移除" />
+    <TranslationEntry Key="UserInterface/btnSaveConfig" Translation="保存配置" />
+    <TranslationEntry Key="UserInterface/btnSearch" Translation="搜索触发器" />
+    <TranslationEntry Key="UserInterface/btnShowChangeLog" Translation="查看更新日志" />
+    <TranslationEntry Key="UserInterface/btnTestInput" Translation="测试输入" />
+    <TranslationEntry Key="UserInterface/btnTryInterrupt" Translation="尝试中断执行的动作" />
+    <TranslationEntry Key="UserInterface/btnUpdate" Translation="刷新" />
+    <TranslationEntry Key="UserInterface/btnUpdateCheck" Translation="检查更新" />
+    <TranslationEntry Key="UserInterface/btnViewLog" Translation="查看日志" />
+    <TranslationEntry Key="UserInterface/btnViewVariables" Translation="查看变量" />
+    <TranslationEntry Key="UserInterface/chkWelcome" Translation="启动插件时显示此欢迎屏幕" />
+    <TranslationEntry Key="UserInterface/ctxAdd" Translation="添加" />
+    <TranslationEntry Key="UserInterface/ctxAddFolder" Translation="分组" />
+    <TranslationEntry Key="UserInterface/ctxAddRepo" Translation="仓库" />
+    <TranslationEntry Key="UserInterface/ctxAddRepoList" Translation="Github 列表中的仓库" />
+    <TranslationEntry Key="UserInterface/ctxAddTrigger" Translation="触发器" />
+    <TranslationEntry Key="UserInterface/ctxCollapse" Translation="折叠全部" />
+    <TranslationEntry Key="UserInterface/ctxCopy" Translation="复制" />
+    <TranslationEntry Key="UserInterface/ctxDelete" Translation="移除" />
+    <TranslationEntry Key="UserInterface/ctxDescendingSort" Translation="降序排列" />
+    <TranslationEntry Key="UserInterface/ctxEdit" Translation="编辑" />
+    <TranslationEntry Key="UserInterface/ctxExpand" Translation="展开全部" />
+    <TranslationEntry Key="UserInterface/ctxExport" Translation="导出" />
+    <TranslationEntry Key="UserInterface/ctxFire" Translation="执行（强制）" />
+    <TranslationEntry Key="UserInterface/ctxFireAllowCondition" Translation="执行（条件）" />
+    <TranslationEntry Key="UserInterface/ctxImport" Translation="导入" />
+    <TranslationEntry Key="UserInterface/ctxPaste" Translation="粘贴" />
+    <TranslationEntry Key="UserInterface/ctxReadme" Translation="打开使用说明" />
+    <TranslationEntry Key="UserInterface/ctxUpdate" Translation="更新" />
+    <TranslationEntry Key="UserInterface/lblWelcomeImport" Translation="类似于创建触发器操作：关闭此界面后，点击顶部的导入按钮：" />
+    <TranslationEntry Key="UserInterface/lblWelcomeImportHeader" Translation="我有一个 XML 配置文件，里面可能包含一些触发器设置。 我该如何使用它？" />
+    <TranslationEntry Key="UserInterface/lblWelcomeIntro" Translation="以下是一些常见问题的答案，可帮助您入门：" />
+    <TranslationEntry Key="UserInterface/lblWelcomeResources" Translation="触发器增强版拥有一个 Discord 聊天室，您可以在其中提出问题，查找触发器以及获取最新的插件更新。 您还可以找到不同的操作方法和详细信息。 您随时都可以加入我们：" />
+    <TranslationEntry Key="UserInterface/lblWelcomeResourcesHeader" Translation="我在哪里可以找到更多关于触发器增强版的资源，触发器或帮助？" />
+    <TranslationEntry Key="UserInterface/lblWelcomeSpse" Translation="SpecialSpellTimer 和 Cactbot 等插件提供了友好的设置界面，设置起来比较容易。&#xD;&#xA;&#xD;&#xA;但触发器增强版更像是一个触发器 DIY 的工具集，为您提供了更大的触发器 DIY 的空间，设置方式可能会更加复杂一些。" />
+    <TranslationEntry Key="UserInterface/lblWelcomeStart" Translation="第一次打开 Triggernometry 时，你会看见两个空白文件夹“本地触发器”“远程触发器”。你可以右键“远程触发器”，从列表中获取触发器。&#xD;&#xA;&#xD;&#xA;译者注：国内网络环境通常无法访问，请自行在社群、论坛等处获取资源。欢迎加群：556836295" />
+    <TranslationEntry Key="UserInterface/lblWelcomeStartHeader" Translation="在哪里能找到可用的触发器？" />
+    <TranslationEntry Key="UserInterface/lblWelcomeThanks" Translation="感谢您安装使用触发器增强版 Triggernometry！" />
+    <TranslationEntry Key="UserInterface/tlsStatus" Translation="准备" />
     <TranslationEntry Key="VariableEditorForm" Translation="变量编辑器" />
     <TranslationEntry Key="VariableEditorForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="VariableEditorForm/btnColumnAdd" Translation="右侧插入列" />

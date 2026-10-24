@@ -48,13 +48,13 @@ namespace Triggernometry.UI.CustomControls
                         case ToastTypeEnum.OK:
                             btnToastYes.Visible = false;
                             btnToastNo.Visible = true;
-                            btnToastNo.Text = I18n.Translate("plugin/Toast/ok", "OK");
+                            btnToastNo.Text = I18n.Translate("internal/Toast/ok", "OK");
                             break;
                         case ToastTypeEnum.YesNo:
                             btnToastYes.Visible = true;
-                            btnToastYes.Text = I18n.Translate("plugin/Toast/yes", "Yes");
+                            btnToastYes.Text = I18n.Translate("internal/Toast/yes", "Yes");
                             btnToastNo.Visible = true;
-                            btnToastNo.Text = I18n.Translate("plugin/Toast/no", "No");
+                            btnToastNo.Text = I18n.Translate("internal/Toast/no", "No");
                             break;
                     }
                 }

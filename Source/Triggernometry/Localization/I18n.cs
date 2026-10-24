@@ -177,7 +177,10 @@ namespace Triggernometry.Localization
                 }
                 if (c is UserControl)
                 {
-                    path += "/" + c.Name;
+                    // Caption text belongs to its owner; other reusable controls own their translations.
+                    path = c is UI.CustomControls.PrettyCaption
+                        ? path + "/" + c.Name
+                        : c.GetType().Name;
                     foreach (Control cc in c.Controls)
                     {
                         TranslateControl(path, cc);
@@ -196,11 +199,11 @@ namespace Triggernometry.Localization
                         TranslateSecondaryControl(path, tsi);
                     }
                 }
-                if (c.Text != null && c.Text != "")
+                if (!string.IsNullOrEmpty(c.Text))
                 {
-                    if (c is TabPage)
+                    if (c is TabPage page)
                     {
-                        if (((TabControl)((TabPage)c).Parent).Appearance != TabAppearance.FlatButtons)
+                        if (((TabControl)page.Parent).Appearance != TabAppearance.FlatButtons)
                         {
                             c.Text = GetLocalizationFor(path + "/" + c.Name, c.Text);
                         }
@@ -216,13 +219,14 @@ namespace Triggernometry.Localization
                     for (int i = 0; i < x.Items.Count; i++)
                     {
                         string o = x.Items[i].ToString();
-                        if (x.Items[i] is UI.Forms.FolderForm.ClassLink)
+                        var key = $"{path}/{c.Name}[{o}]";
+                        if (x.Items[i] is UI.Forms.FolderForm.ClassLink link)
                         {
-                            ((UI.Forms.FolderForm.ClassLink)x.Items[i]).name = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
+                            link.name = GetLocalizationFor(key, o);
                         }
                         else
                         {
-                            x.Items[i] = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
+                            x.Items[i] = GetLocalizationFor(key, o);
                         }
                     }
                 }
@@ -232,7 +236,7 @@ namespace Triggernometry.Localization
                     for (int i = 0; i < x.Items.Count; i++)
                     {
                         string o = x.Items[i].ToString();
-                        x.Items[i] = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
+                        x.Items[i] = GetLocalizationFor($"{path}/{c.Name}[{o}]", o);
                     }
                 }
                 else if (c is ComboBox)
@@ -241,7 +245,7 @@ namespace Triggernometry.Localization
                     for (int i = 0; i < x.Items.Count; i++)
                     {
                         string o = x.Items[i].ToString();
-                        x.Items[i] = GetLocalizationFor(path + "/" + c.Name + "[" + o + "]", o);
+                        x.Items[i] = GetLocalizationFor($"{path}/{c.Name}[{o}]", o);
                     }
                 }
                 else if (c is DataGridView)
