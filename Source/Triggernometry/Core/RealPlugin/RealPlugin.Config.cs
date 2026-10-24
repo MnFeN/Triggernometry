@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -109,6 +108,27 @@ namespace Triggernometry.Core
             SaveConfigToFile(cfg, Path.Combine(ConfigPath, pluginName + ".config.xml"), true);
         }
 
+        /// <summary> Checks the closing tag from the end without reading the whole configuration. </summary>
+        private static bool HasConfigurationEndTag(string filename)
+        {
+            const string endTag = "</" + nameof(Configuration) + ">";
+            using (StreamReader reader = new StreamReader(filename))
+            {
+                reader.Peek(); // Detect a possible BOM before seeking past it.
+                long position = reader.BaseStream.Length;
+                string tail;
+                do
+                {
+                    position = Math.Max(0, position - 4096);
+                    reader.DiscardBufferedData();
+                    reader.BaseStream.Position = position;
+                    tail = reader.ReadToEnd().TrimEnd();
+                }
+                while (position > 0 && tail.Length < endTag.Length);
+                return tail.EndsWith(endTag, StringComparison.Ordinal);
+            }
+        }
+
         private Configuration LoadConfigFromFile(string filename)
         {
             try
@@ -126,8 +146,7 @@ namespace Triggernometry.Core
                     return c;
                 }
                 bool corruptFallback = false;
-                string lastLine = File.ReadLines(filename).LastOrDefault();
-                if (lastLine == null || lastLine.Trim() != "</Configuration>")
+                if (!HasConfigurationEndTag(filename))
                 {
                     // configuration has been corrupted, try loading previous config file instead
                     string newfilename = filename + ".previous";
@@ -212,8 +231,7 @@ namespace Triggernometry.Core
                         sw.Flush();
                     }
                 }
-                string lastLine = File.ReadLines(filename + ".temp").LastOrDefault();
-                if (lastLine == null || lastLine.Trim() != "</Configuration>")
+                if (!HasConfigurationEndTag(filename + ".temp"))
                 {
                     throw new Exception(I18n.Translate("internal/Plugin/cfgsaveincomplete", "The saving process was interrupted.") + "\n");
                 }
