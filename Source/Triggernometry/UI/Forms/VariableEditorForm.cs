@@ -386,6 +386,7 @@ namespace Triggernometry.UI.Forms
             }
             ResetEdit();
             VariableTable v = (VariableTable)VariableToEdit;
+            rowIndex = Math.Min(rowIndex, v.Height - 1);
             v.InsertRow(rowIndex + 1);
             dgvVariableData.RowCount++;
             RenumberRows();
@@ -444,6 +445,7 @@ namespace Triggernometry.UI.Forms
             }
             ResetEdit();
             VariableTable v = (VariableTable)VariableToEdit;
+            colIndex = Math.Min(colIndex, v.Width - 1);
             v.InsertColumn(colIndex + 1);
             if (dgvVariableData.RowCount != v.Height)
             {
