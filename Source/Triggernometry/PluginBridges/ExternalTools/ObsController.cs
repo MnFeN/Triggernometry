@@ -48,7 +48,9 @@ namespace Triggernometry.PluginBridges.ExternalTools
             {
                 using (SHA256 h = SHA256.Create())
                 {
-                    byte[] b = Encoding.ASCII.GetBytes(data);
+                    // Match obs-websocket's UTF-8 hash input: secretAndChallenge.toUtf8().
+                    // https://github.com/obsproject/obs-websocket/blob/master/src/utils/Crypto.cpp
+                    byte[] b = Encoding.UTF8.GetBytes(data);
                     return Convert.ToBase64String(h.ComputeHash(b));
                 }
             }
