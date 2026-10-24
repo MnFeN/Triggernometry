@@ -148,6 +148,8 @@ namespace Triggernometry.Core
         /// </summary>
         internal void RegisterVariable(string folderLogName, RegisteredVariable definition)
         {
+            if (!definition.Enabled || definition.IsComment) 
+                return;
             lock (RegisteredVariables)
             {
                 if (RegisteredVariables.TryGetValue(definition.Name, out VariableScalar previous) && previous.Value != definition.Value)

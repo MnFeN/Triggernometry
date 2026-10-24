@@ -1320,32 +1320,30 @@ namespace Triggernometry.UI.CustomControls
             ToggleExpand();
         }
 
-        private void ToggleExpand()
+        internal void ToggleExpand()
         {
             if (textBox1.Multiline == true)
             {
                 textBox1.Multiline = false;
                 textBox1.MinimumSize = new Size(textBox1.MinimumSize.Width, 0);
                 textBox1.ScrollBars = ScrollBars.None;
-                Image tmp = panel1.BackgroundImage;
-                panel1.BackgroundImage = panel2.BackgroundImage;
-                panel2.BackgroundImage = tmp;
+                (panel2.BackgroundImage, panel1.BackgroundImage) = (panel1.BackgroundImage, panel2.BackgroundImage);
             }
             else
             {
                 textBox1.Multiline = true;
                 textBox1.MinimumSize = new Size(textBox1.MinimumSize.Width, 80);
-                textBox1.MaximumSize = new Size(textBox1.MaximumSize.Width, 300);
+                textBox1.MaximumSize = new Size(textBox1.MaximumSize.Width, textBox1.Dock == DockStyle.Fill ? 0 : 400);
                 textBox1.ScrollBars = ScrollBars.Both;
                 MultiLineAdjustHeight();
-                Image tmp = panel1.BackgroundImage;
-                panel1.BackgroundImage = panel2.BackgroundImage;
-                panel2.BackgroundImage = tmp;
+                (panel2.BackgroundImage, panel1.BackgroundImage) = (panel1.BackgroundImage, panel2.BackgroundImage);
             }
         }
 
         private void MultiLineAdjustHeight()
         {
+            // A docked editor follows its window size rather than its text height.
+            if (textBox1.Dock == DockStyle.Fill) return;
             using (Graphics g = textBox1.CreateGraphics())
             {
                 SizeF size = g.MeasureString(textBox1.Text + "\n\n1", textBox1.Font); // add 2 more lines

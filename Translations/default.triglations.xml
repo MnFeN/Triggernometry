@@ -811,7 +811,6 @@
     <TranslationEntry Key="ExportForm/ctxSaveToFile" Translation="Save to file" />
     <TranslationEntry Key="ExportForm/ctxSelectionToClipboard" Translation="Selection to clipboard" />
     <TranslationEntry Key="ExportForm/tslFormat" Translation="Format" />
-    <TranslationEntry Key="FolderForm/btnApplyRegisteredVariables" Translation="Apply all" />
     <TranslationEntry Key="FolderForm/btnCancel" Translation="Cancel" />
     <TranslationEntry Key="FolderForm/btnGetCurFfxivZone" Translation="Retrieve" />
     <TranslationEntry Key="FolderForm/btnGetCurZone" Translation="Retrieve" />
@@ -862,9 +861,6 @@
     <TranslationEntry Key="FolderForm/chkFfxivClassFilterEnabled" Translation="Process events only if currently on one of the specified classes" />
     <TranslationEntry Key="FolderForm/chkFfxivZoneFilter" Translation="Restrict event processing only to when currently in given zone ID (regex)" />
     <TranslationEntry Key="FolderForm/chkZoneFilter" Translation="Restrict event processing only to events with matching zone name (regex)" />
-    <TranslationEntry Key="FolderForm/colRegisteredVariableLoadWhenActive" Translation="Load mode" />
-    <TranslationEntry Key="FolderForm/colRegisteredVariableName" Translation="Key" />
-    <TranslationEntry Key="FolderForm/colRegisteredVariableValue" Translation="Initial value" />
     <TranslationEntry Key="FolderForm/grpFfxivClassFilter" Translation=" Classes " />
     <TranslationEntry Key="FolderForm/grpGeneral" Translation=" General " />
     <TranslationEntry Key="FolderForm/grpSetting" Translation=" Settings " />
@@ -1380,9 +1376,6 @@
     <TranslationEntry Key="internal/ffxiv/updateexception" Translation="Exception in FFXIV state update: {0} at stage {1}" />
     <TranslationEntry Key="internal/Folder/envvariablekvptoolong" Translation="The raw environment variable key-value pair expression contains more than 2 parts. &#xD;&#xA;Folder: {0}; &#xD;&#xA;Expression: {1}" />
     <TranslationEntry Key="internal/FolderForm/deleterenamedregisteredvariable" Translation="Registered variable &#x27;{0}&#x27; was renamed to &#x27;{1}&#x27;.&#xA;Old runtime value: &#x27;{2}&#x27;&#xA;Delete the old key-value pair?" />
-    <TranslationEntry Key="internal/FolderForm/loaddirectly" Translation="Load directly" />
-    <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="Load when active" />
-    <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="Enter a key for each registered variable." />
     <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="Registered variables" />
     <TranslationEntry Key="internal/Geometry/uninitializedtarget" Translation="The render target needs to be initialized first." />
     <TranslationEntry Key="internal/Graphics/alreadyinitialized" Translation="Graphics device is already initialized." />
@@ -1613,6 +1606,14 @@
     <TranslationEntry Key="internal/Polygon/trianglerequired" Translation="Isosceles subdivision is only supported for triangles." />
     <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="Registered variable key conflict &#x27;{0}&#x27;:&#xA;new value: &#x27;{1}&#x27;&#xA;from: Folder {2}&#xA;old value: &#x27;{3}&#x27;&#xA;from: Folder {4}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)." />
+    <TranslationEntry Key="internal/RegisteredVariableViewer/alwaysactive" Translation="Always active" />
+    <TranslationEntry Key="internal/RegisteredVariableViewer/clipboarderror" Translation="Could not copy or paste registered variables:&#xA;{0}" />
+    <TranslationEntry Key="internal/RegisteredVariableViewer/confirmremove" Translation="Remove the selected rows?" />
+    <TranslationEntry Key="internal/RegisteredVariableViewer/editcomment" Translation="Expand comment" />
+    <TranslationEntry Key="internal/RegisteredVariableViewer/editvalue" Translation="Expand value: {0}" />
+    <TranslationEntry Key="internal/RegisteredVariableViewer/folderenabled" Translation="When folder enabled" />
+    <TranslationEntry Key="internal/RegisteredVariableViewer/namerequired" Translation="Enter a key for each enabled registered variable." />
+    <TranslationEntry Key="internal/RegisteredVariableViewer/removal" Translation="Confirm removal" />
     <TranslationEntry Key="internal/Repository/loadlocalex" Translation="Couldn't load local backup of repository {0} due to exception: {1}" />
     <TranslationEntry Key="internal/Repository/localcleared" Translation="Cleared local backup of repository {0} at {1}" />
     <TranslationEntry Key="internal/Repository/localclearex" Translation="Couldn't clear local backup of repository {0} due to exception: {1}" />
@@ -1714,6 +1715,9 @@
     <TranslationEntry Key="internal/SearchForm/noresults" Translation="No results" />
     <TranslationEntry Key="internal/SearchForm/oneresult" Translation="One result" />
     <TranslationEntry Key="internal/SearchForm/xresults" Translation="{0} results" />
+    <TranslationEntry Key="internal/SimpleInputForm/cancel" Translation="Cancel" />
+    <TranslationEntry Key="internal/SimpleInputForm/close" Translation="Close" />
+    <TranslationEntry Key="internal/SimpleInputForm/ok" Translation="OK" />
     <TranslationEntry Key="internal/StringFunctionParser/functionvalue" Translation="function value" />
     <TranslationEntry Key="internal/StringFunctionParser/invalidsyntax" Translation="Invalid function expression syntax: '{0}'" />
     <TranslationEntry Key="internal/StringFunctionParser/unknownfunction" Translation="Unknown string function '{0}'." />
@@ -1879,6 +1883,31 @@
     <TranslationEntry Key="LogForm/ctxSelectionToClipboard" Translation="Selection to clipboard" />
     <TranslationEntry Key="LogForm/lblRegularExpression" Translation="Regular expression" />
     <TranslationEntry Key="LogForm/lblStatus" Translation="Status" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnAddComment" Translation="Add comment" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnAddVariable" Translation="Add variable" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnApply" Translation="Apply" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnApplyAll" Translation="Apply all" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnBottom" Translation="Bottom" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnDown" Translation="Down" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnExpandEdit" Translation="Expand edit" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnRemove" Translation="Remove" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnTop" Translation="Top" />
+    <TranslationEntry Key="RegisteredVariableViewer/btnUp" Translation="Up" />
+    <TranslationEntry Key="RegisteredVariableViewer/colLoadWhenActive" Translation="Activation policy" />
+    <TranslationEntry Key="RegisteredVariableViewer/colName" Translation="Key" />
+    <TranslationEntry Key="RegisteredVariableViewer/colValue" Translation="Value" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxAddComment" Translation="Add comment" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxAddVariable" Translation="Add variable" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxApply" Translation="Apply" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxApplyAll" Translation="Apply all" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxBottom" Translation="Move to bottom" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxCopy" Translation="Copy" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxDown" Translation="Move down" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxExpandEdit" Translation="Expand edit" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxPaste" Translation="Paste" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxRemove" Translation="Remove" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxTop" Translation="Move to top" />
+    <TranslationEntry Key="RegisteredVariableViewer/ctxUp" Translation="Move up" />
     <TranslationEntry Key="RepositoryForm/btnCancel" Translation="Cancel" />
     <TranslationEntry Key="RepositoryForm/btnCopy" Translation="Copy" />
     <TranslationEntry Key="RepositoryForm/btnEverythingToClipboard" Translation="Everything to clipboard" />
@@ -2209,6 +2238,7 @@
     <TranslationEntry Key="UserInterface/ctxAddTrigger" Translation="Trigger" />
     <TranslationEntry Key="UserInterface/ctxCollapse" Translation="Collapse all" />
     <TranslationEntry Key="UserInterface/ctxCopy" Translation="Copy" />
+    <TranslationEntry Key="UserInterface/ctxCopyRegex" Translation="Copy Regex" />
     <TranslationEntry Key="UserInterface/ctxDelete" Translation="Remove" />
     <TranslationEntry Key="UserInterface/ctxDescendingSort" Translation="Sort By Descending" />
     <TranslationEntry Key="UserInterface/ctxEdit" Translation="Edit" />

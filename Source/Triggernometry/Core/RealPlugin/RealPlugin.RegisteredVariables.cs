@@ -28,7 +28,7 @@ namespace Triggernometry.Core
         {
             lock (RegisteredVariables)
             {
-                foreach (RegisteredVariable variable in folder.RegisteredVariables)
+                foreach (RegisteredVariable variable in folder.RegisteredVariables.Where(value => value.Enabled && !value.IsComment))
                 {
                     RegisteredVariables.Remove(variable.Name);
                 }
@@ -74,7 +74,7 @@ namespace Triggernometry.Core
                 // Finish removals first so a departing folder cannot delete a newly loaded value.
                 foreach (Folder folder in disabled)
                 {
-                    foreach (RegisteredVariable variable in folder.RegisteredVariables.Where(value => value.LoadWhenActive))
+                    foreach (RegisteredVariable variable in folder.RegisteredVariables.Where(value => value.Enabled && !value.IsComment && value.LoadWhenActive))
                     {
                         RegisteredVariables.Remove(variable.Name);
                     }
