@@ -243,11 +243,11 @@ namespace Scarborough
             {
                 if (ctx.Trigger != null)
                 {
-                    ctx.Trigger.AddToLog(RealPlugin.DebugLevelEnum.Error, Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", Name, ctx.Trigger.LogName, ex.Message)));
+                    ctx.Trigger.AddToLog(RealPlugin.DebugLevelEnum.Error, Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerrortrigger", "Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", Name, ctx.Trigger.LogName, ex.Message));
                 }
                 else
                 {
-                    plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' due to update exception: {1}", Name, ex.Message)));
+                    plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", "Deactivating aura '{0}' due to update exception: {1}", Name, ex.Message));
                 }
                 return false;
             }

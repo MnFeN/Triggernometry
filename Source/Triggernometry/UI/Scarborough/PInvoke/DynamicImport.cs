@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
@@ -30,7 +31,7 @@ namespace Scarborough.PInvoke
 
             if (hModule == IntPtr.Zero)
             {
-                throw new DynamicImportException($"DynamicImport failed to import library \"{ libraryName }\"!");
+                throw new DynamicImportException(I18n.Translate("internal/DynamicImport/libraryfailed", "DynamicImport failed to import library '{0}'.",  libraryName ));
             }
             else
             {
@@ -49,7 +50,7 @@ namespace Scarborough.PInvoke
 
             if (procAddress == IntPtr.Zero)
             {
-                throw new DynamicImportException($"DynamicImport failed to find method \"{ methodName }\" in module \"0x{ moduleHandle.ToString("X") }\"!");
+                throw new DynamicImportException(I18n.Translate("internal/DynamicImport/methodfailed", "DynamicImport failed to find method '{0}' in module 0x{1}.",  methodName ,  moduleHandle.ToString("X") ));
             }
             else
             {

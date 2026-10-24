@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -30,7 +31,7 @@ namespace Scarborough.Drawing
         public Geometry(Graphics device)
         {
             if (device == null) throw new ArgumentNullException(nameof(device));
-            if (!device.IsInitialized) throw new InvalidOperationException("The render target needs to be initialized first");
+            if (!device.IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Geometry/uninitializedtarget", "The render target needs to be initialized first."));
 
             _geometry = new PathGeometry(device.GetFactory());
             _sink = _geometry.Open();

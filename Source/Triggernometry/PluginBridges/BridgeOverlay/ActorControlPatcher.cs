@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -19,16 +20,16 @@ namespace Triggernometry.PluginBridges
         {
             var asm = AppDomain.CurrentDomain.GetAssemblies()
                 .FirstOrDefault(a => a.GetName().Name == "OverlayPlugin.Core")
-                ?? throw new Exception("OverlayPlugin.Core not found");
+                ?? throw new Exception(I18n.Translate("internal/BridgeOverlay/objectnotfound", "Object '{0}' was not found.", "OverlayPlugin.Core"));
 
             var targetType = asm.GetType("RainbowMage.OverlayPlugin.NetworkProcessors.LineActorControlExtra")
-                ?? throw new Exception("LineActorControlExtra not found");
+                ?? throw new Exception(I18n.Translate("internal/BridgeOverlay/objectnotfound", "Object '{0}' was not found.", "LineActorControlExtra"));
 
             var field = targetType.GetField("AllowedActorControlCategories", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                ?? throw new Exception("AllowedActorControlCategories not found");
+                ?? throw new Exception(I18n.Translate("internal/BridgeOverlay/objectnotfound", "Object '{0}' was not found.", "AllowedActorControlCategories"));
 
             var enumType = asm.GetType("RainbowMage.OverlayPlugin.NetworkProcessors.Server_ActorControlCategory")
-                ?? throw new Exception("Server_ActorControlCategory not found");
+                ?? throw new Exception(I18n.Translate("internal/BridgeOverlay/objectnotfound", "Object '{0}' was not found.", "Server_ActorControlCategory"));
 
             // original categories
             var original = (Array)field.GetValue(null);

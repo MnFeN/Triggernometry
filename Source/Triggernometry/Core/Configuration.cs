@@ -698,7 +698,7 @@ namespace Triggernometry.Core
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Triggernometry config", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.ToString(), I18n.Translate("internal/Configuration/configtitle", "Triggernometry configuration"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return Guid.Empty;
             }
         }

@@ -5,7 +5,7 @@
     <TranslationEntry Key="AboutForm/btnOk" Translation="确定" />
     <TranslationEntry Key="AboutForm/tabGeneral" Translation="通用" />
     <TranslationEntry Key="AboutForm/tabLicenses" Translation="协议" />
-    <TranslationEntry Key="AboutForm/txtGeneral" Translation="Triggernometry（高级触发器）&#xD;&#xA;版本 [VERSIONNUMBER]&#xD;&#xA;&#xD;&#xA;错误汇报及意见建议请加入插件官方 Discord 聊天室讨论:&#xD;&#xA;https://discord.gg/6f9MY55" />''
+    <TranslationEntry Key="AboutForm/txtGeneral" Translation="Triggernometry（高级触发器）&#xD;&#xA;版本 [VERSIONNUMBER]&#xD;&#xA;&#xD;&#xA;错误汇报及意见建议请加入插件官方 Discord 聊天室讨论:&#xD;&#xA;https://discord.gg/6f9MY55" />
     <TranslationEntry Key="AboutForm/txtLicenses" Translation="Mathos license:&#xD;&#xA;&#xD;&#xA;Copyright (c) 2012-2016 Mathos Project,&#xD;&#xA;All rights reserved.&#xD;&#xA;&#xD;&#xA;Redistribution and use in source and binary forms, with or without&#xD;&#xA;modification, are permitted provided that the following conditions are met:&#xD;&#xA;&#xD;&#xA;* Redistributions of source code must retain the above copyright notice, this&#xD;&#xA; list of conditions and the following disclaimer.&#xD;&#xA;&#xD;&#xA;* Redistributions in binary form must reproduce the above copyright notice,&#xD;&#xA;  this list of conditions and the following disclaimer in the documentation&#xD;&#xA;  and/or other materials provided with the distribution.&#xD;&#xA;&#xD;&#xA;* Neither the name of Mathos-Parser nor the names of its&#xD;&#xA;  contributors may be used to endorse or promote products derived from&#xD;&#xA;  this software without specific prior written permission.&#xD;&#xA;&#xD;&#xA;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;&#xD;&#xA;AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE&#xD;&#xA;IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE&#xD;&#xA;DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE&#xD;&#xA;FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL&#xD;&#xA;DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR&#xD;&#xA;SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER&#xD;&#xA;CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,&#xD;&#xA;OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE&#xD;&#xA;OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&#xD;&#xA;&#xD;&#xA;=============================&#xD;&#xA;&#xD;&#xA;websocket-sharp license:&#xD;&#xA;&#xD;&#xA;The MIT License (MIT)&#xD;&#xA;&#xD;&#xA;Copyright (c) 2010-2018 sta.blockhead&#xD;&#xA;&#xD;&#xA;Permission is hereby granted, free of charge, to any person obtaining a copy&#xD;&#xA;of this software and associated documentation files (the &quot;Software&quot;), to deal&#xD;&#xA;in the Software without restriction, including without limitation the rights&#xD;&#xA;to use, copy, modify, merge, publish, distribute, sublicense, and/or sell&#xD;&#xA;copies of the Software, and to permit persons to whom the Software is&#xD;&#xA;furnished to do so, subject to the following conditions:&#xD;&#xA;&#xD;&#xA;The above copyright notice and this permission notice shall be included in&#xD;&#xA;all copies or substantial portions of the Software.&#xD;&#xA;&#xD;&#xA;THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR&#xD;&#xA;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,&#xD;&#xA;FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE&#xD;&#xA;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER&#xD;&#xA;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,&#xD;&#xA;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN&#xD;&#xA;THE SOFTWARE." />
     <TranslationEntry Key="ActionForm/btnAuraGuide" Translation="使用即时设置（右键悬浮窗获取更多设置）" />
     <TranslationEntry Key="ActionForm/btnCancel" Translation="取消" />
@@ -1074,6 +1074,7 @@
     <TranslationEntry Key="internal/Action/descunknown" Translation="位置动作类型" />
     <TranslationEntry Key="internal/Action/descwindowtargetall" Translation="标题匹配正则 ({0}) 的所有窗口" />
     <TranslationEntry Key="internal/Action/descwindowtargetid" Translation="属于进程 ID ({0})、标题匹配正则 ({1}) 的窗口" />
+    <TranslationEntry Key="internal/Action/descwindowtargetnone" Translation="(未指定窗口名称)" />
     <TranslationEntry Key="internal/Action/descwindowtargetsingle" Translation="标题匹配正则 ({0}) 的首个窗口" />
     <TranslationEntry Key="internal/Action/descwmsg" Translation="向{3}发送消息 ({0})，wparam = ({1})，lparam = ({2})" />
     <TranslationEntry Key="internal/Action/dictbuild" Translation="已将表达式 ({2}) 以 ({3}) ({4}) 拆分，构筑为{1}字典 ({0})" />
@@ -1138,6 +1139,7 @@
     <TranslationEntry Key="internal/Action/obsauthpassword" Translation="OBS 需要网络验证，你必须提供密码。" />
     <TranslationEntry Key="internal/Action/obsconnecterror" Translation="连接到 OBS 接口时出错：{0}" />
     <TranslationEntry Key="internal/Action/obsconnectok" Translation="OBS 接口连接成功" />
+    <TranslationEntry Key="internal/Action/obsconnecttimeout" Translation="OBS WebSocket 身份验证超时。" />
     <TranslationEntry Key="internal/Action/obsconnectversionerror" Translation="目前不支持当前 OBS 版本。" />
     <TranslationEntry Key="internal/Action/obscontrolerror" Translation="OBS 控制操作失败。" />
     <TranslationEntry Key="internal/Action/obscontrolexception" Translation="OBS 操作失败：{0}" />
@@ -1186,6 +1188,7 @@
     <TranslationEntry Key="internal/Action/trigcanceltrigtag" Translation="已取消触发器 ({1}) 中标签匹配 ({2}) 的 {0} 个排队动作" />
     <TranslationEntry Key="internal/Action/trigdisable" Translation="触发器 ({0}) 已停用" />
     <TranslationEntry Key="internal/Action/trigenable" Translation="触发器 ({0}) 已启用" />
+    <TranslationEntry Key="internal/Action/unknowntype" Translation="未知的 ActionType：{0}" />
     <TranslationEntry Key="internal/Action/waitingprocexit" Translation="等待进程退出" />
     <TranslationEntry Key="internal/Action/warndiscordtrunc" Translation="Discord 聊天消息过长，上限为 {0}" />
     <TranslationEntry Key="internal/ActionForm/confirmkeypress" Translation="将在 2 秒后发送按键，以便将光标切换到合适的测试输入位置。" />
@@ -1203,6 +1206,8 @@
     <TranslationEntry Key="internal/ActionForm/textunderline" Translation="下划线" />
     <TranslationEntry Key="internal/ActionForm/urlSendKey" Translation="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.sendkeys.send" />
     <TranslationEntry Key="internal/ActionForm/urlWinMessage" Translation="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.keys" />
+    <TranslationEntry Key="internal/ActionLoop/specialhandling" Translation="循环动作需要专门处理。" />
+    <TranslationEntry Key="internal/ActionViewer/invalidmovetype" Translation="无效的 moveType 参数：{0}" />
     <TranslationEntry Key="internal/ActionViewer/setBgColor" Translation="设置动作描述背景颜色" />
     <TranslationEntry Key="internal/ActionViewer/setDelay" Translation="设置动作延迟 / ms" />
     <TranslationEntry Key="internal/ActionViewer/setTextColor" Translation="设置动作描述文本颜色" />
@@ -1212,6 +1217,8 @@
     <TranslationEntry Key="internal/AuraContainer/closingaura" Translation="关闭悬浮窗" />
     <TranslationEntry Key="internal/AuraContainer/deactaurattl" Translation="由于 TTL 表达式停用悬浮窗" />
     <TranslationEntry Key="internal/AuraContainer/displayingaura" Translation="显示悬浮窗" />
+    <TranslationEntry Key="internal/AuraContainer/updateerror" Translation="更新悬浮窗“{0}”时发生异常，已停用：{1}" />
+    <TranslationEntry Key="internal/AuraContainer/updateerrortrigger" Translation="更新触发器“{1}”的悬浮窗“{0}”时发生异常，已停用：{2}" />
     <TranslationEntry Key="internal/BenchmarkForm/estmaximum" Translation="（估计每秒最大可持续事件负载）" />
     <TranslationEntry Key="internal/BenchmarkForm/esttotal" Translation="（估计每个事件的总评估时间）" />
     <TranslationEntry Key="internal/BenchmarkForm/exception" Translation="基准测试期间发生异常" />
@@ -1219,11 +1226,20 @@
     <TranslationEntry Key="internal/BenchmarkForm/millisecond" Translation="ms" />
     <TranslationEntry Key="internal/BenchmarkForm/nanosecond" Translation="ns" />
     <TranslationEntry Key="internal/BenchmarkForm/resultexception" Translation="编译基准测试结果时发生异常" />
+    <TranslationEntry Key="internal/BridgeCactbot/configfailed" Translation="获取 Cactbot 配置失败." />
+    <TranslationEntry Key="internal/BridgeCafe/invalidobjecttype" Translation="对象“{0}”不是 {1} 类型。" />
+    <TranslationEntry Key="internal/BridgeCafe/objectnotfound" Translation="未找到对象“{0}”。" />
     <TranslationEntry Key="internal/BridgeOverlay/failInit" Translation="OverlayPlugin 插件相关功能初始化失败：{0}" />
     <TranslationEntry Key="internal/BridgeOverlay/failInitModule" Translation="OverlayPlugin 相关模块 {1} 初始化失败：{0}" />
+    <TranslationEntry Key="internal/BridgeOverlay/initfail" Translation="OverlayPlugin 初始化失败：{0}" />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="OverlayPlugin 实体内存扫描未就绪，暂未通过 OverlayPlugin 获取实体，稍后重试。" />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin 实体内存扫描已就绪。如果前面有几条“未就绪”的警告，可忽略。" />
+    <TranslationEntry Key="internal/BridgeOverlay/notfound" Translation="未找到 OverlayPlugin。" />
+    <TranslationEntry Key="internal/BridgeOverlay/notready" Translation="OverlayPlugin 尚未就绪。" />
+    <TranslationEntry Key="internal/BridgeOverlay/objectnotfound" Translation="未找到对象“{0}”。" />
     <TranslationEntry Key="internal/BridgeOverlay/reflectionNotFound" Translation="初始化 OverlayPlugin 相关功能时，反射获取 {0} 失败。" />
+    <TranslationEntry Key="internal/CartesianCoord/constructor" Translation="直角坐标构造函数" />
+    <TranslationEntry Key="internal/CartesianCoord/parseerror" Translation="直角坐标解析错误：{0}&#xA;原始数据：&#xA;x = ({1}),&#xA;y = ({2}),&#xA;z = ({3})" />
     <TranslationEntry Key="internal/ColonParser/columnlookupindices" Translation="按列标题查找表格时必须提供两个索引 [列标题][行索引]：“{0}”" />
     <TranslationEntry Key="internal/ColonParser/doublelookupindices" Translation="按双标题查找表格时必须提供两个索引 [列标题][行标题]：“{0}”" />
     <TranslationEntry Key="internal/ColonParser/rowlookupindices" Translation="按行标题查找表格时必须提供两个索引 [行标题][列索引]：“{0}”" />
@@ -1234,6 +1250,7 @@
     <TranslationEntry Key="internal/ConditionGroup/or" Translation="至少一个条件为真（或）" />
     <TranslationEntry Key="internal/ConditionGroup/unknown" Translation="未知的组值 '{0}'" />
     <TranslationEntry Key="internal/ConditionGroup/xor" Translation="仅一个条件为真（异或）" />
+    <TranslationEntry Key="internal/ConditionSingle/invalidexpressiontype" Translation="无效的表达式类型：{0}" />
     <TranslationEntry Key="internal/ConditionSingle/listcantcontain" Translation="为名的列表 不得包含" />
     <TranslationEntry Key="internal/ConditionSingle/listmustcontain" Translation="为名的列表 必须包含" />
     <TranslationEntry Key="internal/ConditionSingle/listvar" Translation="以" />
@@ -1263,10 +1280,14 @@
     <TranslationEntry Key="internal/ConditionViewer/groupsingular" Translation="{0} 组" />
     <TranslationEntry Key="internal/ConditionViewer/operationwillremove" Translation="此操作将移除：" />
     <TranslationEntry Key="internal/ConditionViewer/pastefail" Translation="条件树粘贴失败：{0}" />
+    <TranslationEntry Key="internal/ConditionViewer/testtitle" Translation="测试" />
+    <TranslationEntry Key="internal/Configuration/configtitle" Translation="Triggernometry 配置" />
     <TranslationEntry Key="internal/Configuration/local" Translation="本地触发器" />
     <TranslationEntry Key="internal/Configuration/remote" Translation="远程触发器" />
     <TranslationEntry Key="internal/ConfigurationForm/actttswarn" Translation="将 ACT 用于文本到语音将导致忽略文本到语音操作的速率和音量选项。 确定要更改吗？" />
+    <TranslationEntry Key="internal/ConfigurationForm/areyousureplural" Translation="确定要删除选中的常量吗？" />
     <TranslationEntry Key="internal/ConfigurationForm/areyousurepluralsub" Translation="你确定你想删除选中的替换项吗？" />
+    <TranslationEntry Key="internal/ConfigurationForm/areyousuresingular" Translation="确定要删除选中的常量吗？" />
     <TranslationEntry Key="internal/ConfigurationForm/areyousuresingularsub" Translation="你确定你想删除选中的替换项吗？" />
     <TranslationEntry Key="internal/ConfigurationForm/confirmremoval" Translation="删除确认" />
     <TranslationEntry Key="internal/ConfigurationForm/confirmsecurityunlock" Translation="确认解锁" />
@@ -1300,6 +1321,23 @@
     <TranslationEntry Key="internal/Context/parseTypeError" Translation="{0} ({1}) 无法解析为{2}。表达式：({3})" />
     <TranslationEntry Key="internal/Context/parseTypeError-" Translation="无法将 {0}（{1}）解析为 {2}。" />
     <TranslationEntry Key="internal/Context/ternaryexpressionerror" Translation="无法解析三元表达式：({0}) &#xD;&#xA;条件：({1}); &#xD;&#xA;True 表达式：({2}); &#xD;&#xA;False 表达式：({3})" />
+    <TranslationEntry Key="internal/Core.Action/trigcancelall" Translation="已取消全部 {0} 个排队中的动作。" />
+    <TranslationEntry Key="internal/CsvHelper/inconsistentcolumns" Translation="CSV {0} 第 {1} 行的列数不一致：期望 {2}，实际 {3}" />
+    <TranslationEntry Key="internal/CsvManager/loadfailed" Translation="加载 CSV 文件“{0}”失败：{1}" />
+    <TranslationEntry Key="internal/CsvManager/missingfactory" Translation="未找到 CsvManager.CreateTypedDict 方法。" />
+    <TranslationEntry Key="internal/CsvManager/missingfolder" Translation="文件夹不存在：{0}" />
+    <TranslationEntry Key="internal/CsvManager/missingpath" Translation="当前配置未包含有效的 XivExtractedCsvPath 设置。" />
+    <TranslationEntry Key="internal/CsvManager/tablenotloaded" Translation="表“{0}.csv”尚未加载。" />
+    <TranslationEntry Key="internal/CsvManager/typedtablenotloaded" Translation="表“{0}.csv”尚未加载。" />
+    <TranslationEntry Key="internal/CsvRow/columnnotfound" Translation="未找到列“{0}”。" />
+    <TranslationEntry Key="internal/CsvRow/indexoutofrange" Translation="列索引 {0} 超出范围。" />
+    <TranslationEntry Key="internal/CsvRow/missingconstructor" Translation="CsvRow 子类 {0} 必须实现无参构造函数" />
+    <TranslationEntry Key="internal/CsvRow/missingcopymethod" Translation="CsvRow.CopyBaseFrom(CsvRow) 方法未找到" />
+    <TranslationEntry Key="internal/CsvTable/duplicatecolumn" Translation="CSV 文件 {0} 存在重复列名: {1}" />
+    <TranslationEntry Key="internal/CsvTable/duplicatekey" Translation="CSV {0} 存在重复 key: {1}" />
+    <TranslationEntry Key="internal/CsvTable/emptyrow" Translation="CSV 文件 {0} 第 {1} 行为空，无法解析数据。" />
+    <TranslationEntry Key="internal/CsvTable/toofewcolumns" Translation="CSV 文件 {0} 列数 ({1}) 不足，无法解析数据。" />
+    <TranslationEntry Key="internal/CsvTable/toofewrows" Translation="CSV 文件 {0} 行数 ({1}) 不足，无法解析数据。" />
     <TranslationEntry Key="internal/DataStringHelper/argumentconversionerror" Translation="参数 {0}（{1}）无法转换为 {2} 类型。" />
     <TranslationEntry Key="internal/DataStringHelper/conversionerror" Translation="无法将字符串“{0}”转换为 {1} 类型。" />
     <TranslationEntry Key="internal/DataStringHelper/decimalconversionwarning" Translation="无法将 {0}（{1}）转换为 decimal。" />
@@ -1308,16 +1346,24 @@
     <TranslationEntry Key="internal/DictEvaluator/indexorpropertyrequired" Translation="表达式“{0}”中的字典变量必须包含索引或属性。" />
     <TranslationEntry Key="internal/DictEvaluator/keynotfound" Translation="字典变量“{1}”中不存在键“{0}”。" />
     <TranslationEntry Key="internal/DictEvaluator/unknownmethod" Translation="表达式“{1}”使用了未知的字典方法“{0}”。" />
+    <TranslationEntry Key="internal/DynamicImport/libraryfailed" Translation="DynamicImport 无法加载库“{0}”。" />
+    <TranslationEntry Key="internal/DynamicImport/methodfailed" Translation="DynamicImport 未在模块 0x{1} 中找到方法“{0}”。" />
+    <TranslationEntry Key="internal/Endpoint/notpost" Translation="收到的请求不是 HTTP POST。" />
+    <TranslationEntry Key="internal/EquationHelper/zerocoefficient" Translation="A 不能为零。" />
     <TranslationEntry Key="internal/ExportForm/exception" Translation="异常" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric1" Translation="该字段支持数值表达式；支持正则捕获组；结果作为数学表达式求值。" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric2" Translation="绿色文本框代表数值表达式合法，红色代表非法。" />
     <TranslationEntry Key="internal/ExpressionTextBox/string" Translation="该字段支持文本表达式；支持正则捕获组。" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexception" Translation="获取全部 FFXIV 实体时发生异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexceptionsingle" Translation="无法获取该实体信息：名称 ({0})，ID ({1})。异常：{2}" />
+    <TranslationEntry Key="internal/ffxiv/datasubscriptionuninitialized" Translation="DataSubscription 尚未初始化。" />
     <TranslationEntry Key="internal/FFXIV/Entity/evaluationerror" Translation="无法计算实体属性或方法表达式“{0}”：{1}" />
     <TranslationEntry Key="internal/FFXIV/Entity/invalidmember" Translation="无效的实体属性或方法名称：{0}" />
     <TranslationEntry Key="internal/FFXIV/Entity/memberrequired" Translation="实体表达式“{0}”未包含属性。" />
     <TranslationEntry Key="internal/FFXIV/Entity/wrongProp" Translation="({0}) 不是有效的实体属性或方法名。完整表达式：({1})" />
+    <TranslationEntry Key="internal/ffxiv/ffxivnozonechanged" Translation="未找到 ZoneChanged 事件。" />
+    <TranslationEntry Key="internal/ffxiv/ffxivzonechangedexception" Translation="订阅 FFXIV 区域切换事件时发生异常：{0}" />
+    <TranslationEntry Key="internal/ffxiv/ffxivzonechangedexception-" Translation="取消订阅 FFXIV 区域切换事件时发生异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/ffxivzonechangednoinstance" Translation="无法获取 FFXIV 区域变化（插件实例不存在）。" />
     <TranslationEntry Key="internal/ffxiv/idexception" Translation="以 ID 检索 FFXIV 实体时发生异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/missingactplugin" Translation="找不到具有文件名 ({0}) 或类型 ({1}) 的 FFXIV 解析插件，某些功能可能无法正常工作" />
@@ -1326,6 +1372,8 @@
     <TranslationEntry Key="internal/ffxiv/networksubok" Translation="已监听 FFXIV 网络事件" />
     <TranslationEntry Key="internal/ffxiv/networkunsubexception" Translation="停止监听 FFXIV 网络事件失败：{0}" />
     <TranslationEntry Key="internal/ffxiv/networkunsubok" Translation="已停止监听 FFXIV 网络事件" />
+    <TranslationEntry Key="internal/ffxiv/nodatasubscription" Translation="未找到 DataSubscription。" />
+    <TranslationEntry Key="internal/ffxiv/noplugininstance" Translation="没有可用的插件实例。" />
     <TranslationEntry Key="internal/ffxiv/oldactplugin" Translation="FFXIV 解析插件的版本 ({0}) 低于要求 ({1})，某些功能可能无法正常工作" />
     <TranslationEntry Key="internal/ffxiv/partytoobig" Translation="小队构成中有超过 {0} 名成员" />
     <TranslationEntry Key="internal/ffxiv/procexception" Translation="搜索 FFXIV 进程时出现异常：{0}" />
@@ -1336,6 +1384,15 @@
     <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="分组生效时加载" />
     <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="请为每个注册变量填写键名。" />
     <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="注册变量" />
+    <TranslationEntry Key="internal/Geometry/uninitializedtarget" Translation="必须先初始化渲染目标。" />
+    <TranslationEntry Key="internal/Graphics/alreadyinitialized" Translation="图形设备已初始化。" />
+    <TranslationEntry Key="internal/Graphics/invalidsize" Translation="宽度或高度无效。" />
+    <TranslationEntry Key="internal/Graphics/invalidwindowhandle" Translation="窗口句柄无效。" />
+    <TranslationEntry Key="internal/Graphics/nullwindowhandle" Translation="窗口句柄为零。" />
+    <TranslationEntry Key="internal/Graphics/uninitializedd2ddevice" Translation="必须先初始化 D2DDevice。" />
+    <TranslationEntry Key="internal/Graphics/uninitializeddevice" Translation="DirectX 设备尚未初始化。" />
+    <TranslationEntry Key="internal/GraphicsWindow/alreadyrunning" Translation="图形窗口已在运行。" />
+    <TranslationEntry Key="internal/GraphicsWindow/notrunning" Translation="图形窗口尚未运行。" />
     <TranslationEntry Key="internal/I18n/bool" Translation="布尔值" />
     <TranslationEntry Key="internal/I18n/char" Translation="字符" />
     <TranslationEntry Key="internal/I18n/charcode" Translation="字符码" />
@@ -1406,6 +1463,11 @@
     <TranslationEntry Key="internal/InvariantNumericExtensions/context" Translation="上下文：{0}" />
     <TranslationEntry Key="internal/InvariantNumericExtensions/expression" Translation="表达式：“{0}”" />
     <TranslationEntry Key="internal/InvariantNumericExtensions/parseerror" Translation="无法将“{0}”解析为 {1}：{2}" />
+    <TranslationEntry Key="internal/Job/UnknownJobId" Translation="职业 ID（{0}）超出范围。" />
+    <TranslationEntry Key="internal/Job/UnknownJobName" Translation="未知的职业名称（{0}）。" />
+    <TranslationEntry Key="internal/Job/UnknownJobProperty" Translation="无效的职业属性（{0}）。" />
+    <TranslationEntry Key="internal/LinearTransformArgs/unsupported3dscale" Translation="TransformAngle3D 不支持缩放模式。" />
+    <TranslationEntry Key="internal/LinearTransformArgs/unsupportedscale" Translation="TransformAngle 不支持缩放模式。" />
     <TranslationEntry Key="internal/ListEvaluator/indexnotfound" Translation="列表变量“{1}”中不存在索引“{0}”。" />
     <TranslationEntry Key="internal/ListEvaluator/indexorpropertyrequired" Translation="表达式“{0}”中的列表变量必须包含索引或属性。" />
     <TranslationEntry Key="internal/ListEvaluator/unknownmethod" Translation="表达式“{1}”使用了未知的列表方法“{0}”。" />
@@ -1414,10 +1476,31 @@
     <TranslationEntry Key="internal/MathParser/basicMathExprError" Translation="基础数学表达式“{0}”无法解析。原始表达式：“{1}”" />
     <TranslationEntry Key="internal/MathParser/basicMathExprOpError" Translation="基础数学表达式“{1}”中的运算符 '{0}' 无法运算。原始表达式：“{2}”" />
     <TranslationEntry Key="internal/MathParser/noclosure" Translation="数学表达式“{0}”存在未闭合的括号。原始表达式：“{1}”" />
+    <TranslationEntry Key="internal/Memory/invalidpatternbyte" Translation="特征码 {1} 中存在无效字节 {0}。" />
+    <TranslationEntry Key="internal/Memory/patternfound" Translation="已在模块数据中找到地址“{0}”。" />
+    <TranslationEntry Key="internal/Memory/patternnotfound" Translation="未在模块数据中找到“{0}”。" />
+    <TranslationEntry Key="internal/Memory/readfailed" Translation="读取内存失败或读取的字节数不正确。" />
+    <TranslationEntry Key="internal/Memory/scannotfoundexception" Translation="扫描 {0} 时未找到内存特征码。" />
+    <TranslationEntry Key="internal/Memory/toomanyjumps" Translation="特征码 {0} 中的“*”过多。" />
+    <TranslationEntry Key="internal/Memory/update1B" Translation="头顶标记偏移已更新为（{0}）。" />
+    <TranslationEntry Key="internal/Memory/update1Berror" Translation="更新头顶标记偏移时发生异常：&#xA;&#xA;{0}" />
+    <TranslationEntry Key="internal/Memory/writefailed" Translation="未能将全部字节写入内存。" />
+    <TranslationEntry Key="internal/MinimumMatchHelper/invalidcost" Translation="组 ({0}, {1}) 返回了无效值 {2}。" />
+    <TranslationEntry Key="internal/MinimumMatchHelper/lengthmismatch" Translation="src 和 tgt 的长度必须相同。" />
+    <TranslationEntry Key="internal/MinimumMatchHelper/reconstructionfailed" Translation="未能还原完整匹配结果。" />
+    <TranslationEntry Key="internal/MinimumMatchHelper/toomanyelements" Translation="元素数量过大。" />
     <TranslationEntry Key="internal/MultiLineRawArgs/duplicatekey" Translation="多行参数中存在重复的键“{0}”。" />
     <TranslationEntry Key="internal/MultiLineRawArgs/keynotfound" Translation="未找到键“{0}”。" />
     <TranslationEntry Key="internal/MultiLineRawArgs/keysnotfound" Translation="未找到以下任何键：“{0}”。" />
     <TranslationEntry Key="internal/NamedCallback/exception" Translation="调用具名回调 {0} 时发生错误：&#xD;&#xA;{1} " />
+    <TranslationEntry Key="internal/OpcodeSideloader/emptykeyorvalue" Translation="无效的行（键或值为空）：{0}" />
+    <TranslationEntry Key="internal/OpcodeSideloader/invalidhex" Translation="无法解析十六进制值：{0}" />
+    <TranslationEntry Key="internal/OpcodeSideloader/invalidline" Translation="无效的行格式：{0}" />
+    <TranslationEntry Key="internal/OpcodeSideloader/nodata" Translation="未向 OpcodeSideloader 回调提供操作码数据。" />
+    <TranslationEntry Key="internal/OpcodeSideloader/unsupportedregion" Translation="[OpcodeSideloader] 不支持的 Machina 游戏区域：{0}" />
+    <TranslationEntry Key="internal/OverlayWindow/alreadyinitialized" Translation="OverlayWindow 已初始化。" />
+    <TranslationEntry Key="internal/OverlayWindow/alreadyrunning" Translation="OverlayWindow 已在运行。" />
+    <TranslationEntry Key="internal/OverlayWindow/uninitialized" Translation="OverlayWindow 尚未初始化。" />
     <TranslationEntry Key="internal/PersistenceSwitch/string" Translation="选项：是否为永久变量。永久变量不会随 ACT 重启而重置。" />
     <TranslationEntry Key="internal/Plugin/actimageaura" Translation="激活图像悬浮窗 '{0}'" />
     <TranslationEntry Key="internal/Plugin/actionqueued" Translation="排队触发器 '{0}' 动作 '{1}' 到 {2} 槽 {3}" />
@@ -1449,10 +1532,12 @@
     <TranslationEntry Key="internal/Plugin/deacttextauratrig" Translation="停用触发器 '{0}' ({1})中的文本悬浮窗" />
     <TranslationEntry Key="internal/Plugin/debugnamedgroup" Translation="触发器 '{0}' 命名捕获组 '{1}': {2}" />
     <TranslationEntry Key="internal/Plugin/debugnumgroup" Translation="触发器 '{0}' 编号捕获组 {1}: {2}" />
+    <TranslationEntry Key="internal/Plugin/defaultrepositoryfailed" Translation="无法添加默认远程仓库：{0}" />
     <TranslationEntry Key="internal/Plugin/downloadnewver" Translation="新版本 ({0}) 已发布，需要打开下载页面吗？" />
     <TranslationEntry Key="internal/Plugin/endpointline" Translation="终端数据：({0})" />
     <TranslationEntry Key="internal/Plugin/endpointlineprocex" Translation="在区域 ({2}) 处理终端数据 ({1}) 时发生异常：&#xD;&#xA;{0}" />
     <TranslationEntry Key="internal/Plugin/endpointsplitline" Translation="分割终端数据：({0})" />
+    <TranslationEntry Key="internal/Plugin/endpointstatus" Translation="端点（{0}）{1}" />
     <TranslationEntry Key="internal/Plugin/exactimageaura" Translation="激活图像悬浮窗 '{1}' 时发生错误 '{0}'" />
     <TranslationEntry Key="internal/Plugin/exacttextaura" Translation="激活文本悬浮窗 '{1}' 时发生错误 '{0}'" />
     <TranslationEntry Key="internal/Plugin/exception" Translation="异常" />
@@ -1499,6 +1584,7 @@
     <TranslationEntry Key="internal/Plugin/langloadex" Translation="加载翻译文件 '{0}' 时遇到错误" />
     <TranslationEntry Key="internal/Plugin/langloadfail" Translation="加载翻译文件失败，请确保您运行的是最新版本" />
     <TranslationEntry Key="internal/Plugin/logline" Translation="ACT 日志：({0})" />
+    <TranslationEntry Key="internal/Plugin/missingtranslationscopied" Translation="已将缺失的翻译复制到剪贴板。" />
     <TranslationEntry Key="internal/Plugin/mutexdelayed" Translation="上下文 '{0}' 在内部操作 {2} 中已等待独占锁 '{1}' 释放超过 {3} 毫秒，该独占锁目前的所有者是 '{4}'" />
     <TranslationEntry Key="internal/Plugin/notadministrator" Translation="您没有以管理员身份运行 ACT  - 这可能会阻止某些触发器工作。" />
     <TranslationEntry Key="internal/Plugin/procex" Translation="发生错误：&#xD;&#xA; ({0}) &#xD;&#xA;日志行：({1}) &#xD;&#xA; 区域： ({2})" />
@@ -1521,6 +1607,10 @@
     <TranslationEntry Key="internal/Plugin/verchecksame" Translation="Triggernometry 版本更新：本地版本 {1} 不低于远程版本 {0}，无需更新。" />
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="行 ({0}) 使用 {1} 毫秒进行处理" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="当前区域切换至 '{0}'。区域分组限制：{1} 个触发器处于激活状态，{2} 个触发器未激活" />
+    <TranslationEntry Key="internal/PolarCoord/constructor" Translation="极坐标构造函数" />
+    <TranslationEntry Key="internal/PolarCoord/parseerror" Translation="极坐标解析错误：{0}&#xA;&#xA;原始数据：&#xA;r = ({1}),&#xA;θ = ({2}),&#xA;z = ({3})" />
+    <TranslationEntry Key="internal/Polygon/toofewvertices" Translation="多边形至少需要 3 个顶点。" />
+    <TranslationEntry Key="internal/Polygon/trianglerequired" Translation="只能对三角形进行等腰子三角剖分。" />
     <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="注册变量键“{0}”冲突：&#xA;新值：“{1}”&#xA;来自：分组 {2}&#xA;旧值：“{3}”&#xA;来自：分组 {4}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="此字段支持正则表达式。绿色代表输入的正则合法，红色代表不合法。" />
     <TranslationEntry Key="internal/Repository/loadlocalex" Translation="仓库 {0} 的本地备份无法加载。错误：{1}" />
@@ -1583,6 +1673,7 @@
     <TranslationEntry Key="internal/SearchForm/hitjsonfiring" Translation="操作 #{0} JSON 响应触发表达式" />
     <TranslationEntry Key="internal/SearchForm/hitjsonheaders" Translation="操作 #{0} JSON 头部表达式" />
     <TranslationEntry Key="internal/SearchForm/hitjsonpayload" Translation="操作 #{0} JSON 要发送的内容" />
+    <TranslationEntry Key="internal/SearchForm/hitjsonvariable" Translation="动作 #{0} JSON 结果变量" />
     <TranslationEntry Key="internal/SearchForm/hitkeypresscode" Translation="操作 #{0} 要发送的键码" />
     <TranslationEntry Key="internal/SearchForm/hitkeypressexpression" Translation="操作 #{0} 要发送的按键命令" />
     <TranslationEntry Key="internal/SearchForm/hitkeypresswindow" Translation="操作 #{0} 发送按键对应的窗口" />
@@ -1592,6 +1683,7 @@
     <TranslationEntry Key="internal/SearchForm/hitlisttarget" Translation="操作 #{0} 目标列表" />
     <TranslationEntry Key="internal/SearchForm/hitlogtext" Translation="操作 #{0} 日志文本" />
     <TranslationEntry Key="internal/SearchForm/hitmsgboxtext" Translation="操作 #{0} 消息框文本" />
+    <TranslationEntry Key="internal/SearchForm/hitobsendpoint" Translation="动作 #{0} OBS 端点" />
     <TranslationEntry Key="internal/SearchForm/hitobsscene" Translation="操作 #{0} OBS 场景名称" />
     <TranslationEntry Key="internal/SearchForm/hitobssource" Translation="操作 #{0} OBS 来源名称" />
     <TranslationEntry Key="internal/SearchForm/hitpathexpr" Translation="操作 #{0} 命令行路径" />
@@ -1615,6 +1707,7 @@
     <TranslationEntry Key="internal/SearchForm/hitttstext" Translation="操作 #{0} TTS 文本" />
     <TranslationEntry Key="internal/SearchForm/hitttsvol" Translation="操作 #{0} TTS 音量" />
     <TranslationEntry Key="internal/SearchForm/hitvarexpr" Translation="操作 #{0} 变量表达式" />
+    <TranslationEntry Key="internal/SearchForm/hitvarjsontarget" Translation="动作 #{0} 变量 JSON 查询目标" />
     <TranslationEntry Key="internal/SearchForm/hitvarname" Translation="操作 #{0} 变量名称" />
     <TranslationEntry Key="internal/SearchForm/hitwmsgtitle" Translation="操作 #{0} 系统消息 (Window message) 窗口标题" />
     <TranslationEntry Key="internal/SearchForm/hitworkingdir" Translation="操作 #{0} 工作目录" />
@@ -1641,12 +1734,18 @@
     <TranslationEntry Key="internal/TestInputForm/debugspeedex" Translation="输入的值无法解析为正数。" />
     <TranslationEntry Key="internal/TestInputForm/debugwarning" Translation="警告：" />
     <TranslationEntry Key="internal/TestInputForm/debugwarningformat" Translation="日志行 #{0}：{1}&#xD;&#xA;数据：{2}" />
+    <TranslationEntry Key="internal/ThrowHelper/beginscenerequired" Translation="绘制前必须调用 BeginScene。" />
     <TranslationEntry Key="internal/Toast/no" Translation="否" />
     <TranslationEntry Key="internal/Toast/ok" Translation="确定" />
     <TranslationEntry Key="internal/Toast/yes" Translation="是" />
     <TranslationEntry Key="internal/TraySlider/Button1" Translation="确认" />
     <TranslationEntry Key="internal/TraySlider/Button2" Translation="取消" />
     <TranslationEntry Key="internal/TraySlider/Button3" Translation="" />
+    <TranslationEntry Key="internal/TraySlider/invalidbuttoncount" Translation="按钮数量必须在 0 到 3 之间。" />
+    <TranslationEntry Key="internal/TraySlider/nomainform" Translation="未找到用于显示托盘通知的主窗口：[{0}] {1}" />
+    <TranslationEntry Key="internal/TreeViewEx/nobrowserequired" Translation="你无需浏览此分组。" />
+    <TranslationEntry Key="internal/TreeViewEx/noeditrequired" Translation="你无需修改此分组。" />
+    <TranslationEntry Key="internal/TreeViewEx/remotetriggers" Translation="远程触发器" />
     <TranslationEntry Key="internal/Trigger/beforelastfired" Translation="当前时间在上次触发触发器之前 '{0}'" />
     <TranslationEntry Key="internal/Trigger/delayingrefire" Translation="延迟触发器 '{0}' 再次触发 {1}" />
     <TranslationEntry Key="internal/Trigger/firingexception" Translation="触发器 '{0}' 触发失败：{1}" />
@@ -1691,6 +1790,11 @@
     <TranslationEntry Key="internal/TriggerForm/savechanges" Translation="保存更改" />
     <TranslationEntry Key="internal/TriggerForm/triggerexitconfirm" Translation="你确定要放弃全部修改吗？" />
     <TranslationEntry Key="internal/TriggerForm/triggerexitconfirmtitle" Translation="放弃修改" />
+    <TranslationEntry Key="internal/UpdateForm/statuschecking" Translation="正在检查最新版本……" />
+    <TranslationEntry Key="internal/UploadTextHelper/invalidalphabet" Translation="Base3500Chars 的长度不为 3500。" />
+    <TranslationEntry Key="internal/UploadTextHelper/networkexception" Translation="网络或服务器错误：{0}" />
+    <TranslationEntry Key="internal/UploadTextHelper/servererror" Translation="网络或服务器错误：{0}" />
+    <TranslationEntry Key="internal/UploadTextHelper/serverstatus" Translation="服务器返回状态码 {0} ({1})" />
     <TranslationEntry Key="internal/UserInterface/add" Translation="添加" />
     <TranslationEntry Key="internal/UserInterface/adddefaultrepo" Translation="开始前，您是否要添加一些远程触发器？" />
     <TranslationEntry Key="internal/UserInterface/addfolder" Translation="添加新分组" />
@@ -1742,6 +1846,9 @@
     <TranslationEntry Key="internal/VariableForm/confirmremoval" Translation="删除确认" />
     <TranslationEntry Key="internal/VariableForm/keyexists" Translation="键“{0}”已存在于字典中（当前第 {1} 行）" />
     <TranslationEntry Key="internal/VariableForm/variableeditortag" Translation="变量编辑器" />
+    <TranslationEntry Key="internal/XIVCoord/invalidsegments" Translation="坐标方向的分段数必须是正整数：{0}" />
+    <TranslationEntry Key="internal/XIVCoord/missingarguments" Translation="坐标参数解析时，关键字之间参数过少。&#xA;表达式：{0}；&#xA;出错位置：{1}" />
+    <TranslationEntry Key="internal/XIVCoord/unmatchedparentheses" Translation="坐标表达式中有 {0} 个不匹配的括号（{1}）。表达式：{2}" />
     <TranslationEntry Key="internal/XivEntityParser/deprecatedselfquery" Translation="检测到已弃用的旧版本表达式：{0}。&#xA;请使用 ${{_me.属性}} 代替 ${{_ffxivparty[1].属性}}、${{_ffxivparty[${{_ffxivplayer}}].属性}} 等表达式查询自身属性。&#xA;触发器：{1}" />
     <TranslationEntry Key="KeyListenForm" Translation="正在监听键盘按键" />
     <TranslationEntry Key="KeyListenForm/btnCancel" Translation="取消" />

@@ -496,7 +496,7 @@ namespace Scarborough
                             ctx = si.Value.ctx,
                             plug = plug,
                             level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Error,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", si.Key, si.Value.ctx.Trigger.LogName, ex.Message))
+                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerrortrigger", "Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", si.Key, si.Value.ctx.Trigger.LogName, ex.Message)
                         }
                         );
                     }
@@ -507,7 +507,7 @@ namespace Scarborough
                             ctx = null,
                             plug = plug,
                             level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Error,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' due to update exception: {1}", si.Key, ex.Message))
+                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", "Deactivating aura '{0}' due to update exception: {1}", si.Key, ex.Message)
                         }
                         );
                     }
@@ -580,7 +580,7 @@ namespace Scarborough
                             ctx = si.Value.ctx,
                             plug = plug,
                             level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Error,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", si.Key, si.Value.ctx.Trigger.LogName, ex.Message))
+                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerrortrigger", "Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", si.Key, si.Value.ctx.Trigger.LogName, ex.Message)
                         }
                         );
                     }
@@ -591,7 +591,7 @@ namespace Scarborough
                             ctx = null,
                             plug = plug,
                             level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Error,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' due to update exception: {1}", si.Key, ex.Message))
+                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", "Deactivating aura '{0}' due to update exception: {1}", si.Key, ex.Message)
                         }
                         );
                     }
@@ -668,7 +668,7 @@ namespace Scarborough
                             ctx = si.ctx,
                             plug = plug,
                             level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Error,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", si.Name, si.ctx.Trigger.LogName, ex.Message))
+                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerrortrigger", "Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", si.Name, si.ctx.Trigger.LogName, ex.Message)
                         }
                         );
                     }
@@ -679,7 +679,7 @@ namespace Scarborough
                             ctx = null,
                             plug = plug,
                             level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Error,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", String.Format("Deactivating aura '{0}' due to update exception: {1}", si.Name, ex.Message))
+                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", "Deactivating aura '{0}' due to update exception: {1}", si.Name, ex.Message)
                         }
                         );
                     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -81,7 +82,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         /// <exception cref="KeyNotFoundException">Thrown if the table has not been loaded.</exception>
         public CsvTable this[string tableName]
             => TryGetTable(tableName, out CsvTable table) ? table
-                : throw new KeyNotFoundException($"Table '{tableName}.csv' was not loaded.");
+                : throw new KeyNotFoundException(I18n.Translate("internal/CsvManager/tablenotloaded", "Table '{0}.csv' was not loaded.", tableName));
 
         /// <summary>
         /// Try to get a loaded raw CSV table by name (without .csv extension, ignore case).
@@ -113,7 +114,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
                     );
                 }
             }
-            throw new KeyNotFoundException($"Table '{typeof(T)}.csv' was not loaded.");
+            throw new KeyNotFoundException(I18n.Translate("internal/CsvManager/typedtablenotloaded", "Table '{0}.csv' was not loaded.", typeof(T)));
         }
 
         /// <summary>
@@ -134,11 +135,11 @@ namespace Triggernometry.FFXIV.ExtractedCsv
                 (!RealPlugin.Instance.cfg.Constants.TryGetValue("XivExtractedCsvPath", out var v) ||
                  string.IsNullOrEmpty(folder = v.Value.Trim())))
             {
-                throw new InvalidOperationException("The current configuration does not contain valid key: 'XivExtractedCsvPath'.");
+                throw new InvalidOperationException(I18n.Translate("internal/CsvManager/missingpath", "The current configuration does not contain a valid 'XivExtractedCsvPath' setting."));
             }
 
             if (!Directory.Exists(folder))
-                throw new DirectoryNotFoundException($"Folder not exist: {folder}");
+                throw new DirectoryNotFoundException(I18n.Translate("internal/CsvManager/missingfolder", "Folder does not exist: {0}", folder));
 
             return folder;
         }
@@ -223,7 +224,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
             catch (Exception ex)
             {
                 // TODO: replace with proper logging and error reporting if needed.
-                throw new Exception($"Failed to load CSV file '{filePath}': {ex.Message}", ex);
+                throw new Exception(I18n.Translate("internal/CsvManager/loadfailed", "Failed to load CSV file '{0}': {1}", filePath, ex.Message), ex);
             }
         }
 
@@ -275,7 +276,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         /// </summary>
         private static readonly MethodInfo _createTypedDictMethod =
             typeof(CsvManager).GetMethod("CreateTypedDict", BindingFlags.Instance | BindingFlags.NonPublic)
-                ?? throw new InvalidOperationException("Cannot find method CreateTypedDict in CsvManager.");
+                ?? throw new InvalidOperationException(I18n.Translate("internal/CsvManager/missingfactory", "Cannot find method CreateTypedDict in CsvManager."));
 
         /// <summary>
         /// Creates a strongly-typed dictionary for a given CsvTable and row type.

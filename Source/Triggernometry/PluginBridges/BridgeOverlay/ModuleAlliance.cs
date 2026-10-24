@@ -22,7 +22,7 @@ namespace Triggernometry.PluginBridges
             {
                 _partyMemoryManager = BridgeOverlay.Container.Resolve($"RainbowMage.OverlayPlugin.MemoryProcessors.Party.IPartyMemory, OverlayPlugin.Core");
                 _getPartyListsMethod = _partyMemoryManager.GetType().GetMethod("GetPartyLists", BindingFlags.Public | BindingFlags.Instance)
-                    ?? throw new Exception("GetPartyListsMethod not found");
+                    ?? throw new Exception(I18n.Translate("internal/BridgeOverlay/objectnotfound", "Object '{0}' was not found.", "GetPartyListsMethod"));
                 Ready = true;
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace Triggernometry.PluginBridges
         {
             if (!Ready)
             {
-                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, "OverlayPlugin not ready");
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/BridgeOverlay/notready", "OverlayPlugin is not ready."));
                 return new object();
             }
             var o = _getPartyListsMethod.Invoke(_partyMemoryManager, null);

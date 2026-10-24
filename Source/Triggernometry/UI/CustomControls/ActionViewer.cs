@@ -177,7 +177,7 @@ namespace Triggernometry.UI.CustomControls
                     end = length - 1;
                     start = length - selectedRowIndices.Count;
                     break;
-                default: throw new Exception($"Wrong moveType argument {moveType}");
+                default: throw new Exception(I18n.Translate("internal/ActionViewer/invalidmovetype", "Invalid moveType argument: {0}", moveType));
             }
 
             List<int> ordMap = new List<int>(new int[length]);

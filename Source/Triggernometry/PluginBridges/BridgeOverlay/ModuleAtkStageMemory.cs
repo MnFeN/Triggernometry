@@ -21,11 +21,11 @@ namespace Triggernometry.PluginBridges
             try
             {
                 AtkStageMemoryManager = BridgeOverlay.Container.Resolve($"RainbowMage.OverlayPlugin.MemoryProcessors.AtkStage.IAtkStageMemory, OverlayPlugin.Core")
-                    ?? throw new Exception("AtkStageMemoryManager not found");
+                    ?? throw new Exception(I18n.Translate("internal/BridgeOverlay/objectnotfound", "Object '{0}' was not found.", "AtkStageMemoryManager"));
                 _getAddonMethod = AtkStageMemoryManager.GetType().GetMethod("GetAddon", BindingFlags.Public | BindingFlags.Instance)
-                    ?? throw new Exception("GetAddonMethod not found");
+                    ?? throw new Exception(I18n.Translate("internal/BridgeOverlay/objectnotfound", "Object '{0}' was not found.", "GetAddonMethod"));
                 _getAddonAddressMethod = AtkStageMemoryManager.GetType().GetMethod("GetAddonAddress", BindingFlags.Public | BindingFlags.Instance)
-                    ?? throw new Exception("GetAddonAddressMethod not found");
+                    ?? throw new Exception(I18n.Translate("internal/BridgeOverlay/objectnotfound", "Object '{0}' was not found.", "GetAddonAddressMethod"));
                 Ready = true;
             }
             catch (Exception ex)

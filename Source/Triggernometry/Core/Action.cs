@@ -812,7 +812,7 @@ namespace Triggernometry.Core
                     return (ActionWindowMessage)this;
 
                 default:
-                    throw new NotSupportedException($"Unknown ActionType: {ActionType}");
+                    throw new NotSupportedException(I18n.Translate("internal/Action/unknowntype", "Unknown ActionType: {0}", ActionType));
             }
         }
 

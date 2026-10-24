@@ -242,7 +242,7 @@ namespace Triggernometry.Utilities
             byte[] valueBytes = new byte[size];
             if (!ReadProcessMemory(procHandle, address, valueBytes, (uint)size, out int bytesRead) || bytesRead != size)
             {
-                Instance.UnfilteredAddToLog(DebugLevelEnum.Error, "Failed to read memory or read incorrect number of bytes.");
+                Instance.UnfilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Memory/readfailed", "Failed to read memory or read an incorrect number of bytes."));
                 return default;
             }
             return BytesToStructure<T>(valueBytes);
@@ -253,7 +253,7 @@ namespace Triggernometry.Utilities
             byte[] valueBytes = StructureToBytes(newValue);
             if (!WriteProcessMemory(procHandle, address, valueBytes, (uint)valueBytes.Length, out int bytesWritten) || bytesWritten != valueBytes.Length)
             {
-                Instance.UnfilteredAddToLog(DebugLevelEnum.Error, "Failed to write all bytes to memory.");
+                Instance.UnfilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Memory/writefailed", "Failed to write all bytes to memory."));
             }
         }
 
@@ -292,7 +292,7 @@ namespace Triggernometry.Utilities
                             bytes.Add(null);
                             break;
                         case "*":
-                            if (Jump) throw new Exception($"Too much * in pattern {patternStr}");
+                            if (Jump) throw new Exception(I18n.Translate("internal/Memory/toomanyjumps", "Too many '*' characters in pattern {0}.", patternStr));
                             Offset = i;
                             Jump = true;
                             regexStr += "(?<jump>.{4})";
@@ -306,7 +306,7 @@ namespace Triggernometry.Utilities
                                 bytes.Add(result);
                                 break;
                             }
-                            else throw new Exception($"Invalid byte {splittedRawPattern[i]} in pattern {patternStr}");
+                            else throw new Exception(I18n.Translate("internal/Memory/invalidpatternbyte", "Invalid byte {0} in pattern {1}.", splittedRawPattern[i], patternStr));
                     }
                 }
                 PatternRegex = new Regex(regexStr, RegexOptions.Compiled | RegexOptions.Singleline);
@@ -324,12 +324,12 @@ namespace Triggernometry.Utilities
             Match match = pattern.PatternRegex.Match(dataStr);
             if (match.Success)
             {
-                Instance.UnfilteredAddToLog(DebugLevelEnum.Verbose, $"Found address \"{pattern.RawPattern}\" in module data");
+                Instance.UnfilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Memory/patternfound", "Found address '{0}' in module data.", pattern.RawPattern));
                 address = match.Index + pattern.Offset;
             }
             else
             {
-                Instance.UnfilteredAddToLog(showWarning ? DebugLevelEnum.Warning : DebugLevelEnum.Verbose, $"Failed to find \"{pattern.RawPattern}\" in module data");
+                Instance.UnfilteredAddToLog(showWarning ? DebugLevelEnum.Warning : DebugLevelEnum.Verbose, I18n.Translate("internal/Memory/patternnotfound", "Failed to find '{0}' in module data.", pattern.RawPattern));
                 return null;
             }
             if (pattern.Jump)

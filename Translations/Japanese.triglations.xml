@@ -177,8 +177,6 @@
     <TranslationEntry Key="ActionForm/cbxObsOpType[Stop streaming]" Translation="配信の停止" />
     <TranslationEntry Key="ActionForm/cbxObsOpType[Stop then start recording (if currently recording)]" Translation="Stop then start recording (if currently recording)" />
     <TranslationEntry Key="ActionForm/cbxObsOpType[Stop then start recording]" Translation="Stop then start recording" />
-    <TranslationEntry Key="ActionForm/cbxProcessLog" Translation="一行のログとしてメッセージを処理" />
-    <TranslationEntry Key="ActionForm/cbxProcessLogACT" Translation="Add the log message to ACT combat log" />
     <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Hidden from view]" Translation="非表示" />
     <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Maximized to fullscreen]" Translation="最大化してフルスクリーン表示" />
     <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Minimized to taskbar]" Translation="最小化してタスクバーに入れる" />
@@ -248,6 +246,8 @@
     <TranslationEntry Key="ActionForm/cbxVariableOp[Unset scalar variables matching regular expression]" Translation="正規表現にマッチするスカラ変数を初期化" />
     <TranslationEntry Key="ActionForm/chkExecuteAsync" Translation="他のアクションの実行をブロックせず非同期で実行" />
     <TranslationEntry Key="ActionForm/chkOverrideDesc" Translation="自動生成されたアクションの説明を上書きする" />
+    <TranslationEntry Key="ActionForm/chkProcessLog" Translation="一行のログとしてメッセージを処理" />
+    <TranslationEntry Key="ActionForm/chkProcessLogACT" Translation="Add the log message to ACT combat log" />
     <TranslationEntry Key="ActionForm/chkSoundExclusive" Translation="専用のサウンドプレーヤーを使用（他のサウンドとの競合の防止）" />
     <TranslationEntry Key="ActionForm/chkSoundMyOutput" Translation="ACTのサウンド出力設定に依存せず、Triggernometryとして音声を出力する" />
     <TranslationEntry Key="ActionForm/chkSpeechExclusive" Translation="専用の音声合成エンジンを使用（他のTTS読み上げとの競合の防止）" />
@@ -405,6 +405,11 @@
     <TranslationEntry Key="ActionForm/tabDebugging" Translation="デバッグ" />
     <TranslationEntry Key="ActionForm/tabDescription" Translation="説明" />
     <TranslationEntry Key="ActionForm/tabScheduling" Translation="制御" />
+    <!-- Note: The raw RichTextboxHelper text after this line are not included in this file due to the length.-->
+    <!-- Please check the English text by clicking [Show Help] in Triggernometry actions.-->
+    <!-- After you translate a key, please delete the ███ in the key: -->
+    <!-- e.g. "ActionForm/███rtbHelperCallback" => "ActionForm/rtbHelperCallback".   -->
+    <!-- Pay attention to the escape rules:  { } should be written as {{ }}    double quote: &quot;     less/greater than: &lt;/&gt;     line break: &#xD;&#xA;. -->
     <TranslationEntry Key="ActionForm/███rtbHelperCallback" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperDictBuild" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperDictFilter" Translation="" />
@@ -485,11 +490,6 @@
     <TranslationEntry Key="ActionViewer/colDescription" Translation="Description" />
     <TranslationEntry Key="ActionViewer/Column1" Translation="  " />
     <TranslationEntry Key="ActionViewer/ctxAddAction" Translation="アクションを追加" />
-    <!-- Note: The raw RichTextboxHelper text after this line are not included in this file due to the length.-->
-    <!-- Please check the English text by clicking [Show Help] in Triggernometry actions.-->
-    <!-- After you translate a key, please delete the ███ in the key: -->
-    <!-- e.g. "ActionForm/███rtbHelperCallback" => "ActionForm/rtbHelperCallback".   -->
-    <!-- Pay attention to the escape rules:  { } should be written as {{ }}    double quote: &quot;     less/greater than: &lt;/&gt;     line break: &#xD;&#xA;. -->
     <TranslationEntry Key="ActionViewer/ctxCopyAction" Translation="コピー" />
     <TranslationEntry Key="ActionViewer/ctxEditAction" Translation="アクションを編集" />
     <TranslationEntry Key="ActionViewer/ctxEditProp" Translation="Edit Properties" />
@@ -1074,6 +1074,7 @@
     <TranslationEntry Key="internal/Action/descunknown" Translation="不明なアクションタイプ" />
     <TranslationEntry Key="internal/Action/descwindowtargetall" Translation="all windows whose titles match ({0})" />
     <TranslationEntry Key="internal/Action/descwindowtargetid" Translation="windows in the process with id ({0}) whose titles match ({1})" />
+    <TranslationEntry Key="internal/Action/descwindowtargetnone" Translation="(ウィンドウ名未指定)" />
     <TranslationEntry Key="internal/Action/descwindowtargetsingle" Translation="the first window whose title match ({0})" />
     <TranslationEntry Key="internal/Action/descwmsg" Translation="{3}にメッセージ送信 ({0}, wparam = {1}, lparam = {2})" />
     <TranslationEntry Key="internal/Action/dictbuild" Translation="{1}Dictionary ({0}) built from expression ({2}) splitted by ({3}) ({4})" />
@@ -1138,6 +1139,7 @@
     <TranslationEntry Key="internal/Action/obsauthpassword" Translation="OBS WebSocket authentication required, you must provide a password" />
     <TranslationEntry Key="internal/Action/obsconnecterror" Translation="Error connecting to OBS WebSocket: {0}" />
     <TranslationEntry Key="internal/Action/obsconnectok" Translation="OBSとのWebSocket接続に成功しました" />
+    <TranslationEntry Key="internal/Action/obsconnecttimeout" Translation="OBS WebSocket の認証がタイムアウトしました。" />
     <TranslationEntry Key="internal/Action/obsconnectversionerror" Translation="Your version of OBS WebSocket is not currently supported." />
     <TranslationEntry Key="internal/Action/obscontrolerror" Translation="エラーが発生したためOBSのコントロールができませんでした。" />
     <TranslationEntry Key="internal/Action/obscontrolexception" Translation="例外が発生したためOBSのコントロールができませんでした: {0}" />
@@ -1186,6 +1188,7 @@
     <TranslationEntry Key="internal/Action/trigcanceltrigtag" Translation="トリガー「{1}」のタグ「{2}」一致の {0} 件のアクションを取消しました" />
     <TranslationEntry Key="internal/Action/trigdisable" Translation="トリガー '{0}' を無効化しました" />
     <TranslationEntry Key="internal/Action/trigenable" Translation="トリガー '{0}' を有効化しました" />
+    <TranslationEntry Key="internal/Action/unknowntype" Translation="不明な ActionType：{0}" />
     <TranslationEntry Key="internal/Action/waitingprocexit" Translation="プロセスの終了を待っています" />
     <TranslationEntry Key="internal/Action/warndiscordtrunc" Translation="Discordのメッセージが長すぎるため、{0} 文字にキャップしました" />
     <TranslationEntry Key="internal/ActionForm/confirmkeypress" Translation="定義したキープレスは、OKを押してから2秒後に送信され、キープレスの送信先のウィンドウに変更できるようになります。" />
@@ -1203,6 +1206,8 @@
     <TranslationEntry Key="internal/ActionForm/textunderline" Translation="下線" />
     <TranslationEntry Key="internal/ActionForm/urlSendKey" Translation="https://learn.microsoft.com/ja-jp/dotnet/api/system.windows.forms.sendkeys.send" />
     <TranslationEntry Key="internal/ActionForm/urlWinMessage" Translation="https://learn.microsoft.com/ja-jp/dotnet/api/system.windows.forms.keys" />
+    <TranslationEntry Key="internal/ActionLoop/specialhandling" Translation="ループアクションには専用の処理が必要です。" />
+    <TranslationEntry Key="internal/ActionViewer/invalidmovetype" Translation="無効な moveType 引数：{0}" />
     <TranslationEntry Key="internal/ActionViewer/setBgColor" Translation="Set Description Background Color To" />
     <TranslationEntry Key="internal/ActionViewer/setDelay" Translation="Set Action Delay To (ms)" />
     <TranslationEntry Key="internal/ActionViewer/setTextColor" Translation="Set Description Text Color To" />
@@ -1212,6 +1217,8 @@
     <TranslationEntry Key="internal/AuraContainer/closingaura" Translation="オーバーレイウィンドウを閉じる" />
     <TranslationEntry Key="internal/AuraContainer/deactaurattl" Translation="TTLで指定した時間が経過したためオーバーレイを非表示にしています" />
     <TranslationEntry Key="internal/AuraContainer/displayingaura" Translation="オーバーレイウィンドウを開く" />
+    <TranslationEntry Key="internal/AuraContainer/updateerror" Translation="オーラ「{0}」の更新中に例外が発生したため、無効化します：{1}" />
+    <TranslationEntry Key="internal/AuraContainer/updateerrortrigger" Translation="トリガー「{1}」のオーラ「{0}」の更新中に例外が発生したため、無効化します：{2}" />
     <TranslationEntry Key="internal/BenchmarkForm/estmaximum" Translation="(Estimated maximum sustainable event load per second)" />
     <TranslationEntry Key="internal/BenchmarkForm/esttotal" Translation="(Estimated total evaluation time per event)" />
     <TranslationEntry Key="internal/BenchmarkForm/exception" Translation="ベンチマーク中に例外が発生しました" />
@@ -1219,11 +1226,20 @@
     <TranslationEntry Key="internal/BenchmarkForm/millisecond" Translation="ms" />
     <TranslationEntry Key="internal/BenchmarkForm/nanosecond" Translation="ns" />
     <TranslationEntry Key="internal/BenchmarkForm/resultexception" Translation="ベンチマーク結果のコンパイル中に例外が発生しました" />
+    <TranslationEntry Key="internal/BridgeCactbot/configfailed" Translation="Cactbot の設定の取得に失敗しました。" />
+    <TranslationEntry Key="internal/BridgeCafe/invalidobjecttype" Translation="オブジェクト「{0}」は {1} 型ではありません。" />
+    <TranslationEntry Key="internal/BridgeCafe/objectnotfound" Translation="オブジェクト「{0}」が見つかりません。" />
     <TranslationEntry Key="internal/BridgeOverlay/failInit" Translation="OverlayPlugin-related initialization failed due to: {0}" />
     <TranslationEntry Key="internal/BridgeOverlay/failInitModule" Translation="OverlayPlugin {1} module initialization failed due to: {0}" />
+    <TranslationEntry Key="internal/BridgeOverlay/initfail" Translation="OverlayPlugin の初期化に失敗しました：{0}" />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="OverlayPlugin combatant memory is not ready. Entity data could not be retrieved via OverlayPlugin yet, will retry later." />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin combatant memory is ready." />
+    <TranslationEntry Key="internal/BridgeOverlay/notfound" Translation="OverlayPlugin が見つかりません。" />
+    <TranslationEntry Key="internal/BridgeOverlay/notready" Translation="OverlayPlugin の準備ができていません。" />
+    <TranslationEntry Key="internal/BridgeOverlay/objectnotfound" Translation="オブジェクト「{0}」が見つかりません。" />
     <TranslationEntry Key="internal/BridgeOverlay/reflectionNotFound" Translation="Failed to find reflection object ({0}) during initializing OverlayPlugin-related modules." />
+    <TranslationEntry Key="internal/CartesianCoord/constructor" Translation="CartesianCoord コンストラクター" />
+    <TranslationEntry Key="internal/CartesianCoord/parseerror" Translation="直交座標の解析に失敗しました：{0}&#xA;元のデータ：&#xA;x = ({1}),&#xA;y = ({2}),&#xA;z = ({3})" />
     <TranslationEntry Key="internal/ColonParser/columnlookupindices" Translation="列ヘッダーによるテーブル検索には、2 つのインデックス [列ヘッダー][行インデックス] が必要です：「{0}」" />
     <TranslationEntry Key="internal/ColonParser/doublelookupindices" Translation="両ヘッダーによるテーブル検索には、2 つのインデックス [列ヘッダー][行ヘッダー] が必要です：「{0}」" />
     <TranslationEntry Key="internal/ColonParser/rowlookupindices" Translation="行ヘッダーによるテーブル検索には、2 つのインデックス [行ヘッダー][列インデックス] が必要です：「{0}」" />
@@ -1234,6 +1250,7 @@
     <TranslationEntry Key="internal/ConditionGroup/or" Translation="1つ以上の条件式がTRUE" />
     <TranslationEntry Key="internal/ConditionGroup/unknown" Translation="不明なグループの値です '{0}'" />
     <TranslationEntry Key="internal/ConditionGroup/xor" Translation="1つの条件式だけがTRUE" />
+    <TranslationEntry Key="internal/ConditionSingle/invalidexpressiontype" Translation="無効な式の種類：{0}" />
     <TranslationEntry Key="internal/ConditionSingle/listcantcontain" Translation="次の結果を含まない" />
     <TranslationEntry Key="internal/ConditionSingle/listmustcontain" Translation="次の結果を含む" />
     <TranslationEntry Key="internal/ConditionSingle/listvar" Translation="リスト変数" />
@@ -1263,10 +1280,14 @@
     <TranslationEntry Key="internal/ConditionViewer/groupsingular" Translation="{0} グループ" />
     <TranslationEntry Key="internal/ConditionViewer/operationwillremove" Translation="次の項目が削除されます:" />
     <TranslationEntry Key="internal/ConditionViewer/pastefail" Translation="Tree paste failed due to exception: {0}" />
+    <TranslationEntry Key="internal/ConditionViewer/testtitle" Translation="テスト" />
+    <TranslationEntry Key="internal/Configuration/configtitle" Translation="Triggernometry の設定" />
     <TranslationEntry Key="internal/Configuration/local" Translation="ローカルトリガー" />
     <TranslationEntry Key="internal/Configuration/remote" Translation="リモートトリガー" />
     <TranslationEntry Key="internal/ConfigurationForm/actttswarn" Translation="TTSの読み上げにACT本体の設定を使用すると、アクション内で定義したボリュームと速度のパラメータは無視されます。続行しますか？" />
+    <TranslationEntry Key="internal/ConfigurationForm/areyousureplural" Translation="選択した定数を削除しますか？" />
     <TranslationEntry Key="internal/ConfigurationForm/areyousurepluralsub" Translation="選択した置換ルールを削除してもよろしいですか？" />
+    <TranslationEntry Key="internal/ConfigurationForm/areyousuresingular" Translation="選択した定数を削除しますか？" />
     <TranslationEntry Key="internal/ConfigurationForm/areyousuresingularsub" Translation="選択した置換ルールを削除してもよろしいですか？" />
     <TranslationEntry Key="internal/ConfigurationForm/confirmremoval" Translation="削除の確認" />
     <TranslationEntry Key="internal/ConfigurationForm/confirmsecurityunlock" Translation="Confirm unlock" />
@@ -1300,6 +1321,23 @@
     <TranslationEntry Key="internal/Context/parseTypeError" Translation="{0} ({1}) could not be parsed into {2}. Expr: ({3})" />
     <TranslationEntry Key="internal/Context/parseTypeError-" Translation="{0}（{1}）を {2} として解析できません。" />
     <TranslationEntry Key="internal/Context/ternaryexpressionerror" Translation="Ternary expression ({0}) could not be parsed: &#xD;&#xA;Condition: ({1}); &#xD;&#xA;TrueExpr: ({2}); &#xD;&#xA;FalseExpr: ({3})" />
+    <TranslationEntry Key="internal/Core.Action/trigcancelall" Translation="キュー内の全 {0} 件のアクションをキャンセルしました。" />
+    <TranslationEntry Key="internal/CsvHelper/inconsistentcolumns" Translation="CSV {0} の {1} 行目：列数は {2} 列である必要がありますが、{3} 列あります。" />
+    <TranslationEntry Key="internal/CsvManager/loadfailed" Translation="CSV ファイル「{0}」の読み込みに失敗しました：{1}" />
+    <TranslationEntry Key="internal/CsvManager/missingfactory" Translation="CsvManager にメソッド CreateTypedDict が見つかりません。" />
+    <TranslationEntry Key="internal/CsvManager/missingfolder" Translation="フォルダーが存在しません：{0}" />
+    <TranslationEntry Key="internal/CsvManager/missingpath" Translation="現在の設定に有効な「XivExtractedCsvPath」がありません。" />
+    <TranslationEntry Key="internal/CsvManager/tablenotloaded" Translation="テーブル「{0}.csv」が読み込まれていません。" />
+    <TranslationEntry Key="internal/CsvManager/typedtablenotloaded" Translation="テーブル「{0}.csv」が読み込まれていません。" />
+    <TranslationEntry Key="internal/CsvRow/columnnotfound" Translation="列「{0}」が見つかりません。" />
+    <TranslationEntry Key="internal/CsvRow/indexoutofrange" Translation="列インデックス {0} が範囲外です。" />
+    <TranslationEntry Key="internal/CsvRow/missingconstructor" Translation="CsvRow の派生クラス {0} に引数なしのコンストラクターが必要です。" />
+    <TranslationEntry Key="internal/CsvRow/missingcopymethod" Translation="メソッド CsvRow.CopyBaseFrom(CsvRow) が見つかりません。" />
+    <TranslationEntry Key="internal/CsvTable/duplicatecolumn" Translation="CSV ファイル {0} に重複する列名があります：{1}" />
+    <TranslationEntry Key="internal/CsvTable/duplicatekey" Translation="CSV ファイル {0} に重複するキーがあります：{1}" />
+    <TranslationEntry Key="internal/CsvTable/emptyrow" Translation="CSV ファイル {0} の {1} 行目が空のため、解析できません。" />
+    <TranslationEntry Key="internal/CsvTable/toofewcolumns" Translation="CSV ファイル {0} の列数（{1}）が不足しているため、解析できません。" />
+    <TranslationEntry Key="internal/CsvTable/toofewrows" Translation="CSV ファイル {0} の行数（{1}）が不足しているため、解析できません。" />
     <TranslationEntry Key="internal/DataStringHelper/argumentconversionerror" Translation="引数 {0}（{1}）を型 {2} に変換できません。" />
     <TranslationEntry Key="internal/DataStringHelper/conversionerror" Translation="文字列「{0}」を型 {1} に変換できません。" />
     <TranslationEntry Key="internal/DataStringHelper/decimalconversionwarning" Translation="{0}（{1}）を decimal に変換できませんでした。" />
@@ -1308,16 +1346,24 @@
     <TranslationEntry Key="internal/DictEvaluator/indexorpropertyrequired" Translation="式「{0}」の辞書変数にはインデックスまたはプロパティが必要です。" />
     <TranslationEntry Key="internal/DictEvaluator/keynotfound" Translation="辞書変数「{1}」にキー「{0}」が見つかりません。" />
     <TranslationEntry Key="internal/DictEvaluator/unknownmethod" Translation="式「{1}」に不明な辞書メソッド「{0}」があります。" />
+    <TranslationEntry Key="internal/DynamicImport/libraryfailed" Translation="DynamicImport がライブラリ「{0}」を読み込めませんでした。" />
+    <TranslationEntry Key="internal/DynamicImport/methodfailed" Translation="DynamicImport がモジュール 0x{1} 内でメソッド「{0}」を見つけられませんでした。" />
+    <TranslationEntry Key="internal/Endpoint/notpost" Translation="受信したリクエストは HTTP POST ではありません。" />
+    <TranslationEntry Key="internal/EquationHelper/zerocoefficient" Translation="A は 0 にできません。" />
     <TranslationEntry Key="internal/ExportForm/exception" Translation="例外" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric1" Translation="このフィールドに数値式を入力します。名前付き正規表現グループへの参照は展開された後、数学表現として評価されます。" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric2" Translation="フィールドの色は、数値式が有効である（緑）か、文法エラーがある（赤）かを示します。" />
     <TranslationEntry Key="internal/ExpressionTextBox/string" Translation="このフィールドに文字列式を入力します。名前付き正規表現グループへの参照は展開された後、数学表現として評価されます。" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexception" Translation="Exception in FFXIV all entities retrieve: {0}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexceptionsingle" Translation="Failed to get entity data: name = {0}, id = {1}. Exception: {2}" />
+    <TranslationEntry Key="internal/ffxiv/datasubscriptionuninitialized" Translation="DataSubscription が初期化されていません。" />
     <TranslationEntry Key="internal/FFXIV/Entity/evaluationerror" Translation="エンティティのプロパティまたはメソッドの式「{0}」を評価できませんでした：{1}" />
     <TranslationEntry Key="internal/FFXIV/Entity/invalidmember" Translation="無効なエンティティのプロパティ名またはメソッド名です：{0}" />
     <TranslationEntry Key="internal/FFXIV/Entity/memberrequired" Translation="エンティティ式「{0}」にプロパティが含まれていません。" />
     <TranslationEntry Key="internal/FFXIV/Entity/wrongProp" Translation="({0}) is not a valid entity property expression. Full expression: {1}" />
+    <TranslationEntry Key="internal/ffxiv/ffxivnozonechanged" Translation="ZoneChanged イベントが見つかりません。" />
+    <TranslationEntry Key="internal/ffxiv/ffxivzonechangedexception" Translation="FFXIV のエリア変更イベントの購読中に例外が発生しました：{0}" />
+    <TranslationEntry Key="internal/ffxiv/ffxivzonechangedexception-" Translation="FFXIV のエリア変更イベントの購読解除中に例外が発生しました：{0}" />
     <TranslationEntry Key="internal/ffxiv/ffxivzonechangednoinstance" Translation="Could not subscribe to FFXIV zone change (no plugin instance available)" />
     <TranslationEntry Key="internal/ffxiv/idexception" Translation="Exception in FFXIV ID entity retrieve: {0}" />
     <TranslationEntry Key="internal/ffxiv/missingactplugin" Translation="FFXIV ACT plugin with filename ({0}) or type ({1}) could not be located, some functions may not work as expected" />
@@ -1326,16 +1372,27 @@
     <TranslationEntry Key="internal/ffxiv/networksubok" Translation="Subscribed to FFXIV network events" />
     <TranslationEntry Key="internal/ffxiv/networkunsubexception" Translation="Could not unsubscribe from FFXIV network events due to an exception: {0}" />
     <TranslationEntry Key="internal/ffxiv/networkunsubok" Translation="Unsubscribed from FFXIV network events" />
+    <TranslationEntry Key="internal/ffxiv/nodatasubscription" Translation="DataSubscription が見つかりません。" />
+    <TranslationEntry Key="internal/ffxiv/noplugininstance" Translation="プラグインのインスタンスがありません。" />
     <TranslationEntry Key="internal/ffxiv/oldactplugin" Translation="FFXIV ACT plugin version is lower ({0}) than expected ({1}), some functions may not work as expected" />
     <TranslationEntry Key="internal/ffxiv/partytoobig" Translation="Party structure has more than {0} members" />
     <TranslationEntry Key="internal/ffxiv/procexception" Translation="Exception in FFXIV process retrieve: {0}" />
     <TranslationEntry Key="internal/ffxiv/updateexception" Translation="Exception in FFXIV state update: {0} at stage {1}" />
-    <TranslationEntry Key="internal/Folder/envvariablekvptoolong" Translation="The raw environment variable key-value pair expression contains more than 2 parts. &#xD;&#xA;Folder: {0}; &#xD;&#xA;Expression: {1}" />
+    <TranslationEntry Key="internal/Folder/envvariablekvptoolong" Translation="環境変数のキーと値の式が 2 つを超える部分に分かれています。&#xD;&#xA;フォルダー：{0};&#xD;&#xA;式：{1}" />
     <TranslationEntry Key="internal/FolderForm/deleterenamedregisteredvariable" Translation="登録変数「{0}」の名前が「{1}」に変更されました。&#xA;変更前のキーの実行時の値：「{2}」&#xA;古いキーと値の組を削除しますか？" />
     <TranslationEntry Key="internal/FolderForm/loaddirectly" Translation="直接読み込む" />
     <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="有効時に読み込む" />
     <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="各登録変数のキーを入力してください。" />
     <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="登録変数" />
+    <TranslationEntry Key="internal/Geometry/uninitializedtarget" Translation="描画ターゲットを先に初期化してください。" />
+    <TranslationEntry Key="internal/Graphics/alreadyinitialized" Translation="グラフィックスデバイスは既に初期化されています。" />
+    <TranslationEntry Key="internal/Graphics/invalidsize" Translation="幅または高さが無効です。" />
+    <TranslationEntry Key="internal/Graphics/invalidwindowhandle" Translation="WindowHandle が無効です。" />
+    <TranslationEntry Key="internal/Graphics/nullwindowhandle" Translation="WindowHandle が 0 です。" />
+    <TranslationEntry Key="internal/Graphics/uninitializedd2ddevice" Translation="D2DDevice を先に初期化してください。" />
+    <TranslationEntry Key="internal/Graphics/uninitializeddevice" Translation="DirectX デバイスが初期化されていません。" />
+    <TranslationEntry Key="internal/GraphicsWindow/alreadyrunning" Translation="グラフィックスウィンドウは既に実行中です。" />
+    <TranslationEntry Key="internal/GraphicsWindow/notrunning" Translation="グラフィックスウィンドウは実行されていません。" />
     <TranslationEntry Key="internal/I18n/bool" Translation="bool" />
     <TranslationEntry Key="internal/I18n/char" Translation="char" />
     <TranslationEntry Key="internal/I18n/charcode" Translation="charcode" />
@@ -1406,6 +1463,11 @@
     <TranslationEntry Key="internal/InvariantNumericExtensions/context" Translation="コンテキスト：{0}" />
     <TranslationEntry Key="internal/InvariantNumericExtensions/expression" Translation="式：「{0}」" />
     <TranslationEntry Key="internal/InvariantNumericExtensions/parseerror" Translation="「{0}」を {1} として解析できませんでした：{2}" />
+    <TranslationEntry Key="internal/Job/UnknownJobId" Translation="ジョブ ID（{0}）が範囲外です。" />
+    <TranslationEntry Key="internal/Job/UnknownJobName" Translation="不明なジョブ名（{0}）です。" />
+    <TranslationEntry Key="internal/Job/UnknownJobProperty" Translation="無効なジョブのプロパティ（{0}）です。" />
+    <TranslationEntry Key="internal/LinearTransformArgs/unsupported3dscale" Translation="TransformAngle3D はスケーリングモードに対応していません。" />
+    <TranslationEntry Key="internal/LinearTransformArgs/unsupportedscale" Translation="TransformAngle はスケーリングモードに対応していません。" />
     <TranslationEntry Key="internal/ListEvaluator/indexnotfound" Translation="リスト変数「{1}」にインデックス「{0}」が見つかりません。" />
     <TranslationEntry Key="internal/ListEvaluator/indexorpropertyrequired" Translation="式「{0}」のリスト変数にはインデックスまたはプロパティが必要です。" />
     <TranslationEntry Key="internal/ListEvaluator/unknownmethod" Translation="式「{1}」に不明なリストメソッド「{0}」があります。" />
@@ -1414,10 +1476,31 @@
     <TranslationEntry Key="internal/MathParser/basicMathExprError" Translation="The basic math expression: '{0}' could not be parsed. Original expression: '{1}'" />
     <TranslationEntry Key="internal/MathParser/basicMathExprOpError" Translation="The operation '{0}' from the basic math expression: '{1}' could not be applied. Original expression: '{2}'" />
     <TranslationEntry Key="internal/MathParser/noclosure" Translation="Parenthesis not closed in math expression: '{0}'. Original expression: ({1})" />
+    <TranslationEntry Key="internal/Memory/invalidpatternbyte" Translation="パターン {1} のバイト {0} が無効です。" />
+    <TranslationEntry Key="internal/Memory/patternfound" Translation="モジュールデータ内でアドレス「{0}」が見つかりました。" />
+    <TranslationEntry Key="internal/Memory/patternnotfound" Translation="モジュールデータ内で「{0}」が見つかりませんでした。" />
+    <TranslationEntry Key="internal/Memory/readfailed" Translation="メモリの読み取りに失敗したか、読み取ったバイト数が正しくありません。" />
+    <TranslationEntry Key="internal/Memory/scannotfoundexception" Translation="{0} のスキャン中にメモリシグネチャが見つかりませんでした。" />
+    <TranslationEntry Key="internal/Memory/toomanyjumps" Translation="パターン {0} に「*」が多すぎます。" />
+    <TranslationEntry Key="internal/Memory/update1B" Translation="頭上マーカーのオフセットを（{0}）に更新しました。" />
+    <TranslationEntry Key="internal/Memory/update1Berror" Translation="頭上マーカーのオフセットの更新中に例外が発生しました：&#xA;&#xA;{0}" />
+    <TranslationEntry Key="internal/Memory/writefailed" Translation="すべてのバイトをメモリに書き込めませんでした。" />
+    <TranslationEntry Key="internal/MinimumMatchHelper/invalidcost" Translation="組（{0}, {1}）が無効な値 {2} を返しました。" />
+    <TranslationEntry Key="internal/MinimumMatchHelper/lengthmismatch" Translation="src と tgt の長さは同じである必要があります。" />
+    <TranslationEntry Key="internal/MinimumMatchHelper/reconstructionfailed" Translation="完全なマッチング結果を復元できませんでした。" />
+    <TranslationEntry Key="internal/MinimumMatchHelper/toomanyelements" Translation="要素数が多すぎます。最大 30 個まで使用できます。" />
     <TranslationEntry Key="internal/MultiLineRawArgs/duplicatekey" Translation="複数行の引数に重複したキー「{0}」があります。" />
     <TranslationEntry Key="internal/MultiLineRawArgs/keynotfound" Translation="キー「{0}」が見つかりません。" />
     <TranslationEntry Key="internal/MultiLineRawArgs/keysnotfound" Translation="キー「{0}」はいずれも見つかりません。" />
     <TranslationEntry Key="internal/NamedCallback/exception" Translation="Exception occurred when invoking named callback {0}: &#xD;&#xA;{1}" />
+    <TranslationEntry Key="internal/OpcodeSideloader/emptykeyorvalue" Translation="無効な行（キーまたは値が空です）：{0}" />
+    <TranslationEntry Key="internal/OpcodeSideloader/invalidhex" Translation="16 進数の値を解析できません：{0}" />
+    <TranslationEntry Key="internal/OpcodeSideloader/invalidline" Translation="無効な行の形式：{0}" />
+    <TranslationEntry Key="internal/OpcodeSideloader/nodata" Translation="OpcodeSideloader コールバックにオペコードデータが指定されていません。" />
+    <TranslationEntry Key="internal/OpcodeSideloader/unsupportedregion" Translation="[OpcodeSideloader] 未対応の Machina GameRegion：{0}" />
+    <TranslationEntry Key="internal/OverlayWindow/alreadyinitialized" Translation="OverlayWindow は既に初期化されています。" />
+    <TranslationEntry Key="internal/OverlayWindow/alreadyrunning" Translation="OverlayWindow は既に実行中です。" />
+    <TranslationEntry Key="internal/OverlayWindow/uninitialized" Translation="OverlayWindow が初期化されていません。" />
     <TranslationEntry Key="internal/PersistenceSwitch/string" Translation="Determines if the variable to be modified is persistent, as in, will be saved to disk on exit and loaded back in when Triggernometry starts. Persistent variables live in a different namespace from regular variables." />
     <TranslationEntry Key="internal/Plugin/actimageaura" Translation="画像オーバーレイ '{0}' を有効化しています" />
     <TranslationEntry Key="internal/Plugin/actionqueued" Translation="Queuing trigger '{0}' action '{1}' to {2} slot {3}" />
@@ -1449,10 +1532,12 @@
     <TranslationEntry Key="internal/Plugin/deacttextauratrig" Translation="Deactivating text auras from trigger '{0}' ({1})" />
     <TranslationEntry Key="internal/Plugin/debugnamedgroup" Translation="Trigger '{0}' named group '{1}': {2}" />
     <TranslationEntry Key="internal/Plugin/debugnumgroup" Translation="Trigger '{0}' numbered group {1}: {2}" />
+    <TranslationEntry Key="internal/Plugin/defaultrepositoryfailed" Translation="既定のリモートリポジトリの追加に失敗しました：{0}" />
     <TranslationEntry Key="internal/Plugin/downloadnewver" Translation="新しいバージョンのTriggernometry ({0}) が利用可能です。ダウンロードページを開きますか？" />
     <TranslationEntry Key="internal/Plugin/endpointline" Translation="Endpoint data: ({0})" />
     <TranslationEntry Key="internal/Plugin/endpointlineprocex" Translation="Exception ({0}) when processing endpoint data ({1}) in zone ({2})" />
     <TranslationEntry Key="internal/Plugin/endpointsplitline" Translation="Split endpoint data: ({0})" />
+    <TranslationEntry Key="internal/Plugin/endpointstatus" Translation="エンドポイント（{0}）{1}" />
     <TranslationEntry Key="internal/Plugin/exactimageaura" Translation="画像オーバーレイ '{1}' を有効化する途中で例外が発生しました: '{0}'" />
     <TranslationEntry Key="internal/Plugin/exacttextaura" Translation="テキストオーバーレイ '{1}' を有効化する途中で例外が発生しました: '{0}'" />
     <TranslationEntry Key="internal/Plugin/exception" Translation="例外" />
@@ -1470,7 +1555,7 @@
     <TranslationEntry Key="internal/Plugin/inicache" Translation="performing cache cleanup" />
     <TranslationEntry Key="internal/Plugin/inicfg" Translation="loading configuration" />
     <TranslationEntry Key="internal/Plugin/iniendpoint" Translation="starting endpoint" />
-    <TranslationEntry Key="internal/Plugin/inievents" Translation="creating events" />
+    <TranslationEntry Key="internal/Plugin/inierror" Translation="{0} 中にエラーが発生しました（{1}）。" />
     <TranslationEntry Key="internal/Plugin/inievents" Translation="creating events" />
     <TranslationEntry Key="internal/Plugin/inifilename" Translation="determining filename" />
     <TranslationEntry Key="internal/Plugin/inilanguages" Translation="loading languages" />
@@ -1499,6 +1584,7 @@
     <TranslationEntry Key="internal/Plugin/langloadex" Translation="Loading the language file '{0}' failed due to an exception" />
     <TranslationEntry Key="internal/Plugin/langloadfail" Translation="Loading language file failed, make sure you are running the latest version" />
     <TranslationEntry Key="internal/Plugin/logline" Translation="Log line: ({0})" />
+    <TranslationEntry Key="internal/Plugin/missingtranslationscopied" Translation="不足している翻訳をクリップボードにコピーしました。" />
     <TranslationEntry Key="internal/Plugin/mutexdelayed" Translation="Context '{0}' has been waiting for mutex '{1}' on {2} for {3} ms, current owner is '{4}'" />
     <TranslationEntry Key="internal/Plugin/notadministrator" Translation="管理者としてACTを実行していません。一部のトリガーが機能しない可能性があります。" />
     <TranslationEntry Key="internal/Plugin/procex" Translation="Exception ({0}) when processing log line ({1}) in zone ({2})" />
@@ -1521,6 +1607,10 @@
     <TranslationEntry Key="internal/Plugin/verchecksame" Translation="最新バージョンのTriggernometry {0} を利用しています。" />
     <TranslationEntry Key="internal/Plugin/warnprocdelay" Translation="Line ({0}) took {1} ms to process, may be falling behind" />
     <TranslationEntry Key="internal/Plugin/zoneupdate" Translation="Zone update to '{0}' - allowed triggers: {1}, restricted triggers: {2}" />
+    <TranslationEntry Key="internal/PolarCoord/constructor" Translation="PolarCoord コンストラクター" />
+    <TranslationEntry Key="internal/PolarCoord/parseerror" Translation="極座標の解析に失敗しました：{0}&#xA;&#xA;元のデータ：&#xA;r = ({1}),&#xA;θ = ({2}),&#xA;z = ({3})" />
+    <TranslationEntry Key="internal/Polygon/toofewvertices" Translation="多角形には 3 つ以上の頂点が必要です。" />
+    <TranslationEntry Key="internal/Polygon/trianglerequired" Translation="二等辺三角形への分割は三角形にのみ使用できます。" />
     <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="登録変数のキー「{0}」が競合しています：&#xA;新しい値：「{1}」&#xA;変更元：フォルダー {2}&#xA;以前の値：「{3}」&#xA;変更元：フォルダー {4}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)." />
     <TranslationEntry Key="internal/Repository/loadlocalex" Translation="リポジトリ {0} のローカルバックアップを読み込めませんでした: {1}" />
@@ -1583,6 +1673,7 @@
     <TranslationEntry Key="internal/SearchForm/hitjsonfiring" Translation="Action #{0} JSON firing expression" />
     <TranslationEntry Key="internal/SearchForm/hitjsonheaders" Translation="Action #{0} JSON header expression" />
     <TranslationEntry Key="internal/SearchForm/hitjsonpayload" Translation="Action #{0} JSON payload expression" />
+    <TranslationEntry Key="internal/SearchForm/hitjsonvariable" Translation="アクション #{0} JSON 結果変数" />
     <TranslationEntry Key="internal/SearchForm/hitkeypresscode" Translation="Action #{0} keypress code" />
     <TranslationEntry Key="internal/SearchForm/hitkeypressexpression" Translation="Action #{0} keypress expression" />
     <TranslationEntry Key="internal/SearchForm/hitkeypresswindow" Translation="Action #{0} keypress window" />
@@ -1592,6 +1683,7 @@
     <TranslationEntry Key="internal/SearchForm/hitlisttarget" Translation="Action #{0} list variable target" />
     <TranslationEntry Key="internal/SearchForm/hitlogtext" Translation="Action #{0} log text" />
     <TranslationEntry Key="internal/SearchForm/hitmsgboxtext" Translation="Action #{0} message box text" />
+    <TranslationEntry Key="internal/SearchForm/hitobsendpoint" Translation="アクション #{0} OBS エンドポイント" />
     <TranslationEntry Key="internal/SearchForm/hitobsscene" Translation="Action #{0} OBS scene name" />
     <TranslationEntry Key="internal/SearchForm/hitobssource" Translation="Action #{0} OBS source name" />
     <TranslationEntry Key="internal/SearchForm/hitpathexpr" Translation="Action #{0} command line path" />
@@ -1615,6 +1707,7 @@
     <TranslationEntry Key="internal/SearchForm/hitttstext" Translation="Action #{0} TTS text" />
     <TranslationEntry Key="internal/SearchForm/hitttsvol" Translation="Action #{0} TTS volume" />
     <TranslationEntry Key="internal/SearchForm/hitvarexpr" Translation="Action #{0} variable expression" />
+    <TranslationEntry Key="internal/SearchForm/hitvarjsontarget" Translation="アクション #{0} 変数の JSON クエリ対象" />
     <TranslationEntry Key="internal/SearchForm/hitvarname" Translation="Action #{0} variable name" />
     <TranslationEntry Key="internal/SearchForm/hitwmsgtitle" Translation="Action #{0} window message title" />
     <TranslationEntry Key="internal/SearchForm/hitworkingdir" Translation="Action #{0} working directory" />
@@ -1641,12 +1734,18 @@
     <TranslationEntry Key="internal/TestInputForm/debugspeedex" Translation="The given value is not a positive number." />
     <TranslationEntry Key="internal/TestInputForm/debugwarning" Translation="Warning:" />
     <TranslationEntry Key="internal/TestInputForm/debugwarningformat" Translation="Logline #{0}: {1}&#xD;&#xA;Data: {2}" />
+    <TranslationEntry Key="internal/ThrowHelper/beginscenerequired" Translation="描画する前に BeginScene を呼び出してください。" />
     <TranslationEntry Key="internal/Toast/no" Translation="いいえ" />
     <TranslationEntry Key="internal/Toast/ok" Translation="OK" />
     <TranslationEntry Key="internal/Toast/yes" Translation="はい" />
     <TranslationEntry Key="internal/TraySlider/Button1" Translation="Confirm" />
     <TranslationEntry Key="internal/TraySlider/Button2" Translation="Cancel" />
     <TranslationEntry Key="internal/TraySlider/Button3" Translation="" />
+    <TranslationEntry Key="internal/TraySlider/invalidbuttoncount" Translation="ボタン数は 0～3 の範囲で指定してください。" />
+    <TranslationEntry Key="internal/TraySlider/nomainform" Translation="トレイ通知を表示するメインフォームが見つかりません：[{0}] {1}" />
+    <TranslationEntry Key="internal/TreeViewEx/nobrowserequired" Translation="このフォルダーを参照する必要はありません。" />
+    <TranslationEntry Key="internal/TreeViewEx/noeditrequired" Translation="このフォルダーを変更する必要はありません。" />
+    <TranslationEntry Key="internal/TreeViewEx/remotetriggers" Translation="リモートトリガー" />
     <TranslationEntry Key="internal/Trigger/beforelastfired" Translation="Current time is before last fired for trigger '{0}'" />
     <TranslationEntry Key="internal/Trigger/delayingrefire" Translation="Delaying trigger '{0}' refire to {1}" />
     <TranslationEntry Key="internal/Trigger/firingexception" Translation="Trigger '{0}' didn't fire due to exception: {1}" />
@@ -1691,6 +1790,11 @@
     <TranslationEntry Key="internal/TriggerForm/savechanges" Translation="変更を保存" />
     <TranslationEntry Key="internal/TriggerForm/triggerexitconfirm" Translation="Do you want to exit without saving?" />
     <TranslationEntry Key="internal/TriggerForm/triggerexitconfirmtitle" Translation="Discard Changes" />
+    <TranslationEntry Key="internal/UpdateForm/statuschecking" Translation="最新バージョンを確認中…" />
+    <TranslationEntry Key="internal/UploadTextHelper/invalidalphabet" Translation="Base3500Chars の長さが 3500 ではありません。" />
+    <TranslationEntry Key="internal/UploadTextHelper/networkexception" Translation="ネットワークまたはサーバーのエラー：{0}" />
+    <TranslationEntry Key="internal/UploadTextHelper/servererror" Translation="ネットワークまたはサーバーのエラー：{0}" />
+    <TranslationEntry Key="internal/UploadTextHelper/serverstatus" Translation="サーバーがステータスコード {0}（{1}）を返しました。" />
     <TranslationEntry Key="internal/UserInterface/add" Translation="新規作成" />
     <TranslationEntry Key="internal/UserInterface/adddefaultrepo" Translation="トリガーリポジトリを追加して開始しますか？" />
     <TranslationEntry Key="internal/UserInterface/addfolder" Translation="新規フォルダ作成" />
@@ -1742,6 +1846,9 @@
     <TranslationEntry Key="internal/VariableForm/confirmremoval" Translation="削除の確認" />
     <TranslationEntry Key="internal/VariableForm/keyexists" Translation="The key {0} already exists (row {1})." />
     <TranslationEntry Key="internal/VariableForm/variableeditortag" Translation="変数エディタ" />
+    <TranslationEntry Key="internal/XIVCoord/invalidsegments" Translation="座標方向の分割数は正の整数で指定してください：{0}" />
+    <TranslationEntry Key="internal/XIVCoord/missingarguments" Translation="座標のキーワード間の引数が不足しています。&#xA;式：{0};&#xA;位置：{1}" />
+    <TranslationEntry Key="internal/XIVCoord/unmatchedparentheses" Translation="座標式に対応しない括弧（{1}）が {0} 個あります。式：{2}" />
     <TranslationEntry Key="internal/XivEntityParser/deprecatedselfquery" Translation="非推奨の旧形式の式が検出されました：{0}。&#xA;自身のプロパティを取得するには、${{_ffxivparty[1].プロパティ}} や ${{_ffxivparty[${{_ffxivplayer}}].プロパティ}} の代わりに ${{_me.プロパティ}} を使用してください。&#xA;トリガー：{1}" />
     <TranslationEntry Key="KeyListenForm" Translation="Listening to keypresses" />
     <TranslationEntry Key="KeyListenForm/btnCancel" Translation="Cancel" />

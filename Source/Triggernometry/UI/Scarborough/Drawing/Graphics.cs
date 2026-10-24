@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Diagnostics;
 
 using SharpDX;
@@ -148,10 +149,10 @@ namespace Scarborough.Drawing
         /// </summary>
         public void Setup()
         {
-            if (IsInitialized) throw new InvalidOperationException("Graphics device is already initialized");
-            if (Width <= 0 || Height <= 0) throw new ArgumentOutOfRangeException("Width or Height is not valid");
-            if (WindowHandle == IntPtr.Zero) throw new ArgumentOutOfRangeException("WindowHandle is zero");
-            if (!User32.IsWindow(WindowHandle)) throw new ArgumentOutOfRangeException("WindowHandle is not valid");
+            if (IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/alreadyinitialized", "Graphics device is already initialized."));
+            if (Width <= 0 || Height <= 0) throw new ArgumentOutOfRangeException(I18n.Translate("internal/Graphics/invalidsize", "Width or Height is not valid."));
+            if (WindowHandle == IntPtr.Zero) throw new ArgumentOutOfRangeException(I18n.Translate("internal/Graphics/nullwindowhandle", "WindowHandle is zero."));
+            if (!User32.IsWindow(WindowHandle)) throw new ArgumentOutOfRangeException(I18n.Translate("internal/Graphics/invalidwindowhandle", "WindowHandle is not valid."));
 
             _factory = new Factory(UseMultiThreadedFactories ? FactoryType.MultiThreaded : FactoryType.SingleThreaded);
             _fontFactory = new FontFactory();
@@ -216,7 +217,7 @@ namespace Scarborough.Drawing
         /// </summary>
         public void Destroy()
         {
-            if (!IsInitialized) throw new InvalidOperationException("D2DDevice needs to be initialized first");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializedd2ddevice", "D2DDevice needs to be initialized first."));
 
             try
             {
@@ -325,7 +326,7 @@ namespace Scarborough.Drawing
         /// </summary>
         public void EndScene()
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
             if (!IsDrawing) return;
 
             long exa, exb;
@@ -373,7 +374,7 @@ namespace Scarborough.Drawing
         /// <returns>The SolidBrush this method creates.</returns>
         public SolidBrush CreateSolidBrush(float r, float g, float b, float a = 1.0f)
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return new SolidBrush(_device, new Color(r, g, b, a));
         }
@@ -388,7 +389,7 @@ namespace Scarborough.Drawing
         /// <returns>The SolidBrush this method creates.</returns>
         public SolidBrush CreateSolidBrush(int r, int g, int b, int a = 255)
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return new SolidBrush(_device, new Color(r, g, b, a));
         }
@@ -400,7 +401,7 @@ namespace Scarborough.Drawing
         /// <returns>The SolidBrush this method creates.</returns>
         public SolidBrush CreateSolidBrush(Color color)
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return new SolidBrush(_device, color);
         }
@@ -416,7 +417,7 @@ namespace Scarborough.Drawing
         /// <returns></returns>
         public Font CreateFont(string fontFamilyName, float size, bool bold = false, bool italic = false, bool wordWrapping = false)
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return new Font(_fontFactory, fontFamilyName, size, bold, italic, wordWrapping);
         }
@@ -428,7 +429,7 @@ namespace Scarborough.Drawing
         /// <returns>The Image this method creates.</returns>
         public Image CreateImage(byte[] bytes)
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return new Image(_device, bytes);
         }
@@ -440,7 +441,7 @@ namespace Scarborough.Drawing
         /// <returns>The Image this method creates.</returns>
         public Image CreateImage(string path)
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return new Image(_device, path);
         }
@@ -2026,7 +2027,7 @@ namespace Scarborough.Drawing
         /// <returns>The RenderTarget of this Graphics surface.</returns>
         public RenderTarget GetRenderTarget()
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return _device;
         }
@@ -2037,7 +2038,7 @@ namespace Scarborough.Drawing
         /// <returns>The Factory of this Graphics surface.</returns>
         public Factory GetFactory()
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return _factory;
         }
@@ -2048,7 +2049,7 @@ namespace Scarborough.Drawing
         /// <returns>The FontFactory of this Graphics surface.</returns>
         public FontFactory GetFontFactory()
         {
-            if (!IsInitialized) throw new InvalidOperationException("The DirectX device is not initialized");
+            if (!IsInitialized) throw new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
 
             return _fontFactory;
         }

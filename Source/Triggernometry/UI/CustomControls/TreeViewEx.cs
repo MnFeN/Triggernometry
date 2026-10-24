@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Triggernometry.Core;
@@ -49,7 +50,7 @@ namespace Triggernometry.UI.CustomControls
         {
             if (e.Node.Tag is Folder folder && folder.Repo != null && folder.DisableRemoteExpand)
             {
-                MessageBox.Show("你无需浏览此分组。", "远程触发器", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(I18n.Translate("internal/TreeViewEx/nobrowserequired", "You do not need to browse this folder."), I18n.Translate("internal/TreeViewEx/remotetriggers", "Remote triggers"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
         }
@@ -58,7 +59,7 @@ namespace Triggernometry.UI.CustomControls
         {
             if (e.Node.Tag is Folder folder && folder.Repo != null && folder.DisableRemoteToggle)
             {
-                MessageBox.Show("你无需修改此分组。", "远程触发器", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(I18n.Translate("internal/TreeViewEx/noeditrequired", "You do not need to modify this folder."), I18n.Translate("internal/TreeViewEx/remotetriggers", "Remote triggers"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
         }

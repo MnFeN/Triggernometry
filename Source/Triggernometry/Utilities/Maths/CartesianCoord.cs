@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Utils;
 using static System.Math;
@@ -70,7 +71,7 @@ namespace Triggernometry.Utilities.Maths
                 case 3:
                     return ParseCoordsString(coords[0], coords[1], coords[2]);
                 default:
-                    throw ErrorHelper.ArgumentCountError("CartesianCoord: 坐标构造函数", "2-3", coords.Length, "[" + string.Join("], [", coords) + "]");
+                    throw ErrorHelper.ArgumentCountError(I18n.Translate("internal/CartesianCoord/constructor", "CartesianCoord constructor"), "2-3", coords.Length, "[" + string.Join("], [", coords) + "]");
             }
         }
 
@@ -85,8 +86,7 @@ namespace Triggernometry.Utilities.Maths
             }
             catch (Exception ex)
             {
-                throw new ArgumentException($"直角坐标解析错误：{ex.Message}\n" +
-                    $"原始数据：\nx = ({rawX}), \ny = ({rawY}), \nz = ({rawZ ?? "null"})");
+                throw new ArgumentException(I18n.Translate("internal/CartesianCoord/parseerror", "Failed to parse Cartesian coordinates: {0}\nRaw data:\nx = ({1}),\ny = ({2}),\nz = ({3})", ex.Message, rawX, rawY, rawZ ?? "null"));
             }
         }
     }

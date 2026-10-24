@@ -26,7 +26,7 @@ namespace Triggernometry.PluginBridges
             object op = WrappedPlugin?.pluginObj;
             if (op == null)
             { 
-                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, "OverlayPlugin not found");
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/BridgeOverlay/notfound", "OverlayPlugin was not found."));
                 Ready = false;
                 return;
             }

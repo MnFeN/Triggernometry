@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -20,7 +21,7 @@ namespace Triggernometry.Utilities.Maths
         public Polygon(List<Vector2> vertexList)
         {
             if (vertexList == null || vertexList.Count < 3)
-                throw new ArgumentException("多边形至少需要 3 个顶点。");
+                throw new ArgumentException(I18n.Translate("internal/Polygon/toofewvertices", "A polygon requires at least 3 vertices."));
             int n = vertexList.Count;
             /*
             // 确保各边未相交
@@ -118,7 +119,7 @@ namespace Triggernometry.Utilities.Maths
         public List<IsoscelesTriangle> IsoscelesTriangulate(double tolerance = 0.05)
         {
             if (N != 3)
-                throw new InvalidOperationException("只能对三角形进行等腰子三角剖分。");
+                throw new InvalidOperationException(I18n.Translate("internal/Polygon/trianglerequired", "Isosceles subdivision is only supported for triangles."));
 
             var result = new List<IsoscelesTriangle>();
 

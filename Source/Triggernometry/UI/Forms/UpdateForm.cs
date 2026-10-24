@@ -65,7 +65,7 @@ namespace Triggernometry.UI.Forms
 
         private void UpdateForm_Shown(object sender, EventArgs e)
         {
-            string trans = I18n.Translate("UpdateForm/statuschecking", "Checking for latest version...");
+            string trans = I18n.Translate("internal/UpdateForm/statuschecking", "Checking for latest version...");
             ShowProgress(-1, trans);
             plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Info, trans);
             Task tx = new Task(() =>

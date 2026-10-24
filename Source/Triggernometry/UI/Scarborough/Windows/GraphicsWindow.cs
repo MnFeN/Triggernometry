@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Threading;
 using System.Diagnostics;
 
@@ -98,7 +99,7 @@ namespace Scarborough.Windows
         /// </summary>
         public void StartThread()
         {
-            if (_isRunning) throw new InvalidOperationException("Graphics window is already running");
+            if (_isRunning) throw new InvalidOperationException(I18n.Translate("internal/GraphicsWindow/alreadyrunning", "Graphics window is already running."));
 
             _isRunning = true;
             _isPaused = !IsVisible;
@@ -130,7 +131,7 @@ namespace Scarborough.Windows
         /// </summary>
         public void StopThreadAsync()
         {
-            if (!_isRunning) throw new InvalidOperationException("Graphics window is not running");
+            if (!_isRunning) throw new InvalidOperationException(I18n.Translate("internal/GraphicsWindow/notrunning", "Graphics window is not running."));
 
             _isRunning = false;
             _isPaused = false;
@@ -141,7 +142,7 @@ namespace Scarborough.Windows
         /// </summary>
         public void Pause()
         {
-            if (!_isRunning) throw new InvalidOperationException("Graphics window is not running");
+            if (!_isRunning) throw new InvalidOperationException(I18n.Translate("internal/GraphicsWindow/notrunning", "Graphics window is not running."));
 
             _isPaused = true;
         }
@@ -151,7 +152,7 @@ namespace Scarborough.Windows
         /// </summary>
         public void Unpause()
         {
-            if (!_isRunning) throw new InvalidOperationException("Graphics window is not running");
+            if (!_isRunning) throw new InvalidOperationException(I18n.Translate("internal/GraphicsWindow/notrunning", "Graphics window is not running."));
 
             _isPaused = false;
         }
@@ -161,7 +162,7 @@ namespace Scarborough.Windows
         /// </summary>
         public void JoinGraphicsThread()
         {
-            if (!_isRunning) throw new InvalidOperationException("Graphics window is not running");
+            if (!_isRunning) throw new InvalidOperationException(I18n.Translate("internal/GraphicsWindow/notrunning", "Graphics window is not running."));
 
             try
             {

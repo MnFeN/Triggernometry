@@ -241,7 +241,7 @@ namespace Triggernometry.Core
 
         private void _ep_OnStatusChange(Endpoint.StatusEnum newStatus, string statusDesc)
         {
-            FilteredAddToLog(DebugLevelEnum.Verbose, string.Format("Endpoint ({0}) {1}", newStatus, statusDesc));
+            FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/endpointstatus", "Endpoint ({0}) {1}", newStatus, statusDesc));
         }
 
         private void BridgeFFXIV_OnLogEvent(DebugLevelEnum level, string text)

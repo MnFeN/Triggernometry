@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -49,10 +50,10 @@ namespace Triggernometry.FFXIV.ExtractedCsv
                 throw new ArgumentNullException(nameof(key));
 
             if (!HeaderIndex.TryGetValue(key, out int colIndex))
-                throw new KeyNotFoundException("Column '" + key + "' not found.");
+                throw new KeyNotFoundException(I18n.Translate("internal/CsvRow/columnnotfound", "Column '{0}' was not found.", key));
 
             if (colIndex < 0 || colIndex >= Fields.Count)
-                throw new IndexOutOfRangeException("Column index " + colIndex + " out of range.");
+                throw new IndexOutOfRangeException(I18n.Translate("internal/CsvRow/indexoutofrange", "Column index {0} is out of range.", colIndex));
 
             return Fields[colIndex];
         }
@@ -63,7 +64,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         public string Get(int colIndex)
         {
             if (colIndex < 0 || colIndex >= Fields.Count)
-                throw new IndexOutOfRangeException($"Column index {colIndex} out of range.");
+                throw new IndexOutOfRangeException(I18n.Translate("internal/CsvRow/indexoutofrange", "Column index {0} is out of range.", colIndex));
 
             return Fields[colIndex];
         }
@@ -101,7 +102,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
                     BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                     null,
                     Type.EmptyTypes,
-                    null) ?? throw new Exception($"CsvRow 子类 {type.Name} 必须实现无参构造函数");
+                    null) ?? throw new Exception(I18n.Translate("internal/CsvRow/missingconstructor", "CsvRow subclass {0} must have a parameterless constructor.", type.Name));
 
                 // 参数 row
                 var pRow = Expression.Parameter(typeof(CsvRow), "row");
@@ -118,7 +119,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
                 // 找到 CsvRow.CopyBaseFrom(CsvRow) 方法
                 var csvRowType = typeof(CsvRow);
                 var copyMethod = csvRowType.GetMethod("CopyBaseFrom", BindingFlags.Instance | BindingFlags.NonPublic)
-                    ?? throw new Exception("CsvRow.CopyBaseFrom(CsvRow) 方法未找到");
+                    ?? throw new Exception(I18n.Translate("internal/CsvRow/missingcopymethod", "Method CsvRow.CopyBaseFrom(CsvRow) was not found."));
 
                 // ((CsvRow)obj).CopyBaseFrom(row);
                 var callCopyBase = Expression.Call(

@@ -139,7 +139,7 @@ namespace Triggernometry.PluginBridges
         {
             if (!Ready)
             { 
-                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, "OverlayPlugin not ready");
+                RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/BridgeOverlay/notready", "OverlayPlugin is not ready."));
                 return new List<FFXIV.Entity>();
             }
             IList combatantList = _getCombatantListMethod.Invoke(_combatantMemoryManager, null) as IList; // List<Combatant> defined by OverlayPlugin

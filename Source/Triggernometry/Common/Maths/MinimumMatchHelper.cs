@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Numerics;
 
 namespace Triggernometry.Common.Maths
@@ -46,11 +47,11 @@ namespace Triggernometry.Common.Maths
             if (src == null) throw new ArgumentNullException(nameof(src));
             if (tgt == null) throw new ArgumentNullException(nameof(tgt));
             if (costSelector == null) throw new ArgumentNullException(nameof(costSelector));
-            if (src.Length != tgt.Length) throw new ArgumentException("src 和 tgt 的长度必须相同。");
+            if (src.Length != tgt.Length) throw new ArgumentException(I18n.Translate("internal/MinimumMatchHelper/lengthmismatch", "src and tgt must have the same length."));
 
             int n = src.Length;
             if (n == 0) return (new int[0], 0);
-            if (n > 30) throw new ArgumentOutOfRangeException(nameof(src), "元素数量过大。");
+            if (n > 30) throw new ArgumentOutOfRangeException(nameof(src), I18n.Translate("internal/MinimumMatchHelper/toomanyelements", "Too many elements; at most 30 are supported."));
 
             double[,] cost = new double[n, n];
             for (int i = 0; i < n; i++)
@@ -59,7 +60,7 @@ namespace Triggernometry.Common.Maths
                 {
                     double value = costSelector(src[i], tgt[j]);
                     if (double.IsNaN(value) || double.IsInfinity(value))
-                        throw new ArgumentException($"组 ({i}, {j}) 返回了无效值 {value}。");
+                        throw new ArgumentException(I18n.Translate("internal/MinimumMatchHelper/invalidcost", "Pair ({0}, {1}) returned an invalid value: {2}.", i, j, value));
 
                     cost[i, j] = value;
                 }
@@ -118,7 +119,7 @@ namespace Triggernometry.Common.Maths
             {
                 int srcIndex = prevChoice[curMask];
                 if (srcIndex < 0)
-                    throw new InvalidOperationException("未能还原完整匹配结果。");
+                    throw new InvalidOperationException(I18n.Translate("internal/MinimumMatchHelper/reconstructionfailed", "Could not reconstruct the complete matching result."));
 
                 matchByTgt[tgtIndex] = srcIndex;
                 curMask = prevMask[curMask];

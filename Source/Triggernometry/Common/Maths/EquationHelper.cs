@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Numerics;
 using static System.Math;
 
@@ -12,7 +13,7 @@ namespace Triggernometry.Common.Maths
         {
             if (Abs(A) <= eps)
             {
-                throw new ArgumentException("A must not be zero");
+                throw new ArgumentException(I18n.Translate("internal/EquationHelper/zerocoefficient", "A must not be zero"));
             }
             var Δ = B * B - 4 * A * C;
 

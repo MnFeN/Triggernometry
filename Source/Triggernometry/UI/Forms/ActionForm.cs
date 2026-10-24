@@ -85,15 +85,15 @@ namespace Triggernometry.UI.Forms
                 tbcActionSettings.SizeMode = TabSizeMode.Fixed;
             }
             btnTest.Tag = I18n.DoNotTranslate;
-            btnTest.Text = I18n.Translate("ActionForm/actionViewer1/ctxTestAction", "Test Action");
+            btnTest.Text = I18n.Translate("ActionViewer/ctxTestAction", "Test Action");
             btnTest.ContextMenuStrip = new ContextMenuStrip();
-            ToolStripItem tsi = btnTest.ContextMenuStrip.Items.Add(I18n.Translate("ActionForm/actionViewer1/ctxTestPlaceholder", "Test action with placeholder values"));
+            ToolStripItem tsi = btnTest.ContextMenuStrip.Items.Add(I18n.Translate("ActionViewer/ctxTestPlaceholder", "Test action with placeholder values"));
             tsi.Image = btnTest.Image;
             tsi.Click += Tsi_Click1;
-            tsi = btnTest.ContextMenuStrip.Items.Add(I18n.Translate("ActionForm/actionViewer1/ctxTestLive", "Test action with live values"));
+            tsi = btnTest.ContextMenuStrip.Items.Add(I18n.Translate("ActionViewer/ctxTestLive", "Test action with live values"));
             tsi.Image = btnTest.Image;
             tsi.Click += Tsi_Click2;
-            tsi = btnTest.ContextMenuStrip.Items.Add(I18n.Translate("ActionForm/actionViewer1/ctxTestLiveIgnoreCnd", "Test action with live values (ignore conditions)"));
+            tsi = btnTest.ContextMenuStrip.Items.Add(I18n.Translate("ActionViewer/ctxTestLiveIgnoreCnd", "Test action with live values (ignore conditions)"));
             tsi.Image = btnTest.Image;
             tsi.Click += Tsi_Click3;
             txtSendKeysLink.Tag = I18n.DoNotTranslate;

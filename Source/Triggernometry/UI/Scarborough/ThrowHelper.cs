@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 
 namespace Scarborough
 {
@@ -6,12 +7,12 @@ namespace Scarborough
     {
         public static InvalidOperationException DeviceNotInitialized()
         {
-            return new InvalidOperationException("The DirectX device is not initialized");
+            return new InvalidOperationException(I18n.Translate("internal/Graphics/uninitializeddevice", "The DirectX device is not initialized."));
         }
 
         public static InvalidOperationException UseBeginScene()
         {
-            return new InvalidOperationException("Use BeginScene before drawing anything");
+            return new InvalidOperationException(I18n.Translate("internal/ThrowHelper/beginscenerequired", "Call BeginScene before drawing."));
         }
     }
 }

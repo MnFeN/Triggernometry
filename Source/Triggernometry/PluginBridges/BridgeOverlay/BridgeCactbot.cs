@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Triggernometry.Localization;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using Triggernometry.Core;
@@ -49,7 +50,7 @@ namespace Triggernometry.PluginBridges
             var config = LoadCactbotOptions();
             if (config == null)
             { 
-                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, "获取 Cactbot 配置失败.");
+                RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/BridgeCactbot/configfailed", "Failed to retrieve Cactbot configuration."));
                 return;
             }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -136,7 +137,7 @@ namespace Triggernometry.Utilities.Maths
 
             if (depth != 0)
             {
-                throw new Exception($"坐标参数存在 {Abs(depth)} 个未闭合的{(depth > 0 ? "左" : "右")}括号。表达式：{rawCoords}");
+                throw new Exception(I18n.Translate("internal/XIVCoord/unmatchedparentheses", "Coordinate expression contains {0} unmatched parentheses ({1}). Expression: {2}", Abs(depth), depth > 0 ? "(" : ")", rawCoords));
             }
 
             List<XIVCoord> coords = new List<XIVCoord>();
@@ -170,7 +171,7 @@ namespace Triggernometry.Utilities.Maths
                     {
                         // polardirN4 r, 2 等价于 polar r, π/4；负向分段的序号偏移 0.5。
                         if (!int.TryParse(dirMatch.Groups["segments"].Value, out currentDirSegments) || currentDirSegments <= 0)
-                            throw new ArgumentException($"坐标方向的分段数必须是正整数：{operation}");
+                            throw new ArgumentException(I18n.Translate("internal/XIVCoord/invalidsegments", "Coordinate direction segment count must be a positive integer: {0}", operation));
 
                         currentDirNegative = dirMatch.Groups["isNegative"].Success;
                         isCurrentPolar = true;
@@ -192,7 +193,7 @@ namespace Triggernometry.Utilities.Maths
                 }
                 else
                 {
-                    throw new Exception($"坐标参数解析时，关键字之间参数过少。\n表达式：{rawCoords}；\n出错位置：{part}");
+                    throw new Exception(I18n.Translate("internal/XIVCoord/missingarguments", "Not enough arguments between coordinate keywords.\nExpression: {0};\nLocation: {1}", rawCoords, part));
                 }
             }
 

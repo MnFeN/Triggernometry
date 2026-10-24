@@ -321,13 +321,13 @@ namespace Triggernometry.UI.Forms
 
         private void cbxEditAutofire_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.Text != I18n.Translate("ConfigurationForm/btnTriggerTemplate", "Edit template trigger"))
+            if (this.Text != I18n.Translate("ConfigurationForm2/btnTriggerTemplate", "Edit template trigger"))
                 BtnOkUpdateText();
         }
 
         private void cbxEditAutofireAllowCondition_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.Text != I18n.Translate("ConfigurationForm/btnTriggerTemplate", "Edit template trigger"))
+            if (this.Text != I18n.Translate("ConfigurationForm2/btnTriggerTemplate", "Edit template trigger"))
                 BtnOkUpdateText();
         }
 

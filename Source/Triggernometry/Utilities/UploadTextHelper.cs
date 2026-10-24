@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -45,7 +46,7 @@ namespace Triggernometry.Utilities
 
                     // 如果服务器返回的内容本身是错误信息
                     if (resp.StatusCode != HttpStatusCode.OK)
-                        throw new WebException($"服务器返回状态码 {(int)resp.StatusCode} ({resp.StatusDescription})");
+                        throw new WebException(I18n.Translate("internal/UploadTextHelper/serverstatus", "Server returned status code {0} ({1}).", (int)resp.StatusCode, resp.StatusDescription));
                     return result;
                 }
             }
@@ -53,13 +54,13 @@ namespace Triggernometry.Utilities
             {
                 // 如果服务器确实有响应，读取错误信息附加上去
                 var resp = ex.Response as HttpWebResponse
-                    ?? throw new WebException($"网络或服务器错误：{ex.Message}", ex);
+                    ?? throw new WebException(I18n.Translate("internal/UploadTextHelper/networkexception", "Network or server error: {0}", ex.Message), ex);
 
                 using (resp)
                 using (var reader = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
                 {
                     string serverErr = reader.ReadToEnd();
-                    throw new WebException($"网络或服务器错误：{serverErr}", ex);
+                    throw new WebException(I18n.Translate("internal/UploadTextHelper/servererror", "Network or server error: {0}", serverErr), ex);
                 }
             }
         }
@@ -104,7 +105,7 @@ namespace Triggernometry.Utilities
             byte[] bytes = id.ToByteArray();
 
             if (Base3500Chars.Length != Base)
-                throw new InvalidOperationException("Base3500Chars length is not 3500");
+                throw new InvalidOperationException(I18n.Translate("internal/UploadTextHelper/invalidalphabet", "Base3500Chars length is not 3500."));
 
             char[] name = new char[4];
 

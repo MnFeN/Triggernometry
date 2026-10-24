@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Threading;
 using System.Runtime.InteropServices;
 
@@ -57,7 +58,7 @@ namespace Scarborough.Windows
             }
             set
             {
-                if (_isInitialized) throw new InvalidOperationException("OverlayWindow already running");
+                if (_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/alreadyrunning", "OverlayWindow is already running."));
 
                 _title = value;
             }
@@ -80,7 +81,7 @@ namespace Scarborough.Windows
             }
             set
             {
-                if (_isInitialized) throw new InvalidOperationException("OverlayWindow already running");
+                if (_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/alreadyrunning", "OverlayWindow is already running."));
 
                 _className = value;
             }
@@ -293,7 +294,7 @@ namespace Scarborough.Windows
         {
             lock (_lock)
             {
-                if (_isInitialized) throw new InvalidOperationException("OverlayWindow is already initialized");
+                if (_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/alreadyinitialized", "OverlayWindow is already initialized."));
 
                 _windowThread = new Thread(WindowThread)
                 {
@@ -325,7 +326,7 @@ namespace Scarborough.Windows
         /// </summary>
         public void Show()
         {
-            if (!_isInitialized) throw new InvalidOperationException("OverlayWindow not initialized");
+            if (!_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/uninitialized", "OverlayWindow is not initialized."));
 
             User32.ShowWindow(_handle, ShowWindowCommand.Show);
 
@@ -341,7 +342,7 @@ namespace Scarborough.Windows
         /// </summary>
         public void Hide()
         {
-            if (!_isInitialized) throw new InvalidOperationException("OverlayWindow not initialized");
+            if (!_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/uninitialized", "OverlayWindow is not initialized."));
 
             User32.ShowWindow(_handle, ShowWindowCommand.Hide);
 
@@ -357,7 +358,7 @@ namespace Scarborough.Windows
         /// <param name="y">The new y-coordinate of the window.</param>
         public void Move(int x, int y)
         {
-            if (!_isInitialized) throw new InvalidOperationException("OverlayWindow not initialized");
+            if (!_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/uninitialized", "OverlayWindow is not initialized."));
 
             User32.MoveWindow(_handle, x, y, _width, _height, true);
 
@@ -376,7 +377,7 @@ namespace Scarborough.Windows
         /// <param name="height">The new height of the window.</param>
         public void Resize(int width, int height)
         {
-            if (!_isInitialized) throw new InvalidOperationException("OverlayWindow not initialized");
+            if (!_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/uninitialized", "OverlayWindow is not initialized."));
 
             User32.MoveWindow(_handle, _x, _y, width, height, true);
 
@@ -397,7 +398,7 @@ namespace Scarborough.Windows
         /// <param name="height">The new height of the window.</param>
         public void Resize(int x, int y, int width, int height)
         {
-            if (!_isInitialized) throw new InvalidOperationException("OverlayWindow not initialized");
+            if (!_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/uninitialized", "OverlayWindow is not initialized."));
 
             User32.MoveWindow(_handle, x, y, width, height, true);
 
@@ -636,7 +637,7 @@ namespace Scarborough.Windows
         {
             lock (_lock)
             {
-                if (!_isInitialized) throw new InvalidOperationException("OverlayWindow is not initialized");
+                if (!_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/uninitialized", "OverlayWindow is not initialized."));
 
                 User32.PostMessage(Handle, CustomDestroyWindowMessage, IntPtr.Zero, IntPtr.Zero);
             }

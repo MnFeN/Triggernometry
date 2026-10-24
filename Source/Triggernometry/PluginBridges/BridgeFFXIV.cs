@@ -128,16 +128,16 @@ namespace Triggernometry.PluginBridges
             try
             {
                 object ffxivPlug = GetInstance()
-                    ?? throw new ArgumentException("No plugin instance available");
+                    ?? throw new ArgumentException(I18n.Translate("internal/ffxiv/noplugininstance", "No plugin instance available"));
 
                 PropertyInfo pi = ffxivPlug.GetType().GetProperty("DataSubscription",
                     BindingFlags.Public |
                     BindingFlags.NonPublic |
                     BindingFlags.Instance)
-                    ?? throw new ArgumentException("No DataSubscription found");
+                    ?? throw new ArgumentException(I18n.Translate("internal/ffxiv/nodatasubscription", "No DataSubscription found"));
 
                 object subs = pi.GetValue(ffxivPlug)
-                    ?? throw new ArgumentException("DataSubscription not initialized");
+                    ?? throw new ArgumentException(I18n.Translate("internal/ffxiv/datasubscriptionuninitialized", "DataSubscription not initialized"));
 
                 EventInfo zoneChangedEventInfo = subs.GetType().GetEvent("ZoneChanged",
                     BindingFlags.Public | BindingFlags.Instance)

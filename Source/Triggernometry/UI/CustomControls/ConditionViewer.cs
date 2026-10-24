@@ -982,7 +982,7 @@ namespace Triggernometry.UI.CustomControls
             if (selectedNode.Tag is ConditionGroup group)
             {
                 string result = group.CheckCondition(fakectx, null, null) ? "True" : "False";
-                MessageBox.Show(result, "Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(result, I18n.Translate("internal/ConditionViewer/testtitle", "Test"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else if (selectedNode.Tag is ConditionSingle condition)
             {
@@ -997,7 +997,7 @@ namespace Triggernometry.UI.CustomControls
                 }
                 string left = "L = \"" + GetExprResult(() => condition.GetExpressionResultL(fakectx, null, null)) + "\"";
                 string right = "R = \"" + GetExprResult(() => condition.GetExpressionResultR(fakectx, null, null)) + "\"";
-                MessageBox.Show($"{result}\n{left}\n{right}", "Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"{result}\n{left}\n{right}", I18n.Translate("internal/ConditionViewer/testtitle", "Test"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

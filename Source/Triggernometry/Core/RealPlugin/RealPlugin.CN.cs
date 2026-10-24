@@ -56,7 +56,7 @@ namespace Triggernometry.Core
                 serializer.Serialize(writer, entries);
                 string serializedEntries = writer.ToString();
                 ActionOld.ClipboardSetText(serializedEntries);
-                MessageBox.Show("Missing translations copied to clipboard.");
+                MessageBox.Show(I18n.Translate("internal/Plugin/missingtranslationscopied", "Missing translations copied to clipboard."));
             }
         }
 

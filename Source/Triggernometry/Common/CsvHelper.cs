@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace Triggernometry.Common
 
                         if (arr.Length != expected)
                         {
-                            throw new InvalidDataException($"CSV {filePath} 第 {row} 行的列数不一致：期望 {expected}，实际 {arr.Length}");
+                            throw new InvalidDataException(I18n.Translate("internal/CsvHelper/inconsistentcolumns", "CSV {0}, row {1}: expected {2} columns but found {3}.", filePath, row, expected, arr.Length));
                         }
                     }
 

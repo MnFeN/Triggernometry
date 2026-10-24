@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Triggernometry.Localization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,19 +27,19 @@ namespace Triggernometry.PluginBridges
             if (cafeStore == null) return;
 
             dependencyObjectType = Type.GetType("System.Windows.DependencyObject, WindowsBase")
-                ?? throw new Exception("没找到 DependencyObject");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/objectnotfound", "Object '{0}' was not found.", "DependencyObject"));
 
             dispatcherObjectType = Type.GetType("System.Windows.Threading.DispatcherObject, WindowsBase")
-                ?? throw new Exception("没找到 DispatcherObject");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/objectnotfound", "Object '{0}' was not found.", "DispatcherObject"));
 
             visualTreeHelperType = Type.GetType("System.Windows.Media.VisualTreeHelper, PresentationCore")
-                ?? throw new Exception("没找到 VisualTreeHelper");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/objectnotfound", "Object '{0}' was not found.", "VisualTreeHelper"));
 
             listViewType = Type.GetType("System.Windows.Controls.ListView, PresentationFramework")
-                ?? throw new Exception("没找到 ListView");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/objectnotfound", "Object '{0}' was not found.", "ListView"));
 
             notifyCollectionChangedType = Type.GetType("System.Collections.Specialized.NotifyCollectionChangedEventHandler, System")
-                ?? throw new Exception("没找到 NotifyCollectionChangedEventHandler");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/objectnotfound", "Object '{0}' was not found.", "NotifyCollectionChangedEventHandler"));
         }
 
         public static string AutoRemoveTriggernometryFromCafeStore()
@@ -135,10 +136,10 @@ namespace Triggernometry.PluginBridges
             var mainView = cafeStore.GetType()
                 .GetField("_mainView", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 ?.GetValue(cafeStore)
-                ?? throw new Exception("没找到 mainView");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/objectnotfound", "Object '{0}' was not found.", "mainView"));
 
             if (!dependencyObjectType.IsInstanceOfType(mainView))
-                throw new Exception("mainView 不是 DependencyObject");
+                throw new Exception(I18n.Translate("internal/BridgeCafe/invalidobjecttype", "Object '{0}' is not of type {1}.", "mainView", "DependencyObject"));
 
             return mainView;
         }
@@ -147,10 +148,10 @@ namespace Triggernometry.PluginBridges
         {
             object listView = GetVisualTree(mainView)
                 .FirstOrDefault(x => listViewType.IsInstanceOfType(x))
-                ?? throw new Exception("没找到 ListView");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/objectnotfound", "Object '{0}' was not found.", "ListView"));
 
             return GetPropertyValue(listView, "ItemsSource") as IList
-                ?? throw new Exception("ItemsSource 不是 IList");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/invalidobjecttype", "Object '{0}' is not of type {1}.", "ItemsSource", "IList"));
         }
 
         static object FindOldTriggernometryEntry(IList source)
@@ -169,7 +170,7 @@ namespace Triggernometry.PluginBridges
             var dispatcher = dispatcherObjectType
                 .GetProperty("Dispatcher", BindingFlags.Public | BindingFlags.Instance)
                 .GetValue(mainView, null)
-                ?? throw new Exception("没找到 Dispatcher");
+                ?? throw new Exception(I18n.Translate("internal/BridgeCafe/objectnotfound", "Object '{0}' was not found.", "Dispatcher"));
 
             dispatcher.GetType().InvokeMember(
                 "Invoke",
