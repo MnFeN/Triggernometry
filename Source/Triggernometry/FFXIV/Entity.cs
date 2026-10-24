@@ -227,7 +227,7 @@ namespace Triggernometry.FFXIV
             { "IsFriend",       e => e.IsFriend },
             { "WeaponID",       e => e.WeaponID },
             { "TargetID",       e => e.TargetHexID },
-            { "IsTargetingSelf",e => e.TargetID == GetMyself().TargetID },
+            { "IsTargetingSelf",e => e.TargetID == GetMyself().ID },
             { "BNpcNameID",     e => e.BNpcNameID },
             { "CurrentWorldID", e => e.CurrentWorldID },
             { "WorldID",        e => e.WorldID },
