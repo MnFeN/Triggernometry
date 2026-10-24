@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -23,7 +22,6 @@ namespace Triggernometry.UI.CustomControls
     {
 
         private Dictionary<ConditionComponent, TreeNode> _reverseNodeLookup = new Dictionary<ConditionComponent, TreeNode>();
-        private bool _isChanging = false;
         private bool isReadOnly;
         private Color disabledNodeColor;
 
@@ -94,17 +92,11 @@ namespace Triggernometry.UI.CustomControls
             if (_reverseNodeLookup.ContainsKey(cc) == true)
             {
                 _reverseNodeLookup.Remove(cc);
-                //System.Diagnostics.Debug.WriteLine("CV: ConditionComponent " + cc.Id + " unregistered");
-            }
-            else
-            {
-                //System.Diagnostics.Debug.WriteLine("CV: ConditionComponent " + cc.Id + " not registered");
             }
         }
 
         private void SetReverseLookup(ConditionComponent cc, TreeNode tn)
         {
-            //System.Diagnostics.Debug.WriteLine("CV: ConditionComponent " + cc.Id + " registered");
             _reverseNodeLookup[cc] = tn;
         }
 
@@ -113,10 +105,6 @@ namespace Triggernometry.UI.CustomControls
             if (_reverseNodeLookup.ContainsKey(cc) == true)
             {
                 return _reverseNodeLookup[cc];
-            }
-            else
-            {
-                //System.Diagnostics.Debug.WriteLine("CV: ConditionComponent " + cc.Id + " not found");
             }
             return null;
         }
@@ -131,11 +119,6 @@ namespace Triggernometry.UI.CustomControls
             ResizeCombobox(cbxOpType);
             DoubleBuffered = true;
             disabledNodeColor = Color.Red;
-            trvNodes.TreeViewNodeSorter = new NodeSorter();
-            trvNodes.ItemDrag += trvNodes_ItemDrag;
-            trvNodes.DragDrop += trvNodes_DragDrop;
-            trvNodes.DragEnter += trvNodes_DragEnter;
-            trvNodes.DragOver += trvNodes_DragOver;
             trvNodes.BeforeCheck += trvNodes_BeforeCheck;
             pnlEditorGroup.Visible = false;
             pnlEditorSingle.Visible = false;            
@@ -171,8 +154,6 @@ namespace Triggernometry.UI.CustomControls
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             re.ExpressionL = expLeft.Expression;
-            TreeSort();
-
         }
 
         private void expRight_TextChanged(object sender, EventArgs e)
@@ -180,7 +161,6 @@ namespace Triggernometry.UI.CustomControls
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             re.ExpressionR = expRight.Expression;
-            TreeSort();
         }
 
         private void expLeft_LostFocus(object sender, EventArgs e)
@@ -210,63 +190,58 @@ namespace Triggernometry.UI.CustomControls
             cbx.DropDownWidth = mw;
         }
 
-        // Create a node sorter that implements the IComparer interface.
-        public class NodeSorter : IComparer
+        /// <summary> Uses row edges for sibling order and a group's center to move conditions into it. </summary>
+        private bool TryGetDropTarget(DragEventArgs e, out TreeNode dragged, out TreeNode target, out int index)
         {
-            // Compare the length of the strings, or the strings
-            // themselves, if they are the same length.
-            public int Compare(object x, object y)
-            {
-                TreeNode tx = x as TreeNode;
-                TreeNode ty = y as TreeNode;
-                if (tx.Tag is ConditionGroup && ty.Tag is ConditionSingle)
-                {
-                    return -1;
-                }
-                if (ty.Tag is ConditionGroup && tx.Tag is ConditionSingle)
-                {
-                    return 1;
-                }                // If they are the same length, call Compare.
-                int ex = string.Compare(tx.Text, ty.Text);
-                if (ex != 0)
-                {
-                    return ex;
-                }
-                return ((ConditionComponent)tx.Tag).Id.CompareTo(((ConditionComponent)ty.Tag).Id);
-            }
-        }
+            dragged = e.Data?.GetData(typeof(TreeNode)) as TreeNode;
+            target = null;
+            index = -1;
+            if (isReadOnly || dragged?.Parent == null || dragged.TreeView != trvNodes
+                || (e.AllowedEffect & DragDropEffects.Move) == 0) return false;
 
-        private bool ContainsNode(TreeNode node1, TreeNode node2)
-        {
-            if (node2.Parent == null) return false;
-            if (node2.Parent.Equals(node1)) return true;
-            return ContainsNode(node1, node2.Parent);
+            Point point = trvNodes.PointToClient(new Point(e.X, e.Y));
+            if (!trvNodes.ClientRectangle.Contains(point)) return false;
+            target = trvNodes.GetNodeAt(point) ?? trvNodes.Nodes[0];
+            if (target == dragged) return false;
+            Rectangle bounds = target.Bounds;
+            if (!(target.Tag is ConditionGroup) || (target.Parent != null
+                && (point.Y < bounds.Top + bounds.Height / 4 || point.Y >= bounds.Bottom - bounds.Height / 4)))
+            {
+                index = target.Index + (point.Y < bounds.Top + bounds.Height / 2 ? 0 : 1);
+            }
+            TreeNode parent = index < 0 ? target : target.Parent;
+            if (parent == null) return false;
+            for (TreeNode ancestor = parent; ancestor != null; ancestor = ancestor.Parent)
+            {
+                if (ancestor == dragged) return false;
+            }
+            return true;
         }
 
         internal void trvNodes_DragOver(object sender, DragEventArgs e)
         {
-            if (isReadOnly) { e.Effect = DragDropEffects.None; return; }
-            Point targetPoint = trvNodes.PointToClient(new Point(e.X, e.Y));
-            TreeNode tn = trvNodes.GetNodeAt(targetPoint);
-            if (tn != null)
-            {
-                trvNodes.SelectedNode = tn;
-            }
-            if (tn != null && tn.Tag is ConditionGroup)
+            if (TryGetDropTarget(e, out _, out TreeNode target, out int index))
             {
                 e.Effect = DragDropEffects.Move;
+                trvNodes.SelectedNode = target;
+                trvNodes.SetInsertionMark(index < 0 ? null : target, index > target.Index);
+                if (index < 0) target.Expand();
             }
             else
             {
                 e.Effect = DragDropEffects.None;
+                trvNodes.SetInsertionMark(null, false);
             }
         }
 
         internal void trvNodes_DragEnter(object sender, DragEventArgs e)
         {
-            if (isReadOnly) { e.Effect = DragDropEffects.None; return; }
-            e.Effect = e.AllowedEffect;
-            OnConditionsUpdated();
+            trvNodes_DragOver(sender, e);
+        }
+
+        private void trvNodes_DragLeave(object sender, EventArgs e)
+        {
+            trvNodes.SetInsertionMark(null, false);
         }
 
         internal void FocusTree()
@@ -276,48 +251,32 @@ namespace Triggernometry.UI.CustomControls
 
         internal void trvNodes_DragDrop(object sender, DragEventArgs e)
         {
-            if (isReadOnly) return;
-            Point targetPoint = trvNodes.PointToClient(new Point(e.X, e.Y));
-            TreeNode targetNode = trvNodes.GetNodeAt(targetPoint);
-            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
-            if (!draggedNode.Equals(targetNode) && !ContainsNode(draggedNode, targetNode) && !(targetNode.Tag is ConditionSingle))
-            {
-                if (e.Effect == DragDropEffects.Move)
-                {
-                    ConditionGroup te = (ConditionGroup)targetNode.Tag;
-                    ConditionComponent de = (ConditionComponent)draggedNode.Tag;
-                    de.Parent.Children.Remove(de);
-                    de.Parent = te;
-                    te.Children.Add(de);
-                    draggedNode.Remove();
-                    targetNode.Nodes.Add(draggedNode);
-                    trvNodes.SelectedNode = draggedNode;
-                    RecolorStartingFromNode(targetNode, targetNode.Checked);
-                }
-                targetNode.Expand();
-            }
+            trvNodes.SetInsertionMark(null, false);
+            if (e.Effect != DragDropEffects.Move || !TryGetDropTarget(e, out TreeNode dragged, out TreeNode target, out int index)) return;
+            TreeNode parent = index < 0 ? target : target.Parent;
+            if (index < 0) index = parent.Nodes.Count;
+            if (dragged.Parent == parent && dragged.Index < index) index--;
+            if (dragged.Parent == parent && dragged.Index == index) return;
+
+            // Tree order is also the serialized and short-circuit evaluation order.
+            ConditionComponent condition = (ConditionComponent)dragged.Tag;
+            condition.Parent.Children.Remove(condition);
+            condition.Parent = (ConditionGroup)parent.Tag;
+            condition.Parent.Children.Insert(index, condition);
+            dragged.Remove();
+            parent.Nodes.Insert(index, dragged);
+            parent.Expand();
+            trvNodes.SelectedNode = dragged;
+            RecolorStartingFromNode(dragged, parent.Checked);
             OnConditionsUpdated();
         }
 
         internal void trvNodes_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            if (isReadOnly) return;
-            if (e.Button == MouseButtons.Left)
+            if (!isReadOnly && e.Button == MouseButtons.Left && e.Item is TreeNode node && node.Parent != null)
             {
-                if (e.Item != trvNodes.Nodes[0])
-                {
-                    DoDragDrop(e.Item, DragDropEffects.Move);
-                }
-            }
-        }
-
-        private void TreeSort()
-        {
-            if (_isChanging == false)
-            {
-                TreeNode tn = trvNodes.SelectedNode;
-                trvNodes.Sort();
-                trvNodes.SelectedNode = tn;
+                DoDragDrop(node, DragDropEffects.Move);
+                trvNodes.SetInsertionMark(null, false);
             }
         }
 
@@ -376,7 +335,6 @@ namespace Triggernometry.UI.CustomControls
         private void UpdateEditorToCondition(ConditionGroup r)
         {
             BuildTreeFromCondition(r);
-            TreeSort();
             trvNodes.SelectedNode = trvNodes.Nodes[0];
             trvNodes.Nodes[0].Expand();
         }
@@ -446,20 +404,9 @@ namespace Triggernometry.UI.CustomControls
             btnDelete.Enabled = !isReadOnly && re.Parent != null;
         }
 
-        private void trvNodes_BeforeSelect(object sender, TreeViewCancelEventArgs e)
-        {
-            _isChanging = true;
-        }
-
         private void trvNodes_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            ConfirmComponentSelection((ConditionComponent)e.Node.Tag);
-        }
-
-        private void ConfirmComponentSelection(ConditionComponent cc)
-        {
-            UpdateEditorToConditionComponent(cc);
-            _isChanging = false;
+            UpdateEditorToConditionComponent((ConditionComponent)e.Node.Tag);
         }
 
         private void BuildTreeFromCondition(ConditionGroup r)
@@ -542,7 +489,6 @@ namespace Triggernometry.UI.CustomControls
             re.Parent.Children.Add(re);
             tx.Nodes.Add(tn);
             RecolorStartingFromNode(tx, tx.Checked);
-            TreeSort();
             trvNodes.SelectedNode = tn;
             if (tx.IsExpanded == false)
             {
@@ -572,7 +518,6 @@ namespace Triggernometry.UI.CustomControls
             re.Parent.Children.Add(re);
             tx.Nodes.Add(tn);
             RecolorStartingFromNode(tx, tx.Checked);
-            TreeSort();
             trvNodes.SelectedNode = tn;
             if (tx.IsExpanded == false)
             {
@@ -722,7 +667,6 @@ namespace Triggernometry.UI.CustomControls
                     re.ExpressionTypeR = ConditionSingle.ExprTypeEnum.Numeric;
                     break;
             }
-            TreeSort();
             OnConditionsUpdated();
         }
 
@@ -741,7 +685,6 @@ namespace Triggernometry.UI.CustomControls
                     re.ExpressionTypeL = ConditionSingle.ExprTypeEnum.Numeric;
                     break;
             }
-            TreeSort();
             OnConditionsUpdated();
         }
 
@@ -888,7 +831,6 @@ namespace Triggernometry.UI.CustomControls
                             tn.Checked = tc.Enabled;
                             tc.Grouping = sc.Grouping;                            
                             RecolorStartingFromNode(tn, tn.Checked);
-                            TreeSort();
                             UpdateEditorToConditionComponent(target);
                             tn.Expand();
                         }
@@ -904,7 +846,6 @@ namespace Triggernometry.UI.CustomControls
                             tc.ExpressionTypeL = sc.ExpressionTypeL;
                             tc.ExpressionTypeR = sc.ExpressionTypeR;
                             RecolorStartingFromNode(tn, tn.Checked);
-                            TreeSort();
                             UpdateEditorToConditionComponent(target);
                         }
                     }
@@ -920,7 +861,6 @@ namespace Triggernometry.UI.CustomControls
                         cx.Parent = tg;
                         TreeNode ex = BuildTreeFromConditionItem(tn, cx);
                         RecolorStartingFromNode(tn, tn.Checked);
-                        TreeSort();
                         trvNodes.SelectedNode = ex;
                         ex.ExpandAll();
                     }
@@ -953,7 +893,6 @@ namespace Triggernometry.UI.CustomControls
                     break;
             }
             UpdateNodeIcon(tn);
-            TreeSort();
             OnConditionsUpdated();
         }
 
@@ -962,7 +901,6 @@ namespace Triggernometry.UI.CustomControls
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             re.ConditionType = (ConditionSingle.CndTypeEnum)cbxOpType.SelectedIndex;
-            TreeSort();
             OnConditionsUpdated();
         }
 

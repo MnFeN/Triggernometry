@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using System.Threading;
+﻿using System.Xml.Serialization;
 
 namespace Triggernometry.Core.Conditions
 {
@@ -17,10 +11,6 @@ namespace Triggernometry.Core.Conditions
         public delegate void ChangeDelegate(ConditionComponent re);
         public event ChangeDelegate OnPropertyChange;
 
-        private static object lobject = new object();
-        private static long IdCounter = 1;
-        internal long Id { get; set; }
-
         [XmlAttribute]
         public bool Enabled { get; set; } = true;
 
@@ -28,24 +18,11 @@ namespace Triggernometry.Core.Conditions
 
         protected void TriggerOnPropertyChange()
         {
-            if (OnPropertyChange != null)
-            {
-                OnPropertyChange(this);
-            }
+            OnPropertyChange?.Invoke(this);
         }
 
         internal abstract bool CheckCondition(Context ctx, Context.LoggerDelegate logger, object o);
         internal abstract ConditionComponent Duplicate();
-
-        public ConditionComponent()
-        {
-            lock (lobject)
-            {
-                Id = IdCounter;
-                IdCounter++;
-            }
-        }
-
     }
 
 }
