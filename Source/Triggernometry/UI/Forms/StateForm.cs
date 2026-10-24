@@ -222,7 +222,11 @@ namespace Triggernometry.UI.Forms
         {
             string newType = "";
             DataGridView dgv = sender as DataGridView;
-            VariableStore vs = plug.GetVariableStore(dgv.Name == nameof(dgvPeScalarVariables));
+            VariableStore vs = plug.GetVariableStore(
+                dgv == dgvPeScalarVariables || 
+                dgv == dgvPeListVariables ||
+                dgv == dgvPeTableVariables || 
+                dgv == dgvPeDictVariables);
             switch (dgv.Name)
             {
                 case nameof(dgvScalarVariables):
