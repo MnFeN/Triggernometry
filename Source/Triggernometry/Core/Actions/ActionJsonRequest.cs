@@ -205,7 +205,7 @@ namespace Triggernometry.Core.Actions
                 string endpointh = RealPlugin.GenerateHash(endpoint);
                 string payloadh = RealPlugin.GenerateHash(payload);
                 string headersh = RealPlugin.GenerateHash(headers);
-                string fh = RealPlugin.GenerateHash(endpointh + payloadh + headersh);
+                string fh = RealPlugin.GenerateHash(Method + endpointh + payloadh + headersh);
                 string fn = Path.Combine(plug.ConfigPath, "TriggernometryJsonCache");
                 if (Directory.Exists(fn) == false)
                 {
