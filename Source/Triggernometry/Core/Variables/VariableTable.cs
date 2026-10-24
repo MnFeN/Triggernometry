@@ -59,9 +59,8 @@ namespace Triggernometry.Core.Variables
             {
                 return 1;
             }
-            if (o is VariableTable)
+            if (o is VariableTable vt)
             {
-                VariableTable vt = (VariableTable)o;                
                 if (Height < vt.Height)
                 {
                     return -1;
@@ -79,9 +78,9 @@ namespace Triggernometry.Core.Variables
                     return 1;
                 }
                 int res;
-                for (int y = 0; y < Height; y++)
+                for (int y = 1; y <= Height; y++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (int x = 1; x <= Width; x++)
                     {
                         res = Peek(x, y).CompareTo(vt.Peek(x, y));
                         if (res != 0)
