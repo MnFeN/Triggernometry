@@ -83,14 +83,14 @@ namespace Triggernometry.Core.Conditions
             return cg;
         }
 
-        internal static void RebuildParentage(ConditionGroup cg)
+        internal static void RebuildParentage(ConditionGroup parentGroup)
         {
-            foreach (ConditionComponent cc in cg.Children)
+            foreach (var component in parentGroup.Children)
             {
-                cc.Parent = cg;
-                if (cc is ConditionGroup)
+                component.Parent = parentGroup;
+                if (component is ConditionGroup group)
                 {
-                    RebuildParentage((ConditionGroup)cc);
+                    RebuildParentage(group);
                 }
             }
         }

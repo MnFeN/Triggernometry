@@ -817,6 +817,11 @@ namespace Triggernometry.UI.CustomControls
                     {
                         cx = (ConditionComponent)xs.Deserialize(nr);
                     }
+                    // XML stores children, but internal parent links must be rebuilt after deserialization.
+                    if (cx is ConditionGroup group)
+                    {
+                        ConditionGroup.RebuildParentage(group);
+                    }
                     TreeNode tn = trvNodes.SelectedNode;
                     ConditionComponent target = (ConditionComponent)tn.Tag;
                     if (
