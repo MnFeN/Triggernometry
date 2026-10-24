@@ -772,7 +772,8 @@ namespace Triggernometry.Core
 
         internal void SetActionsParent()
         {
-            Actions.ForEach(a => a.ParentTrigger = this);
+            if (Condition != null) ConditionGroup.RebuildParentage(Condition);
+            ActionOld.RebuildParentage(Actions, this);
         }
 
         #endregion Utils

@@ -364,13 +364,6 @@ namespace Triggernometry.UI.CustomControls
             {
                 tn.Expand();
             }
-            lock (plug.Triggers)
-            {
-                foreach (Trigger t in plug.Triggers)
-                {
-                    t.SetActionsParent();
-                }
-            }
         }
 
         private void RetranslateTreeRoots()
@@ -455,18 +448,8 @@ namespace Triggernometry.UI.CustomControls
                 tn.SelectedImageIndex = tn.ImageIndex;
                 tx.Parent = parentfolder;
                 parentnode.Nodes.Add(tn);
+                tx.SetActionsParent();
                 plug.AddTrigger(tx, tx.Parent.ParentsEnabled());
-                if (tx.Condition != null)
-                {
-                    ConditionGroup.RebuildParentage(tx.Condition);
-                }
-                foreach (var a in tx.Actions)
-                {
-                    if (a.Condition != null)
-                    {
-                        ConditionGroup.RebuildParentage(a.Condition);
-                    }
-                }
             }
         }
 
@@ -517,16 +500,6 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        /// <summary> Gives copied template actions independent queue identities, including loop actions. </summary>
-        private static void ResetActionIds(IEnumerable<Core.ActionOld> actions)
-        {
-            foreach (Core.ActionOld action in actions)
-            {
-                action.Id = Guid.NewGuid();
-                ResetActionIds(action.LoopActions);
-            }
-        }
-
         internal void btnAddTrigger_Click(object sender, EventArgs e)
         {
             Trigger newTrigger = new Trigger();
@@ -534,7 +507,10 @@ namespace Triggernometry.UI.CustomControls
             {
                 cfg.TemplateTrigger?.CopySettingsTo(newTrigger);
                 newTrigger.Id = Guid.NewGuid();
-                ResetActionIds(newTrigger.Actions);
+                foreach (Core.ActionOld action in Core.ActionOld.RecursiveGetActions(newTrigger.Actions))
+                {
+                    action.Id = Guid.NewGuid();
+                }
             }
 
             using (Forms.TriggerForm tf = new Forms.TriggerForm(newTrigger, treeView1, imageList1))
@@ -1106,9 +1082,9 @@ namespace Triggernometry.UI.CustomControls
                 }
             }
             int fdjs = 0, tdjs = 0;
-            foreach (Trigger nt in newTrigs)
+            foreach (Trigger newTrig in newTrigs)
             {
-                foreach (Core.ActionOld a in nt.Actions)
+                foreach (Core.ActionOld a in Core.ActionOld.RecursiveGetActions(newTrig.Actions))
                 {
                     if (renamedTriggers.ContainsKey(a._TriggerId) == true)
                     {
@@ -1121,7 +1097,8 @@ namespace Triggernometry.UI.CustomControls
                         fdjs++;
                     }
                 }
-                plug.AddTrigger(nt, nt.Parent.ParentsEnabled());
+                newTrig.SetActionsParent();
+                plug.AddTrigger(newTrig, newTrig.Parent.ParentsEnabled());
             }
             if (fdjs > 0 || tdjs > 0)
             {

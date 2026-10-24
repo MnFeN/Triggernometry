@@ -436,7 +436,7 @@ namespace Triggernometry.UI.CustomControls
                 if ((pastedActions?.Count ?? 0) == 0) return;
 
                 // Set ParentTrigger for all pasted actions
-                pastedActions.ForEach(a => a.ParentTrigger = Trigger);
+                Core.ActionOld.RebuildParentage(pastedActions, Trigger);
 
                 // Decide insert index:
                 // If there are selected rows: insert after the last selected row

@@ -141,6 +141,21 @@ namespace Triggernometry.UI.Forms
             return rex.IsMatch(input);
         }
 
+        /// <summary> Enumerates searchable actions with their positions inside nested loops. </summary>
+        private static IEnumerable<(ActionOld Action, string Path)> GetActionsWithPath(IEnumerable<ActionOld> actions, string prefix = "")
+        {
+            int index = 0;
+            foreach (ActionOld action in actions)
+            {
+                string path = prefix + ++index;
+                yield return (action, path);
+                foreach (var child in GetActionsWithPath(action.LoopActions, path + "."))
+                {
+                    yield return child;
+                }
+            }
+        }
+
         internal List<SearchResult> SearchIn(Folder f, Context ctx, Regex rex, SearchFilterEnum filter)
         {
             List<SearchResult> results = new List<SearchResult>();
@@ -193,8 +208,7 @@ namespace Triggernometry.UI.Forms
                 {   // use the cached trigger regex instead?
                     if (RegexMatches(rex, t.RegularExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggerregex", "Trigger regular expression"), Match = tn });
                 }
-                int i = 1;
-                foreach (var a in t.Actions)
+                foreach (var (a, i) in GetActionsWithPath(t.Actions))
                 {
                     if ((filter & SearchFilterEnum.ActionDescription) != 0)
                     {
@@ -202,7 +216,7 @@ namespace Triggernometry.UI.Forms
                     }
                     if ((filter & SearchFilterEnum.ActionCondition) != 0)
                     {
-                        if (ConditionMatches(rex, a.Condition) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitactioncond", "Action #{0} condition", i), Match = tn });
+                        if (ConditionMatches(rex, a.Condition) || (a.ActionType == ActionTypeEnum.Loop && ConditionMatches(rex, a.LoopCondition))) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitactioncond", "Action #{0} condition", i), Match = tn });
                     }
                     if ((filter & SearchFilterEnum.ActionDetails) != 0)
                     {
@@ -311,7 +325,6 @@ namespace Triggernometry.UI.Forms
                             if (RegexMatches(rex, a._DiskFileOpVar) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitdiskfilevar", "Action #{0} disk operation variable name", i), Match = tn });
                         }
                     }
-                    i++;
                 }
             }
             foreach (Folder sf in f.Folders)

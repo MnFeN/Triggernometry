@@ -344,7 +344,7 @@ namespace Triggernometry.Core
             {
                 case AudioOutputEnum.AlwaysOverride:
                     {
-                        foreach (ActionOld a in t.Actions)
+                        foreach (ActionOld a in ActionOld.RecursiveGetActions(t.Actions))
                         {
                             a._SoundRouting = Configuration.AudioRoutingMethodEnum.Triggernometry;
                             a._TTSRouting = Configuration.AudioRoutingMethodEnum.Triggernometry;

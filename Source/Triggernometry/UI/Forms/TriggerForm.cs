@@ -213,6 +213,7 @@ namespace Triggernometry.UI.Forms
             t.Condition = cndCondition.ConditionToEdit;
             t.MutexToCapture = expMutexName.Expression;
             t.IsReadme = chkReadmeTrigger.Checked;
+            t.SetActionsParent();
         }
 
         private void TriggerForm_Shown(object sender, EventArgs e)

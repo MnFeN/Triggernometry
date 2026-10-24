@@ -923,6 +923,7 @@ namespace Triggernometry.UI.Forms
                      orderby tx.OrderNumber ascending
                      select tx;
             a.LoopActions.AddRange(ix);
+            ActionOld.RebuildParentage(new[] { a }, ParentTrigger);
             a.LoopDelayExpression = expLoopIterationDelay.Expression;
             a.LoopIncrExpression = expLoopIncr.Expression;
             a.LoopInitExpression = expLoopInit.Expression;
