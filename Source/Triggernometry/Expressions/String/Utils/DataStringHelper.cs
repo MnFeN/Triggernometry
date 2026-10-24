@@ -252,13 +252,14 @@ namespace Triggernometry.Expressions.String.Utils
             public uint Value;
             public const uint Default = 0xE0000000;
 
-            private static readonly Regex HexRegex = new Regex(@"^[0-9A-Fa-f]+$", RegexOptions.Compiled);
+            private static readonly Regex HexRegex = new Regex(@"^(?:[14]0[0-9A-F]{6}|E0000000)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             public HexOrDecId(uint value) => Value = value;
             public HexOrDecId(string input)
             {
                 input = input.Trim();
                 if (string.IsNullOrWhiteSpace(input))
                     Value = Default;
+                // "10123456" "40ABCDEF" "E0000000"
                 else if (HexRegex.IsMatch(input))
                     Value = Convert.ToUInt32(input, 16);
                 else

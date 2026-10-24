@@ -207,6 +207,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
                 return false;
 
             return
+                entityId == 0xE0000000 ||
                 (entityId >= 0x10000000 && entityId <= 0x10FFFFFF) ||
                 (entityId >= 0x40000000 && entityId <= 0x40FFFFFF);
         }
