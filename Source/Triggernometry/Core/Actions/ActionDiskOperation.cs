@@ -211,28 +211,32 @@ namespace Triggernometry.Core.Actions
                                 data.Add(x);
                             }
                         }
-                        VariableTable vt = vs.GetTableVariable(varname, true);
-                        if (data.Count > 0 && datawidth > 0)
+                        string vtchanger;
+                        if (ctx.Trigger != null)
                         {
-                            string vtchanger;
-                            if (ctx.Trigger != null)
+                            vtchanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
+                        }
+                        else
+                        {
+                            vtchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
+                        }
+                        // Build a replacement so missing CSV cells cannot retain old values.
+                        VariableTable vt = new VariableTable();
+                        vt.Resize(datawidth, data.Count);
+                        int y = 1;
+                        foreach (string[] row in data)
+                        {
+                            for (int x = 0; x < row.Length; x++)
                             {
-                                vtchanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
+                                vt.Set(x + 1, y, row[x], vtchanger);
                             }
-                            else
-                            {
-                                vtchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
-                            }
-                            vt.Resize(datawidth, data.Count);
-                            int y = 1;
-                            foreach (string[] row in data)
-                            {
-                                for (int x = 0; x < row.Length; x++)
-                                {
-                                    vt.Set(x + 1, y, row[x], vtchanger);
-                                }
-                                y++;
-                            }
+                            y++;
+                        }
+                        vt.LastChanged = DateTime.Now;
+                        vt.LastChanger = vtchanger;
+                        lock (vs.Table)
+                        {
+                            vs.Table[varname] = vt;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/filetableset",
                             "{2}Table variable ({0}) value read from CSV file ({1})", varname, filename, persist));
