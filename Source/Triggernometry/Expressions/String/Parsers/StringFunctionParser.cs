@@ -23,7 +23,8 @@ namespace Triggernometry.Expressions.String.Parsers
         {
             Match funcMatch = rexFunc.Match(operand);
             if (!funcMatch.Success)
-                throw new Exception($"Invalid function expression syntax: '{operand}'");
+                throw new Exception(I18n.Translate("internal/StringFunctionParser/invalidsyntax",
+                    "Invalid function expression syntax: '{0}'", operand));
 
             var funcNameLower = funcMatch.Groups["name"].Value.ToLower().TrimEx();
             var sourceString = funcMatch.Groups["val"].Value;
@@ -103,7 +104,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         sourceString = sourceString.TrimEx();
                         if (!reHex8.IsMatch(sourceString))
                         {
-                            throw InvalidValueError(funcNameLower, "funcval", sourceString);
+                            throw InvalidValueError(funcNameLower, I18n.Translate("internal/StringFunctionParser/functionvalue", "function value"), sourceString);
                         }
                         return MathParser.ParseDamage(sourceString).ToString(InvClt);
                     }
@@ -488,7 +489,8 @@ namespace Triggernometry.Expressions.String.Parsers
                         return dt.ToString(format);
                     }
                 default:
-                    throw new Exception($"Unknown string function '{funcNameLower}'.");
+                    throw new Exception(I18n.Translate("internal/StringFunctionParser/unknownfunction",
+                        "Unknown string function '{0}'.", funcNameLower));
             }
         }
     }

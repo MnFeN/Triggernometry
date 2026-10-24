@@ -4,6 +4,7 @@ using System.Text;
 using Triggernometry.Core;
 using Triggernometry.Expressions.String.Parsers;
 using static Triggernometry.Expressions.String.Utils.ParserCommon;
+using Triggernometry.Localization;
 
 namespace Triggernometry.Expressions.String
 {
@@ -57,14 +58,16 @@ namespace Triggernometry.Expressions.String
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"解析文本表达式时出错：{ex.Message}。\n完整表达式：{expr}", ex);
+                    throw new Exception(I18n.Translate("internal/StringParser/expressionerror",
+                        "Error parsing string expression: {0}\nFull expression: {1}", ex.Message, expr), ex);
                     //\n触发器：{ctx?.Trigger?.LogName ?? (null)}
                 }
             }
 
             if (depth == MAX_DEPTH)
             {
-                throw new InvalidOperationException($"当前表达式 {expr} 解析疑似无限循环。");
+                throw new InvalidOperationException(I18n.Translate("internal/StringParser/infiniteloop",
+                    "Parsing expression '{0}' appears to be in an infinite loop.", expr));
             }
 
             // ¤1 ¤{...} => $1 ${...}

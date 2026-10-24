@@ -81,14 +81,17 @@ namespace Triggernometry.Expressions.String.Utils
                 else if (part == "..." || part == "…")
                 {
                     var d = last1 - last2
-                        ?? throw new ArgumentException($"Invalid argument count expression: '...' \nIn:{requiredCount}");
+                        ?? throw new ArgumentException(I18n.Translate("internal/ArgHelper/invalidcountpattern",
+                            "Invalid argument count expression: {0}\nIn: {1}", "'...'", requiredCount));
                     if (d <= 0)
-                        throw new ArgumentException($"Invalid argument count expression: {last2}, {last1}, ... \nIn:{requiredCount}");
+                        throw new ArgumentException(I18n.Translate("internal/ArgHelper/invalidcountpattern",
+                            "Invalid argument count expression: {0}\nIn: {1}", $"{last2}, {last1}, ...", requiredCount));
                     checks.Add(i => i > last1 && (i - last1) % d == 0);
                     last1 = null;
                 }
                 else
-                    throw new ArgumentException($"Invalid argument count expression: {part} \nIn:{requiredCount}");
+                    throw new ArgumentException(I18n.Translate("internal/ArgHelper/invalidcountpattern",
+                        "Invalid argument count expression: {0}\nIn: {1}", part, requiredCount));
             }
             validator = i => checks.Any(f => f(i));
             lock (_lockValidators)
@@ -504,7 +507,8 @@ namespace Triggernometry.Expressions.String.Utils
                 {
                     if (!typeof(T).IsValueType || Nullable.GetUnderlyingType(typeof(T)) != null)
                         return default;
-                    throw new ArgumentException($"默认参数 #{index} 的类型 {typeof(T).Name} 不可为 null。");
+                    throw new ArgumentException(I18n.Translate("internal/ArgHelper/nulldefaultargument",
+                        "Default argument #{0} of type {1} cannot be null.", index, typeof(T).Name));
                 }
                 try
                 {
@@ -520,7 +524,8 @@ namespace Triggernometry.Expressions.String.Utils
                 // fallback
                 return value.ToDataString().ParseData<T>();
             }
-            throw new ArgumentException($"缺少 {typeof(T).Name} 参数 #{index} 且未提供默认值。提供的参数：{string.Join(", ", rawArgs)}");
+            throw new ArgumentException(I18n.Translate("internal/ArgHelper/missingargument",
+                "Missing {0} argument #{1} with no default value. Supplied arguments: {2}", typeof(T).Name, index, string.Join(", ", rawArgs)));
         }
 
     }

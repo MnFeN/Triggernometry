@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
+using Triggernometry.Localization;
 
 namespace Triggernometry.Expressions.String.Utils
 {
@@ -596,13 +597,16 @@ namespace Triggernometry.Expressions.String.Utils
         private static string BuildParseErrorMessage<T>(Exception ex, string input, string contextDescription, string rawExpression)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Failed to parse '{input}' as {typeof(T).Name}: {ex.Message}");
+            sb.AppendLine(I18n.Translate("internal/InvariantNumericExtensions/parseerror",
+                "Failed to parse '{0}' as {1}: {2}", input, typeof(T).Name, ex.Message));
 
             if (!string.IsNullOrWhiteSpace(contextDescription))
-                sb.AppendLine($"Context: {contextDescription}");
+                sb.AppendLine(I18n.Translate("internal/InvariantNumericExtensions/context",
+                    "Context: {0}", contextDescription));
 
             if (rawExpression != null) // allow empty since it could be the user input
-                sb.AppendLine($"Expression: '{rawExpression}'");
+                sb.AppendLine(I18n.Translate("internal/InvariantNumericExtensions/expression",
+                    "Expression: '{0}'", rawExpression));
 
             return sb.ToString();
         }

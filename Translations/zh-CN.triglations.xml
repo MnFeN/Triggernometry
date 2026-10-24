@@ -1247,6 +1247,9 @@
     <TranslationEntry Key="internal/ActionViewer/setBgColor" Translation="设置动作描述背景颜色" />
     <TranslationEntry Key="internal/ActionViewer/setDelay" Translation="设置动作延迟 / ms" />
     <TranslationEntry Key="internal/ActionViewer/setTextColor" Translation="设置动作描述文本颜色" />
+    <TranslationEntry Key="internal/ArgHelper/invalidcountpattern" Translation="无效的参数数量表达式：{0}&#xA;所在规则：{1}" />
+    <TranslationEntry Key="internal/ArgHelper/missingargument" Translation="缺少 {0} 参数 #{1} 且未提供默认值。提供的参数：{2}" />
+    <TranslationEntry Key="internal/ArgHelper/nulldefaultargument" Translation="默认参数 #{0} 的类型 {1} 不可为 null。" />
     <TranslationEntry Key="internal/AuraContainer/closingaura" Translation="关闭悬浮窗" />
     <TranslationEntry Key="internal/AuraContainer/deactaurattl" Translation="由于 TTL 表达式停用悬浮窗" />
     <TranslationEntry Key="internal/AuraContainer/displayingaura" Translation="显示悬浮窗" />
@@ -1262,6 +1265,10 @@
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="OverlayPlugin 实体内存扫描未就绪，暂未通过 OverlayPlugin 获取实体，稍后重试。" />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin 实体内存扫描已就绪。如果前面有几条“未就绪”的警告，可忽略。" />
     <TranslationEntry Key="internal/BridgeOverlay/reflectionNotFound" Translation="初始化 OverlayPlugin 相关功能时，反射获取 {0} 失败。" />
+    <TranslationEntry Key="internal/ColonParser/columnlookupindices" Translation="按列标题查找表格时必须提供两个索引 [列标题][行索引]：“{0}”" />
+    <TranslationEntry Key="internal/ColonParser/doublelookupindices" Translation="按双标题查找表格时必须提供两个索引 [列标题][行标题]：“{0}”" />
+    <TranslationEntry Key="internal/ColonParser/rowlookupindices" Translation="按行标题查找表格时必须提供两个索引 [行标题][列索引]：“{0}”" />
+    <TranslationEntry Key="internal/ColonParser/variablenotfound" Translation="变量“{0}”不存在。" />
     <TranslationEntry Key="internal/ColorSelector/sample" Translation="示例" />
     <TranslationEntry Key="internal/ConditionGroup/and" Translation="全部条件为真（与）" />
     <TranslationEntry Key="internal/ConditionGroup/not" Translation="全部条件为假（非）" />
@@ -1317,25 +1324,54 @@
     <TranslationEntry Key="internal/ConfigurationForm/tipShortcutWrapTextWhenSelected" Translation="当选中文本并使用快捷键时，将文本包裹在表达式中，而非用空白表达式替换文本。&#xD;&#xA;&#xD;&#xA;如：选中“1 + 1”并按下 Ctrl + Shift + N 可得到“${{n: 1 + 1}}”。" />
     <TranslationEntry Key="internal/ConfigurationForm/warning" Translation="警告" />
     <TranslationEntry Key="internal/Context/argCountError" Translation="({0}) 需要 {1} 个参数，而实际提供了 {2} 个。表达式：({3})" />
+    <TranslationEntry Key="internal/Context/argumentCountError" Translation="在（{0}）中，期望 {1} 个参数，但提供了 {2} 个。表达式：（{3}）" />
+    <TranslationEntry Key="internal/Context/argumentCountError-" Translation="在（{0}）中，期望 {1} 个参数，但提供了 {2} 个。" />
     <TranslationEntry Key="internal/Context/expansion" Translation="将表达式 '{0}' 展开为 '{1}'" />
     <TranslationEntry Key="internal/Context/expansionstep" Translation="将表达式 '{1}' 展开为 '{2}'，第 {0} 步：({3}) = '{4}'" />
     <TranslationEntry Key="internal/Context/extremumlistzeroelementerror" Translation="变量 ({0}) 中仅选出了 0 个元素，无法取最值。表达式：({1})" />
+    <TranslationEntry Key="internal/Context/extremumlistzeroelementerror-" Translation="变量（{0}）未选中任何可用于求极值的元素。" />
     <TranslationEntry Key="internal/Context/extremumparsetypeerror" Translation="{0} 函数中，不是所有选中的元素均可解析为{1}。表达式：({2})" />
+    <TranslationEntry Key="internal/Context/extremumparsetypeerror-" Translation="在函数（{0}）中，部分选中的值无法解析为 {1}。" />
     <TranslationEntry Key="internal/Context/infiniteClipboardError" Translation="剪贴板内容包含文本 ${{_clipboard}}，会导致展开表达式时出现无限循环" />
     <TranslationEntry Key="internal/Context/infiniteRepeatError" Translation="Repeat 函数中，循环模式下新字符串 ({0}) 不能包含旧字符串 ({1})。表达式：({2})" />
+    <TranslationEntry Key="internal/Context/infiniteRepeatError-" Translation="在 repeat 函数的循环模式下，新文本（{0}）不能包含旧文本（{1}）。" />
     <TranslationEntry Key="internal/Context/invalidValueError" Translation="{0} 中，{1} ({2}) 不合法。表达式：({3})" />
+    <TranslationEntry Key="internal/Context/invalidValueError-" Translation="在（{0}）中，{1}（{2}）无效。" />
     <TranslationEntry Key="internal/Context/noEntity" Translation="检索的实体不存在：({0})。触发器：({1})" />
     <TranslationEntry Key="internal/Context/parseTypeError" Translation="{0} ({1}) 无法解析为{2}。表达式：({3})" />
+    <TranslationEntry Key="internal/Context/parseTypeError-" Translation="无法将 {0}（{1}）解析为 {2}。" />
     <TranslationEntry Key="internal/Context/ternaryexpressionerror" Translation="无法解析三元表达式：({0}) &#xD;&#xA;条件：({1}); &#xD;&#xA;True 表达式：({2}); &#xD;&#xA;False 表达式：({3})" />
+    <TranslationEntry Key="internal/DataStringHelper/argumentconversionerror" Translation="参数 {0}（{1}）无法转换为 {2} 类型。" />
+    <TranslationEntry Key="internal/DataStringHelper/conversionerror" Translation="无法将字符串“{0}”转换为 {1} 类型。" />
+    <TranslationEntry Key="internal/DataStringHelper/decimalconversionwarning" Translation="无法将 {0}（{1}）转换为 decimal。" />
+    <TranslationEntry Key="internal/DataStringHelper/missingargument" Translation="参数 {0}（{1}）缺少值且无默认值。" />
+    <TranslationEntry Key="internal/DataStringHelper/toomanyarguments" Translation="参数数量过多：期望最多 {0} 个参数，但提供了 {1} 个。" />
+    <TranslationEntry Key="internal/DictEvaluator/indexorpropertyrequired" Translation="表达式“{0}”中的字典变量必须包含索引或属性。" />
+    <TranslationEntry Key="internal/DictEvaluator/keynotfound" Translation="字典变量“{1}”中不存在键“{0}”。" />
+    <TranslationEntry Key="internal/DictEvaluator/unknownmethod" Translation="表达式“{1}”使用了未知的字典方法“{0}”。" />
     <TranslationEntry Key="internal/ExportForm/exception" Translation="异常" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric1" Translation="该字段支持数值表达式；支持正则捕获组；结果作为数学表达式求值。" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric2" Translation="绿色文本框代表数值表达式合法，红色代表非法。" />
     <TranslationEntry Key="internal/ExpressionTextBox/string" Translation="该字段支持文本表达式；支持正则捕获组。" />
+    <TranslationEntry Key="internal/FFXIV/Entity/evaluationerror" Translation="无法计算实体属性或方法表达式“{0}”：{1}" />
+    <TranslationEntry Key="internal/FFXIV/Entity/invalidmember" Translation="无效的实体属性或方法名称：{0}" />
+    <TranslationEntry Key="internal/FFXIV/Entity/memberrequired" Translation="实体表达式“{0}”未包含属性。" />
     <TranslationEntry Key="internal/FolderForm/loaddirectly" Translation="直接加载" />
     <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="分组生效时加载" />
     <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="请为每个注册变量填写键名。" />
     <TranslationEntry Key="internal/FolderForm/deleterenamedregisteredvariable" Translation="注册变量“{0}”已改名为“{1}”。&#xA;旧的运行时值：“{2}”&#xA;是否删除旧键值对？" />
     <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="注册变量" />
+    <TranslationEntry Key="internal/I18n/targetmarker" Translation="目标标记" />
+    <TranslationEntry Key="internal/IndexMemberExpression/indexoutofrange" Translation="表达式 {0} 仅包含 {1} 个索引。" />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/context" Translation="上下文：{0}" />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/expression" Translation="表达式：“{0}”" />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/parseerror" Translation="无法将“{0}”解析为 {1}：{2}" />
+    <TranslationEntry Key="internal/ListEvaluator/indexnotfound" Translation="列表变量“{1}”中不存在索引“{0}”。" />
+    <TranslationEntry Key="internal/ListEvaluator/indexorpropertyrequired" Translation="表达式“{0}”中的列表变量必须包含索引或属性。" />
+    <TranslationEntry Key="internal/ListEvaluator/unknownmethod" Translation="表达式“{1}”使用了未知的列表方法“{0}”。" />
+    <TranslationEntry Key="internal/MultiLineRawArgs/duplicatekey" Translation="多行参数中存在重复的键“{0}”。" />
+    <TranslationEntry Key="internal/MultiLineRawArgs/keynotfound" Translation="未找到键“{0}”。" />
+    <TranslationEntry Key="internal/MultiLineRawArgs/keysnotfound" Translation="未找到以下任何键：“{0}”。" />
     <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="注册变量键“{0}”冲突：&#xA;新值：“{1}”&#xA;来自：分组 {2}&#xA;旧值：“{3}”&#xA;来自：分组 {4}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexception" Translation="获取全部 FFXIV 实体时发生异常：{0}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexceptionsingle" Translation="无法获取该实体信息：名称 ({0})，ID ({1})。异常：{2}" />
@@ -1566,6 +1602,8 @@
     <TranslationEntry Key="internal/RepositoryForm/exception" Translation="异常" />
     <TranslationEntry Key="internal/RepositoryForm/unavailable" Translation="不可用" />
     <TranslationEntry Key="internal/RepositoryForm/warning" Translation="警告" />
+    <TranslationEntry Key="internal/Scripting/callbacknotfound" Translation="未找到回调函数“{0}”。" />
+    <TranslationEntry Key="internal/Scripting/storedobjectnotdelegate" Translation="存储的对象“{0}”不是 Delegate 类型。" />
     <TranslationEntry Key="internal/SearchForm/hitactioncond" Translation="操作 #{0} 的条件" />
     <TranslationEntry Key="internal/SearchForm/hitactiondesc" Translation="操作 #{0} 的描述" />
     <TranslationEntry Key="internal/SearchForm/hitactionfolderid" Translation="操作 #{0} 的分组 ID" />
@@ -1624,6 +1662,16 @@
     <TranslationEntry Key="internal/SearchForm/noresults" Translation="无结果" />
     <TranslationEntry Key="internal/SearchForm/oneresult" Translation="1 个结果" />
     <TranslationEntry Key="internal/SearchForm/xresults" Translation="{0} 个结果" />
+    <TranslationEntry Key="internal/StringFunctionParser/functionvalue" Translation="函数值" />
+    <TranslationEntry Key="internal/StringFunctionParser/invalidsyntax" Translation="函数表达式语法无效：“{0}”" />
+    <TranslationEntry Key="internal/StringFunctionParser/unknownfunction" Translation="未知的文本函数“{0}”。" />
+    <TranslationEntry Key="internal/StringParser/expressionerror" Translation="解析文本表达式时出错：{0}&#xA;完整表达式：{1}" />
+    <TranslationEntry Key="internal/StringParser/infiniteloop" Translation="表达式“{0}”的解析疑似陷入无限循环。" />
+    <TranslationEntry Key="internal/TableEvaluator/indexorpropertyrequired" Translation="表达式“{0}”中的表格变量必须包含索引或属性。" />
+    <TranslationEntry Key="internal/TableEvaluator/twoindicesrequired" Translation="表达式“{0}”中的表格索引必须包含 [列][行] 两部分。" />
+    <TranslationEntry Key="internal/TableEvaluator/unknownmethod" Translation="表达式“{1}”使用了未知的表格方法“{0}”。" />
+    <TranslationEntry Key="internal/TemplateParser/capturegroupoutofrange" Translation="正则捕获组索引 {0} 超出范围。&#xA;触发器：{1}" />
+    <TranslationEntry Key="internal/TemplateParser/unknowntemplate" Translation="文本模板 {0} 无法识别为有效表达式，且不存在此名称的正则捕获组。" />
     <TranslationEntry Key="internal/TestInputForm/debugcopied" Translation="调试触发器已复制到剪贴板，可以直接在主界面粘贴。" />
     <TranslationEntry Key="internal/TestInputForm/debugdelay--" Translation="明显早于前一行。已根据时间插入到正确的位置。" />
     <TranslationEntry Key="internal/TestInputForm/debugdelay-" Translation="略早于前一行，可能是不准确的日志时间所致。已调整为前一行的时间。" />
@@ -1731,6 +1779,7 @@
     <TranslationEntry Key="internal/VariableForm/areyousuresingular" Translation="你确定你想删除选中的变量吗？" />
     <TranslationEntry Key="internal/VariableForm/confirmremoval" Translation="删除确认" />
     <TranslationEntry Key="internal/VariableForm/keyexists" Translation="键“{0}”已存在于字典中（当前第 {1} 行）" />
+    <TranslationEntry Key="internal/XivEntityParser/deprecatedselfquery" Translation="检测到已弃用的旧版本表达式：{0}。&#xA;请使用 ${{_me.属性}} 代替 ${{_ffxivparty[1].属性}}、${{_ffxivparty[${{_ffxivplayer}}].属性}} 等表达式查询自身属性。&#xA;触发器：{1}" />
     <TranslationEntry Key="KeyListenForm" Translation="正在监听键盘按键" />
     <TranslationEntry Key="KeyListenForm/btnCancel" Translation="取消" />
     <TranslationEntry Key="KeyListenForm/btnOk" Translation="确定" />

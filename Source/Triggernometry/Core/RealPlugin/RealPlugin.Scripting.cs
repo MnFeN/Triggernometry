@@ -58,10 +58,12 @@ namespace Triggernometry.Core
         public object InvokeStorageCallback(string name, IEnumerable<string> args)
         {
             if (!Instance.scriptingStorage.TryGetValue(name, out var obj))
-                throw new ArgumentException($"未找到回调函数：{name}");
+                throw new ArgumentException(I18n.Translate("internal/Scripting/callbacknotfound",
+                    "Callback function '{0}' was not found.", name));
 
             if (!(obj is Delegate callback))
-                throw new ArgumentException($"存储的对象 {name} 不是 Delegate 类型");
+                throw new ArgumentException(I18n.Translate("internal/Scripting/storedobjectnotdelegate",
+                    "Stored object '{0}' is not a delegate.", name));
 
             return callback.RawInvoke(args?.ToArray());
         }

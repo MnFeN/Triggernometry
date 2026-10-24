@@ -39,9 +39,9 @@ namespace Triggernometry.Expressions.String.Parsers
             if (isParty && (expr.Index == "1" || expr.Index == Entity.MyName))
             {
                 RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning,
-                    $"检测到已弃用的旧版本表达式：{expr.RawExpression}。\n" +
-                    $"请使用 ${{_me.属性}} 代替 ${{_ffxivparty[1].属性}}、${{_ffxivparty[${{_ffxivplayer}}].属性}} 等表达式查询自身属性。\n" +
-                    $"触发器：{ctx?.Trigger?.FullPath ?? "null"}",
+                    I18n.Translate("internal/XivEntityParser/deprecatedselfquery",
+                        "Deprecated expression detected: {0}.\nUse ${{_me.Property}} instead of ${{_ffxivparty[1].Property}} or ${{_ffxivparty[${{_ffxivplayer}}].Property}} to query your own properties.\nTrigger: {1}",
+                        expr.RawExpression, ctx?.Trigger?.FullPath ?? "null"),
                     ctx?.Trigger);
             }
 

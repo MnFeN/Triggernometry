@@ -74,7 +74,8 @@ namespace Triggernometry.Expressions.String.Parsers
                     lock (plug.RegisteredVariables)
                     {
                         return plug.RegisteredVariables.TryGetValue(body, out VariableScalar registered) ? registered.Value
-                            : prefixLower == "!reg" ? throw new Exception($"Variable '{body}' does not exist.") : "";
+                            : prefixLower == "!reg" ? throw new Exception(I18n.Translate("internal/ColonParser/variablenotfound",
+                                "Variable '{0}' does not exist.", body)) : "";
                     }
 
                 case "env": // folder environment variables
@@ -214,7 +215,8 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvarrl:TableName[Header][ColIndex]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Row-based table lookup expects exactly two indices [Header][ColIndex]: '{template}'");
+                            throw new Exception(I18n.Translate("internal/ColonParser/rowlookupindices",
+                                "Row-based table lookup expects exactly two indices [Header][ColIndex]: '{0}'", template));
                         }
 
                         string headerExpr = expr.Index1;
@@ -244,7 +246,8 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvarcl:TableName[Header][RowIndex]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Column-based table lookup expects exactly two indices [Header][RowIndex]: '{template}'");
+                            throw new Exception(I18n.Translate("internal/ColonParser/columnlookupindices",
+                                "Column-based table lookup expects exactly two indices [Header][RowIndex]: '{0}'", template));
                         }
 
                         string headerExpr = expr.Index1;
@@ -274,7 +277,8 @@ namespace Triggernometry.Expressions.String.Parsers
                         // tvardl:TableName[ColHeader][RowHeader]
                         if (expr.Indexes.Length != 2)
                         {
-                            throw new Exception($"Double-based table lookup expects exactly two indices [ColHeader][RowHeader]: '{template}'");
+                            throw new Exception(I18n.Translate("internal/ColonParser/doublelookupindices",
+                                "Double-based table lookup expects exactly two indices [ColHeader][RowHeader]: '{0}'", template));
                         }
 
                         string colHeader = expr.Index1;
@@ -325,7 +329,8 @@ namespace Triggernometry.Expressions.String.Parsers
         {
             return !mustExist
                 ? store.GetVariable(variables, varName, false)
-                : store.GetVariable(variables, varName) ?? throw new Exception($"Variable '{varName}' does not exist.");
+                : store.GetVariable(variables, varName) ?? throw new Exception(I18n.Translate("internal/ColonParser/variablenotfound",
+                    "Variable '{0}' does not exist.", varName));
         }
 
     }

@@ -37,7 +37,8 @@ namespace Triggernometry.Expressions.String.Utils
                     }
                     catch (Exception)
                     {
-                        RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, $"float ({f}) => decimal failed");
+                        RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/DataStringHelper/decimalconversionwarning",
+                            "Failed to convert {0} ({1}) to decimal.", "float", f));
                         return f.ToString();
                     }
                 case double d:
@@ -47,7 +48,8 @@ namespace Triggernometry.Expressions.String.Utils
                     }
                     catch (Exception)
                     {
-                        RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, $"double ({d}) => decimal failed");
+                        RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/DataStringHelper/decimalconversionwarning",
+                            "Failed to convert {0} ({1}) to decimal.", "double", d));
                         return d.ToString();
                     }
                 case IFormattable formattable:
@@ -74,7 +76,8 @@ namespace Triggernometry.Expressions.String.Utils
             if (TryParseData(input, targetType, out var value))
                 return value;
 
-            throw new ArgumentException($"无法将字符串 '{input}' 转换为 {targetType.Name} 类型。");
+            throw new ArgumentException(I18n.Translate("internal/DataStringHelper/conversionerror",
+                "Cannot convert string '{0}' to type {1}.", input, targetType.Name));
         }
 
         public static bool TryParseData<T>(this string input, out T result)
@@ -206,7 +209,8 @@ namespace Triggernometry.Expressions.String.Utils
 
             rawArgs = rawArgs ?? new string[0];
             if (rawArgs.Length > paramsInfo.Length)
-                throw new ArgumentException($"参数数量过多：期望最多 {paramsInfo.Length} 个参数，但提供了 {rawArgs.Length} 个");
+                throw new ArgumentException(I18n.Translate("internal/DataStringHelper/toomanyarguments",
+                    "Too many arguments: expected at most {0}, but got {1}.", paramsInfo.Length, rawArgs.Length));
 
             object[] parameters = new object[paramsInfo.Length];
 
@@ -221,7 +225,8 @@ namespace Triggernometry.Expressions.String.Utils
                     }
                     catch (Exception ex)
                     {
-                        throw new ArgumentException($"参数 {i} ({paramsInfo[i].Name}) 无法转换为类型 {paramType}", ex);
+                        throw new ArgumentException(I18n.Translate("internal/DataStringHelper/argumentconversionerror",
+                            "Argument {0} ({1}) cannot be converted to type {2}.", i, paramsInfo[i].Name, paramType), ex);
                     }
                 }
                 else
@@ -229,7 +234,8 @@ namespace Triggernometry.Expressions.String.Utils
                     if (paramsInfo[i].HasDefaultValue)
                         parameters[i] = paramsInfo[i].DefaultValue;
                     else
-                        throw new ArgumentException($"参数 {i} ({paramsInfo[i].Name}) 缺少值且无默认值");
+                        throw new ArgumentException(I18n.Translate("internal/DataStringHelper/missingargument",
+                            "Argument {0} ({1}) has no value or default value.", i, paramsInfo[i].Name));
                 }
             }
 

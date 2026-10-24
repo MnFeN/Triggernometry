@@ -1247,6 +1247,9 @@
     <TranslationEntry Key="internal/ActionViewer/setBgColor" Translation="Set Description Background Color To" />
     <TranslationEntry Key="internal/ActionViewer/setDelay" Translation="Set Action Delay To (ms)" />
     <TranslationEntry Key="internal/ActionViewer/setTextColor" Translation="Set Description Text Color To" />
+    <TranslationEntry Key="internal/ArgHelper/invalidcountpattern" Translation="Invalid argument count expression: {0}&#xA;In: {1}" />
+    <TranslationEntry Key="internal/ArgHelper/missingargument" Translation="Missing {0} argument #{1} with no default value. Supplied arguments: {2}" />
+    <TranslationEntry Key="internal/ArgHelper/nulldefaultargument" Translation="Default argument #{0} of type {1} cannot be null." />
     <TranslationEntry Key="internal/AuraContainer/closingaura" Translation="Closing aura window" />
     <TranslationEntry Key="internal/AuraContainer/deactaurattl" Translation="Deactivating aura due to TTL expression" />
     <TranslationEntry Key="internal/AuraContainer/displayingaura" Translation="Displaying aura window" />
@@ -1262,6 +1265,10 @@
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="OverlayPlugin combatant memory is not ready. Entity data could not be retrieved via OverlayPlugin yet, will retry later." />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin combatant memory is ready." />
     <TranslationEntry Key="internal/BridgeOverlay/reflectionNotFound" Translation="Failed to find reflection object ({0}) during initializing OverlayPlugin-related modules." />
+    <TranslationEntry Key="internal/ColonParser/columnlookupindices" Translation="Column-based table lookup expects exactly two indices [Header][RowIndex]: '{0}'" />
+    <TranslationEntry Key="internal/ColonParser/doublelookupindices" Translation="Double-based table lookup expects exactly two indices [ColHeader][RowHeader]: '{0}'" />
+    <TranslationEntry Key="internal/ColonParser/rowlookupindices" Translation="Row-based table lookup expects exactly two indices [Header][ColIndex]: '{0}'" />
+    <TranslationEntry Key="internal/ColonParser/variablenotfound" Translation="Variable '{0}' does not exist." />
     <TranslationEntry Key="internal/ColorSelector/sample" Translation="Sample" />
     <TranslationEntry Key="internal/ConditionGroup/and" Translation="All conditions must be true" />
     <TranslationEntry Key="internal/ConditionGroup/not" Translation="None of the conditions may be true" />
@@ -1317,25 +1324,54 @@
     <TranslationEntry Key="internal/ConfigurationForm/tipShortcutWrapTextWhenSelected" Translation="If any text is selected when using the shortcut, &#xD;&#xA;wrap the text in the template expression, &#xD;&#xA;instead of replacing it with an empty template expression. &#xD;&#xA;&#xD;&#xA;For example, you can select the expression &quot;1 + 1&quot; and press Ctrl + Shift + N, &#xD;&#xA;then you will get &quot;${{n: 1 + 1}}&quot;." />
     <TranslationEntry Key="internal/ConfigurationForm/warning" Translation="Warning" />
     <TranslationEntry Key="internal/Context/argCountError" Translation="({0}) requires {1} arguments, {2} were given. Expr: ({3})" />
+    <TranslationEntry Key="internal/Context/argumentCountError" Translation="In ({0}), expected {1} arguments but got {2}. Expr: ({3})" />
+    <TranslationEntry Key="internal/Context/argumentCountError-" Translation="In ({0}), expected {1} arguments but got {2}." />
     <TranslationEntry Key="internal/Context/expansion" Translation="Variable expansion from '{0}' to '{1}'" />
     <TranslationEntry Key="internal/Context/expansionstep" Translation="Expansion step {0} from '{1}' to '{2}' ({3}) = '{4}'" />
     <TranslationEntry Key="internal/Context/extremumlistzeroelementerror" Translation="The variable ({0}) selected zero elements to get its extremum value. Expr: ({1})" />
+    <TranslationEntry Key="internal/Context/extremumlistzeroelementerror-" Translation="The variable ({0}) selected zero elements to get its extremum value." />
     <TranslationEntry Key="internal/Context/extremumparsetypeerror" Translation="In the function ({0}), not all selected values could be parsed into {1}. Expr: ({2})" />
+    <TranslationEntry Key="internal/Context/extremumparsetypeerror-" Translation="In the function ({0}), not all selected values could be parsed into {1}." />
     <TranslationEntry Key="internal/Context/infiniteClipboardError" Translation="The current clipboard contains the expression ${{_clipboard}}, which would cause infinite loop" />
     <TranslationEntry Key="internal/Context/infiniteRepeatError" Translation="In the repeat function, new string ({0}) cannot contain old string ({1}) in loop mode. Expr: ({2})" />
+    <TranslationEntry Key="internal/Context/infiniteRepeatError-" Translation="In the repeat function, new string ({0}) cannot contain old string ({1}) in loop mode." />
     <TranslationEntry Key="internal/Context/invalidValueError" Translation="In ({0}), {1} ({2}) is invalid. Expr: ({3})" />
+    <TranslationEntry Key="internal/Context/invalidValueError-" Translation="In ({0}), {1} ({2}) is invalid." />
     <TranslationEntry Key="internal/Context/noEntity" Translation="The queried entity does not exist: {0}. Trigger: ({1})" />
     <TranslationEntry Key="internal/Context/parseTypeError" Translation="{0} ({1}) could not be parsed into {2}. Expr: ({3})" />
+    <TranslationEntry Key="internal/Context/parseTypeError-" Translation="{0} ({1}) could not be parsed into {2}." />
     <TranslationEntry Key="internal/Context/ternaryexpressionerror" Translation="Ternary expression ({0}) could not be parsed: &#xD;&#xA;Condition: ({1}); &#xD;&#xA;TrueExpr: ({2}); &#xD;&#xA;FalseExpr: ({3})" />
+    <TranslationEntry Key="internal/DataStringHelper/argumentconversionerror" Translation="Argument {0} ({1}) cannot be converted to type {2}." />
+    <TranslationEntry Key="internal/DataStringHelper/conversionerror" Translation="Cannot convert string '{0}' to type {1}." />
+    <TranslationEntry Key="internal/DataStringHelper/decimalconversionwarning" Translation="Failed to convert {0} ({1}) to decimal." />
+    <TranslationEntry Key="internal/DataStringHelper/missingargument" Translation="Argument {0} ({1}) has no value or default value." />
+    <TranslationEntry Key="internal/DataStringHelper/toomanyarguments" Translation="Too many arguments: expected at most {0}, but got {1}." />
+    <TranslationEntry Key="internal/DictEvaluator/indexorpropertyrequired" Translation="Dictionary variable must include an index or property in expression '{0}'." />
+    <TranslationEntry Key="internal/DictEvaluator/keynotfound" Translation="Key '{0}' not found in dictionary variable '{1}'." />
+    <TranslationEntry Key="internal/DictEvaluator/unknownmethod" Translation="Unknown dict method '{0}' in expression '{1}'." />
     <TranslationEntry Key="internal/ExportForm/exception" Translation="Exception" />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric1" Translation="This field supports numeric expressions; references to named regular expression groups will be expanded, after which the result will be evaluated as a mathematic expression." />
     <TranslationEntry Key="internal/ExpressionTextBox/numeric2" Translation="The color of the field will also change depending on whether the numeric expression appears to be valid (green) or not (red)." />
     <TranslationEntry Key="internal/ExpressionTextBox/string" Translation="This field supports string expressions; references to named regular expression groups will be expanded." />
+    <TranslationEntry Key="internal/FFXIV/Entity/evaluationerror" Translation="Failed to evaluate entity property/method expression '{0}': {1}" />
+    <TranslationEntry Key="internal/FFXIV/Entity/invalidmember" Translation="Invalid entity property/method name: {0}" />
+    <TranslationEntry Key="internal/FFXIV/Entity/memberrequired" Translation="Entity expression '{0}' does not include a property." />
     <TranslationEntry Key="internal/FolderForm/loaddirectly" Translation="Load directly" />
     <TranslationEntry Key="internal/FolderForm/loadwhenactive" Translation="Load when active" />
     <TranslationEntry Key="internal/FolderForm/registeredvariablenamerequired" Translation="Enter a key for each registered variable." />
     <TranslationEntry Key="internal/FolderForm/deleterenamedregisteredvariable" Translation="Registered variable &#x27;{0}&#x27; was renamed to &#x27;{1}&#x27;.&#xA;Old runtime value: &#x27;{2}&#x27;&#xA;Delete the old key-value pair?" />
     <TranslationEntry Key="internal/FolderForm/registeredvariables" Translation="Registered variables" />
+    <TranslationEntry Key="internal/I18n/targetmarker" Translation="target marker" />
+    <TranslationEntry Key="internal/IndexMemberExpression/indexoutofrange" Translation="Expression {0} has only {1} index(es)." />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/context" Translation="Context: {0}" />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/expression" Translation="Expression: '{0}'" />
+    <TranslationEntry Key="internal/InvariantNumericExtensions/parseerror" Translation="Failed to parse '{0}' as {1}: {2}" />
+    <TranslationEntry Key="internal/ListEvaluator/indexnotfound" Translation="Index '{0}' not found in list variable '{1}'." />
+    <TranslationEntry Key="internal/ListEvaluator/indexorpropertyrequired" Translation="List variable must include an index or property in expression '{0}'." />
+    <TranslationEntry Key="internal/ListEvaluator/unknownmethod" Translation="Unknown list method '{0}' in expression '{1}'." />
+    <TranslationEntry Key="internal/MultiLineRawArgs/duplicatekey" Translation="Duplicate key '{0}' found in the rawLines input." />
+    <TranslationEntry Key="internal/MultiLineRawArgs/keynotfound" Translation="Key '{0}' was not found." />
+    <TranslationEntry Key="internal/MultiLineRawArgs/keysnotfound" Translation="None of the keys '{0}' were found." />
     <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="Registered variable key conflict &#x27;{0}&#x27;:&#xA;new value: &#x27;{1}&#x27;&#xA;from: Folder {2}&#xA;old value: &#x27;{3}&#x27;&#xA;from: Folder {4}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexception" Translation="Exception in FFXIV all entities retrieve: {0}" />
     <TranslationEntry Key="internal/ffxiv/allentitiesexceptionsingle" Translation="Failed to get entity data: name = {0}, id = {1}. Exception: {2}" />
@@ -1566,6 +1602,8 @@
     <TranslationEntry Key="internal/RepositoryForm/exception" Translation="Exception" />
     <TranslationEntry Key="internal/RepositoryForm/unavailable" Translation="Unavailable" />
     <TranslationEntry Key="internal/RepositoryForm/warning" Translation="Warning" />
+    <TranslationEntry Key="internal/Scripting/callbacknotfound" Translation="Callback function '{0}' was not found." />
+    <TranslationEntry Key="internal/Scripting/storedobjectnotdelegate" Translation="Stored object '{0}' is not a delegate." />
     <TranslationEntry Key="internal/SearchForm/hitactioncond" Translation="Action #{0} condition" />
     <TranslationEntry Key="internal/SearchForm/hitactiondesc" Translation="Action #{0} description" />
     <TranslationEntry Key="internal/SearchForm/hitactionfolderid" Translation="Action #{0} folder ID" />
@@ -1624,6 +1662,16 @@
     <TranslationEntry Key="internal/SearchForm/noresults" Translation="No results" />
     <TranslationEntry Key="internal/SearchForm/oneresult" Translation="One result" />
     <TranslationEntry Key="internal/SearchForm/xresults" Translation="{0} results" />
+    <TranslationEntry Key="internal/StringFunctionParser/functionvalue" Translation="function value" />
+    <TranslationEntry Key="internal/StringFunctionParser/invalidsyntax" Translation="Invalid function expression syntax: '{0}'" />
+    <TranslationEntry Key="internal/StringFunctionParser/unknownfunction" Translation="Unknown string function '{0}'." />
+    <TranslationEntry Key="internal/StringParser/expressionerror" Translation="Error parsing string expression: {0}&#xA;Full expression: {1}" />
+    <TranslationEntry Key="internal/StringParser/infiniteloop" Translation="Parsing expression '{0}' appears to be in an infinite loop." />
+    <TranslationEntry Key="internal/TableEvaluator/indexorpropertyrequired" Translation="Table variable must include an index or property in expression '{0}'." />
+    <TranslationEntry Key="internal/TableEvaluator/twoindicesrequired" Translation="Table index must have 2 components [col][row] in expression '{0}'." />
+    <TranslationEntry Key="internal/TableEvaluator/unknownmethod" Translation="Unknown table method '{0}' in expression '{1}'." />
+    <TranslationEntry Key="internal/TemplateParser/capturegroupoutofrange" Translation="Regex capture group index {0} is out of range.&#xA;Trigger: {1}" />
+    <TranslationEntry Key="internal/TemplateParser/unknowntemplate" Translation="Text template {0} is not a recognized expression, and no regex capture group with this name exists." />
     <TranslationEntry Key="internal/TestInputForm/debugcopied" Translation="Debug trigger has been copied to clipboard." />
     <TranslationEntry Key="internal/TestInputForm/debugdelay--" Translation="Significantly earlier than the previous line. Adjusted to the correct position based on time." />
     <TranslationEntry Key="internal/TestInputForm/debugdelay-" Translation="Slightly earlier than the previous line, might due to inaccurate log time. Adjusted to the previous line's time." />
@@ -1731,6 +1779,7 @@
     <TranslationEntry Key="internal/VariableForm/areyousuresingular" Translation="Are you sure you want to remove the selected variable?" />
     <TranslationEntry Key="internal/VariableForm/confirmremoval" Translation="Confirm removal" />
     <TranslationEntry Key="internal/VariableForm/keyexists" Translation="The key {0} already exists (row {1})." />
+    <TranslationEntry Key="internal/XivEntityParser/deprecatedselfquery" Translation="Deprecated expression detected: {0}.&#xA;Use ${{_me.Property}} instead of ${{_ffxivparty[1].Property}} or ${{_ffxivparty[${{_ffxivplayer}}].Property}} to query your own properties.&#xA;Trigger: {1}" />
     <TranslationEntry Key="KeyListenForm" Translation="Listening to keypresses" />
     <TranslationEntry Key="internal/VariableForm/variableeditortag" Translation="Variable editor" />
     <TranslationEntry Key="KeyListenForm/btnCancel" Translation="Cancel" />

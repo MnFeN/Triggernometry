@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Triggernometry.Core;
+using Triggernometry.Localization;
 
 namespace Triggernometry.Expressions.String.Parsers
 {
@@ -38,7 +39,8 @@ namespace Triggernometry.Expressions.String.Parsers
                 result = ParseSingleTemplate(m.Expression ?? "", ctx, isNumeric);
                 if (result == null)
                 {
-                    var msg = $"文本模板 {m.RawExpression} 无法识别为有效表达式，且不存在此名称的正则捕获组。";
+                    var msg = I18n.Translate("internal/TemplateParser/unknowntemplate",
+                        "Text template {0} is not a recognized expression, and no regex capture group with this name exists.", m.RawExpression);
                     throw new FormatException(msg);
                 }
             }
@@ -47,7 +49,8 @@ namespace Triggernometry.Expressions.String.Parsers
                 result = ctx?.GetNumGroup(m.NumIndex.Value);
                 if (result == null && ctx?.Trigger != null)
                 {
-                    var msg = $"正则捕获组索引 {m.RawExpression} 超出范围。\n触发器：{ctx.Trigger?.LogName ?? "(null)"}";
+                    var msg = I18n.Translate("internal/TemplateParser/capturegroupoutofrange",
+                        "Regex capture group index {0} is out of range.\nTrigger: {1}", m.RawExpression, ctx.Trigger?.LogName ?? "(null)");
                     ctx.Plugin?.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, msg, ctx.Trigger);
                 }
             }

@@ -298,7 +298,7 @@ namespace Triggernometry.Localization
         private static readonly HashSet<string> _wordsToTranslate = new HashSet<string> 
         {   // all lowercase
             "bool", "char", "charcode", "double", "float", "hex", "index", "int", "key",
-            "length", "property", "slice", "startindex", "string", "time", "times", "type", "version"
+            "length", "property", "slice", "startindex", "string", "targetmarker", "time", "times", "type", "version"
         };
 
         internal static string TranslateWord(string key)

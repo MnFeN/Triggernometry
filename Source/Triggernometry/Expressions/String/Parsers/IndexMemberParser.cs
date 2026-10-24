@@ -62,7 +62,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "_targetmarker2id":
                 case "_tm2id":
                     return Memory.EntityIdByTargetMarker(expr.Index)?.ToString("X8")
-                        ?? throw ErrorHelper.ParseTypeError(I18n.TranslateWord("string"), expr.Index, "targetmarker");
+                        ?? throw ErrorHelper.ParseTypeError(I18n.TranslateWord("string"), expr.Index, I18n.TranslateWord("targetmarker"));
 
                 case "_waymark":
                 case "_wm":
