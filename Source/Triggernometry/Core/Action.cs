@@ -384,7 +384,8 @@ namespace Triggernometry.Core
                     DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, NextAction.ExecutionDelayExpression));
                     Instance.QueueAction(ctx, ctx.Trigger, qa?.mutex, NextAction, dt, false);
                 }
-                else if (qa?.mutex != null)
+                // Non-sequential actions release through the final queued action's ActionFinished.
+                else if (qa?.mutex != null && ctx.Trigger.Sequential)
                 {
                     qa.mutex.Release(ctx);
                     qa.mutex = null;

@@ -157,7 +157,7 @@ namespace Triggernometry.Core
         {
             ActionOld lastAction = null;
             var sortedActions = actions.OrderBy(a => a.OrderNumber);
-            var finalAction = sortedActions.LastOrDefault(); // _Enabled?
+            var finalAction = sortedActions.LastOrDefault(a => a.Enabled);
             if (sequential == false)
             {
                 foreach (ActionOld action in sortedActions)
