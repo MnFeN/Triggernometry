@@ -633,6 +633,7 @@ namespace Triggernometry.Core
             a._DiskFileOp = _DiskFileOp;
             a._DiskFileOpVar = _DiskFileOpVar;
             a._DiskFileOpName = _DiskFileOpName;
+            a._DiskFileCache = _DiskFileCache;
             a._TableVariableExpression = _TableVariableExpression;
             a._TableVariableExpressionType = _TableVariableExpressionType;
             a._TableVariableName = _TableVariableName;
