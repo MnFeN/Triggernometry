@@ -217,7 +217,7 @@ namespace Triggernometry.Core.Actions
                 {
                     FileInfo fi = new FileInfo(fn);
                     DateTime dt = DateTime.Now.AddMinutes(0 - plug.cfg.CacheJsonExpiry);
-                    if (fi.LastWriteTime > dt)
+                    if (fi.LastWriteTime > dt && fi.Length > 0)
                     {
                         responseCode = (int)HttpStatusCode.OK;
                         response = File.ReadAllText(fn);
@@ -229,7 +229,11 @@ namespace Triggernometry.Core.Actions
                     Tuple<int, string> resp = SendJson(ctx, Method, endpoint, payload, headerslist, false); // todo
                     responseCode = resp.Item1;
                     response = resp.Item2;
-                    File.WriteAllText(fn, response);
+                    // Cache files only store the body, so only cache non-empty 200 responses.
+                    if (responseCode == (int)HttpStatusCode.OK && response.Length > 0)
+                    {
+                        File.WriteAllText(fn, response);
+                    }
                 }
             }
             else
