@@ -2095,6 +2095,7 @@
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn7" Translation="Created by" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn8" Translation="Name" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn9" Translation="Created by" />
+    <TranslationEntry Key="StateForm/locateSourceToolStripMenuItem" Translation="Locate source" />
     <TranslationEntry Key="StateForm/refreshToolStripMenuItem" Translation="Refresh" />
     <TranslationEntry Key="StateForm/tabDict" Translation="Dict variables" />
     <TranslationEntry Key="StateForm/tabDictPersistent" Translation="Persistent" />

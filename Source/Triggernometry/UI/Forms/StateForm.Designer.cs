@@ -54,6 +54,7 @@
             this.btnScalarRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.locateSourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dgvScalarVariables = new Triggernometry.UI.CustomControls.DataGridViewEx();
             this.colScalarName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -368,9 +369,11 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem});
+            this.refreshToolStripMenuItem,
+            this.locateSourceToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(114, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(150, 48);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // refreshToolStripMenuItem
             // 
@@ -378,6 +381,13 @@
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
+            //
+            // locateSourceToolStripMenuItem
+            //
+            this.locateSourceToolStripMenuItem.Name = "locateSourceToolStripMenuItem";
+            this.locateSourceToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.locateSourceToolStripMenuItem.Text = "Locate source";
+            this.locateSourceToolStripMenuItem.Click += new System.EventHandler(this.locateSourceToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -2380,6 +2390,7 @@
         private CustomControls.DataGridViewEx dgvScalarVariables;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem locateSourceToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TabControl tbcMain;
         private System.Windows.Forms.TabPage tabScalar;

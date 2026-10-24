@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Triggernometry.UI.CustomControls;
 using Triggernometry.Localization;
@@ -134,6 +136,46 @@ namespace Triggernometry.UI.Forms
         }
 
         #region Generic
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            var dgv = contextMenuStrip1.SourceControl as DataGridView;
+            bool hasSource = dgv != null && dgv != dgvMutexes && dgv != dgvCallback;
+            locateSourceToolStripMenuItem.Visible = hasSource;
+            locateSourceToolStripMenuItem.Enabled = hasSource && dgv.SelectedRows.Count == 1;
+        }
+
+        private void locateSourceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(contextMenuStrip1.SourceControl is DataGridView dgv) || dgv.SelectedRows.Count != 1) return;
+            string source = dgv.SelectedRows[0].Cells[dgv.ColumnCount - 1].Value?.ToString() ?? "";
+            // Log names parenthesize the source ID; aura contexts also contain a separate execution GUID.
+            Match match = Regex.Match(source, @"\((?<remote>@)?(?<id>[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})\)");
+            if (match.Success)
+            {
+                TreeNode root = plug.ui.treeView1.Nodes[match.Groups["remote"].Success ? 1 : 0];
+                TreeNode node = FindSourceNode(root, new Guid(match.Groups["id"].Value));
+                if (node != null)
+                {
+                    System.Media.SystemSounds.Asterisk.Play();
+                    plug.ui.LocateTreeNode(node);
+                    return;
+                }
+            }
+            System.Media.SystemSounds.Hand.Play();
+        }
+
+        /// <summary> Finds a trigger or registered-variable folder by its source GUID within the selected tree. </summary>
+        private TreeNode FindSourceNode(TreeNode node, Guid id)
+        {
+            if (node.Tag is Trigger trigger && trigger.Id == id || node.Tag is Folder folder && folder.Id == id) return node;
+            foreach (TreeNode child in node.Nodes)
+            {
+                TreeNode found = FindSourceNode(child, id);
+                if (found != null) return found;
+            }
+            return null;
+        }
 
         private List<string> sortedVariableKeys;
         private string sortType;

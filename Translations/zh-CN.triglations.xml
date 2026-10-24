@@ -2095,6 +2095,7 @@
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn7" Translation="创建来源" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn8" Translation="名称" />
     <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn9" Translation="创建来源" />
+    <TranslationEntry Key="StateForm/locateSourceToolStripMenuItem" Translation="定位来源" />
     <TranslationEntry Key="StateForm/refreshToolStripMenuItem" Translation="刷新" />
     <TranslationEntry Key="StateForm/tabDict" Translation="字典变量" />
     <TranslationEntry Key="StateForm/tabDictPersistent" Translation="永久变量" />
