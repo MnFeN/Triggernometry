@@ -343,17 +343,17 @@ namespace Triggernometry.Core
             switch (AudioOutput)
             {
                 case AudioOutputEnum.AlwaysOverride:
-                    {
-                        foreach (ActionOld a in ActionOld.RecursiveGetActions(t.Actions))
-                        {
-                            a._SoundRouting = Configuration.AudioRoutingMethodEnum.Triggernometry;
-                            a._TTSRouting = Configuration.AudioRoutingMethodEnum.Triggernometry;
-                        }
-                    }
-                    break;
                 case AudioOutputEnum.NeverOverride:
                     {
-                        // ?
+                        // None restores the configured global route instead of the action's override.
+                        var routing = AudioOutput == AudioOutputEnum.AlwaysOverride
+                            ? Configuration.AudioRoutingMethodEnum.Triggernometry
+                            : Configuration.AudioRoutingMethodEnum.None;
+                        foreach (ActionOld a in ActionOld.RecursiveGetActions(t.Actions))
+                        {
+                            a._SoundRouting = routing;
+                            a._TTSRouting = routing;
+                        }
                     }
                     break;
             }
