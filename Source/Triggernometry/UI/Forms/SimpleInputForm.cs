@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Triggernometry.Core;
 using Triggernometry.UI.CustomControls;
 using Triggernometry.Localization;
 
@@ -8,10 +9,7 @@ namespace Triggernometry.UI.Forms
 {
     public partial class SimpleInputForm : Form
     {
-        private ExpressionTextBox expEditedValue;
-        private Button okButton;
-        private Button cancelButton;
-        private TableLayoutPanel table;
+        private Font fontOverride;
 
         public bool ReadOnly
         {
@@ -25,24 +23,26 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        public SimpleInputForm(string title, ExpressionTextBox.SupportedExpressionTypeEnum exprType, string defaultValue = "", bool multiline = false)
+        public SimpleInputForm()
+        {
+            InitializeComponent();
+        }
+
+        public SimpleInputForm(string title, ExpressionTextBox.SupportedExpressionTypeEnum exprType, string defaultValue = "", bool multiline = false) : this()
         {
             Text = title;
-            FormBorderStyle = FormBorderStyle.Sizable;
-            StartPosition = FormStartPosition.CenterParent;
-            MaximizeBox = true;
-            MinimizeBox = false;
             MinimumSize = multiline ? new Size(480, 300) : new Size(360, 160);
             ClientSize = multiline ? new Size(900, 560) : new Size(480, 130);
-            KeyPreview = true;
-            KeyDown += SimpleInputForm_KeyDown;
-
-            expEditedValue = new ExpressionTextBox
+            okButton.Text = I18n.Translate("internal/SimpleInputForm/ok", "OK");
+            cancelButton.Text = I18n.Translate("internal/SimpleInputForm/cancel", "Cancel");
+            Configuration cfg = RealPlugin.Instance.cfg;
+            if (!cfg.UiFontDefault)
             {
-                Dock = DockStyle.Fill,
-                ExpressionType = exprType,
-                Text = defaultValue
-            };
+                fontOverride = RealPlugin.CreateFontFromDefinition(cfg.UiFontName, cfg.UiFontSize, cfg.UiFontEffect);
+                RealPlugin.ApplyFontOverrideToForm(this, fontOverride);
+            }
+            expEditedValue.ExpressionType = exprType;
+            expEditedValue.Text = defaultValue;
             expEditedValue.textBox1.MinimumSize = new Size(200, 0);
             if (multiline)
             {
@@ -54,51 +54,19 @@ namespace Triggernometry.UI.Forms
                 expEditedValue.ToggleExpand();
             }
 
-            okButton = new Button
-            {
-                Text = I18n.Translate("internal/SimpleInputForm/ok", "OK"),
-                AutoSize = true,
-                DialogResult = DialogResult.OK
-            };
-            cancelButton = new Button
-            {
-                Text = I18n.Translate("internal/SimpleInputForm/cancel", "Cancel"),
-                AutoSize = true,
-                DialogResult = DialogResult.Cancel
-            };
-            var buttons = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                FlowDirection = FlowDirection.RightToLeft,
-                AutoSize = true,
-                WrapContents = false,
-                Padding = new Padding(0, 10, 0, 0)
-            };
-            buttons.Controls.Add(cancelButton);
-            buttons.Controls.Add(okButton);
             // Enter inserts a newline in the expanded editor; Ctrl+Enter accepts either mode.
-            if (!multiline) AcceptButton = okButton;
-            CancelButton = cancelButton;
+            if (multiline) AcceptButton = null;
+        }
 
-            table = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                Padding = new Padding(15),
-                ColumnCount = 1,
-                RowCount = 2
-            };
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            table.Controls.Add(expEditedValue, 0, 0);
-            table.Controls.Add(buttons, 0, 1);
-            Controls.Add(table);
+        private void SimpleInputForm_Shown(object sender, EventArgs e)
+        {
+            expEditedValue.textBox1.Focus();
+            Activate();
+        }
 
-            Shown += (_, __) =>
-            {
-                expEditedValue.textBox1.Focus();
-                Activate();
-            };
+        private void SimpleInputForm_Disposed(object sender, EventArgs e)
+        {
+            fontOverride?.Dispose();
         }
 
         private void SimpleInputForm_KeyDown(object sender, KeyEventArgs e)
