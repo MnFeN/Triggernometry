@@ -2303,18 +2303,22 @@ namespace Triggernometry.UI.CustomControls
                 plug.CheckForUpdates(isManual: false);
             }
 
-            RepositoryFolder rfo = (RepositoryFolder)treeView1.Nodes[1].Tag;
-            List<Repository> upds = new List<Repository>();
-            foreach (Repository r in rfo.Repositories)
+            // Defer automatic repository checks when in combat.
+            if (plug.InCombatHook?.Invoke() != true)
             {
-                if (r.Enabled == true && r.AutoUpdate == true && r.UpdateLastChecked.AddMinutes(r.UpdateInterval) < DateTime.Now)
+                RepositoryFolder rfo = (RepositoryFolder)treeView1.Nodes[1].Tag;
+                List<Repository> upds = new List<Repository>();
+                foreach (Repository r in rfo.Repositories)
                 {
-                    upds.Add(r);
+                    if (r.Enabled == true && r.AutoUpdate == true && r.UpdateLastChecked.AddMinutes(r.UpdateInterval) < DateTime.Now)
+                    {
+                        upds.Add(r);
+                    }
                 }
-            }
-            if (upds.Count > 0)
-            {
-                _ = Task.Run(() => plug.UpdateRepositoriesAsync(upds, false));
+                if (upds.Count > 0)
+                {
+                    _ = Task.Run(() => plug.UpdateRepositoriesAsync(upds, false));
+                }
             }
             if (cfg.AutosaveEnabled == true && plug.lastConfigSave.AddMinutes(cfg.AutosaveInterval) < DateTime.Now)
             {
