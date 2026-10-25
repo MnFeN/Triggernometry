@@ -130,7 +130,7 @@ namespace Triggernometry.Core.Variables
             VariableDictionary v = new VariableDictionary();
             foreach (KeyValuePair<string, Variable> kp in Values)
             {
-                v.SetValue(kp.Key, kp.Value.Duplicate());
+                v.SetValue(kp.Key, kp.Value);
             }
             v.LastChanger = LastChanger;
             v.LastChanged = LastChanged;

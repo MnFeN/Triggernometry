@@ -103,7 +103,7 @@ namespace Triggernometry.Core.Variables
             {
                 for (int x = 1; x <= Width; x++)
                 {
-                    v.Set(x, y, Peek(x, y).Duplicate(), LastChanger);
+                    v.Set(x, y, Peek(x, y), LastChanger);
                 }
             }
             v.LastChanger = LastChanger;
