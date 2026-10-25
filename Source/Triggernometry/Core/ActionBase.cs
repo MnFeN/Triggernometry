@@ -557,54 +557,41 @@ namespace Triggernometry.Core
         internal abstract void ExecuteImplementation(ActionInstance ai);
         public void Execute(ActionInstance ai)
         {            
-            if (Enabled == false)
+            if (!Enabled)
             {
                 LastExecutionResult = false;
                 return;
             }
+
             Context ctx = ai.ctx;
-            if ((ctx.forceType & ActionOld.TriggerForceTypeEnum.SkipConditions) == 0 && ctx.testByPlaceholder == false)
+            var shouldConsiderCondition = !ctx.forceType.HasFlag(ActionOld.TriggerForceTypeEnum.SkipConditions) && !ctx.testByPlaceholder;
+            if (shouldConsiderCondition && Condition?.Enabled == true && !Condition.CheckCondition(ctx, ActionContextLogger, ctx))
             {
-                if (Condition != null && Condition.Enabled == true)
-                {
-                    if (Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
-                    {
-                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", OrderNumber, ctx.Trigger?.LogName ?? "(null)"));
-                        LastExecutionResult = false;
-                        return;
-                    }
-                }
+                AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", OrderNumber, ctx.Trigger?.LogName ?? "(null)"));
+                LastExecutionResult = false;
+                return;
             }
-            if (Asynchronous == true)
+
+            void ExecuteCore()
             {
-                Task t;
-                if (ctx.Plugin != null)
-                {
-                    CancellationToken ct = ctx.Plugin.GetCancellationToken();
-                    t = new Task(() =>
-                    {
-                        ct.ThrowIfCancellationRequested();
-                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
-                        ExecuteImplementation(ai);
-                        ai?.ActionFinished();
-                    });
-                }
-                else
-                {
-                    t = new Task(() =>
-                    {                        
-                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
-                        ExecuteImplementation(ai);
-                        ai?.ActionFinished();
-                    });
-                }
-                t.Start();
-            }
-            else
-            {                
                 AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
                 ExecuteImplementation(ai);
                 ai?.ActionFinished();
+            }
+
+            if (Asynchronous)
+            {
+                CancellationToken? ct = ctx.Plugin?.GetCancellationToken();
+                Task t = new Task(() =>
+                {
+                    ct?.ThrowIfCancellationRequested();
+                    ExecuteCore();
+                });
+                t.Start();
+            }
+            else
+            {
+                ExecuteCore();
             }
             LastExecutionResult = true;
         }
