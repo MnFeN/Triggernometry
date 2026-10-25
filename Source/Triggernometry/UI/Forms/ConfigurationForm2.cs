@@ -120,7 +120,13 @@ namespace Triggernometry.UI.Forms
             nudCacheJsonExpiry.Value = cfg.CacheJsonExpiry;
             nudCacheRepoExpiry.Value = cfg.CacheRepoExpiry;
             nudCacheFileExpiry.Value = cfg.CacheFileExpiry;
-            subs.AddRange(cfg.Substitutions);
+            // Keep rule edits local until the configuration dialog is accepted.
+            subs = cfg.Substitutions.Select(sub => new Configuration.Substitution
+            {
+                SearchFor = sub.SearchFor,
+                ReplaceWith = sub.ReplaceWith,
+                Scope = sub.Scope
+            }).ToList();
             subs.Sort();
             dgvSubstitutions.RowCount = cfg.Substitutions.Count;
             cbxAutosaveConfig.Checked = cfg.AutosaveEnabled;
