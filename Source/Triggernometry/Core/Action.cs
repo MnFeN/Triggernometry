@@ -419,25 +419,31 @@ namespace Triggernometry.Core
             if (loopActionIdOld == Id)
                 ctx.loopIterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _LoopIncrExpression);
 
-            if (!LoopCondition.Enabled || LoopCondition.CheckCondition(ctx, ActionContextLogger, ctx) != true)
+            if (!LoopCondition.Enabled)
                 return;
 
             bool continuing = false;
+            Context loopContext = ctx;
             if (loopActionIdOld != Id)
             {
                 continuing = loopActionIdOld == Guid.Empty;
-                ctx = ctx.Duplicate();
+                loopContext = ctx.Duplicate();
                 if (loopActionIdOld != Guid.Empty && loopActionIdOld != Id)
                 {
-                    ctx.id = Guid.NewGuid();
+                    loopContext.id = Guid.NewGuid();
                 }
-                ctx.loopActionId = Id;
-                ctx.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _LoopInitExpression);
+                loopContext.loopActionId = Id;
+                loopContext.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _LoopInitExpression);
             }
             else
             {
                 continuing = true;
             }
+            // Test the initial value before entering, without replacing the caller's context on failure.
+            if (LoopCondition.CheckCondition(loopContext, ActionContextLogger, loopContext) != true)
+                return;
+            ctx = loopContext;
+
             DateTime curTime = DateTime.Now;
             ActionOld lastAction = Instance.QueueActions(ctx, curTime, LoopActions, ctx.Trigger.Sequential, qa?.mutex, ActionContextLogger);
             lastAction.LoopAction = this;
