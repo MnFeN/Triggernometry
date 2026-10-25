@@ -157,14 +157,8 @@ namespace Triggernometry.Core
 
         private void VerifyProcessWindow()
         {
-            if (string.IsNullOrWhiteSpace(cfg.WindowToMonitor))
-            {
-                HideAllAuras = WindowsUtils.IsInFocus(cfg.WindowToMonitor) == false;
-            }
-            else
-            {
-                HideAllAuras = false;
-            }
+            HideAllAuras = !string.IsNullOrWhiteSpace(cfg.WindowToMonitor)
+                && !WindowsUtils.IsInFocus(cfg.WindowToMonitor);
         }
 
         internal void UpdateAuras(int numTicks)
