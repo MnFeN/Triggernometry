@@ -437,13 +437,15 @@ namespace Triggernometry.Core.Actions
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(ValueExpression, invalidExprs);
 
-                        string value = GetListExpressionValue(ctx, ValueType, ValueExpression);
+                        string value;
                         int index = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
                         lock (svs.List)
                         {
                             VariableList vl = svs.GetListVariable(sourcename, true);
                             ctx.varName = (Persistent ? "plvar:" : "lvar:") + sourcename;   // ${_this}
                             ctx.listIndex = index;  // ${_idx}
+                            // Establish the target before evaluating expressions that read its old value.
+                            value = GetListExpressionValue(ctx, ValueType, ValueExpression);
                             vl.Set(index, value, changer);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listindexset",
@@ -651,7 +653,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.List)
                         {
                             VariableList vl = svs.GetListVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "plvar:" : "lvar:") + Name;    // for ${_this}
+                            ctx.varName = (Persistent ? "plvar:" : "lvar:") + sourcename;    // for ${_this}
                                                                                                             // Iterate through the list and evaluate the key expression in the current context
                             for (int listIndex = 0; listIndex < vl.Size; listIndex++)
                             {
@@ -744,7 +746,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.List)
                         {
                             VariableList vl = svs.GetListVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "plvar:" : "lvar:") + Name;    // for ${_this}
+                            ctx.varName = (Persistent ? "plvar:" : "lvar:") + sourcename;    // for ${_this}
                             for (int i = 0; i < vl.Size; i++)
                             {
                                 ctx.listIndex = i + 1;  // for ${_idx}

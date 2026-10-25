@@ -578,7 +578,7 @@ namespace Triggernometry.Core.Actions
                             {
                                 vt.Resize(mx, my);
                             }
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;
                             ctx.tableColIndex = x;          // for ${_col}
                             ctx.tableRowIndex = y;          // for ${_row}
                             expr = ParseExpr();
@@ -601,7 +601,7 @@ namespace Triggernometry.Core.Actions
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
                             newWidth = newWidth <= 0 ? vt.Width : newWidth;
                             newHeight = newHeight <= 0 ? vt.Height : newHeight;
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;
                             for (int y = 1; y <= newHeight; y++)     // x/y index starts from 1
                             {
                                 ctx.tableRowIndex = y;          // for ${_row}
@@ -634,7 +634,7 @@ namespace Triggernometry.Core.Actions
                             // index starts from 0
                             List<int> colIndices = ArgHelper.GetSliceIndices(colSlicesStr, vt.Width, X, startIndex: 1);
                             List<int> rowIndices = ArgHelper.GetSliceIndices(rowSlicesStr, vt.Height, Y, startIndex: 1);
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;
                             foreach (int rowIndex in rowIndices)
                             {
                                 ctx.tableRowIndex = rowIndex + 1;       // for ${_row}
@@ -690,7 +690,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.Table)
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;  // for ${_this}
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;  // for ${_this}
 
                             for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
                             {
@@ -729,7 +729,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.Table)
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name;  // for ${_this}
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;  // for ${_this}
                             if (isCol)
                             {
                                 for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
@@ -867,7 +867,7 @@ namespace Triggernometry.Core.Actions
                         lock (svs.Table)
                         {
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + Name; // for ${_row[i]}
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename; // for ${_row[i]}
                             if (isCol)
                             {
                                 // Iterate through the columns and evaluate the key expression in the current context

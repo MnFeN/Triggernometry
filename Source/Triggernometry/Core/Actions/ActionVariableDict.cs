@@ -506,7 +506,10 @@ namespace Triggernometry.Core.Actions
                     {
                         bool isLengthMode = !string.IsNullOrWhiteSpace(VariableLength);
                         int length = isLengthMode ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, VariableLength) : 0;
-                        string[] invalidExprs = new[] { "${_row", "${_col", "${_this}" };
+                        // Only length-based generation establishes an index for each entry.
+                        string[] invalidExprs = isLengthMode
+                            ? new[] { "${_row", "${_col", "${_this}" }
+                            : new[] { "${_row", "${_col", "${_this}", "${_idx}" };
                         CheckInvalidDymanicExpr(Key, invalidExprs);
                         CheckInvalidDymanicExpr(Value, invalidExprs);
                         VariableDictionary vdNew = new VariableDictionary();
