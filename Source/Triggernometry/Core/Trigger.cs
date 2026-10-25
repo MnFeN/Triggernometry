@@ -718,7 +718,8 @@ namespace Triggernometry.Core
         public void QueueActions(Context ctx, DateTime curtime, RealPlugin.MutexInformation mtx)
         {
             //System.Diagnostics.Debug.WriteLine("### queuing actions for " + ctx.ToString());
-            RealPlugin.Instance.QueueActions(ctx, curtime, Actions, Sequential, mtx, TriggerContextLogger);
+            if (RealPlugin.Instance.QueueActions(ctx, curtime, Actions, Sequential, mtx, TriggerContextLogger) == null)
+                mtx?.Release(ctx);
         }
 
         #endregion Firing Pipeline

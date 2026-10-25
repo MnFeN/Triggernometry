@@ -497,14 +497,24 @@ namespace Triggernometry.Core
 
         internal void Execute(QueuedAction qa, Context ctx)
         {
+            if (qa != null)
+            {
+                lock (ctx.Plugin.ActionQueue) ctx.Plugin.ExecutingActions.Add(qa);
+            }
             if (Asynchronous == true)
             {
                 CancellationToken? ct = ctx.Plugin?.GetCancellationToken();
                 Task.Run(() =>
                 {
-                    ct?.ThrowIfCancellationRequested();
-                    ExecutionImplementation(qa, ctx);
-                    qa?.ActionFinished();
+                    try
+                    {
+                        ct?.ThrowIfCancellationRequested();
+                        ExecutionImplementation(qa, ctx);
+                    }
+                    finally 
+                    { 
+                        qa?.ActionFinished(); 
+                    }
                 });
             }
             else

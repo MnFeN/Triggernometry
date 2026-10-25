@@ -26,6 +26,8 @@ namespace Triggernometry.Core
 
         internal Thread ActionQueueThread = null;
         internal List<QueuedAction> ActionQueue = new List<QueuedAction>();
+        // Cancellation must also account for actions already removed from the queue to execute.
+        internal HashSet<QueuedAction> ExecutingActions = new HashSet<QueuedAction>();
         internal AutoResetEvent ActionUpdateEvent = null;
         private long curOrdinal = 0;
         internal object QueueProcessingLock = new object();
@@ -107,9 +109,14 @@ namespace Triggernometry.Core
 
             public void ActionFinished()
             {
-                if (mutex != null && releaseMutex == true)
+                lock (ctx.Plugin.ActionQueue)
                 {
-                    mutex.Release(ctx);
+                    ctx.Plugin.ExecutingActions.Remove(this);
+                    if (mutex != null && releaseMutex == true)
+                    {
+                        mutex.Release(ctx);
+                        mutex = null;
+                    }
                 }
             }
 
@@ -131,21 +138,22 @@ namespace Triggernometry.Core
             int removedCount = 0;
             lock (ActionQueue)
             {
-                if (filter == null)
+                var toRemove = ActionQueue.Where(qa => filter == null || filter(qa)).ToList();
+                removedCount = toRemove.Count;
+                foreach (var qa in toRemove)
+                    ActionQueue.Remove(qa);
+
+                foreach (var group in toRemove.Where(qa => qa.mutex != null)
+                    .GroupBy(qa => new { qa.mutex, qa.ctx.id }))
                 {
-                    removedCount = ActionQueue.Count;
-                    ActionQueue.Clear();
-                }
-                else
-                {
-                    var toRemove = ActionQueue.Where(filter).ToList();
-                    removedCount = toRemove.Count;
-                    if (removedCount > 0)
+                    // Transfer the release to a surviving action, or finish the canceled chain.
+                    var last = ExecutingActions.Concat(ActionQueue).LastOrDefault(qa => qa.mutex == group.Key.mutex && qa.ctx.id == group.Key.id);
+                    if (last != null)
                     {
-                        foreach (var qa in toRemove)
-                            ActionQueue.Remove(qa);
-                        ActionQueue.Sort();
+                        if (group.Any(qa => qa.releaseMutex)) last.releaseMutex = true;
                     }
+                    else if (group.Any(qa => qa.releaseMutex || qa.ctx.Trigger.Sequential))
+                        group.Key.mutex.Release(group.First().ctx);
                 }
                 if (removedCount > 0)
                     ActionUpdateEvent.Set();
@@ -312,6 +320,7 @@ namespace Triggernometry.Core
                                 {
                                     tp = ActionQueue[0];
                                     ActionQueue.RemoveAt(0);
+                                    ExecutingActions.Add(tp);
                                 }
                             }
                             if (tp != null)
