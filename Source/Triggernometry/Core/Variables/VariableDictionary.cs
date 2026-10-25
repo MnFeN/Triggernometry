@@ -104,16 +104,17 @@ namespace Triggernometry.Core.Variables
                 }
                 List<string> a = new List<string>(Values.Keys);
                 List<string> b = new List<string>(v.Values.Keys);
-                a.Sort();
-                b.Sort();
+                var comparer = StringComparer.OrdinalIgnoreCase;
+                a.Sort(comparer);
+                b.Sort(comparer);
                 for (int i = 0; i < a.Count; i++)
                 {
-                    int res = a[i].CompareTo(b[i]);
+                    int res = comparer.Compare(a[i], b[i]);
                     if (res != 0)
                     {
                         return res;
                     }
-                    res = Values[a[i]].CompareTo(v.Values[a[i]]);
+                    res = Values[a[i]].CompareTo(v.Values[b[i]]);
                     if (res != 0)
                     {
                         return res;
