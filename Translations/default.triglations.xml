@@ -1610,6 +1610,7 @@
     <TranslationEntry Key="internal/PolarCoord/parseerror" Translation="Failed to parse polar coordinates: {0}&#xA;&#xA;Raw data:&#xA;r = ({1}),&#xA;θ = ({2}),&#xA;z = ({3})" />
     <TranslationEntry Key="internal/Polygon/toofewvertices" Translation="A polygon requires at least 3 vertices." />
     <TranslationEntry Key="internal/Polygon/trianglerequired" Translation="Isosceles subdivision is only supported for triangles." />
+    <TranslationEntry Key="internal/Polygon/triangulationfailed" Translation="The polygon could not be triangulated. Check that its vertices form a simple polygon." />
     <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="Registered variable key conflict &#x27;{0}&#x27;:&#xA;new value: &#x27;{1}&#x27;&#xA;from: Folder {2}&#xA;old value: &#x27;{3}&#x27;&#xA;from: Folder {4}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)." />
     <TranslationEntry Key="internal/RegisteredVariableViewer/alwaysactive" Translation="Always active" />

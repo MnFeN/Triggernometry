@@ -1610,6 +1610,7 @@
     <TranslationEntry Key="internal/PolarCoord/parseerror" Translation="极坐标解析错误：{0}&#xA;&#xA;原始数据：&#xA;r = ({1}),&#xA;θ = ({2}),&#xA;z = ({3})" />
     <TranslationEntry Key="internal/Polygon/toofewvertices" Translation="多边形至少需要 3 个顶点。" />
     <TranslationEntry Key="internal/Polygon/trianglerequired" Translation="只能对三角形进行等腰子三角剖分。" />
+    <TranslationEntry Key="internal/Polygon/triangulationfailed" Translation="无法对多边形进行三角剖分，请检查顶点是否构成简单多边形。" />
     <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="注册变量键“{0}”冲突：&#xA;新值：“{1}”&#xA;来自：分组 {2}&#xA;旧值：“{3}”&#xA;来自：分组 {4}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="此字段支持正则表达式。绿色代表输入的正则合法，红色代表不合法。" />
     <TranslationEntry Key="internal/RegisteredVariableViewer/alwaysactive" Translation="永远生效" />

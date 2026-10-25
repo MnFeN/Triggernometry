@@ -81,28 +81,56 @@ namespace Triggernometry.Utilities.Maths
 
         private static float Cross(Vector2 a, Vector2 b) => -a.X * b.Y + b.X * a.Y; // 左手系
 
+        /// <summary> Tests whether a point lies inside or on a clockwise triangle in game coordinates. </summary>
+        private static bool IsPointInTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)
+            => Cross(b - a, point - a) <= 0 &&
+               Cross(c - b, point - b) <= 0 &&
+               Cross(a - c, point - c) <= 0;
+
         public List<Polygon> Triangulate(double tolerance = 0.05)
         { 
             var vertices = VertexList.ToList();
             var output = new List<Polygon>();
+            var err = tolerance * tolerance;
             while (vertices.Count > 3)
             {
                 var n = vertices.Count;
-                var minIdx = vertices
+                var candidates = vertices
                     .Select((v, i) => (idx: i, angle: GetAngle(vertices, i)) )
                     .Where(tuple => tuple.angle >= 0) // 过滤掉凹顶点
-                    .OrderBy(tuple => tuple.angle) // 取最小的有向角度
-                    .First().idx;
-                var v1 = vertices[(minIdx - 1 + n) % n];
-                var v2 = vertices[minIdx];
-                var v3 = vertices[(minIdx + 1) % n];
-                var err = tolerance * tolerance;
-                if (Vector2.DistanceSquared(v1, v2) <= err || Vector2.DistanceSquared(v2, v3) <= err || Vector2.DistanceSquared(v3, v1) <= err) 
-                    continue; // 跳过任意边小于容差的三角形
-                output.Add(new Polygon(v1, v2, v3));
-                vertices.RemoveAt(minIdx);
+                    .OrderBy(tuple => tuple.angle); // 优先选最小的有向角度
+                bool clipped = false;
+                foreach (var candidate in candidates)
+                {
+                    int prev = (candidate.idx - 1 + n) % n;
+                    int next = (candidate.idx + 1) % n;
+                    var v1 = vertices[prev];
+                    var v2 = vertices[candidate.idx];
+                    var v3 = vertices[next];
+                    // Remove degenerate vertices so the same short edge cannot stall the loop.
+                    bool degenerate = Vector2.DistanceSquared(v1, v2) <= err ||
+                        Vector2.DistanceSquared(v2, v3) <= err || Vector2.DistanceSquared(v3, v1) <= err ||
+                        Cross(v1 - v2, v3 - v2) == 0;
+                    if (!degenerate)
+                    {
+                        // A convex vertex is an ear only if no other vertex lies in its triangle.
+                        if (vertices.Where((v, i) => i != prev && i != candidate.idx && i != next)
+                            .Any(v => IsPointInTriangle(v, v1, v2, v3))) continue;
+                        output.Add(new Polygon(v1, v2, v3));
+                    }
+                    vertices.RemoveAt(candidate.idx);
+                    clipped = true;
+                    break;
+                }
+                if (!clipped)
+                    throw new ArgumentException(I18n.Translate("internal/Polygon/triangulationfailed",
+                        "The polygon could not be triangulated. Check that its vertices form a simple polygon."));
             }
-            output.Add(new Polygon(vertices));
+            if (Vector2.DistanceSquared(vertices[0], vertices[1]) > err &&
+                Vector2.DistanceSquared(vertices[1], vertices[2]) > err &&
+                Vector2.DistanceSquared(vertices[2], vertices[0]) > err &&
+                Cross(vertices[1] - vertices[0], vertices[2] - vertices[0]) != 0)
+                output.Add(new Polygon(vertices));
             return output;
         }
 

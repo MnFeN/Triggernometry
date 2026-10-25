@@ -1610,6 +1610,7 @@
     <TranslationEntry Key="internal/PolarCoord/parseerror" Translation="極座標の解析に失敗しました：{0}&#xA;&#xA;元のデータ：&#xA;r = ({1}),&#xA;θ = ({2}),&#xA;z = ({3})" />
     <TranslationEntry Key="internal/Polygon/toofewvertices" Translation="多角形には 3 つ以上の頂点が必要です。" />
     <TranslationEntry Key="internal/Polygon/trianglerequired" Translation="二等辺三角形への分割は三角形にのみ使用できます。" />
+    <TranslationEntry Key="internal/Polygon/triangulationfailed" Translation="多角形を三角形に分割できませんでした。頂点が単純多角形を構成しているか確認してください。" />
     <TranslationEntry Key="internal/RealPlugin/registeredvariableoverwrite" Translation="登録変数のキー「{0}」が競合しています：&#xA;新しい値：「{1}」&#xA;変更元：フォルダー {2}&#xA;以前の値：「{3}」&#xA;変更元：フォルダー {4}" />
     <TranslationEntry Key="internal/RegexTextBox" Translation="This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)." />
     <TranslationEntry Key="internal/RegisteredVariableViewer/alwaysactive" Translation="常に有効" />
