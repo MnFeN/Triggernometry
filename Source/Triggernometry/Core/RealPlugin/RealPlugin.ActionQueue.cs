@@ -200,6 +200,8 @@ namespace Triggernometry.Core
                     }
                     prev = action;
                 }
+                // The new tail must not retain a successor from an earlier queue operation.
+                if (prev != null) prev.NextAction = null;
                 if (first != null)
                 {
                     QueueAction(ctx, ctx.Trigger, mtx, first, startingFrom, false);
