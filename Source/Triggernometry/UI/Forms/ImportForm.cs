@@ -852,7 +852,7 @@ namespace Triggernometry.UI.Forms
         {
             Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
             treeView1.SelectedNode = treeView1.GetNodeAt(targetPoint);
-            if (treeView1.SelectedNode.Tag is Trigger)
+            if (treeView1.SelectedNode == null || treeView1.SelectedNode.Tag is Trigger)
             {
                 e.Effect = DragDropEffects.None;
             }
@@ -871,6 +871,7 @@ namespace Triggernometry.UI.Forms
         {
             Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
             TreeNode targetNode = treeView1.GetNodeAt(targetPoint);
+            if (targetNode == null) return;
             TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
             if (!draggedNode.Equals(targetNode) && !ContainsNode(draggedNode, targetNode) && !(targetNode.Tag is Trigger))
             {

@@ -1998,9 +1998,9 @@ namespace Triggernometry.UI.Forms
         {
             lock (plug.callbacksById)
             {
-                dgvCallback.RowCount = plug.callbacksById.Count;
+                SortCallbacks();
+                dgvCallback.RowCount = sortedCallbackKeys.Count;
             }
-            SortCallbacks();
             Refresh();
         }
 
@@ -2018,12 +2018,11 @@ namespace Triggernometry.UI.Forms
         {
             lock (plug.callbacksById)
             {
-                if (e.RowIndex >= plug.callbacksById.Count)
+                if (e.RowIndex >= sortedCallbackKeys.Count
+                    || !plug.callbacksById.TryGetValue(sortedCallbackKeys[e.RowIndex], out RealPlugin.NamedCallback cb))
                 {
                     return;
                 }
-                int cbid = sortedCallbackKeys[e.RowIndex];
-                RealPlugin.NamedCallback cb = plug.callbacksById[cbid];
                 switch (e.ColumnIndex)
                 {
                     case 0:

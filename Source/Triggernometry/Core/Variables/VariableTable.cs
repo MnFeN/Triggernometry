@@ -18,6 +18,7 @@ namespace Triggernometry.Core.Variables
 
             [XmlArrayItem(ElementName = "VariableScalar", Type = typeof(VariableScalar))]
             [XmlArrayItem(ElementName = "VariableList", Type = typeof(VariableList))]
+            [XmlArrayItem(ElementName = "VariableDictionary", Type = typeof(VariableDictionary))]
             [XmlArrayItem(ElementName = "VariableTable", Type = typeof(VariableTable))]
             public List<Variable> Values { get; set; } = new List<Variable>();
 

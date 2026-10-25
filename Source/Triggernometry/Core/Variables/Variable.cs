@@ -6,6 +6,7 @@ namespace Triggernometry.Core.Variables
 
     [XmlInclude(typeof(VariableScalar))]
     [XmlInclude(typeof(VariableList))]
+    [XmlInclude(typeof(VariableDictionary))]
     [XmlInclude(typeof(VariableTable))]    
     public abstract class Variable : IComparable
     {

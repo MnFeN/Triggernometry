@@ -857,6 +857,7 @@ namespace Triggernometry.UI.Forms
 
         private void dgvSubstitutions_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0) return;
             dgvSubstitutions.ClearSelection();
             dgvSubstitutions.Rows[e.RowIndex].Selected = true;
             btnSubEdit_Click(sender, null);
