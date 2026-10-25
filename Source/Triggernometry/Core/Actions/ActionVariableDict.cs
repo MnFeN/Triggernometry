@@ -349,9 +349,9 @@ namespace Triggernometry.Core.Actions
                         "All {0}dict variables unset", sPersist));
                     break;
                 case OperationEnum.UnsetRegex:                    
-                    svs.UnsetVariableRegex(svs.Dict, Name);
+                    svs.UnsetVariableRegex(svs.Dict, sourcename);
                     AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictunsetregex",
-                        "All {0}dict variables matching ({1}) unset", sPersist, Name));
+                        "All {0}dict variables matching ({1}) unset", sPersist, sourcename));
                     break;
                 case OperationEnum.Unset:
                     svs.UnsetVariable(svs.Dict, sourcename);

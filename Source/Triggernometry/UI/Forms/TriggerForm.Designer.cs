@@ -180,6 +180,7 @@
             this.txtRegexp.Location = new System.Drawing.Point(106, 29);
             this.txtRegexp.Name = "txtRegexp";
             this.txtRegexp.ReadOnly = false;
+            this.txtRegexp.RegexSupportsExpressions = false;
             this.txtRegexp.Size = new System.Drawing.Size(535, 20);
             this.txtRegexp.TabIndex = 3;
             // 

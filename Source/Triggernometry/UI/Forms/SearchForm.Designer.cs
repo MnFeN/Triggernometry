@@ -142,6 +142,7 @@
             this.expSearchTerm.Location = new System.Drawing.Point(106, 3);
             this.expSearchTerm.Name = "expSearchTerm";
             this.expSearchTerm.ReadOnly = false;
+            this.expSearchTerm.RegexSupportsExpressions = false;
             this.expSearchTerm.Size = new System.Drawing.Size(336, 20);
             this.expSearchTerm.TabIndex = 1;
             // 

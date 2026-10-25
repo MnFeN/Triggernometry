@@ -273,7 +273,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOld.AuraOpEnum.DeactivateAuraRegex:
                     {
-                        string ax = a._AuraName;
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaurarex", "Deactivating image auras matching '{0}'", ax));
                         sc.DeactivateRegex(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Image);
                     }
@@ -417,8 +417,9 @@ namespace Triggernometry.Core
                     break;
                 case ActionOld.AuraOpEnum.DeactivateAuraRegex:
                     {
-                        Regex rex = new Regex(a._AuraName);
-                        FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaurarex", "Deactivating image auras matching '{0}'", a._AuraName));
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
+                        Regex rex = new Regex(ax);
+                        FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaurarex", "Deactivating image auras matching '{0}'", ax));
                         List<string> toRem = new List<string>();
                         lock (ctx.Plugin.imageauras)
                         {
@@ -534,7 +535,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOld.AuraOpEnum.DeactivateAuraRegex:
                     {
-                        string ax = a._TextAuraName;
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaurarex", "Deactivating text auras matching '{0}'", ax));
                         sc.DeactivateRegex(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Text);
                     }
@@ -744,8 +745,9 @@ namespace Triggernometry.Core
                     break;
                 case ActionOld.AuraOpEnum.DeactivateAuraRegex:
                     {
-                        Regex rex = new Regex(a._TextAuraName);
-                        FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaurarex", "Deactivating text auras matching '{0}'", a._TextAuraName));
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                        Regex rex = new Regex(ax);
+                        FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaurarex", "Deactivating text auras matching '{0}'", ax));
                         List<string> toRem = new List<string>();
                         lock (ctx.Plugin.textauras)
                         {

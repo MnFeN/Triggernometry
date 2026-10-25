@@ -263,20 +263,20 @@ namespace Triggernometry.Core.Actions
                     }
                 case OperationEnum.UnsetRegex:
                     {
-                        vs.UnsetVariableRegex(vs.Scalar, Name);
+                        vs.UnsetVariableRegex(vs.Scalar, varname);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarunsetregex",
-                            "All {1}scalar variables matching ({0}) unset", Name, sPersist));
+                            "All {1}scalar variables matching ({0}) unset", varname, sPersist));
                         break;
                     }
                 case OperationEnum.UnsetRegexUniversal:
                     {
-                        Regex rx = new Regex(Name);
+                        Regex rx = new Regex(varname);
                         vs.UnsetVariableRegex(vs.Scalar, rx);
                         vs.UnsetVariableRegex(vs.List, rx);
                         vs.UnsetVariableRegex(vs.Table, rx);
                         vs.UnsetVariableRegex(vs.Dict, rx);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarunsetregexuniversal",
-                            "All {1}variables matching ({0}) unset", Name, sPersist));
+                            "All {1}variables matching ({0}) unset", varname, sPersist));
                         break;
                     }
                 case OperationEnum.Unset:

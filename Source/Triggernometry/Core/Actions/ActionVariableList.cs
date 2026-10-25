@@ -860,9 +860,9 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.UnsetRegex:
                     {
-                        svs.UnsetVariableRegex(svs.List, Name);
+                        svs.UnsetVariableRegex(svs.List, sourcename);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listunsetregex",
-                            "All {1}list variables matching ({0}) unset", Name, sPersist));
+                            "All {1}list variables matching ({0}) unset", sourcename, sPersist));
                         break;
                     }
                 default:

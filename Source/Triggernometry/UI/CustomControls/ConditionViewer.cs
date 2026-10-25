@@ -376,6 +376,7 @@ namespace Triggernometry.UI.CustomControls
                         break;
                 }
                 cbxOpType.SelectedIndex = (int)r.ConditionType;
+                UpdateRightExpressionType();
                 capProperties.Caption = I18n.Translate("internal/ConditionViewer/condprops", "Condition properties");
                 pnlEditorSingle.Visible = true;
             }
@@ -666,15 +667,25 @@ namespace Triggernometry.UI.CustomControls
             switch (cbxExpRType.SelectedIndex)
             {
                 case 0:
-                    expRight.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.String;
                     re.ExpressionTypeR = ConditionSingle.ExprTypeEnum.String;
                     break;
                 case 1:
-                    expRight.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.Numeric;
                     re.ExpressionTypeR = ConditionSingle.ExprTypeEnum.Numeric;
                     break;
             }
+            UpdateRightExpressionType();
             OnConditionsUpdated();
+        }
+
+        /// <summary> Validates the right-hand string as a regex when the comparison uses one. </summary>
+        private void UpdateRightExpressionType()
+        {
+            bool isRegex = cbxOpType.SelectedIndex == (int)ConditionSingle.CndTypeEnum.RegexMatch ||
+                cbxOpType.SelectedIndex == (int)ConditionSingle.CndTypeEnum.RegexNotMatch;
+            expRight.ExpressionType = cbxExpRType.SelectedIndex == 1
+                ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric
+                : isRegex ? ExpressionTextBox.SupportedExpressionTypeEnum.Regex
+                : ExpressionTextBox.SupportedExpressionTypeEnum.String;
         }
 
         private void cbxExpLType_SelectedIndexChanged(object sender, EventArgs e)
@@ -926,6 +937,7 @@ namespace Triggernometry.UI.CustomControls
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             re.ConditionType = (ConditionSingle.CndTypeEnum)cbxOpType.SelectedIndex;
+            UpdateRightExpressionType();
             OnConditionsUpdated();
         }
 

@@ -290,6 +290,7 @@
             this.expZoneFilterRegex.Location = new System.Drawing.Point(158, 30);
             this.expZoneFilterRegex.Name = "expZoneFilterRegex";
             this.expZoneFilterRegex.ReadOnly = false;
+            this.expZoneFilterRegex.RegexSupportsExpressions = false;
             this.expZoneFilterRegex.Size = new System.Drawing.Size(369, 20);
             this.expZoneFilterRegex.TabIndex = 13;
             // 
@@ -342,6 +343,7 @@
             this.expFfxivZoneFilterRegex.Location = new System.Drawing.Point(103, 30);
             this.expFfxivZoneFilterRegex.Name = "expFfxivZoneFilterRegex";
             this.expFfxivZoneFilterRegex.ReadOnly = false;
+            this.expFfxivZoneFilterRegex.RegexSupportsExpressions = false;
             this.expFfxivZoneFilterRegex.Size = new System.Drawing.Size(424, 20);
             this.expFfxivZoneFilterRegex.TabIndex = 17;
             // 
@@ -395,6 +397,7 @@
             this.expEventFilterRegex.Location = new System.Drawing.Point(158, 112);
             this.expEventFilterRegex.Name = "expEventFilterRegex";
             this.expEventFilterRegex.ReadOnly = false;
+            this.expEventFilterRegex.RegexSupportsExpressions = false;
             this.expEventFilterRegex.Size = new System.Drawing.Size(369, 20);
             this.expEventFilterRegex.TabIndex = 14;
             // 

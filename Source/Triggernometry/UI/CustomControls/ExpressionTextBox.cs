@@ -316,6 +316,19 @@ namespace Triggernometry.UI.CustomControls
 
         public bool AutocompleteAvailable { get; set; } = true;
 
+        private bool _regexSupportsExpressions = true;
+        [DefaultValue(true)]
+        public bool RegexSupportsExpressions
+        {
+            get => _regexSupportsExpressions;
+            set
+            {
+                if (_regexSupportsExpressions == value) return;
+                _regexSupportsExpressions = value;
+                ResetTooltip();
+            }
+        }
+
         private SupportedExpressionTypeEnum _ExpressionType;
         public SupportedExpressionTypeEnum ExpressionType
         {
@@ -852,7 +865,10 @@ namespace Triggernometry.UI.CustomControls
                 }
                 try
                 {
-                    Regex rex = new Regex(textBox1.Text);
+                    string pattern = RegexSupportsExpressions
+                        ? contextForValidation.ExpandVariables(null, null, false, textBox1.Text)
+                        : textBox1.Text;
+                    Regex rex = new Regex(pattern);
                     textBox1.BackColor = IsPersistent ? BgBlue : BgGreen;
                 }
                 catch (Exception)

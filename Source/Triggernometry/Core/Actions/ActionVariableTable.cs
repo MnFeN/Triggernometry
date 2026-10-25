@@ -473,9 +473,9 @@ namespace Triggernometry.Core.Actions
                     }
                 case OperationEnum.UnsetRegex:
                     {
-                        svs.UnsetVariableRegex(svs.Table, Name);
+                        svs.UnsetVariableRegex(svs.Table, sourcename);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableunsetregex",
-                            "All {1}table variables matching ({0}) unset", Name, sPersist));
+                            "All {1}table variables matching ({0}) unset", sourcename, sPersist));
                         break;
                     }
                 case OperationEnum.Resize:

@@ -248,6 +248,7 @@
             this.rexSearch.Name = "rexSearch";
             this.rexSearch.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.rexSearch.ReadOnly = false;
+            this.rexSearch.RegexSupportsExpressions = false;
             this.rexSearch.Size = new System.Drawing.Size(194, 20);
             this.rexSearch.TabIndex = 8;
             // 
