@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using Triggernometry.Localization;
 using static Triggernometry.Expressions.String.Utils.ParserCommon;
 
@@ -101,25 +100,6 @@ namespace Triggernometry.Expressions.String.Utils
             return validator;
         }
 
-        internal static Regex BuildSplitArgRegex(string separator, bool isCompiled = false)
-        {
-            string s = Regex.Escape(separator);
-            char lb = LINEBREAK;
-            return new Regex(
-            //   (?<=^|{s}): after a separator or start-of-line
-            //               (?:\\s|{lb})*\"[^\"]*\"(?:\\s|{lb})*: spaces? + " + text? + " + spaces?
-            //                                                    (?:\\s|{lb})*'[^']*'(?:\\s|{lb})*: spaces? + ' + text? + ' + spaces?
-            //                                                                                      [^{s}]*: any unquoted text
-            //                                                                                              (?=$|{s}): before a separator or end-of-line
-                $"(?<=^|{s})((?:\\s|{lb})*\"[^\"]*\"(?:\\s|{lb})*|(?:\\s|{lb})*'[^']*'(?:\\s|{lb})*|[^{s}]*)(?=$|{s})",
-                isCompiled ? RegexOptions.Compiled : RegexOptions.None
-            );
-        }
-
-        internal static Regex reSplitArgComma = BuildSplitArgRegex(",", true);
-        internal static Regex reSplitArgEqual = BuildSplitArgRegex("=", true);
-        internal static Regex reSplitArgPipe = BuildSplitArgRegex("|", true);
-
         /// <summary> 
         /// Split an expression with commas or other specified separators to a list of arguments. <br />
         /// If the argument contains separator, single/double quotes, it should be quoted like "xx,xx", 'xx,xx', 'xx"xx', "xx'xx".
@@ -131,26 +111,54 @@ namespace Triggernometry.Expressions.String.Utils
             {
                 return Array.Empty<string>();
             }
-            var reSingleArg = separator == "," ? reSplitArgComma
-                            : separator == "=" ? reSplitArgEqual
-                            : separator == "|" ? reSplitArgPipe
-                            : BuildSplitArgRegex(separator);
+            if (separator == null) throw new ArgumentNullException(nameof(separator));
+            if (separator.Length == 0) throw new ArgumentException(nameof(separator));
 
             args = UnescapeCustomExpr(args);
-            var matches = reSingleArg.Matches(args);
             var result = new List<string>();
-            foreach (Match match in matches)
+            int start = 0;
+            while (start <= args.Length)
             {
-                string currentMatch = match.Value.TrimEx();
+                int end = args.IndexOf(separator, start, StringComparison.Ordinal);
+                if (end < 0) end = args.Length;
+
+                int index = start;
+                while (index < args.Length && args[index].IsWhiteSpaceEx()) index++;
+                if (index < args.Length && (args[index] == '"' || args[index] == '\''))
+                {
+                    int closingQuote = args.IndexOf(args[index], index + 1);
+                    if (closingQuote >= 0)
+                    {
+                        index = closingQuote + 1;
+                        while (index < args.Length && args[index].IsWhiteSpaceEx()) index++;
+                        // Quotes protect separators only when the entire argument is quoted.
+                        // Otherwise, retain the original unquoted split and quote trimming.
+                        while (index > closingQuote)
+                        {
+                            if (index == args.Length || string.CompareOrdinal(args, index, separator, 0, separator.Length) == 0)
+                            {
+                                end = index;
+                                break;
+                            }
+                            index--;
+                        }
+                    }
+                }
+
+                string currentMatch = args.Substring(start, end - start).TrimEx();
                 int length = currentMatch.Length;
                 if (length >= 2
                     && currentMatch[0] == currentMatch[length - 1]
-                    && (currentMatch[0] == '\"' || currentMatch[0] == '\'')  // quoted string: "..." '...'
-                    )
+                    && (currentMatch[0] == '\"' || currentMatch[0] == '\''))
                 {
-                    currentMatch = currentMatch.Substring(1, length - 2); // remove " / '
+                    currentMatch = currentMatch.Substring(1, length - 2);
                 }
                 result.Add(currentMatch);
+                int next = end + separator.Length;
+                // Preserve empty arguments after quotes or whitespace that are themselves the separator.
+                if (separator.Length == 1 && end > start && args[end - 1] == separator[0]) next = end;
+                if (next > args.Length) break;
+                start = next;
             }
             return result.ToArray();
         }
