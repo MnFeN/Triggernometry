@@ -335,7 +335,7 @@ namespace Triggernometry.UI.CustomControls
 
             // set a warning color when a delay (not zero) is hidden under the description
             string delay = "0" + a.ExecutionDelayExpression.Trim();
-            if (a.Enabled && a.DescriptionOverride && !( double.TryParse(delay, out double result) && result == 0 ))
+            if (a.Enabled && a.DescriptionOverride && !( double.TryParse(delay, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double result) && result == 0 ))
             {
                 e.CellStyle.BackColor = Color.FromArgb(240, 224, 128); // light yellow
                 e.CellStyle.ForeColor = SystemColors.InactiveCaptionText;

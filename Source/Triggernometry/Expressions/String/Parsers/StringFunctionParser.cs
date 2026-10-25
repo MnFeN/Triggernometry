@@ -90,10 +90,10 @@ namespace Triggernometry.Expressions.String.Parsers
                                 return dataAsLong.ToString();
 
                             case "hex2float":
-                                return "" + BitConverter.ToSingle(BitConverter.GetBytes((int)dataAsLong), 0);
+                                return BitConverter.ToSingle(BitConverter.GetBytes((int)dataAsLong), 0).ToStringInvariant();
 
                             case "hex2double":
-                                return "" + BitConverter.ToDouble(BitConverter.GetBytes(dataAsLong), 0);
+                                return BitConverter.ToDouble(BitConverter.GetBytes(dataAsLong), 0).ToStringInvariant();
                         }
                         return null; // unreachable
                     }
@@ -472,7 +472,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     {
                         Type type = Type.GetType(args[0]);
                         object converted = Convert.ChangeType(sourceString, type, InvClt);
-                        return string.Format("{0:" + args[1] + "}", converted);
+                        return string.Format(InvClt, "{0:" + args[1] + "}", converted);
                     }
 
                 case "utctime": // utctime(formatstring)

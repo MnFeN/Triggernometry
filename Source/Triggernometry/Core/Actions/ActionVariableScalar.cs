@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -364,7 +365,7 @@ namespace Triggernometry.Core.Actions
                         switch (result.Length)
                         {
                             case 0: x.Value = ""; break;
-                            case 1: x.Value = result[0].ToString(); break; // to-do: do not support complex types properly now, same for query list
+                            case 1: x.Value = Convert.ToString(result[0], CultureInfo.InvariantCulture); break; // to-do: do not support complex types properly now, same for query list
                             default: x.Value = JsonSerializer.Serialize(result); break;
                         }
                         x.LastChanger = changer;
@@ -394,7 +395,7 @@ namespace Triggernometry.Core.Actions
                         switch (result.Length)
                         {
                             case 0: break;
-                            case 1: x.Push(new VariableScalar { Value = result[0].ToString(), LastChanged = x.LastChanged, LastChanger = changer }, changer); break;
+                            case 1: x.Push(new VariableScalar { Value = Convert.ToString(result[0], CultureInfo.InvariantCulture), LastChanged = x.LastChanged, LastChanger = changer }, changer); break;
                             default:
                                 foreach (object o in result)
                                 {
@@ -408,7 +409,7 @@ namespace Triggernometry.Core.Actions
                                     }
                                     else
                                     {
-                                        x.Push(new VariableScalar() { Value = o.ToString(), LastChanged = x.LastChanged, LastChanger = changer }, changer);
+                                        x.Push(new VariableScalar() { Value = Convert.ToString(o, CultureInfo.InvariantCulture), LastChanged = x.LastChanged, LastChanger = changer }, changer);
                                     }
                                 }
                                 break;

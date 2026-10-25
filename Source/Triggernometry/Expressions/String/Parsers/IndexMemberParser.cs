@@ -139,6 +139,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
                     if (node is double d) return d.ToDataString();
                     if (node is float f) return f.ToDataString();
+                    if (node is decimal dec) return dec.ToStringInvariant();
                     return node?.ToString() ?? "";
 
                 case "_actionhistory":

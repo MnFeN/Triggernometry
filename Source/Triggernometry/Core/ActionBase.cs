@@ -655,8 +655,8 @@ namespace Triggernometry.Core
                     if (isNumeric[k])
                     {
                         sortedIndices = isAscending[k]
-                            ? indices.OrderBy(i => Convert.ToDouble(values[k][i]))
-                            : indices.OrderByDescending(i => Convert.ToDouble(values[k][i]));
+                            ? indices.OrderBy(i => Convert.ToDouble(values[k][i], CultureInfo.InvariantCulture))
+                            : indices.OrderByDescending(i => Convert.ToDouble(values[k][i], CultureInfo.InvariantCulture));
                     }
                     else
                     {
@@ -670,8 +670,8 @@ namespace Triggernometry.Core
                     if (isNumeric[k])
                     {
                         sortedIndices = isAscending[k]
-                            ? sortedIndices.ThenBy(i => Convert.ToDouble(values[k][i]))
-                            : sortedIndices.ThenByDescending(i => Convert.ToDouble(values[k][i]));
+                            ? sortedIndices.ThenBy(i => Convert.ToDouble(values[k][i], CultureInfo.InvariantCulture))
+                            : sortedIndices.ThenByDescending(i => Convert.ToDouble(values[k][i], CultureInfo.InvariantCulture));
                     }
                     else
                     {

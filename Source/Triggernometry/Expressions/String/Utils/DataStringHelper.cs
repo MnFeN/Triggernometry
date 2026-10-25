@@ -39,7 +39,7 @@ namespace Triggernometry.Expressions.String.Utils
                     {
                         RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/DataStringHelper/decimalconversionwarning",
                             "Failed to convert {0} ({1}) to decimal.", "float", f));
-                        return f.ToString();
+                        return f.ToString(CultureInfo.InvariantCulture);
                     }
                 case double d:
                     try
@@ -50,7 +50,7 @@ namespace Triggernometry.Expressions.String.Utils
                     {
                         RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/DataStringHelper/decimalconversionwarning",
                             "Failed to convert {0} ({1}) to decimal.", "double", d));
-                        return d.ToString();
+                        return d.ToString(CultureInfo.InvariantCulture);
                     }
                 case IFormattable formattable:
                     return formattable.ToString(null, CultureInfo.InvariantCulture);
