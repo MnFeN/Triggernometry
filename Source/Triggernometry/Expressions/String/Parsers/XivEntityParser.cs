@@ -88,8 +88,7 @@ namespace Triggernometry.Expressions.String.Parsers
             // 3. single name
             if (ShouldTreatAsName(inputCondition))
             {
-                var entitiesByName = Entity.GetEntities(e => e.Name == inputCondition && (!isParty || e.InParty))
-                    .ToList();
+                var entitiesByName = Entity.GetEntities(e => e.Name == inputCondition && (!isParty || e.InParty));
 
                 foreach (var e in entitiesByName)
                     yield return e;
