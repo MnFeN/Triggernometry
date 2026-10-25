@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
+using Triggernometry.Expressions.String.Evaluators;
 using Triggernometry.Expressions.String.Parsers;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
@@ -941,6 +940,10 @@ namespace Triggernometry.Core.Actions
                             propNames = specialKeys.Concat(propNames.Except(specialKeys));
                         }
 
+                        // Build each column accessor once and reuse it for every entity.
+                        propNames = propNames.ToArray();
+                        var propEvaluators = propNames.Select(XivEntityEvaluator.BuildEvaluator).ToArray();
+                        
                         VariableTable vt = new VariableTable { LastChanger = vtchanger, LastChanged = DateTime.Now };
                         var headerRow = new VariableTable.VariableTableRow
                         {
@@ -953,9 +956,10 @@ namespace Triggernometry.Core.Actions
                             if (entity.ID == 0) continue;
                             var row = new VariableTable.VariableTableRow
                             {
-                                Values = propNames.Select(prop => XivEntityParser.EvaluateEntityMembers(entity, prop))
-                                                  .Select(result => (Variable)new VariableScalar(result))
-                                                  .ToList()
+                                Values = propEvaluators
+                                    .Select(evaluate => string.Join(", ", evaluate(entity)))
+                                    .Select(result => (Variable)new VariableScalar(result))
+                                    .ToList()
                             };
                             vt.Rows.Add(row);
                         }

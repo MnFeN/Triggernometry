@@ -40,7 +40,8 @@ namespace Triggernometry.Expressions.String.Evaluators
             var rawExpr = rawExprForErrorOverride ?? $"Entity.{string.Join(", ", memberExpressions)}";
             var accessors = memberExpressions
                 .Select(raw => new MemberExpression(raw))
-                .Select(member => GetSingleAccessor(member)); // GetSingleAccessor would throw error if not found
+                .Select(member => GetSingleAccessor(member)) // GetSingleAccessor would throw error if not found
+                .ToArray();
 
             return entity => accessors.Select(accessor => {
                 try
