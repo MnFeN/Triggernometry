@@ -1,125 +1,65 @@
 ﻿using System;
-using System.Text.Json;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Text.Json;
+using Triggernometry.Expressions.String.Utils;
 
 namespace Triggernometry.Utilities
 {
-
     internal class JsonParser
     {
-
-        private JsonSerializerOptions opts;
-
-        private class ObjectConverter : JsonConverter<object>
+        /// <summary>
+        /// Parses a JSON root into dictionaries, lists and scalar values.
+        /// </summary>
+        public object Parse(string json)
         {
-
-            public override object Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
+            using (JsonDocument document = JsonDocument.Parse(json))
             {
-                switch (reader.TokenType)
-                {
-                    case JsonTokenType.Null:
-                        return null;
-                    case JsonTokenType.True:
-                        return true;
-                    case JsonTokenType.False:
-                        return false;
-                    case JsonTokenType.String:
-                        return reader.GetString();
-                    case JsonTokenType.Number:
-                        return reader.GetDecimal();
-                }
-                var converter = options.GetConverter(typeof(JsonElement)) as JsonConverter<JsonElement>;
-                if (converter != null)
-                {
-                    return converter.Read(ref reader, type, options);
-                }
-                throw new JsonException();
+                return ParseElement(document.RootElement);
             }
-
-
-            public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
-            {
-                throw new InvalidOperationException();
-            }
-
         }
 
-        public JsonParser()
+        /// <summary>
+        /// Converts an element recursively without retaining the source document.
+        /// </summary>
+        private object ParseElement(JsonElement element)
         {
-            opts = new JsonSerializerOptions();
-            opts.Converters.Add(new ObjectConverter());
-        }
-
-        private void FixComplexTypes(Dictionary<string, object> o)
-        {
-            List<string> keys = new List<string>(o.Keys);
-            foreach (string key in keys)
+            switch (element.ValueKind)
             {
-                if (o[key] is JsonElement)
-                {
-                    JsonElement ele = (JsonElement)o[key];
-                    if (ele.ValueKind == JsonValueKind.Object)
+                case JsonValueKind.Null: return null;
+                case JsonValueKind.True: return true;
+                case JsonValueKind.False: return false;
+                case JsonValueKind.String: return element.GetString();
+                case JsonValueKind.Number:
+                    return element.TryGetDecimal(out decimal value) ? (object)value : element.GetDouble();
+                case JsonValueKind.Object:
+                    var dictionary = new Dictionary<string, object>();
+                    foreach (JsonProperty property in element.EnumerateObject())
                     {
-                        o[key] = FixObject(ele);
+                        dictionary[property.Name] = ParseElement(property.Value);
                     }
-                    if (ele.ValueKind == JsonValueKind.Array)
+                    return dictionary;
+                case JsonValueKind.Array:
+                    var list = new List<object>();
+                    foreach (JsonElement item in element.EnumerateArray())
                     {
-                        o[key] = FixArray(ele);
+                        list.Add(ParseElement(item));
                     }
-                }
+                    return list;
+                default: throw new JsonException();
             }
         }
 
-        private Dictionary<string, object> FixObject(JsonElement ele)
+        /// <summary>
+        /// Formats scalar query results as text and preserves complex results as JSON.
+        /// </summary>
+        internal static string ToValueString(object value)
         {
-            Dictionary<string, object> ox = JsonSerializer.Deserialize<Dictionary<string, object>>(ele.ToString(), opts);
-            FixComplexTypes(ox);
-            return ox;
+            if (value is IDictionary || value is IList) return JsonSerializer.Serialize(value);
+            if (value is double d) return d.ToStringInvariant();
+            if (value is float f) return f.ToStringInvariant();
+            return Convert.ToString(value, CultureInfo.InvariantCulture);
         }
-
-        private List<object> FixArray(JsonElement ele)
-        {
-            List<object> ox = new List<object>();
-            foreach (var ex in ele.EnumerateArray())
-            {
-                switch (ex.ValueKind)
-                {
-                    case JsonValueKind.Null:
-                        ox.Add(null);
-                        break;
-                    case JsonValueKind.True:
-                        ox.Add(true);
-                        break;
-                    case JsonValueKind.False:
-                        ox.Add(false);
-                        break;
-                    case JsonValueKind.String:
-                        ox.Add(ex.GetString());
-                        break;
-                    case JsonValueKind.Number:
-                        ox.Add(ex.GetDecimal());
-                        break;
-                    case JsonValueKind.Object:
-                        ox.Add(FixObject(ex));
-                        break;
-                    case JsonValueKind.Array:
-                        ox.Add(FixArray(ex));
-                        break;
-                }
-            }
-            return ox;
-        }
-
-        public Dictionary<string, object> Parse(string json)
-        {
-            Dictionary<string, object> o = JsonSerializer.Deserialize<Dictionary<string, object>>(json, opts);
-            FixComplexTypes(o);
-            return o;
-        }
-
     }
-
 }

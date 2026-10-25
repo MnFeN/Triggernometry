@@ -779,14 +779,26 @@ namespace Triggernometry.Core
                         httpWebRequest.Method = "GET";
                         break;
                 }
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                if (httpResponse.StatusCode != HttpStatusCode.NoContent && expectNoContent == true)
+                HttpWebResponse httpResponse;
+                try
                 {
-                    AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/jsonpostunexpectedresponse", "Unexpected response code: {0}", httpResponse.StatusCode));
+                    httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 }
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                catch (WebException ex) when (ex.Response is HttpWebResponse)
                 {
-                    return new Tuple<int, string>((int)httpResponse.StatusCode, streamReader.ReadToEnd());
+                    // HTTP errors still carry a response that expressions may need to inspect.
+                    httpResponse = (HttpWebResponse)ex.Response;
+                }
+                using (httpResponse)
+                {
+                    if (httpResponse.StatusCode != HttpStatusCode.NoContent && expectNoContent == true)
+                    {
+                        AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/jsonpostunexpectedresponse", "Unexpected response code: {0}", httpResponse.StatusCode));
+                    }
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        return new Tuple<int, string>((int)httpResponse.StatusCode, streamReader.ReadToEnd());
+                    }
                 }
             }
             catch (Exception ex)

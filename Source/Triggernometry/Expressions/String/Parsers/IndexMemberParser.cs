@@ -1,7 +1,8 @@
 ﻿using Scarborough;
 using System;
 using System.Linq;
-using System.Web.Script.Serialization;
+using System.Collections;
+using System.Collections.Generic;
 using Triggernometry.Core;
 using Triggernometry.Expressions.String.Evaluators;
 using Triggernometry.Expressions.String.Models;
@@ -127,20 +128,18 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "_jsonresponse":
                     if (ctx.isContextJsonParsed == false)
                     {
-                        JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-                        ctx.contextJsonResponse = jsonSerializer.Deserialize<dynamic>(ctx.contextResponse);
+                        ctx.contextJsonResponse = new JsonParser().Parse(ctx.contextResponse);
                         ctx.isContextJsonParsed = true;
                     }
                     string jsonPath = expr.Index;
-                    dynamic node = ctx.contextJsonResponse;
+                    object node = ctx.contextJsonResponse;
                     foreach (string nodeName in jsonPath.Split("/".ToCharArray()))
                     {
-                        node = node[nodeName];
+                        node = node is IDictionary<string, object> dictionary
+                            ? dictionary[nodeName]
+                            : ((IList)node)[nodeName.ParseInt()];
                     }
-                    if (node is double d) return d.ToDataString();
-                    if (node is float f) return f.ToDataString();
-                    if (node is decimal dec) return dec.ToStringInvariant();
-                    return node?.ToString() ?? "";
+                    return JsonParser.ToValueString(node);
 
                 case "_actionhistory":
                     return expr.Index == "previous"

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -358,14 +357,14 @@ namespace Triggernometry.Core.Actions
                         VariableStore vs2 = plug.GetVariableStore(JsonTargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
-                        Dictionary<string, object> p = new Utilities.JsonParser().Parse(newval);
+                        object p = new Utilities.JsonParser().Parse(newval);
                         object[] result = pc.Select(p, query).ToArray();
 
                         VariableScalar x = new VariableScalar();
                         switch (result.Length)
                         {
                             case 0: x.Value = ""; break;
-                            case 1: x.Value = Convert.ToString(result[0], CultureInfo.InvariantCulture); break; // to-do: do not support complex types properly now, same for query list
+                            case 1: x.Value = Utilities.JsonParser.ToValueString(result[0]); break;
                             default: x.Value = JsonSerializer.Serialize(result); break;
                         }
                         x.LastChanger = changer;
@@ -386,33 +385,15 @@ namespace Triggernometry.Core.Actions
                         VariableStore vs2 = plug.GetVariableStore(JsonTargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
-                        Dictionary<string, object> p = new Utilities.JsonParser().Parse(newval);
+                        object p = new Utilities.JsonParser().Parse(newval);
                         object[] result = pc.Select(p, query).ToArray();
 
                         VariableList x = new VariableList();
                         x.LastChanger = changer;
                         x.LastChanged = DateTime.Now;
-                        switch (result.Length)
+                        foreach (object value in result)
                         {
-                            case 0: break;
-                            case 1: x.Push(new VariableScalar { Value = Convert.ToString(result[0], CultureInfo.InvariantCulture), LastChanged = x.LastChanged, LastChanger = changer }, changer); break;
-                            default:
-                                foreach (object o in result)
-                                {
-                                    if (o is object[] array)
-                                    {
-                                        x.Push(new VariableScalar { Value = JsonSerializer.Serialize(array), LastChanged = x.LastChanged, LastChanger = changer }, changer);
-                                    }
-                                    else if (o is Dictionary<string, object> dict)
-                                    {
-                                        x.Push(new VariableScalar { Value = JsonSerializer.Serialize(dict), LastChanged = x.LastChanged, LastChanger = changer }, changer);
-                                    }
-                                    else
-                                    {
-                                        x.Push(new VariableScalar() { Value = Convert.ToString(o, CultureInfo.InvariantCulture), LastChanged = x.LastChanged, LastChanger = changer }, changer);
-                                    }
-                                }
-                                break;
+                            x.Push(new VariableScalar { Value = Utilities.JsonParser.ToValueString(value), LastChanged = x.LastChanged, LastChanger = changer }, changer);
                         }
                         lock (vs2.List) // verified
                         {

@@ -38,7 +38,7 @@ namespace Triggernometry.Core
 
         internal string contextResponse = "";
         internal int contextResponseCode = 0;
-        internal dynamic contextJsonResponse;
+        internal object contextJsonResponse;
         internal bool isContextJsonParsed = false;
 
         internal List<int> ActionResults = new List<int>();
