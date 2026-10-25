@@ -154,6 +154,8 @@ namespace Triggernometry.Core
 
         internal Folder Root { get; set; } = new Folder();
 
+        private bool isContentLoaded;
+
         private readonly object _logLock = new object();
         private List<string> UpdateLog { get; set; } = new List<string>();
         public string[] UpdateLogSnapshot()
@@ -204,6 +206,7 @@ namespace Triggernometry.Core
         /// </summary>
         public void ClearContent()
         {
+            isContentLoaded = false;
             Instance.RemoveFolderRuntimeContent(Root);
             Root.Folders.Clear();
             Root.Triggers.Clear();
@@ -407,6 +410,7 @@ namespace Triggernometry.Core
             }
 
             Instance.ui.BuildTreeForRepository(exp, this);
+            isContentLoaded = true;
         }
 
         internal void RegisterFolder(Folder f, bool parentEnabled)
@@ -618,8 +622,8 @@ namespace Triggernometry.Core
                 shouldUpdate = ShouldUpdate(remoteLength, remoteLastModified); 
             }
 
-            // if an update is not needed, try to load local backup
-            if (!shouldUpdate && KeepLocalBackup)
+            // Backups initialize an unloaded repository; unchanged live content stays in place.
+            if (!shouldUpdate && KeepLocalBackup && !isContentLoaded)
             {
                 if (TryLoadLocalBackup() == false)
                 {
@@ -639,8 +643,8 @@ namespace Triggernometry.Core
                     LocalLastModified = remoteLastModified;
                 }
 
-                // if update failed, try to load local backup
-                if (!updated && KeepLocalBackup && !triedLoadBackup)
+                // A failed download must not replace working content with a backup either.
+                if (!updated && KeepLocalBackup && !triedLoadBackup && !isContentLoaded)
                 {
                     _ = TryLoadLocalBackup();
                 }
