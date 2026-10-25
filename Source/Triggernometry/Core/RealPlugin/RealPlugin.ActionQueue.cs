@@ -254,8 +254,9 @@ namespace Triggernometry.Core
                     curOrdinal++;
                 }
                 a.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", t.LogName, a.GetDescription(ctx), FormatDateTime(when), newOrdinal));
-                ActionQueue.Add(new QueuedAction(when, newOrdinal, m, a, ctx, releaseMutex));
-                ActionQueue.Sort();
+                var queuedAction = new QueuedAction(when, newOrdinal, m, a, ctx, releaseMutex);
+                int index = ActionQueue.BinarySearch(queuedAction);
+                ActionQueue.Insert(index < 0 ? ~index : index, queuedAction);
                 ActionUpdateEvent.Set();
             }
         }
