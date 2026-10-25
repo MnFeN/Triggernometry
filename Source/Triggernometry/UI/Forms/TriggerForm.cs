@@ -53,14 +53,13 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        internal string initialDescriptions;
+        private string initialTriggerXml;
         private string closeReason = "";
 
         public TriggerForm(Trigger t, TreeView treeView, ImageList imageList, bool isReadOnly = false, bool isReadMe = false) : base()
         {
             _isInitializing = true;
             InitializeComponent();
-            initialDescriptions = "";
 
             this.KeyPreview = true;
             this.FormClosing += TriggerForm_FormClosing;
@@ -94,7 +93,7 @@ namespace Triggernometry.UI.Forms
             else BtnOkUpdateText();
 
             _isInitializing = false;
-            initialDescriptions = GetAllDescriptionsStr();
+            initialTriggerXml = GetTriggerSettingsXml();
             SetTriggerDescription();
 
             txtRegexp.TextChanged += (s, e) => ExpressionTextBox.CurrentTriggerRegexStr = txtRegexp.Text;
@@ -258,30 +257,19 @@ namespace Triggernometry.UI.Forms
             return false;
         }
 
-        internal string GetAllDescriptionsStr()
-        {   // record all textboxes and action descriptions
-            // roughly check if it is changed when closing the trigger form
-            return string.Join(",", actionViewer1.GetActionDescriptions()) + ","
-                 + string.Join(",", GetAllTextBoxText(this));
-        }
-
-        private List<string> GetAllTextBoxText(Control parent)
-        {   // get a list of the text of all text boxes in the form
-            List<string> texts = new List<string>();
-            foreach (Control control in parent.Controls)
-            {
-                if (control is TextBox txt)
-                {
-                    texts.Add(txt.Text);
-                }
-                texts.AddRange(GetAllTextBoxText(control));
-            }
-            return texts;
+        /// <summary> Serializes the editable configuration, excluding UI selection and runtime state. </summary>
+        private string GetTriggerSettingsXml()
+        {
+            var trigger = new Trigger { Id = Guid.Empty };
+            SettingsToTrigger(trigger);
+            // Snapshot creation must not leave editor actions owned by the temporary trigger.
+            ActionOld.RebuildParentage(Actions, Trigger);
+            return new TriggernometryExport { ExportedTrigger = trigger }.Serialize();
         }
 
         private bool ConfirmDiscardChanges()
         {
-            if (initialDescriptions != GetAllDescriptionsStr())
+            if (initialTriggerXml != GetTriggerSettingsXml())
             {
                 DialogResult result = MessageBox.Show(this,
                     I18n.Translate("internal/TriggerForm/triggerexitconfirm", "Are you sure you want to exit without saving?"),
