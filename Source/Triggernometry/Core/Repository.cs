@@ -479,7 +479,8 @@ namespace Triggernometry.Core
             DateTime cacheLimit;
             try
             {
-                cacheLimit = LocalLastModified.AddMinutes(Instance.cfg.CacheRepoExpiry);
+                // Cache age starts at the local download, not the remote file's modification.
+                cacheLimit = File.GetLastWriteTime(GetBackupFileName()).AddMinutes(Instance.cfg.CacheRepoExpiry);
             }
             catch
             {
