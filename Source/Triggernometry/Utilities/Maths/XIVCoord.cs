@@ -64,7 +64,7 @@ namespace Triggernometry.Utilities.Maths
             else
             {
                 PolarCoord polarA = (PolarCoord)a;
-                return new PolarCoord(polarA.R, polarA.θ + PI, polarA.Z);
+                return new PolarCoord(polarA.R, polarA.θ + PI, -polarA.Z);
             }
         }
 
@@ -77,7 +77,7 @@ namespace Triggernometry.Utilities.Maths
             else
             {
                 PolarCoord polarA = (PolarCoord)a;
-                return new PolarCoord(polarA.R * n, polarA.θ, polarA.Z);
+                return new PolarCoord(polarA.R * n, polarA.θ, polarA.Z * n);
             }
         }
 
