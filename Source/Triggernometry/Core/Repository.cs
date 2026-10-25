@@ -595,7 +595,7 @@ namespace Triggernometry.Core
             // this function should not throw any uncaught exceptions
 
             UpdateLastChecked = DateTime.Now;
-            ClearContent();
+
             AddToLog(null, new string('=', 50)); // separator before each update attempt
 
             // Whether we should check the remote metadata at all (depends on startup mode and update policy).
@@ -671,7 +671,7 @@ namespace Triggernometry.Core
 
         /// <summary>
         /// Attempt to load the repository from its local backup file. <br />
-        /// Make sure <see cref="ClearContent()" /> is used before this function.
+        /// Existing content is replaced only after the backup has been parsed successfully.
         /// </summary>
         private bool TryLoadLocalBackup()
         {
