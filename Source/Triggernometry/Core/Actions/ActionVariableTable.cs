@@ -631,8 +631,8 @@ namespace Triggernometry.Core.Actions
                             VariableTable vt = svs.GetTableVariable(sourcename, false);
                             vtNew = (VariableTable)vt.Duplicate();
                             // index starts from 0
-                            List<int> colIndices = ArgHelper.GetSliceIndices(colSlicesStr, vt.Width, X, startIndex: 1);
-                            List<int> rowIndices = ArgHelper.GetSliceIndices(rowSlicesStr, vt.Height, Y, startIndex: 1);
+                            var colIndices = ArgHelper.ParseSlices(colSlicesStr, vt.Width, X, startIndex: 1);
+                            var rowIndices = ArgHelper.ParseSlices(rowSlicesStr, vt.Height, Y, startIndex: 1);
                             ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;
                             foreach (int rowIndex in rowIndices)
                             {

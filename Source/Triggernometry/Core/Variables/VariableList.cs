@@ -246,18 +246,18 @@ namespace Triggernometry.Core.Variables
             return LastIndexOf(new VariableScalar() { Value = value });
         }
 
-        public string IndicesOf(string targetStr, string joiner, List<int> indices)
+        public string IndicesOf(string targetStr, string joiner, IEnumerable<int> indices)
         {   // accepts indices starts from 0; returns indices starts from 1
             var selectedIndices = indices.Where(i => Values[i].ToString() == targetStr).Select(i => i + 1).ToList();
             return string.Join(joiner, selectedIndices);
         }
 
-        public int Count(string str, List<int> indices)
+        public int Count(string str, IEnumerable<int> indices)
         {
             return indices.Count(index => Values[index].ToString() == str);
         }
 
-        public double Sum(List<int> indices)
+        public double Sum(IEnumerable<int> indices)
         {
             double sum = 0;
             foreach (int i in indices)
@@ -268,7 +268,7 @@ namespace Triggernometry.Core.Variables
             return sum;
         }
 
-        public string Join(string joiner, List<int> indices)
+        public string Join(string joiner, IEnumerable<int> indices)
         {
             return string.Join(joiner, indices.Select(index => Values[index].ToString()));
         }

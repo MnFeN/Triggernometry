@@ -68,7 +68,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                         string slicesStr = GetArgument(args, 2, ":");
                         return vl =>
                         {
-                            var indices = GetSliceIndices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
+                            var indices = ParseSlices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
                             return vl.IndicesOf(args[0], joiner, indices);
                         };
                     }
@@ -79,7 +79,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                         string slicesStr = GetArgument(args, 0, ":");
                         return vl =>
                         {
-                            var indices = GetSliceIndices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
+                            var indices = ParseSlices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
                             return I18n.ThingToString(vl.Sum(indices));
                         };
                     }
@@ -94,7 +94,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                         var extremum = ExtremumEvaluator.BuildEvaluator(valueType, isMin, expr);
                         return vl =>
                         {
-                            var indices = GetSliceIndices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
+                            var indices = ParseSlices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
                             var strings = indices.Select(i => vl.Values[i].ToString());
                             return extremum(strings);
                         };
@@ -109,16 +109,19 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                         return vl =>
                         {
-                            var indices = GetSliceIndices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
+                            var indices = ParseSlices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
 
                             if (methodName == "randjoin")
                             {
+                                // Only random joins need a mutable list of individual indices.
+                                var shuffledIndices = indices.ToList();
                                 // Fisher–Yates
-                                for (int i = indices.Count - 1; i > 0; i--)
+                                for (int i = shuffledIndices.Count - 1; i > 0; i--)
                                 {
                                     int j = rng.Next(i + 1);
-                                    (indices[j], indices[i]) = (indices[i], indices[j]);
+                                    (shuffledIndices[j], shuffledIndices[i]) = (shuffledIndices[i], shuffledIndices[j]);
                                 }
+                                return vl.Join(joiner, shuffledIndices);
                             }
 
                             return vl.Join(joiner, indices);
@@ -131,18 +134,21 @@ namespace Triggernometry.Expressions.String.Evaluators
                         string slicesStr = GetArgument(args, 1, ":");
                         return vl =>
                         {
-                            var indices = GetSliceIndices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
+                            var indices = ParseSlices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
                             return vl.Count(args[0], indices).ToString();
                         };
                     }
 
                 case "contain":
                     CheckArgCountLocal("1-2");
+                    // A query without a slice can search the values directly.
+                    if (args.Length == 1)
+                        return vl => vl.Values.Any(value => value.ToString() == args[0]) ? "1" : "0";
                     {
                         string slicesStr = GetArgument(args, 1, ":");
                         return vl =>
                         {
-                            var indices = GetSliceIndices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
+                            var indices = ParseSlices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
                             return indices.Any(idx => vl.Values[idx].ToString() == args[0]) ? "1" : "0";
                         };
                     }

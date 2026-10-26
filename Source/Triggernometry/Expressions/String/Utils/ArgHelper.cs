@@ -185,17 +185,23 @@ namespace Triggernometry.Expressions.String.Utils
         /// <param name="startIndex"> The start index in the given expression. 0 for strings; 1 for other variables. (Triggernometry definition)</param>
         /// <returns>A list of selected indices.</returns>
         public static List<int> GetSliceIndices(string slicesStr, int totalLength, string rawExpr, int startIndex)
+            => ParseSlices(slicesStr, totalLength, rawExpr, startIndex).ToList();
+
+        /// <summary>
+        /// Parses and validates all slices before returning repeatable index ranges.
+        /// </summary>
+        public static IEnumerable<int> ParseSlices(string slicesStr, int totalLength, string rawExpr, int startIndex)
         {
-            if (totalLength <= 0) { return new List<int>(); }
+            if (totalLength <= 0) return Enumerable.Empty<int>();
 
             // optimize for default input
             string checkDefault = slicesStr.Replace(" ", "");
             if (checkDefault == "" || checkDefault == ":" || checkDefault == "::")
             {
-                return Enumerable.Range(0, totalLength).ToList();
+                return Enumerable.Range(0, totalLength);
             }
 
-            List<int> indices = new List<int>();
+            var indices = new SliceIndices();
             string[] slices = SplitArguments(slicesStr, allowEmptyList: false);
             foreach (string slice in slices)
             {   // parse slice string to int start/end/step
@@ -214,7 +220,7 @@ namespace Triggernometry.Expressions.String.Utils
                         start = start >= 0 ? start - startIndex : start + totalLength;
                         if (start >= 0 && start < totalLength)
                         {
-                            indices.Add(start);
+                            indices.AddRange(start, start + 1, 1);
                         }
                         continue;
                     }
@@ -261,16 +267,10 @@ namespace Triggernometry.Expressions.String.Utils
                     end = end < -1 ? -1 : end;
                 }
 
-                // get indices
-                int sign = Math.Sign(step);
-                int index = start;
-                while (sign * index >= sign * start && sign * index < sign * end)
-                {
-                    indices.Add(index);
-                    index += step;
-                }
+                // Store the range; callers can enumerate it repeatedly without reparsing.
+                indices.AddRange(start, end, step);
             }
-            return indices;
+            return indices.AsEnumerable();
         }
 
         /// <summary>

@@ -296,12 +296,12 @@ namespace Triggernometry.Core.Variables
             return 0;
         }
 
-        public int VLookup(Variable targetStr, int rowIndex, List<int> colIndices)
+        public int VLookup(Variable targetStr, int rowIndex, IEnumerable<int> colIndices)
         {
             return VLookup(targetStr.ToString(), rowIndex, colIndices);
         }
 
-        public int VLookup(string targetStr, int colIndex, List<int> rowIndices)
+        public int VLookup(string targetStr, int colIndex, IEnumerable<int> rowIndices)
         {
             if (colIndex < 0 || colIndex >= Width)
             {
@@ -318,12 +318,12 @@ namespace Triggernometry.Core.Variables
             return 0;
         }
 
-        public int HLookup(Variable targetStr, int rowIndex, List<int> colIndices)
+        public int HLookup(Variable targetStr, int rowIndex, IEnumerable<int> colIndices)
         {
             return HLookup(targetStr.ToString(), rowIndex, colIndices);
         }
 
-        public int HLookup(string targetStr, int rowIndex, List<int> colIndices)
+        public int HLookup(string targetStr, int rowIndex, IEnumerable<int> colIndices)
         {
             if (rowIndex < 0 || rowIndex >= Height)
             {
@@ -365,7 +365,7 @@ namespace Triggernometry.Core.Variables
             return string.Join("|", Rows.Select(row => string.Join(",", row.Values)));
         }
 
-        public double Sum(List<int> colIndices, List<int> rowIndices)
+        public double Sum(IEnumerable<int> colIndices, IEnumerable<int> rowIndices)
         {
             double sum = 0;
             foreach (int x in colIndices)
@@ -379,7 +379,7 @@ namespace Triggernometry.Core.Variables
             return sum;
         }
 
-        public string VJoin(string joiner1, string joiner2, List<int> colSlices, List<int> rowSlices)
+        public string VJoin(string joiner1, string joiner2, IEnumerable<int> colSlices, IEnumerable<int> rowSlices)
         {
             List<string> cols = new List<string>();
 
@@ -398,7 +398,7 @@ namespace Triggernometry.Core.Variables
             return string.Join(joiner2, cols);
         }
 
-        public string HJoin(string joiner1, string joiner2, List<int> colSlices, List<int> rowSlices)
+        public string HJoin(string joiner1, string joiner2, IEnumerable<int> colSlices, IEnumerable<int> rowSlices)
         {
             List<string> rows = new List<string>();
 
@@ -555,7 +555,7 @@ namespace Triggernometry.Core.Variables
             }
         }
 
-        public int Count(string str, List<int> colIndices, List<int> rowIndices)
+        public int Count(string str, IEnumerable<int> colIndices, IEnumerable<int> rowIndices)
         {
             int count = 0;
             foreach (int y in rowIndices)

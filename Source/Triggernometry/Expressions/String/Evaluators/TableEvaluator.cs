@@ -74,8 +74,8 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                         return vt =>
                         {
-                            var colIndices = GetSliceIndices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
-                            var rowIndices = GetSliceIndices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
+                            var colIndices = ParseSlices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
+                            var rowIndices = ParseSlices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
 
                             if (methodName.StartsWith("hj")) // hjoin / hjoin(...)
                                 return vt.HJoin(joiner1, joiner2, colIndices, rowIndices);
@@ -102,7 +102,7 @@ namespace Triggernometry.Expressions.String.Evaluators
                             int maxLength = horizontal ? vt.Height : vt.Width;
                             int index = rawIndex < 0 ? rawIndex + maxLength : rawIndex - 1;
 
-                            var indices = GetSliceIndices(
+                            var indices = ParseSlices(
                                 slicesStr,
                                 horizontal ? vt.Width : vt.Height,
                                 expr.RawExpression,
@@ -125,8 +125,8 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                         return vt =>
                         {
-                            var colIndices = GetSliceIndices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
-                            var rowIndices = GetSliceIndices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
+                            var colIndices = ParseSlices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
+                            var rowIndices = ParseSlices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
                             return vt.Count(targetStr, colIndices, rowIndices).ToString();
                         };
                     }
@@ -139,8 +139,8 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                         return vt =>
                         {
-                            var colIndices = GetSliceIndices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
-                            var rowIndices = GetSliceIndices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
+                            var colIndices = ParseSlices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
+                            var rowIndices = ParseSlices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
                             return I18n.ThingToString(vt.Sum(colIndices, rowIndices));
                         };
                     }
@@ -158,8 +158,8 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                         return vt =>
                         {
-                            var colIndices = GetSliceIndices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
-                            var rowIndices = GetSliceIndices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
+                            var colIndices = ParseSlices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
+                            var rowIndices = ParseSlices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
 
                             var strings = rowIndices.SelectMany(row => colIndices.Select(col => vt.Rows[row].Values[col]))
                                                     .Select(v => v.ToString());
@@ -176,8 +176,8 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                         return vt =>
                         {
-                            var colIndices = GetSliceIndices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
-                            var rowIndices = GetSliceIndices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
+                            var colIndices = ParseSlices(colSlicesStr, vt.Width, expr.RawExpression, startIndex: 1);
+                            var rowIndices = ParseSlices(rowSlicesStr, vt.Height, expr.RawExpression, startIndex: 1);
 
                             bool exist = colIndices.Any(col =>
                                 rowIndices.Any(row => vt.Rows[row].Values[col].ToString() == targetStr));

@@ -294,7 +294,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     CheckArgCountLocal("0-1");
                     {
                         string slicesStr = GetArgument(args, 0, ":");
-                        var indices = GetSliceIndices(slicesStr, sourceString.Length, null, startIndex: 0);
+                        var indices = ParseSlices(slicesStr, sourceString.Length, null, startIndex: 0);
                         StringBuilder sb = new StringBuilder();
                         foreach (int index in indices)
                         {
@@ -336,7 +336,7 @@ namespace Triggernometry.Expressions.String.Parsers
                         int totalLength = sourceString.Length;
                         string joiner = GetArgument(args, 1, defaultValue: ",");
                         string slicesStr = GetArgument(args, 2, defaultValue: ":");
-                        List<int> indices = GetSliceIndices(slicesStr, totalLength - subLength + 1, null, startIndex: 0);
+                        var indices = ParseSlices(slicesStr, totalLength - subLength + 1, null, startIndex: 0);
                         StringBuilder sb = new StringBuilder();
                         foreach (int idx in indices)
                         {
