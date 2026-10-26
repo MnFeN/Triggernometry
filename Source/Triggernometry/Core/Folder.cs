@@ -335,29 +335,29 @@ namespace Triggernometry.Core
 
         public bool IsLimited() => ZoneFilterEnabled || EventFilterEnabled || FFXIVJobFilterEnabled || FFXIVZoneFilterEnabled;
 
+        /// <summary>Tests this folder's zone restrictions without repeating ancestor checks.</summary>
+        internal bool PassesOwnZoneRestriction(string zone)
+        {
+            if (zone == null) return false;
+
+            bool passesZoneName = !ZoneFilterEnabled || _regexCacheZone?.IsMatch(zone) == true;
+            if (!passesZoneName) return false;
+
+            bool passesZoneId = !FFXIVZoneFilterEnabled ||
+                _regexCacheFfxivZoneId?.IsMatch(PluginBridges.BridgeFFXIV.ZoneID.ToString()) == true;
+            return passesZoneId;
+        }
+
         public bool PassesZoneRestriction(string zone)
         {
-            if (zone == null)
+            for (Folder folder = this; folder != null; folder = folder.Parent)
             {
-                return false;
+                if (!folder.PassesOwnZoneRestriction(zone)) 
+                    return false;
             }
-            bool ret = true;
-            Folder f = this;
-            while (f != null && ret == true)
-            {
-                if (ret == true && f.ZoneFilterEnabled == true)
-                {
-                    ret = f._regexCacheZone != null && f._regexCacheZone.IsMatch(zone);
-                }
-                if (ret == true && f.FFXIVZoneFilterEnabled == true)
-                {
-                    ret = f._regexCacheFfxivZoneId != null && f._regexCacheFfxivZoneId.IsMatch(PluginBridges.BridgeFFXIV.ZoneID.ToString());
-                }
-                f = f.Parent;
-            }
-            return ret;
+            return true;
         }
-		
+
 		internal FilterFailReason PassesFilter(LogEvent le)
 		{
 			bool ret = true;

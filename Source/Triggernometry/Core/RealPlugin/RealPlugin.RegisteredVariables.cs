@@ -45,7 +45,9 @@ namespace Triggernometry.Core
         /// </summary>
         private void CollectFolderVariableChanges(Folder folder, bool isActive, string zone, List<Folder> disabled, List<Folder> enabled)
         {
-            isActive = isActive && folder.Enabled && folder.PassesZoneRestriction(zone);
+            // isActive already includes all ancestor restrictions from the recursive traversal.
+            // Only PassesOwnZoneRestriction is needed.
+            isActive = isActive && folder.Enabled && folder.PassesOwnZoneRestriction(zone);
             if (folder.isRegisteredVariableScopeActive != isActive)
             {
                 (isActive ? enabled : disabled).Add(folder);
