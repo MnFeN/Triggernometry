@@ -340,7 +340,8 @@ namespace Triggernometry.Expressions.String.Parsers
                         StringBuilder sb = new StringBuilder();
                         foreach (int idx in indices)
                         {
-                            if (sourceString.Substring(idx, subLength) == targetStr)
+                            // Compare the original text range ordinally without creating a substring.
+                            if (string.CompareOrdinal(sourceString, idx, targetStr, 0, subLength) == 0)
                             {
                                 if (sb.Length > 0)
                                     sb.Append(joiner);
@@ -402,14 +403,14 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "match": // func:match(str):regex
                     CheckArgCountLocal("1");
                     {
-                        Match match = new Regex(UnescapeCustomExpr(sourceString)).Match(args[0]);
+                        Match match = Regex.Match(args[0], UnescapeCustomExpr(sourceString));
                         return match.Success ? "1" : "0";
                     }
 
                 case "capture": // func:capture(str, group):regex
                     CheckArgCountLocal("2");
                     {
-                        Match match = new Regex(UnescapeCustomExpr(sourceString)).Match(args[0]);
+                        Match match = Regex.Match(args[0], UnescapeCustomExpr(sourceString));
                         if (int.TryParse(args[1], NSFloat, InvClt, out int groupNumber)
                             && groupNumber >= 0 && groupNumber < match.Groups.Count)
                         {
@@ -421,7 +422,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "ifmatch": // func:ifmatch(str, successStr, failStr):regex
                     CheckArgCountLocal("3");
                     {
-                        Match match = new Regex(UnescapeCustomExpr(sourceString)).Match(args[0]);
+                        Match match = Regex.Match(args[0], UnescapeCustomExpr(sourceString));
                         return match.Success ? args[1] : args[2];
                     }
 

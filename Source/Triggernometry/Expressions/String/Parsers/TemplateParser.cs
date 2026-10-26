@@ -69,8 +69,10 @@ namespace Triggernometry.Expressions.String.Parsers
 
             for (int i = 0; i < fullLength - 1; i++)
             {
-                // not '$'
-                if (expr[i] != '$') continue;
+                // Find the next template marker, skipping plain text in between.
+                i = expr.IndexOf('$', i);
+                if (i < 0 || i >= fullLength - 1)
+                    break;
 
                 var next = expr[i + 1];
 
@@ -148,21 +150,14 @@ namespace Triggernometry.Expressions.String.Parsers
 
             var sb = new StringBuilder(text.Length);
 
-            // avoid Substring
-            void Append(ReadOnlySpan<char> span)
-            {
-                for (int i = 0; i < span.Length; i++)
-                    sb.Append(span[i]);
-            }
-
             int start = 0;
 
             for (int i = 0; i < templates.Count; i++)
             {
                 var template = templates[i];
 
-                // add original part before template
-                Append(text.AsSpan(start, template.Start - start));
+                // Append the preceding text in bulk without creating a substring.
+                sb.Append(text, start, template.Start - start);
 
                 // add evaluated template
                 var result = ParseTemplateMatch(template, ctx, isNumeric);
@@ -172,8 +167,7 @@ namespace Triggernometry.Expressions.String.Parsers
                 start = template.End + 1;
             }
 
-            // add final part after last template
-            Append(text.AsSpan(start, text.Length - start));
+            sb.Append(text, start, text.Length - start);
 
             return sb.ToString();
         }
@@ -190,20 +184,24 @@ namespace Triggernometry.Expressions.String.Parsers
         /// <summary> Replace all valid currency-sign templates ¤n, ¤{...} to dollar-sign templates $n, ${...} in the given string. </summary>
         internal static string ReplaceCurrencyTemplates(string expr)
         {
+            int currencyPos = expr.IndexOf('¤');
+            if (currencyPos < 0)
+                return expr;
+
             var sb = new StringBuilder(expr.Length);
-            int n = expr.Length;
-            for (int i = 0; i < n; i++)
+            int start = 0;
+            while (currencyPos >= 0)
             {
-                // count all consecutive '¤'s and convert them together
-                var currencyCount = CheckConsecutiveCurrencyCharCount(expr, i, out bool isValidCurrencyTemplate);
-                if (currencyCount > 0)
-                {
-                    char c = isValidCurrencyTemplate ? '$' : '¤';
-                    sb.Append(c, currencyCount);
-                    i += currencyCount - 1;
-                }
-                else sb.Append(expr[i]);
+                // Append plain text in bulk and check consecutive currency signs only at markers.
+                sb.Append(expr, start, currencyPos - start);
+                int currencyCount = CheckConsecutiveCurrencyCharCount(expr, currencyPos, out bool isValidCurrencyTemplate);
+                char c = isValidCurrencyTemplate ? '$' : '¤';
+                sb.Append(c, currencyCount);
+
+                start = currencyPos + currencyCount;
+                currencyPos = expr.IndexOf('¤', start);
             }
+            sb.Append(expr, start, expr.Length - start);
             return sb.ToString();
         }
 

@@ -62,6 +62,11 @@ namespace Triggernometry.Expressions.String.Utils
         /// __FLP__ => '（';        __FRP__ => '）';
         internal static string UnescapeCustomExpr(string rawExpr)
         {
+            // Skip string construction and replacements when no custom escape markers are present.
+            if (rawExpr != null && rawExpr.IndexOf("__", StringComparison.Ordinal) < 0
+                && rawExpr.IndexOf('｛') < 0 && rawExpr.IndexOf('｝') < 0)
+                return rawExpr;
+
             StringBuilder sb = new StringBuilder(rawExpr);
             sb.Replace("__LB__", "{").Replace("__RB__", "}")
               .Replace("｛", "{").Replace("｝", "}")
