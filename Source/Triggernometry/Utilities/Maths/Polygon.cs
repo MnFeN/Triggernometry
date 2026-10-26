@@ -156,8 +156,9 @@ namespace Triggernometry.Utilities.Maths
             // 三个边长
             var (a, b, c) = (Vector2.Distance(B, C), Vector2.Distance(C, A), Vector2.Distance(A, B));
             // 调整顺序至 A <= B <= C
-            var sort = new[] { (a, A), (b, B), (c, C) }.OrderBy(pair => pair.Item1).ToList();
-            ((a, A), (b, B), (c, C)) = (sort[0], sort[1], sort[2]);
+            if (a > b) ((a, A), (b, B)) = ((b, B), (a, A));
+            if (b > c) ((b, B), (c, C)) = ((c, C), (b, B));
+            if (a > b) ((a, A), (b, B)) = ((b, B), (a, A));
             // 检查等腰三角形特殊情况
             if (Abs(a - b) <= tolerance && c > tolerance)
             {
