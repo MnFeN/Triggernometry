@@ -561,7 +561,8 @@ namespace Triggernometry.Core
             lock (EventQueue)
             {
                 EventQueue.Enqueue(le);
-                QueueWakeupEvent.Set();
+                if (EventQueue.Count == 1)
+                    QueueWakeupEvent.Set();
             }
         }
 
