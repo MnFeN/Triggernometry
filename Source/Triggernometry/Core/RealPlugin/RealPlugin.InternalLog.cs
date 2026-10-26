@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Triggernometry.Core
 {
@@ -9,6 +10,7 @@ namespace Triggernometry.Core
     {
 
         internal bool DisableLogging = false;
+        private long logSequence;
 
         internal Dictionary<DebugLevelEnum, Queue<InternalLog>> log = Enum.GetValues(typeof(DebugLevelEnum))
             .Cast<DebugLevelEnum>()
@@ -65,6 +67,8 @@ namespace Triggernometry.Core
             var queue = log[level];
             lock (queue)
             {
+                // Preserve enqueue order across level queues when timestamps are equal.
+                il.Sequence = Interlocked.Increment(ref logSequence);
                 queue.Enqueue(il);
                 if (queue.Count > 30000)
                 {

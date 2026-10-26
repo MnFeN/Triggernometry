@@ -12,6 +12,7 @@ namespace Triggernometry.Core
     {
 
         public DateTime Timestamp { get; set; }
+        internal long Sequence { get; set; }
         public RealPlugin.DebugLevelEnum Level { get; set; }
         public string Message { get; set; }
         public Trigger SourceTrigger { get; set; }

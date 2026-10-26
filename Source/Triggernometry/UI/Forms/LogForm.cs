@@ -136,7 +136,6 @@ namespace Triggernometry.UI.Forms
                     logData.AddRange(queue);
                 }
             }
-            logData.Sort((a, b) => b.Timestamp.CompareTo(a.Timestamp));
             if (dgvLog.VirtualMode == true)
             {
                 RefreshViewVirtual();
@@ -161,7 +160,7 @@ namespace Triggernometry.UI.Forms
                     return new List<InternalLog>();
                 }
             }
-            return logData.Where(ix =>
+            var filtered = logData.Where(ix =>
                 (
                     chkAll.Checked ||
                     (chkError.Checked && ix.Level == RealPlugin.DebugLevelEnum.Error) ||
@@ -172,6 +171,12 @@ namespace Triggernometry.UI.Forms
                     (chkCustom2.Checked && ix.Level == RealPlugin.DebugLevelEnum.Custom2) 
                 ) && (rex == null || rex.IsMatch(ix.Message))
             ).ToList();
+            filtered.Sort((a, b) =>
+            {
+                int order = b.Timestamp.CompareTo(a.Timestamp);
+                return order != 0 ? order : b.Sequence.CompareTo(a.Sequence);
+            });
+            return filtered;
         }
 
         private void RefreshViewVirtual()
