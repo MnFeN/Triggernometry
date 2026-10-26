@@ -1756,10 +1756,18 @@ namespace Scarborough.Drawing
 
         public void DrawTextEx(Font font, System.Drawing.FontStyle fs, float fontSize, IBrush brush, ParagraphAlignment pa, TextAlignment ta, float x, float y, float width, float height, string text)
         {
-            if (!IsDrawing) throw ThrowHelper.UseBeginScene();
+            using (var layout = CreateTextLayout(font, fs, fontSize, pa, ta, width, height, text))
+            {
+                if (layout != null) DrawTextLayout(layout, brush, x, y);
+            }
+        }
 
-            if (text == null) throw new ArgumentNullException(nameof(text));            
-            if (text.Length == 0) return;
+        // Share one layout between the outline and foreground within a single draw.
+        internal TextLayout CreateTextLayout(Font font, System.Drawing.FontStyle fs, float fontSize, ParagraphAlignment pa, TextAlignment ta, float width, float height, string text)
+        {
+            if (!IsDrawing) throw ThrowHelper.UseBeginScene();
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            if (text.Length == 0) return null;
 
             var layout = new TextLayout(_fontFactory, text, font.TextFormat, width, height);
             
@@ -1778,9 +1786,13 @@ namespace Scarborough.Drawing
             layout.ParagraphAlignment = pa;
             layout.TextAlignment = ta;
             
-            _device.DrawTextLayout(new RawVector2(x, y), layout, brush.Brush, DrawTextOptions.Clip);
+            return layout;
+        }
 
-            layout.Dispose();
+        internal void DrawTextLayout(TextLayout layout, IBrush brush, float x, float y)
+        {
+            if (!IsDrawing) throw ThrowHelper.UseBeginScene();
+            _device.DrawTextLayout(new RawVector2(x, y), layout, brush.Brush, DrawTextOptions.Clip);
         }
 
         /// <summary>

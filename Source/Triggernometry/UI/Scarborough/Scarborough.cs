@@ -652,7 +652,6 @@ namespace Scarborough
         {
             List<ScarboroughItem> toRem = new List<ScarboroughItem>();
             List<DeferredMessage> messages = new List<DeferredMessage>();            
-            rc.items.Sort((a, b) => a.Ordinal.CompareTo(b.Ordinal));
             foreach (ScarboroughItem si in rc.items)
             {
                 try
@@ -775,6 +774,8 @@ namespace Scarborough
                         ExecuteActions();
                         UpdateImages(numTicks, ref rc);
                         UpdateText(numTicks, ref rc);
+                        // The render list only changes when the logic tick rebuilds it.
+                        rc.items.Sort((a, b) => a.Ordinal.CompareTo(b.Ordinal));
                     }
                     if (rc.items.Count > 0)
                     {

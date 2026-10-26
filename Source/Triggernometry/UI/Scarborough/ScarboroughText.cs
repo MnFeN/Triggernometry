@@ -289,16 +289,22 @@ namespace Scarborough
                     ta = SharpDX.DirectWrite.TextAlignment.Trailing;
                     break;
             }
-            if (UseOutline == true)
+            using (var layout = _graphics.CreateTextLayout(TextFont, FontStyle, FontSize * 1.3f, pa, ta, Width, Height, Text))
             {
-                TextBrush.Color = new Color(OutlineColor.R, OutlineColor.G, OutlineColor.B, Opacity / 100.0f);
-                _graphics.DrawTextEx(TextFont, FontStyle, FontSize * 1.3f, TextBrush, pa, ta, 1, 0, Width, Height, Text);
-                _graphics.DrawTextEx(TextFont, FontStyle, FontSize * 1.3f, TextBrush, pa, ta, -1, 0, Width, Height, Text);
-                _graphics.DrawTextEx(TextFont, FontStyle, FontSize * 1.3f, TextBrush, pa, ta, 0, 1, Width, Height, Text);
-                _graphics.DrawTextEx(TextFont, FontStyle, FontSize * 1.3f, TextBrush, pa, ta, 0, -1, Width, Height, Text);
+                if (layout != null)
+                {
+                    if (UseOutline == true)
+                    {
+                        TextBrush.Color = new Color(OutlineColor.R, OutlineColor.G, OutlineColor.B, Opacity / 100.0f);
+                        _graphics.DrawTextLayout(layout, TextBrush, 1, 0);
+                        _graphics.DrawTextLayout(layout, TextBrush, -1, 0);
+                        _graphics.DrawTextLayout(layout, TextBrush, 0, 1);
+                        _graphics.DrawTextLayout(layout, TextBrush, 0, -1);
+                    }
+                    TextBrush.Color = new Color(TextColor.R, TextColor.G, TextColor.B, Opacity / 100.0f);
+                    _graphics.DrawTextLayout(layout, TextBrush, 0, 0);
+                }
             }
-            TextBrush.Color = new Color(TextColor.R, TextColor.G, TextColor.B, Opacity / 100.0f);
-            _graphics.DrawTextEx(TextFont, FontStyle, FontSize * 1.3f, TextBrush, pa, ta, 0, 0, Width, Height, Text);
             _graphics.EndScene();
         }
 
