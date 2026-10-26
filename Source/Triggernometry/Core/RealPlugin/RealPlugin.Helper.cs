@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -139,10 +140,17 @@ namespace Triggernometry.Core
             if (id == Guid.Empty) return null;
             lock (Triggers)
             {
-                var ix = from ax in Triggers
-                         where ax.Id == id && ax.Repo == repo
-                         select ax;
-                return ix.FirstOrDefault();
+                // Preserve the first registered match, including duplicate IDs in the same repository.
+                if (triggersById == null)
+                {
+                    triggersById = new Dictionary<(Guid Id, Repository Repo), Trigger>();
+                    foreach (Trigger trigger in Triggers)
+                    {
+                        var key = (trigger.Id, trigger.Repo);
+                        if (!triggersById.ContainsKey(key)) triggersById.Add(key, trigger);
+                    }
+                }
+                return triggersById.TryGetValue((id, repo), out Trigger result) ? result : null;
             }
         }
 

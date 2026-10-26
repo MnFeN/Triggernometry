@@ -19,8 +19,21 @@ namespace Triggernometry.Core
         [XmlIgnore]
         public Folder Parent { get; set; }
 
+        private Repository _repo;
         [XmlIgnore]
-        public Repository Repo { get; set; } = null;
+        public Repository Repo
+        {
+            get => _repo;
+            set
+            {
+                if (_repo == value) return;
+                _repo = value;
+                IdentityChanged?.Invoke();
+            }
+        }
+
+        /// <summary>Notifies the owning plugin when Id or Repo changes so its lookup index can be invalidated.</summary>
+        internal event System.Action IdentityChanged;
 
         [XmlIgnore]
         public bool ZoneBlocked { get; set; } = false;
@@ -48,9 +61,18 @@ namespace Triggernometry.Core
         [XmlAttribute]
         public bool Enabled { get; set; }
 
-
+        private Guid _id = Guid.NewGuid();
         [XmlAttribute]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id
+        {
+            get => _id;
+            set
+            {
+                if (_id == value) return;
+                _id = value;
+                IdentityChanged?.Invoke();
+            }
+        }
 
         /// <summary>
         /// The name of the trigger.

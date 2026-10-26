@@ -12,6 +12,15 @@ namespace Triggernometry.Core
 
         internal List<Trigger> Triggers = new List<Trigger>();
 
+        // Build once on demand after membership or identity changes, under the existing Triggers lock.
+        private Dictionary<(Guid Id, Repository Repo), Trigger> triggersById;
+
+        /// <summary>Invalidates the lazy lookup after a registered trigger changes identity.</summary>
+        private void InvalidateTriggerIndex()
+        {
+            lock (Triggers) triggersById = null;
+        }
+
         internal List<Trigger> ActiveTextTriggers = new List<Trigger>();
         internal List<Trigger> ActiveFFXIVNetworkTriggers = new List<Trigger>();
         internal List<Trigger> ActiveACTTriggers = new List<Trigger>();
@@ -48,6 +57,8 @@ namespace Triggernometry.Core
             lock (Triggers)
             {
                 Triggers.Add(t);
+                t.IdentityChanged += InvalidateTriggerIndex;
+                triggersById = null;
                 if (t.Enabled == true && parentEnabled == true && activeTriggers != null)
                 {
                     lock (activeTriggers)
@@ -112,7 +123,11 @@ namespace Triggernometry.Core
                         activeTriggers.Remove(t);
                     }
                 }
-                Triggers.Remove(t);
+                if (Triggers.Remove(t))
+                {
+                    t.IdentityChanged -= InvalidateTriggerIndex;
+                    triggersById = null;
+                }
             }
         }
 
