@@ -128,22 +128,32 @@ namespace Triggernometry.Core
 
         internal void RecordCaptureGroups(Trigger trigger, Match match)
         {
+            bool shouldLogCaptures = Plugin != null && (Plugin.cfg == null || Plugin.cfg.DebugLevel >= DebugLevelEnum.Verbose);
+
             _numRegexGroups = new List<string>();
             foreach (int idx in trigger.regexCache.GetGroupNumbers())
             {
                 string capturedValue = match?.Groups[idx].Value ?? "";
                 _numRegexGroups.Add(capturedValue);
-                Plugin?.FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnumgroup",
-                    "Trigger '{0}' numbered group {1}: {2}", trigger.LogName, idx, capturedValue));
+                if (shouldLogCaptures)
+                {
+                    Plugin.FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnumgroup",
+                        "Trigger '{0}' numbered group {1}: {2}", trigger.LogName, idx, capturedValue));
+                }
             }
 
             _namedRegexGroups = new Dictionary<string, string>();
+            int groupIndex = 0;
+            // Group names and numbers have the same order; reuse the captured strings.
             foreach (string name in trigger.regexCache.GetGroupNames())
             {
-                string capturedValue = match?.Groups[name].Value ?? "";
+                string capturedValue = _numRegexGroups[groupIndex++];
                 _namedRegexGroups[name] = capturedValue;
-                Plugin?.FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnamedgroup",
-                    "Trigger '{0}' named group '{1}': {2}", trigger.LogName, name, capturedValue));
+                if (shouldLogCaptures)
+                {
+                    Plugin.FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnamedgroup",
+                        "Trigger '{0}' named group '{1}': {2}", trigger.LogName, name, capturedValue));
+                }
             }
         }
 
