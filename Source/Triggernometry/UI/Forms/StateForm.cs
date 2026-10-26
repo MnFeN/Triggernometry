@@ -273,7 +273,7 @@ namespace Triggernometry.UI.Forms
                     {
                         case 0: newType = "name"; break;
                         case 1: newType = "size"; break;
-                        case 2: newType = "value"; break;
+                        case 2: return;
                         case 3: newType = "lastchanged"; break;
                         case 4: newType = "lastchanger"; break;
                     }
@@ -1239,7 +1239,6 @@ namespace Triggernometry.UI.Forms
             switch (sortType)
             {
                 case "size": selector = kvp => kvp.Value.Size; break;
-                case "value": selector = kvp => kvp.Value; break;
                 case "lastchanged": selector = kvp => kvp.Value.LastChanged; break;
                 case "lastchanger": selector = kvp => kvp.Value.LastChanger; break;
                 default: selector = kvp => kvp.Key; break;

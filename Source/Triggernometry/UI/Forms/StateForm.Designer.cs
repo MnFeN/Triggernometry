@@ -1511,7 +1511,7 @@
             // 
             this.colDictValue.HeaderText = "Value";
             this.colDictValue.Name = "colDictValue";
-            this.colDictValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colDictValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colDictValue.Width = 240;
             // 
             // colDictLastChanged
@@ -1674,7 +1674,7 @@
             // 
             this.colPeDictValue.HeaderText = "Value";
             this.colPeDictValue.Name = "colPeDictValue";
-            this.colPeDictValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colPeDictValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colPeDictValue.Width = 240;
             // 
             // colPeDictLastChanged
