@@ -90,24 +90,17 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
                 }
 
                 var parameters = method.GetParameters();
-                if (parameters.Length != 1 || parameters[0].ParameterType != typeof(string))
+                if (method.ReturnType != typeof(void) || 
+                    method.ContainsGenericParameters ||
+                    parameters.Length != 1 || 
+                    parameters[0].ParameterType != typeof(string))
                 {
-                    ErrorLog($"[鲶鱼精邮差扩展] 回调方法 {method.Name} 参数签名必须是 (string)。");
+                    ErrorLog($"[鲶鱼精邮差扩展] 回调方法 {method.Name} 签名必须为 void CallbackMethod(string)。");
                     continue;
                 }
 
-                var callback = new Action<object, string>((_, data) =>
-                {
-                    try
-                    {
-                        method.Invoke(this, new object[] { data });
-                    }
-                    catch (TargetInvocationException ex) when (ex.InnerException != null)
-                    {
-                        ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
-                    }
-                });
-                RealPlugin.Instance.RegisterNamedCallback(attr.Name, callback, null, false, $"[鲶鱼精邮差扩展] {GetType().Name}");
+                var action = (Action<string>)Delegate.CreateDelegate(typeof(Action<string>), this, method);
+                RegisterCallback(attr.Name, action);
             }
         }
 

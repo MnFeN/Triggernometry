@@ -24,7 +24,21 @@ namespace Triggernometry.Core
 
             public void Invoke(string val)
             {
-                Callback.DynamicInvoke(new object[] { Obj, val });
+                if (Callback is Action<object, string> callback)
+                {
+                    try 
+                    { 
+                        callback(Obj, val); 
+                    }
+                    catch (Exception ex) 
+                    { 
+                        throw new System.Reflection.TargetInvocationException(ex); 
+                    }
+                }
+                else // actually does not support other types for now
+                {
+                    Callback.DynamicInvoke(new object[] { Obj, val });
+                }
                 LastInvoked = DateTime.Now;
             }
 
