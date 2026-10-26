@@ -386,15 +386,11 @@ namespace Triggernometry.Core
 
         public string PerformSubstitution(string input, Substitution.SubstitutionScopeEnum scope)
         {
-            if (Substitutions.Count > 0)
+            foreach (Substitution rep in Substitutions)
             {
-                var reps = from ix in Substitutions where (ix.Scope & scope) == scope select ix;
-                if (reps.Count() > 0)
+                if ((rep.Scope & scope) == scope)
                 {
-                    foreach (Substitution rep in reps)
-                    {
-                        input = rep.Replace(input);
-                    }
+                    input = rep.Replace(input);
                 }
             }
             return input;

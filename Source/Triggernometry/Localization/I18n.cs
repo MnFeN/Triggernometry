@@ -96,13 +96,20 @@ namespace Triggernometry.Localization
                 {
                     RealPlugin.Instance.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, Translate("internal/I18n/formatex", 
                         "You might need to update your translation file (your_language_name.triglations.xml). \nFormatException occured during translating \"{0}\".",key));
-                    return string.Format(text, args);
+                    return FormatTranslation(text, args);
                 }
             }
             else
             {
-                return string.Format(text, args);
+                return FormatTranslation(text, args);
             }
+        }
+
+        internal static string FormatTranslation(string text, object[] args)
+        {
+            if (args?.Length == 0 && text.IndexOf('{') < 0 && text.IndexOf('}') < 0)
+                return text;
+            return string.Format(text, args);
         }
 
         internal static void TranslateSecondaryControl(string path, ToolStripItem tsi)

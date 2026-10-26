@@ -40,7 +40,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             CheckBeforeExecution(command);
             (ActionType actionType, uint actionId, uint targetId, UseActionMode mode)
                 = command.ParseArgs<ActionType, uint, HexOrDecId, UseActionMode>(
-                    (2, 0xE0000000),
+                    (2, new HexOrDecId(HexOrDecId.Default)),
                     (3, UseActionMode.None)
                 );
             UseAction(actionType, actionId, targetId, mode);
@@ -66,8 +66,8 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             var (actionType, actionId, x, y, z, extraParam)
                 = command.ParseArgs<ActionType, uint, float, float, float, uint>(
                     (1, 0xE0000000),
-                    (2, 0), (3, 0), (4, 0),
-                    (5, 0)
+                    (2, 0f), (3, 0f), (4, 0f),
+                    (5, 0u)
                 );
             UseActionLocation(actionType, actionId, x, y, z, extraParam);
         }

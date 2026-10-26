@@ -111,7 +111,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Vfx
             else if (data.TryGet("Angle3D", out string rawAngle3D))
             {
                 var (θ, θx, θy) =
-                    rawAngle3D.ParseArgs<float, float, float>((0, 0.0), (1, 0.0), (2, 0.0));
+                    rawAngle3D.ParseArgs<float, float, float>((0, 0f), (1, 0f), (2, 0f));
 
                 args.Angle3D = new Vector3(θ, θx, θy);
             }

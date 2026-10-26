@@ -444,10 +444,7 @@ namespace Triggernometry.UI.CustomControls
                 int insertIndex = dgvActions.SelectedRows.Cast<DataGridViewRow>().Select(r => r.Index).DefaultIfEmpty(-1).Max() + 1;
 
                 // Insert/append all new actions at the determined position
-                foreach (var act in pastedActions)
-                {
-                    Actions.Insert(insertIndex++, act);
-                }
+                Actions.InsertRange(insertIndex, pastedActions);
 
                 // Re-number all current Actions consecutively (1..N)
                 for (int i = 0; i < Actions.Count; i++)
@@ -459,11 +456,9 @@ namespace Triggernometry.UI.CustomControls
                 dgvActions.SuspendLayout();
                 dgvActions.RowCount = Actions.Count;
                 dgvActions.ClearSelection();
-                foreach (var pastedAction in pastedActions)
+                for (int i = insertIndex; i < insertIndex + pastedActions.Count; i++)
                 {
-                    int idx = Actions.IndexOf(pastedAction);
-                    if (idx >= 0)
-                        dgvActions.Rows[idx].Selected = true;
+                    dgvActions.Rows[i].Selected = true;
                 }
                 dgvActions.ResumeLayout();
                 dgvActions.Invalidate();

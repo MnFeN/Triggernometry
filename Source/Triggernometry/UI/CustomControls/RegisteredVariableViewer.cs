@@ -22,6 +22,9 @@ namespace Triggernometry.UI.CustomControls
         internal RealPlugin Plugin { get; set; }
         private RealPlugin CurrentPlugin => Plugin ?? RealPlugin.Instance;
 
+        private static readonly XmlSerializer clipboardSerializer =
+            new XmlSerializer(typeof(List<RegisteredVariable>), new XmlRootAttribute("RegisteredVariables"));
+
         public RegisteredVariableViewer()
         {
             InitializeComponent();
@@ -311,10 +314,9 @@ namespace Triggernometry.UI.CustomControls
             if (variables.Count == 0) return;
             try
             {
-                var serializer = new XmlSerializer(typeof(List<RegisteredVariable>), new XmlRootAttribute("RegisteredVariables"));
                 using (var writer = new StringWriter())
                 {
-                    serializer.Serialize(writer, variables);
+                    clipboardSerializer.Serialize(writer, variables);
                     Clipboard.SetText(writer.ToString());
                 }
             }
@@ -326,11 +328,10 @@ namespace Triggernometry.UI.CustomControls
             if (isReadOnly || !dgvVariables.EndEdit() || !Clipboard.ContainsText()) return;
             try
             {
-                var serializer = new XmlSerializer(typeof(List<RegisteredVariable>), new XmlRootAttribute("RegisteredVariables"));
                 List<RegisteredVariable> variables;
                 using (var reader = new StringReader(Clipboard.GetText()))
                 {
-                    variables = (List<RegisteredVariable>)serializer.Deserialize(reader);
+                    variables = (List<RegisteredVariable>)clipboardSerializer.Deserialize(reader);
                 }
                 int index = SelectedRows().Select(row => row.Index).DefaultIfEmpty(-1).Max() + 1;
                 dgvVariables.ClearSelection();

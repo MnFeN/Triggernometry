@@ -94,7 +94,7 @@ namespace Triggernometry.Localization
             if (TranslationsLookup.ContainsKey(key) == true)
             {
                 string data = TranslationsLookup[key];
-                return string.Format(data, args);
+                return I18n.FormatTranslation(data, args);
             }
             //start
             if (!string.IsNullOrEmpty(text) && !_missingTranslations.ContainsKey(key))
@@ -113,13 +113,13 @@ namespace Triggernometry.Localization
                         }
                         else
                         {
-                            return string.Format(text, args);
+                            return I18n.FormatTranslation(text, args);
                         }
                     }
                 case MissingHandlingEnum.OutputKey:
                     return key;
             }
-            return string.Format(text, args);
+            return I18n.FormatTranslation(text, args);
         }
 
         internal List<TranslationEntry> ExportMissingTranslations()

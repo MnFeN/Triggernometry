@@ -199,7 +199,7 @@ namespace Triggernometry.PluginBridges.BridgeNamazu.Modules
             if (GetConfig<bool>("StaticVfx") == false) return; // ignored
             var (vfxName, t, x, y, z, h, scaleX, rawScaleY, rawScaleZ, r, g, b, a) 
                 = rawArgs.ParseArgs<string, float, float, float, float, float, float, float?, float?, float, float, float, float>(
-                    (6, 1), (7, null), (8, null), (9, 1), (10, 1), (11, 1), (12, 1));
+                    (6, 1f), (7, null), (8, null), (9, 1f), (10, 1f), (11, 1f), (12, 1f));
 
             CheckIfVfxNameTooShort(vfxName, "StaticVfx");
             var vfxPath = nameFormatTemplate == null ? vfxName : string.Format(nameFormatTemplate, vfxName);
