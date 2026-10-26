@@ -621,10 +621,10 @@ namespace Triggernometry.Core
             DateTime scheduleBaseTime = DateTime.Now;
             if (Scheduling == SchedulingEnum.FromLastAction)
             {
-                // get the last queued action as curTime
+                // The queue is ordered by execution time, so search from the end.
                 lock (ctx.Plugin.ActionQueue)
                 {
-                    var lastQueuedAction = GetSelfQueuedActions(ctx).OrderByDescending(ax => ax.when).FirstOrDefault();
+                    var lastQueuedAction = ctx.Plugin.ActionQueue.FindLast(qa => qa.ctx.Trigger.Id == Id);
                     if (lastQueuedAction != null)
                     {
                         scheduleBaseTime = lastQueuedAction.when;
