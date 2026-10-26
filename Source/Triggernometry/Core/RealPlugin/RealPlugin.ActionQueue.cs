@@ -216,24 +216,14 @@ namespace Triggernometry.Core
             {
                 if (a.RefireRequeue == false || a.RefireInterrupt == true)
                 {
-                    var ix = from ax in ActionQueue
-                             where ax.act.Id == a.Id
-                             select ax;
-                    if (ix.Count() > 0)
+                    if (ActionQueue.Any(qa => qa.act.Id == a.Id))
                     {
                         if (a.RefireInterrupt == true)
                         {
-                            List<QueuedAction> rems = new List<QueuedAction>();
-                            rems.AddRange(ix);
-                            int exx = 0;
-                            foreach (QueuedAction qa in rems)
+                            int removedCount = ActionQueue.RemoveAll(qa => qa.act.Id == a.Id);
+                            if (removedCount > 0)
                             {
-                                ActionQueue.Remove(qa);
-                                exx++;
-                            }
-                            if (exx > 0)
-                            {
-                                a.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", exx, t.LogName, a.GetDescription(ctx)));
+                                a.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, t.LogName, a.GetDescription(ctx)));
                             }
                         }
                         if (a.RefireRequeue == false)
