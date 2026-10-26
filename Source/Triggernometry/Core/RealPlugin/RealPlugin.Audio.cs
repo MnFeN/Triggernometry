@@ -234,7 +234,8 @@ namespace Triggernometry.Core
             }
             repstore[item] = DateTime.Now;
             // clean old entries while we're here
-            var olds = (from rx in repstore where rx.Value.AddMilliseconds(cooldown) < DateTime.Now select rx.Key).ToList();
+            DateTime expiresBefore = DateTime.Now.AddMilliseconds(-(double)cooldown);
+            var olds = (from rx in repstore where rx.Value < expiresBefore select rx.Key).ToList();
             foreach (var old in olds)
             {
                 repstore.Remove(old);
