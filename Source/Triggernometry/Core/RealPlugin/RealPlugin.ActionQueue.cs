@@ -164,10 +164,12 @@ namespace Triggernometry.Core
         internal ActionOld QueueActions(Context ctx, DateTime startingFrom, IEnumerable<ActionOld> actions, bool sequential, MutexInformation mtx, Context.LoggerDelegate logger)
         {
             ActionOld lastAction = null;
-            var sortedActions = actions.OrderBy(a => a.OrderNumber);
-            var finalAction = sortedActions.LastOrDefault(a => a.Enabled);
+            IEnumerable<ActionOld> sortedActions = actions.OrderBy(a => a.OrderNumber);
             if (sequential == false)
             {
+                // Reuse the sorted result for both the final-action lookup and enqueueing.
+                sortedActions = sortedActions.ToArray();
+                var finalAction = sortedActions.LastOrDefault(a => a.Enabled);
                 foreach (ActionOld action in sortedActions)
                 {
                     if (action.Enabled == true)
@@ -180,6 +182,7 @@ namespace Triggernometry.Core
             }
             else
             {
+                // Sequential execution only needs one traversal to build the action chain.
                 ActionOld prev = null;
                 ActionOld first = null;
                 foreach (ActionOld action in sortedActions)
