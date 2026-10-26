@@ -7,3 +7,4 @@
 /Source/Triggernometry/PluginBridges/BridgeNamazu/Modules/ExecuteCommandModule.cs
 /Source/TriggernometryScripts/UserScript/*
 !/Source/TriggernometryScripts/UserScript/.keep
+/.agents
