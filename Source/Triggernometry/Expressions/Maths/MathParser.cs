@@ -733,6 +733,12 @@ namespace Triggernometry.Expressions.Maths
         {
             if (string.IsNullOrWhiteSpace(mathExpression))
                 return 0.0;
+            // fast path: hex
+            if (mathExpression.Length > 2 && mathExpression.Length <= 18
+                && mathExpression[0] == '0' && mathExpression[1] == 'x'
+                && long.TryParse(mathExpression.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo, out long hexValue))
+                return double.Parse(hexValue.ToString(CultureInfo), CultureInfo);
+            // fast path: number
             if (double.TryParse(mathExpression, NumberStyles.Float, CultureInfo, out var result))
                 return result;
             return MathParserLogic(Lexer(mathExpression));
@@ -1024,25 +1030,34 @@ namespace Triggernometry.Expressions.Maths
                     string.Join(" ", tokens), string.Join(" ", originalTokens)));
             }
 
-            foreach (string op in OperatorOrder)
+            // A numeric binary expression can use the same evaluator without scanning other operators.
+            IEnumerable<string> operators = OperatorOrder;
+            if (tokens.Count == 3 && OperatorOrder.Contains(tokens[1])
+                && OperatorArity.TryGetValue(tokens[1], out int arity) && arity == 2
+                && BinaryOperation.TryGetValue(tokens[1], out var operation) && operation != null
+                && double.TryParse(tokens[0], NumberStyles.Float, CultureInfo, out _)
+                && double.TryParse(tokens[2], NumberStyles.Float, CultureInfo, out _))
+                operators = new[] { tokens[1] };
+
+            foreach (string op in operators)
             {
                 try
                 {
+                    // Reuse the operator position found by the loop condition.
+                    int opPlace;
                     // string operator
                     if (op == "==")
                     {
-                        while (tokens.IndexOf(op) != -1)
+                        while ((opPlace = tokens.IndexOf(op)) != -1)
                         {
-                            int opPlace = tokens.IndexOf(op);
                             ApplyStringEqual(tokens, opPlace);
                         }
                         continue;
                     }
                     if (op == "??")
                     {
-                        while (tokens.IndexOf(op) != -1)
+                        while ((opPlace = tokens.LastIndexOf(op)) != -1)
                         {
-                            int opPlace = tokens.LastIndexOf(op);
                             ApplyStringCoalescing(tokens, opPlace, originalTokens);
                         }
                         continue;
@@ -1051,9 +1066,9 @@ namespace Triggernometry.Expressions.Maths
                     switch (OperatorArity[op])
                     {
                         case 1:
-                            while (tokens.IndexOf(op) != -1)
+                            while ((opPlace = tokens.IndexOf(op)) != -1)
                             {
-                                var opPlace = OperatorRightAssociative[op] ? tokens.LastIndexOf(op) : tokens.IndexOf(op);
+                                if (OperatorRightAssociative[op]) opPlace = tokens.LastIndexOf(op);
                                 if (tokens[opPlace + 1] == "+" || tokens[opPlace + 1] == "-")
                                 {
                                     ApplyPlusMinusToNumber(tokens, opPlace + 1);
@@ -1066,9 +1081,9 @@ namespace Triggernometry.Expressions.Maths
                             }
                             break;
                         case 2:
-                            while (tokens.IndexOf(op) != -1)
+                            while ((opPlace = tokens.IndexOf(op)) != -1)
                             {
-                                var opPlace = OperatorRightAssociative[op] ? tokens.LastIndexOf(op) : tokens.IndexOf(op);
+                                if (OperatorRightAssociative[op]) opPlace = tokens.LastIndexOf(op);
 
                                 if ((op == "+" || op == "-")
                                     && (opPlace == 0 || OperatorArity.ContainsKey(tokens[opPlace - 1])))
@@ -1089,10 +1104,8 @@ namespace Triggernometry.Expressions.Maths
                             }
                             break;
                         case 3: // currently only for  "? :"
-                            while (tokens.IndexOf(op) != -1)
+                            while ((opPlace = tokens.LastIndexOf(op)) != -1)
                             {
-                                //var opPlace = (OperatorRightAssociative[op]) ? tokens.LastIndexOf(op) : tokens.IndexOf(op);
-                                var opPlace = tokens.LastIndexOf(op);
                                 if (tokens[opPlace + 2] != ":") { throw new Exception(); }
                                 var result = IsZero(double.Parse(tokens[opPlace - 1], CultureInfo)) 
                                            ? double.Parse(tokens[opPlace + 3], CultureInfo)
