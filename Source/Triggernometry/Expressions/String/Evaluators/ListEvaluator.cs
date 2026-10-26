@@ -112,7 +112,14 @@ namespace Triggernometry.Expressions.String.Evaluators
                             var indices = GetSliceIndices(slicesStr, vl.Size, expr.RawExpression, startIndex: 1);
 
                             if (methodName == "randjoin")
-                                indices = indices.OrderBy(_ => rng.Next()).ToList();
+                            {
+                                // Fisher–Yates
+                                for (int i = indices.Count - 1; i > 0; i--)
+                                {
+                                    int j = rng.Next(i + 1);
+                                    (indices[j], indices[i]) = (indices[i], indices[j]);
+                                }
+                            }
 
                             return vl.Join(joiner, indices);
                         };
