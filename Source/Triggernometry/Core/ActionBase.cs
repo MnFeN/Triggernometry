@@ -1193,6 +1193,72 @@ namespace Triggernometry.Core
         #endregion
 
 
+        /// <summary>Converts this action's settings to the legacy model through its concrete converter.</summary>
+        internal ActionOld ConvertToOldAction()
+        {
+            switch (this)
+            {
+                case ActionActInteraction value: return (ActionOld)value;
+                case ActionBeep value: return (ActionOld)value;
+                case ActionDiscordWebhook value: return (ActionOld)value;
+                case ActionDiskOperation value: return (ActionOld)value;
+                case ActionExecuteScript value: return (ActionOld)value;
+                case ActionFolderOperation value: return (ActionOld)value;
+                case ActionJsonRequest value: return (ActionOld)value;
+                case ActionKeypress value: return (ActionOld)value;
+                case ActionLaunchProcess value: return (ActionOld)value;
+                case ActionLiveSplitControl value: return (ActionOld)value;
+                case ActionLogMessage value: return (ActionOld)value;
+                case ActionLoop value: return (ActionOld)value;
+                case ActionMessageBox value: return (ActionOld)value;
+                case ActionMouse value: return (ActionOld)value;
+                case ActionMutex value: return (ActionOld)value;
+                case ActionNamedCallback value: return (ActionOld)value;
+                case ActionObsControl value: return (ActionOld)value;
+                case ActionOverlayImage value: return (ActionOld)value;
+                case ActionOverlayText value: return (ActionOld)value;
+                case ActionPlaceholder value: return (ActionOld)value;
+                case ActionPlaySound value: return (ActionOld)value;
+                case ActionPlaySpeech value: return (ActionOld)value;
+                case ActionRepository value: return (ActionOld)value;
+                case ActionTriggerOperation value: return (ActionOld)value;
+                case ActionVariableDict value: return (ActionOld)value;
+                case ActionVariableList value: return (ActionOld)value;
+                case ActionVariableScalar value: return (ActionOld)value;
+                case ActionVariableTable value: return (ActionOld)value;
+                case ActionWindowMessage value: return (ActionOld)value;
+                default: throw new NotSupportedException(GetType().FullName);
+            }
+        }
+
+        /// <summary>Enumerates actions and their loop descendants in tree order.</summary>
+        internal static IEnumerable<ActionBase> RecursiveGetActions(IEnumerable<ActionBase> actions)
+        {
+            foreach (ActionBase action in actions)
+            {
+                yield return action;
+                if (action is ActionLoop loop)
+                {
+                    foreach (ActionBase child in RecursiveGetActions(loop.LoopActions))
+                    {
+                        yield return child;
+                    }
+                }
+            }
+        }
+
+        /// <summary>Restores owning triggers and condition parent links for an action subtree.</summary>
+        internal static void RebuildParentage(IEnumerable<ActionBase> actions, Trigger trigger)
+        {
+            foreach (ActionBase action in RecursiveGetActions(actions))
+            {
+                action.ParentTrigger = trigger;
+                if (action.Condition != null) ConditionGroup.RebuildParentage(action.Condition);
+                if (action is ActionLoop loop && loop.LoopCondition != null)
+                    ConditionGroup.RebuildParentage(loop.LoopCondition);
+            }
+        }
+
         public ActionBase Copy()
         {
             var clone = (ActionBase)Activator.CreateInstance(GetType());
@@ -1284,6 +1350,8 @@ namespace Triggernometry.Core
                     assigns.Add(Expression.Assign(dstAccess, srcAccess));
                 }
 
+                // Support actions without specific settings, such as placeholders.
+                assigns.Add(Expression.Empty());
                 var body = Expression.Block(assigns);
                 var lambda = Expression.Lambda<Action<ActionBase, ActionBase>>(body, src, dst);
                 return lambda.Compile();

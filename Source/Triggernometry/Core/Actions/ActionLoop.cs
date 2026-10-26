@@ -46,6 +46,7 @@ namespace Triggernometry.Core.Actions
         /// Delay between every loop iteration
         /// </summary>        
         [XmlIgnore]
+        [Action(order: 1, typehint: typeof(float))]
         public string DelayExpression { get; set; } = "";
 
         [XmlAttribute("DelayExpression")]
@@ -59,6 +60,7 @@ namespace Triggernometry.Core.Actions
         /// Expression for the initial value of the loop iterator
         /// </summary>
         [XmlIgnore]
+        [Action(order: 2, typehint: typeof(int))]
         public string InitExpression { get; set; } = "0";
 
         [XmlAttribute("InitExpression")]
@@ -72,6 +74,7 @@ namespace Triggernometry.Core.Actions
         /// Expression for the addition to the loop iterator after every iteration
         /// </summary>
         [XmlIgnore]
+        [Action(order: 3, typehint: typeof(int))]
         public string IncrExpression { get; set; } = "1";
 
         [XmlAttribute("IncrExpression")]
@@ -133,6 +136,15 @@ namespace Triggernometry.Core.Actions
             }
         }
 
+        /// <summary>Copies loop conditions and child actions without sharing editable objects.</summary>
+        internal override void CopySpecificPropertiesTo(ActionBase clone)
+        {
+            base.CopySpecificPropertiesTo(clone);
+            var loop = (ActionLoop)clone;
+            loop.LoopCondition = (ConditionGroup)LoopCondition?.Duplicate();
+            loop.LoopActions = LoopActions.Select(action => action.Copy()).ToList();
+        }
+
         #endregion
 
         #region Old Action Converter
@@ -146,8 +158,7 @@ namespace Triggernometry.Core.Actions
             action.InitExpression = oldAction._LoopInitExpression;
             action.IncrExpression = oldAction._LoopIncrExpression;
             action.LoopCondition = (ConditionGroup)oldAction.LoopCondition?.Duplicate() ?? new ConditionGroup();
-            // todo Actions proper type
-            action.LoopActions = oldAction.LoopActions?.Select(x => (ActionBase)new ActionPlaceholder()).ToList() ?? new List<ActionBase>();
+            action.LoopActions = oldAction.LoopActions?.Select(x => x.ConvertToNewAction()).ToList() ?? new List<ActionBase>();
             return action;
         }
 
@@ -161,8 +172,7 @@ namespace Triggernometry.Core.Actions
             oldAction._LoopInitExpression = action.InitExpression;
             oldAction._LoopIncrExpression = action.IncrExpression;
             oldAction.LoopCondition = (ConditionGroup)action.LoopCondition?.Duplicate() ?? new ConditionGroup();
-            // todo 
-            // oldAction.LoopActions = action.LoopActions?.Select(x => x.Copy()).ToList() ?? new List<ActionOld>();
+            oldAction.LoopActions = action.LoopActions?.Select(x => x.ConvertToOldAction()).ToList() ?? new List<ActionOld>();
             return oldAction;
         }
 

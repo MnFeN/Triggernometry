@@ -81,6 +81,7 @@ namespace Triggernometry.Core.Actions
         /// Type of the text overlay operation
         /// </summary>
         [XmlIgnore]
+        [Action(order: 1)]
         public OperationEnum Operation { get; set; } = OperationEnum.Activate;
 
         [XmlAttribute("Operation")]
@@ -94,6 +95,7 @@ namespace Triggernometry.Core.Actions
         /// Alignment of text within overlay area
         /// </summary>
         [XmlIgnore]
+        [Action(order: 6)]
         public TextAlignmentEnum Alignment { get; set; } = TextAlignmentEnum.MiddleCenter;
 
         [XmlAttribute("Alignment")]
@@ -107,6 +109,7 @@ namespace Triggernometry.Core.Actions
         /// Text display effect
         /// </summary>
         [XmlIgnore]
+        [Action(order: 7)]
         public EffectEnum Effect { get; set; } = EffectEnum.None;
 
         [XmlAttribute("Effect")]
@@ -120,6 +123,7 @@ namespace Triggernometry.Core.Actions
         /// Font size
         /// </summary>
         [XmlIgnore]
+        [Action(order: 5)]
         public float FontSize { get; set; } = 10.0f;
 
         [XmlAttribute("FontSize")]
@@ -133,6 +137,7 @@ namespace Triggernometry.Core.Actions
         /// Color of the text
         /// </summary>
         [XmlIgnore]
+        [Action(order: 8)]
         public string ForeColor { get; set; } = "";
 
         [XmlAttribute("ForeColor")]
@@ -146,6 +151,7 @@ namespace Triggernometry.Core.Actions
         /// Background color of the overlay
         /// </summary>
         [XmlIgnore]
+        [Action(order: 9)]
         public string BackColor { get; set; } = "";
 
         [XmlAttribute("BackColor")]
@@ -159,6 +165,7 @@ namespace Triggernometry.Core.Actions
         /// Color of the text outline
         /// </summary>
         [XmlIgnore]
+        [Action(order: 10)]
         public string OutlineColor { get; set; } = "";
 
         [XmlAttribute("OutlineColor")]
@@ -172,6 +179,7 @@ namespace Triggernometry.Core.Actions
         /// Name of the text overlay
         /// </summary>
         [XmlIgnore]
+        [Action(order: 2)]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -185,6 +193,7 @@ namespace Triggernometry.Core.Actions
         /// Text expression
         /// </summary>
         [XmlIgnore]
+        [Action(order: 3)]
         public string Text { get; set; } = "";
 
         [XmlAttribute("Text")]
@@ -198,6 +207,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay X position
         /// </summary>
         [XmlIgnore]
+        [Action(order: 11, typehint: typeof(float))]
         public string XIniExpression { get; set; } = "";
 
         [XmlAttribute("XIniExpression")]
@@ -211,6 +221,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay Y position
         /// </summary>
         [XmlIgnore]
+        [Action(order: 12, typehint: typeof(float))]
         public string YIniExpression { get; set; } = "";
 
         [XmlAttribute("YIniExpression")]
@@ -224,6 +235,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay width
         /// </summary>
         [XmlIgnore]
+        [Action(order: 13, typehint: typeof(float))]
         public string WIniExpression { get; set; } = "";
 
         [XmlAttribute("WIniExpression")]
@@ -237,6 +249,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay height
         /// </summary>
         [XmlIgnore]
+        [Action(order: 14, typehint: typeof(float))]
         public string HIniExpression { get; set; } = "";
 
         [XmlAttribute("HIniExpression")]
@@ -250,6 +263,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay opacity
         /// </summary>
         [XmlIgnore]
+        [Action(order: 15, typehint: typeof(float))]
         public string OIniExpression { get; set; } = "";
 
         [XmlAttribute("OIniExpression")]
@@ -263,6 +277,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay X position
         /// </summary>
         [XmlIgnore]
+        [Action(order: 16, typehint: typeof(float))]
         public string XTickExpression { get; set; } = "";
 
         [XmlAttribute("XTickExpression")]
@@ -276,6 +291,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay Y position
         /// </summary>
         [XmlIgnore]
+        [Action(order: 17, typehint: typeof(float))]
         public string YTickExpression { get; set; } = "";
 
         [XmlAttribute("YTickExpression")]
@@ -289,6 +305,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay width
         /// </summary>
         [XmlIgnore]
+        [Action(order: 18, typehint: typeof(float))]
         public string WTickExpression { get; set; } = "";
 
         [XmlAttribute("WTickExpression")]
@@ -302,6 +319,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay height
         /// </summary>
         [XmlIgnore]
+        [Action(order: 19, typehint: typeof(float))]
         public string HTickExpression { get; set; } = "";
 
         [XmlAttribute("HTickExpression")]
@@ -315,6 +333,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay opacity
         /// </summary>
         [XmlIgnore]
+        [Action(order: 20, typehint: typeof(float))]
         public string OTickExpression { get; set; } = "";
 
         [XmlAttribute("OTickExpression")]
@@ -328,6 +347,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for checking overlay life cycle
         /// </summary>
         [XmlIgnore]
+        [Action(order: 21, typehint: typeof(float))]
         public string TTLTickExpression { get; set; } = "";
 
         [XmlAttribute("TTLTickExpression")]
@@ -341,6 +361,7 @@ namespace Triggernometry.Core.Actions
         /// Name of the font to use
         /// </summary>
         [XmlIgnore]
+        [Action(order: 4)]
         public string Font { get; set; } = "";
 
         [XmlAttribute("Font")]

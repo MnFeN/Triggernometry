@@ -50,6 +50,7 @@ namespace Triggernometry.Core.Actions
         /// Type of the image overlay operation
         /// </summary>
         [XmlIgnore]
+        [Action(order: 1)]
         public OperationEnum Operation { get; set; } = OperationEnum.Activate;
 
         [XmlAttribute("Operation")]
@@ -63,6 +64,7 @@ namespace Triggernometry.Core.Actions
         /// Image sizing mode within overlay
         /// </summary>
         [XmlIgnore]
+        [Action(order: 4)]
         public PictureBoxSizeMode SizeMode { get; set; } = PictureBoxSizeMode.Normal;
 
         [XmlAttribute("SizeMode")]
@@ -76,6 +78,7 @@ namespace Triggernometry.Core.Actions
         /// Name of the image overlay
         /// </summary>
         [XmlIgnore]
+        [Action(order: 2)]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -89,6 +92,7 @@ namespace Triggernometry.Core.Actions
         /// Image file name expression
         /// </summary>
         [XmlIgnore]
+        [Action(order: 3, specialtype: ActionAttribute.SpecialTypeEnum.ImageSelector)]
         public string Filename { get; set; } = "";
 
         [XmlAttribute("Filename")]
@@ -102,6 +106,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay X position
         /// </summary>
         [XmlIgnore]
+        [Action(order: 5, typehint: typeof(float))]
         public string XIniExpression { get; set; } = "";
 
         [XmlAttribute("XIniExpression")]
@@ -115,6 +120,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay Y position
         /// </summary>
         [XmlIgnore]
+        [Action(order: 6, typehint: typeof(float))]
         public string YIniExpression { get; set; } = "";
 
         [XmlAttribute("YIniExpression")]
@@ -128,6 +134,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay width
         /// </summary>
         [XmlIgnore]
+        [Action(order: 7, typehint: typeof(float))]
         public string WIniExpression { get; set; } = "";
 
         [XmlAttribute("WIniExpression")]
@@ -141,6 +148,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay height
         /// </summary>
         [XmlIgnore]
+        [Action(order: 8, typehint: typeof(float))]
         public string HIniExpression { get; set; } = "";
 
         [XmlAttribute("HIniExpression")]
@@ -154,6 +162,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay opacity
         /// </summary>
         [XmlIgnore]
+        [Action(order: 9, typehint: typeof(float))]
         public string OIniExpression { get; set; } = "";
 
         [XmlAttribute("OIniExpression")]
@@ -167,6 +176,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay X position
         /// </summary>
         [XmlIgnore]
+        [Action(order: 10, typehint: typeof(float))]
         public string XTickExpression { get; set; } = "";
 
         [XmlAttribute("XTickExpression")]
@@ -180,6 +190,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay Y position
         /// </summary>
         [XmlIgnore]
+        [Action(order: 11, typehint: typeof(float))]
         public string YTickExpression { get; set; } = "";
 
         [XmlAttribute("YTickExpression")]
@@ -193,6 +204,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay width
         /// </summary>
         [XmlIgnore]
+        [Action(order: 12, typehint: typeof(float))]
         public string WTickExpression { get; set; } = "";
 
         [XmlAttribute("WTickExpression")]
@@ -206,6 +218,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay height
         /// </summary>
         [XmlIgnore]
+        [Action(order: 13, typehint: typeof(float))]
         public string HTickExpression { get; set; } = "";
 
         [XmlAttribute("HTickExpression")]
@@ -219,6 +232,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay opacity
         /// </summary>
         [XmlIgnore]
+        [Action(order: 14, typehint: typeof(float))]
         public string OTickExpression { get; set; } = "";
 
         [XmlAttribute("OTickExpression")]
@@ -232,6 +246,7 @@ namespace Triggernometry.Core.Actions
         /// Exoression for checking overlay life cycle
         /// </summary>
         [XmlIgnore]
+        [Action(order: 15, typehint: typeof(float))]
         public string TTLTickExpression { get; set; } = "";
 
         [XmlAttribute("TTLTickExpression")]
