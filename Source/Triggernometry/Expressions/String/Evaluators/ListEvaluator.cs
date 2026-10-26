@@ -141,10 +141,10 @@ namespace Triggernometry.Expressions.String.Evaluators
 
                 case "contain":
                     CheckArgCountLocal("1-2");
-                    // A query without a slice can search the values directly.
-                    if (args.Length == 1)
-                        return vl => vl.Values.Any(value => value.ToString() == args[0]) ? "1" : "0";
                     {
+                        if (args.Length == 1)
+                            return vl => vl.Values.Any(value => value.ToString() == args[0]) ? "1" : "0";
+
                         string slicesStr = GetArgument(args, 1, ":");
                         return vl =>
                         {

@@ -220,18 +220,7 @@ namespace Triggernometry.Core.Actions
                         {
                             vtchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
                         }
-                        // Build a replacement so missing CSV cells cannot retain old values.
-                        VariableTable vt = new VariableTable();
-                        vt.Resize(datawidth, data.Count);
-                        int y = 1;
-                        foreach (string[] row in data)
-                        {
-                            for (int x = 0; x < row.Length; x++)
-                            {
-                                vt.Set(x + 1, y, row[x], vtchanger);
-                            }
-                            y++;
-                        }
+                        VariableTable vt = VariableTable.ActualBuild(data, datawidth, data.Count);
                         vt.LastChanged = DateTime.Now;
                         vt.LastChanger = vtchanger;
                         lock (vs.Table)

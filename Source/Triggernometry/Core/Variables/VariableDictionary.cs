@@ -130,7 +130,8 @@ namespace Triggernometry.Core.Variables
             VariableDictionary v = new VariableDictionary();
             foreach (KeyValuePair<string, Variable> kp in Values)
             {
-                v.SetValue(kp.Key, kp.Value);
+                // Clone values without repeatedly updating the new container metadata.
+                v.Values.Add(kp.Key, kp.Value.Duplicate());
             }
             v.LastChanger = LastChanger;
             v.LastChanged = LastChanged;

@@ -87,7 +87,8 @@ namespace Triggernometry.Core.Variables
             VariableList v = new VariableList();
             foreach (Variable vx in Values)
             {
-                v.Push(vx.Duplicate(), "");
+                // Copy values directly; restore the container metadata after cloning.
+                v.Values.Add(vx.Duplicate());
             }
             v.LastChanger = LastChanger;
             v.LastChanged = LastChanged;
@@ -292,26 +293,25 @@ namespace Triggernometry.Core.Variables
             LastChanger = changer;
         }
 
-        private static int CompareNumeric(Variable a, Variable b)
+        private void SortNumeric(string changer, bool descending)
         {
-            decimal left = decimal.Parse(a.ToString(), CultureInfo.InvariantCulture);
-            decimal right = decimal.Parse(b.ToString(), CultureInfo.InvariantCulture);
-            return left.CompareTo(right);
-        }
-
-        public void SortNumericAsc(string changer)
-        {
-            Values.Sort(CompareNumeric);
+            if (Values.Count > 1)
+            {
+                var values = Values.ToArray();
+                var keys = values.Select(value => decimal.Parse(value.ToString(), CultureInfo.InvariantCulture)).ToArray();
+                Array.Sort(keys, values, descending
+                    ? Comparer<decimal>.Create((a, b) => b.CompareTo(a))
+                    : Comparer<decimal>.Default);
+                Values.Clear();
+                Values.AddRange(values);
+            }
             LastChanged = DateTime.Now;
             LastChanger = changer;
         }
 
-        public void SortNumericDesc(string changer)
-        {
-            Values.Sort((a, b) => CompareNumeric(b, a));
-            LastChanged = DateTime.Now;
-            LastChanger = changer;
-        }
+        public void SortNumericAsc(string changer) => SortNumeric(changer, false);
+
+        public void SortNumericDesc(string changer) => SortNumeric(changer, true);
 
         public void SortFfxivPartyAsc(Configuration cfg, string changer)
         {

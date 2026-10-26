@@ -98,12 +98,17 @@ namespace Triggernometry.Core.Variables
         public override Variable Duplicate()
         {
             VariableTable v = new VariableTable();
-            v.Resize(Width, Height);
-            for (int y = 1; y <= Height; y++)
+            // Build cloned rows directly instead of allocating and replacing empty cells.
+            if (Width > 0)
             {
-                for (int x = 1; x <= Width; x++)
+                for (int y = 1; y <= Height; y++)
                 {
-                    v.Set(x, y, Peek(x, y), LastChanger);
+                    var row = new VariableTableRow();
+                    for (int x = 1; x <= Width; x++)
+                    {
+                        row.Values.Add(Peek(x, y).Duplicate());
+                    }
+                    v.Rows.Add(row);
                 }
             }
             v.LastChanger = LastChanger;
@@ -598,7 +603,10 @@ namespace Triggernometry.Core.Variables
             return ActualBuild(cellStrings, width, height);
         }
 
-        private static VariableTable ActualBuild(List<string[]> cellStrings, int width, int height)
+        /// <summary>
+        /// Builds rows directly, padding missing cells with empty scalars.
+        /// </summary>
+        internal static VariableTable ActualBuild(List<string[]> cellStrings, int width, int height)
         {
             VariableTable vt = new VariableTable();
             for (int rowIndex = 0; rowIndex < height; rowIndex++)

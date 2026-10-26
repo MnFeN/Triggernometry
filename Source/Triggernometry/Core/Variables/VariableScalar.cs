@@ -38,6 +38,9 @@ namespace Triggernometry.Core.Variables
 
         public override Variable Duplicate()
         {
+            // #109: Scalar fields are strings or value types; copy them without reinitializing metadata.
+            if (GetType() == typeof(VariableScalar)) return (VariableScalar)MemberwiseClone();
+
             VariableScalar v = new VariableScalar();
             v.Value = Value;
             v.LastChanger = LastChanger;
