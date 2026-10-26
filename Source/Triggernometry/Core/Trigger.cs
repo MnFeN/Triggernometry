@@ -697,7 +697,7 @@ namespace Triggernometry.Core
             int removedCount = 0;
             lock (ctx.Plugin.ActionQueue)
             {
-                foreach (RealPlugin.QueuedAction qa in GetSelfQueuedActions(ctx))
+                foreach (RealPlugin.QueuedAction qa in GetSelfQueuedActions(ctx).ToList())
                 {
                     ctx.Plugin.ActionQueue.Remove(qa);
                     removedCount++;
@@ -709,11 +709,11 @@ namespace Triggernometry.Core
         private int CountSelfQueuedActions(Context ctx)
         {
             lock (ctx.Plugin.ActionQueue)
-                return GetSelfQueuedActions(ctx).Count;
+                return GetSelfQueuedActions(ctx).Count();
         }
 
-        private List<RealPlugin.QueuedAction> GetSelfQueuedActions(Context ctx)
-            => ctx.Plugin.ActionQueue.Where(qa => qa.ctx.Trigger.Id == Id).ToList();
+        private IEnumerable<RealPlugin.QueuedAction> GetSelfQueuedActions(Context ctx)
+            => ctx.Plugin.ActionQueue.Where(qa => qa.ctx.Trigger.Id == Id);
 
         public void QueueActions(Context ctx, DateTime curtime, RealPlugin.MutexInformation mtx)
         {
