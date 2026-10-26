@@ -46,14 +46,17 @@ namespace Triggernometry.Core
             */
         }
 
+        // Custom-root serializers need explicit reuse; defer creation until the first export.
+        private static readonly Lazy<XmlSerializer> missingTranslationsSerializer = new Lazy<XmlSerializer>(() =>
+            new XmlSerializer(typeof(List<Language.TranslationEntry>), new XmlRootAttribute("Translations")));
+
         public static void CopyMissingTranslations()
         {
             var entries = I18n.CurrentLanguage.ExportMissingTranslations();
 
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Language.TranslationEntry>), new XmlRootAttribute("Translations"));
             using (StringWriter writer = new StringWriter())
             {
-                serializer.Serialize(writer, entries);
+                missingTranslationsSerializer.Value.Serialize(writer, entries);
                 string serializedEntries = writer.ToString();
                 ActionOld.ClipboardSetText(serializedEntries);
                 MessageBox.Show(I18n.Translate("internal/Plugin/missingtranslationscopied", "Missing translations copied to clipboard."));
