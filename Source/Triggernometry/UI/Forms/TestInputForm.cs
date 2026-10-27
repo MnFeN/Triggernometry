@@ -12,6 +12,7 @@ using Triggernometry.Expressions.Maths;
 using Triggernometry.Localization;
 using Triggernometry.UI.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Actions;
 
 namespace Triggernometry.UI.Forms
 {
@@ -242,22 +243,20 @@ namespace Triggernometry.UI.Forms
                 }
             }
 
-            private void AddDelayAction(double seconds) => Trig.Actions.Add(new Core.ActionOld
+            private void AddDelayAction(double seconds) => Trig.Actions.Add(new ActionPlaceholder
             {
-                ActionType = Core.ActionOld.ActionTypeEnum.Placeholder,
                 OrderNumber = Trig.Actions.Count() + 1,
                 ExecutionDelayExpression = $"{seconds.ToString("F2", CultureInfo.InvariantCulture)} * 1000",
-            });
+            }.ConvertToOldAction());
 
-            private void AddLogMsgAction(Logline logline) => Trig.Actions.Add(new Core.ActionOld
-            {                
-                ActionType = Core.ActionOld.ActionTypeEnum.LogMessage,
+            private void AddLogMsgAction(Logline logline) => Trig.Actions.Add(new ActionLogMessage
+            {
                 OrderNumber = Trig.Actions.Count() + 1,
-                _LogMessageText = logline.Data,
-                _LogMessageTarget = DefaultSource,
-                _LogProcess = true,
-                _LogProcessACT = true,
-            });
+                Message = logline.Data,
+                Target = DefaultSource,
+                ProcessAsLogline = true,
+                AddToACTEncounter = true,
+            }.ConvertToOldAction());
 
             public string WarningText()
             {   // Item1: logline  Item2: text

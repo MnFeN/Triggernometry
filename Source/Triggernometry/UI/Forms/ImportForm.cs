@@ -19,6 +19,7 @@ using System.Globalization;
 using Triggernometry.Localization;
 using Triggernometry.UI.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Actions;
 using Triggernometry.Utilities;
 
 namespace Triggernometry.UI.Forms
@@ -549,43 +550,23 @@ namespace Triggernometry.UI.Forms
             {
                 t.Name += " (" + tag + ")";
             }
+            ActionBase action = null;
             switch (soundType)
             {
-                case 0:
-                    break;
                 case 1:
-                    {
-                        Core.ActionOld a = new Core.ActionOld();
-                        a.ActionType = Core.ActionOld.ActionTypeEnum.SystemBeep;
-                        a._SystemBeepFreqExpression = "1046.5"; // C6
-                        a._SystemBeepLengthExpression = "100";
-                        a.OrderNumber = 1;
-                        t.Actions.Add(a);
-                    }
+                    action = new ActionBeep { Frequency = "1046.5", Duration = "100" }; // C6
                     break;
                 case 2:
-                    {
-                        Core.ActionOld a = new Core.ActionOld();
-                        a.ActionType = Core.ActionOld.ActionTypeEnum.PlaySound;
-                        a._PlaySoundExclusive = true;
-                        a._PlaySoundFileExpression = soundData;
-                        a._PlaySoundVolumeExpression = "100";
-                        a.OrderNumber = 1;
-                        t.Actions.Add(a);
-                    }
+                    action = new ActionPlaySound { Filename = soundData, Volume = "100", ExclusivePlayer = true };
                     break;
                 case 3:
-                    {
-                        Core.ActionOld a = new Core.ActionOld();
-                        a.ActionType = Core.ActionOld.ActionTypeEnum.UseTTS;
-                        a._UseTTSExclusive = true;
-                        a._UseTTSTextExpression = soundData;
-                        a._UseTTSVolumeExpression = "100";
-                        a._UseTTSRateExpression = "0";
-                        a.OrderNumber = 1;
-                        t.Actions.Add(a);
-                    }
+                    action = new ActionPlaySpeech { Message = soundData, Volume = "100", Rate = "0", ExclusivePlayer = true };
                     break;
+            }
+            if (action != null)
+            {
+                action.OrderNumber = 1;
+                t.Actions.Add(action.ConvertToOldAction());
             }
             return t;
         }

@@ -559,7 +559,7 @@ namespace Triggernometry.UI.CustomControls
             Core.ActionBase selectedAction = SelectedActions().FirstOrDefault();
             if (selectedAction == null)
                 return;
-            ActionOld a = selectedAction.ConvertToOldAction();
+            ActionBase a = selectedAction.Copy();
             Context ctx = new Context(a.ParentTrigger);
             ctx.soundhook = RealPlugin.Instance.SoundPlaybackSmart;
             ctx.ttshook = RealPlugin.Instance.TtsPlaybackSmart;
@@ -586,7 +586,7 @@ namespace Triggernometry.UI.CustomControls
                     break;
             }
             
-            a.Execute(null, ctx);
+            a.ConvertToOldAction().Execute(null, ctx);
         }
 
         private void ctxEditPropCopyCnd_Click(object sender, EventArgs e)

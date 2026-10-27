@@ -108,7 +108,7 @@ namespace Triggernometry.UI.Forms
 
             public string Name { get; set; }
             public float Size { get; set; }
-            public ActionOld.TextAuraEffectEnum Effect { get; set; }
+            public ActionOverlayText.EffectEnum Effect { get; set; }
 
         }
 
@@ -405,19 +405,19 @@ namespace Triggernometry.UI.Forms
             FontInfoContainer fic = (FontInfoContainer)txtTextAuraFont.Tag;
             string desc = fic.Name + ", " + fic.Size + I18n.Translate("internal/ActionForm/textptunit", "pt");
             List<string> ex = new List<string>();
-            if ((fic.Effect & ActionOld.TextAuraEffectEnum.Bold) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
             {
                 ex.Add(I18n.Translate("internal/ActionForm/textbold", "bold"));
             }
-            if ((fic.Effect & ActionOld.TextAuraEffectEnum.Italic) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
             {
                 ex.Add(I18n.Translate("internal/ActionForm/textitalic", "italic"));
             }
-            if ((fic.Effect & ActionOld.TextAuraEffectEnum.Underline) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
             {
                 ex.Add(I18n.Translate("internal/ActionForm/textunderline", "underline"));
             }
-            if ((fic.Effect & ActionOld.TextAuraEffectEnum.Strikeout) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
             {
                 ex.Add(I18n.Translate("internal/ActionForm/textstrikeout", "strikeout"));
             }
@@ -567,7 +567,7 @@ namespace Triggernometry.UI.Forms
                     {
                         Name = a.Font,
                         Size = a.FontSize,
-                        Effect = (ActionOld.TextAuraEffectEnum)a.Effect
+                        Effect = a.Effect
                     };
                     txtTextAuraFont.Tag = fic;
                     try
@@ -926,7 +926,7 @@ namespace Triggernometry.UI.Forms
                     a.TTLTickExpression = expTextAuraTTLTick.Expression;
                     a.Font = fic.Name;
                     a.FontSize = fic.Size;
-                    a.Effect = (ActionOverlayText.EffectEnum)fic.Effect;
+                    a.Effect = fic.Effect;
                     a.ForeColor = expTextForeColor.Text;
                     a.BackColor = expTextBackColor.Text;
                     a.OutlineColor = expTextOutlineColor.Text;
@@ -1109,14 +1109,14 @@ namespace Triggernometry.UI.Forms
 
         private void TestAction(bool liveValues, bool ignoreConditions = false)
         {
-            ActionOld a = SettingsToAction().ConvertToOldAction();
+            ActionBase a = SettingsToAction();
             if (ignoreConditions) a.Condition = new ConditionGroup();
 
             Context ctx = new Context(a.ParentTrigger);
             ctx.testByPlaceholder = liveValues == false;
             ctx.soundhook = Plugin.SoundPlaybackSmart;
             ctx.ttshook = Plugin.TtsPlaybackSmart;
-            a.Execute(null, ctx);
+            a.ConvertToOldAction().Execute(null, ctx);
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -1457,19 +1457,19 @@ namespace Triggernometry.UI.Forms
                 adf.UseOutline = adf.OutlineColor != Color.Empty;
                 FontInfoContainer fic = (FontInfoContainer)txtTextAuraFont.Tag;
                 FontStyle fs = FontStyle.Regular;
-                if ((fic.Effect & ActionOld.TextAuraEffectEnum.Bold) != 0)
+                if ((fic.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
                 {
                     fs |= FontStyle.Bold;
                 }
-                if ((fic.Effect & ActionOld.TextAuraEffectEnum.Italic) != 0)
+                if ((fic.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
                 {
                     fs |= FontStyle.Italic;
                 }
-                if ((fic.Effect & ActionOld.TextAuraEffectEnum.Underline) != 0)
+                if ((fic.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
                 {
                     fs |= FontStyle.Underline;
                 }
-                if ((fic.Effect & ActionOld.TextAuraEffectEnum.Strikeout) != 0)
+                if ((fic.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
                 {
                     fs |= FontStyle.Strikeout;
                 }
@@ -1571,20 +1571,18 @@ namespace Triggernometry.UI.Forms
 
         private void btnHide_Click(object sender, EventArgs e)
         {
-            var a = SettingsToAction().ConvertToOldAction();
+            var a = (ActionOverlayImage)SettingsToAction();
+            a.Operation = ActionOverlayImage.OperationEnum.Deactivate;
             Context ctx = new Context(ParentTrigger) { testByPlaceholder = true };
-            a.ActionType = ActionTypeEnum.Aura;
-            a._AuraOp = ActionOld.AuraOpEnum.DeactivateAura;
-            a.Execute(null, ctx);
+            a.ConvertToOldAction().Execute(null, ctx);
         }
 
         private void btnTextAuraHide_Click(object sender, EventArgs e)
         {
-            var a = SettingsToAction().ConvertToOldAction();
+            var a = (ActionOverlayText)SettingsToAction();
+            a.Operation = ActionOverlayText.OperationEnum.Deactivate;
             Context ctx = new Context(ParentTrigger) { testByPlaceholder = true };
-            a.ActionType = ActionTypeEnum.TextAura;
-            a._AuraOp = ActionOld.AuraOpEnum.DeactivateAura;
-            a.Execute(null, ctx);
+            a.ConvertToOldAction().Execute(null, ctx);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -1693,19 +1691,19 @@ namespace Triggernometry.UI.Forms
         {
             FontInfoContainer fic = (FontInfoContainer)txtTextAuraFont.Tag;
             FontStyle fs = FontStyle.Regular;
-            if ((fic.Effect & ActionOld.TextAuraEffectEnum.Bold) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
             {
                 fs |= FontStyle.Bold;
             }
-            if ((fic.Effect & ActionOld.TextAuraEffectEnum.Italic) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
             {
                 fs |= FontStyle.Italic;
             }
-            if ((fic.Effect & ActionOld.TextAuraEffectEnum.Underline) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
             {
                 fs |= FontStyle.Underline;
             }
-            if ((fic.Effect & ActionOld.TextAuraEffectEnum.Strikeout) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
             {
                 fs |= FontStyle.Strikeout;
             }
@@ -1722,22 +1720,22 @@ namespace Triggernometry.UI.Forms
                         {
                             fic.Name = fontDialog1.Font.Name;
                             fic.Size = fontDialog1.Font.SizeInPoints;
-                            ActionOld.TextAuraEffectEnum ef = ActionOld.TextAuraEffectEnum.None;
+                            ActionOverlayText.EffectEnum ef = ActionOverlayText.EffectEnum.None;
                             if (fontDialog1.Font.Bold == true)
                             {
-                                ef |= ActionOld.TextAuraEffectEnum.Bold;
+                                ef |= ActionOverlayText.EffectEnum.Bold;
                             }
                             if (fontDialog1.Font.Italic == true)
                             {
-                                ef |= ActionOld.TextAuraEffectEnum.Italic;
+                                ef |= ActionOverlayText.EffectEnum.Italic;
                             }
                             if (fontDialog1.Font.Strikeout == true)
                             {
-                                ef |= ActionOld.TextAuraEffectEnum.Strikeout;
+                                ef |= ActionOverlayText.EffectEnum.Strikeout;
                             }
                             if (fontDialog1.Font.Underline == true)
                             {
-                                ef |= ActionOld.TextAuraEffectEnum.Underline;
+                                ef |= ActionOverlayText.EffectEnum.Underline;
                             }
                             fic.Effect = ef;
                             UpdateFontDescription();

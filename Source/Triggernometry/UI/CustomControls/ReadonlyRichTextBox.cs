@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.UI.Forms;
 using Triggernometry.Localization;
-using static Triggernometry.Core.ActionOld;
+using Triggernometry.Core.Actions;
 
 namespace Triggernometry.UI.CustomControls
 {
@@ -62,15 +62,15 @@ namespace Triggernometry.UI.CustomControls
                 switch (Name)
                 {
                     case "rtbVariableHelper":
-                        key = "rtbHelperVar" + Enum.GetName(typeof(VariableOpEnum), ((ActionForm)ParentForm).cbxVariableOp.SelectedIndex); break;
+                        key = "rtbHelperVar" + Enum.GetName(typeof(ActionVariableScalar.OperationEnum), ((ActionForm)ParentForm).cbxVariableOp.SelectedIndex); break;
                     case "rtbLvarHelper":
-                        key = "rtbHelperLvar" + Enum.GetName(typeof(ListVariableOpEnum), ((ActionForm)ParentForm).cbxLvarOperation.SelectedIndex); break;
+                        key = "rtbHelperLvar" + Enum.GetName(typeof(ActionVariableList.OperationEnum), ((ActionForm)ParentForm).cbxLvarOperation.SelectedIndex); break;
                     case "rtbTvarHelper":
-                        key = "rtbHelperTvar" + Enum.GetName(typeof(TableVariableOpEnum), ((ActionForm)ParentForm).cbxTvarOpType.SelectedIndex); break;
+                        key = "rtbHelperTvar" + Enum.GetName(typeof(ActionVariableTable.OperationEnum), ((ActionForm)ParentForm).cbxTvarOpType.SelectedIndex); break;
                     case "rtbDictHelper":
-                        key = "rtbHelperDict" + Enum.GetName(typeof(DictVariableOpEnum), ((ActionForm)ParentForm).cbxDictOpType.SelectedIndex); break;
+                        key = "rtbHelperDict" + Enum.GetName(typeof(ActionVariableDict.OperationEnum), ((ActionForm)ParentForm).cbxDictOpType.SelectedIndex); break;
                     case "rtbSendKeysHelper":
-                        key = "rtbHelperSendKeys" + Enum.GetName(typeof(KeypressTypeEnum), ((ActionForm)ParentForm).cbxKeypressMethod.SelectedIndex); break;
+                        key = "rtbHelperSendKeys" + Enum.GetName(typeof(ActionKeypress.OperationEnum), ((ActionForm)ParentForm).cbxKeypressMethod.SelectedIndex); break;
                     case "rtbCallbackHelper": key = "rtbHelperCallback"; break;
                     case "rtbWmsgHelper": key = "rtbHelperWmsg"; break;
                     case "rtbJsonHelper": key = "rtbHelperJson"; break;

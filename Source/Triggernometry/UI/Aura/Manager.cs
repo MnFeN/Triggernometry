@@ -67,26 +67,17 @@ namespace Triggernometry.UI.Aura
 
         public void Dispose()
         {
-            if (exitEvent != null)
-            {
-                exitEvent.Dispose();
-                exitEvent = null;
-            }
+            exitEvent?.Dispose();
+            exitEvent = null;
         }
 
         public void Shutdown()
         {
-            if (exitEvent != null)
-            {
-                exitEvent.Set();
-            }
-            if (drawThread != null)
-            {
-                drawThread.Join();
-            }
+            exitEvent?.Set();
+            drawThread?.Join();
         }
 
-        internal void ExecuteAction(Context ctx, Core.ActionOld a)
+        internal void ExecuteAction(Context ctx, ActionBase a)
         {            
         }
 
@@ -100,10 +91,7 @@ namespace Triggernometry.UI.Aura
                     {
                         ItemAction ia = ItemActions.Dequeue();
                         ExecuteItemAction(ia);
-                        if (ia.Completed != null)
-                        {
-                            ia.Completed.Set();
-                        }
+                        ia.Completed?.Set();
                     }
                     catch (Exception)
                     {
@@ -124,15 +112,15 @@ namespace Triggernometry.UI.Aura
                     break;
                 case ItemAction.ActionTypeEnum.Activate:
                     {
-                        if (ia.Item is AuraImage)
+                        if (ia.Item is AuraImage image)
                         {
                             ia.Item.Name = ia.Id;
-                            ActivateImage(ia.Id, (AuraImage)ia.Item);
+                            ActivateImage(ia.Id, image);
                         }
-                        else if (ia.Item is AuraText)
+                        else if (ia.Item is AuraText text)
                         {
                             ia.Item.Name = ia.Id;
-                            ActivateText(ia.Id, (AuraText)ia.Item);
+                            ActivateText(ia.Id, text);
                         }
                     }
                     break;
@@ -150,10 +138,7 @@ namespace Triggernometry.UI.Aura
                                         AuraImage a = null;
                                         a = imageitems[rem];
                                         imageitems.Remove(rem);
-                                        if (a != null)
-                                        {
-                                            a.Dispose();
-                                        }
+                                        a?.Dispose();
                                     }
                                 }
                                 break;
@@ -165,10 +150,7 @@ namespace Triggernometry.UI.Aura
                                         AuraText a = null;
                                         a = textitems[rem];
                                         textitems.Remove(rem);
-                                        if (a != null)
-                                        {
-                                            a.Dispose();
-                                        }
+                                        a?.Dispose();
                                     }
                                 }
                                 break;
@@ -187,10 +169,7 @@ namespace Triggernometry.UI.Aura
                                         a = imageitems[ia.Id];
                                         imageitems.Remove(ia.Id);
                                     }
-                                    if (a != null)
-                                    {
-                                        a.Dispose();
-                                    }
+                                    a?.Dispose();
                                 }
                                 break;
                             case ItemAction.ItemTypeEnum.Text:
@@ -201,10 +180,7 @@ namespace Triggernometry.UI.Aura
                                         a = textitems[ia.Id];
                                         textitems.Remove(ia.Id);
                                     }
-                                    if (a != null)
-                                    {
-                                        a.Dispose();
-                                    }
+                                    a?.Dispose();
                                 }
                                 break;
                         }

@@ -12,7 +12,7 @@ using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
-using static Triggernometry.Core.ActionOld;
+using Triggernometry.Core.Actions;
 using static Triggernometry.UI.Forms.ActionForm;
 
 namespace Triggernometry.UI.Forms
@@ -164,13 +164,13 @@ namespace Triggernometry.UI.Forms
             {
                 fic.Name = Font.Name;
                 fic.Size = Font.SizeInPoints;
-                fic.Effect = TextAuraEffectEnum.None;
+                fic.Effect = ActionOverlayText.EffectEnum.None;
             }
             else
             {
                 fic.Name = cfg.UiFontName;
                 fic.Size = cfg.UiFontSize;
-                fic.Effect = cfg.UiFontEffect;
+                fic.Effect = (ActionOverlayText.EffectEnum)cfg.UiFontEffect;
             }
             txtUiFontDesc.Tag = fic;
             cbxUiFontDefault.Checked = cfg.UiFontDefault;
@@ -263,7 +263,7 @@ namespace Triggernometry.UI.Forms
             cfg.UiFontDefault = cbxUiFontDefault.Checked;
             cfg.UiFontName = fic.Name;
             cfg.UiFontSize = fic.Size;
-            cfg.UiFontEffect = fic.Effect;
+            cfg.UiFontEffect = (ActionOld.TextAuraEffectEnum)fic.Effect;
         }
 
         #region Startup
@@ -346,19 +346,19 @@ namespace Triggernometry.UI.Forms
         {
             FontInfoContainer fic = (FontInfoContainer)txtUiFontDesc.Tag;
             FontStyle fs = FontStyle.Regular;
-            if ((fic.Effect & TextAuraEffectEnum.Bold) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
             {
                 fs |= FontStyle.Bold;
             }
-            if ((fic.Effect & TextAuraEffectEnum.Italic) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
             {
                 fs |= FontStyle.Italic;
             }
-            if ((fic.Effect & TextAuraEffectEnum.Underline) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
             {
                 fs |= FontStyle.Underline;
             }
-            if ((fic.Effect & TextAuraEffectEnum.Strikeout) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
             {
                 fs |= FontStyle.Strikeout;
             }
@@ -375,22 +375,22 @@ namespace Triggernometry.UI.Forms
                         {
                             fic.Name = fontDialog1.Font.Name;
                             fic.Size = fontDialog1.Font.SizeInPoints;
-                            TextAuraEffectEnum ef = TextAuraEffectEnum.None;
+                            ActionOverlayText.EffectEnum ef = ActionOverlayText.EffectEnum.None;
                             if (fontDialog1.Font.Bold == true)
                             {
-                                ef |= TextAuraEffectEnum.Bold;
+                                ef |= ActionOverlayText.EffectEnum.Bold;
                             }
                             if (fontDialog1.Font.Italic == true)
                             {
-                                ef |= TextAuraEffectEnum.Italic;
+                                ef |= ActionOverlayText.EffectEnum.Italic;
                             }
                             if (fontDialog1.Font.Strikeout == true)
                             {
-                                ef |= TextAuraEffectEnum.Strikeout;
+                                ef |= ActionOverlayText.EffectEnum.Strikeout;
                             }
                             if (fontDialog1.Font.Underline == true)
                             {
-                                ef |= TextAuraEffectEnum.Underline;
+                                ef |= ActionOverlayText.EffectEnum.Underline;
                             }
                             fic.Effect = ef;
                             UpdateFontDescription();
@@ -405,19 +405,19 @@ namespace Triggernometry.UI.Forms
             FontInfoContainer fic = (FontInfoContainer)txtUiFontDesc.Tag;
             string desc = fic.Name + ", " + fic.Size + I18n.Translate("internal/ActionForm/textptunit", "pt");
             List<string> ex = new List<string>();
-            if ((fic.Effect & TextAuraEffectEnum.Bold) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
             {
                 ex.Add(I18n.Translate("internal/ActionForm/textbold", "bold"));
             }
-            if ((fic.Effect & TextAuraEffectEnum.Italic) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
             {
                 ex.Add(I18n.Translate("internal/ActionForm/textitalic", "italic"));
             }
-            if ((fic.Effect & TextAuraEffectEnum.Underline) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
             {
                 ex.Add(I18n.Translate("internal/ActionForm/textunderline", "underline"));
             }
-            if ((fic.Effect & TextAuraEffectEnum.Strikeout) != 0)
+            if ((fic.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
             {
                 ex.Add(I18n.Translate("internal/ActionForm/textstrikeout", "strikeout"));
             }
