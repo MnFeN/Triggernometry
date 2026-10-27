@@ -772,7 +772,7 @@ namespace Triggernometry.Core
 
             // ─── Properties - Actions/Conditions ────────────────
             t.Actions.Clear();
-            t.Actions.AddRange(Actions.OrderBy(action => action.OrderNumber).Select(action => action.Copy()));
+            t.Actions.AddRange(Actions.Select(action => action.Copy()));
             t.Condition = (ConditionGroup)Condition.Duplicate();
 
             // ─── Properties - Scheduling ────────────────────────
@@ -800,7 +800,7 @@ namespace Triggernometry.Core
         internal void SetActionsParent()
         {
             if (Condition != null) ConditionGroup.RebuildParentage(Condition);
-            ActionBase.RebuildParentage(Actions, this);
+            ActionBase.RebuildParentage(Actions, this, "");
         }
 
         #endregion Utils

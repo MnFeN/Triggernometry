@@ -220,7 +220,6 @@ namespace Triggernometry.Core
             action.Enabled = Enabled;
             action.Id = Id;
             action.ParentTrigger = ParentTrigger;
-            action.OrderNumber = OrderNumber;
             action.Condition = (ConditionGroup)Condition?.Duplicate();
             action.Tag = Tag;
             action.RefireInterrupt = RefireInterrupt;

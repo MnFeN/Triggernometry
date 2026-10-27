@@ -154,7 +154,7 @@ namespace Triggernometry.Core.Actions
             action.InitExpression = oldAction._LoopInitExpression;
             action.IncrExpression = oldAction._LoopIncrExpression;
             action.LoopCondition = (ConditionGroup)oldAction.LoopCondition?.Duplicate() ?? new ConditionGroup();
-            action.LoopActions = oldAction.LoopActions?.Select(x => x.ConvertToNewAction()).ToList() ?? new List<ActionBase>();
+            action.LoopActions = oldAction.LoopActions?.OrderBy(x => x.OrderNumber).Select(x => x.ConvertToNewAction()).ToList() ?? new List<ActionBase>();
             return action;
         }
 

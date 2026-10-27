@@ -33,15 +33,25 @@ namespace Triggernometry.Core.Serialization
 
         public XmlSchema GetSchema() => null;
 
-        /// <summary>Reads action children in their stored order, including mixed legacy and typed nodes.</summary>
+        /// <summary>Reads action children and applies legacy ordering once, preserving ties in XML order.</summary>
         public void ReadXml(XmlReader reader)
         {
             bool isEmpty = reader.IsEmptyElement;
             reader.ReadStartElement();
             if (isEmpty) return;
+            var actions = new List<(ActionBase Action, int Order)>();
+            bool needsSorting = false;
             while (reader.MoveToContent() == XmlNodeType.Element)
-                Actions.Add(ReadAction(reader));
+            {
+                ActionBase action = ReadAction(reader, out int order);
+                if (actions.Count > 0 && order < actions[actions.Count - 1].Order) needsSorting = true;
+                actions.Add((action, order));
+            }
             reader.ReadEndElement();
+            // Old and previously saved typed actions may both carry OrderNumber.
+            IEnumerable<(ActionBase Action, int Order)> ordered = actions;
+            if (needsSorting) ordered = ordered.OrderBy(item => item.Order);
+            Actions.AddRange(ordered.Select(item => item.Action));
         }
 
         /// <summary>Writes each concrete action with its declared element name.</summary>
@@ -53,8 +63,10 @@ namespace Triggernometry.Core.Serialization
                 serializers[action.GetType()].Value.Serialize(writer, action, ns);
         }
 
-        private static ActionBase ReadAction(XmlReader reader)
+        private static ActionBase ReadAction(XmlReader reader, out int order)
         {
+            string legacyOrder = reader.GetAttribute("OrderNumber");
+            order = legacyOrder == null ? 0 : XmlConvert.ToInt32(legacyOrder);
             if (reader.LocalName == "Action")
                 return ((ActionOld)legacySerializer.Value.Deserialize(reader)).ConvertToNewAction();
             if (actionTypes.TryGetValue(reader.LocalName, out Type type))
@@ -69,7 +81,7 @@ namespace Triggernometry.Core.Serialization
             using (var text = new StringWriter())
             using (var writer = XmlWriter.Create(text, new XmlWriterSettings { Indent = true }))
             {
-                var collection = new ActionXmlCollection(actions.OrderBy(action => action.OrderNumber).ToList());
+                var collection = new ActionXmlCollection(actions);
                 writer.WriteStartDocument();
                 if (actions.Count > 1)
                 {
@@ -96,7 +108,7 @@ namespace Triggernometry.Core.Serialization
             {
                 reader.MoveToContent();
                 if (reader.LocalName != "ActionBundle")
-                    return new List<ActionBase> { ReadAction(reader) };
+                    return new List<ActionBase> { ReadAction(reader, out _) };
                 var collection = new ActionXmlCollection();
                 bool isEmpty = reader.IsEmptyElement;
                 reader.ReadStartElement();

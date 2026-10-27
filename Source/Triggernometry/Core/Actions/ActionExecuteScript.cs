@@ -72,7 +72,7 @@ namespace Triggernometry.Core.Actions
             }
             else
             {
-                AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/scriptinifailed", "Action #{0} on trigger '{1}' not fired, scripting not available", OrderNumber, ctx.Trigger?.LogName ?? "(null)"));
+                AddToLog(ctx, RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/Action/scriptinifailed", "Action #{0} on trigger '{1}' not fired, scripting not available", IndexInTrigger, ctx.Trigger?.LogName ?? "(null)"));
             }
         }
 

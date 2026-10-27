@@ -449,7 +449,6 @@ namespace Triggernometry.UI.CustomControls
                 tn.SelectedImageIndex = tn.ImageIndex;
                 tx.Parent = parentfolder;
                 parentnode.Nodes.Add(tn);
-                tx.SetActionsParent();
                 plug.AddTrigger(tx, tx.Parent.ParentsEnabled());
             }
         }
@@ -1098,7 +1097,6 @@ namespace Triggernometry.UI.CustomControls
                         fdjs++;
                     }
                 }
-                newTrig.SetActionsParent();
                 plug.AddTrigger(newTrig, newTrig.Parent.ParentsEnabled());
             }
             if (fdjs > 0 || tdjs > 0)

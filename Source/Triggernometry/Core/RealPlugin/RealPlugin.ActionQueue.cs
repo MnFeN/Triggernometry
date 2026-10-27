@@ -87,7 +87,7 @@ namespace Triggernometry.Core
             MutexInformation mtx, Context.LoggerDelegate logger, ActionInstance loopParent = null)
         {
             var instances = new List<ActionInstance>();
-            foreach (ActionBase action in actions.OrderBy(a => a.OrderNumber))
+            foreach (ActionBase action in actions)
             {
                 if (!action.Enabled) continue;
                 if (!sequential || instances.Count == 0)

@@ -262,6 +262,10 @@ namespace Triggernometry.Core
         /// </summary>
         internal Guid Id { get; set; } = Guid.NewGuid();
 
+        /// <summary>The one-based position within the trigger, including loop ancestors (for example, 5-3).</summary>
+        [XmlIgnore]
+        internal string IndexInTrigger { get; private set; } = "0";
+
         [XmlIgnore]
         public bool Enabled { get; set; } = true;
 
@@ -337,11 +341,6 @@ namespace Triggernometry.Core
             get => XmlAttr.Bool(RefireRequeue, true);
             set => RefireRequeue = XmlAttr.Bool(value);
         }
-
-
-
-        [XmlAttribute]
-        public int OrderNumber;
 
 
 
@@ -517,7 +516,7 @@ namespace Triggernometry.Core
                     Condition?.Enabled == true && Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
                 {
                     ctx.PushActionResult(0);
-                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", OrderNumber, ctx.Trigger?.LogName ?? "(null)"));
+                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", IndexInTrigger, ctx.Trigger?.LogName ?? "(null)"));
                 }
                 else
                 {
@@ -855,15 +854,25 @@ namespace Triggernometry.Core
             }
         }
 
-        /// <summary>Restores owning triggers and condition parent links for an action subtree.</summary>
-        internal static void RebuildParentage(IEnumerable<ActionBase> actions, Trigger trigger)
+        /// <summary>Restores trigger ownership and condition parent links for an action subtree.</summary>
+        /// <param name="parentPosition">An empty string numbers the complete trigger list; null preserves existing positions.</param>
+        internal static void RebuildParentage(IEnumerable<ActionBase> actions, Trigger trigger, string parentPosition = null)
         {
-            foreach (ActionBase action in RecursiveGetActions(actions))
+            int position = 0;
+            foreach (ActionBase action in actions)
             {
+                if (parentPosition != null)
+                {
+                    string index = (++position).ToString(CultureInfo.InvariantCulture);
+                    action.IndexInTrigger = parentPosition.Length == 0 ? index : parentPosition + "-" + index;
+                }
                 action.ParentTrigger = trigger;
                 if (action.Condition != null) ConditionGroup.RebuildParentage(action.Condition);
-                if (action is ActionLoop loop && loop.LoopCondition != null)
-                    ConditionGroup.RebuildParentage(loop.LoopCondition);
+                if (action is ActionLoop loop)
+                {
+                    if (loop.LoopCondition != null) ConditionGroup.RebuildParentage(loop.LoopCondition);
+                    RebuildParentage(loop.LoopActions, trigger, parentPosition == null ? null : action.IndexInTrigger);
+                }
             }
         }
 
@@ -887,7 +896,7 @@ namespace Triggernometry.Core
             action.Enabled = Enabled;
             action.Id = Id;
             action.ParentTrigger = ParentTrigger;
-            action.OrderNumber = OrderNumber;
+            action.IndexInTrigger = IndexInTrigger;
             action.Condition = (ConditionGroup)Condition?.Duplicate();
             action.Tag = Tag;
             action.RefireInterrupt = RefireInterrupt;
@@ -909,7 +918,6 @@ namespace Triggernometry.Core
             oldAction.Enabled = Enabled;
             oldAction.Id = Id;
             oldAction.ParentTrigger = ParentTrigger;
-            oldAction.OrderNumber = OrderNumber;
             oldAction.Condition = (ConditionGroup)Condition?.Duplicate();
             oldAction.Tag = Tag;
             oldAction.RefireInterrupt = RefireInterrupt;

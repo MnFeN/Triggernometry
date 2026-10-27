@@ -53,6 +53,7 @@ namespace Triggernometry.Core
 
         internal void AddTrigger(Trigger t, bool parentEnabled)
         {
+            t.SetActionsParent();
             List<Trigger> activeTriggers = GetActiveTriggers(t.Source);
 
             lock (Triggers)

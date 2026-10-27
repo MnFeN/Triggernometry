@@ -676,7 +676,7 @@ namespace Triggernometry.UI.Forms
                 case ActionLoop a:
                 {
                     cndLoopCondition.ConditionToEdit = (ConditionGroup)a.LoopCondition?.Duplicate() ?? new ConditionGroup { Grouping = ConditionGroup.CndGroupingEnum.Or, Enabled = false };
-                    loopActionViewer.Actions = a.LoopActions.OrderBy(child => child.OrderNumber).Select(child => child.Copy()).ToList();
+                    loopActionViewer.Actions = a.LoopActions.Select(child => child.Copy()).ToList();
                     loopActionViewer.RefreshDgv();
                     expLoopIterationDelay.Expression = a.DelayExpression;
                     expLoopIncr.Expression = a.IncrExpression;
@@ -1015,7 +1015,7 @@ namespace Triggernometry.UI.Forms
                 case ActionLoop a:
                 {
                     a.LoopCondition = (ConditionGroup)cndLoopCondition.ConditionToEdit.Duplicate();
-                    a.LoopActions = loopActionViewer.Actions.OrderBy(child => child.OrderNumber).Select(child => child.Copy()).ToList();
+                    a.LoopActions = loopActionViewer.Actions.Select(child => child.Copy()).ToList();
                     a.DelayExpression = expLoopIterationDelay.Expression;
                     a.IncrExpression = expLoopIncr.Expression;
                     a.InitExpression = expLoopInit.Expression;

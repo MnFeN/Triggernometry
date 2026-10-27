@@ -565,7 +565,6 @@ namespace Triggernometry.UI.Forms
             }
             if (action != null)
             {
-                action.OrderNumber = 1;
                 t.Actions.Add(action);
             }
             return t;

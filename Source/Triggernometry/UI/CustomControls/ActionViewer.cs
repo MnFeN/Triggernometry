@@ -74,6 +74,7 @@ namespace Triggernometry.UI.CustomControls
         {
             return dgvActions.SelectedRows
                              .Cast<DataGridViewRow>()
+                             .OrderBy(row => row.Index)
                              .Select(row => Actions[row.Index])
                              .ToList();
         }
@@ -119,8 +120,6 @@ namespace Triggernometry.UI.CustomControls
                     a.Enabled = true;
                     int insertIndex = (dgvActions.Rows.Count > 0 && dgvActions.SelectedRows.Count > 0) ? (dgvActions.SelectedRows[0].Index + 1) : dgvActions.Rows.Count;
                     Actions.Insert(insertIndex, a);
-                    a.OrderNumber = insertIndex + 1;
-                    for (int i = insertIndex + 1; i < Actions.Count; i++) { Actions[i].OrderNumber++; }
                     dgvActions.RowCount = Actions.Count;
                     dgvActions.ClearSelection();
                     dgvActions.Rows[insertIndex].Selected = true;
@@ -181,28 +180,16 @@ namespace Triggernometry.UI.CustomControls
                 default: throw new Exception(I18n.Translate("internal/ActionViewer/invalidmovetype", "Invalid moveType argument: {0}", moveType));
             }
 
-            List<int> ordMap = new List<int>(new int[length]);
-
+            var reordered = new List<ActionBase>(length);
+            int selectedIndex = 0, unselectedIndex = 0;
             for (int i = 0; i < length; i++)
             {
-                if (i >= start && i <= end)
-                {
-                    ordMap[i] = selectedRowIndices[0] + 1;
-                    selectedRowIndices.RemoveAt(0);
-                }
-                else
-                {
-                    ordMap[i] = unselectedRowIndices[0] + 1;
-                    unselectedRowIndices.RemoveAt(0);
-                }
+                int sourceIndex = i >= start && i <= end
+                    ? selectedRowIndices[selectedIndex++]
+                    : unselectedRowIndices[unselectedIndex++];
+                reordered.Add(Actions[sourceIndex]);
             }
-
-            for (int i = 0; i < length; i++)
-            {
-                Actions[ordMap[i] - 1].OrderNumber = i + 1;
-            }
-
-            Actions.Sort((a, b) => a.OrderNumber.CompareTo(b.OrderNumber));
+            Actions = reordered;
 
             dgvActions.ClearSelection();
             for (int i = start; i <= end; i++)
@@ -253,16 +240,8 @@ namespace Triggernometry.UI.CustomControls
             {
                 case DialogResult.Yes:
                     StoreActions();
-                    foreach (Core.ActionBase a in SelectedActions())
-                    {
-                        Actions.Remove(a);
-                        List<Core.ActionBase> px = new List<Core.ActionBase>();
-                        px.AddRange(from ax in Actions where ax.OrderNumber > a.OrderNumber select ax);
-                        foreach (Core.ActionBase aaa in px)
-                        {
-                            aaa.OrderNumber--;
-                        }
-                    }
+                    var selected = new HashSet<ActionBase>(SelectedActions());
+                    Actions.RemoveAll(action => selected.Contains(action));
                     dgvActions.RowCount = Actions.Count;
                     dgvActions.ClearSelection();
                     dgvActions.Refresh();
@@ -444,12 +423,6 @@ namespace Triggernometry.UI.CustomControls
 
                 // Insert/append all new actions at the determined position
                 Actions.InsertRange(insertIndex, pastedActions);
-
-                // Re-number all current Actions consecutively (1..N)
-                for (int i = 0; i < Actions.Count; i++)
-                {
-                    Actions[i].OrderNumber = i + 1;
-                }
 
                 // Update UI: row count, selection, refresh
                 dgvActions.SuspendLayout();
