@@ -713,7 +713,7 @@ namespace Triggernometry.Core
             }
         }
 
-        protected Tuple<int, string> SendJson(Context ctx, ActionOld.HTTPMethodEnum method, string url, string json, IEnumerable<string> headers, bool expectNoContent)
+        protected Tuple<int, string> SendJson(Context ctx, ActionJsonRequest.MethodEnum method, string url, string json, IEnumerable<string> headers, bool expectNoContent)
         {
             try
             {
@@ -753,7 +753,7 @@ namespace Triggernometry.Core
                 }
                 switch (method)
                 {
-                    case HTTPMethodEnum.POST:
+                    case ActionJsonRequest.MethodEnum.POST:
                         httpWebRequest.ContentType = "application/json";
                         httpWebRequest.Method = "POST";
                         using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
@@ -763,7 +763,7 @@ namespace Triggernometry.Core
                             streamWriter.Close();
                         }
                         break;
-                    case HTTPMethodEnum.GET:
+                    case ActionJsonRequest.MethodEnum.GET:
                         httpWebRequest.Method = "GET";
                         break;
                 }

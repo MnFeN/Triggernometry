@@ -12,6 +12,7 @@ using System.IO;
 using System.Net;
 using Triggernometry.Localization;
 using Triggernometry.Core;
+using Triggernometry.Core.Actions;
 
 namespace Triggernometry.UI.Forms
 {
@@ -37,7 +38,7 @@ namespace Triggernometry.UI.Forms
         internal Context ctx { get; set; }
 
         internal string TextExpression { get; set; }
-        internal Core.ActionOld.TextAuraAlignmentEnum TextAlignment { get; set; }
+        internal ActionOverlayText.TextAlignmentEnum TextAlignment { get; set; }
         internal Color TextColor { get; set; }
         internal Color OutlineColor { get; set; }
         internal Color BackgroundColor { get; set; }
@@ -451,39 +452,39 @@ namespace Triggernometry.UI.Forms
                 Rectangle r = new Rectangle(ClientRectangle.Location, ClientRectangle.Size);
                 switch (TextAlignment)
                 {
-                    case Core.ActionOld.TextAuraAlignmentEnum.TopLeft:
+                    case ActionOverlayText.TextAlignmentEnum.TopLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.TopCenter:
+                    case ActionOverlayText.TextAlignmentEnum.TopCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.TopRight:
+                    case ActionOverlayText.TextAlignmentEnum.TopRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.MiddleLeft:
+                    case ActionOverlayText.TextAlignmentEnum.MiddleLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.MiddleCenter:
+                    case ActionOverlayText.TextAlignmentEnum.MiddleCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.MiddleRight:
+                    case ActionOverlayText.TextAlignmentEnum.MiddleRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.BottomLeft:
+                    case ActionOverlayText.TextAlignmentEnum.BottomLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.BottomCenter:
+                    case ActionOverlayText.TextAlignmentEnum.BottomCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.BottomRight:
+                    case ActionOverlayText.TextAlignmentEnum.BottomRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Far;
                         break;

@@ -12,6 +12,22 @@ namespace Triggernometry.Core
     public partial class RealPlugin
     {
 
+        /// <summary> Set text to the clipboard using the UI thread. If text is empty, clear the clipboard. </summary>
+        public static void ClipboardSetText(string text)
+        {
+            Instance.ui.Invoke(new System.Action(() =>
+            {
+                if (string.IsNullOrEmpty(text))
+                    Clipboard.Clear();
+                else
+                    Clipboard.SetText(text);
+            }));
+        }
+
+        /// <summary> Get the clipboard text using the UI thread. </summary>
+        public static string ClipboardGetText()
+            => (string)Instance.ui.Invoke(new Func<string>(Clipboard.GetText));
+
         internal static string FormatDateTime(DateTime dt)
         {
             return dt.ToString("MM-dd HH:mm:ss.fff");

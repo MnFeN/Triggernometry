@@ -673,19 +673,11 @@ namespace Triggernometry.Core
 
         /// <summary> Set text to the clipboard using the UI thread. If text is empty, clear the clipboard. </summary>
         public static void ClipboardSetText(string text)
-        {
-            Instance.ui.Invoke(new System.Action(() =>
-            {
-                if (string.IsNullOrEmpty(text))
-                    Clipboard.Clear();
-                else
-                    Clipboard.SetText(text);
-            }));
-        }
+            => RealPlugin.ClipboardSetText(text);
 
         /// <summary> Get the clipboard text using the UI thread. </summary>
         public static string ClipboardGetText()
-            => (string)Instance.ui.Invoke(new Func<string>(Clipboard.GetText));
+            => RealPlugin.ClipboardGetText();
 
         public static ArgumentException InvalidEnumException(string enumName, string enumValue)
         { 

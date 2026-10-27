@@ -96,7 +96,7 @@ namespace Triggernometry.Core.Actions
                     AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/warndiscordtrunc", "Discord message too long, capping to {0}", msg.Length));
                 }
                 var wh = new JavaScriptSerializer().Serialize(new { content = msg, tts = true });
-                SendJson(ctx, ActionOld.HTTPMethodEnum.POST, url, wh, null, true);
+                SendJson(ctx, ActionJsonRequest.MethodEnum.POST, url, wh, null, true);
             }
             else
             {
@@ -106,7 +106,7 @@ namespace Triggernometry.Core.Actions
                     AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/warndiscordtrunc", "Discord message too long, capping to {0}", msg.Length));
                 }
                 var wh = new JavaScriptSerializer().Serialize(new { content = msg });
-                SendJson(ctx, ActionOld.HTTPMethodEnum.POST, url, wh, null, true);
+                SendJson(ctx, ActionJsonRequest.MethodEnum.POST, url, wh, null, true);
             }
         }
 

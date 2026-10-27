@@ -16,7 +16,7 @@ namespace Triggernometry
         {
             string data = string.Join(Environment.NewLine, objs.Select(o => o?.ToString() ?? "(null)"));
             MessageBox.Show(data, "Debug", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Core.ActionOld.ClipboardSetText(data);
+            RealPlugin.ClipboardSetText(data);
         }
 
         public static void Log(params object[] objs)
@@ -27,7 +27,7 @@ namespace Triggernometry
         public static object Show(this object o)
         {
             MessageBox.Show(o?.ToString() ?? "(null)", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Core.ActionOld.ClipboardSetText(o?.ToString() ?? "(null)");
+            RealPlugin.ClipboardSetText(o?.ToString() ?? "(null)");
             return o;
         }
 

@@ -492,7 +492,7 @@ namespace Triggernometry.Core
                                 fs |= FontStyle.Strikeout;
                             }
                             si.TextExpression = a.Text;
-                            si.TextAlignment = (ActionOld.TextAuraAlignmentEnum)a.Alignment;
+                            si.TextAlignment = a.Alignment;
                             si.TextColor = ExpressionTextBox.ParseColor(
                                     ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.ForeColor),
                                     Color.Black);
@@ -579,7 +579,7 @@ namespace Triggernometry.Core
                                 acf.AuraPrepare();
                                 acf.ctx = ctx;
                                 acf.TextExpression = a.Text;
-                                acf.TextAlignment = (ActionOld.TextAuraAlignmentEnum)a.Alignment;
+                                acf.TextAlignment = a.Alignment;
                                 acf.TextColor = ExpressionTextBox.ParseColor(
                                     ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.ForeColor),
                                     Color.Black);

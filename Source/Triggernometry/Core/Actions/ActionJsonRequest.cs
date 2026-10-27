@@ -19,7 +19,6 @@ namespace Triggernometry.Core.Actions
     {
 
         #region Properties
-        /*
         /// <summary>
         /// Request method
         /// </summary>
@@ -28,7 +27,6 @@ namespace Triggernometry.Core.Actions
             POST,
             GET
         }
-        */
 
         /// <summary>
         /// Remote endpoint expression
@@ -43,7 +41,7 @@ namespace Triggernometry.Core.Actions
             get => XmlAttr.String(Endpoint);
             set => Endpoint = value;
         }
-        /* todo
+
         /// <summary>
         /// Request method to use
         /// </summary>
@@ -56,21 +54,6 @@ namespace Triggernometry.Core.Actions
         {
             get => XmlAttr.Enum(Method, MethodEnum.POST);
             set => Method = XmlAttr.Enum<MethodEnum>(value);
-        }
-        */
-
-        /// <summary>
-        /// Request method to use
-        /// </summary>
-        [XmlIgnore]
-        [Action(order: 2)]
-        public ActionOld.HTTPMethodEnum Method { get; set; } = ActionOld.HTTPMethodEnum.POST;
-
-        [XmlAttribute("Method")]
-        public string Xml_Method
-        {
-            get => XmlAttr.Enum(Method, ActionOld.HTTPMethodEnum.POST);
-            set => Method = XmlAttr.Enum<ActionOld.HTTPMethodEnum>(value);
         }
 
         /// <summary>
@@ -226,7 +209,7 @@ namespace Triggernometry.Core.Actions
                 }
                 if (fromcache == false)
                 {
-                    Tuple<int, string> resp = SendJson(ctx, Method, endpoint, payload, headerslist, false); // todo
+                    Tuple<int, string> resp = SendJson(ctx, Method, endpoint, payload, headerslist, false);
                     responseCode = resp.Item1;
                     response = resp.Item2;
                     // Cache files only store the body, so only cache non-empty 200 responses.
@@ -238,7 +221,7 @@ namespace Triggernometry.Core.Actions
             }
             else
             {
-                Tuple<int, string> resp = SendJson(ctx, Method, endpoint, payload, headerslist, false); // todo
+                Tuple<int, string> resp = SendJson(ctx, Method, endpoint, payload, headerslist, false);
                 responseCode = resp.Item1;
                 response = resp.Item2;
             }
@@ -290,7 +273,7 @@ namespace Triggernometry.Core.Actions
             var action = new ActionJsonRequest();
             oldAction.CopyCommonPropertiesTo(action);
             action.Endpoint = oldAction._JsonEndpointExpression;
-            action.Method = oldAction._JsonOperationType;
+            action.Method = (MethodEnum)(int)oldAction._JsonOperationType;
             action.Payload = oldAction._JsonPayloadExpression;
             action.Headers = oldAction._JsonHeaderExpression;
             action.ResultVariable = oldAction._JsonResultVariable;
@@ -307,7 +290,7 @@ namespace Triggernometry.Core.Actions
             action.CopyCommonPropertiesTo(oldAction);
             oldAction.ActionType = ActionOld.ActionTypeEnum.GenericJson;
             oldAction._JsonEndpointExpression = action.Endpoint;
-            oldAction._JsonOperationType = action.Method;
+            oldAction._JsonOperationType = (ActionOld.HTTPMethodEnum)(int)action.Method;
             oldAction._JsonPayloadExpression = action.Payload;
             oldAction._JsonHeaderExpression = action.Headers;
             oldAction._JsonResultVariable = action.ResultVariable;

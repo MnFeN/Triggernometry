@@ -345,7 +345,7 @@ namespace Triggernometry.Core.Actions
                         {
                             text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         }
-                        ActionOld.ClipboardSetText(text); // todo
+                        RealPlugin.ClipboardSetText(text);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarclipboard",
                             "Set text ({0}) to clipboard", text));
                         break;

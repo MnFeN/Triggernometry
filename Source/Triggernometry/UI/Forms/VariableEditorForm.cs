@@ -503,7 +503,7 @@ namespace Triggernometry.UI.Forms
         private void btnCopyAsCsv_Click(object sender, EventArgs e)
         {
             VariableTable v = (VariableTable)VariableToEdit;
-            Core.ActionOld.ClipboardSetText(v.ToCSVString());
+            RealPlugin.ClipboardSetText(v.ToCSVString());
         }
 
         private void btnSaveAsCsv_Click(object sender, EventArgs e) 
