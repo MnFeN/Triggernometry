@@ -41,12 +41,12 @@ namespace Triggernometry.Core
         }
 
         internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig = null)
-            => UnfilteredAddToLog(level, msg, trig, null);
+            => UnfilteredAddToLog(level, msg, trig, (ActionBase)null);
 
-        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, ActionOld action)
+        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, ActionBase action)
             => UnfilteredAddToLog(level, msg, action?.ParentTrigger, action);
 
-        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig, ActionOld action)
+        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig, ActionBase action)
         {
             InternalLog il = new InternalLog() 
             { 
@@ -77,13 +77,22 @@ namespace Triggernometry.Core
             }
         }
 
-        public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig = null)
-            => FilteredAddToLog(level, msg, trig, null);
+        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, ActionOld action)
+            => UnfilteredAddToLog(level, msg, action?.ConvertToNewAction());
 
         public void FilteredAddToLog(DebugLevelEnum level, string msg, ActionOld action)
-            => FilteredAddToLog(level, msg, action?.ParentTrigger, action);
+            => FilteredAddToLog(level, msg, action?.ConvertToNewAction());
 
         public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig, ActionOld action)
+            => FilteredAddToLog(level, msg, trig, action?.ConvertToNewAction());
+
+        public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig = null)
+            => FilteredAddToLog(level, msg, trig, (ActionBase)null);
+
+        public void FilteredAddToLog(DebugLevelEnum level, string msg, ActionBase action)
+            => FilteredAddToLog(level, msg, action?.ParentTrigger, action);
+
+        public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig, ActionBase action)
         {
             if (cfg != null && level > cfg.DebugLevel)
             {

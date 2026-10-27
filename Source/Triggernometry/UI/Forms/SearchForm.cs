@@ -209,10 +209,9 @@ namespace Triggernometry.UI.Forms
                 {   // use the cached trigger regex instead?
                     if (RegexMatches(rex, t.RegularExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggerregex", "Trigger regular expression"), Match = tn });
                 }
-                // The trigger collection is still legacy; create typed views only when searching action fields.
                 bool searchActions = (filter & (SearchFilterEnum.ActionDescription | SearchFilterEnum.ActionCondition | SearchFilterEnum.ActionDetails)) != 0;
                 if (!searchActions) continue;
-                foreach (var (a, i) in GetActionsWithPath(t.Actions.Select(action => action.ConvertToNewAction())))
+                foreach (var (a, i) in GetActionsWithPath(t.Actions))
                 {
                     if ((filter & SearchFilterEnum.ActionDescription) != 0)
                     {

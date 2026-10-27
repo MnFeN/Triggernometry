@@ -16,8 +16,8 @@ namespace Triggernometry.Core
         public RealPlugin.DebugLevelEnum Level { get; set; }
         public string Message { get; set; }
         public Trigger SourceTrigger { get; set; }
-        public ActionOld SourceAction { get; set; }
-        internal static ActionOld RecordedAction { get; set; }
+        public ActionBase SourceAction { get; set; }
+        internal static ActionBase RecordedAction { get; set; }
 
         public override string ToString()
         {

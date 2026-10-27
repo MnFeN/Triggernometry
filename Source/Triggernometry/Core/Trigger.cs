@@ -149,13 +149,13 @@ namespace Triggernometry.Core
         /// The list of actions executed when this trigger is fired.
         /// </summary>
         [XmlIgnore]
-        public List<ActionOld> Actions { get; set; } = new List<ActionOld>();
+        public List<ActionBase> Actions { get; set; } = new List<ActionBase>();
 
         [XmlElement("Actions")]
         public ActionXmlCollection Xml_Actions
         {
-            get => new ActionXmlCollection(Actions.Select(action => action.ConvertToNewAction()).ToList());
-            set => Actions = value.Actions.Select(action => action.ConvertToOldAction()).ToList();
+            get => new ActionXmlCollection(Actions);
+            set => Actions = value.Actions;
         }
 
         public bool ShouldSerializeXml_Actions() => ShouldSerializeActions();
@@ -727,7 +727,7 @@ namespace Triggernometry.Core
             int removedCount = 0;
             lock (ctx.Plugin.ActionQueue)
             {
-                foreach (RealPlugin.QueuedAction qa in GetSelfQueuedActions(ctx).ToList())
+                foreach (ActionBase.ActionInstance qa in GetSelfQueuedActions(ctx).ToList())
                 {
                     ctx.Plugin.ActionQueue.Remove(qa);
                     removedCount++;
@@ -742,7 +742,7 @@ namespace Triggernometry.Core
                 return GetSelfQueuedActions(ctx).Count();
         }
 
-        private IEnumerable<RealPlugin.QueuedAction> GetSelfQueuedActions(Context ctx)
+        private IEnumerable<ActionBase.ActionInstance> GetSelfQueuedActions(Context ctx)
             => ctx.Plugin.ActionQueue.Where(qa => qa.ctx.Trigger.Id == Id);
 
         public void QueueActions(Context ctx, DateTime curtime, RealPlugin.MutexInformation mtx)
@@ -771,12 +771,7 @@ namespace Triggernometry.Core
 
             // ─── Properties - Actions/Conditions ────────────────
             t.Actions.Clear();
-            foreach (var oldAction in Actions.OrderBy(x => x.OrderNumber))
-            {
-                var newAction = new ActionOld();
-                oldAction.CopySettingsTo(newAction);
-                t.Actions.Add(newAction);
-            }
+            t.Actions.AddRange(Actions.OrderBy(action => action.OrderNumber).Select(action => action.Copy()));
             t.Condition = (ConditionGroup)Condition.Duplicate();
 
             // ─── Properties - Scheduling ────────────────────────
@@ -804,7 +799,7 @@ namespace Triggernometry.Core
         internal void SetActionsParent()
         {
             if (Condition != null) ConditionGroup.RebuildParentage(Condition);
-            ActionOld.RebuildParentage(Actions, this);
+            ActionBase.RebuildParentage(Actions, this);
         }
 
         #endregion Utils

@@ -1116,7 +1116,7 @@ namespace Triggernometry.UI.Forms
             ctx.testByPlaceholder = liveValues == false;
             ctx.soundhook = Plugin.SoundPlaybackSmart;
             ctx.ttshook = Plugin.TtsPlaybackSmart;
-            a.ConvertToOldAction().Execute(null, ctx);
+            a.Execute(null, ctx);
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -1574,7 +1574,7 @@ namespace Triggernometry.UI.Forms
             var a = (ActionOverlayImage)SettingsToAction();
             a.Operation = ActionOverlayImage.OperationEnum.Deactivate;
             Context ctx = new Context(ParentTrigger) { testByPlaceholder = true };
-            a.ConvertToOldAction().Execute(null, ctx);
+            a.Execute(null, ctx);
         }
 
         private void btnTextAuraHide_Click(object sender, EventArgs e)
@@ -1582,7 +1582,7 @@ namespace Triggernometry.UI.Forms
             var a = (ActionOverlayText)SettingsToAction();
             a.Operation = ActionOverlayText.OperationEnum.Deactivate;
             Context ctx = new Context(ParentTrigger) { testByPlaceholder = true };
-            a.ConvertToOldAction().Execute(null, ctx);
+            a.Execute(null, ctx);
         }
 
         private void timer1_Tick(object sender, EventArgs e)

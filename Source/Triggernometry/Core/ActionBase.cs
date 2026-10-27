@@ -217,6 +217,15 @@ namespace Triggernometry.Core
             internal Context ctx { get; set; }
             internal bool releaseMutex { get; set; } = false;
 
+            /// <summary>
+            /// The effective tag text used by the action,
+            /// with expressions evaluated when the action is queued. <br />
+            /// If this action’s <see cref="ActionBase.Tag"/> is not specified, or evaluates to a whitespace-string,
+            /// the <see cref="Trigger.Tag"/> from the parent trigger will be used instead. <br />
+            /// Empty if no tag is specified anywhere.
+            /// </summary>
+            internal string ParsedTag { get; set; } = "";
+
             public ActionInstance(DateTime when, long ordinal, MutexInformation mtx, ActionBase act, Context ctx, bool releaseMutex)
             {
                 this.when = when;
@@ -240,13 +249,19 @@ namespace Triggernometry.Core
 
             public void ActionFinished()
             {
-                if (mutex != null && releaseMutex == true)
+                lock (ctx.Plugin.ActionQueue)
                 {
-                    mutex.Release(ctx);
+                    ctx.Plugin.ExecutingActions.Remove(this);
+                    if (mutex != null && releaseMutex == true)
+                    {
+                        mutex.Release(ctx);
+                        mutex = null;
+                    }
                 }
             }
 
         }
+
 
         #endregion
 
@@ -258,10 +273,10 @@ namespace Triggernometry.Core
             internal static List<ActionBase> XmlToActions(string text) => ActionXmlCollection.FromXml(text);
         }
 
-        internal ActionOld NextAction { get; set; } = null;
+        internal ActionBase NextAction { get; set; } = null;
 
         /// <summary> 循环的父动作 </summary>
-        internal ActionOld LoopAction { get; set; } = null;
+        internal ActionLoop LoopAction { get; set; } = null;
         //internal Guid LoopContext { get; set; } = Guid.Empty;
 
         /// <summary>
@@ -489,52 +504,99 @@ namespace Triggernometry.Core
         internal int ExecutionCount { get; set; } = 0;
 
         internal abstract void ExecuteImplementation(ActionInstance ai);
-        public void Execute(ActionInstance ai)
-        {            
-            if (!Enabled)
-            {
-                LastExecutionResult = false;
-                return;
-            }
 
-            Context ctx = ai.ctx;
-            var shouldConsiderCondition = !ctx.forceType.HasFlag(ActionOld.TriggerForceTypeEnum.SkipConditions) && !ctx.testByPlaceholder;
-            if (shouldConsiderCondition && Condition?.Enabled == true && !Condition.CheckCondition(ctx, ActionContextLogger, ctx))
-            {
-                AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", OrderNumber, ctx.Trigger?.LogName ?? "(null)"));
-                LastExecutionResult = false;
-                return;
-            }
+        /// <summary>Executes a queued instance through the same lifecycle as direct UI tests.</summary>
+        public void Execute(ActionInstance ai) => Execute(ai, ai.ctx);
 
+        internal void Execute(ActionInstance ai, Context ctx)
+        {
+            if (ai != null)
+            {
+                lock (ctx.Plugin.ActionQueue) ctx.Plugin.ExecutingActions.Add(ai);
+            }
+            CancellationToken? ct = Asynchronous ? ctx.Plugin?.GetCancellationToken() : null;
             void ExecuteCore()
             {
-                AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
-                ExecuteImplementation(ai);
-                ai?.ActionFinished();
-            }
-
-            if (Asynchronous)
-            {
-                CancellationToken? ct = ctx.Plugin?.GetCancellationToken();
-                Task t = new Task(() =>
+                try
                 {
                     ct?.ThrowIfCancellationRequested();
-                    ExecuteCore();
-                });
-                t.Start();
+                    ExecutionImplementation(ai, ctx);
+                }
+                finally
+                {
+                    ai?.ActionFinished();
+                }
             }
-            else
+            if (Asynchronous) Task.Run((Action)ExecuteCore);
+            else ExecuteCore();
+        }
+
+        private void ExecutionImplementation(ActionInstance ai, Context ctx)
+        {
+            try
             {
-                ExecuteCore();
+                if ((ctx.forceType & TriggerForceTypeEnum.SkipConditions) == 0 && !ctx.testByPlaceholder &&
+                    Condition?.Enabled == true && Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
+                {
+                    ctx.PushActionResult(0);
+                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", OrderNumber, ctx.Trigger?.LogName ?? "(null)"));
+                }
+                else
+                {
+                    ctx.PushActionResult(1);
+                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
+
+                    if (this is ActionLoop loop)
+                    {
+                        if (loop.QueueIteration(ref ctx, ai)) return;
+                    }
+                    else
+                    {
+                        ExecuteImplementation(ai ?? new ActionInstance(default, 0, null, this, ctx, false));
+                    }
+                }
+
+                if (LoopAction != null)
+                {
+                    DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, LoopAction.DelayExpression));
+                    ctx.Plugin.QueueAction(ctx, ctx.Trigger, ai?.mutex, LoopAction, dt, false);
+                }
+                else if (NextAction != null)
+                {
+                    DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, NextAction.ExecutionDelayExpression));
+                    ctx.Plugin.QueueAction(ctx, ctx.Trigger, ai?.mutex, NextAction, dt, false);
+                }
+                // Non-sequential actions release through the final queued action's ActionFinished.
+                else if (ai?.mutex != null && ctx.Trigger.Sequential)
+                {
+                    ai.mutex.Release(ctx);
+                    ai.mutex = null;
+                }
             }
-            LastExecutionResult = true;
+            catch (Exception ex)
+            {
+                if (this is ActionNamedCallback)
+                {
+                    if (ex is TargetInvocationException tiex && tiex.InnerException != null)
+                        ex = tiex.InnerException;
+                }
+                string triggerPath = ai?.ctx?.Trigger?.FullPath ?? "(null)";
+                string actionDesc = "";
+                try { actionDesc = Describe(); } catch { }
+                actionDesc = actionDesc.Length > 300 ? actionDesc.Substring(0, 297) + "..." : actionDesc;
+                string detail = ex.FullMessage();
+
+                AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/exception",
+                    "Action exception: {0}  \nIn action: {1}  \nIn trigger: {2}{3}",
+                    ex.Message, actionDesc, triggerPath, detail));
+            }
         }
 
         internal DebugLevelEnum GetDebugLevel(Context ctx)
         {
             if (DebugLevel == DebugLevelEnum.Inherit)
             {
-                return ctx.Trigger?.GetDebugLevel(Instance) ?? DebugLevelEnum.Verbose;
+                return ctx?.Trigger?.GetDebugLevel(Instance) ?? DebugLevelEnum.Verbose;
             }
             return DebugLevel;
         }
@@ -546,8 +608,7 @@ namespace Triggernometry.Core
             {
                 return;
             }
-            // The log still stores legacy actions; convert only when a log entry is emitted.
-            Instance.UnfilteredAddToLog(level, message, ConvertToOldAction());
+            Instance.UnfilteredAddToLog(level, message, this);
         }
 
         // todo should get rid of this maybe

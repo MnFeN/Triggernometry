@@ -178,7 +178,7 @@ namespace Triggernometry.UI.Forms
             cbxLoggingLevel.SelectedIndex = (int)t.DebugLevel;
             foreach (var action in t.Actions.OrderBy(a => a.OrderNumber))
             {
-                Actions.Add(action.ConvertToNewAction());
+                Actions.Add(action.Copy());
             }
             cndCondition.ConditionToEdit = (ConditionGroup)t.Condition?.Duplicate() ?? new ConditionGroup
             {
@@ -206,7 +206,7 @@ namespace Triggernometry.UI.Forms
             t.Tag = expTag.Expression;
             t.RefirePeriodExpression = expRefirePeriod.Expression;
             t.DebugLevel = (RealPlugin.DebugLevelEnum)cbxLoggingLevel.SelectedIndex;
-            t.Actions = Actions.OrderBy(tx => tx.OrderNumber).Select(action => action.ConvertToOldAction()).ToList();
+            t.Actions = Actions.OrderBy(a => a.OrderNumber).Select(a => a.Copy()).ToList();
             t.Condition = cndCondition.ConditionToEdit;
             t.MutexToCapture = expMutexName.Expression;
             t.IsReadme = chkReadmeTrigger.Checked;

@@ -402,7 +402,7 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.CancelTrigger:
                     {
-                        bool trigFilter(QueuedAction _qa) => _qa?.ctx?.Trigger == t;
+                        bool trigFilter(ActionInstance action) => action?.ctx?.Trigger == t;
 
                         if (!string.IsNullOrWhiteSpace(TagRegex))
                         {

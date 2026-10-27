@@ -247,7 +247,7 @@ namespace Triggernometry.UI.Forms
             {
                 OrderNumber = Trig.Actions.Count() + 1,
                 ExecutionDelayExpression = $"{seconds.ToString("F2", CultureInfo.InvariantCulture)} * 1000",
-            }.ConvertToOldAction());
+            });
 
             private void AddLogMsgAction(Logline logline) => Trig.Actions.Add(new ActionLogMessage
             {
@@ -256,7 +256,7 @@ namespace Triggernometry.UI.Forms
                 Target = DefaultSource,
                 ProcessAsLogline = true,
                 AddToACTEncounter = true,
-            }.ConvertToOldAction());
+            });
 
             public string WarningText()
             {   // Item1: logline  Item2: text

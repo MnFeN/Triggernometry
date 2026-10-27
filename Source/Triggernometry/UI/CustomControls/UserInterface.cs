@@ -508,7 +508,7 @@ namespace Triggernometry.UI.CustomControls
             {
                 cfg.TemplateTrigger?.CopySettingsTo(newTrigger);
                 newTrigger.Id = Guid.NewGuid();
-                foreach (Core.ActionOld action in Core.ActionOld.RecursiveGetActions(newTrigger.Actions))
+                foreach (Core.ActionBase action in Core.ActionBase.RecursiveGetActions(newTrigger.Actions))
                 {
                     action.Id = Guid.NewGuid();
                 }
@@ -1085,16 +1085,16 @@ namespace Triggernometry.UI.CustomControls
             int fdjs = 0, tdjs = 0;
             foreach (Trigger newTrig in newTrigs)
             {
-                foreach (Core.ActionOld a in Core.ActionOld.RecursiveGetActions(newTrig.Actions))
+                foreach (Core.ActionBase a in Core.ActionBase.RecursiveGetActions(newTrig.Actions))
                 {
-                    if (renamedTriggers.ContainsKey(a._TriggerId) == true)
+                    if (a is ActionTriggerOperation triggerAction && renamedTriggers.ContainsKey(triggerAction.TriggerId))
                     {
-                        a._TriggerId = renamedTriggers[a._TriggerId];
+                        triggerAction.TriggerId = renamedTriggers[triggerAction.TriggerId];
                         tdjs++;
                     }
-                    if (renamedFolders.ContainsKey(a._FolderId) == true)
+                    if (a is ActionFolderOperation folderAction && renamedFolders.ContainsKey(folderAction.FolderId))
                     {
-                        a._FolderId = renamedFolders[a._FolderId];
+                        folderAction.FolderId = renamedFolders[folderAction.FolderId];
                         fdjs++;
                     }
                 }

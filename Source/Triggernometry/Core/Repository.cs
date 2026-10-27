@@ -10,6 +10,8 @@ using Triggernometry.Localization;
 using Triggernometry.Utilities;
 using static Triggernometry.Core.RealPlugin;
 
+using Triggernometry.Core.Actions;
+
 namespace Triggernometry.Core
 {
 
@@ -240,24 +242,24 @@ namespace Triggernometry.Core
         /// <summary>
         /// Returns the <see cref="RestrictionEnum" /> flags violated by this action.
         /// </summary>
-        private RestrictionEnum GetActionRestrictions(ActionOld a)
+        private RestrictionEnum GetActionRestrictions(ActionBase a)
         {
             if (!a.Enabled)
                 return RestrictionEnum.None;
-            switch (a.ActionType)
+            switch (a)
             {
-                case ActionOld.ActionTypeEnum.ExecuteScript:
+                case ActionExecuteScript _:
                     return AllowScriptExecution ? RestrictionEnum.None : RestrictionEnum.ExecuteScript;
-                case ActionOld.ActionTypeEnum.LaunchProcess:
+                case ActionLaunchProcess _:
                     return AllowProcessLaunch ? RestrictionEnum.None : RestrictionEnum.LaunchProcess;
-                case ActionOld.ActionTypeEnum.WindowMessage:
+                case ActionWindowMessage _:
                     return AllowWindowMessages ? RestrictionEnum.None : RestrictionEnum.WindowMessage;
-                case ActionOld.ActionTypeEnum.DiskFile:
+                case ActionDiskOperation _:
                     return AllowDiskOperations ? RestrictionEnum.None : RestrictionEnum.DiskOperation;
-                case ActionOld.ActionTypeEnum.ObsControl:
+                case ActionObsControl _:
                     return AllowObsControl ? RestrictionEnum.None : RestrictionEnum.ObsControl;
-                case ActionOld.ActionTypeEnum.Loop:
-                    return a.LoopActions?.Select(GetActionRestrictions).Aggregate(RestrictionEnum.None, (acc, cur) => acc | cur) ?? RestrictionEnum.None;
+                case ActionLoop loop:
+                    return loop.LoopActions?.Select(GetActionRestrictions).Aggregate(RestrictionEnum.None, (acc, cur) => acc | cur) ?? RestrictionEnum.None;
             }
             return RestrictionEnum.None;
         }
@@ -352,10 +354,10 @@ namespace Triggernometry.Core
                         var routing = AudioOutput == AudioOutputEnum.AlwaysOverride
                             ? Configuration.AudioRoutingMethodEnum.Triggernometry
                             : Configuration.AudioRoutingMethodEnum.None;
-                        foreach (ActionOld a in ActionOld.RecursiveGetActions(t.Actions))
+                        foreach (ActionBase a in ActionBase.RecursiveGetActions(t.Actions))
                         {
-                            a._SoundRouting = routing;
-                            a._TTSRouting = routing;
+                            if (a is ActionPlaySound sound) sound.AudioTarget = routing;
+                            if (a is ActionPlaySpeech speech) speech.AudioTarget = routing;
                         }
                     }
                     break;

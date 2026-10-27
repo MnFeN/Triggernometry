@@ -17,6 +17,7 @@ using Triggernometry.UI.CustomControls;
 using Triggernometry.Localization;
 using Triggernometry.Utilities;
 using Triggernometry.Core.Variables;
+using static Triggernometry.Core.ActionBase;
 
 namespace Triggernometry.Core
 {
@@ -25,9 +26,9 @@ namespace Triggernometry.Core
     {
 
         internal Thread ActionQueueThread = null;
-        internal List<QueuedAction> ActionQueue = new List<QueuedAction>();
+        internal List<ActionInstance> ActionQueue = new List<ActionInstance>();
         // Cancellation must also account for actions already removed from the queue to execute.
-        internal HashSet<QueuedAction> ExecutingActions = new HashSet<QueuedAction>();
+        internal HashSet<ActionInstance> ExecutingActions = new HashSet<ActionInstance>();
         internal AutoResetEvent ActionUpdateEvent = null;
         private long curOrdinal = 0;
         internal object QueueProcessingLock = new object();
@@ -55,72 +56,6 @@ namespace Triggernometry.Core
             ActionUpdateEvent = null;
         }
 
-        internal class QueuedAction : IComparable
-        {
-
-            internal DateTime when { get; set; }
-            internal long ordinal { get; set; }
-            internal MutexInformation mutex { get; set; }
-            internal ActionOld act { get; set; }
-            internal Context ctx { get; set; }
-            internal bool releaseMutex { get; set; } = false;
-
-            /// <summary>
-            /// The effective tag text used by the action,  
-            /// with expressions evaluated when the action is queued. <br />
-            /// If this action’s <see cref="ActionOld.Tag"/> is not specified, or evaluates to a whitespace-string,   
-            /// the <see cref="Trigger.Tag"/> from the parent trigger will be used instead. <br />
-            /// Empty if no tag is specified anywhere.
-            /// </summary>
-            internal string ParsedTag { get; set; } = "";
-
-            public QueuedAction(DateTime when, long ordinal, MutexInformation mtx, ActionOld act, Context ctx, bool releaseMutex)
-            {
-                this.when = when;
-                this.ordinal = ordinal;
-                mutex = mtx;
-                this.act = act;
-                this.ctx = ctx;
-                this.releaseMutex = releaseMutex;
-                var actionTag = ctx.EvaluateStringExpression(null, ctx, act.Tag);
-                if (!string.IsNullOrWhiteSpace(actionTag))
-                {
-                    ParsedTag = actionTag;
-                }
-                else
-                {
-                    var triggerTag = ctx.EvaluateStringExpression(null, ctx, ctx?.Trigger?.Tag);
-                    if (!string.IsNullOrWhiteSpace(triggerTag))
-                        ParsedTag = triggerTag;
-                }
-            }
-
-            public int CompareTo(object o)
-            {
-                QueuedAction b = (QueuedAction)o;
-                int ex = when.CompareTo(b.when);
-                if (ex != 0)
-                {
-                    return ex;
-                }
-                return ordinal.CompareTo(b.ordinal);
-            }
-
-            public void ActionFinished()
-            {
-                lock (ctx.Plugin.ActionQueue)
-                {
-                    ctx.Plugin.ExecutingActions.Remove(this);
-                    if (mutex != null && releaseMutex == true)
-                    {
-                        mutex.Release(ctx);
-                        mutex = null;
-                    }
-                }
-            }
-
-        }
-
         /// <summary>
         /// Remove queued actions from the global action queue based on the specified filter. <br/>
         /// If <paramref name="filter"/> is <c>null</c>, all queued actions are cleared. <br/>
@@ -132,7 +67,7 @@ namespace Triggernometry.Core
         /// </param>
         /// <returns>The number of queued actions removed from the queue.</returns>
 
-        internal int CancelQueuedActions(Func<QueuedAction, bool> filter = null)
+        internal int CancelQueuedActions(Func<ActionInstance, bool> filter = null)
         {
             int removedCount = 0;
             lock (ActionQueue)
@@ -160,16 +95,16 @@ namespace Triggernometry.Core
             return removedCount;
         }
 
-        internal ActionOld QueueActions(Context ctx, DateTime startingFrom, IEnumerable<ActionOld> actions, bool sequential, MutexInformation mtx, Context.LoggerDelegate logger)
+        internal ActionBase QueueActions(Context ctx, DateTime startingFrom, IEnumerable<ActionBase> actions, bool sequential, MutexInformation mtx, Context.LoggerDelegate logger)
         {
-            ActionOld lastAction = null;
-            IEnumerable<ActionOld> sortedActions = actions.OrderBy(a => a.OrderNumber);
+            ActionBase lastAction = null;
+            IEnumerable<ActionBase> sortedActions = actions.OrderBy(a => a.OrderNumber);
             if (sequential == false)
             {
                 // Reuse the sorted result for both the final-action lookup and enqueueing.
                 sortedActions = sortedActions.ToArray();
                 var finalAction = sortedActions.LastOrDefault(a => a.Enabled);
-                foreach (ActionOld action in sortedActions)
+                foreach (ActionBase action in sortedActions)
                 {
                     if (action.Enabled == true)
                     {
@@ -182,9 +117,9 @@ namespace Triggernometry.Core
             else
             {
                 // Sequential execution only needs one traversal to build the action chain.
-                ActionOld prev = null;
-                ActionOld first = null;
-                foreach (ActionOld action in sortedActions)
+                ActionBase prev = null;
+                ActionBase first = null;
+                foreach (ActionBase action in sortedActions)
                 {
                     if (action.Enabled == false)
                     {
@@ -212,28 +147,28 @@ namespace Triggernometry.Core
             return lastAction;
         }
 
-        public void QueueAction(Context ctx, Trigger t, MutexInformation m, ActionOld a, DateTime when, bool releaseMutex)
+        public void QueueAction(Context ctx, Trigger trig, MutexInformation mutex, ActionBase action, DateTime when, bool releaseMutex)
         {
             lock (ActionQueue) // verified
             {
-                if (a.RefireRequeue == false || a.RefireInterrupt == true)
+                if (action.RefireRequeue == false || action.RefireInterrupt == true)
                 {
-                    if (ActionQueue.Any(qa => qa.act.Id == a.Id))
+                    if (ActionQueue.Any(actionInstance => actionInstance.act.Id == action.Id))
                     {
-                        if (a.RefireInterrupt == true)
+                        if (action.RefireInterrupt == true)
                         {
-                            int removedCount = ActionQueue.RemoveAll(qa => qa.act.Id == a.Id);
+                            int removedCount = ActionQueue.RemoveAll(actionInstance => actionInstance.act.Id == action.Id);
                             if (removedCount > 0)
                             {
-                                a.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, t.LogName, a.GetDescription(ctx)));
+                                action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig.LogName, action.Describe()));
                             }
                         }
-                        if (a.RefireRequeue == false)
+                        if (action.RefireRequeue == false)
                         {
-                            a.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", t.LogName, a.GetDescription(ctx)));
-                            if (releaseMutex == true && m != null)
+                            action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig.LogName, action.Describe()));
+                            if (releaseMutex == true && mutex != null)
                             {
-                                m.Release(ctx);
+                                mutex.Release(ctx);
                             }
                             return;
                         }
@@ -245,13 +180,28 @@ namespace Triggernometry.Core
                     newOrdinal = curOrdinal;
                     curOrdinal++;
                 }
-                a.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", t.LogName, a.GetDescription(ctx), FormatDateTime(when), newOrdinal));
-                var queuedAction = new QueuedAction(when, newOrdinal, m, a, ctx, releaseMutex);
+                action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig.LogName, action.Describe(), FormatDateTime(when), newOrdinal));
+                var queuedAction = new ActionInstance(when, newOrdinal, mutex, action, ctx, releaseMutex);
+                var actionTag = ctx.EvaluateStringExpression(null, ctx, action.Tag);
+                if (!string.IsNullOrWhiteSpace(actionTag))
+                {
+                    queuedAction.ParsedTag = actionTag;
+                }
+                else
+                {
+                    var triggerTag = ctx.EvaluateStringExpression(null, ctx, ctx?.Trigger?.Tag);
+                    if (!string.IsNullOrWhiteSpace(triggerTag))
+                        queuedAction.ParsedTag = triggerTag;
+                }
                 int index = ActionQueue.BinarySearch(queuedAction);
                 ActionQueue.Insert(index < 0 ? ~index : index, queuedAction);
                 ActionUpdateEvent.Set();
             }
         }
+
+        /// <summary>Converts legacy callers once before entering the typed action queue.</summary>
+        public void QueueAction(Context ctx, Trigger trig, MutexInformation mutex, ActionOld actionOld, DateTime when, bool releaseMutex)
+            => QueueAction(ctx, trig, mutex, actionOld.ConvertToNewAction(), when, releaseMutex);
 
         internal bool ReadyForOperation()
         {
@@ -308,7 +258,7 @@ namespace Triggernometry.Core
                 {
                     case WaitHandle.WaitTimeout:
                         {
-                            QueuedAction tp = null;
+                            ActionInstance tp = null;
                             lock (ActionQueue) // verified
                             {
                                 if (ActionQueue.Count > 0)

@@ -105,40 +105,48 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            throw new NotImplementedException(I18n.Translate("internal/ActionLoop/specialhandling", "Loop actions require special handling."));
-            Context ctx = ai?.ctx ?? Context.Unbound;
-            RealPlugin plug = ctx.Plugin;
+            Context ctx = ai.ctx;
+            QueueIteration(ref ctx, ai);
+        }
 
-            if (ctx.loopActionId == Id)
-            {
+        /// <summary>Queues a loop iteration and returns whether the outer continuation must wait.</summary>
+        internal bool QueueIteration(ref Context ctx, ActionInstance qa)
+        {
+            var loopActionIdOld = ctx.loopActionId;
+
+            if (loopActionIdOld == Id)
                 ctx.loopIterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, IncrExpression);
-            }
-            if (LoopCondition.Enabled == true && LoopCondition.CheckCondition(ctx, ActionContextLogger, ctx) == true)
+
+            if (!LoopCondition.Enabled)
+                return false;
+
+            bool continuing = false;
+            Context loopContext = ctx;
+            if (loopActionIdOld != Id)
             {
-                bool continuing = false;
-                if (ctx.loopActionId != Id)
+                continuing = loopActionIdOld == Guid.Empty;
+                loopContext = ctx.Duplicate();
+                if (loopActionIdOld != Guid.Empty && loopActionIdOld != Id)
                 {
-                    continuing = ctx.loopActionId == Guid.Empty;
-                    ctx = ctx.Duplicate();
-                    if (ctx.loopActionId != Guid.Empty && ctx.loopActionId != Id)
-                    {
-                        ctx.id = Guid.NewGuid();
-                    }
-                    ctx.loopActionId = Id;
-                    ctx.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, InitExpression);
+                    loopContext.id = Guid.NewGuid();
                 }
-                else
-                {
-                    continuing = true;
-                }
-                DateTime curTime = DateTime.Now;
-                ActionOld lastAction = plug.QueueActions(ctx, curTime, null /* todo Actions proper type */, ctx.Trigger.Sequential, ai?.mutex, ActionContextLogger);
-                lastAction.LoopAction = null; // todo supposed to be a reference to this action
-                if (continuing == true)
-                {
-                    return;
-                }
+                loopContext.loopActionId = Id;
+                loopContext.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, InitExpression);
             }
+            else
+            {
+                continuing = true;
+            }
+            // Test the initial value before entering, without replacing the caller's context on failure.
+            if (LoopCondition.CheckCondition(loopContext, ActionContextLogger, loopContext) != true)
+                return false;
+            ctx = loopContext;
+
+            DateTime curTime = DateTime.Now;
+            ActionBase lastAction = ctx.Plugin.QueueActions(ctx, curTime, LoopActions, ctx.Trigger.Sequential, qa?.mutex, ActionContextLogger);
+            lastAction.LoopAction = this;
+
+            return continuing;
         }
 
         /// <summary>Copies loop conditions and child actions without sharing editable objects.</summary>

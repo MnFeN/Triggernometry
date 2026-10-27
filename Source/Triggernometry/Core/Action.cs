@@ -38,11 +38,7 @@ namespace Triggernometry.Core
 
         #region General properties
 
-        internal ActionOld NextAction { get; set; } = null;
 
-        /// <summary> 循环的父动作 </summary>
-        internal ActionOld LoopAction { get; set; } = null;
-        //internal Guid LoopContext { get; set; } = Guid.Empty;
 
         /// <summary>
         /// for queue controlling
@@ -288,150 +284,8 @@ namespace Triggernometry.Core
             Instance.UnfilteredAddToLog(level, message, this);
         }
 
-        private void ExecutionImplementation(QueuedAction qa, Context ctx)
-        {
-            try
-            {
-                if ((ctx.forceType & TriggerForceTypeEnum.SkipConditions) == 0 && !ctx.testByPlaceholder &&
-                    Condition?.Enabled == true && Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
-                {
-                    ctx.PushActionResult(0);
-                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", OrderNumber, ctx.Trigger?.LogName ?? "(null)"));
-                }
-                else
-                {
-                    ctx.PushActionResult(1);
-                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", GetDescription(ctx), Thread.CurrentThread.ManagedThreadId));
-
-                    if (ActionType == ActionTypeEnum.Loop)
-                    {
-                        ExecuteLoopAction(ref ctx, qa, out bool shouldReturn); // ctx might be changed here
-                        if (shouldReturn) return; // need to check: mutex should be released here?
-                    }
-                    else
-                    {
-                        ExecutionCore(qa, ctx);
-                    }
-                }
-
-                if (LoopAction != null)
-                {
-                    DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, LoopAction._LoopDelayExpression));
-                    Instance.QueueAction(ctx, ctx.Trigger, qa?.mutex, LoopAction, dt, false);
-                }
-                else if (NextAction != null)
-                {
-                    DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, NextAction.ExecutionDelayExpression));
-                    Instance.QueueAction(ctx, ctx.Trigger, qa?.mutex, NextAction, dt, false);
-                }
-                // Non-sequential actions release through the final queued action's ActionFinished.
-                else if (qa?.mutex != null && ctx.Trigger.Sequential)
-                {
-                    qa.mutex.Release(ctx);
-                    qa.mutex = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ActionType == ActionTypeEnum.NamedCallback)
-                {
-                    if (ex is TargetInvocationException tiex && tiex.InnerException != null)
-                        ex = tiex.InnerException;
-                }
-                string triggerPath = qa?.ctx?.Trigger?.FullPath ?? "(null)";
-                string actionDesc = "";
-                try { actionDesc = GetDescription(ctx); } catch { }
-                actionDesc = actionDesc.Length > 300 ? actionDesc.Substring(0, 297) + "..." : actionDesc;
-                bool showDetail = true; // _ActionType == ActionTypeEnum.ExecuteScript || _ActionType == ActionTypeEnum.NamedCallback || plug.cfg.DeveloperMode;
-                string detail = showDetail ? ex.FullMessage() : ""; // inner and stack
-                
-                AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/exception",
-                    "Action exception: {0}  \nIn action: {1}  \nIn trigger: {2}{3}",
-                    ex.Message, actionDesc, triggerPath, detail));
-            }
-        }
-
-        private void ExecuteLoopAction(ref Context ctx, QueuedAction qa, out bool shouldReturn)
-        {
-            shouldReturn = false;
-            var loopActionIdOld = ctx.loopActionId;
-
-            if (loopActionIdOld == Id)
-                ctx.loopIterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _LoopIncrExpression);
-
-            if (!LoopCondition.Enabled)
-                return;
-
-            bool continuing = false;
-            Context loopContext = ctx;
-            if (loopActionIdOld != Id)
-            {
-                continuing = loopActionIdOld == Guid.Empty;
-                loopContext = ctx.Duplicate();
-                if (loopActionIdOld != Guid.Empty && loopActionIdOld != Id)
-                {
-                    loopContext.id = Guid.NewGuid();
-                }
-                loopContext.loopActionId = Id;
-                loopContext.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, _LoopInitExpression);
-            }
-            else
-            {
-                continuing = true;
-            }
-            // Test the initial value before entering, without replacing the caller's context on failure.
-            if (LoopCondition.CheckCondition(loopContext, ActionContextLogger, loopContext) != true)
-                return;
-            ctx = loopContext;
-
-            DateTime curTime = DateTime.Now;
-            ActionOld lastAction = Instance.QueueActions(ctx, curTime, LoopActions, ctx.Trigger.Sequential, qa?.mutex, ActionContextLogger);
-            lastAction.LoopAction = this;
-
-            shouldReturn = continuing == true;
-        }
-
-        private void ExecutionCore(QueuedAction qa, Context ctx)
-        {
-            var newAction = ConvertToNewAction();
-            var ai = new ActionBase.ActionInstance(
-                qa?.when ?? default,
-                qa?.ordinal ?? default,
-                qa?.mutex,
-                newAction,
-                ctx,
-                qa?.releaseMutex ?? default);
-            newAction.ExecuteImplementation(ai);
-        }
-        
-        internal void Execute(QueuedAction qa, Context ctx)
-        {
-            if (qa != null)
-            {
-                lock (ctx.Plugin.ActionQueue) ctx.Plugin.ExecutingActions.Add(qa);
-            }
-            if (Asynchronous == true)
-            {
-                CancellationToken? ct = ctx.Plugin?.GetCancellationToken();
-                Task.Run(() =>
-                {
-                    try
-                    {
-                        ct?.ThrowIfCancellationRequested();
-                        ExecutionImplementation(qa, ctx);
-                    }
-                    finally 
-                    { 
-                        qa?.ActionFinished(); 
-                    }
-                });
-            }
-            else
-            {
-                ExecutionImplementation(qa, ctx);
-                qa?.ActionFinished();
-            }
-        }
+        // Legacy entry points use the typed executor; runtime triggers no longer store this model.
+        internal void Execute(ActionBase.ActionInstance ai, Context ctx) => ConvertToNewAction().Execute(ai, ctx);
 
         public void CopySettingsTo(ActionOld a)
         {

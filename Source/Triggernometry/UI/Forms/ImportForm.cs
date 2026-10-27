@@ -338,16 +338,16 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private bool IsActionTypeTrigger(Trigger trigger, Core.ActionOld.ActionTypeEnum actionType)
-            => trigger.Actions.Any(action => action.ActionType == actionType);
+        private bool IsActionTypeTrigger<TAction>(Trigger trigger) where TAction : ActionBase
+            => trigger.Actions.Any(action => action is TAction);
 
-        private bool HasActionTypeTrigger(Folder folder, Core.ActionOld.ActionTypeEnum actionType)
-            => folder.Triggers.Any(trigger => IsActionTypeTrigger(trigger, actionType)) ||
-               folder.Folders.Any(subfolder => HasActionTypeTrigger(subfolder, actionType));
+        private bool HasActionTypeTrigger<TAction>(Folder folder) where TAction : ActionBase
+            => folder.Triggers.Any(trigger => IsActionTypeTrigger<TAction>(trigger)) ||
+               folder.Folders.Any(subfolder => HasActionTypeTrigger<TAction>(subfolder));
 
-        private bool HasActionTypeTrigger(TriggernometryExport tex, Core.ActionOld.ActionTypeEnum actionType)
-            => tex.ExportedFolder != null ? HasActionTypeTrigger(tex.ExportedFolder, actionType)
-                                          : IsActionTypeTrigger(tex.ExportedTrigger, actionType);
+        private bool HasActionTypeTrigger<TAction>(TriggernometryExport tex) where TAction : ActionBase
+            => tex.ExportedFolder != null ? HasActionTypeTrigger<TAction>(tex.ExportedFolder)
+                                          : IsActionTypeTrigger<TAction>(tex.ExportedTrigger);
 
         private void TryImportExport(TriggernometryExport tex)
         {
@@ -360,13 +360,13 @@ namespace Triggernometry.UI.Forms
 
             List<string> warningComponents = new List<string>();
 
-            if (HasActionTypeTrigger(tex, Core.ActionOld.ActionTypeEnum.DiskFile))
+            if (HasActionTypeTrigger<ActionDiskOperation>(tex))
                 warningComponents.Add(I18n.Translate("internal/ImportForm/dangerDisk", "perform file operations"));
-            if (HasActionTypeTrigger(tex, Core.ActionOld.ActionTypeEnum.LaunchProcess))
+            if (HasActionTypeTrigger<ActionLaunchProcess>(tex))
                 warningComponents.Add(I18n.Translate("internal/ImportForm/dangerProc", "launch arbitrary processes"));
-            if (HasActionTypeTrigger(tex, Core.ActionOld.ActionTypeEnum.ExecuteScript))
+            if (HasActionTypeTrigger<ActionExecuteScript>(tex))
                 warningComponents.Add(I18n.Translate("internal/ImportForm/dangerScript", "execute arbitrary scripts"));
-            if (HasActionTypeTrigger(tex, Core.ActionOld.ActionTypeEnum.WindowMessage))
+            if (HasActionTypeTrigger<ActionWindowMessage>(tex))
                 warningComponents.Add(I18n.Translate("internal/ImportForm/dangerWmsg", "send arbitrary window messages"));
 
             if (warningComponents.Count > 0)
@@ -428,10 +428,10 @@ namespace Triggernometry.UI.Forms
                 tn.Tag = t;
                 tn.ImageIndex = (int)CustomControls.UserInterface.ImageIndices.Bolt;
                 tn.SelectedImageIndex = tn.ImageIndex;
-                if ((IsActionTypeTrigger(t, Core.ActionOld.ActionTypeEnum.DiskFile) ||
-                     IsActionTypeTrigger(t, Core.ActionOld.ActionTypeEnum.LaunchProcess) ||
-                     IsActionTypeTrigger(t, Core.ActionOld.ActionTypeEnum.ExecuteScript) ||
-                     IsActionTypeTrigger(t, Core.ActionOld.ActionTypeEnum.WindowMessage)) && !isRemote)
+                if ((IsActionTypeTrigger<ActionDiskOperation>(t) ||
+                     IsActionTypeTrigger<ActionLaunchProcess>(t) ||
+                     IsActionTypeTrigger<ActionExecuteScript>(t) ||
+                     IsActionTypeTrigger<ActionWindowMessage>(t)) && !isRemote)
                 {
                     tn.BackColor = Color.Yellow;
                 }
@@ -566,7 +566,7 @@ namespace Triggernometry.UI.Forms
             if (action != null)
             {
                 action.OrderNumber = 1;
-                t.Actions.Add(action.ConvertToOldAction());
+                t.Actions.Add(action);
             }
             return t;
         }
