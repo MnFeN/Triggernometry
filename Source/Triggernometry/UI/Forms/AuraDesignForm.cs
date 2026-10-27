@@ -31,7 +31,7 @@ namespace Triggernometry.UI.Forms
         const int ResizeThreshold = 10;
 
         internal AuraContainerForm.AuraTypeEnum AuraType { get; set; }
-        internal Core.ActionOld.TextAuraAlignmentEnum TextAlignment { get; set; }
+        internal Core.Actions.ActionOverlayText.TextAlignmentEnum TextAlignment { get; set; }
         internal Font AuraFont { get; set; }
 
         internal SolidBrush Brush = null;
@@ -166,31 +166,31 @@ namespace Triggernometry.UI.Forms
                     {
                         switch (TextAlignment)
                         {
-                            case Core.ActionOld.TextAuraAlignmentEnum.TopLeft:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopLeft:
                                 topLeftToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.ActionOld.TextAuraAlignmentEnum.TopCenter:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopCenter:
                                 topCenterToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.ActionOld.TextAuraAlignmentEnum.TopRight:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopRight:
                                 topRightToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.ActionOld.TextAuraAlignmentEnum.MiddleLeft:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleLeft:
                                 middleLeftToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.ActionOld.TextAuraAlignmentEnum.MiddleCenter:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleCenter:
                                 middleCenterToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.ActionOld.TextAuraAlignmentEnum.MiddleRight:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleRight:
                                 middleRightToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.ActionOld.TextAuraAlignmentEnum.BottomLeft:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomLeft:
                                 bottomLeftToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.ActionOld.TextAuraAlignmentEnum.BottomCenter:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomCenter:
                                 bottomCenterToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.ActionOld.TextAuraAlignmentEnum.BottomRight:
+                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomRight:
                                 bottomRightToolStripMenuItem.Checked = true;
                                 break;
                         }
@@ -216,7 +216,7 @@ namespace Triggernometry.UI.Forms
         {
             if (topLeftToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.TopLeft;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.TopLeft;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
                 middleLeftToolStripMenuItem.Checked = false;
@@ -233,7 +233,7 @@ namespace Triggernometry.UI.Forms
         {
             if (topCenterToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.TopCenter;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.TopCenter;
                 topLeftToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
                 middleLeftToolStripMenuItem.Checked = false;
@@ -250,7 +250,7 @@ namespace Triggernometry.UI.Forms
         {
             if (topRightToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.TopRight;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.TopRight;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 middleLeftToolStripMenuItem.Checked = false;
@@ -267,7 +267,7 @@ namespace Triggernometry.UI.Forms
         {
             if (middleLeftToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.MiddleLeft;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleLeft;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -284,7 +284,7 @@ namespace Triggernometry.UI.Forms
         {
             if (middleCenterToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.MiddleCenter;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleCenter;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -301,7 +301,7 @@ namespace Triggernometry.UI.Forms
         {
             if (middleRightToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.MiddleRight;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleRight;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -318,7 +318,7 @@ namespace Triggernometry.UI.Forms
         {
             if (bottomLeftToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.BottomLeft;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomLeft;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -335,7 +335,7 @@ namespace Triggernometry.UI.Forms
         {
             if (bottomCenterToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.BottomCenter;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomCenter;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -352,7 +352,7 @@ namespace Triggernometry.UI.Forms
         {
             if (bottomRightToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.ActionOld.TextAuraAlignmentEnum.BottomRight;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomRight;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -402,39 +402,39 @@ namespace Triggernometry.UI.Forms
                 Rectangle r = new Rectangle(ClientRectangle.Location, ClientRectangle.Size);
                 switch (TextAlignment)
                 {
-                    case Core.ActionOld.TextAuraAlignmentEnum.TopLeft:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Near;                        
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.TopCenter:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.TopRight:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.MiddleLeft:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.MiddleCenter:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.MiddleRight:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.BottomLeft:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.BottomCenter:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
-                    case Core.ActionOld.TextAuraAlignmentEnum.BottomRight:
+                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
