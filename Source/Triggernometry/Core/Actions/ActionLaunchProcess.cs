@@ -12,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// Launch process
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "LaunchProcess")]
+    [XmlRoot(ElementName = "ActionLaunchProcess")]
     public class ActionLaunchProcess : ActionBase
     {
 
@@ -42,7 +42,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Path")]
         public string Xml_Path
         {
-            get => XmlAttr.String(Path);
+            get => XmlAttr.String(Path, "", omitWhitespace: false);
             set => Path = value;
         }
 
@@ -56,7 +56,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Arguments")]
         public string Xml_Arguments
         {
-            get => XmlAttr.String(Arguments);
+            get => XmlAttr.String(Arguments, "", omitWhitespace: false);
             set => Arguments = value;
         }
 
@@ -70,7 +70,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("WorkingDirectory")]
         public string Xml_WorkingDirectory
         {
-            get => XmlAttr.String(WorkingDirectory);
+            get => XmlAttr.String(WorkingDirectory, "", omitWhitespace: false);
             set => WorkingDirectory = value;
         }
 

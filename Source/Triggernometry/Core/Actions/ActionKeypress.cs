@@ -15,7 +15,7 @@ namespace Triggernometry.Core.Actions
     /// Keypress operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Input)]
-    [XmlRoot(ElementName = "Keypress")]
+    [XmlRoot(ElementName = "ActionKeypress")]
     public class ActionKeypress : ActionBase
     {
 
@@ -64,7 +64,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Keypress")]
         public string Xml_Keypress
         {
-            get => XmlAttr.String(Keypress);
+            get => XmlAttr.String(Keypress, "", omitWhitespace: false);
             set => Keypress = value;
         }
 
@@ -78,7 +78,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Keycode")]
         public string Xml_Keycode
         {
-            get => XmlAttr.String(Keycode);
+            get => XmlAttr.String(Keycode, "", omitWhitespace: false);
             set => Keycode = value;
         }
 
@@ -92,7 +92,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("WindowTitle")]
         public string Xml_WindowTitle
         {
-            get => XmlAttr.String(WindowTitle);
+            get => XmlAttr.String(WindowTitle, "", omitWhitespace: false);
             set => WindowTitle = value;
         }
 
@@ -106,7 +106,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("ProcessId")]
         public string Xml_ProcessId
         {
-            get => XmlAttr.String(ProcessId);
+            get => XmlAttr.String(ProcessId, "", omitWhitespace: false);
             set => ProcessId = value;
         }
 

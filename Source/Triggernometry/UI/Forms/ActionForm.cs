@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
@@ -20,6 +21,7 @@ namespace Triggernometry.UI.Forms
     {
 
         private bool IsReadonly { get; set; } = false;
+        private ActionBase editedAction;
         private string EditorTempFn { get; set; }
         private Process ExtEditor { get; set; } = null;
 
@@ -75,7 +77,7 @@ namespace Triggernometry.UI.Forms
 
         }
 
-        public ActionForm(ActionOld action, Context uiContext, TreeView treeView, ImageList imageList)
+        public ActionForm(ActionBase action, Context uiContext, TreeView treeView, ImageList imageList)
         {
             InitializeComponent();
             expAuraImage.textBox1.TextChanged += TextBox1_TextChanged;
@@ -391,7 +393,14 @@ namespace Triggernometry.UI.Forms
             txtTextAuraFont.Text = desc;
         }
 
-        internal void SettingsFromAction(ActionOld action)
+        internal void SettingsFromAction(ActionBase action)
+        {
+            editedAction = action;
+            SettingsFromActionOld(action.ConvertToOldAction());
+        }
+
+        /// <summary>Maps legacy fields to the existing controls.</summary>
+        private void SettingsFromActionOld(ActionOld action)
         {
             if (action == null)
                 throw new NullReferenceException(nameof(action) + "cannot be null.");
@@ -648,16 +657,8 @@ namespace Triggernometry.UI.Forms
                 cx.Enabled = false;
             }
             cndLoopCondition.ConditionToEdit = cx;
-            loopActionViewer.Actions = new List<ActionOld>();
-            var ix = from tx in action.LoopActions
-                     orderby tx.OrderNumber ascending
-                     select tx;
-            foreach (ActionOld ax in ix)
-            {
-                ActionOld b = new ActionOld();
-                ax.CopySettingsTo(b);
-                loopActionViewer.Actions.Add(b);
-            }
+            loopActionViewer.Actions = action.LoopActions.OrderBy(child => child.OrderNumber)
+                .Select(child => child.ConvertToNewAction()).ToList();
             loopActionViewer.RefreshDgv();
             expLoopIterationDelay.Expression = action._LoopDelayExpression;
             expLoopIncr.Expression = action._LoopIncrExpression;
@@ -681,7 +682,19 @@ namespace Triggernometry.UI.Forms
             chkProcessLog_CheckedChanged(null, null);
         }
 
-        internal void SettingsToAction(ActionOld a)
+        /// <summary>Creates the selected typed action without modifying the edited object.</summary>
+        internal ActionBase SettingsToAction()
+        {
+            // Reuse the existing field mapping while returning only the selected action type.
+            ActionOld legacy = editedAction.ConvertToOldAction();
+            SettingsToLegacyAction(legacy);
+            ActionBase action = legacy.ConvertToNewAction();
+            ActionBase.RebuildParentage(new[] { action }, ParentTrigger);
+            return action;
+        }
+
+        /// <summary>Reads the existing controls into a temporary legacy action for conversion.</summary>
+        private void SettingsToLegacyAction(ActionOld a)
         {
             a.ParentTrigger = ParentTrigger;
             a.ActionType = (ActionTypeEnum)cbxActionType.SelectedIndex;
@@ -922,7 +935,7 @@ namespace Triggernometry.UI.Forms
             var ix = from tx in loopActionViewer.Actions
                      orderby tx.OrderNumber ascending
                      select tx;
-            a.LoopActions.AddRange(ix);
+            a.LoopActions.AddRange(ix.Select(action => action.ConvertToOldAction()));
             ActionOld.RebuildParentage(new[] { a }, ParentTrigger);
             a.LoopDelayExpression = expLoopIterationDelay.Expression;
             a.LoopIncrExpression = expLoopIncr.Expression;
@@ -948,8 +961,7 @@ namespace Triggernometry.UI.Forms
 
         private void TestAction(bool liveValues, bool ignoreConditions = false)
         {
-            ActionOld a = new ActionOld();
-            SettingsToAction(a);
+            ActionOld a = SettingsToAction().ConvertToOldAction();
             if (ignoreConditions) a.Condition = new ConditionGroup();
 
             Context ctx = new Context(a.ParentTrigger);
@@ -1411,9 +1423,8 @@ namespace Triggernometry.UI.Forms
 
         private void btnHide_Click(object sender, EventArgs e)
         {
-            var a = new ActionOld();
+            var a = SettingsToAction().ConvertToOldAction();
             Context ctx = new Context(ParentTrigger) { testByPlaceholder = true };
-            SettingsToAction(a);
             a.ActionType = ActionTypeEnum.Aura;
             a._AuraOp = AuraOpEnum.DeactivateAura;
             a.Execute(null, ctx);
@@ -1421,9 +1432,8 @@ namespace Triggernometry.UI.Forms
 
         private void btnTextAuraHide_Click(object sender, EventArgs e)
         {
-            var a = new ActionOld();
+            var a = SettingsToAction().ConvertToOldAction();
             Context ctx = new Context(ParentTrigger) { testByPlaceholder = true };
-            SettingsToAction(a);
             a.ActionType = ActionTypeEnum.TextAura;
             a._AuraOp = AuraOpEnum.DeactivateAura;
             a.Execute(null, ctx);

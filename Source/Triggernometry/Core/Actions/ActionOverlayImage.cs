@@ -11,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// Image overlay operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Overlay)]
-    [XmlRoot(ElementName = "OverlayImage")]
+    [XmlRoot(ElementName = "ActionOverlayImage")]
     public class ActionOverlayImage : ActionBase
     {
 
@@ -84,7 +84,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Name")]
         public string Xml_Name
         {
-            get => XmlAttr.String(Name);
+            get => XmlAttr.String(Name, "", omitWhitespace: false);
             set => Name = value;
         }
 
@@ -98,7 +98,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Filename")]
         public string Xml_Filename
         {
-            get => XmlAttr.String(Filename);
+            get => XmlAttr.String(Filename, "", omitWhitespace: false);
             set => Filename = value;
         }
 
@@ -112,7 +112,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("XIniExpression")]
         public string Xml_XIniExpression
         {
-            get => XmlAttr.String(XIniExpression);
+            get => XmlAttr.String(XIniExpression, "", omitWhitespace: false);
             set => XIniExpression = value;
         }
 
@@ -126,7 +126,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("YIniExpression")]
         public string Xml_YIniExpression
         {
-            get => XmlAttr.String(YIniExpression);
+            get => XmlAttr.String(YIniExpression, "", omitWhitespace: false);
             set => YIniExpression = value;
         }
 
@@ -140,7 +140,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("WIniExpression")]
         public string Xml_WIniExpression
         {
-            get => XmlAttr.String(WIniExpression);
+            get => XmlAttr.String(WIniExpression, "", omitWhitespace: false);
             set => WIniExpression = value;
         }
 
@@ -154,7 +154,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("HIniExpression")]
         public string Xml_HIniExpression
         {
-            get => XmlAttr.String(HIniExpression);
+            get => XmlAttr.String(HIniExpression, "", omitWhitespace: false);
             set => HIniExpression = value;
         }
 
@@ -168,7 +168,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("OIniExpression")]
         public string Xml_OIniExpression
         {
-            get => XmlAttr.String(OIniExpression);
+            get => XmlAttr.String(OIniExpression, "", omitWhitespace: false);
             set => OIniExpression = value;
         }
 
@@ -182,7 +182,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("XTickExpression")]
         public string Xml_XTickExpression
         {
-            get => XmlAttr.String(XTickExpression);
+            get => XmlAttr.String(XTickExpression, "", omitWhitespace: false);
             set => XTickExpression = value;
         }
 
@@ -196,7 +196,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("YTickExpression")]
         public string Xml_YTickExpression
         {
-            get => XmlAttr.String(YTickExpression);
+            get => XmlAttr.String(YTickExpression, "", omitWhitespace: false);
             set => YTickExpression = value;
         }
 
@@ -210,7 +210,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("WTickExpression")]
         public string Xml_WTickExpression
         {
-            get => XmlAttr.String(WTickExpression);
+            get => XmlAttr.String(WTickExpression, "", omitWhitespace: false);
             set => WTickExpression = value;
         }
 
@@ -224,7 +224,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("HTickExpression")]
         public string Xml_HTickExpression
         {
-            get => XmlAttr.String(HTickExpression);
+            get => XmlAttr.String(HTickExpression, "", omitWhitespace: false);
             set => HTickExpression = value;
         }
 
@@ -238,7 +238,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("OTickExpression")]
         public string Xml_OTickExpression
         {
-            get => XmlAttr.String(OTickExpression);
+            get => XmlAttr.String(OTickExpression, "", omitWhitespace: false);
             set => OTickExpression = value;
         }
 
@@ -252,7 +252,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("TTLTickExpression")]
         public string Xml_TTLTickExpression
         {
-            get => XmlAttr.String(TTLTickExpression);
+            get => XmlAttr.String(TTLTickExpression, "", omitWhitespace: false);
             set => TTLTickExpression = value;
         }
 

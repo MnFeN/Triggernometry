@@ -14,7 +14,7 @@ namespace Triggernometry.Core.Actions
     /// JSON remote request
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Networking)]
-    [XmlRoot(ElementName = "JsonRequest")]
+    [XmlRoot(ElementName = "ActionJsonRequest")]
     public class ActionJsonRequest : ActionBase
     {
 
@@ -38,7 +38,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Endpoint")]
         public string Xml_Endpoint
         {
-            get => XmlAttr.String(Endpoint);
+            get => XmlAttr.String(Endpoint, "", omitWhitespace: false);
             set => Endpoint = value;
         }
 
@@ -66,7 +66,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Payload")]
         public string Xml_Payload
         {
-            get => XmlAttr.String(Payload);
+            get => XmlAttr.String(Payload, "", omitWhitespace: false);
             set => Payload = value;
         }
 
@@ -80,7 +80,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Headers")]
         public string Xml_Headers
         {
-            get => XmlAttr.String(Headers);
+            get => XmlAttr.String(Headers, "", omitWhitespace: false);
             set => Headers = value;
         }
 
@@ -94,7 +94,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("ResultVariable")]
         public string Xml_ResultVariable
         {
-            get => XmlAttr.String(ResultVariable);
+            get => XmlAttr.String(ResultVariable, "", omitWhitespace: false);
             set => ResultVariable = value;
         }
 
@@ -108,7 +108,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("FiringExpression")]
         public string Xml_FiringExpression
         {
-            get => XmlAttr.String(FiringExpression);
+            get => XmlAttr.String(FiringExpression, "", omitWhitespace: false);
             set => FiringExpression = value;
         }
 

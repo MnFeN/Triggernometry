@@ -14,7 +14,7 @@ namespace Triggernometry.Core.Actions
     /// Loop
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "Loop")]
+    [XmlRoot(ElementName = "ActionLoop")]
     public class ActionLoop : ActionBase
     {
 
@@ -27,11 +27,6 @@ namespace Triggernometry.Core.Actions
             return LoopCondition.Children.Count > 0;
         }
 
-        private bool ShouldSerializeLoopActions()
-        {
-            return LoopActions.Count > 0;
-        }
-
         /// <summary>
         /// Condition that is checked before every iterator whether loop should continue or not
         /// </summary>
@@ -40,7 +35,17 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Actions within the loop
         /// </summary>
+        [XmlIgnore]
         public List<ActionBase> LoopActions = new List<ActionBase>();
+
+        [XmlElement("LoopActions")]
+        public ActionXmlCollection Xml_LoopActions
+        {
+            get => new ActionXmlCollection(LoopActions);
+            set => LoopActions = value.Actions;
+        }
+
+        public bool ShouldSerializeXml_LoopActions() => LoopActions.Count > 0;
 
         /// <summary>
         /// Delay between every loop iteration
@@ -52,7 +57,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("DelayExpression")]
         public string Xml_DelayExpression
         {
-            get => XmlAttr.String(DelayExpression);
+            get => XmlAttr.String(DelayExpression, "", omitWhitespace: false);
             set => DelayExpression = value;
         }
 
@@ -66,7 +71,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("InitExpression")]
         public string Xml_InitExpression
         {
-            get => XmlAttr.String(InitExpression, "0");
+            get => XmlAttr.String(InitExpression, "0", omitWhitespace: false);
             set => InitExpression = value;
         }
 
@@ -80,7 +85,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("IncrExpression")]
         public string Xml_IncrExpression
         {
-            get => XmlAttr.String(IncrExpression, "1");
+            get => XmlAttr.String(IncrExpression, "1", omitWhitespace: false);
             set => IncrExpression = value;
         }
 

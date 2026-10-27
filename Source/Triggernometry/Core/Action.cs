@@ -27,70 +27,12 @@ namespace Triggernometry.Core
             [XmlArrayItem("Action")]
             public List<ActionOld> Actions { get; set; } = new List<ActionOld>();
 
-            /// <summary>
-            /// Serializes a list of <see cref="ActionOld"/> into an XML string. <br />
-            /// Multiple <see cref="ActionOld"/>s are wrapped in a <see cref="ActionBundle"/>; <br />
-            /// A single <see cref="ActionOld"/> is serialized as a single <see cref="ActionOld"/>. <br />
-            /// Returns an empty string for null or empty input.
-            /// </summary>
-            internal static string ActionsToXml(List<ActionOld> actions)
-            {
-                if (actions == null || actions.Count == 0) return string.Empty;
+            // Keep legacy callers at the same XML boundary as the typed editor.
+            internal static string ActionsToXml(List<ActionOld> actions) =>
+                ActionBase.ActionBundle.ActionsToXml(actions?.Select(action => action.ConvertToNewAction()).ToList());
 
-                object toSerialize;
-                XmlSerializer xs;
-
-                if (actions.Count > 1)
-                {
-                    var ab = new ActionBundle();
-                    ab.Actions.AddRange(actions);
-                    ab.Actions.Sort((a, b) => a.OrderNumber.CompareTo(b.OrderNumber));
-                    toSerialize = ab;
-                    xs = new XmlSerializer(typeof(ActionBundle));
-                }
-                else // single Action
-                {
-                    toSerialize = actions[0];
-                    xs = new XmlSerializer(typeof(ActionOld));
-                }
-
-                var ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                using (var sw = new StringWriter())
-                {
-                    xs.Serialize(sw, toSerialize, ns);
-                    return sw.ToString();
-                }
-            }
-
-            /// <summary>
-            /// Deserializes XML containing either an <see cref="ActionBundle"/> or a single <see cref="ActionOld"/>, <br />
-            /// and returns a <see cref="List{T}"/> of <see cref="ActionOld"/> in its original order.
-            /// </summary>
-            internal static List<ActionOld> XmlToActions(string xmlData)
-            {
-                var result = new List<ActionOld>();
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xmlData);
-                using (var sr = new StringReader(xmlData))
-                {
-                    if (xmlDoc.DocumentElement.Name == "ActionBundle")
-                    {
-                        var bundleSerializer = new XmlSerializer(typeof(ActionBundle));
-                        var bundle = (ActionBundle)bundleSerializer.Deserialize(sr);
-                        if (bundle?.Actions != null)
-                            result.AddRange(bundle.Actions);
-                    }
-                    else // single Action
-                    {
-                        var actionSerializer = new XmlSerializer(typeof(ActionOld));
-                        var a = (ActionOld)actionSerializer.Deserialize(sr);
-                        if (a != null)
-                            result.Add(a);
-                    }
-                }
-                return result;
-            }
+            internal static List<ActionOld> XmlToActions(string text) =>
+                ActionBase.ActionBundle.XmlToActions(text).Select(action => action.ConvertToOldAction()).ToList();
 
         }
 

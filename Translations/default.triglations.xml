@@ -1188,6 +1188,7 @@
     <TranslationEntry Key="internal/Action/trigdisable" Translation="Trigger '{0}' disabled" />
     <TranslationEntry Key="internal/Action/trigenable" Translation="Trigger '{0}' enabled" />
     <TranslationEntry Key="internal/Action/unknowntype" Translation="Unknown ActionType: {0}" />
+    <TranslationEntry Key="internal/Action/unknownxmlelement" Translation="Unknown action XML element '{0}'." />
     <TranslationEntry Key="internal/Action/waitingprocexit" Translation="Waiting for process to exit" />
     <TranslationEntry Key="internal/Action/warndiscordtrunc" Translation="Discord message too long, capping to {0}" />
     <TranslationEntry Key="internal/ActionForm/confirmkeypress" Translation="The keypresses you defined will be sent in two seconds after you hit OK, to allow you to change to the window you want to send the keypresses to." />

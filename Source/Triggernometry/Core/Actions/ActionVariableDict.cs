@@ -18,7 +18,7 @@ namespace Triggernometry.Core.Actions
     /// Dictionary variable operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Variable)]
-    [XmlRoot(ElementName = "VariableDict")]
+    [XmlRoot(ElementName = "ActionVariableDict")]
     public class ActionVariableDict : ActionBase
     {
 
@@ -111,7 +111,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Name")]
         public string Xml_Name
         {
-            get => XmlAttr.String(Name);
+            get => XmlAttr.String(Name, "", omitWhitespace: false);
             set => Name = value;
         }
 
@@ -125,7 +125,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("TargetVariable")]
         public string Xml_TargetVariable
         {
-            get => XmlAttr.String(TargetVariable);
+            get => XmlAttr.String(TargetVariable, "", omitWhitespace: false);
             set => TargetVariable = value;
         }
 
@@ -136,7 +136,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("VariableLength")]
         public string Xml_VariableLength
         {
-            get => XmlAttr.String(VariableLength);
+            get => XmlAttr.String(VariableLength, "", omitWhitespace: false);
             set => VariableLength = value;
         }
 
@@ -150,7 +150,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Key")]
         public string Xml_Key
         {
-            get => XmlAttr.String(Key);
+            get => XmlAttr.String(Key, "", omitWhitespace: false);
             set => Key = value;
         }
 
@@ -164,7 +164,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Value")]
         public string Xml_Value
         {
-            get => XmlAttr.String(Value);
+            get => XmlAttr.String(Value, "", omitWhitespace: false);
             set => Value = value;
         }
 

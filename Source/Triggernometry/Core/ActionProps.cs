@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Conditions;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core
@@ -1668,7 +1670,17 @@ namespace Triggernometry.Core
             return LoopActions.Count > 0;
         }
 
+        [XmlIgnore]
         public List<ActionOld> LoopActions = new List<ActionOld>();
+
+        [XmlElement("LoopActions")]
+        public ActionXmlCollection Xml_LoopActions
+        {
+            get => new ActionXmlCollection(LoopActions.Select(action => action.ConvertToNewAction()).ToList());
+            set => LoopActions = value.Actions.Select(action => action.ConvertToOldAction()).ToList();
+        }
+
+        public bool ShouldSerializeXml_LoopActions() => ShouldSerializeLoopActions();
 
         internal string _LoopDelayExpression = "";
         [XmlAttribute]

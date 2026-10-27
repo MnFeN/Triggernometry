@@ -14,7 +14,7 @@ namespace Triggernometry.Core.Actions
     /// Trigger operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "TriggerOperation")]
+    [XmlRoot(ElementName = "ActionTriggerOperation")]
     public class ActionTriggerOperation : ActionBase
     {
 
@@ -154,7 +154,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Text")]
         public string Xml_Text
         {
-            get => XmlAttr.String(Text);
+            get => XmlAttr.String(Text, "", omitWhitespace: false);
             set => Text = value;
         }
 
@@ -168,7 +168,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Zone")]
         public string Xml_Zone
         {
-            get => XmlAttr.String(Zone);
+            get => XmlAttr.String(Zone, "", omitWhitespace: false);
             set => Zone = value;
         }
 
@@ -182,7 +182,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("TagRegex")]
         public string Xml_TagRegex
         {
-            get => XmlAttr.String(TagRegex);
+            get => XmlAttr.String(TagRegex, "", omitWhitespace: false);
             set => TagRegex = value;
         }
 

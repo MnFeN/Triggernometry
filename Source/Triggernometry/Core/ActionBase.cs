@@ -254,74 +254,8 @@ namespace Triggernometry.Core
 
         public class ActionBundle
         {
-            [XmlArrayItem("Action")]
-            public List<ActionOld> Actions { get; set; } = new List<ActionOld>();
-
-            /// <summary>
-            /// Serializes a list of <see cref="ActionOld"/> into an XML string. <br />
-            /// Multiple <see cref="ActionOld"/>s are wrapped in a <see cref="ActionBundle"/>; <br />
-            /// A single <see cref="ActionOld"/> is serialized as a single <see cref="ActionOld"/>. <br />
-            /// Returns an empty string for null or empty input.
-            /// </summary>
-            internal static string ActionsToXml(List<ActionOld> actions)
-            {
-                if (actions == null || actions.Count == 0) return string.Empty;
-
-                object toSerialize;
-                XmlSerializer xs;
-
-                if (actions.Count > 1)
-                {
-                    var ab = new ActionBundle();
-                    ab.Actions.AddRange(actions);
-                    ab.Actions.Sort((a, b) => a.OrderNumber.CompareTo(b.OrderNumber));
-                    toSerialize = ab;
-                    xs = new XmlSerializer(typeof(ActionBundle));
-                }
-                else // single Action
-                {
-                    toSerialize = actions[0];
-                    xs = new XmlSerializer(typeof(ActionOld));
-                }
-
-                var ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                using (var sw = new StringWriter())
-                {
-                    xs.Serialize(sw, toSerialize, ns);
-                    return sw.ToString();
-                }
-            }
-
-            /// <summary>
-            /// Deserializes XML containing either an <see cref="ActionBundle"/> or a single <see cref="ActionOld"/>, <br />
-            /// and returns a <see cref="List{Action}"/> of <see cref="ActionOld"/> in its original order.
-            /// </summary>
-            internal static List<ActionOld> XmlToActions(string xmlData)
-            {
-                var result = new List<ActionOld>();
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xmlData);
-                using (var sr = new StringReader(xmlData))
-                {
-                    if (xmlDoc.DocumentElement.Name == "ActionBundle")
-                    {
-                        var bundleSerializer = new XmlSerializer(typeof(ActionBundle));
-                        var bundle = (ActionBundle)bundleSerializer.Deserialize(sr);
-                        if (bundle?.Actions != null)
-                            result.AddRange(bundle.Actions);
-                    }
-                    else // single Action
-                    {
-                        var actionSerializer = new XmlSerializer(typeof(ActionOld));
-                        var a = (ActionOld)actionSerializer.Deserialize(sr);
-                        if (a != null)
-                            result.Add(a);
-                    }
-                }
-                return result;
-            }
-
+            internal static string ActionsToXml(List<ActionBase> actions) => ActionXmlCollection.ToXml(actions);
+            internal static List<ActionBase> XmlToActions(string text) => ActionXmlCollection.FromXml(text);
         }
 
         internal ActionOld NextAction { get; set; } = null;
@@ -359,7 +293,7 @@ namespace Triggernometry.Core
         [XmlAttribute("ExecutionDelayExpression")]
         public string Xml_ExecutionDelayExpression
         {
-            get => XmlAttr.String(ExecutionDelayExpression, "0");
+            get => XmlAttr.String(ExecutionDelayExpression, "0", omitWhitespace: false);
             set => ExecutionDelayExpression = value;
         }
 
@@ -424,7 +358,7 @@ namespace Triggernometry.Core
         [XmlAttribute("Description")]
         public string Xml_Description
         {
-            get => XmlAttr.String(Description);
+            get => XmlAttr.String(Description, "", omitWhitespace: false);
             set => Description = value;
         }
 
@@ -436,7 +370,7 @@ namespace Triggernometry.Core
         [XmlAttribute("DescBgColor")]
         public string Xml_DescBgColor
         {
-            get => XmlAttr.String(DescBgColor);
+            get => XmlAttr.String(DescBgColor, "", omitWhitespace: false);
             set => DescBgColor = value;
         }
 
@@ -448,7 +382,7 @@ namespace Triggernometry.Core
         [XmlAttribute("DescTextColor")]
         public string Xml_DescTextColor
         {
-            get => XmlAttr.String(DescTextColor);
+            get => XmlAttr.String(DescTextColor, "", omitWhitespace: false);
             set => DescTextColor = value;
         }
 
@@ -473,7 +407,7 @@ namespace Triggernometry.Core
         [XmlAttribute("Tag")]
         public string Xml_Tag
         {
-            get => XmlAttr.String(Tag);
+            get => XmlAttr.String(Tag, null, omitWhitespace: false);
             set => Tag = value;
         }
 

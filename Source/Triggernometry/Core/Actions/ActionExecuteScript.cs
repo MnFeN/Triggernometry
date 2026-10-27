@@ -11,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// Script execution
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "ExecuteScript")]
+    [XmlRoot(ElementName = "ActionExecuteScript")]
     public class ActionExecuteScript : ActionBase
     {
 
@@ -27,7 +27,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Assemblies")]
         public string Xml_Assemblies
         {
-            get => XmlAttr.String(Assemblies);
+            get => XmlAttr.String(Assemblies, "", omitWhitespace: false);
             set => Assemblies = value;
         }
 
@@ -41,7 +41,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Script")]
         public string Xml_Script
         {
-            get => XmlAttr.String(Script);
+            get => XmlAttr.String(Script, "", omitWhitespace: false);
             set => Script = value;
         }
 

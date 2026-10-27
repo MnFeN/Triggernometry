@@ -13,7 +13,7 @@ namespace Triggernometry.Core.Actions
     /// LiveSplit remote control operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
-    [XmlRoot(ElementName = "LiveSplitControl")]
+    [XmlRoot(ElementName = "ActionLiveSplitControl")]
     public class ActionLiveSplitControl : ActionBase
     {
 
@@ -59,7 +59,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("CustomPayload")]
         public string Xml_CustomPayload
         {
-            get => /*_Operation != OperationEnum.CustomPayload ? null :*/ XmlAttr.String(CustomPayload);
+            get => XmlAttr.String(CustomPayload, "", omitWhitespace: false);
             set => CustomPayload = value;
         }
 

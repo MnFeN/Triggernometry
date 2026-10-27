@@ -1188,6 +1188,7 @@
     <TranslationEntry Key="internal/Action/trigdisable" Translation="触发器 ({0}) 已停用" />
     <TranslationEntry Key="internal/Action/trigenable" Translation="触发器 ({0}) 已启用" />
     <TranslationEntry Key="internal/Action/unknowntype" Translation="未知的 ActionType：{0}" />
+    <TranslationEntry Key="internal/Action/unknownxmlelement" Translation="未知的动作 XML 元素“{0}”。" />
     <TranslationEntry Key="internal/Action/waitingprocexit" Translation="等待进程退出" />
     <TranslationEntry Key="internal/Action/warndiscordtrunc" Translation="Discord 聊天消息过长，上限为 {0}" />
     <TranslationEntry Key="internal/ActionForm/confirmkeypress" Translation="将在 2 秒后发送按键，以便将光标切换到合适的测试输入位置。" />

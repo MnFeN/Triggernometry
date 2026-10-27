@@ -10,7 +10,7 @@ namespace Triggernometry.Core.Actions
     /// Named callback invocation
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
-    [XmlRoot(ElementName = "NamedCallback")]
+    [XmlRoot(ElementName = "ActionNamedCallback")]
     public class ActionNamedCallback : ActionBase
     {
 
@@ -26,7 +26,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Name")]
         public string Xml_Name
         {
-            get => XmlAttr.String(Name);
+            get => XmlAttr.String(Name, "", omitWhitespace: false);
             set => Name = value;
         }
 
@@ -40,7 +40,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Parameter")]
         public string Xml_Parameter
         {
-            get => XmlAttr.String(Parameter);
+            get => XmlAttr.String(Parameter, "", omitWhitespace: false);
             set => Parameter = value;
         }
 

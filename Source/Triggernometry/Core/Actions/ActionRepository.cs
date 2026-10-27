@@ -11,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// Remote repository operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "Repository")]
+    [XmlRoot(ElementName = "ActionRepository")]
     public class ActionRepository : ActionBase
     {
 

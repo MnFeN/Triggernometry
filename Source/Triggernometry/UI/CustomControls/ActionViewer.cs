@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 using Triggernometry.UI.Forms;
@@ -21,10 +22,10 @@ namespace Triggernometry.UI.CustomControls
         private Trigger Trigger => UiContext?.Trigger;
         private RealPlugin Plugin => UiContext?.Plugin;
 
-        internal List<ActionOld> Actions { get; set; } = new List<ActionOld>();
+        internal List<ActionBase> Actions { get; set; } = new List<ActionBase>();
         internal ImageList Images { get; set; }
         internal TreeView TreeView { get; set; }
-        internal List<ActionOld> PrevActions { get; set; }
+        internal List<ActionBase> PrevActions { get; set; }
         internal List<int> PrevSelectedIndices { get; set; }
         private static ConditionGroup copiedCondition;
 
@@ -69,7 +70,7 @@ namespace Triggernometry.UI.CustomControls
             btnActionBottom.Enabled = allowMoveAndRemove;
         }
 
-        internal List<Core.ActionOld> SelectedActions()
+        internal List<Core.ActionBase> SelectedActions()
         {
             return dgvActions.SelectedRows
                              .Cast<DataGridViewRow>()
@@ -103,7 +104,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void btnAddAction_Click(object sender, EventArgs e)
         {
-            var a = new ActionOld();
+            ActionBase a = new ActionBeep();
             using (ActionForm af = new ActionForm(a, UiContext, TreeView, Images))
             {
                 if (IsReadonly == true)
@@ -114,7 +115,7 @@ namespace Triggernometry.UI.CustomControls
                 af.btnOk.Text = I18n.Translate("internal/TriggerForm/add", "Add");                
                 if (af.ShowDialog() == DialogResult.OK)
                 {
-                    af.SettingsToAction(a);
+                    a = af.SettingsToAction();
                     a.Enabled = true;
                     int insertIndex = (dgvActions.Rows.Count > 0 && dgvActions.SelectedRows.Count > 0) ? (dgvActions.SelectedRows[0].Index + 1) : dgvActions.Rows.Count;
                     Actions.Insert(insertIndex, a);
@@ -133,7 +134,6 @@ namespace Triggernometry.UI.CustomControls
             if (dgvActions.SelectedRows.Count == 0) { return; }
             int rowIndex = dgvActions.SelectedRows[0].Index;
             if (rowIndex < 0 || rowIndex >= Actions.Count ) { return; }
-            Context ctx = new Context(UiContext.Trigger);
             var action = Actions[rowIndex];
             using (ActionForm af = new ActionForm(action, UiContext, TreeView, Images))
             {
@@ -141,12 +141,12 @@ namespace Triggernometry.UI.CustomControls
                 {
                     af.SetReadOnly();
                 }
-                af.Text = I18n.Translate("internal/TriggerForm/editaction", "Edit action '{0}'", action.GetDescription(ctx));
+                af.Text = I18n.Translate("internal/TriggerForm/editaction", "Edit action '{0}'", action.Describe());
                 af.btnOk.Text = I18n.Translate("internal/TriggerForm/savechanges", "Save changes");
                 if (af.ShowDialog() == DialogResult.OK)
                 {
                     StoreActions();
-                    af.SettingsToAction(action);
+                    Actions[rowIndex] = af.SettingsToAction();
                     dgvActions.Refresh();
                     OnActionsUpdated();
                 }
@@ -253,12 +253,12 @@ namespace Triggernometry.UI.CustomControls
             {
                 case DialogResult.Yes:
                     StoreActions();
-                    foreach (Core.ActionOld a in SelectedActions())
+                    foreach (Core.ActionBase a in SelectedActions())
                     {
                         Actions.Remove(a);
-                        List<Core.ActionOld> px = new List<Core.ActionOld>();
+                        List<Core.ActionBase> px = new List<Core.ActionBase>();
                         px.AddRange(from ax in Actions where ax.OrderNumber > a.OrderNumber select ax);
-                        foreach (Core.ActionOld aaa in px)
+                        foreach (Core.ActionBase aaa in px)
                         {
                             aaa.OrderNumber--;
                         }
@@ -295,13 +295,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void StoreActions()
         {
-            PrevActions = new List<Core.ActionOld>();
-            foreach (var originalAction in Actions)
-            {
-                Core.ActionOld copiedAction = new Core.ActionOld();
-                originalAction.CopySettingsTo(copiedAction);
-                PrevActions.Add(copiedAction);
-            }
+            PrevActions = Actions.Select(action => action.Copy()).ToList();
 
             PrevSelectedIndices = dgvActions.SelectedRows.Cast<DataGridViewRow>()
                 .Select(row => row.Index).ToList();
@@ -320,7 +314,7 @@ namespace Triggernometry.UI.CustomControls
                     e.Value = Actions[e.RowIndex].Enabled;
                     break;
                 case 1:
-                    e.Value = Actions[e.RowIndex].GetDescription(UiContext);
+                    e.Value = Actions[e.RowIndex].Describe();
                     break;
             }
         }
@@ -331,7 +325,7 @@ namespace Triggernometry.UI.CustomControls
             {
                 return;
             }
-            Core.ActionOld a = Actions[e.RowIndex];
+            Core.ActionBase a = Actions[e.RowIndex];
 
             // set a warning color when a delay (not zero) is hidden under the description
             string delay = "0" + a.ExecutionDelayExpression.Trim();
@@ -359,7 +353,7 @@ namespace Triggernometry.UI.CustomControls
                 catch { textColor = Color.Empty; }
 
                 // placeholder / normal color
-                if (a.ActionType == Core.ActionOld.ActionTypeEnum.Placeholder)
+                if (a is ActionPlaceholder)
                 {
                     e.CellStyle.BackColor = (bgColor != Color.Empty) ? bgColor : SystemColors.InactiveCaption;
                     e.CellStyle.ForeColor = (textColor != Color.Empty) ? textColor : SystemColors.InactiveCaptionText;
@@ -408,7 +402,7 @@ namespace Triggernometry.UI.CustomControls
                 if (dgvActions.SelectedRows.Count > 0)
                 {
                     var selectedActions = SelectedActions();
-                    var xmlData = Core.ActionOld.ActionBundle.ActionsToXml(selectedActions);
+                    var xmlData = Core.ActionBase.ActionBundle.ActionsToXml(selectedActions);
                     System.Windows.Forms.Clipboard.SetText(xmlData);
                 }
             }
@@ -427,16 +421,21 @@ namespace Triggernometry.UI.CustomControls
             {
                 return;
             }
+            PasteActions(System.Windows.Forms.Clipboard.GetText(TextDataFormat.UnicodeText));
+        }
+
+        private void PasteActions(string data)
+        {
+            if (IsReadonly) return;
             StoreActions();
-            string data = System.Windows.Forms.Clipboard.GetText(TextDataFormat.UnicodeText);
             try
             {
                 // Parse the XML and collect the actions into a list
-                List<Core.ActionOld> pastedActions = Core.ActionOld.ActionBundle.XmlToActions(data);
+                List<Core.ActionBase> pastedActions = Core.ActionBase.ActionBundle.XmlToActions(data);
                 if ((pastedActions?.Count ?? 0) == 0) return;
 
                 // Set ParentTrigger for all pasted actions
-                Core.ActionOld.RebuildParentage(pastedActions, Trigger);
+                Core.ActionBase.RebuildParentage(pastedActions, Trigger);
 
                 // Decide insert index:
                 // If there are selected rows: insert after the last selected row
@@ -478,9 +477,9 @@ namespace Triggernometry.UI.CustomControls
         public List<string> GetActionDescriptions()
         {
             List<string> descriptions = new List<string>();
-            foreach (Core.ActionOld action in Actions)
+            foreach (Core.ActionBase action in Actions)
             {
-                descriptions.Add(action.GetDescription(UiContext));
+                descriptions.Add(action.Describe());
             }
             return descriptions;
         }
@@ -557,11 +556,10 @@ namespace Triggernometry.UI.CustomControls
 
         private void ctxTest_Click(object sender, EventArgs e)
         {
-            Core.ActionOld selectedAction = SelectedActions().FirstOrDefault();
+            Core.ActionBase selectedAction = SelectedActions().FirstOrDefault();
             if (selectedAction == null)
                 return;
-            Core.ActionOld a = new Core.ActionOld();
-            selectedAction.CopySettingsTo(a);
+            ActionOld a = selectedAction.ConvertToOldAction();
             Context ctx = new Context(a.ParentTrigger);
             ctx.soundhook = RealPlugin.Instance.SoundPlaybackSmart;
             ctx.ttshook = RealPlugin.Instance.TtsPlaybackSmart;
@@ -600,7 +598,7 @@ namespace Triggernometry.UI.CustomControls
         {
             if (ActionViewer.copiedCondition == null) 
                 return;
-            foreach (Core.ActionOld a in SelectedActions())
+            foreach (Core.ActionBase a in SelectedActions())
             {
                 a.Condition = (ConditionGroup)ActionViewer.copiedCondition.Duplicate();
             }
@@ -610,7 +608,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void ctxEditPropRemoveCnd_Click(object sender, EventArgs e)
         {
-            foreach (Core.ActionOld a in SelectedActions())
+            foreach (Core.ActionBase a in SelectedActions())
             {
                 a.Condition = new ConditionGroup();
                 a.Condition.Enabled = false;
@@ -641,7 +639,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void ctxEditPropAsyncOn_Click(object sender, EventArgs e)
         {
-            foreach (Core.ActionOld a in SelectedActions())
+            foreach (Core.ActionBase a in SelectedActions())
             {
                 a.Asynchronous = true;
             }
@@ -651,7 +649,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void ctxEditPropAsyncOff_Click(object sender, EventArgs e)
         {
-            foreach (Core.ActionOld a in SelectedActions())
+            foreach (Core.ActionBase a in SelectedActions())
             {
                 a.Asynchronous = false;
             }
@@ -667,7 +665,7 @@ namespace Triggernometry.UI.CustomControls
                 ).GetInput();
             if (value != null)
             {
-                foreach (Core.ActionOld a in SelectedActions())
+                foreach (Core.ActionBase a in SelectedActions())
                 {
                     a.ExecutionDelayExpression = value;
                 }
@@ -684,7 +682,7 @@ namespace Triggernometry.UI.CustomControls
                 ).GetInput();
             if (value != null)
             {
-                foreach (Core.ActionOld a in SelectedActions())
+                foreach (Core.ActionBase a in SelectedActions())
                 {
                     a.DescBgColor = value;
                 }
@@ -701,7 +699,7 @@ namespace Triggernometry.UI.CustomControls
                 ).GetInput();
             if (value != null)
             {
-                foreach (Core.ActionOld a in SelectedActions())
+                foreach (Core.ActionBase a in SelectedActions())
                 {
                     a.DescTextColor = value;
                 }
@@ -712,7 +710,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void ctxEditPropRemoveDesc_Click(object sender, EventArgs e)
         {
-            foreach (Core.ActionOld a in SelectedActions())
+            foreach (Core.ActionBase a in SelectedActions())
             {
                 a.DescriptionOverride = false;
                 a.Description = "";
@@ -723,7 +721,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void SetCndGroupingType(ConditionGroup.CndGroupingEnum cndGroupingType)
         {
-            foreach (Core.ActionOld a in SelectedActions())
+            foreach (Core.ActionBase a in SelectedActions())
             {
                 if (a.Condition == null) 
                 { 
@@ -748,7 +746,7 @@ namespace Triggernometry.UI.CustomControls
             }
             ctxEditPropCopyCnd.Enabled = isSingleActionSelected;
             ctxEditPropPasteCnd.Enabled = !IsReadonly && hasSelection && ActionViewer.copiedCondition != null;
-            ctxTestAction.Enabled = isSingleActionSelected && SelectedActions()[0].ActionType != Core.ActionOld.ActionTypeEnum.Placeholder;
+            ctxTestAction.Enabled = isSingleActionSelected && !(SelectedActions()[0] is ActionPlaceholder);
             
             bool allowMutate = IsReadonly == false && hasSelection;
             ctxCopyAction.Enabled = hasSelection;

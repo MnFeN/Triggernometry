@@ -11,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// Mutex operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "Mutex")]
+    [XmlRoot(ElementName = "ActionMutex")]
     public class ActionMutex : ActionBase
     {
 
@@ -50,7 +50,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Name")]
         public string Xml_Name
         {
-            get => XmlAttr.String(Name);
+            get => XmlAttr.String(Name, "", omitWhitespace: false);
             set => Name = value;
         }
 

@@ -11,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// Message box
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "MessageBox")]
+    [XmlRoot(ElementName = "ActionMessageBox")]
     public class ActionMessageBox : ActionBase
     {
 
@@ -55,7 +55,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Text")]
         public string Xml_Text
         {
-            get => XmlAttr.String(Text);
+            get => XmlAttr.String(Text, "", omitWhitespace: false);
             set => Text = value;
         }
 

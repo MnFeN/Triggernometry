@@ -17,7 +17,7 @@ namespace Triggernometry.Core.Actions
     /// Table variable operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Variable)]
-    [XmlRoot(ElementName = "VariableTable")]
+    [XmlRoot(ElementName = "ActionVariableTable")]
     public class ActionVariableTable : ActionBase
     {
 
@@ -101,7 +101,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Name")]
         public string Xml_Name
         {
-            get => XmlAttr.String(Name);
+            get => XmlAttr.String(Name, "", omitWhitespace: false);
             set => Name = value;
         }
 
@@ -115,7 +115,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("TargetName")]
         public string Xml_TargetName
         {
-            get => XmlAttr.String(TargetName);
+            get => XmlAttr.String(TargetName, "", omitWhitespace: false);
             set => TargetName = value;
         }
 
@@ -129,7 +129,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Value")]
         public string Xml_Value
         {
-            get => XmlAttr.String(Value);
+            get => XmlAttr.String(Value, "", omitWhitespace: false);
             set => Value = value;
         }
 
@@ -143,7 +143,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("X")]
         public string Xml_X
         {
-            get => XmlAttr.String(X);
+            get => XmlAttr.String(X, "", omitWhitespace: false);
             set => X = value;
         }
 
@@ -157,7 +157,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Y")]
         public string Xml_Y
         {
-            get => XmlAttr.String(Y);
+            get => XmlAttr.String(Y, "", omitWhitespace: false);
             set => Y = value;
         }
 

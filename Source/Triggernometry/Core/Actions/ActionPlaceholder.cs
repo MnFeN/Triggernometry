@@ -9,7 +9,7 @@ namespace Triggernometry.Core.Actions
     /// Placeholder (noop)
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "Placeholder")]
+    [XmlRoot(ElementName = "ActionPlaceholder")]
     public class ActionPlaceholder : ActionBase
     {
 

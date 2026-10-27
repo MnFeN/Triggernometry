@@ -12,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// Discord webhook operation
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
-    [XmlRoot(ElementName = "DiscordWebhook")]
+    [XmlRoot(ElementName = "ActionDiscordWebhook")]
     public class ActionDiscordWebhook : ActionBase
     {
 
@@ -35,7 +35,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("WebhookURL")]
         public string Xml_WebhookURL
         {
-            get => XmlAttr.String(WebhookURL);
+            get => XmlAttr.String(WebhookURL, "", omitWhitespace: false);
             set => WebhookURL = value;
         }
 
@@ -49,7 +49,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Message")]
         public string Xml_Message
         {
-            get => XmlAttr.String(Message);
+            get => XmlAttr.String(Message, "", omitWhitespace: false);
             set => Message = value;
         }
 

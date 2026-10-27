@@ -16,7 +16,7 @@ namespace Triggernometry.Core.Actions
     /// Scalar variable operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Variable)]
-    [XmlRoot(ElementName = "VariableScalar")]
+    [XmlRoot(ElementName = "ActionVariableScalar")]
     public class ActionVariableScalar : ActionBase
     {
 
@@ -91,7 +91,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Name")]
         public string Xml_Name
         {
-            get => XmlAttr.String(Name);
+            get => XmlAttr.String(Name, "", omitWhitespace: false);
             set => Name = value;
         }
 
@@ -105,7 +105,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("JsonTargetName")]
         public string Xml_JsonTargetName
         {
-            get => XmlAttr.String(JsonTargetName);
+            get => XmlAttr.String(JsonTargetName, "", omitWhitespace: false);
             set => JsonTargetName = value;
         }
 
@@ -119,7 +119,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Value")]
         public string Xml_Value
         {
-            get => XmlAttr.String(Value);
+            get => XmlAttr.String(Value, "", omitWhitespace: false);
             set => Value = value;
         }
 

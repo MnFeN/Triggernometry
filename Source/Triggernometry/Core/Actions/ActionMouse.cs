@@ -13,7 +13,7 @@ namespace Triggernometry.Core.Actions
     /// Mouse operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Input)]
-    [XmlRoot(ElementName = "Mouse")]
+    [XmlRoot(ElementName = "ActionMouse")]
     public class ActionMouse : ActionBase
     {
 
@@ -83,7 +83,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("X")]
         public string Xml_X
         {
-            get => XmlAttr.String(X, "0");
+            get => XmlAttr.String(X, "0", omitWhitespace: false);
             set => X = value;
         }
 
@@ -97,7 +97,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Y")]
         public string Xml_Y
         {
-            get => XmlAttr.String(Y, "0");
+            get => XmlAttr.String(Y, "0", omitWhitespace: false);
             set => Y = value;
         }
 

@@ -13,7 +13,7 @@ namespace Triggernometry.Core.Actions
     /// Beep
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Audio)]
-    [XmlRoot(ElementName = "Beep")]
+    [XmlRoot(ElementName = "ActionBeep")]
     public class ActionBeep : ActionBase
     {
 
@@ -29,7 +29,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Frequency")]
         public string Xml_Frequency
         {
-            get => XmlAttr.String(Frequency, "1046.5");
+            get => XmlAttr.String(Frequency, "1046.5", omitWhitespace: false);
             set => Frequency = value;
         }
 
@@ -43,7 +43,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Duration")]
         public string Xml_Duration
         {
-            get => XmlAttr.String(Duration, "100");
+            get => XmlAttr.String(Duration, "100", omitWhitespace: false);
             set => Duration = value;
         }
 

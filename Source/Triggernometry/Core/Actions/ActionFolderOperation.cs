@@ -12,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// Folder operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "FolderOperation")]
+    [XmlRoot(ElementName = "ActionFolderOperation")]
     public class ActionFolderOperation : ActionBase
     {
 

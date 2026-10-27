@@ -13,7 +13,7 @@ namespace Triggernometry.Core.Actions
     /// OBS remote control operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
-    [XmlRoot(ElementName = "ObsControl")]
+    [XmlRoot(ElementName = "ActionObsControl")]
     public class ActionObsControl : ActionBase
     {
 
@@ -69,7 +69,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Endpoint")]
         public string Xml_Endpoint
         {
-            get => XmlAttr.String(Endpoint, @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}");
+            get => XmlAttr.String(Endpoint, @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}", omitWhitespace: false);
             set => Endpoint = value;
         }
 
@@ -83,7 +83,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Password")]
         public string Xml_Password
         {
-            get => XmlAttr.String(Password, @"${_const[OBSWebsocketPassword]}");
+            get => XmlAttr.String(Password, @"${_const[OBSWebsocketPassword]}", omitWhitespace: false);
             set => Password = value;
         }
 
@@ -97,7 +97,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("SceneName")]
         public string Xml_SceneName
         {
-            get => XmlAttr.String(SceneName);
+            get => XmlAttr.String(SceneName, "", omitWhitespace: false);
             set => SceneName = value;
         }
 
@@ -111,7 +111,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("SourceName")]
         public string Xml_SourceName
         {
-            get => XmlAttr.String(SourceName);
+            get => XmlAttr.String(SourceName, "", omitWhitespace: false);
             set => SourceName = value;
         }
 
@@ -125,7 +125,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("JSONPayload")]
         public string Xml_JSONPayload
         {
-            get => XmlAttr.String(JSONPayload);
+            get => XmlAttr.String(JSONPayload, "", omitWhitespace: false);
             set => JSONPayload = value;
         }
 

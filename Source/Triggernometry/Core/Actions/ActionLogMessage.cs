@@ -11,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// Message logging
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
-    [XmlRoot(ElementName = "LogMessage")]
+    [XmlRoot(ElementName = "ActionLogMessage")]
     public class ActionLogMessage : ActionBase
     {
 
@@ -51,7 +51,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Message")]
         public string Xml_Message
         {
-            get => XmlAttr.String(Message);
+            get => XmlAttr.String(Message, "", omitWhitespace: false);
             set => Message = value;
         }
 

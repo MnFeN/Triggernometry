@@ -16,7 +16,7 @@ namespace Triggernometry.Core.Actions
     /// File system operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.File)]
-    [XmlRoot(ElementName = "DiskOperation")]
+    [XmlRoot(ElementName = "ActionDiskOperation")]
     public class ActionDiskOperation : ActionBase
     {
 
@@ -65,7 +65,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Filename")]
         public string Xml_Filename
         {
-            get => XmlAttr.String(Filename);
+            get => XmlAttr.String(Filename, "", omitWhitespace: false);
             set => Filename = value;
         }
 
@@ -79,7 +79,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Variable")]
         public string Xml_Variable
         {
-            get => XmlAttr.String(Variable);
+            get => XmlAttr.String(Variable, "", omitWhitespace: false);
             set => Variable = value;
         }
 

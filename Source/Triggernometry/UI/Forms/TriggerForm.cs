@@ -29,7 +29,7 @@ namespace Triggernometry.UI.Forms
 
         internal Trigger Trigger => UiContext?.Trigger;
         private RealPlugin Plugin => UiContext?.Plugin;
-        private List<ActionOld> Actions => actionViewer1?.Actions;
+        private List<ActionBase> Actions => actionViewer1?.Actions;
 
         private ImageList _images;
         internal ImageList Images
@@ -178,9 +178,7 @@ namespace Triggernometry.UI.Forms
             cbxLoggingLevel.SelectedIndex = (int)t.DebugLevel;
             foreach (var action in t.Actions.OrderBy(a => a.OrderNumber))
             {
-                var newAction = new Core.ActionOld();
-                action.CopySettingsTo(newAction);
-                Actions.Add(newAction);
+                Actions.Add(action.ConvertToNewAction());
             }
             cndCondition.ConditionToEdit = (ConditionGroup)t.Condition?.Duplicate() ?? new ConditionGroup
             {
@@ -208,7 +206,7 @@ namespace Triggernometry.UI.Forms
             t.Tag = expTag.Expression;
             t.RefirePeriodExpression = expRefirePeriod.Expression;
             t.DebugLevel = (RealPlugin.DebugLevelEnum)cbxLoggingLevel.SelectedIndex;
-            t.Actions = Actions.OrderBy(tx => tx.OrderNumber).ToList();
+            t.Actions = Actions.OrderBy(tx => tx.OrderNumber).Select(action => action.ConvertToOldAction()).ToList();
             t.Condition = cndCondition.ConditionToEdit;
             t.MutexToCapture = expMutexName.Expression;
             t.IsReadme = chkReadmeTrigger.Checked;
@@ -263,7 +261,7 @@ namespace Triggernometry.UI.Forms
             var trigger = new Trigger { Id = Guid.Empty };
             SettingsToTrigger(trigger);
             // Snapshot creation must not leave editor actions owned by the temporary trigger.
-            ActionOld.RebuildParentage(Actions, Trigger);
+            ActionBase.RebuildParentage(Actions, Trigger);
             return new TriggernometryExport { ExportedTrigger = trigger }.Serialize();
         }
 

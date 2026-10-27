@@ -12,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// ACT interaction operations
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
-    [XmlRoot(ElementName = "ActInteraction")]
+    [XmlRoot(ElementName = "ActionActInteraction")]
     public class ActionActInteraction : ActionBase
     {
 
@@ -72,7 +72,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("StringParam")]
         public string Xml_StringParam
         {
-            get => XmlAttr.String(StringParam);
+            get => XmlAttr.String(StringParam, "", omitWhitespace: false);
             set => StringParam = value;
         }
 

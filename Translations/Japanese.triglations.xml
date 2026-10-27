@@ -1188,6 +1188,7 @@
     <TranslationEntry Key="internal/Action/trigdisable" Translation="トリガー '{0}' を無効化しました" />
     <TranslationEntry Key="internal/Action/trigenable" Translation="トリガー '{0}' を有効化しました" />
     <TranslationEntry Key="internal/Action/unknowntype" Translation="不明な ActionType：{0}" />
+    <TranslationEntry Key="internal/Action/unknownxmlelement" Translation="不明なアクション XML 要素 '{0}'。" />
     <TranslationEntry Key="internal/Action/waitingprocexit" Translation="プロセスの終了を待っています" />
     <TranslationEntry Key="internal/Action/warndiscordtrunc" Translation="Discordのメッセージが長すぎるため、{0} 文字にキャップしました" />
     <TranslationEntry Key="internal/ActionForm/confirmkeypress" Translation="定義したキープレスは、OKを押してから2秒後に送信され、キープレスの送信先のウィンドウに変更できるようになります。" />

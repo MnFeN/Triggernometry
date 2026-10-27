@@ -12,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// Sound playback
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Audio)]
-    [XmlRoot(ElementName = "PlaySound")]
+    [XmlRoot(ElementName = "ActionPlaySound")]
     public class ActionPlaySound : ActionBase
     {
 
@@ -42,7 +42,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Filename")]
         public string Xml_Filename
         {
-            get => XmlAttr.String(Filename);
+            get => XmlAttr.String(Filename, "", omitWhitespace: false);
             set => Filename = value;
         }
 
@@ -56,7 +56,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Volume")]
         public string Xml_Volume
         {
-            get => XmlAttr.String(Volume, "100");
+            get => XmlAttr.String(Volume, "100", omitWhitespace: false);
             set => Volume = value;
         }
 

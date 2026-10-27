@@ -12,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// Send window message
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
-    [XmlRoot(ElementName = "WindowMessage")]
+    [XmlRoot(ElementName = "ActionWindowMessage")]
     public class ActionWindowMessage : ActionBase
     {
 
@@ -31,7 +31,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("ProcessId")]
         public string Xml_ProcessId
         {
-            get => XmlAttr.String(ProcessId);
+            get => XmlAttr.String(ProcessId, "", omitWhitespace: false);
             set => ProcessId = value;
         }
 
@@ -45,7 +45,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("WindowTitle")]
         public string Xml_WindowTitle
         {
-            get => XmlAttr.String(WindowTitle);
+            get => XmlAttr.String(WindowTitle, "", omitWhitespace: false);
             set => WindowTitle = value;
         }
 
@@ -59,7 +59,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("MessageId")]
         public string Xml_MessageId
         {
-            get => XmlAttr.String(MessageId);
+            get => XmlAttr.String(MessageId, "", omitWhitespace: false);
             set => MessageId = value;
         }
 
@@ -73,7 +73,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Wparam")]
         public string Xml_Wparam
         {
-            get => XmlAttr.String(Wparam);
+            get => XmlAttr.String(Wparam, "", omitWhitespace: false);
             set => Wparam = value;
         }
 
@@ -87,7 +87,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Lparam")]
         public string Xml_Lparam
         {
-            get => XmlAttr.String(Lparam);
+            get => XmlAttr.String(Lparam, "", omitWhitespace: false);
             set => Lparam = value;
         }
 

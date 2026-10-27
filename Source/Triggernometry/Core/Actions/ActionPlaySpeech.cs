@@ -11,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// Text-to-speech
     /// </summary>
     [ActionCategory(ActionCategory.CategoryTypeEnum.Audio)]
-    [XmlRoot(ElementName = "PlaySpeech")]
+    [XmlRoot(ElementName = "ActionPlaySpeech")]
     public class ActionPlaySpeech : ActionBase
     {
 
@@ -41,7 +41,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Message")]
         public string Xml_Message
         {
-            get => XmlAttr.String(Message);
+            get => XmlAttr.String(Message, "", omitWhitespace: false);
             set => Message = value;
         }
 
@@ -55,7 +55,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Volume")]
         public string Xml_Volume
         {
-            get => XmlAttr.String(Volume, "100");
+            get => XmlAttr.String(Volume, "100", omitWhitespace: false);
             set => Volume = value;
         }
 
@@ -69,7 +69,7 @@ namespace Triggernometry.Core.Actions
         [XmlAttribute("Rate")]
         public string Xml_Rate
         {
-            get => XmlAttr.String(Rate, "0");
+            get => XmlAttr.String(Rate, "0", omitWhitespace: false);
             set => Rate = value;
         }
 

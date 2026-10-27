@@ -148,9 +148,17 @@ namespace Triggernometry.Core
         /// <summary>
         /// The list of actions executed when this trigger is fired.
         /// </summary>
-        [XmlArray("Actions")]
-        [XmlArrayItem("Action")]
+        [XmlIgnore]
         public List<ActionOld> Actions { get; set; } = new List<ActionOld>();
+
+        [XmlElement("Actions")]
+        public ActionXmlCollection Xml_Actions
+        {
+            get => new ActionXmlCollection(Actions.Select(action => action.ConvertToNewAction()).ToList());
+            set => Actions = value.Actions.Select(action => action.ConvertToOldAction()).ToList();
+        }
+
+        public bool ShouldSerializeXml_Actions() => ShouldSerializeActions();
 
         public bool ShouldSerializeActions() => Actions != null && Actions.Count > 0;
 
