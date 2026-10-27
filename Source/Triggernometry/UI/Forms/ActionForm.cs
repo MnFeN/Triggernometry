@@ -11,7 +11,6 @@ using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
-using ActionTypeEnum = Triggernometry.Core.ActionOld.ActionTypeEnum;
 using static Triggernometry.UI.CustomControls.ColorSelector;
 
 namespace Triggernometry.UI.Forms
@@ -307,33 +306,20 @@ namespace Triggernometry.UI.Forms
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int oldsel = tbcActionSettings.SelectedIndex;
             tbcActionSettings.SelectedIndex = cbxActionType.SelectedIndex;
-            if (cbxActionType.SelectedIndex == (int)ActionTypeEnum.Aura
-                || cbxActionType.SelectedIndex == (int)ActionTypeEnum.TextAura
-                || cbxActionType.SelectedIndex == (int)ActionTypeEnum.NamedCallback)
-            {
-                timer2.Enabled = true;
-                stsMouseHelp.Visible = true;
-            }
-            else if (oldsel == (int)ActionTypeEnum.Aura ||
-                     oldsel == (int)ActionTypeEnum.TextAura ||
-                     oldsel == (int)ActionTypeEnum.NamedCallback)
-            {
-                stsMouseHelp.Visible = false;
-                timer2.Enabled = false;
-            }
-            switch (cbxActionType.SelectedIndex)
-            {
-                case ((int)ActionTypeEnum.Variable): rtbVariableHelper.Expanded = RichTextBoxHelper._Expanded; break;
-                case ((int)ActionTypeEnum.ListVariable): rtbLvarHelper.Expanded = RichTextBoxHelper._Expanded; break;
-                case ((int)ActionTypeEnum.TableVariable): rtbTvarHelper.Expanded = RichTextBoxHelper._Expanded; break;
-                case ((int)ActionTypeEnum.DictVariable): rtbDictHelper.Expanded = RichTextBoxHelper._Expanded; break;
-                case ((int)ActionTypeEnum.KeyPress): rtbSendKeysHelper.Expanded = RichTextBoxHelper._Expanded; break;
-                case ((int)ActionTypeEnum.NamedCallback): rtbCallbackHelper.Expanded = RichTextBoxHelper._Expanded; break;
-                case ((int)ActionTypeEnum.WindowMessage): rtbWmsgHelper.Expanded = RichTextBoxHelper._Expanded; break;
-                case ((int)ActionTypeEnum.GenericJson): rtbJsonHelper.Expanded = RichTextBoxHelper._Expanded; break;
-            }
+            TabPage selectedTab = tbcActionSettings.SelectedTab;
+            bool showMouseHelp = selectedTab == tabImageAura || selectedTab == tabTextAura || selectedTab == tabNamedCallback;
+            timer2.Enabled = showMouseHelp;
+            stsMouseHelp.Visible = showMouseHelp;
+
+            if (selectedTab == tabVariable) rtbVariableHelper.Expanded = RichTextBoxHelper._Expanded;
+            else if (selectedTab == tabListVariable) rtbLvarHelper.Expanded = RichTextBoxHelper._Expanded;
+            else if (selectedTab == tabTableVariable) rtbTvarHelper.Expanded = RichTextBoxHelper._Expanded;
+            else if (selectedTab == tabDictVariable) rtbDictHelper.Expanded = RichTextBoxHelper._Expanded;
+            else if (selectedTab == tabKeypress) rtbSendKeysHelper.Expanded = RichTextBoxHelper._Expanded;
+            else if (selectedTab == tabNamedCallback) rtbCallbackHelper.Expanded = RichTextBoxHelper._Expanded;
+            else if (selectedTab == tabWindowMessage) rtbWmsgHelper.Expanded = RichTextBoxHelper._Expanded;
+            else if (selectedTab == tabGenericJson) rtbJsonHelper.Expanded = RichTextBoxHelper._Expanded;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -1269,7 +1255,7 @@ namespace Triggernometry.UI.Forms
 
         private void TestActionPrepare(bool liveValues, bool ignoreConditions)
         {
-            if (cbxActionType.SelectedIndex == (int)ActionTypeEnum.KeyPress && cbxKeypressMethod.SelectedIndex == (int)ActionKeypress.OperationEnum.SendKeys)
+            if (tbcActionSettings.SelectedTab == tabKeypress && cbxKeypressMethod.SelectedIndex == (int)ActionKeypress.OperationEnum.SendKeys)
             {
                 if (DialogResult.OK == MessageBox.Show(this, I18n.Translate("internal/ActionForm/confirmkeypress", "The keypresses you defined will be sent in two seconds after you hit OK, to allow you to change to the window you want to send the keypresses to."), I18n.Translate("internal/ActionForm/confirmkeypressdelay", "Confirm"), MessageBoxButtons.OK, MessageBoxIcon.Information))
                 {
@@ -1283,7 +1269,7 @@ namespace Triggernometry.UI.Forms
                 }
                 return;
             }
-            if (cbxActionType.SelectedIndex == (int)ActionTypeEnum.Aura)
+            if (tbcActionSettings.SelectedTab == tabImageAura)
             {
                 if (cbxAuraOp.SelectedIndex == (int)ActionOverlayImage.OperationEnum.Activate)
                 {

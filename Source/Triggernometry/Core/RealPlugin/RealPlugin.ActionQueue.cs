@@ -175,8 +175,8 @@ namespace Triggernometry.Core
                 return true;
             }
         }
-
         /// <summary>Converts legacy callers once before entering the typed action queue.</summary>
+        [Obsolete("Use the typed action queue instead.")]
         public void QueueAction(Context ctx, Trigger trig, MutexInformation mutex, ActionOld actionOld, DateTime when, bool releaseMutex)
             => QueueAction(ctx, trig, mutex, actionOld.ConvertToNewAction(), when, releaseMutex);
 

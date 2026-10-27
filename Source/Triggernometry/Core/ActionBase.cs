@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,15 +10,12 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
 using System.Xml.Serialization;
 using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
-using Triggernometry.UI.CustomControls;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core
@@ -117,7 +113,7 @@ namespace Triggernometry.Core
         }
 
         /// <summary>
-        /// This property attribute controls how the generic action property editor will treat and display a specific property
+        /// Marks action-specific settings for copying and provides editor metadata.
         /// </summary>
         [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
         public class ActionAttribute : Attribute
@@ -182,23 +178,6 @@ namespace Triggernometry.Core
                 _order = order;
                 _typehint = typehint;
                 _specialtype = specialtype;
-            }
-
-        }
-
-        /// <summary>
-        /// Helper class for ComboBox/CheckedListBox for binding Enum values to a specific item
-        /// </summary>
-        public class EnumBinding
-        {
-
-            public string Text { get; set; }
-            public PropertyInfo Prop { get; set; }
-            public string EnumValueName { get; set; }
-
-            public override string ToString()
-            {
-                return Text;
             }
 
         }
@@ -623,11 +602,9 @@ namespace Triggernometry.Core
             Instance.UnfilteredAddToLog(level, message, this);
         }
 
-        // todo should get rid of this maybe
-
         #endregion
 
-        #region Obsoletes, under construction, etc
+        #region Action helpers
 
         public void ActionContextLogger(object o, string msg)
         {
@@ -823,383 +800,6 @@ namespace Triggernometry.Core
             => new NotImplementedException(NotImplementedEnumMessage(@enum));
 
         #endregion
-
-        #region Action-specific property management
-
-        /// <summary>
-        /// Builds a list of all properties on the action that have ActionAttribute set to them
-        /// </summary>
-        /// <returns>Tuple containing the PropertyInfo, its displayorder, and suggested editor type</returns>
-        private List<(PropertyInfo prop, ActionAttribute attr)> GetProperties()
-        {
-            PropertyInfo[] props = GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            List<(PropertyInfo prop, ActionAttribute attr)> results = new List<(PropertyInfo prop, ActionAttribute attr)>();
-            foreach (PropertyInfo pi in props)
-            {
-                ActionAttribute aa = pi.GetCustomAttributes<ActionAttribute>().FirstOrDefault();
-                if (aa == null)
-                {
-                    continue;
-                }
-                // attribute can hint at what kind of editor to provide for this property
-                // (which can be different from the underlying data type)                
-                if (aa._typehint == null)
-                {
-                    // determine editor type from property type instead
-                    object val = pi.GetValue(this);
-                    aa._typehint = val.GetType();
-                    if (aa._typehint.IsEnum)
-                    {
-                        aa._typehint = typeof(Enum);
-                    }
-                }
-                results.Add((
-                    prop: pi,
-                    attr: aa
-                ));
-            }
-            results.Sort((a, b) => a.attr._order.CompareTo(b.attr._order));
-            return results;
-        }
-
-        /// <summary>
-        /// Updates underlying property value when expression textbox contents change
-        /// </summary>
-        /// <param name="sender">ExpressionTextBox</param>
-        /// <param name="e">Unused</param>
-        private void Etb_TextChanged(object sender, EventArgs e)
-        {
-            ExpressionTextBox etb = (ExpressionTextBox)sender;
-            PropertyInfo pi = (PropertyInfo)etb.Tag;
-            pi.SetValue(this, etb.Text);
-        }
-
-        /// <summary>
-        /// Updates underlying property value when checkbox state changes
-        /// </summary>
-        /// <param name="sender">CheckBox</param>
-        /// <param name="e">Unused</param>
-        private void Cb_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBox cb = (CheckBox)sender;
-            PropertyInfo pi = (PropertyInfo)cb.Tag;
-            if (pi.PropertyType == typeof(bool))
-            {
-                pi.SetValue(this, cb.Checked);
-            }
-            else
-            {
-                pi.SetValue(this, cb.Checked.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Updates underlying enum value when combobox state changes
-        /// </summary>
-        /// <param name="sender">ComboBox</param>
-        /// <param name="e">Unused</param>
-        private void Cb_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox cb = (ComboBox)sender;
-            EnumBinding eb = (EnumBinding)cb.SelectedItem;
-            PropertyInfo pi = eb.Prop;
-            pi.SetValue(this, Enum.Parse(pi.PropertyType, eb.EnumValueName));
-        }
-
-        /// <summary>
-        /// Updates underlying enum value when checkedlistbox state changes
-        /// </summary>
-        /// <param name="sender">CheckedListBox</param>
-        /// <param name="e">Unused</param>        
-        private void Clb_ItemCheck(object sender, ItemCheckEventArgs e)
-        {            
-            CheckedListBox clb = (CheckedListBox)sender;
-            int newval = 0;
-            PropertyInfo pi = (PropertyInfo)clb.Tag;            
-            for (int i = 0; i < clb.Items.Count; i++)            
-            {
-                if (i == e.Index)
-                {
-                    if (e.NewValue == CheckState.Unchecked)
-                    {
-                        continue;
-                    }
-                }
-                else if (clb.GetItemChecked(i) == false)
-                {
-                    continue;
-                }
-                EnumBinding eb = (EnumBinding)clb.Items[i];
-                int thisval = (int)Enum.Parse(pi.PropertyType, eb.EnumValueName);
-                newval |= thisval;
-            }
-            pi.SetValue(this, newval);
-        }
-
-        private void BrowseBtn_Click(object sender, EventArgs e)
-        {
-            Button b = (Button)sender;
-            (PropertyInfo prop, ActionAttribute attr, ExpressionTextBox target) prop = ((PropertyInfo prop, ActionAttribute attr, ExpressionTextBox target))b.Tag;
-            using (OpenFileDialog ofd = new OpenFileDialog())
-            {
-                string curvalue = (string)prop.prop.GetValue(this);
-                ofd.FileName = curvalue;
-                switch (prop.attr._specialtype)
-                {
-                    case ActionAttribute.SpecialTypeEnum.FileSelector:
-                        ofd.Title = "Select file"; // todo i18n
-                        ofd.Filter = "All files (*.*)|*.*";
-                        break;
-                    case ActionAttribute.SpecialTypeEnum.ExecutableSelector:
-                        ofd.Title = "Select executable"; // todo i18n
-                        ofd.Filter = "Executables (*.exe)|*.exe|All files (*.*)|*.*";
-                        break;
-                    case ActionAttribute.SpecialTypeEnum.AudioSelector:
-                        ofd.Title = "Select audio file"; // todo i18n
-                        ofd.Filter = "Sound files (*.wav, *.mp3)|*.wav;*.mp3|All files (*.*)|*.*";
-                        break;
-                    case ActionAttribute.SpecialTypeEnum.ImageSelector:
-                        ofd.Title = "Select image file"; // todo i18n
-                        ofd.Filter = "Image files (*.gif, *.bmp, *.png, *.jpg, *.jpeg)|*.gif;*.bmp;*.png;*.jpg;*.jpeg|All files (*.*)|*.*";
-                        break;
-                }
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    prop.target.Text = ofd.FileName;
-                }
-            }
-        }
-
-        private Control GetGenericPropertyEditor()
-        {
-            var props = GetProperties();
-            List<(PropertyInfo prop, ActionAttribute attr, object ctrl)> propeditors = new List<(PropertyInfo prop, ActionAttribute attr, object ctrl)>();
-            foreach (var prop in props)
-            {
-                Control temp = GetPropertyEditor(prop);
-                if (temp != null)
-                {
-                    propeditors.Add((prop.prop, prop.attr, ctrl: temp));
-                    continue;
-                }
-                if (prop.attr._typehint == typeof(string))
-                {
-                    switch (prop.attr._specialtype)
-                    {
-                        case ActionAttribute.SpecialTypeEnum.FileSelector:
-                        case ActionAttribute.SpecialTypeEnum.ExecutableSelector:
-                        case ActionAttribute.SpecialTypeEnum.AudioSelector:
-                        case ActionAttribute.SpecialTypeEnum.ImageSelector:                        
-                            {
-                                // show file selector
-                                ExpressionTextBox etb = new ExpressionTextBox();
-                                etb.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.String;
-                                etb.Expression = (string)prop.prop.GetValue(this);
-                                etb.TextChanged += Etb_TextChanged;
-                                etb.Tag = prop.prop;
-                                Button browseBtn = new Button();
-                                browseBtn.Dock = DockStyle.Fill;
-                                browseBtn.Click += BrowseBtn_Click;
-                                browseBtn.Tag = (prop.prop, prop.attr, target: etb);
-                                propeditors.Add((prop.prop, prop.attr, ctrl: new object[] { etb, browseBtn }));
-                                break;
-                            }
-                        case ActionAttribute.SpecialTypeEnum.KeypressRecorder:
-                            {
-                                // todo show keypress recorder
-                                break;
-                            }
-                        default:
-                            {
-                                // show string expression field
-                                ExpressionTextBox etb = new ExpressionTextBox();
-                                etb.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.String;
-                                etb.Expression = (string)prop.prop.GetValue(this);
-                                etb.TextChanged += Etb_TextChanged;
-                                etb.Tag = prop.prop;
-                                propeditors.Add((prop.prop, prop.attr, ctrl: etb));
-                                break;
-                            }
-                    }
-                }
-                else if (prop.attr._typehint == typeof(int) || prop.attr._typehint == typeof(uint) || prop.attr._typehint == typeof(float))
-                {
-                    // show numeric expression field
-                    ExpressionTextBox etb = new ExpressionTextBox();
-                    etb.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.Numeric;
-                    etb.Expression = (string)prop.prop.GetValue(this);
-                    etb.TextChanged += Etb_TextChanged;
-                    etb.Tag = prop.prop;
-                    propeditors.Add((prop.prop, prop.attr, ctrl: etb));
-                }
-                else if (prop.attr._typehint == typeof(Regex))
-                {
-                    // show regex expression field
-                    ExpressionTextBox etb = new ExpressionTextBox();
-                    etb.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.Regex;
-                    etb.Expression = (string)prop.prop.GetValue(this);
-                    etb.TextChanged += Etb_TextChanged;
-                    etb.Tag = prop.prop;
-                    propeditors.Add((prop.prop, prop.attr, ctrl: etb));
-                }
-                else if (prop.attr._typehint == typeof(bool))
-                {
-                    // show checkbox
-                    CheckBox cb = new CheckBox();
-                    cb.Text = "";
-                    cb.CheckAlign = ContentAlignment.MiddleRight;
-                    if (prop.prop.PropertyType == typeof(bool))
-                    {
-                        cb.Checked = (bool)prop.prop.GetValue(this);
-                    }
-                    else
-                    {
-                        cb.Checked = bool.Parse(prop.prop.GetValue(this).ToString());
-                    }
-                    cb.CheckedChanged += Cb_CheckedChanged;
-                    cb.Tag = prop.prop;
-                    propeditors.Add((prop.prop, prop.attr, ctrl: cb));
-                }
-                else if (prop.attr._typehint == typeof(Enum))
-                {
-                    if (prop.prop.PropertyType.IsDefined(typeof(FlagsAttribute), true) == true)
-                    {
-                        // for flags enums, show checkedlistbox
-                        CheckedListBox clb = new CheckedListBox();
-                        clb.CheckOnClick = true;                        
-                        string[] names = Enum.GetNames(prop.prop.PropertyType);
-                        int curval = (int)prop.prop.GetValue(this);
-                        foreach (string name in names)
-                        {
-                            // for example, "Internal/Enum/ActionTriggerOperation/ForceEnum/SkipConditions"
-                            int thisval = (int)Enum.Parse(prop.prop.PropertyType, name);
-                            if (thisval != 0 && (thisval & thisval - 1) == 0)
-                            {
-                                // show only single bit values
-                                string trkey = "Internal/Enum/" + prop.prop.PropertyType.DeclaringType.Name + "/" + prop.prop.PropertyType.Name + "/" + name;
-                                EnumBinding eb = new EnumBinding() { Text = trkey, Prop = prop.prop, EnumValueName = name };
-                                clb.Items.Add(eb);
-                                if ((thisval & curval) != 0)
-                                {
-                                    clb.SetItemChecked(clb.Items.Count - 1, true);
-                                }
-                            }
-                        }
-                        clb.Tag = prop.prop;
-                        clb.ItemCheck += Clb_ItemCheck;
-                        clb.Height = clb.GetItemHeight(0) * 4;
-                        propeditors.Add((prop.prop, prop.attr, ctrl: clb));
-                    }
-                    else
-                    {
-                        // for regular enums, show combobox
-                        ComboBox cb = new ComboBox();
-                        cb.DropDownStyle = ComboBoxStyle.DropDownList;
-                        string[] names = Enum.GetNames(prop.prop.PropertyType);
-                        string curval = prop.prop.GetValue(this).ToString();
-                        foreach (string name in names)
-                        {
-                            // for example, "Internal/Enum/ActionActInteraction/OperationEnum/SetCombatState"
-                            string trkey = "Internal/Enum/" + prop.prop.PropertyType.DeclaringType.Name + "/" + prop.prop.PropertyType.Name + "/" + name;
-                            EnumBinding eb = new EnumBinding() { Text = trkey, Prop = prop.prop, EnumValueName = name };
-                            cb.Items.Add(eb);
-                            if (curval == name)
-                            {
-                                cb.SelectedItem = eb;
-                            }
-                        }
-                        cb.SelectedIndexChanged += Cb_SelectedIndexChanged;
-                        propeditors.Add((prop.prop, prop.attr, ctrl: cb));
-                    }
-                }
-                else if (prop.attr._typehint == typeof(Guid))
-                {
-                    // this is a reference to something, check specialtype for what it is
-                    switch (prop.attr._specialtype)
-                    {
-                        case ActionAttribute.SpecialTypeEnum.TriggerReference:
-                            // todo show trigger selector
-                            break;
-                        case ActionAttribute.SpecialTypeEnum.FolderReference:
-                            // todo show folder selector
-                            break;
-                        case ActionAttribute.SpecialTypeEnum.RepoReference:
-                            // todo show repository selector
-                            break;
-                    }
-                }
-            }
-            if (propeditors.Count == 0)
-            {
-                // no properties to edit
-                return null;
-            }
-            // the generic property editor is a TableLayoutPanel, where
-            // - first column is AutoSize for Labels
-            // - second column is 100 % for content
-            // - third optional column is 50px for a button or some such, use ColumnSpan 2 on second column if not needed
-            TableLayoutPanel tlp = new TableLayoutPanel();
-            tlp.ColumnCount = 3;
-            tlp.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.0f));
-            tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50.0f));
-            tlp.RowCount = propeditors.Count;
-            for (int i = 0; i < propeditors.Count; i++)
-            {                
-                tlp.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                Label l = new Label();
-                // for example, "Internal/Property/ActionActInteraction/Operation"
-                string trkey = "Internal/Property/" + GetType().Name + "/" + Regex.Replace(propeditors[i].prop.Name, "[^a-zA-Z0-9]", "");
-                l.Text = trkey;
-                l.Dock = DockStyle.Fill;
-                l.TextAlign = ContentAlignment.MiddleLeft;
-                l.MinimumSize = new Size(150, 0);
-                tlp.Controls.Add(l, 0, i);
-                (PropertyInfo prop, ActionAttribute attr, object ctrl) pe = propeditors[i];
-                if (pe.ctrl is object[])
-                {
-                    int col = 1;
-                    object[] ctrls = (object[])pe.ctrl;
-                    foreach (object o in ctrls)
-                    {
-                        Control ctrl = (Control)o;
-                        ctrl.Dock = DockStyle.Top;
-                        tlp.Controls.Add(ctrl, col, i);
-                        tlp.SetColumnSpan(ctrl, 1);
-                        col++;
-                    }
-                }
-                else
-                {
-                    Control ctrl = (Control)pe.ctrl;
-                    ctrl.Dock = DockStyle.Top;
-                    tlp.Controls.Add(ctrl, 1, i);
-                    tlp.SetColumnSpan(ctrl, 2);
-                }
-            }
-            tlp.Dock = DockStyle.Top;
-            tlp.AutoSize = true;
-            tlp.BackColor = SystemColors.Highlight;
-            return tlp;
-        }
-
-        protected virtual Control GetPropertyEditor((PropertyInfo prop, ActionAttribute attr) prop)
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Creates a property editor control for the action. Actions can override this to provide their own entirely custom property editor.
-        /// Alternatively, if controls want to use the generic property editor but provide a custom editor only for one parameter, override the PropertyInfo overload instead.
-        /// </summary>
-        /// <returns>Property editor for the action</returns>
-        internal virtual Control GetPropertyEditor()
-        {
-            return GetGenericPropertyEditor();
-        }
-
-        #endregion
-
 
         /// <summary>Converts this action's settings to the legacy model through its concrete converter.</summary>
         internal ActionOld ConvertToOldAction()

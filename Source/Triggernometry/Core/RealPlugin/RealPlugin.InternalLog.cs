@@ -77,15 +77,6 @@ namespace Triggernometry.Core
             }
         }
 
-        internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, ActionOld action)
-            => UnfilteredAddToLog(level, msg, action?.ConvertToNewAction());
-
-        public void FilteredAddToLog(DebugLevelEnum level, string msg, ActionOld action)
-            => FilteredAddToLog(level, msg, action?.ConvertToNewAction());
-
-        public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig, ActionOld action)
-            => FilteredAddToLog(level, msg, trig, action?.ConvertToNewAction());
-
         public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig = null)
             => FilteredAddToLog(level, msg, trig, (ActionBase)null);
 
