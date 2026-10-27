@@ -1,22 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Security.Principal;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-using Triggernometry.UI.CustomControls;
 using Triggernometry.Localization;
-using Triggernometry.Utilities;
-using Triggernometry.Core.Variables;
 using static Triggernometry.Core.ActionBase;
 
 namespace Triggernometry.Core
@@ -198,109 +184,73 @@ namespace Triggernometry.Core
             return mainform?.IsHandleCreated == true && ActInitedHook?.Invoke() == true;
         }
 
+        /// <summary>Runs startup triggers, then dispatches actions until the plugin exits.</summary>
         internal void ActionThreadProc()
         {
+            while (!ReadyForOperation()) Thread.Sleep(100);
+            RunStartupTriggers();
+
             int timeout = Timeout.Infinite;
-            WaitHandle[] wh = new WaitHandle[2];
-            wh[0] = ExitEvent;
-            wh[1] = ActionUpdateEvent;
-            if (ReadyForOperation() == false)
-            {
-                //FilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Plugin/invalidwindowhandle", "No valid window handle yet, waiting for it to be created"));
-                do
-                {
-                    Thread.Sleep(100);
-                } while (ReadyForOperation() == false);
-            }
-            if (cfg.StartupTriggerId != Guid.Empty)
-            {
-                if (cfg.StartupTriggerType == Configuration.StartupTriggerTypeEnum.Trigger)
-                {
-                    Trigger t = GetTriggerById(cfg.StartupTriggerId, null);
-                    if (t != null)
-                    {
-                        LogEvent le = new LogEvent();
-                        le.Text = "";
-                        le.ZoneName = "";
-                        le.Timestamp = DateTime.Now;
-                        TestTrigger(t, le, ActionOld.TriggerForceTypeEnum.SkipAll);
-                    }
-                }
-                if (cfg.StartupTriggerType == Configuration.StartupTriggerTypeEnum.Folder)
-                {
-                    Folder f = GetFolderById(cfg.StartupTriggerId, null);
-                    if (f != null)
-                    {
-                        LogEvent le = new LogEvent();
-                        le.Text = "";
-                        le.ZoneName = "";
-                        le.Timestamp = DateTime.Now;
-                        foreach (Trigger tx in f.Triggers)
-                        {
-                            TestTrigger(tx, le, ActionOld.TriggerForceTypeEnum.SkipAll);
-                        }
-                    }
-                }
-            }
+            WaitHandle[] waitHandles = { ExitEvent, ActionUpdateEvent };
             while (true)
             {
-                switch (WaitHandle.WaitAny(wh, timeout))
+                int waitResult = WaitHandle.WaitAny(waitHandles, timeout);
+                if (waitResult == 0) return;
+
+                if (waitResult == WaitHandle.WaitTimeout) ExecuteNextQueuedAction();
+
+                // Both queue changes and completed actions require a new wait deadline.
+                timeout = GetActionQueueTimeout();
+            }
+        }
+
+        /// <summary>Fires the configured startup trigger or the direct children of its folder.</summary>
+        private void RunStartupTriggers()
+        {
+            if (cfg.StartupTriggerId == Guid.Empty) return;
+
+            var logEvent = new LogEvent { Text = "", ZoneName = "", Timestamp = DateTime.Now };
+            switch (cfg.StartupTriggerType)
+            {
+                case Configuration.StartupTriggerTypeEnum.Trigger:
+                    Trigger trigger = GetTriggerById(cfg.StartupTriggerId, null);
+                    if (trigger != null) TestTrigger(trigger, logEvent, ActionOld.TriggerForceTypeEnum.SkipAll);
+                    break;
+
+                case Configuration.StartupTriggerTypeEnum.Folder:
+                    Folder folder = GetFolderById(cfg.StartupTriggerId, null);
+                    if (folder == null) return;
+                    foreach (Trigger child in folder.Triggers)
+                        TestTrigger(child, logEvent, ActionOld.TriggerForceTypeEnum.SkipAll);
+                    break;
+            }
+        }
+
+        /// <summary>Moves the first queued action to the executing set before dispatching it outside the lock.</summary>
+        private void ExecuteNextQueuedAction()
+        {
+            ActionInstance instance;
+            lock (ActionQueue)
+            {
+                if (ActionQueue.Count == 0) return;
+                instance = ActionQueue[0];
+                ActionQueue.RemoveAt(0);
+                ExecutingActions.Add(instance);
+            }
+            instance.act.Execute(instance, instance.ctx);
+        }
+
+        /// <summary>Returns the next wait duration, or an indefinite wait while paused or empty.</summary>
+        private int GetActionQueueTimeout()
+        {
+            lock (ActionQueue)
+            {
+                lock (QueueProcessingLock)
                 {
-                    case WaitHandle.WaitTimeout:
-                        {
-                            ActionInstance tp = null;
-                            lock (ActionQueue) // verified
-                            {
-                                if (ActionQueue.Count > 0)
-                                {
-                                    tp = ActionQueue[0];
-                                    ActionQueue.RemoveAt(0);
-                                    ExecutingActions.Add(tp);
-                                }
-                            }
-                            if (tp != null)
-                            {
-                                tp.act.Execute(tp, tp.ctx);
-                                goto case 1;
-                            }
-                            else
-                            {
-                                timeout = Timeout.Infinite;
-                                continue;
-                            }
-                        }
-                    case 0:
-                        {
-                            return;
-                        }
-                    case 1:
-                        {
-                            lock (ActionQueue) // verified
-                            {
-                                lock (QueueProcessingLock) // verified
-                                {
-                                    if (QueueProcessing == false)
-                                    {
-                                        timeout = Timeout.Infinite;
-                                        break;
-                                    }
-                                }
-                                if (ActionQueue.Count > 0)
-                                {
-                                    timeout = (int)Math.Ceiling((ActionQueue[0].when - DateTime.Now).TotalMilliseconds);
-                                    if (timeout < 0)
-                                    {
-                                        timeout = 0;
-                                    }
-                                }
-                                else
-                                {
-                                    timeout = Timeout.Infinite;
-                                }
-                            }
-                        }
-                        break;
+                    if (!QueueProcessing) return Timeout.Infinite;
                 }
+                if (ActionQueue.Count == 0) return Timeout.Infinite;
+                return Math.Max(0, (int)Math.Ceiling((ActionQueue[0].when - DateTime.Now).TotalMilliseconds));
             }
         }
 
@@ -323,11 +273,8 @@ namespace Triggernometry.Core
 
             public void Dispose()
             {
-                if (ev != null)
-                {
-                    ev.Dispose();
-                    ev = null;
-                }
+                ev?.Dispose();
+                ev = null;
             }
 
         }
