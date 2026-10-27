@@ -25,6 +25,8 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 		<SatelliteResourceLanguages>None</SatelliteResourceLanguages>
+		<ReleasePublishDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\publish\'))</ReleasePublishDirectory>
+		<PublishDir>$(ReleasePublishDirectory)</PublishDir>
 	</PropertyGroup>
 	<ItemGroup>
 		<Reference Include="Advanced Combat Tracker">
@@ -40,9 +42,7 @@
 		<Reference Include="Microsoft.CSharp" />
 		<Reference Include="System.Data" />
 		<Reference Include="System.Xml" />
-		<Reference Include="TriggernometryPlugin">
-			<HintPath>..\Triggernometry\bin\Release\TriggernometryPlugin.dll</HintPath>
-		</Reference>
+		<ProjectReference Include="..\Triggernometry\TriggernometryPlugin.csproj" />
 		<!--下面是从TriggernometryPlugin复制的，Costura自动打包-->
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.9">
 			<Private>True</Private>
@@ -67,4 +67,23 @@
 			<IncludeAssets>all</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
+	<Target Name="SelectReleaseFiles" AfterTargets="ComputeFilesToPublish">
+		<MSBuild Projects="..\Triggernometry\TriggernometryPlugin.csproj" Targets="GetTargetPath"
+			Properties="Configuration=$(Configuration);Platform=$(Platform)">
+			<Output TaskParameter="TargetOutputs" ItemName="_PluginPublishAssembly" />
+		</MSBuild>
+		<ItemGroup>
+			<_ReleaseFiles Include="$(TargetPath);@(_PluginPublishAssembly)" />
+			<_ReleaseFiles Include="$(MSBuildProjectDirectory)\..\..\Translations\zh-CN.triglations.xml" />
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" />
+			<ResolvedFileToPublish Include="@(_ReleaseFiles)">
+				<RelativePath>%(Filename)%(Extension)</RelativePath>
+				<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+		<!-- This generated output directory must contain only the current release files. -->
+		<RemoveDir Directories="$(ReleasePublishDirectory)" />
+		<MakeDir Directories="$(ReleasePublishDirectory)" />
+		<Message Importance="High" Text="Release files: @(ResolvedFileToPublish->'%(RelativePath)', ', ')" />
+	</Target>
 </Project>
