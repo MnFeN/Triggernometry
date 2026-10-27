@@ -217,6 +217,12 @@ namespace Triggernometry.Core
             internal Context ctx { get; set; }
             internal bool releaseMutex { get; set; } = false;
 
+            // Continuations belong to this execution, never to the shared action definition.
+            internal ActionInstance NextAction { get; set; }
+            internal ActionInstance LoopParent { get; set; }
+            internal Context LoopContext { get; set; }
+            internal bool IsLoopTail { get; set; }
+
             /// <summary>
             /// The effective tag text used by the action,
             /// with expressions evaluated when the action is queued. <br />
@@ -272,12 +278,6 @@ namespace Triggernometry.Core
             internal static string ActionsToXml(List<ActionBase> actions) => ActionXmlCollection.ToXml(actions);
             internal static List<ActionBase> XmlToActions(string text) => ActionXmlCollection.FromXml(text);
         }
-
-        internal ActionBase NextAction { get; set; } = null;
-
-        /// <summary> 循环的父动作 </summary>
-        internal ActionLoop LoopAction { get; set; } = null;
-        //internal Guid LoopContext { get; set; } = Guid.Empty;
 
         /// <summary>
         /// for queue controlling
@@ -520,7 +520,7 @@ namespace Triggernometry.Core
                 try
                 {
                     ct?.ThrowIfCancellationRequested();
-                    ExecutionImplementation(ai, ctx);
+                    ExecutionImplementation(ai ?? new ActionInstance(default, 0, null, this, ctx, false), ctx);
                 }
                 finally
                 {
@@ -548,29 +548,42 @@ namespace Triggernometry.Core
 
                     if (this is ActionLoop loop)
                     {
-                        if (loop.QueueIteration(ref ctx, ai)) return;
+                        if (loop.QueueIteration(ai)) return;
+                        // A nested loop restores its caller's iterator; a root loop keeps its final value.
+                        if (ai.LoopParent == null && ai.LoopContext != null) ctx = ai.LoopContext;
                     }
                     else
                     {
-                        ExecuteImplementation(ai ?? new ActionInstance(default, 0, null, this, ctx, false));
+                        ExecuteImplementation(ai);
                     }
                 }
 
-                if (LoopAction != null)
+                ActionInstance next = ai.NextAction;
+                if (next != null)
                 {
-                    DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, LoopAction.DelayExpression));
-                    ctx.Plugin.QueueAction(ctx, ctx.Trigger, ai?.mutex, LoopAction, dt, false);
+                    next.ctx = ctx;
+                    next.when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, next.act.ExecutionDelayExpression));
                 }
-                else if (NextAction != null)
+                else if (ai.IsLoopTail)
                 {
-                    DateTime dt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, NextAction.ExecutionDelayExpression));
-                    ctx.Plugin.QueueAction(ctx, ctx.Trigger, ai?.mutex, NextAction, dt, false);
+                    ActionInstance parent = ai.LoopParent;
+                    DateTime when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ((ActionLoop)parent.act).DelayExpression));
+                    next = new ActionInstance(when, 0, ai.mutex, parent.act, parent.ctx, false)
+                    {
+                        NextAction = parent.NextAction,
+                        LoopParent = parent.LoopParent,
+                        LoopContext = parent.LoopContext,
+                        IsLoopTail = parent.IsLoopTail
+                    };
                 }
-                // Non-sequential actions release through the final queued action's ActionFinished.
-                else if (ai?.mutex != null && ctx.Trigger.Sequential)
+                if (next != null)
                 {
-                    ai.mutex.Release(ctx);
-                    ai.mutex = null;
+                    lock (ctx.Plugin.ActionQueue)
+                    {
+                        // Only a successfully queued successor takes over the mutex release.
+                        next.releaseMutex = ai.releaseMutex;
+                        if (ctx.Plugin.QueueAction(next)) ai.releaseMutex = false;
+                    }
                 }
             }
             catch (Exception ex)

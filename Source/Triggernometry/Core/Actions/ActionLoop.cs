@@ -105,48 +105,31 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(ActionInstance ai)
         {
-            Context ctx = ai.ctx;
-            QueueIteration(ref ctx, ai);
+            QueueIteration(ai);
         }
 
-        /// <summary>Queues a loop iteration and returns whether the outer continuation must wait.</summary>
-        internal bool QueueIteration(ref Context ctx, ActionInstance qa)
+        /// <summary>Queues the next iteration using this invocation's iterator and return path.</summary>
+        internal bool QueueIteration(ActionInstance ai)
         {
-            var loopActionIdOld = ctx.loopActionId;
+            if (!LoopCondition.Enabled) return false;
 
-            if (loopActionIdOld == Id)
-                ctx.loopIterator += (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, IncrExpression);
-
-            if (!LoopCondition.Enabled)
-                return false;
-
-            bool continuing = false;
-            Context loopContext = ctx;
-            if (loopActionIdOld != Id)
+            Context loopContext = ai.LoopContext;
+            if (loopContext == null)
             {
-                continuing = loopActionIdOld == Guid.Empty;
-                loopContext = ctx.Duplicate();
-                if (loopActionIdOld != Guid.Empty && loopActionIdOld != Id)
-                {
-                    loopContext.id = Guid.NewGuid();
-                }
+                loopContext = ai.ctx.Duplicate();
                 loopContext.loopActionId = Id;
-                loopContext.loopIterator = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, InitExpression);
+                loopContext.loopIterator = (int)ai.ctx.EvaluateNumericExpression(ActionContextLogger, ai.ctx, InitExpression);
             }
             else
             {
-                continuing = true;
+                loopContext.loopIterator += (int)loopContext.EvaluateNumericExpression(ActionContextLogger, loopContext, IncrExpression);
             }
-            // Test the initial value before entering, without replacing the caller's context on failure.
-            if (LoopCondition.CheckCondition(loopContext, ActionContextLogger, loopContext) != true)
-                return false;
-            ctx = loopContext;
+            // A failed initial test must not replace the caller's context.
+            if (!LoopCondition.CheckCondition(loopContext, ActionContextLogger, loopContext)) return false;
+            ai.LoopContext = loopContext;
 
-            DateTime curTime = DateTime.Now;
-            ActionBase lastAction = ctx.Plugin.QueueActions(ctx, curTime, LoopActions, ctx.Trigger.Sequential, qa?.mutex, ActionContextLogger);
-            lastAction.LoopAction = this;
-
-            return continuing;
+            return loopContext.Plugin.QueueActions(loopContext, DateTime.Now, LoopActions,
+                loopContext.Trigger.Sequential, ai.mutex, ActionContextLogger, ai) != null;
         }
 
         /// <summary>Copies loop conditions and child actions without sharing editable objects.</summary>

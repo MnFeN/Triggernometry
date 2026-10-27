@@ -95,61 +95,60 @@ namespace Triggernometry.Core
             return removedCount;
         }
 
-        internal ActionBase QueueActions(Context ctx, DateTime startingFrom, IEnumerable<ActionBase> actions, bool sequential, MutexInformation mtx, Context.LoggerDelegate logger)
+        /// <summary>Builds execution-local continuations and queues the first action or parallel batch.</summary>
+        internal ActionInstance QueueActions(Context ctx, DateTime startingFrom, IEnumerable<ActionBase> actions, bool sequential,
+            MutexInformation mtx, Context.LoggerDelegate logger, ActionInstance loopParent = null)
         {
-            ActionBase lastAction = null;
-            IEnumerable<ActionBase> sortedActions = actions.OrderBy(a => a.OrderNumber);
-            if (sequential == false)
+            var instances = new List<ActionInstance>();
+            foreach (ActionBase action in actions.OrderBy(a => a.OrderNumber))
             {
-                // Reuse the sorted result for both the final-action lookup and enqueueing.
-                sortedActions = sortedActions.ToArray();
-                var finalAction = sortedActions.LastOrDefault(a => a.Enabled);
-                foreach (ActionBase action in sortedActions)
+                if (!action.Enabled) continue;
+                if (!sequential || instances.Count == 0)
+                    startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.ExecutionDelayExpression));
+                var instance = new ActionInstance(startingFrom, 0, mtx, action, ctx, false) { LoopParent = loopParent };
+                if (sequential && instances.Count > 0) instances[instances.Count - 1].NextAction = instance;
+                instances.Add(instance);
+            }
+            if (instances.Count == 0) return null;
+
+            ActionInstance lastQueued = null;
+            lock (ActionQueue)
+            {
+                try
                 {
-                    if (action.Enabled == true)
+                    foreach (ActionInstance instance in instances)
                     {
-                        startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.ExecutionDelayExpression));
-                        QueueAction(ctx, ctx.Trigger, mtx, action, startingFrom, finalAction == action);
-                        lastAction = action;
+                        if (QueueAction(instance)) lastQueued = instance;
+                        if (sequential) break;
+                    }
+                }
+                finally
+                {
+                    if (lastQueued != null)
+                    {
+                        // Transfer ownership before the worker can consume any of the new actions.
+                        lastQueued.releaseMutex = loopParent?.releaseMutex ?? true;
+                        if (loopParent != null) loopParent.releaseMutex = false;
+                        if (loopParent != null) instances[sequential ? instances.Count - 1 : instances.IndexOf(lastQueued)].IsLoopTail = true;
                     }
                 }
             }
-            else
-            {
-                // Sequential execution only needs one traversal to build the action chain.
-                ActionBase prev = null;
-                ActionBase first = null;
-                foreach (ActionBase action in sortedActions)
-                {
-                    if (action.Enabled == false)
-                    {
-                        continue;
-                    }
-                    lastAction = action;
-                    if (prev != null)
-                    {
-                        prev.NextAction = action;
-                    }
-                    else
-                    {
-                        first = action;
-                        startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.ExecutionDelayExpression));
-                    }
-                    prev = action;
-                }
-                // The new tail must not retain a successor from an earlier queue operation.
-                if (prev != null) prev.NextAction = null;
-                if (first != null)
-                {
-                    QueueAction(ctx, ctx.Trigger, mtx, first, startingFrom, false);
-                }
-            }
-            return lastAction;
+            return lastQueued;
         }
 
         public void QueueAction(Context ctx, Trigger trig, MutexInformation mutex, ActionBase action, DateTime when, bool releaseMutex)
         {
-            lock (ActionQueue) // verified
+            var instance = new ActionInstance(when, 0, mutex, action, ctx, releaseMutex);
+            if (!QueueAction(instance, trig) && releaseMutex && mutex != null) mutex.Release(ctx);
+        }
+
+        /// <summary>Queues an instance without releasing a rejected continuation's mutex.</summary>
+        internal bool QueueAction(ActionInstance instance, Trigger trig = null)
+        {
+            Context ctx = instance.ctx;
+            ActionBase action = instance.act;
+            trig = trig ?? ctx.Trigger;
+            lock (ActionQueue)
             {
                 if (action.RefireRequeue == false || action.RefireInterrupt == true)
                 {
@@ -166,36 +165,27 @@ namespace Triggernometry.Core
                         if (action.RefireRequeue == false)
                         {
                             action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig.LogName, action.Describe()));
-                            if (releaseMutex == true && mutex != null)
-                            {
-                                mutex.Release(ctx);
-                            }
-                            return;
+                            return false;
                         }
                     }
                 }
-                long newOrdinal;
-                lock (this)
-                {
-                    newOrdinal = curOrdinal;
-                    curOrdinal++;
-                }
-                action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig.LogName, action.Describe(), FormatDateTime(when), newOrdinal));
-                var queuedAction = new ActionInstance(when, newOrdinal, mutex, action, ctx, releaseMutex);
-                var actionTag = ctx.EvaluateStringExpression(null, ctx, action.Tag);
+                lock (this) instance.ordinal = curOrdinal++;
+                action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig.LogName, action.Describe(), FormatDateTime(instance.when), instance.ordinal));
+                Context tagContext = instance.LoopContext ?? ctx;
+                var actionTag = tagContext.EvaluateStringExpression(null, tagContext, action.Tag);
                 if (!string.IsNullOrWhiteSpace(actionTag))
                 {
-                    queuedAction.ParsedTag = actionTag;
+                    instance.ParsedTag = actionTag;
                 }
                 else
                 {
-                    var triggerTag = ctx.EvaluateStringExpression(null, ctx, ctx?.Trigger?.Tag);
-                    if (!string.IsNullOrWhiteSpace(triggerTag))
-                        queuedAction.ParsedTag = triggerTag;
+                    var triggerTag = tagContext.EvaluateStringExpression(null, tagContext, tagContext.Trigger?.Tag);
+                    if (!string.IsNullOrWhiteSpace(triggerTag)) instance.ParsedTag = triggerTag;
                 }
-                int index = ActionQueue.BinarySearch(queuedAction);
-                ActionQueue.Insert(index < 0 ? ~index : index, queuedAction);
+                int index = ActionQueue.BinarySearch(instance);
+                ActionQueue.Insert(index < 0 ? ~index : index, instance);
                 ActionUpdateEvent.Set();
+                return true;
             }
         }
 
