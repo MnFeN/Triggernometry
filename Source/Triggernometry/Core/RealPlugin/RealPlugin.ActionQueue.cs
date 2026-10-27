@@ -33,7 +33,6 @@ namespace Triggernometry.Core
         internal object QueueProcessingLock = new object();
         internal bool QueueProcessing = true;
 
-        internal delegate void ActionExecutionHook(Context ctx, ActionOld a);
 
         private void InitActionQueue()
         {

@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggernometry.Core;
+using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Localization;
 using static Triggernometry.Core.RealPlugin;
@@ -1535,11 +1536,8 @@ namespace Triggernometry.UI.CustomControls
 
         private void deactivateAllAurasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Core.ActionOld a = new Core.ActionOld();
-            a._AuraOp = Core.ActionOld.AuraOpEnum.DeactivateAllAura;
-            a._TextAuraOp = Core.ActionOld.AuraOpEnum.DeactivateAllAura;
-            plug.ImageAuraManagement(Context.Unbound, a);
-            plug.TextAuraManagement(Context.Unbound, a);
+            plug.ImageAuraManagement(Context.Unbound, new ActionOverlayImage { Operation = ActionOverlayImage.OperationEnum.DeactivateAll });
+            plug.TextAuraManagement(Context.Unbound, new ActionOverlayText { Operation = ActionOverlayText.OperationEnum.DeactivateAll });
         }
 
         private void testInputToolStripMenuItem_Click(object sender, EventArgs e)

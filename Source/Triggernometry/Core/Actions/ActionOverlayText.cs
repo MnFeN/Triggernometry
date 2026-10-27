@@ -398,7 +398,7 @@ namespace Triggernometry.Core.Actions
             Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
-            plug.TextAuraManagement(ctx, (ActionOld)this); // todo supposed to be a reference to this action
+            plug.TextAuraManagement(ctx, this);
         }
 
         #endregion

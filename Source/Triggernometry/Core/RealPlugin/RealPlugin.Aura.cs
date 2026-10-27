@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Triggernometry.Core.Actions;
 using Triggernometry.UI.CustomControls;
 using Triggernometry.UI.Forms;
 using Triggernometry.Localization;
@@ -195,7 +196,7 @@ namespace Triggernometry.Core
             }
         }
 
-        internal void ImageAuraManagement(Context ctx, ActionOld a)
+        internal void ImageAuraManagement(Context ctx, ActionOverlayImage a)
         {
             if (_usingScarborough == true)
             {
@@ -207,7 +208,7 @@ namespace Triggernometry.Core
             }
         }
 
-        internal void TextAuraManagement(Context ctx, ActionOld a)
+        internal void TextAuraManagement(Context ctx, ActionOverlayText a)
         {
             if (_usingScarborough == true)
             {
@@ -219,30 +220,30 @@ namespace Triggernometry.Core
             }
         }
 
-        internal void SbImageAuraManagement(Context ctx, ActionOld a)
+        internal void SbImageAuraManagement(Context ctx, ActionOverlayImage a)
         {
-            switch (a._AuraOp)
+            switch (a.Operation)
             {
-                case ActionOld.AuraOpEnum.ActivateAura:
+                case ActionOverlayImage.OperationEnum.Activate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actimageaura", "Activating image aura '{0}'", ax));
                         try
                         {
                             Scarborough.ScarboroughImage si = new Scarborough.ScarboroughImage(sc);
-                            si.ImageExpression = a._AuraImage;
-                            si.InitXExpression = a._AuraXIniExpression;
-                            si.InitYExpression = a._AuraYIniExpression;
-                            si.InitWExpression = a._AuraWIniExpression;
-                            si.InitHExpression = a._AuraHIniExpression;
-                            si.InitOExpression = a._AuraOIniExpression;
-                            si.UpdateXExpression = a._AuraXTickExpression;
-                            si.UpdateYExpression = a._AuraYTickExpression;
-                            si.UpdateWExpression = a._AuraWTickExpression;
-                            si.UpdateHExpression = a._AuraHTickExpression;
-                            si.UpdateOExpression = a._AuraOTickExpression;
-                            si.TTLExpression = a._AuraTTLTickExpression;
-                            si.Display = a._AuraImageMode;
+                            si.ImageExpression = a.Filename;
+                            si.InitXExpression = a.XIniExpression;
+                            si.InitYExpression = a.YIniExpression;
+                            si.InitWExpression = a.WIniExpression;
+                            si.InitHExpression = a.HIniExpression;
+                            si.InitOExpression = a.OIniExpression;
+                            si.UpdateXExpression = a.XTickExpression;
+                            si.UpdateYExpression = a.YTickExpression;
+                            si.UpdateWExpression = a.WTickExpression;
+                            si.UpdateHExpression = a.HTickExpression;
+                            si.UpdateOExpression = a.OTickExpression;
+                            si.TTLExpression = a.TTLTickExpression;
+                            si.Display = a.SizeMode;
                             si.ctx = ctx;
                             sc.Activate(ax, si);
                         }
@@ -252,27 +253,27 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAura:
+                case ActionOverlayImage.OperationEnum.Deactivate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaura", "Deactivating image aura '{0}'", ax));
                         sc.Deactivate(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Image);
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAllAura:
+                case ActionOverlayImage.OperationEnum.DeactivateAll:
                     {
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactallimageaura", "Deactivating all image auras"));
                         sc.DeactivateAllImages();
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAuraRegex:
+                case ActionOverlayImage.OperationEnum.DeactivateRegex:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaurarex", "Deactivating image auras matching '{0}'", ax));
                         sc.DeactivateRegex(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Image);
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAuraTrigger:
+                case ActionOverlayImage.OperationEnum.DeactivateTrigger:
                     {
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageauratrig", "Deactivating image auras from trigger '{0}' ({1})", ctx.Trigger.LogName, ctx.Trigger.Id));
                         sc.DeactivateTrigger(ctx.Trigger, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Image);
@@ -281,20 +282,20 @@ namespace Triggernometry.Core
             }
         }
 
-        internal void LegacyImageAuraManagement(Context ctx, ActionOld a)
+        internal void LegacyImageAuraManagement(Context ctx, ActionOverlayImage a)
         {
             if (mainform.InvokeRequired == true)
             {
-                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
+                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                 FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/invokeimageaura", "Invoke required for image aura '{0}'", ax));
-                mainform.Invoke(new ActionExecutionHook(ImageAuraManagement), ctx, a);
+                mainform.Invoke(new Action<Context, ActionOverlayImage>(ImageAuraManagement), ctx, a);
                 return;
             }
-            switch (a._AuraOp)
+            switch (a.Operation)
             {
-                case ActionOld.AuraOpEnum.ActivateAura:
+                case ActionOverlayImage.OperationEnum.Activate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actimageaura", "Activating image aura '{0}'", ax));
                         AuraContainerForm acf = null;
                         bool newAura = false;
@@ -315,11 +316,11 @@ namespace Triggernometry.Core
                                 }
                                 acf.AuraPrepare();
                                 acf.ctx = ctx;
-                                acf.ImageExpression = a._AuraImage;
-                                acf.Display = a._AuraImageMode;
-                                acf.Left = acf.EvaluateNumericExpression(ctx, a._AuraXIniExpression);
-                                acf.Top = acf.EvaluateNumericExpression(ctx, a._AuraYIniExpression);
-                                int i = acf.EvaluateNumericExpression(ctx, a._AuraWIniExpression);
+                                acf.ImageExpression = a.Filename;
+                                acf.Display = a.SizeMode;
+                                acf.Left = acf.EvaluateNumericExpression(ctx, a.XIniExpression);
+                                acf.Top = acf.EvaluateNumericExpression(ctx, a.YIniExpression);
+                                int i = acf.EvaluateNumericExpression(ctx, a.WIniExpression);
                                 if (i < 0)
                                 {
                                     i = 0;
@@ -329,13 +330,13 @@ namespace Triggernometry.Core
                                 {
                                     i = 0;
                                 }
-                                i = acf.EvaluateNumericExpression(ctx, a._AuraHIniExpression);
+                                i = acf.EvaluateNumericExpression(ctx, a.HIniExpression);
                                 if (i < 0)
                                 {
                                     i = 0;
                                 }
                                 acf.Height = i;
-                                i = acf.EvaluateNumericExpression(ctx, a._AuraOIniExpression);
+                                i = acf.EvaluateNumericExpression(ctx, a.OIniExpression);
                                 if (i < 0)
                                 {
                                     i = 0;
@@ -345,12 +346,12 @@ namespace Triggernometry.Core
                                     i = 100;
                                 }
                                 acf.PresentableOpacity = i;
-                                acf.XExpression = a._AuraXTickExpression;
-                                acf.YExpression = a._AuraYTickExpression;
-                                acf.WExpression = a._AuraWTickExpression;
-                                acf.HExpression = a._AuraHTickExpression;
-                                acf.OExpression = a._AuraOTickExpression;
-                                acf.TTLExpression = a._AuraTTLTickExpression;
+                                acf.XExpression = a.XTickExpression;
+                                acf.YExpression = a.YTickExpression;
+                                acf.WExpression = a.WTickExpression;
+                                acf.HExpression = a.HTickExpression;
+                                acf.OExpression = a.OTickExpression;
+                                acf.TTLExpression = a.TTLTickExpression;
                                 acf.AuraActivate();
                                 if (newAura == true)
                                 {
@@ -375,9 +376,9 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAura:
+                case ActionOverlayImage.OperationEnum.Deactivate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaura", "Deactivating image aura '{0}'", ax));
                         lock (ctx.Plugin.imageauras)
                         {
@@ -389,7 +390,7 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAllAura:
+                case ActionOverlayImage.OperationEnum.DeactivateAll:
                     {
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactallimageaura", "Deactivating all image auras"));
                         while (true)
@@ -409,9 +410,9 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAuraRegex:
+                case ActionOverlayImage.OperationEnum.DeactivateRegex:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._AuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         Regex rex = new Regex(ax);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaurarex", "Deactivating image auras matching '{0}'", ax));
                         List<string> toRem = new List<string>();
@@ -426,7 +427,7 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAuraTrigger:
+                case ActionOverlayImage.OperationEnum.DeactivateTrigger:
                     {
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageauratrig", "Deactivating image auras from trigger '{0}' ({1})", ctx.Trigger.LogName, ctx.Trigger.Id));
                         List<string> toRem = new List<string>();
@@ -444,67 +445,67 @@ namespace Triggernometry.Core
             }
         }
 
-        internal void SbTextAuraManagement(Context ctx, ActionOld a)
+        internal void SbTextAuraManagement(Context ctx, ActionOverlayText a)
         {
             if (mainform.InvokeRequired == true)
             {
-                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                 FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/invoketextaura", "Invoke required for text aura '{0}'", ax));
-                mainform.Invoke(new ActionExecutionHook(TextAuraManagement), ctx, a);
+                mainform.Invoke(new Action<Context, ActionOverlayText>(TextAuraManagement), ctx, a);
                 return;
             }
-            switch (a._TextAuraOp)
+            switch (a.Operation)
             {
-                case ActionOld.AuraOpEnum.ActivateAura:
+                case ActionOverlayText.OperationEnum.Activate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/acttextaura", "Activating text aura '{0}'", ax));
                         try
                         {
                             Scarborough.ScarboroughText si = new Scarborough.ScarboroughText(sc);
-                            si.InitXExpression = a._TextAuraXIniExpression;
-                            si.InitYExpression = a._TextAuraYIniExpression;
-                            si.InitWExpression = a._TextAuraWIniExpression;
-                            si.InitHExpression = a._TextAuraHIniExpression;
-                            si.InitOExpression = a._TextAuraOIniExpression;
-                            si.UpdateXExpression = a._TextAuraXTickExpression;
-                            si.UpdateYExpression = a._TextAuraYTickExpression;
-                            si.UpdateWExpression = a._TextAuraWTickExpression;
-                            si.UpdateHExpression = a._TextAuraHTickExpression;
-                            si.UpdateOExpression = a._TextAuraOTickExpression;
-                            si.TTLExpression = a._TextAuraTTLTickExpression;
+                            si.InitXExpression = a.XIniExpression;
+                            si.InitYExpression = a.YIniExpression;
+                            si.InitWExpression = a.WIniExpression;
+                            si.InitHExpression = a.HIniExpression;
+                            si.InitOExpression = a.OIniExpression;
+                            si.UpdateXExpression = a.XTickExpression;
+                            si.UpdateYExpression = a.YTickExpression;
+                            si.UpdateWExpression = a.WTickExpression;
+                            si.UpdateHExpression = a.HTickExpression;
+                            si.UpdateOExpression = a.OTickExpression;
+                            si.TTLExpression = a.TTLTickExpression;
                             FontStyle fs = FontStyle.Regular;
-                            if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Bold) != 0)
+                            if ((a.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
                             {
                                 fs |= FontStyle.Bold;
                             }
-                            if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Italic) != 0)
+                            if ((a.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
                             {
                                 fs |= FontStyle.Italic;
                             }
-                            if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Underline) != 0)
+                            if ((a.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
                             {
                                 fs |= FontStyle.Underline;
                             }
-                            if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Strikeout) != 0)
+                            if ((a.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
                             {
                                 fs |= FontStyle.Strikeout;
                             }
-                            si.TextExpression = a._TextAuraExpression;
-                            si.TextAlignment = a._TextAuraAlignment;
+                            si.TextExpression = a.Text;
+                            si.TextAlignment = (ActionOld.TextAuraAlignmentEnum)a.Alignment;
                             si.TextColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraForegroundClInt),
+                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.ForeColor),
                                     Color.Black);
                             si.OutlineColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraOutlineClInt),
+                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.OutlineColor),
                                     Color.Empty);
                             si.UseOutline = si.OutlineColor != Color.Empty;
-                            si.FontName = a._TextAuraFontName;
-                            si.FontSize = a._TextAuraFontSize;
+                            si.FontName = a.Font;
+                            si.FontSize = a.FontSize;
                             si.FontStyle = fs;
                             si.ctx = ctx;
                             si.BackgroundColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraBackgroundClInt),
+                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.BackColor),
                                     Color.Transparent);
                             sc.Activate(ax, si);
                         }
@@ -514,27 +515,27 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAura:
+                case ActionOverlayText.OperationEnum.Deactivate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaura", "Deactivating text aura '{0}'", ax));
                         sc.Deactivate(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Text);
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAllAura:
+                case ActionOverlayText.OperationEnum.DeactivateAll:
                     {
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactalltextaura", "Deactivating all text auras"));
                         sc.DeactivateAllText();
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAuraRegex:
+                case ActionOverlayText.OperationEnum.DeactivateRegex:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaurarex", "Deactivating text auras matching '{0}'", ax));
                         sc.DeactivateRegex(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Text);
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAuraTrigger:
+                case ActionOverlayText.OperationEnum.DeactivateTrigger:
                     {
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextauratrig", "Deactivating text auras from trigger '{0}' ({1})", ctx.Trigger.LogName, ctx.Trigger.Id));
                         sc.DeactivateTrigger(ctx.Trigger, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Text);
@@ -543,20 +544,20 @@ namespace Triggernometry.Core
             }
         }
 
-        internal void LegacyTextAuraManagement(Context ctx, ActionOld a)
+        internal void LegacyTextAuraManagement(Context ctx, ActionOverlayText a)
         {
             if (mainform.InvokeRequired == true)
             {
-                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                 FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/invoketextaura", "Invoke required for text aura '{0}'", ax));
-                mainform.Invoke(new ActionExecutionHook(TextAuraManagement), ctx, a);
+                mainform.Invoke(new Action<Context, ActionOverlayText>(TextAuraManagement), ctx, a);
                 return;
             }
-            switch (a._TextAuraOp)
+            switch (a.Operation)
             {
-                case ActionOld.AuraOpEnum.ActivateAura:
+                case ActionOverlayText.OperationEnum.Activate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/acttextaura", "Activating text aura '{0}'", ax));
                         AuraContainerForm acf = null;
                         bool newAura = false;
@@ -577,36 +578,36 @@ namespace Triggernometry.Core
                                 }
                                 acf.AuraPrepare();
                                 acf.ctx = ctx;
-                                acf.TextExpression = a._TextAuraExpression;
-                                acf.TextAlignment = a._TextAuraAlignment;
+                                acf.TextExpression = a.Text;
+                                acf.TextAlignment = (ActionOld.TextAuraAlignmentEnum)a.Alignment;
                                 acf.TextColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraForegroundClInt),
+                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.ForeColor),
                                     Color.Black);
                                 acf.OutlineColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraOutlineClInt),
+                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.OutlineColor),
                                     Color.Empty);
                                 acf.UseOutline = acf.OutlineColor != Color.Empty;
                                 if (acf.AuraFont != null)
                                 {
                                     FontStyle fs = FontStyle.Regular;
-                                    if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Bold) != 0)
+                                    if ((a.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
                                     {
                                         fs |= FontStyle.Bold;
                                     }
-                                    if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Italic) != 0)
+                                    if ((a.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
                                     {
                                         fs |= FontStyle.Italic;
                                     }
-                                    if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Underline) != 0)
+                                    if ((a.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
                                     {
                                         fs |= FontStyle.Underline;
                                     }
-                                    if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Strikeout) != 0)
+                                    if ((a.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
                                     {
                                         fs |= FontStyle.Strikeout;
                                     }
                                     Font x = acf.AuraFont;
-                                    if (x.Style != fs || x.Size != a._TextAuraFontSize || x.Name != a._TextAuraFontName)
+                                    if (x.Style != fs || x.Size != a.FontSize || x.Name != a.Font)
                                     {
                                         x.Dispose();
                                         acf.AuraFont = null;
@@ -615,39 +616,39 @@ namespace Triggernometry.Core
                                 if (acf.AuraFont == null)
                                 {
                                     FontStyle fs = FontStyle.Regular;
-                                    if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Bold) != 0)
+                                    if ((a.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
                                     {
                                         fs |= FontStyle.Bold;
                                     }
-                                    if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Italic) != 0)
+                                    if ((a.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
                                     {
                                         fs |= FontStyle.Italic;
                                     }
-                                    if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Underline) != 0)
+                                    if ((a.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
                                     {
                                         fs |= FontStyle.Underline;
                                     }
-                                    if ((a._TextAuraEffect & ActionOld.TextAuraEffectEnum.Strikeout) != 0)
+                                    if ((a.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
                                     {
                                         fs |= FontStyle.Strikeout;
                                     }
-                                    float ex = a._TextAuraFontSize;
+                                    float ex = a.FontSize;
                                     if (ex < 1)
                                     {
                                         ex = 1;
                                     }
-                                    acf.AuraFont = new Font(a._TextAuraFontName, ex, fs, GraphicsUnit.Point);
+                                    acf.AuraFont = new Font(a.Font, ex, fs, GraphicsUnit.Point);
                                 }
                                 acf.BackgroundColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraBackgroundClInt),
+                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.BackColor),
                                     Color.Transparent);
                                 if (acf.BackgroundColor == Color.Transparent)
                                 {
                                     acf.BackColor = acf.TransparencyKey;
                                 }
-                                acf.Left = acf.EvaluateNumericExpression(ctx, a._TextAuraXIniExpression);
-                                acf.Top = acf.EvaluateNumericExpression(ctx, a._TextAuraYIniExpression);
-                                int i = acf.EvaluateNumericExpression(ctx, a._TextAuraWIniExpression);
+                                acf.Left = acf.EvaluateNumericExpression(ctx, a.XIniExpression);
+                                acf.Top = acf.EvaluateNumericExpression(ctx, a.YIniExpression);
+                                int i = acf.EvaluateNumericExpression(ctx, a.WIniExpression);
                                 if (i < 0)
                                 {
                                     i = 0;
@@ -657,13 +658,13 @@ namespace Triggernometry.Core
                                 {
                                     i = 0;
                                 }
-                                i = acf.EvaluateNumericExpression(ctx, a._TextAuraHIniExpression);
+                                i = acf.EvaluateNumericExpression(ctx, a.HIniExpression);
                                 if (i < 0)
                                 {
                                     i = 0;
                                 }
                                 acf.Height = i;
-                                i = acf.EvaluateNumericExpression(ctx, a._TextAuraOIniExpression);
+                                i = acf.EvaluateNumericExpression(ctx, a.OIniExpression);
                                 if (i < 0)
                                 {
                                     i = 0;
@@ -673,12 +674,12 @@ namespace Triggernometry.Core
                                     i = 100;
                                 }
                                 acf.PresentableOpacity = i;
-                                acf.XExpression = a._TextAuraXTickExpression;
-                                acf.YExpression = a._TextAuraYTickExpression;
-                                acf.WExpression = a._TextAuraWTickExpression;
-                                acf.HExpression = a._TextAuraHTickExpression;
-                                acf.OExpression = a._TextAuraOTickExpression;
-                                acf.TTLExpression = a._TextAuraTTLTickExpression;
+                                acf.XExpression = a.XTickExpression;
+                                acf.YExpression = a.YTickExpression;
+                                acf.WExpression = a.WTickExpression;
+                                acf.HExpression = a.HTickExpression;
+                                acf.OExpression = a.OTickExpression;
+                                acf.TTLExpression = a.TTLTickExpression;
                                 acf.AuraActivate();
                                 if (newAura == true)
                                 {
@@ -703,9 +704,9 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAura:
+                case ActionOverlayText.OperationEnum.Deactivate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaura", "Deactivating text aura '{0}'", ax));
                         lock (ctx.Plugin.textauras)
                         {
@@ -717,7 +718,7 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAllAura:
+                case ActionOverlayText.OperationEnum.DeactivateAll:
                     {
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactalltextaura", "Deactivating all text auras"));
                         while (true)
@@ -737,9 +738,9 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAuraRegex:
+                case ActionOverlayText.OperationEnum.DeactivateRegex:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._TextAuraName);
+                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
                         Regex rex = new Regex(ax);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaurarex", "Deactivating text auras matching '{0}'", ax));
                         List<string> toRem = new List<string>();
@@ -754,7 +755,7 @@ namespace Triggernometry.Core
                         }
                     }
                     break;
-                case ActionOld.AuraOpEnum.DeactivateAuraTrigger:
+                case ActionOverlayText.OperationEnum.DeactivateTrigger:
                     {
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextauratrig", "Deactivating text auras from trigger '{0}' ({1})", ctx.Trigger.LogName, ctx.Trigger.Id));
                         List<string> toRem = new List<string>();
@@ -775,11 +776,8 @@ namespace Triggernometry.Core
         internal void RemoveAurasFromTrigger(Trigger t)
         {
             Context fakectx = new Context(t);
-            ActionOld a = new ActionOld();
-            a._AuraOp = ActionOld.AuraOpEnum.DeactivateAuraTrigger;
-            a._TextAuraOp = ActionOld.AuraOpEnum.DeactivateAuraTrigger;
-            ImageAuraManagement(fakectx, a);
-            TextAuraManagement(fakectx, a);
+            ImageAuraManagement(fakectx, new ActionOverlayImage { Operation = ActionOverlayImage.OperationEnum.DeactivateTrigger });
+            TextAuraManagement(fakectx, new ActionOverlayText { Operation = ActionOverlayText.OperationEnum.DeactivateTrigger });
         }
     }
 }
