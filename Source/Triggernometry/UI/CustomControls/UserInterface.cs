@@ -556,9 +556,9 @@ namespace Triggernometry.UI.CustomControls
                     if (newTrigger.EditAutofire == true)
                     {
                         if (newTrigger.EditAutofireAllowCondition)
-                            ForceFireTrigger(newTrigger, Core.ActionOld.TriggerForceTypeEnum.SkipExceptConditions);
+                            ForceFireTrigger(newTrigger, ActionTriggerOperation.ForceEnum.SkipExceptConditions);
                         else
-                            ForceFireTrigger(newTrigger, Core.ActionOld.TriggerForceTypeEnum.SkipAll);
+                            ForceFireTrigger(newTrigger, ActionTriggerOperation.ForceEnum.SkipAll);
                     }
                 }
             }
@@ -669,9 +669,9 @@ namespace Triggernometry.UI.CustomControls
                         if (t.EditAutofire == true)
                         {
                             if (t.EditAutofireAllowCondition)
-                                ForceFireTrigger(t, ActionOld.TriggerForceTypeEnum.SkipExceptConditions);
+                                ForceFireTrigger(t, ActionTriggerOperation.ForceEnum.SkipExceptConditions);
                             else
-                                ForceFireTrigger(t, ActionOld.TriggerForceTypeEnum.SkipAll);
+                                ForceFireTrigger(t, ActionTriggerOperation.ForceEnum.SkipAll);
                         }
                         ApplyNodeNameAndResort(treeView1.SelectedNode, t.Name);
                     }
@@ -2198,7 +2198,7 @@ namespace Triggernometry.UI.CustomControls
                 TreeNode tn = treeView1.SelectedNode;
                 if (tn.Tag is Trigger t)
                 {
-                    ForceFireTrigger(t, Core.ActionOld.TriggerForceTypeEnum.SkipAll);
+                    ForceFireTrigger(t, ActionTriggerOperation.ForceEnum.SkipAll);
                 }
             }
         }
@@ -2210,12 +2210,12 @@ namespace Triggernometry.UI.CustomControls
                 TreeNode tn = treeView1.SelectedNode;
                 if (tn.Tag is Trigger t)
                 {
-                    ForceFireTrigger(t, Core.ActionOld.TriggerForceTypeEnum.SkipExceptConditions);
+                    ForceFireTrigger(t, ActionTriggerOperation.ForceEnum.SkipExceptConditions);
                 }
             }
         }
 
-        private void ForceFireTrigger(Trigger t, Core.ActionOld.TriggerForceTypeEnum force)
+        private void ForceFireTrigger(Trigger t, ActionTriggerOperation.ForceEnum force)
         {
             Context ctx = new Context(t);
             ctx.soundhook = plug.SoundPlaybackSmart;
@@ -2228,7 +2228,7 @@ namespace Triggernometry.UI.CustomControls
             else
             {
                 string[] lines = ctx.EvaluateStringExpression(t.TriggerContextLogger, plug, t.TestInput).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                force = Core.ActionOld.TriggerForceTypeEnum.SkipActive | Core.ActionOld.TriggerForceTypeEnum.SkipRefire | Core.ActionOld.TriggerForceTypeEnum.SkipParent;
+                force = ActionTriggerOperation.ForceEnum.SkipActive | ActionTriggerOperation.ForceEnum.SkipRefire | ActionTriggerOperation.ForceEnum.SkipParent;
                 LogEvent.SourceEnum source;
                 switch (t.Source)
                 {
@@ -2246,7 +2246,7 @@ namespace Triggernometry.UI.CustomControls
                         break;
                     default:
                     case Trigger.TriggerSourceEnum.None:
-                        force |= Core.ActionOld.TriggerForceTypeEnum.SkipRegexp;
+                        force |= ActionTriggerOperation.ForceEnum.SkipRegexp;
                         source = LogEvent.SourceEnum.Log;
                         break;
                 }

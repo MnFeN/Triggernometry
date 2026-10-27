@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
@@ -523,7 +524,7 @@ namespace Triggernometry.Core
         public float UiFontSize { get; set; } = 10.0f;
 
         [XmlAttribute]
-        public ActionOld.TextAuraEffectEnum UiFontEffect { get; set; } = ActionOld.TextAuraEffectEnum.None;
+        public ActionOverlayText.EffectEnum UiFontEffect { get; set; } = ActionOverlayText.EffectEnum.None;
 
         [XmlAttribute]
         public bool TestLiveByDefault { get; set; } = true;

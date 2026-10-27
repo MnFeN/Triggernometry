@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Triggernometry.Core.Actions;
 using Triggernometry.Localization;
 
 namespace Triggernometry.Core
@@ -169,12 +170,12 @@ namespace Triggernometry.Core
             RemoveAurasFromTrigger(t);
         }
 
-        internal void TestTrigger(Trigger trigger, LogEvent logEvent, ActionOld.TriggerForceTypeEnum forceType)
+        internal void TestTrigger(Trigger trigger, LogEvent logEvent, ActionTriggerOperation.ForceEnum forceType)
         {
             lock (trigger)
             {
                 Match match = null;
-                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipRegexp) == 0)
+                if ((forceType & ActionTriggerOperation.ForceEnum.SkipRegexp) == 0)
                 {
                     match = trigger.CheckMatch(logEvent.Text);
                     if (match == null)
@@ -186,7 +187,7 @@ namespace Triggernometry.Core
                         trigger.AddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigmatches", "Trigger '{0}' matches log line '{1}'", trigger.LogName, logEvent.Text));
                     }
                 }
-                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipActive) == 0)
+                if ((forceType & ActionTriggerOperation.ForceEnum.SkipActive) == 0)
                 {
                     if (trigger.Enabled == false)
                     {
@@ -194,7 +195,7 @@ namespace Triggernometry.Core
                         return;
                     }
                 }
-                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipParent) == 0)
+                if ((forceType & ActionTriggerOperation.ForceEnum.SkipParent) == 0)
                 {
                     Folder.FilterFailReason reason = trigger.Parent.PassesFilter(logEvent);
                     if (reason != Folder.FilterFailReason.Passed)
@@ -206,7 +207,7 @@ namespace Triggernometry.Core
                         return;
                     }
                 }
-                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipRefire) == 0)
+                if ((forceType & ActionTriggerOperation.ForceEnum.SkipRefire) == 0)
                 {
                     if (trigger.PeriodRefire == Trigger.RefireEnum.Deny && DateTime.Now < trigger.RefireDelayedUntil)
                     {
@@ -219,7 +220,7 @@ namespace Triggernometry.Core
                 ctx.soundhook = SoundPlaybackSmart;
                 ctx.ttshook = TtsPlaybackSmart;
 
-                if ((forceType & ActionOld.TriggerForceTypeEnum.SkipRegexp) == 0)
+                if ((forceType & ActionTriggerOperation.ForceEnum.SkipRegexp) == 0)
                 {
                     ctx.RecordCaptureGroups(trigger, match);
                 }

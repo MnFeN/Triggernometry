@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Triggernometry.Core.Actions;
 using Triggernometry.Core.Variables;
 using Triggernometry.FFXIV.LogTranscribe;
 using Triggernometry.Localization;
@@ -166,22 +167,22 @@ namespace Triggernometry.Core
             }
         }
 
-        internal static Font CreateFontFromDefinition(string name, float size, ActionOld.TextAuraEffectEnum effect)
+        internal static Font CreateFontFromDefinition(string name, float size, ActionOverlayText.EffectEnum effect)
         {
             FontStyle fs = FontStyle.Regular;
-            if ((effect & ActionOld.TextAuraEffectEnum.Bold) == ActionOld.TextAuraEffectEnum.Bold)
+            if ((effect & ActionOverlayText.EffectEnum.Bold) == ActionOverlayText.EffectEnum.Bold)
             {
                 fs |= FontStyle.Bold;
             }
-            if ((effect & ActionOld.TextAuraEffectEnum.Italic) == ActionOld.TextAuraEffectEnum.Italic)
+            if ((effect & ActionOverlayText.EffectEnum.Italic) == ActionOverlayText.EffectEnum.Italic)
             {
                 fs |= FontStyle.Italic;
             }
-            if ((effect & ActionOld.TextAuraEffectEnum.Underline) == ActionOld.TextAuraEffectEnum.Underline)
+            if ((effect & ActionOverlayText.EffectEnum.Underline) == ActionOverlayText.EffectEnum.Underline)
             {
                 fs |= FontStyle.Underline;
             }
-            if ((effect & ActionOld.TextAuraEffectEnum.Strikeout) == ActionOld.TextAuraEffectEnum.Strikeout)
+            if ((effect & ActionOverlayText.EffectEnum.Strikeout) == ActionOverlayText.EffectEnum.Strikeout)
             {
                 fs |= FontStyle.Strikeout;
             }
@@ -654,7 +655,7 @@ namespace Triggernometry.Core
                             {
                                 continue;
                             }
-                            TestTrigger(t, le, ActionOld.TriggerForceTypeEnum.NoSkip);
+                            TestTrigger(t, le, ActionTriggerOperation.ForceEnum.NoSkip);
                         }
                     }
                     break;
@@ -667,7 +668,7 @@ namespace Triggernometry.Core
                             {
                                 continue;
                             }
-                            TestTrigger(t, le, ActionOld.TriggerForceTypeEnum.NoSkip);
+                            TestTrigger(t, le, ActionTriggerOperation.ForceEnum.NoSkip);
                         }
                     }
                     break;
@@ -680,7 +681,7 @@ namespace Triggernometry.Core
                             {
                                 continue;
                             }
-                            TestTrigger(t, le, ActionOld.TriggerForceTypeEnum.NoSkip);
+                            TestTrigger(t, le, ActionTriggerOperation.ForceEnum.NoSkip);
                         }
                     }
                     break;
@@ -693,7 +694,7 @@ namespace Triggernometry.Core
                             {
                                 continue;
                             }
-                            TestTrigger(t, le, ActionOld.TriggerForceTypeEnum.NoSkip);
+                            TestTrigger(t, le, ActionTriggerOperation.ForceEnum.NoSkip);
                         }
                     }
                     break;

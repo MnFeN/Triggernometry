@@ -428,9 +428,11 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.FireTrigger:
                     {
-                        LogEvent le = new LogEvent();
-                        le.Text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Text);
-                        le.ZoneName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Zone);
+                        LogEvent le = new LogEvent
+                        {
+                            Text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Text),
+                            ZoneName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Zone)
+                        };
                         if (ZoneType == ZoneTypeEnum.ZoneIdFFXIV && le.ZoneName.Trim().Length > 0)
                         {
                             le.ZoneId = le.ZoneName;
@@ -441,7 +443,7 @@ namespace Triggernometry.Core.Actions
                             le.TestMode = true;
                             le.ZoneId = ctx.zoneIdOverride;
                         }
-                        plug.TestTrigger(t, le, (ActionOld.TriggerForceTypeEnum)(int)Force);
+                        plug.TestTrigger(t, le, Force);
                     }
                     break;
                 case OperationEnum.EnableTrigger:

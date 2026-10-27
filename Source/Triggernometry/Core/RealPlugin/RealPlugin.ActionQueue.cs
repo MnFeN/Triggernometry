@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Triggernometry.Core.Actions;
 using Triggernometry.Localization;
 using static Triggernometry.Core.ActionBase;
 
@@ -214,14 +215,15 @@ namespace Triggernometry.Core
             {
                 case Configuration.StartupTriggerTypeEnum.Trigger:
                     Trigger trigger = GetTriggerById(cfg.StartupTriggerId, null);
-                    if (trigger != null) TestTrigger(trigger, logEvent, ActionOld.TriggerForceTypeEnum.SkipAll);
+                    if (trigger != null)
+                        TestTrigger(trigger, logEvent, ActionTriggerOperation.ForceEnum.SkipAll);
                     break;
 
                 case Configuration.StartupTriggerTypeEnum.Folder:
                     Folder folder = GetFolderById(cfg.StartupTriggerId, null);
                     if (folder == null) return;
                     foreach (Trigger child in folder.Triggers)
-                        TestTrigger(child, logEvent, ActionOld.TriggerForceTypeEnum.SkipAll);
+                        TestTrigger(child, logEvent, ActionTriggerOperation.ForceEnum.SkipAll);
                     break;
             }
         }

@@ -20,7 +20,6 @@ using Triggernometry.Core.Serialization;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
 using Triggernometry.UI.CustomControls;
-using static Triggernometry.Core.ActionOld;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core
@@ -535,7 +534,7 @@ namespace Triggernometry.Core
         {
             try
             {
-                if ((ctx.forceType & TriggerForceTypeEnum.SkipConditions) == 0 && !ctx.testByPlaceholder &&
+                if ((ctx.forceType & ActionTriggerOperation.ForceEnum.SkipConditions) == 0 && !ctx.testByPlaceholder &&
                     Condition?.Enabled == true && Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
                 {
                     ctx.PushActionResult(0);

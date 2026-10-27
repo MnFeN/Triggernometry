@@ -170,7 +170,7 @@ namespace Triggernometry.UI.Forms
             {
                 fic.Name = cfg.UiFontName;
                 fic.Size = cfg.UiFontSize;
-                fic.Effect = (ActionOverlayText.EffectEnum)cfg.UiFontEffect;
+                fic.Effect = cfg.UiFontEffect;
             }
             txtUiFontDesc.Tag = fic;
             cbxUiFontDefault.Checked = cfg.UiFontDefault;
@@ -263,7 +263,7 @@ namespace Triggernometry.UI.Forms
             cfg.UiFontDefault = cbxUiFontDefault.Checked;
             cfg.UiFontName = fic.Name;
             cfg.UiFontSize = fic.Size;
-            cfg.UiFontEffect = (ActionOld.TextAuraEffectEnum)fic.Effect;
+            cfg.UiFontEffect = fic.Effect;
         }
 
         #region Startup

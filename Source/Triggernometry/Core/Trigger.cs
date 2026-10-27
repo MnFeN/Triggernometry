@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
@@ -605,7 +606,7 @@ namespace Triggernometry.Core
         /// <summary> <see langword="true"/> if this fire should be blocked.</summary>
         private bool TryBlockByCondition(Context ctx)
         {
-            if ((ctx.forceType & ActionOld.TriggerForceTypeEnum.SkipConditions) != 0)
+            if ((ctx.forceType & ActionTriggerOperation.ForceEnum.SkipConditions) != 0)
                 return false;
 
             if (Condition?.Enabled != true)
