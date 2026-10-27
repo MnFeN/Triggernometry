@@ -451,14 +451,14 @@ namespace Triggernometry.Core
 
         private void ExecutionCore(QueuedAction qa, Context ctx)
         {
+            var newAction = ConvertToNewAction();
             var ai = new ActionBase.ActionInstance(
                 qa?.when ?? default,
                 qa?.ordinal ?? default,
                 qa?.mutex,
-                this,
+                newAction,
                 ctx,
                 qa?.releaseMutex ?? default);
-            var newAction = ConvertToNewAction();
             newAction.ExecuteImplementation(ai);
         }
         

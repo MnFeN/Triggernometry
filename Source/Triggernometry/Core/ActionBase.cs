@@ -213,11 +213,11 @@ namespace Triggernometry.Core
             internal DateTime when { get; set; }
             internal long ordinal { get; set; }
             internal MutexInformation mutex { get; set; }
-            internal ActionOld act { get; set; }
+            internal ActionBase act { get; set; }
             internal Context ctx { get; set; }
             internal bool releaseMutex { get; set; } = false;
 
-            public ActionInstance(DateTime when, long ordinal, MutexInformation mtx, ActionOld act, Context ctx, bool releaseMutex)
+            public ActionInstance(DateTime when, long ordinal, MutexInformation mtx, ActionBase act, Context ctx, bool releaseMutex)
             {
                 this.when = when;
                 this.ordinal = ordinal;
