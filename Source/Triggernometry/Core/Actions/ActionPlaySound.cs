@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using WMPLib;
 
 namespace Triggernometry.Core.Actions
 {
@@ -76,6 +77,46 @@ namespace Triggernometry.Core.Actions
 
         #region Implementation
 
+        // Each sound action owns the players used for overlapping playback.
+        internal readonly List<WindowsMediaPlayer> players = new List<WindowsMediaPlayer>();
+
+        internal void Mywmp_PlayStateChange(int NewState)
+        {
+            if ((WMPPlayState)NewState != WMPPlayState.wmppsStopped)
+            {
+                return;
+            }
+            WindowsMediaPlayer wmp;
+            lock (players) // verified
+            {
+                do
+                {
+                    wmp = null;
+                    foreach (WindowsMediaPlayer player in players)
+                    {
+                        if (player.playState == WMPPlayState.wmppsStopped)
+                        {
+                            wmp = player;
+                            break;
+                        }
+                    }
+                    if (wmp != null)
+                    {
+                        players.Remove(wmp);
+                    }
+                } while (wmp != null);
+            }
+        }
+
+        internal void Mywmp_MediaError(object pMediaObject)
+        {
+            WindowsMediaPlayer wmp = (WindowsMediaPlayer)pMediaObject;
+            lock (players) // verified
+            {
+                players.Remove(wmp);
+            }
+        }
+
         internal override string DescribeImplementation()
         {
             return I18n.Translate("internal/Action/descplaysound", "play sound file ({0}) at volume ({1}) %", Filename, Volume);
@@ -84,9 +125,7 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(ActionInstance ai)
         {
             Context ctx = ai?.ctx ?? Context.Unbound;
-            // RealPlugin plug = ctx.Plugin;
-
-            ctx.soundhook(ctx, (ActionOld)this); // todo
+            ctx.soundhook(ctx, this);
         }
 
         #endregion

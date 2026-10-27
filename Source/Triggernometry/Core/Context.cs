@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Triggernometry.Core.Actions;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String;
 using Triggernometry.Localization;
@@ -25,8 +26,8 @@ namespace Triggernometry.Core
         public readonly Trigger Trigger;
         internal ActionOld.TriggerForceTypeEnum forceType;
 
-        internal RealPlugin.ActionExecutionHook soundhook;
-        internal RealPlugin.ActionExecutionHook ttshook;
+        internal Action<Context, ActionPlaySound> soundhook;
+        internal Action<Context, ActionPlaySpeech> ttshook;
 
         private Dictionary<string, string> _namedRegexGroups = null;
         private List<string> _numRegexGroups = null;

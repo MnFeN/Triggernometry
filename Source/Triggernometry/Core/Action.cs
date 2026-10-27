@@ -14,7 +14,6 @@ using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Localization;
-using WMPLib;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core
@@ -320,7 +319,6 @@ namespace Triggernometry.Core
         internal string GetDescription(Context ctx)
             => ConvertToNewAction().Describe();
 
-        internal List<WindowsMediaPlayer> players = new List<WindowsMediaPlayer>();
 
         public ActionOld()
         {
@@ -464,43 +462,6 @@ namespace Triggernometry.Core
             newAction.ExecuteImplementation(ai);
         }
         
-        internal void Mywmp_PlayStateChange(int NewState)
-        {
-            if ((WMPPlayState)NewState != WMPPlayState.wmppsStopped)
-            {
-                return;
-            }
-            WindowsMediaPlayer wmp = null;
-            lock (players) // verified
-            {
-                do
-                {
-                    wmp = null;
-                    foreach (WindowsMediaPlayer x in players)
-                    {
-                        if (x.playState == WMPPlayState.wmppsStopped)
-                        {
-                            wmp = x;
-                            break;
-                        }
-                    }
-                    if (wmp != null)
-                    {
-                        players.Remove(wmp);
-                    }
-                } while (wmp != null);
-            }
-        }
-
-        internal void Mywmp_MediaError(object pMediaObject)
-        {
-            WindowsMediaPlayer wmp = (WindowsMediaPlayer)pMediaObject;
-            lock (players) // verified
-            {
-                players.Remove(wmp);
-            }
-        }
-
         internal void Execute(QueuedAction qa, Context ctx)
         {
             if (qa != null)

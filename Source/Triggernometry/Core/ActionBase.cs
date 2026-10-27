@@ -612,7 +612,8 @@ namespace Triggernometry.Core
             {
                 return;
             }
-            Instance.UnfilteredAddToLog(level, message, ParentTrigger); // to-do: should pass Action instance as well
+            // The log still stores legacy actions; convert only when a log entry is emitted.
+            Instance.UnfilteredAddToLog(level, message, ConvertToOldAction());
         }
 
         // todo should get rid of this maybe

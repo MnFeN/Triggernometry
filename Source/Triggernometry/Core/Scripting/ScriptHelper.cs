@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Triggernometry.Core.Actions;
 using Triggernometry.Core.Variables;
 
 namespace Triggernometry.Core.Scripting
@@ -37,15 +38,13 @@ namespace Triggernometry.Core.Scripting
 
         public static void PlayTTS(string text, Context ctx)
         {
-            ActionOld a = new ActionOld();
-            a._UseTTSTextExpression = text;
+            var a = new ActionPlaySpeech { Message = text };
             ctx.ttshook(ctx, a);
         }
 
         public static void PlaySound(string uri, Context ctx)
         {
-            ActionOld a = new ActionOld();
-            a._PlaySoundFileExpression = uri;
+            var a = new ActionPlaySound { Filename = uri };
             ctx.soundhook(ctx, a);
         }
 

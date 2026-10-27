@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Speech.Synthesis;
+using Triggernometry.Core.Actions;
 using Triggernometry.Localization;
 using WMPLib;
 
@@ -49,7 +50,7 @@ namespace Triggernometry.Core
             tts = null;
         }
 
-        internal void TtsPlaybackAct(Context ctx, ActionOld a)
+        internal void TtsPlaybackAct(Context ctx, ActionPlaySpeech a)
         {
             string text = TtsPlaybackGetTextFromAction(ctx, a);
             if (string.IsNullOrWhiteSpace(text))
@@ -66,7 +67,7 @@ namespace Triggernometry.Core
             TtsPlaybackHook(text);
         }
 
-        internal void SoundPlaybackAct(Context ctx, ActionOld a, string filename)
+        internal void SoundPlaybackAct(Context ctx, ActionPlaySound a, string filename)
         {
             lock (SoundRepetitions)
             {
@@ -75,7 +76,7 @@ namespace Triggernometry.Core
                     return;
                 }
             }
-            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a._PlaySoundVolumeExpression);
+            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
             vol *= ctx.Plugin.cfg.SfxVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
@@ -88,9 +89,9 @@ namespace Triggernometry.Core
             SoundPlaybackHook(filename, (int)Math.Floor(vol));
         }
 
-        internal string TtsPlaybackGetTextFromAction(Context ctx, ActionOld a)
+        internal string TtsPlaybackGetTextFromAction(Context ctx, ActionPlaySpeech a)
         {
-            string text = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._UseTTSTextExpression);
+            string text = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Message);
             if (ctx.Plugin != null)
             {
                 text = ctx.Plugin.cfg.PerformSubstitution(text, Configuration.Substitution.SubstitutionScopeEnum.TextToSpeech);
@@ -98,7 +99,7 @@ namespace Triggernometry.Core
             return text;
         }
 
-        internal void TtsPlaybackSelf(Context ctx, ActionOld a)
+        internal void TtsPlaybackSelf(Context ctx, ActionPlaySpeech a)
         {
             string text = TtsPlaybackGetTextFromAction(ctx, a);
             if (string.IsNullOrWhiteSpace(text))
@@ -113,7 +114,7 @@ namespace Triggernometry.Core
                 }
             }
             SpeechSynthesizer mytts = new SpeechSynthesizer();
-            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a._UseTTSVolumeExpression);
+            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
             vol *= ctx.Plugin.cfg.TtsVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
@@ -123,7 +124,7 @@ namespace Triggernometry.Core
             {
                 vol = 100.0;
             }
-            double rate = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a._UseTTSRateExpression);
+            double rate = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Rate);
             if (rate < -10.0)
             {
                 rate = -10.0;
@@ -137,7 +138,7 @@ namespace Triggernometry.Core
             mytts.SpeakAsync(text);
         }
 
-        internal void SoundPlaybackSelf(Context ctx, ActionOld a, string filename)
+        internal void SoundPlaybackSelf(Context ctx, ActionPlaySound a, string filename)
         {
             lock (SoundRepetitions)
             {
@@ -147,7 +148,7 @@ namespace Triggernometry.Core
                 }
             }
             WindowsMediaPlayer mywmp;
-            if (a._PlaySoundExclusive == true)
+            if (a.ExclusivePlayer == true)
             {
                 mywmp = new WindowsMediaPlayer();
                 lock (a.players) // verified
@@ -161,7 +162,7 @@ namespace Triggernometry.Core
             {
                 mywmp = wmp;
             }
-            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a._PlaySoundVolumeExpression);
+            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
             vol *= ctx.Plugin.cfg.SfxVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
@@ -176,7 +177,7 @@ namespace Triggernometry.Core
             mywmp.URL = filename;
         }
 
-        internal void TtsPlaybackExternal(Context ctx, ActionOld a)
+        internal void TtsPlaybackExternal(Context ctx, ActionPlaySpeech a)
         {
             string proc = (cfg.TtsExternalApp ?? "").Trim();
             if (proc.Length == 0)
@@ -200,7 +201,7 @@ namespace Triggernometry.Core
             Process.Start(proc, args);
         }
 
-        internal void SoundPlaybackExternal(Context ctx, ActionOld a, string filename)
+        internal void SoundPlaybackExternal(Context ctx, ActionPlaySound a, string filename)
         {
             lock (SoundRepetitions)
             {
@@ -243,9 +244,9 @@ namespace Triggernometry.Core
             return true;
         }
 
-        internal void TtsPlaybackSmart(Context ctx, ActionOld a)
+        internal void TtsPlaybackSmart(Context ctx, ActionPlaySpeech a)
         {
-            switch (a._TTSRouting)
+            switch (a.AudioTarget)
             {
                 case Configuration.AudioRoutingMethodEnum.None:
                     if (cfg.TtsMethod == Configuration.AudioRoutingMethodEnum.ExternalApplication)
@@ -270,9 +271,9 @@ namespace Triggernometry.Core
             }
         }
 
-        internal void SoundPlaybackSmart(Context ctx, ActionOld a)
+        internal void SoundPlaybackSmart(Context ctx, ActionPlaySound a)
         {
-            string filename = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a._PlaySoundFileExpression);
+            string filename = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Filename);
             Uri u = new Uri(filename);
             if (u.IsFile == false)
             {
@@ -305,7 +306,7 @@ namespace Triggernometry.Core
                     }
                 }
             }
-            switch (a._SoundRouting)
+            switch (a.AudioTarget)
             {
                 case Configuration.AudioRoutingMethodEnum.None:
                     if (cfg.SoundMethod == Configuration.AudioRoutingMethodEnum.ExternalApplication)
