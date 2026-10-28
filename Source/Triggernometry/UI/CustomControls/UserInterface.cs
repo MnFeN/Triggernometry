@@ -2071,19 +2071,12 @@ namespace Triggernometry.UI.CustomControls
             {
                 return;
             }
-            if (tnupdate.Tag is RepositoryFolder rfo)
+            if (tnupdate.Tag is RepositoryFolder)
             {
-                foreach (TreeNode tn in tnupdate.Nodes)
-                {
-                    tn.ImageIndex = (int)ImageIndices.RemoteRepoUnavailable;
-                    tn.SelectedImageIndex = tn.ImageIndex;
-                }
                 _ = Task.Run(() => plug.UpdateAllRepositoriesAsync(false));
             }
-            if (tnupdate.Tag is Repository repo)
+            else if (tnupdate.Tag is Repository repo)
             {
-                tnupdate.ImageIndex = (int)ImageIndices.RemoteRepoUnavailable;
-                tnupdate.SelectedImageIndex = tnupdate.ImageIndex;
                 _ = Task.Run(() => plug.UpdateSingleRepositoryAsync(repo));
             }
         }
