@@ -372,6 +372,20 @@ namespace Triggernometry.UI.CustomControls
             {
                 // 未选择替代节点时保留原 GUID，避免丢失暂时无法找到的引用。
                 originalId = (Guid)value;
+                // 仅在编辑控件中为空引用预选当前目标，不改变配置读取或动作自身的默认值。
+                if (originalId == Guid.Empty)
+                {
+                    if (kind == EditorReferenceType.Trigger)
+                        originalId = UiContext?.Trigger?.Id ?? Guid.Empty;
+                    else if (kind == EditorReferenceType.Folder)
+                    {
+                        // 新建触发器尚未设置 Parent 时，使用主树中准备添加到的分组。
+                        Folder folder = UiContext?.Trigger?.Parent 
+                            ?? (TreeView?.SelectedNode?.Tag as Folder)
+                            ?? (TreeView?.SelectedNode?.Tag as Trigger)?.Parent;
+                        originalId = folder?.Id ?? Guid.Empty;
+                    }
+                }
                 nodesById.TryGetValue(originalId, out TreeNode node);
                 tree.SelectedNode = node;
                 node?.EnsureVisible();
