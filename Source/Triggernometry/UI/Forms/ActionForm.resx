@@ -333,20 +333,6 @@ For example, the key functions `"n+:${{_this}} % 3", 'n−:${{_idx}}'`:
 This means that the remainder of each element divided by `3` is used as the first key in ascending order, and the index of each element is used as the second key in descending order.
 Applying this sort to the list `1, 2, 3, 4, 5, 6, 7, 8, 9` results in: `9, 6, 3, 7, 4, 1, 8, 5, 2`.</value>
   </data>
-  <data name="rtbHelperLvarSortFfxivPartyAsc.Text" xml:space="preserve">
-    <value>Sort each value in the list as a member name in a squad list in ascending order according to the job order.
-The job order is set in the Triggernometry user configuration.
-When jobs are the same, it further sorts by the member name.
-
-Note: This method is highly dependent on user configuration. If you want to share triggers, it's recommended to use this method cautiously.</value>
-  </data>
-  <data name="rtbHelperLvarSortFfxivPartyDesc.Text" xml:space="preserve">
-    <value>Sort each value in the list as a member name in a squad list in descending order according to the job order.
-The job order is set in the Triggernometry user configuration.
-When jobs are the same, it further sorts by the member name.
-
-Note: This method is highly dependent on user configuration. If you want to share triggers, it's recommended to use this method cautiously.</value>
-  </data>
   <data name="rtbHelperLvarSortNumericAsc.Text" xml:space="preserve">
     <value>Sort the list in ascending numeric order.
 All values in the list must be treated as pure numeric values (of type double); otherwise, an exception will be thrown.

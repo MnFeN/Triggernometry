@@ -143,13 +143,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(8, Label = "Target variable name", Autofill = EditorAutofillType.Table)]
-        public string TargetName { get; set; } = "";
+        public string TargetVar { get; set; } = "";
 
-        [XmlAttribute("TargetName")]
-        public string Xml_TargetName
+        [XmlAttribute("TargetVar")]
+        public string Xml_TargetVar
         {
-            get => XmlAttr.String(TargetName, "", omitWhitespace: false);
-            set => TargetName = value;
+            get => XmlAttr.String(TargetVar, "", omitWhitespace: false);
+            set => TargetVar = value;
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Triggernometry.Core.Actions
         /// </summary>
         [XmlIgnore]
         [ActionSpecificProperty]
-        [PersistenceEditor(9, nameof(TargetName), Label = "Target variable name")]
+        [PersistenceEditor(9, nameof(TargetVar), Label = "Target variable name")]
         public bool TargetPersistent { get; set; } = false;
 
         [XmlAttribute("TargetPersistent")]
@@ -238,7 +238,7 @@ namespace Triggernometry.Core.Actions
             var valueType = editor.GetEditor(nameof(ValueType));
             var x = editor.GetEditor(nameof(X));
             var y = editor.GetEditor(nameof(Y));
-            var target = editor.GetEditor(nameof(TargetName));
+            var target = editor.GetEditor(nameof(TargetVar));
             var persistent = editor.GetEditor(nameof(Persistent));
             var targetPersistent = editor.GetEditor(nameof(TargetPersistent));
             return () =>
@@ -385,18 +385,18 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/desctablecopy",
                         "copy {2}table variable ({0}) to {3}table variable ({1})",
-                        Name, TargetName, sPersistT, tPersistT
+                        Name, TargetVar, sPersistT, tPersistT
                     );
                 case OperationEnum.Append:
                     return I18n.Translate("internal/Action/desctableappend",
                         "vertically append {2}table variable ({0}) to {3}table variable ({1})",
-                        Name, TargetName, sPersistT, tPersistT
+                        Name, TargetVar, sPersistT, tPersistT
                     );
                 case OperationEnum.AppendH:
                     return I18n.Translate(
                         "internal/Action/desctableappendh",
                         "horizontally append {2}table variable ({0}) to {3}table variable ({1})",
-                        Name, TargetName, sPersistT, tPersistT
+                        Name, TargetVar, sPersistT, tPersistT
                     );
                 case OperationEnum.Build:
                     int dollarIndex = Value.IndexOf("$");
@@ -409,7 +409,7 @@ namespace Triggernometry.Core.Actions
                         return I18n.Translate(
                             "internal/Action/desctablebuild",
                             "build {1}table variable ({0}) from string ({2}) separated by ({3}) ({4})",
-                            TargetName, tPersistT,
+                            TargetVar, tPersistT,
                             Value.Length < 2 ? "" : Value.Substring(2),
                             Value.Length < 1 ? "" : Value.Substring(0, 1),
                             Value.Length < 2 ? "" : Value.Substring(1, 1)
@@ -418,13 +418,13 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/desctablebuildraw",
                         "build {1}table variable ({0}) from {3} expression ({2}) separated by its first 2 characters",
-                        TargetName, tPersistT, Value, exprTypeT
+                        TargetVar, tPersistT, Value, exprTypeT
                     );
                 case OperationEnum.Filter:
                     return I18n.Translate(
                         "internal/Action/desctablefilter",
                         "Use expression ({4}) to filter {1}table ({0}) into {3}list ({2})",
-                        Name, sPersistT, TargetName, tPersistT, Value
+                        Name, sPersistT, TargetVar, tPersistT, Value
                     );
                 case OperationEnum.FilterLine:
                     {
@@ -433,7 +433,7 @@ namespace Triggernometry.Core.Actions
                         return I18n.Translate(
                             "internal/Action/desctablefilterline",
                             "Use expression ({4}) to filter the {5}s in {1}table ({0}) into {3}table ({2})",
-                            Name, sPersistT, TargetName, tPersistT, isCol ? X : Y, lineType
+                            Name, sPersistT, TargetVar, tPersistT, isCol ? X : Y, lineType
                         );
                     }
                 case OperationEnum.SetLine:
@@ -528,7 +528,7 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
-            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetName);
+            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
             VariableStore svs = plug.GetVariableStore(Persistent);
             VariableStore tvs = plug.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
@@ -1080,7 +1080,7 @@ namespace Triggernometry.Core.Actions
             action.Operation = (OperationEnum)(int)oldAction._TableVariableOp;
             action.ValueType = (ExpressionType)(int)oldAction._TableVariableExpressionType;
             action.Name = oldAction._TableVariableName;
-            action.TargetName = oldAction._TableVariableTarget;
+            action.TargetVar = oldAction._TableVariableTarget;
             action.Value = oldAction._TableVariableExpression;
             action.X = oldAction._TableVariableX;
             action.Y = oldAction._TableVariableY;
@@ -1098,7 +1098,7 @@ namespace Triggernometry.Core.Actions
             oldAction._TableVariableOp = (ActionOld.TableVariableOpEnum)(int)action.Operation;
             oldAction._TableVariableExpressionType = (ActionOld.TableVariableExpTypeEnum)(int)action.ValueType;
             oldAction._TableVariableName = action.Name;
-            oldAction._TableVariableTarget = action.TargetName;
+            oldAction._TableVariableTarget = action.TargetVar;
             oldAction._TableVariableExpression = action.Value;
             oldAction._TableVariableX = action.X;
             oldAction._TableVariableY = action.Y;

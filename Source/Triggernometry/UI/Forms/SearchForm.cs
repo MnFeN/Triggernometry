@@ -223,7 +223,7 @@ namespace Triggernometry.UI.Forms
                     }
                     if ((filter & SearchFilterEnum.ActionDetails) != 0)
                     {
-                        if (RegexMatches(rex, a.ExecutionDelayExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitexecdelay", "Action #{0} execution delay", i), Match = tn });
+                        if (RegexMatches(rex, a.ExecDelay) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitexecdelay", "Action #{0} execution delay", i), Match = tn });
                         if (a is ActionOverlayImage overlayImage)
                         {
                             if (RegexMatches(rex, overlayImage.Filename) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitimgaurasrc", "Action #{0} image aura source", i), Match = tn });
@@ -246,16 +246,16 @@ namespace Triggernometry.UI.Forms
                         if (a is ActionJsonRequest jsonRequest)
                         {
                             if (RegexMatches(rex, jsonRequest.Endpoint) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonendpoint", "Action #{0} JSON endpoint", i), Match = tn });
-                            if (RegexMatches(rex, jsonRequest.FiringExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonfiring", "Action #{0} JSON firing expression", i), Match = tn });
+                            if (RegexMatches(rex, jsonRequest.ResponseLogTemplate) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonfiring", "Action #{0} JSON firing expression", i), Match = tn });
                             if (RegexMatches(rex, jsonRequest.Payload) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonpayload", "Action #{0} JSON payload expression", i), Match = tn });
                             if (RegexMatches(rex, jsonRequest.Headers) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonheaders", "Action #{0} JSON header expression", i), Match = tn });
-                            if (RegexMatches(rex, jsonRequest.ResultVariable) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonvariable", "Action #{0} JSON result variable", i), Match = tn });
+                            if (RegexMatches(rex, jsonRequest.ResponseVar) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitjsonvariable", "Action #{0} JSON result variable", i), Match = tn });
                         }
                         if (a is ActionKeypress keypress)
                         {
                             if (RegexMatches(rex, keypress.Keycode) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitkeypresscode", "Action #{0} keypress code", i), Match = tn });
                             if (RegexMatches(rex, keypress.Keypress) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitkeypressexpression", "Action #{0} keypress expression", i), Match = tn });
-                            if (RegexMatches(rex, keypress.WindowTitle) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitkeypresswindow", "Action #{0} keypress window", i), Match = tn });
+                            if (RegexMatches(rex, keypress.WinTitleRegex) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitkeypresswindow", "Action #{0} keypress window", i), Match = tn });
                         }
                         if (a is ActionLaunchProcess launchProcess)
                         {
@@ -265,10 +265,10 @@ namespace Triggernometry.UI.Forms
                         }
                         if (a is ActionVariableList variableList)
                         {
-                            if (RegexMatches(rex, variableList.ValueExpression) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlistexpr", "Action #{0} list variable expression", i), Match = tn });
+                            if (RegexMatches(rex, variableList.Value) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlistexpr", "Action #{0} list variable expression", i), Match = tn });
                             if (RegexMatches(rex, variableList.Index) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlistindex", "Action #{0} list variable index", i), Match = tn });
                             if (RegexMatches(rex, variableList.Name) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlistname", "Action #{0} list variable name", i), Match = tn });
-                            if (RegexMatches(rex, variableList.Target) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlisttarget", "Action #{0} list variable target", i), Match = tn });
+                            if (RegexMatches(rex, variableList.TargetVar) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitlisttarget", "Action #{0} list variable target", i), Match = tn });
                         }
                         if (a is ActionLogMessage logMessage)
                         {
@@ -316,16 +316,16 @@ namespace Triggernometry.UI.Forms
                         {
                             if (RegexMatches(rex, variableScalar.Value) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitvarexpr", "Action #{0} variable expression", i), Match = tn });
                             if (RegexMatches(rex, variableScalar.Name) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitvarname", "Action #{0} variable name", i), Match = tn });
-                            if (RegexMatches(rex, variableScalar.JsonTargetName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitvarjsontarget", "Action #{0} variable JSON query target", i), Match = tn });
+                            if (RegexMatches(rex, variableScalar.TargetVar) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitvarjsontarget", "Action #{0} variable JSON query target", i), Match = tn });
                         }
                         if (a is ActionWindowMessage windowMessage)
                         {
-                            if (RegexMatches(rex, windowMessage.WindowTitle) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitwmsgtitle", "Action #{0} window message title", i), Match = tn });
+                            if (RegexMatches(rex, windowMessage.WinTitleRegex) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitwmsgtitle", "Action #{0} window message title", i), Match = tn });
                         }
                         if (a is ActionDiskOperation diskOperation)
                         {
                             if (RegexMatches(rex, diskOperation.Filename) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitdiskfilename", "Action #{0} disk operation file name", i), Match = tn });
-                            if (RegexMatches(rex, diskOperation.Variable) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitdiskfilevar", "Action #{0} disk operation variable name", i), Match = tn });
+                            if (RegexMatches(rex, diskOperation.TargetVar) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitdiskfilevar", "Action #{0} disk operation variable name", i), Match = tn });
                         }
                     }
                 }

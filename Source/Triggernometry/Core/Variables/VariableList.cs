@@ -313,69 +313,7 @@ namespace Triggernometry.Core.Variables
 
         public void SortNumericDesc(string changer) => SortNumeric(changer, true);
 
-        public void SortFfxivPartyAsc(Configuration cfg, string changer)
-        {
-            Values.Sort((a, b) =>
-            {
-                VariableDictionary pa = PluginBridges.BridgeFFXIV.GetNamedPartyMember(a.ToString());
-                VariableDictionary pb = PluginBridges.BridgeFFXIV.GetNamedPartyMember(b.ToString());
-                if (cfg.FfxivPartyOrdering == Configuration.FfxivPartyOrderingEnum.CustomSelfFirst)
-                {
-                    VariableDictionary se = PluginBridges.BridgeFFXIV.GetMyself();
-                    if (se == pa)
-                    {
-                        return -1;
-                    }
-                    if (se == pb)
-                    {
-                        return 1;
-                    }
-                }
-                int vla = cfg.GetPartyOrderValue(pa.GetValue("jobid").ToString());
-                int vlb = cfg.GetPartyOrderValue(pb.GetValue("jobid").ToString());
-                if (vla < vlb)
-                {
-                    return -1;
-                }
-                if (vla > vlb)
-                {
-                    return 1;
-                }
-                return pa.GetValue("name").CompareTo(pb.GetValue("name"));
-            });
-        }
 
-        public void SortFfxivPartyDesc(Configuration cfg, string changer)
-        {
-            Values.Sort((a, b) =>
-            {
-                VariableDictionary pa = PluginBridges.BridgeFFXIV.GetNamedPartyMember(a.ToString());
-                VariableDictionary pb = PluginBridges.BridgeFFXIV.GetNamedPartyMember(b.ToString());
-                if (cfg.FfxivPartyOrdering == Configuration.FfxivPartyOrderingEnum.CustomSelfFirst)
-                {
-                    VariableDictionary se = PluginBridges.BridgeFFXIV.GetMyself();
-                    if (se == pa)
-                    {
-                        return 1;
-                    }
-                    if (se == pb)
-                    {
-                        return -1;
-                    }
-                }
-                int vla = cfg.GetPartyOrderValue(pa.GetValue("jobid").ToString());
-                int vlb = cfg.GetPartyOrderValue(pb.GetValue("jobid").ToString());
-                if (vla < vlb)
-                {
-                    return 1;
-                }
-                if (vla > vlb)
-                {
-                    return -1;
-                }
-                return pa.GetValue("name").CompareTo(pb.GetValue("name")) * -1;
-            });
-        }
 
         public static VariableList Build(string expression, char separator, string changer)
         {   // in actions

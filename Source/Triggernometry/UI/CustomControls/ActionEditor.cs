@@ -450,12 +450,12 @@ namespace Triggernometry.UI.CustomControls
                             font = RealPlugin.CreateFontFromDefinition(textAction.Font, textAction.EvaluateFontSize(context), textAction.Effect);
                             dialog.AuraFont = font;
                             dialog.TextAlignment = textAction.Alignment;
-                            dialog.TextColor = ExpressionTextBox.ParseColor(textAction.ForeColor, Color.Black);
+                            dialog.TextColor = ExpressionTextBox.ParseColor(textAction.TextColor, Color.Black);
                             dialog.OutlineColor = ExpressionTextBox.ParseColor(textAction.OutlineColor, Color.Empty);
                             dialog.UseOutline = dialog.OutlineColor != Color.Empty;
                         }
                         var type = action.GetType();
-                        string[] properties = { "XIniExpression", "YIniExpression", "WIniExpression", "HIniExpression" };
+                        string[] properties = { nameof(ActionOverlayImage.X_0), nameof(ActionOverlayImage.Y_0), nameof(ActionOverlayImage.W_0), nameof(ActionOverlayImage.H_0) };
                         string[] values = properties.Select(name => (string)type.GetProperty(name).GetValue(action)).ToArray();
                         if (values.All(string.IsNullOrWhiteSpace)) dialog.StartPosition = FormStartPosition.CenterParent;
                         else
@@ -467,7 +467,7 @@ namespace Triggernometry.UI.CustomControls
                         if (dialog.ShowDialog(this) != DialogResult.OK) return;
                         int[] bounds = { dialog.Left, dialog.Top, dialog.Width, dialog.Height };
                         for (int i = 0; i < properties.Length; i++) type.GetProperty(properties[i]).SetValue(action, bounds[i].ToString(CultureInfo.InvariantCulture));
-                        var opacity = type.GetProperty("OIniExpression");
+                        var opacity = type.GetProperty(nameof(ActionOverlayImage.O_0));
                         if (string.IsNullOrWhiteSpace((string)opacity.GetValue(action))) opacity.SetValue(action, "100");
                         if (action is ActionOverlayImage resultImage) resultImage.SizeMode = dialog.GetImageDisplay();
                         if (action is ActionOverlayText resultText) resultText.Alignment = dialog.TextAlignment;

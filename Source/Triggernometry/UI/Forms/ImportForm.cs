@@ -557,7 +557,7 @@ namespace Triggernometry.UI.Forms
                     action = new ActionBeep { Frequency = "1046.5", Duration = "100" }; // C6
                     break;
                 case 2:
-                    action = new ActionPlaySound { Filename = soundData, Volume = "100", ExclusivePlayer = true };
+                    action = new ActionPlaySound { Filename = soundData, Volume = "100", UseSharedPlayer = false };
                     break;
                 case 3:
                     action = new ActionPlaySpeech { Message = soundData, Volume = "100", Rate = "0" };

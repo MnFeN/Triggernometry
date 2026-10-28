@@ -41,11 +41,8 @@ namespace Triggernometry.Core
 
         private void DeInitAudio()
         {
-            if (wmp != null)
-            {
-                wmp.close();
-                wmp = null;
-            }
+            wmp?.close();
+            wmp = null;
             tts?.Dispose();
             tts = null;
         }
@@ -148,7 +145,7 @@ namespace Triggernometry.Core
                 }
             }
             WindowsMediaPlayer mywmp;
-            if (a.ExclusivePlayer == true)
+            if (!a.UseSharedPlayer)
             {
                 mywmp = new WindowsMediaPlayer();
                 lock (a.players) // verified

@@ -245,13 +245,13 @@ namespace Triggernometry.UI.Forms
 
             private void AddDelayAction(double seconds) => Trig.Actions.Add(new ActionPlaceholder
             {
-                ExecutionDelayExpression = $"{seconds.ToString("F2", CultureInfo.InvariantCulture)} * 1000",
+                ExecDelay = $"{seconds.ToString("F2", CultureInfo.InvariantCulture)} * 1000",
             });
 
             private void AddLogMsgAction(Logline logline) => Trig.Actions.Add(new ActionLogMessage
             {
                 Message = logline.Data,
-                Target = DefaultSource,
+                LogSource = DefaultSource,
                 ProcessAsLogline = true,
                 AddToACTEncounter = true,
             });

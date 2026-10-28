@@ -93,7 +93,7 @@ namespace Triggernometry.Core
             {
                 if (!action.Enabled) continue;
                 if (!sequential || instances.Count == 0)
-                    startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.ExecutionDelayExpression));
+                    startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.ExecDelay));
                 var instance = new ActionInstance(startingFrom, 0, mtx, action, ctx, false) { LoopParent = loopParent };
                 if (sequential && instances.Count > 0) instances[instances.Count - 1].NextAction = instance;
                 instances.Add(instance);
@@ -145,11 +145,11 @@ namespace Triggernometry.Core
             trig = trig ?? ctx.Trigger;
             lock (ActionQueue)
             {
-                if (action.PreventDuplicateQueue || action.RefireInterrupt == true)
+                if (action.PreventDuplicateQueue || action.ReplaceQueued == true)
                 {
                     if (ActionQueue.Any(actionInstance => actionInstance.Action.Id == action.Id))
                     {
-                        if (action.RefireInterrupt == true)
+                        if (action.ReplaceQueued == true)
                         {
                             int removedCount = ActionQueue.RemoveAll(actionInstance => actionInstance.Action.Id == action.Id);
                             if (removedCount > 0)

@@ -50,7 +50,7 @@ namespace Triggernometry.UI.CustomControls
             switch (e.ChangedType)
             {
                 case ColorSelector.ColorChangedType.TextColor:
-                    expressions[nameof(ActionOverlayText.ForeColor)].Expression = ExpressionTextBox.ColorToString(e.NewColor, Color.Black);
+                    expressions[nameof(ActionOverlayText.TextColor)].Expression = ExpressionTextBox.ColorToString(e.NewColor, Color.Black);
                     break;
                 case ColorSelector.ColorChangedType.TextOutlineColor:
                     expressions[nameof(ActionOverlayText.OutlineColor)].Expression = ExpressionTextBox.ColorToString(e.NewColor, Color.Empty);
@@ -106,7 +106,7 @@ namespace Triggernometry.UI.CustomControls
             }
             // 颜色单独求值，字体输入无效时仍可刷新颜色。求值失败时使用下面指定的后备颜色。
             // 直接设置预览字段，不触发用户选色事件，也不将求值结果写回原始表达式。
-            fontPreview._textColor = EvaluatePreviewColor(nameof(ActionOverlayText.ForeColor), Color.Black);
+            fontPreview._textColor = EvaluatePreviewColor(nameof(ActionOverlayText.TextColor), Color.Black);
             fontPreview._textOutlineColor = EvaluatePreviewColor(nameof(ActionOverlayText.OutlineColor), Color.Empty);
             fontPreview._backgroundColor = EvaluatePreviewColor(nameof(ActionOverlayText.BackColor), Color.Transparent);
             // 同步控件底色，再请求重绘示例文字、描边和背景。

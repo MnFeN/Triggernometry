@@ -50,7 +50,6 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
-
         #region Implementation
 
         internal override string DescribeImplementation()

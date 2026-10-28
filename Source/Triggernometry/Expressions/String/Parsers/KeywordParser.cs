@@ -68,9 +68,6 @@ namespace Triggernometry.Expressions.String.Parsers
                 case "_ffxivzoneid":
                     return ctx.zoneIdOverride ?? BridgeFFXIV.ZoneID.ToString();
 
-                case "_ffxivpartyorder":
-                    return plug.cfg.FfxivPartyOrdering + " " + plug.cfg.FfxivCustomPartyOrder;
-
                 case "_ffxivprocid":
                     return BridgeFFXIV.GetProcessId().ToString();
 

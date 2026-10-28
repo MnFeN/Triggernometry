@@ -96,7 +96,7 @@ namespace Triggernometry.UI.CustomControls
             "_x", "_y", "_w", "_width", "_h", "_height", "_opacity",
             "_ffxivparty[x]", "_party[x]", "_ffxiventity[x]", "_entity[x]", "_ffxivplayer", "_me", "_me.id",
             "_job[jobid/jobName/jobAbbrev]", "_tm2id[markType]", "_targetmarker2id[markType]", "_wm[markType]", "_waymark[markType]",
-            "_ffxivtime", "_ET", "_ETprecise", "_ffxivpartyorder", "_ffxivprocid", "_ffxivprocname", "_ffxivzoneid",
+            "_ffxivtime", "_ET", "_ETprecise", "_ffxivprocid", "_ffxivprocname", "_ffxivzoneid",
             "_ffxivversion", "_ffxivincombat", "_ffxivisglobal", "_ffxivlanguage", "_ffxivlanguageid",
             "_env[x]", "_const[x]", "_config[x]", "_storage[x]", "_actionhistory[i/previous]",
             "_this", "_idx", "_col", "_row", "_col[i]", "_row[i]", "_colrl[...]", "_rowcl[...]", "_key", "_val",

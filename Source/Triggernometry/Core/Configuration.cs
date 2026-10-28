@@ -276,65 +276,6 @@ namespace Triggernometry.Core
         [XmlAttribute]
         public bool FfxivLogNetwork { get; set; } = false;
 
-        public enum FfxivPartyOrderingEnum
-        {
-            Legacy,
-            CustomSelfFirst,
-            CustomFull
-        }
-
-        [XmlAttribute]
-        public FfxivPartyOrderingEnum FfxivPartyOrdering { get; set; } = FfxivPartyOrderingEnum.CustomSelfFirst;
-        private string _FfxivCustomPartyOrder;
-        [XmlAttribute]
-        public string FfxivCustomPartyOrder
-        {
-            get
-            {
-                return _FfxivCustomPartyOrder;
-            }
-            set
-            {
-                _FfxivCustomPartyOrder = value;
-                _FfxivCustomPartyOrderLookup.Clear();
-                string[] ex = value.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
-                int subn = 1;
-                foreach (string e in ex)
-                {
-                    string et = e.Trim();
-                    int valn = 0;
-                    if (int.TryParse(et, out valn) == true)
-                    {
-                        if (_FfxivCustomPartyOrderLookup.ContainsKey(valn) == false)
-                        {
-                            _FfxivCustomPartyOrderLookup[valn] = subn;
-                            subn++;
-                        }
-                    }
-                }
-            }
-        }
-
-        internal int GetPartyOrderValue(int job)
-        {
-            if (_FfxivCustomPartyOrderLookup.ContainsKey(job) == true)
-            {
-                return _FfxivCustomPartyOrderLookup[job];
-            }
-            return 9999;
-        }
-
-        internal int GetPartyOrderValue(string job)
-        {
-            int ex = 0;
-            if (int.TryParse(job, out ex) == true)
-            {
-                return GetPartyOrderValue(ex);
-            }
-            return 999;
-        }
-
-        private Dictionary<int, int> _FfxivCustomPartyOrderLookup { get; set; } = new Dictionary<int, int>();
 
         #endregion
 
@@ -619,7 +560,6 @@ namespace Triggernometry.Core
 
         public Configuration()
         {
-            FfxivCustomPartyOrder = "19, 1, 21, 3, 32, 37, 24, 6, 28, 33, 40, 20, 2, 22, 4, 30, 29, 34, 39, 23, 5, 31, 38, 25, 7, 27, 26, 35, 36";
             Constants["TelestoEndpoint"] = new VariableScalar("localhost");
             Constants["TelestoPort"] = new VariableScalar("45678");
             Constants["OBSWebsocketEndpoint"] = new VariableScalar("localhost");

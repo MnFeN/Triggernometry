@@ -222,16 +222,16 @@ namespace Triggernometry.Core
             action.ParentTrigger = ParentTrigger;
             action.Condition = (ConditionGroup)Condition?.Duplicate();
             action.Tag = Tag;
-            action.RefireInterrupt = RefireInterrupt;
+            action.ReplaceQueued = RefireInterrupt;
             // Legacy XML uses the opposite (allow requeue) logic.
             action.PreventDuplicateQueue = !RefireRequeue;
-            action.ExecutionDelayExpression = ExecutionDelayExpression;
+            action.ExecDelay = ExecutionDelayExpression;
             action.Asynchronous = Asynchronous;
             action.DebugLevel = DebugLevel;
             action.Description = Description;
-            action.DescBgColor = DescBgColor;
+            action.DescBackColor = DescBgColor;
             action.DescTextColor = DescTextColor;
-            action.DescriptionOverride = DescriptionOverride;
+            action.DescOverride = DescriptionOverride;
         }
 
         internal ActionBase ConvertToNewAction()
@@ -253,6 +253,13 @@ namespace Triggernometry.Core
                 case ActionTypeEnum.Variable:
                     return (ActionVariableScalar)this;
                 case ActionTypeEnum.ListVariable:
+                    if (_ListVariableOp == ListVariableOpEnum.SortFfxivPartyAsc || _ListVariableOp == ListVariableOpEnum.SortFfxivPartyDesc)
+                    {
+                        var placeholder = (ActionPlaceholder)this;
+                        placeholder.DescOverride = true;
+                        placeholder.Description = "FFXIV job sorting is no longer supported. Please implement job sorting yourself.";
+                        return placeholder;
+                    }
                     return (ActionVariableList)this;
                 case ActionTypeEnum.TableVariable:
                     return (ActionVariableTable)this;

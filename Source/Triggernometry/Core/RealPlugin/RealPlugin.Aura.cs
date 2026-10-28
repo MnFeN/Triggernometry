@@ -232,17 +232,17 @@ namespace Triggernometry.Core
                         {
                             Scarborough.ScarboroughImage si = new Scarborough.ScarboroughImage(sc);
                             si.ImageExpression = a.Filename;
-                            si.InitXExpression = a.XIniExpression;
-                            si.InitYExpression = a.YIniExpression;
-                            si.InitWExpression = a.WIniExpression;
-                            si.InitHExpression = a.HIniExpression;
-                            si.InitOExpression = a.OIniExpression;
-                            si.UpdateXExpression = a.XTickExpression;
-                            si.UpdateYExpression = a.YTickExpression;
-                            si.UpdateWExpression = a.WTickExpression;
-                            si.UpdateHExpression = a.HTickExpression;
-                            si.UpdateOExpression = a.OTickExpression;
-                            si.TTLExpression = a.TTLTickExpression;
+                            si.InitXExpression = a.X_0;
+                            si.InitYExpression = a.Y_0;
+                            si.InitWExpression = a.W_0;
+                            si.InitHExpression = a.H_0;
+                            si.InitOExpression = a.O_0;
+                            si.UpdateXExpression = a.X_t;
+                            si.UpdateYExpression = a.Y_t;
+                            si.UpdateWExpression = a.W_t;
+                            si.UpdateHExpression = a.H_t;
+                            si.UpdateOExpression = a.O_t;
+                            si.TTLExpression = a.AliveCondition;
                             si.Display = a.SizeMode;
                             si.ctx = ctx;
                             sc.Activate(ax, si);
@@ -318,9 +318,9 @@ namespace Triggernometry.Core
                                 acf.ctx = ctx;
                                 acf.ImageExpression = a.Filename;
                                 acf.Display = a.SizeMode;
-                                acf.Left = acf.EvaluateNumericExpression(ctx, a.XIniExpression);
-                                acf.Top = acf.EvaluateNumericExpression(ctx, a.YIniExpression);
-                                int i = acf.EvaluateNumericExpression(ctx, a.WIniExpression);
+                                acf.Left = acf.EvaluateNumericExpression(ctx, a.X_0);
+                                acf.Top = acf.EvaluateNumericExpression(ctx, a.Y_0);
+                                int i = acf.EvaluateNumericExpression(ctx, a.W_0);
                                 if (i < 0)
                                 {
                                     i = 0;
@@ -330,13 +330,13 @@ namespace Triggernometry.Core
                                 {
                                     i = 0;
                                 }
-                                i = acf.EvaluateNumericExpression(ctx, a.HIniExpression);
+                                i = acf.EvaluateNumericExpression(ctx, a.H_0);
                                 if (i < 0)
                                 {
                                     i = 0;
                                 }
                                 acf.Height = i;
-                                i = acf.EvaluateNumericExpression(ctx, a.OIniExpression);
+                                i = acf.EvaluateNumericExpression(ctx, a.O_0);
                                 if (i < 0)
                                 {
                                     i = 0;
@@ -346,12 +346,12 @@ namespace Triggernometry.Core
                                     i = 100;
                                 }
                                 acf.PresentableOpacity = i;
-                                acf.XExpression = a.XTickExpression;
-                                acf.YExpression = a.YTickExpression;
-                                acf.WExpression = a.WTickExpression;
-                                acf.HExpression = a.HTickExpression;
-                                acf.OExpression = a.OTickExpression;
-                                acf.TTLExpression = a.TTLTickExpression;
+                                acf.XExpression = a.X_t;
+                                acf.YExpression = a.Y_t;
+                                acf.WExpression = a.W_t;
+                                acf.HExpression = a.H_t;
+                                acf.OExpression = a.O_t;
+                                acf.TTLExpression = a.AliveCondition;
                                 acf.AuraActivate();
                                 if (newAura == true)
                                 {
@@ -463,17 +463,17 @@ namespace Triggernometry.Core
                         try
                         {
                             Scarborough.ScarboroughText si = new Scarborough.ScarboroughText(sc);
-                            si.InitXExpression = a.XIniExpression;
-                            si.InitYExpression = a.YIniExpression;
-                            si.InitWExpression = a.WIniExpression;
-                            si.InitHExpression = a.HIniExpression;
-                            si.InitOExpression = a.OIniExpression;
-                            si.UpdateXExpression = a.XTickExpression;
-                            si.UpdateYExpression = a.YTickExpression;
-                            si.UpdateWExpression = a.WTickExpression;
-                            si.UpdateHExpression = a.HTickExpression;
-                            si.UpdateOExpression = a.OTickExpression;
-                            si.TTLExpression = a.TTLTickExpression;
+                            si.InitXExpression = a.X_0;
+                            si.InitYExpression = a.Y_0;
+                            si.InitWExpression = a.W_0;
+                            si.InitHExpression = a.H_0;
+                            si.InitOExpression = a.O_0;
+                            si.UpdateXExpression = a.X_t;
+                            si.UpdateYExpression = a.Y_t;
+                            si.UpdateWExpression = a.W_t;
+                            si.UpdateHExpression = a.H_t;
+                            si.UpdateOExpression = a.O_t;
+                            si.TTLExpression = a.AliveCondition;
                             FontStyle fs = FontStyle.Regular;
                             if ((a.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
                             {
@@ -494,7 +494,7 @@ namespace Triggernometry.Core
                             si.TextExpression = a.Text;
                             si.TextAlignment = a.Alignment;
                             si.TextColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.ForeColor),
+                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.TextColor),
                                     Color.Black);
                             si.OutlineColor = ExpressionTextBox.ParseColor(
                                     ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.OutlineColor),
@@ -582,7 +582,7 @@ namespace Triggernometry.Core
                                 acf.TextExpression = a.Text;
                                 acf.TextAlignment = a.Alignment;
                                 acf.TextColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.ForeColor),
+                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.TextColor),
                                     Color.Black);
                                 acf.OutlineColor = ExpressionTextBox.ParseColor(
                                     ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.OutlineColor),
@@ -642,9 +642,9 @@ namespace Triggernometry.Core
                                 {
                                     acf.BackColor = acf.TransparencyKey;
                                 }
-                                acf.Left = acf.EvaluateNumericExpression(ctx, a.XIniExpression);
-                                acf.Top = acf.EvaluateNumericExpression(ctx, a.YIniExpression);
-                                int i = acf.EvaluateNumericExpression(ctx, a.WIniExpression);
+                                acf.Left = acf.EvaluateNumericExpression(ctx, a.X_0);
+                                acf.Top = acf.EvaluateNumericExpression(ctx, a.Y_0);
+                                int i = acf.EvaluateNumericExpression(ctx, a.W_0);
                                 if (i < 0)
                                 {
                                     i = 0;
@@ -654,13 +654,13 @@ namespace Triggernometry.Core
                                 {
                                     i = 0;
                                 }
-                                i = acf.EvaluateNumericExpression(ctx, a.HIniExpression);
+                                i = acf.EvaluateNumericExpression(ctx, a.H_0);
                                 if (i < 0)
                                 {
                                     i = 0;
                                 }
                                 acf.Height = i;
-                                i = acf.EvaluateNumericExpression(ctx, a.OIniExpression);
+                                i = acf.EvaluateNumericExpression(ctx, a.O_0);
                                 if (i < 0)
                                 {
                                     i = 0;
@@ -670,12 +670,12 @@ namespace Triggernometry.Core
                                     i = 100;
                                 }
                                 acf.PresentableOpacity = i;
-                                acf.XExpression = a.XTickExpression;
-                                acf.YExpression = a.YTickExpression;
-                                acf.WExpression = a.WTickExpression;
-                                acf.HExpression = a.HTickExpression;
-                                acf.OExpression = a.OTickExpression;
-                                acf.TTLExpression = a.TTLTickExpression;
+                                acf.XExpression = a.X_t;
+                                acf.YExpression = a.Y_t;
+                                acf.WExpression = a.W_t;
+                                acf.HExpression = a.H_t;
+                                acf.OExpression = a.O_t;
+                                acf.TTLExpression = a.AliveCondition;
                                 acf.AuraActivate();
                                 if (newAura == true)
                                 {

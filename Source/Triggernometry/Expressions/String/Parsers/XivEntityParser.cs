@@ -64,12 +64,10 @@ namespace Triggernometry.Expressions.String.Parsers
             // 1. party index: ffxivparty[n]
             if (isParty && int.TryParse(inputCondition, out int partyIdx) && partyIdx >= 1 && partyIdx <= 8)
             {
-                string hexID = BridgeFFXIV.GetPartyMember(partyIdx).GetValue("id").ToString();
-                if (!string.IsNullOrEmpty(hexID))
-                {
-                    var entity = Entity.GetEntityByID(hexID);
-                    if (entity.Exist) yield return entity;
-                }
+                // 职业的默认顺序由 Job.XivDefaultOrder 初始化；同职业成员保留实体枚举顺序。
+                var entity = Entity.GetEntities(e => e.InParty || e.ID == BridgeFFXIV.PlayerId)
+                    .OrderBy(e => e.Job.DefaultOrder).ElementAtOrDefault(partyIdx - 1);
+                if (entity != null && entity.Exist) yield return entity;
                 yield break;
             }
 

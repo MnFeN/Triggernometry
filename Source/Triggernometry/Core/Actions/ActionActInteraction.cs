@@ -64,8 +64,7 @@ namespace Triggernometry.Core.Actions
         /// </summary>
         [XmlIgnore]
         [ActionSpecificProperty]
-        [EnumChoiceEditor(2, Label = "State",
-            ChoiceLabels = new[]
+        [EnumChoiceEditor(2, Label = "State", ChoiceLabels = new[]
         {
             "End/Disable",
             "Start/Enable",

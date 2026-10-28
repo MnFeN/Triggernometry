@@ -44,13 +44,13 @@ namespace Triggernometry.Core.Actions
             "FFXIV network event",
             "ACT event",
         })]
-        public LogEvent.SourceEnum Target { get; set; } = LogEvent.SourceEnum.Log;
+        public LogEvent.SourceEnum LogSource { get; set; } = LogEvent.SourceEnum.Log;
 
-        [XmlAttribute("Target")]
-        public string Xml_Target
+        [XmlAttribute("LogSource")]
+        public string Xml_LogSource
         {
-            get => XmlAttr.Enum(Target, LogEvent.SourceEnum.Log);
-            set => Target = XmlAttr.Enum<LogEvent.SourceEnum>(value);
+            get => XmlAttr.Enum(LogSource, LogEvent.SourceEnum.Log);
+            set => LogSource = XmlAttr.Enum<LogEvent.SourceEnum>(value);
         }
 
         [XmlIgnore]
@@ -124,7 +124,7 @@ namespace Triggernometry.Core.Actions
         public override Action CreateEditorRules(ConfigEditor editor)
         {
             var process = editor.GetEditor(nameof(ProcessAsLogline));
-            var target = editor.GetEditor(nameof(Target));
+            var target = editor.GetEditor(nameof(LogSource));
             var encounter = editor.GetEditor(nameof(AddToACTEncounter));
             var level = editor.GetEditor(nameof(Level));
             return () =>
@@ -142,7 +142,7 @@ namespace Triggernometry.Core.Actions
             if (ProcessAsLogline == true)
             {
                 string srcType = "";
-                switch (Target)
+                switch (LogSource)
                 {
                     case LogEvent.SourceEnum.ACT:
                         srcType = "ACT event"; break;
@@ -151,9 +151,9 @@ namespace Triggernometry.Core.Actions
                     case LogEvent.SourceEnum.Log:
                         srcType = "Normal log line"; break;
                     default:
-                        return NotImplementedEnumMessage(Target);
+                        return NotImplementedEnumMessage(LogSource);
                 }
-                srcType = I18n.Translate($"internal/EditorFields/{nameof(ActionLogMessage)}/{nameof(Target)}[{srcType}]", srcType);
+                srcType = I18n.Translate($"internal/EditorFields/{nameof(ActionLogMessage)}/{nameof(LogSource)}[{srcType}]", srcType);
                 return I18n.Translate(
                     "internal/Action/descprocessmessage",
                     "process message ({0}) as {1}", Message, srcType
@@ -193,7 +193,7 @@ namespace Triggernometry.Core.Actions
             if (ProcessAsLogline)
             {
                 string zone = ctx.EvaluateStringExpression(ActionContextLogger, ctx, plug.currentZone);
-                plug.LogLineQueuer(message, zone, Target);
+                plug.LogLineQueuer(message, zone, LogSource);
             }
             else
             {
@@ -232,7 +232,7 @@ namespace Triggernometry.Core.Actions
         {
             var action = new ActionLogMessage();
             oldAction.CopyCommonPropertiesTo(action);
-            action.Target = (LogEvent.SourceEnum)(int)oldAction._LogMessageTarget;
+            action.LogSource = (LogEvent.SourceEnum)(int)oldAction._LogMessageTarget;
             action.Message = oldAction._LogMessageText;
             action.ProcessAsLogline = oldAction._LogProcess;
             action.AddToACTEncounter = oldAction._LogProcessACT;
@@ -246,7 +246,7 @@ namespace Triggernometry.Core.Actions
             var oldAction = new ActionOld();
             action.CopyCommonPropertiesTo(oldAction);
             oldAction.ActionType = ActionOld.ActionTypeEnum.LogMessage;
-            oldAction._LogMessageTarget = (LogEvent.SourceEnum)(int)action.Target;
+            oldAction._LogMessageTarget = (LogEvent.SourceEnum)(int)action.LogSource;
             oldAction._LogMessageText = action.Message;
             oldAction._LogProcess = action.ProcessAsLogline;
             oldAction._LogProcessACT = action.AddToACTEncounter;

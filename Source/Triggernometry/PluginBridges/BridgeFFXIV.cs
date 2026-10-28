@@ -472,31 +472,6 @@ namespace Triggernometry.PluginBridges
                         }
                     }
                     PrevNumPartyMembers = NumPartyMembers;
-                    phase = 8;
-                    if (cfg.FfxivPartyOrdering == Configuration.FfxivPartyOrderingEnum.CustomSelfFirst)
-                    {
-                        //DebugPlayerSorting("a1", PartyMembers);
-                        PartyMembers.Sort(SortPlayersSelf);
-                        int ro = 1;
-                        foreach (VariableDictionary vc in PartyMembers)
-                        {
-                            vc.SetValue("order", "" + ro);
-                            ro++;
-                        }
-                        //DebugPlayerSorting("a2", PartyMembers);
-                    }
-                    else if (cfg.FfxivPartyOrdering == Configuration.FfxivPartyOrderingEnum.CustomFull)
-                    {
-                        //DebugPlayerSorting("b1", PartyMembers);
-                        PartyMembers.Sort(SortPlayers);
-                        int ro = 1;
-                        foreach (VariableDictionary vc in PartyMembers)
-                        {
-                            vc.SetValue("order", "" + ro);
-                            ro++;
-                        }
-                        //DebugPlayerSorting("b2", PartyMembers);
-                    }
                 }
             }
             catch (Exception ex)
@@ -505,34 +480,6 @@ namespace Triggernometry.PluginBridges
             }
         }
 
-        public static int SortPlayersSelf(VariableDictionary a, VariableDictionary b)
-        {
-            if (a == Myself && b != Myself)
-            {
-                return -1;
-            }
-            if (b == Myself && a != Myself)
-            {
-                return 1;
-            }
-            return SortPlayers(a, b);
-        }
-
-        public static int SortPlayers(VariableDictionary a, VariableDictionary b)
-        {
-            int av = cfg.GetPartyOrderValue(a.GetValue("jobid").ToString());
-            int bv = cfg.GetPartyOrderValue(b.GetValue("jobid").ToString());
-            if (av < bv)
-            {
-                return -1;
-            }
-            if (av > bv)
-            {
-                return 1;
-            }
-            // https://github.com/paissaheavyindustries/Triggernometry/issues/9
-            return b.GetValue("id").CompareTo(a.GetValue("id"));
-        }
 
         public static VariableDictionary GetNamedEntity(string name)
         {
@@ -836,15 +783,6 @@ namespace Triggernometry.PluginBridges
             return InternalGetEntities().FirstOrDefault() ?? XivEntity.NullEntity();
         }
 
-        public static VariableDictionary GetPartyMember(int index)
-        {
-            UpdateState();
-            if (index < 1 || index > NumPartyMembers)
-            {
-                return _nullCombatant;
-            }
-            return PartyMembers[index - 1];
-        }
 
         public static VariableDictionary GetMyself()
         {
@@ -852,18 +790,6 @@ namespace Triggernometry.PluginBridges
             return Myself ?? NullCombatant;
         }
 
-        public static VariableDictionary GetNamedPartyMember(string name)
-        {
-            UpdateState();
-            foreach (VariableDictionary vc in PartyMembers)
-            {
-                if (vc.GetValue("name").ToString() == name)
-                {
-                    return vc;
-                }
-            }
-            return _nullCombatant;
-        }
 
         public static VariableDictionary GetIdPartyMember(string id)
         {

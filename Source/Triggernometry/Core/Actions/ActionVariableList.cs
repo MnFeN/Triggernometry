@@ -50,8 +50,6 @@ namespace Triggernometry.Core.Actions
             SortNumericDesc,
             SortAlphaAsc,
             SortAlphaDesc,
-            SortFfxivPartyAsc,
-            SortFfxivPartyDesc,
             SortByKeys,
             UnsetAll,
             UnsetRegex,
@@ -99,8 +97,6 @@ namespace Triggernometry.Core.Actions
             "Sort list in a numerically descending order",
             "Sort list in an alphabetically ascending order",
             "Sort list in an alphabetically descending order",
-            "Sort list in an ascending order based on FFXIV party job order",
-            "Sort list in a descending order based on FFXIV party job order",
             "Sort list by the key functions",
             "Unset all list variables",
             "Unset list variables matching regular expression",
@@ -166,13 +162,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(5, Label = "Expression")]
-        public string ValueExpression { get; set; } = "";
+        public string Value { get; set; } = "";
 
-        [XmlAttribute("ValueExpression")]
-        public string Xml_ValueExpression
+        [XmlAttribute("Value")]
+        public string Xml_Value
         {
-            get => XmlAttr.String(ValueExpression, "", omitWhitespace: false);
-            set => ValueExpression = value;
+            get => XmlAttr.String(Value, "", omitWhitespace: false);
+            set => Value = value;
         }
 
         /// <summary>
@@ -196,13 +192,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(7, Label = "Target variable name", Autofill = EditorAutofillType.List)]
-        public string Target { get; set; } = "";
+        public string TargetVar { get; set; } = "";
 
-        [XmlAttribute("Target")]
-        public string Xml_Target
+        [XmlAttribute("TargetVar")]
+        public string Xml_TargetVar
         {
-            get => XmlAttr.String(Target, "", omitWhitespace: false);
-            set => Target = value;
+            get => XmlAttr.String(TargetVar, "", omitWhitespace: false);
+            set => TargetVar = value;
         }
 
         /// <summary>
@@ -225,7 +221,7 @@ namespace Triggernometry.Core.Actions
         /// </summary>
         [XmlIgnore]
         [ActionSpecificProperty]
-        [PersistenceEditor(8, nameof(Target), Label = "Target variable name")]
+        [PersistenceEditor(8, nameof(TargetVar), Label = "Target variable name")]
         public bool TargetPersistent { get; set; } = false;
 
         [XmlAttribute("TargetPersistent")]
@@ -242,12 +238,12 @@ namespace Triggernometry.Core.Actions
         {
             var operation = editor.GetEditor(nameof(Operation));
             var name = editor.GetEditor(nameof(Name));
-            var value = editor.GetEditor(nameof(ValueExpression));
+            var value = editor.GetEditor(nameof(Value));
             string valueLabel = value.Label.Text;
             string targetIndexLabel = I18n.Translate(value.Field.TranslationKey + "/TargetIndex", "Target Index");
             var valueType = editor.GetEditor(nameof(ValueType));
             var index = editor.GetEditor(nameof(Index));
-            var target = editor.GetEditor(nameof(Target));
+            var target = editor.GetEditor(nameof(TargetVar));
             var persistent = editor.GetEditor(nameof(Persistent));
             var targetPersistent = editor.GetEditor(nameof(TargetPersistent));
             return () =>
@@ -314,19 +310,19 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/desclistpush",
                         "push the value from {3} expression ({2}) to the end of {1}list variable ({0})",
-                        Name, sPersistL, ValueExpression, exprTypeL
+                        Name, sPersistL, Value, exprTypeL
                     );
                 case OperationEnum.Insert:
                     return I18n.Translate(
                         "internal/Action/desclistinsert",
                         "insert the value from {3} expression ({2}) to index ({4}) on {1}list variable ({0})",
-                        Name, sPersistL, ValueExpression, exprTypeL, Index
+                        Name, sPersistL, Value, exprTypeL, Index
                     );
                 case OperationEnum.Set:
                     return I18n.Translate(
                         "internal/Action/desclistset",
                         "set the value from {3} expression ({2}) to index ({4}) on {1}list variable ({0})",
-                        Name, sPersistL, ValueExpression, exprTypeL, Index
+                        Name, sPersistL, Value, exprTypeL, Index
                     );
                 case OperationEnum.SetAll:
                     if (string.IsNullOrWhiteSpace(Index))
@@ -334,13 +330,13 @@ namespace Triggernometry.Core.Actions
                         return I18n.Translate(
                             "internal/Action/desclistsetall",
                             "set all values on {1}list ({0}) to {3} expr ({2})",
-                            Name, sPersistL, ValueExpression, exprTypeL
+                            Name, sPersistL, Value, exprTypeL
                         );
                     }
                     return I18n.Translate(
                         "internal/Action/desclistsetallresize",
                         "set all values on {1}list ({0}) to {3} expr ({2}) (resized to length ({4}))",
-                        Name, sPersistL, ValueExpression, exprTypeL, Index
+                        Name, sPersistL, Value, exprTypeL, Index
                     );
                 case OperationEnum.Remove:
                     return I18n.Translate(
@@ -353,29 +349,29 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/desclistpop",
                         "pop index ({4}) of {1}list variable ({0}) into {3}scalar variable ({2})",
-                        Name, sPersistL, Target, tPersistL, index
+                        Name, sPersistL, TargetVar, tPersistL, index
                     );
                 case OperationEnum.PopToListInsert:
-                    if (string.IsNullOrWhiteSpace(ValueExpression))
+                    if (string.IsNullOrWhiteSpace(Value))
                     {
                         return I18n.Translate(
                             "internal/Action/desclistpoptolist",
                             "pop index ({2}) of {1}list variable ({0}) to the end of {5}list variable ({4})",
-                            Name, sPersistL, Index, Target, tPersistL
+                            Name, sPersistL, Index, TargetVar, tPersistL
                         );
                     }
                     return I18n.Translate(
                         "internal/Action/desclistpoptolistinsert",
                         "pop index ({2}) of {1}list variable ({0}) and insert to index ({5}) of {4}list variable ({3})",
                         Name, sPersistL, Index,
-                        Target, tPersistL, ValueExpression
+                        TargetVar, tPersistL, Value
                     );
                 case OperationEnum.PopToListSet:
                     return I18n.Translate(
                         "internal/Action/desclistpoptolistset",
                         "pop index ({2}) of {1}list variable ({0}) and set to index ({5}) of {4}list variable ({3})",
                         Name, sPersistL, Index,
-                        Target, tPersistL, ValueExpression
+                        TargetVar, tPersistL, Value
                     );
                 case OperationEnum.SortAlphaAsc:
                 case OperationEnum.SortAlphaDesc:
@@ -393,68 +389,60 @@ namespace Triggernometry.Core.Actions
                         "sort {1}list variable ({0}) in a numerically {2} order",
                         Name, sPersistL, numOrder
                     );
-                case OperationEnum.SortFfxivPartyAsc:
-                case OperationEnum.SortFfxivPartyDesc:
-                    string jobOrder = I18n.TrlSortAscOrDesc(Operation == OperationEnum.SortFfxivPartyAsc);
-                    return I18n.Translate(
-                        "internal/Action/desclistsortffxiv",
-                        "sort {1}list variable ({0}) in an FFXIV party job {2} order",
-                        Name, sPersistL, jobOrder
-                    );
                 case OperationEnum.SortByKeys:
                     return I18n.Translate(
                         "internal/Action/desclistsortbykeys",
                         "sort {1}list variable ({0}) by keys ({2})",
-                        Name, sPersistL, ValueExpression
+                        Name, sPersistL, Value
                     );
                 case OperationEnum.Copy:
                     return I18n.Translate(
                         "internal/Action/desclistcopy",
                         "copy {2}list variable ({0}) to {3}list variable ({1})",
-                        Name, Target, sPersistL, tPersistL
+                        Name, TargetVar, sPersistL, tPersistL
                     );
                 case OperationEnum.InsertList:
                     return I18n.Translate(
                         "internal/Action/desclistinsertlist",
                         "insert {3}list variable ({0}) into {4}list variable ({1}) at index ({2})",
-                        Name, Target, Index, sPersistL, tPersistL
+                        Name, TargetVar, Index, sPersistL, tPersistL
                     );
                 case OperationEnum.Join:
                     return I18n.Translate(
                         "internal/Action/desclistjoin",
                         "join all values in {3}list variable ({0}) to {4}scalar variable ({1}) using {5} expression ({2}) as separator",
-                        Name, Target, ValueExpression, sPersistL, tPersistL, exprTypeL
+                        Name, TargetVar, Value, sPersistL, tPersistL, exprTypeL
                     );
                 case OperationEnum.Split:
                     return I18n.Translate(
                         "internal/Action/desclistsplit",
                         "split {3}scalar variable ({0}) into {4}list variable ({1}) using {5} expression ({2}) as separator",
-                        Name, Target, ValueExpression, sPersistL, tPersistL, exprTypeL
+                        Name, TargetVar, Value, sPersistL, tPersistL, exprTypeL
                     );
                 case OperationEnum.Build:
                     if (
                         ValueType == ExpressionType.String
-                        && !ValueExpression.StartsWith("$") && !ValueExpression.StartsWith("¤{")
+                        && !Value.StartsWith("$") && !Value.StartsWith("¤{")
                     )
                     {
                         return I18n.Translate(
                             "internal/Action/desclistbuild",
                             "build {1}list variable ({0}) from string ({2}) separated by ({3})",
-                            Target, tPersistL,
-                            ValueExpression.Length == 0 ? "" : ValueExpression.Substring(1),
-                            ValueExpression.Length == 0 ? "" : ValueExpression.Substring(0, 1)
+                            TargetVar, tPersistL,
+                            Value.Length == 0 ? "" : Value.Substring(1),
+                            Value.Length == 0 ? "" : Value.Substring(0, 1)
                         );
                     }
                     return I18n.Translate(
                         "internal/Action/desclistbuildraw",
                         "build {1}list variable ({0}) from {3} expression ({2}) separated by its first character",
-                        Target, tPersistL, ValueExpression, exprTypeL
+                        TargetVar, tPersistL, Value, exprTypeL
                     );
                 case OperationEnum.Filter:
                     return I18n.Translate(
                         "internal/Action/desclistfilter",
                         "Use expression ({4}) to filter {1}list ({0}) into {3}list ({2})",
-                        Name, sPersistL, Target, tPersistL, ValueExpression
+                        Name, sPersistL, TargetVar, tPersistL, Value
                     );
                 case OperationEnum.UnsetAll:
                     return I18n.Translate( "internal/Action/desclistunsetall", "unset all {0}list variables", sPersistL);
@@ -510,7 +498,7 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.Push:
                     {
-                        string value = GetListExpressionValue(ctx, ValueType, ValueExpression);
+                        string value = GetListExpressionValue(ctx, ValueType, Value);
                         lock (svs.List)
                         {
                             VariableList vl = svs.GetListVariable(sourcename, true);
@@ -523,7 +511,7 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.Insert:
                     {
-                        string value = GetListExpressionValue(ctx, ValueType, ValueExpression);
+                        string value = GetListExpressionValue(ctx, ValueType, Value);
                         int index = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
                         lock (svs.List)
                         {
@@ -538,7 +526,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Set:
                     {
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_key}", "${_val}" };
-                        CheckInvalidDymanicExpr(ValueExpression, invalidExprs);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
 
                         string value;
                         int index = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
@@ -548,7 +536,7 @@ namespace Triggernometry.Core.Actions
                             ctx.varName = (Persistent ? "plvar:" : "lvar:") + sourcename;   // ${_this}
                             ctx.listIndex = index;  // ${_idx}
                             // Establish the target before evaluating expressions that read its old value.
-                            value = GetListExpressionValue(ctx, ValueType, ValueExpression);
+                            value = GetListExpressionValue(ctx, ValueType, Value);
                             vl.Set(index, value, changer);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listindexset",
@@ -559,7 +547,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.SetAll:
                     {
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_key}", "${_val}" };
-                        CheckInvalidDymanicExpr(ValueExpression, invalidExprs);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
                         int newLength = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
                         // create a new list to avoid setting values base on previously edited ones
                         VariableList vlNew = new VariableList();
@@ -571,14 +559,14 @@ namespace Triggernometry.Core.Actions
                             for (int i = 1; i <= newLength; i++)   // index starts from 1
                             {
                                 ctx.listIndex = i;  // ${_idx}
-                                string expr = GetListExpressionValue(ctx, ValueType, ValueExpression);
+                                string expr = GetListExpressionValue(ctx, ValueType, Value);
                                 vlNew.Push(new VariableScalar() { Value = expr }, changer);
                             }
                             svs.List[sourcename] = vlNew;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsetall",
                             "All values in {1}list variable ({0}) set to ({2})",
-                            sourcename, sPersist, ValueExpression));
+                            sourcename, sPersist, Value));
                     }
                     break;
                 case OperationEnum.Remove:
@@ -596,7 +584,7 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.PopFirst:
                     {
-                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Target);
+                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
                         int rawIndex = string.IsNullOrWhiteSpace(Index) ? 1 : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
 
                         string newval = "";
@@ -621,15 +609,15 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.PopToListInsert:
                 case OperationEnum.PopToListSet:
                     {
-                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Target);
+                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
                         bool isInsert = Operation == OperationEnum.PopToListInsert;
-                        bool popToEnd = isInsert && string.IsNullOrWhiteSpace(ValueExpression);
+                        bool popToEnd = isInsert && string.IsNullOrWhiteSpace(Value);
 
                         int rawSourceIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
                         int rawTargetIndex = 0;
                         if (!popToEnd)
                         {
-                            rawTargetIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ValueExpression);
+                            rawTargetIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
                         }
 
                         VariableScalar popped;
@@ -718,37 +706,13 @@ namespace Triggernometry.Core.Actions
                             "{1}List variable ({0}) sorted in numerically {2} order", sourcename, sPersist, order));
                     }
                     break;
-                case OperationEnum.SortFfxivPartyAsc:
-                    {
-                        string order = I18n.TrlSortAscOrDesc(true);
-                        lock (svs.List)
-                        {
-                            VariableList vl = svs.GetListVariable(sourcename, false);
-                            vl.SortFfxivPartyAsc(plug.cfg, changer);
-                        }
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortffxiv",
-                            "{1}List variable ({0}) sorted in FFXIV party {2} order", sourcename, sPersist, order));
-                    }
-                    break;
-                case OperationEnum.SortFfxivPartyDesc:
-                    {
-                        string order = I18n.TrlSortAscOrDesc(false);
-                        lock (svs.List)
-                        {
-                            VariableList vl = svs.GetListVariable(sourcename, false);
-                            vl.SortFfxivPartyDesc(plug.cfg, changer);
-                        }
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortffxiv",
-                            "{1}List variable ({0}) sorted in FFXIV party {2} order", sourcename, sPersist, order));
-                    }
-                    break;
                 case OperationEnum.SortByKeys:
                     {
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_key}", "${_val}" };
-                        CheckInvalidDymanicExpr(ValueExpression, invalidExprs);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
 
                         // parsing expressions like "n+:key1, s-:key2, s+:key3, ..."
-                        ParseSortKeyFunctions(ValueExpression,
+                        ParseSortKeyFunctions(Value,
                             out List<bool> isNumeric, out List<bool> isAscending,
                             out List<string> keysExpr, out List<List<string>> values);
                         int keysCount = keysExpr.Count;
@@ -788,7 +752,7 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.Copy:
                     {
-                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Target);
+                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
                         VariableList vl = null;
                         lock (svs.List)
                         {
@@ -810,7 +774,7 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.InsertList:
                     {
-                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Target);
+                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
                         int rawIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
                         VariableList vl = null;
                         VariableList vlcopy = null;
@@ -843,8 +807,8 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Filter:
                     {
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_key}", "${_val}" };
-                        CheckInvalidDymanicExpr(ValueExpression, invalidExprs);
-                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Target);
+                        CheckInvalidDymanicExpr(Value, invalidExprs);
+                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
                         VariableList vlResult = new VariableList();
                         lock (svs.List)
                         {
@@ -853,7 +817,7 @@ namespace Triggernometry.Core.Actions
                             for (int i = 0; i < vl.Size; i++)
                             {
                                 ctx.listIndex = i + 1;  // for ${_idx}
-                                double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ValueExpression);
+                                double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
                                 if (!MathParser.IsZero(result))
                                 {
                                     vlResult.Values.Add(vl.Values[i].Duplicate());
@@ -873,8 +837,8 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.Join:
                     {
-                        string separator = GetListExpressionValue(ctx, ValueType, ValueExpression);
-                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Target);
+                        string separator = GetListExpressionValue(ctx, ValueType, Value);
+                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
                         string newval = "";
                         lock (svs.List)
                         {
@@ -898,8 +862,8 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.Split:
                     {
-                        string separator = GetListExpressionValue(ctx, ValueType, ValueExpression);
-                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Target);
+                        string separator = GetListExpressionValue(ctx, ValueType, Value);
+                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
                         string splitval = "";
                         lock (svs.Scalar) // verified
                         {
@@ -927,8 +891,8 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Build:
                     {   // Using the first character in the expression to split the remaining part into a new list
                         // e.g. expr = ",1,2,3,4,5,6,7,8"
-                        string expr = GetListExpressionValue(ctx, ValueType, ValueExpression);
-                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Target);
+                        string expr = GetListExpressionValue(ctx, ValueType, Value);
+                        string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
                         VariableList vl = new VariableList();
                         if (expr.Length > 0)
                         {
@@ -982,12 +946,12 @@ namespace Triggernometry.Core.Actions
         {
             var action = new ActionVariableList();
             oldAction.CopyCommonPropertiesTo(action);
-            action.Operation = (OperationEnum)(int)oldAction._ListVariableOp;
+            action.Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), oldAction._ListVariableOp.ToString());
             action.ValueType = (ExpressionType)(int)oldAction._ListVariableExpressionType;
             action.Name = oldAction._ListVariableName;
-            action.ValueExpression = oldAction._ListVariableExpression;
+            action.Value = oldAction._ListVariableExpression;
             action.Index = oldAction._ListVariableIndex;
-            action.Target = oldAction._ListVariableTarget;
+            action.TargetVar = oldAction._ListVariableTarget;
             action.Persistent = oldAction._ListSourcePersist;
             action.TargetPersistent = oldAction._ListTargetPersist;
             return action;
@@ -999,12 +963,12 @@ namespace Triggernometry.Core.Actions
             var oldAction = new ActionOld();
             action.CopyCommonPropertiesTo(oldAction);
             oldAction.ActionType = ActionOld.ActionTypeEnum.ListVariable;
-            oldAction._ListVariableOp = (ActionOld.ListVariableOpEnum)(int)action.Operation;
+            oldAction._ListVariableOp = (ActionOld.ListVariableOpEnum)Enum.Parse(typeof(ActionOld.ListVariableOpEnum), action.Operation.ToString());
             oldAction._ListVariableExpressionType = (ActionOld.ListVariableExpTypeEnum)(int)action.ValueType;
             oldAction._ListVariableName = action.Name;
-            oldAction._ListVariableExpression = action.ValueExpression;
+            oldAction._ListVariableExpression = action.Value;
             oldAction._ListVariableIndex = action.Index;
-            oldAction._ListVariableTarget = action.Target;
+            oldAction._ListVariableTarget = action.TargetVar;
             oldAction._ListSourcePersist = action.Persistent;
             oldAction._ListTargetPersist = action.TargetPersistent;
             return oldAction;

@@ -31,13 +31,6 @@ namespace Triggernometry.Core
                 cfg.ShowWelcome = false;
             }
             Version v = Assembly.GetExecutingAssembly().GetName().Version;
-            if (v < new Version("1.1.6.0"))
-            {
-                if (cfg.FfxivPartyOrdering == Configuration.FfxivPartyOrderingEnum.Legacy)
-                {
-                    cfg.FfxivPartyOrdering = Configuration.FfxivPartyOrderingEnum.CustomSelfFirst;
-                }
-            }
             Configuration dummy = new Configuration();
             foreach (KeyValuePair<string, VariableScalar> kp in dummy.Constants)
             {

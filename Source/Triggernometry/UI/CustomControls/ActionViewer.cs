@@ -314,8 +314,8 @@ namespace Triggernometry.UI.CustomControls
             Core.ActionBase a = Actions[e.RowIndex];
 
             // set a warning color when a delay (not zero) is hidden under the description
-            string delay = "0" + a.ExecutionDelayExpression.Trim();
-            if (a.Enabled && a.DescriptionOverride && !( double.TryParse(delay, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double result) && result == 0 ))
+            string delay = "0" + a.ExecDelay.Trim();
+            if (a.Enabled && a.DescOverride && !( double.TryParse(delay, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double result) && result == 0 ))
             {
                 e.CellStyle.BackColor = Color.FromArgb(240, 224, 128); // light yellow
                 e.CellStyle.ForeColor = SystemColors.InactiveCaptionText;
@@ -326,7 +326,7 @@ namespace Triggernometry.UI.CustomControls
                 Color bgColor, textColor;
                 try
                 {
-                    string rawBgColor = UiContext.ExpandVariables(null, null, false, a.DescBgColor);
+                    string rawBgColor = UiContext.ExpandVariables(null, null, false, a.DescBackColor);
                     bgColor = ExpressionTextBox.ParseColor(rawBgColor, Color.Empty);
                 }
                 catch { bgColor = Color.Empty; }
@@ -470,7 +470,7 @@ namespace Triggernometry.UI.CustomControls
             foreach (var action in Actions)
             {
                 if (!action.Enabled) { continue; }
-                string delay = action.ExecutionDelayExpression;
+                string delay = action.ExecDelay;
                 if (delay.Contains("$") || delay.ToLower().Contains("random"))
                 {
                     return Double.NaN;
@@ -647,7 +647,7 @@ namespace Triggernometry.UI.CustomControls
             {
                 foreach (Core.ActionBase a in SelectedActions())
                 {
-                    a.ExecutionDelayExpression = value;
+                    a.ExecDelay = value;
                 }
             }
             dgvActions.Refresh();
@@ -664,7 +664,7 @@ namespace Triggernometry.UI.CustomControls
             {
                 foreach (Core.ActionBase a in SelectedActions())
                 {
-                    a.DescBgColor = value;
+                    a.DescBackColor = value;
                 }
             }
             dgvActions.Refresh();
@@ -692,7 +692,7 @@ namespace Triggernometry.UI.CustomControls
         {
             foreach (Core.ActionBase a in SelectedActions())
             {
-                a.DescriptionOverride = false;
+                a.DescOverride = false;
                 a.Description = "";
             }
             dgvActions.Refresh();

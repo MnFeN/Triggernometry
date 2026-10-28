@@ -120,13 +120,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(5, Label = "Target variable name")]
-        public string JsonTargetName { get; set; } = "";
+        public string TargetVar { get; set; } = "";
 
-        [XmlAttribute("JsonTargetName")]
-        public string Xml_JsonTargetName
+        [XmlAttribute("TargetVar")]
+        public string Xml_TargetVar
         {
-            get => XmlAttr.String(JsonTargetName, "", omitWhitespace: false);
-            set => JsonTargetName = value;
+            get => XmlAttr.String(TargetVar, "", omitWhitespace: false);
+            set => TargetVar = value;
         }
 
         /// <summary>
@@ -149,14 +149,14 @@ namespace Triggernometry.Core.Actions
         /// </summary>
         [XmlIgnore]
         [ActionSpecificProperty]
-        [PersistenceEditor(6, nameof(JsonTargetName), Label = "Target variable name")]
-        public bool JsonTargetPersistent { get; set; } = false;
+        [PersistenceEditor(6, nameof(TargetVar), Label = "Target variable name")]
+        public bool TargetPersistent { get; set; } = false;
 
-        [XmlAttribute("JsonTargetPersistent")]
-        public string Xml_JsonTargetPersistent
+        [XmlAttribute("TargetPersistent")]
+        public string Xml_TargetPersistent
         {
-            get => XmlAttr.Bool(JsonTargetPersistent, false);
-            set => JsonTargetPersistent = XmlAttr.Bool(value);
+            get => XmlAttr.Bool(TargetPersistent, false);
+            set => TargetPersistent = XmlAttr.Bool(value);
         }
 
         /// <summary>
@@ -182,9 +182,9 @@ namespace Triggernometry.Core.Actions
             var operation = editor.GetEditor(nameof(Operation));
             var name = editor.GetEditor(nameof(Name));
             var value = editor.GetEditor(nameof(Value));
-            var target = editor.GetEditor(nameof(JsonTargetName));
+            var target = editor.GetEditor(nameof(TargetVar));
             var persistent = editor.GetEditor(nameof(Persistent));
-            var targetPersistent = editor.GetEditor(nameof(JsonTargetPersistent));
+            var targetPersistent = editor.GetEditor(nameof(TargetPersistent));
             return () =>
             {
                 var op = (OperationEnum)operation.GetValue();
@@ -215,7 +215,7 @@ namespace Triggernometry.Core.Actions
         internal override string DescribeImplementation()
         {
             string sPersist = I18n.TrlVarPersist(Persistent);
-            string tPersist = I18n.TrlVarPersist(JsonTargetPersistent);
+            string tPersist = I18n.TrlVarPersist(TargetPersistent);
             switch (Operation)
             {
                 case OperationEnum.SetNumeric:
@@ -276,13 +276,13 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/descscalarqueryjson",
                         "query {1} variable ({0}) with JSON path ({2}) and store result to {4}scalar variable ({3})",
-                        Name, sPersist, Value, JsonTargetName, tPersist
+                        Name, sPersist, Value, TargetVar, tPersist
                     );
                 case OperationEnum.QueryJsonPathList:
                     return I18n.Translate(
                         "internal/Action/descscalarqueryjsonlist",
                         "query {1} variable ({0}) with JSON path ({2}) and store result to {4}list variable ({3})",
-                        Name, sPersist, Value, JsonTargetName, tPersist
+                        Name, sPersist, Value, TargetVar, tPersist
                     );
                 default:
                     return NotImplementedEnumMessage(Operation);
@@ -295,7 +295,7 @@ namespace Triggernometry.Core.Actions
 
             string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
             string sPersist = I18n.TrlVarPersist(Persistent);
-            string tPersist = I18n.TrlVarPersist(JsonTargetPersistent);
+            string tPersist = I18n.TrlVarPersist(TargetPersistent);
             string changer;
             if (ctx.Trigger != null)
             {
@@ -408,8 +408,8 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.QueryJsonPath:
                     {
                         newval = vs.GetScalarVariable(varname, false).Value;
-                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JsonTargetName);
-                        VariableStore vs2 = plug.GetVariableStore(JsonTargetPersistent);
+                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
+                        VariableStore vs2 = plug.GetVariableStore(TargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         object p = new Utilities.JsonParser().Parse(newval);
@@ -436,8 +436,8 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.QueryJsonPathList:
                     {
                         newval = vs.GetScalarVariable(varname, false).Value;
-                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JsonTargetName);
-                        VariableStore vs2 = plug.GetVariableStore(JsonTargetPersistent);
+                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
+                        VariableStore vs2 = plug.GetVariableStore(TargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         object p = new Utilities.JsonParser().Parse(newval);
@@ -474,9 +474,9 @@ namespace Triggernometry.Core.Actions
             oldAction.CopyCommonPropertiesTo(action);
             action.Operation = (OperationEnum)(int)oldAction._VariableOp;
             action.Name = oldAction._VariableName;
-            action.JsonTargetName = oldAction._VariableJsonTarget;
+            action.TargetVar = oldAction._VariableJsonTarget;
             action.Value = oldAction._VariableExpression;
-            action.JsonTargetPersistent = oldAction._VariableTargetPersist;
+            action.TargetPersistent = oldAction._VariableTargetPersist;
             action.Persistent = oldAction._VariablePersist;
             return action;
         }
@@ -489,9 +489,9 @@ namespace Triggernometry.Core.Actions
             oldAction.ActionType = ActionOld.ActionTypeEnum.Variable;
             oldAction._VariableOp = (ActionOld.VariableOpEnum)(int)action.Operation;
             oldAction._VariableName = action.Name;
-            oldAction._VariableJsonTarget = action.JsonTargetName;
+            oldAction._VariableJsonTarget = action.TargetVar;
             oldAction._VariableExpression = action.Value;
-            oldAction._VariableTargetPersist = action.JsonTargetPersistent;
+            oldAction._VariableTargetPersist = action.TargetPersistent;
             oldAction._VariablePersist = action.Persistent;
             return oldAction;
         }

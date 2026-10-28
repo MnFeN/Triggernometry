@@ -202,13 +202,13 @@ namespace Triggernometry.Core
 
         [XmlIgnore]
         [ExpressionEditor(3, EditorExpressionType.Numeric, Label = "Execution delay from last action (ms)")]
-        public string ExecutionDelayExpression { get; set; } = "0";
+        public string ExecDelay { get; set; } = "0";
 
-        [XmlAttribute("ExecutionDelayExpression")]
-        public string Xml_ExecutionDelayExpression
+        [XmlAttribute("ExecDelay")]
+        public string Xml_ExecDelay
         {
-            get => XmlAttr.String(ExecutionDelayExpression, "0", omitWhitespace: false);
-            set => ExecutionDelayExpression = value;
+            get => XmlAttr.String(ExecDelay, "0", omitWhitespace: false);
+            set => ExecDelay = value;
         }
 
 
@@ -252,13 +252,13 @@ namespace Triggernometry.Core
 
         [XmlIgnore]
         [CheckBoxEditor(5, Label = "Interrupt previously queued instances of this action")]
-        public bool RefireInterrupt { get; set; } = false;
+        public bool ReplaceQueued { get; set; } = false;
 
-        [XmlAttribute("RefireInterrupt")]
-        public string Xml_RefireInterrupt
+        [XmlAttribute("ReplaceQueued")]
+        public string Xml_ReplaceQueued
         {
-            get => XmlAttr.Bool(RefireInterrupt, false);
-            set => RefireInterrupt = XmlAttr.Bool(value);
+            get => XmlAttr.Bool(ReplaceQueued, false);
+            set => ReplaceQueued = XmlAttr.Bool(value);
         }
 
 
@@ -289,13 +289,13 @@ namespace Triggernometry.Core
 
 
         [XmlIgnore]
-        public string DescBgColor { get; set; } = "";
+        public string DescBackColor { get; set; } = "";
 
-        [XmlAttribute("DescBgColor")]
-        public string Xml_DescBgColor
+        [XmlAttribute("DescBackColor")]
+        public string Xml_DescBackColor
         {
-            get => XmlAttr.String(DescBgColor, "", omitWhitespace: false);
-            set => DescBgColor = value;
+            get => XmlAttr.String(DescBackColor, "", omitWhitespace: false);
+            set => DescBackColor = value;
         }
 
 
@@ -313,13 +313,13 @@ namespace Triggernometry.Core
 
 
         [XmlIgnore]
-        public bool DescriptionOverride { get; set; } = false;
+        public bool DescOverride { get; set; } = false;
 
-        [XmlAttribute("DescriptionOverride")]
-        public string Xml_DescriptionOverride
+        [XmlAttribute("DescOverride")]
+        public string Xml_DescOverride
         {
-            get => XmlAttr.Bool(DescriptionOverride, false);
-            set => DescriptionOverride = XmlAttr.Bool(value);
+            get => XmlAttr.Bool(DescOverride, false);
+            set => DescOverride = XmlAttr.Bool(value);
         }
 
 
@@ -366,14 +366,14 @@ namespace Triggernometry.Core
         {
             try
             {
-                if (DescriptionOverride)
+                if (DescOverride)
                 {
                     return Description ?? "";
                 }
                 string temp = I18n.TrlAsync(Asynchronous);
-                if (!string.IsNullOrWhiteSpace(ExecutionDelayExpression) && ExecutionDelayExpression.Trim() != "0")
+                if (!string.IsNullOrWhiteSpace(ExecDelay) && ExecDelay.Trim() != "0")
                 {
-                    string delay = double.TryParse(ExecutionDelayExpression.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out _) ? ExecutionDelayExpression : $"({ExecutionDelayExpression})";
+                    string delay = double.TryParse(ExecDelay.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out _) ? ExecDelay : $"({ExecDelay})";
                     temp += I18n.Translate("internal/Action/descafterdelay", "after {0} ms, ", delay);  // included comma in translations (comma symbols are language-dependent)
                 }
                 if (Condition?.Enabled == true)
@@ -474,12 +474,12 @@ namespace Triggernometry.Core
                 if (next != null)
                 {
                     next.Context = ctx;
-                    next.ExecuteAt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, next.Action.ExecutionDelayExpression));
+                    next.ExecuteAt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, next.Action.ExecDelay));
                 }
                 else if (ai.IsLoopTail)
                 {
                     ActionInstance parent = ai.LoopParent;
-                    DateTime when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ((ActionLoop)parent.Action).DelayExpression));
+                    DateTime when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ((ActionLoop)parent.Action).LoopDelay));
                     next = new ActionInstance(when, 0, ai.Mutex, parent.Action, parent.Context, false)
                     {
                         NextAction = parent.NextAction,
@@ -864,15 +864,15 @@ namespace Triggernometry.Core
             action.IndexInTrigger = IndexInTrigger;
             action.Condition = (ConditionGroup)Condition?.Duplicate();
             action.Tag = Tag;
-            action.RefireInterrupt = RefireInterrupt;
+            action.ReplaceQueued = ReplaceQueued;
             action.PreventDuplicateQueue = PreventDuplicateQueue;
-            action.ExecutionDelayExpression = ExecutionDelayExpression;
+            action.ExecDelay = ExecDelay;
             action.Asynchronous = Asynchronous;
             action.DebugLevel = DebugLevel;
             action.Description = Description;
-            action.DescBgColor = DescBgColor;
+            action.DescBackColor = DescBackColor;
             action.DescTextColor = DescTextColor;
-            action.DescriptionOverride = DescriptionOverride;
+            action.DescOverride = DescOverride;
         }
 
         internal void CopyCommonPropertiesTo(ActionOld oldAction)
@@ -885,15 +885,15 @@ namespace Triggernometry.Core
             oldAction.ParentTrigger = ParentTrigger;
             oldAction.Condition = (ConditionGroup)Condition?.Duplicate();
             oldAction.Tag = Tag;
-            oldAction.RefireInterrupt = RefireInterrupt;
+            oldAction.RefireInterrupt = ReplaceQueued;
             oldAction.RefireRequeue = !PreventDuplicateQueue;
-            oldAction.ExecutionDelayExpression = ExecutionDelayExpression;
+            oldAction.ExecutionDelayExpression = ExecDelay;
             oldAction.Asynchronous = Asynchronous;
             oldAction.DebugLevel = DebugLevel;
             oldAction.Description = Description;
-            oldAction.DescBgColor = DescBgColor;
+            oldAction.DescBgColor = DescBackColor;
             oldAction.DescTextColor = DescTextColor;
-            oldAction.DescriptionOverride = DescriptionOverride;
+            oldAction.DescriptionOverride = DescOverride;
         }
 
         /// <summary>

@@ -99,13 +99,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(4, EditorExpressionType.Regex, Label = "Window title")]
-        public string WindowTitle { get; set; } = "";
+        public string WinTitleRegex { get; set; } = "";
 
-        [XmlAttribute("WindowTitle")]
-        public string Xml_WindowTitle
+        [XmlAttribute("WinTitleRegex")]
+        public string Xml_WinTitleRegex
         {
-            get => XmlAttr.String(WindowTitle, "", omitWhitespace: false);
-            set => WindowTitle = value;
+            get => XmlAttr.String(WinTitleRegex, "", omitWhitespace: false);
+            set => WinTitleRegex = value;
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Triggernometry.Core.Actions
             var operation = editor.GetEditor(nameof(Operation));
             var keys = editor.GetEditor(nameof(Keypress));
             var code = editor.GetEditor(nameof(Keycode));
-            var window = editor.GetEditor(nameof(WindowTitle));
+            var window = editor.GetEditor(nameof(WinTitleRegex));
             var process = editor.GetEditor(nameof(ProcessId));
             return () =>
             {
@@ -154,7 +154,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.WindowMessageCombo:
                     string target;
                     ProcessId = ProcessId.Trim();
-                    string title = string.IsNullOrWhiteSpace(WindowTitle) ? ".*" : WindowTitle;
+                    string title = string.IsNullOrWhiteSpace(WinTitleRegex) ? ".*" : WinTitleRegex;
                     int parsedProcId = 1;
                     try { parsedProcId = (int)MathParser.Parse(ProcessId); }
                     catch { }
@@ -195,7 +195,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.WindowMessage:
                     {
                         int procid = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ProcessId);
-                        string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WindowTitle);
+                        string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WinTitleRegex);
                         int keycode = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Keycode);
                         WindowsUtils.SendKeycode(procid, window, keycode);
                     }
@@ -203,7 +203,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.WindowMessageCombo:
                     {
                         int procid = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ProcessId);
-                        string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WindowTitle);
+                        string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WinTitleRegex);
                         int[] keycodes = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Keycode)
                             .Split(',').Select(kx => Convert.ToInt32(kx.Trim())).ToArray();
                         WindowsUtils.SendKeycodes(procid, window, keycodes);
@@ -226,7 +226,7 @@ namespace Triggernometry.Core.Actions
             action.Operation = (OperationEnum)(int)oldAction._KeypressType;
             action.Keypress = oldAction._KeyPressExpression;
             action.Keycode = oldAction._KeyPressCode;
-            action.WindowTitle = oldAction._KeyPressWindow;
+            action.WinTitleRegex = oldAction._KeyPressWindow;
             action.ProcessId = oldAction._KeyPressProcId;
             return action;
         }
@@ -240,7 +240,7 @@ namespace Triggernometry.Core.Actions
             oldAction._KeypressType = (ActionOld.KeypressTypeEnum)(int)action.Operation;
             oldAction._KeyPressExpression = action.Keypress;
             oldAction._KeyPressCode = action.Keycode;
-            oldAction._KeyPressWindow = action.WindowTitle;
+            oldAction._KeyPressWindow = action.WinTitleRegex;
             oldAction._KeyPressProcId = action.ProcessId;
             return oldAction;
         }

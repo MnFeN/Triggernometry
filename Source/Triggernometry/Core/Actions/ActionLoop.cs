@@ -51,13 +51,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(3, EditorExpressionType.Numeric, Label = "Loop iteration delay")]
-        public string DelayExpression { get; set; } = "";
+        public string LoopDelay { get; set; } = "";
 
-        [XmlAttribute("DelayExpression")]
-        public string Xml_DelayExpression
+        [XmlAttribute("LoopDelay")]
+        public string Xml_LoopDelay
         {
-            get => XmlAttr.String(DelayExpression, "", omitWhitespace: false);
-            set => DelayExpression = value;
+            get => XmlAttr.String(LoopDelay, "", omitWhitespace: false);
+            set => LoopDelay = value;
         }
 
         /// <summary>
@@ -66,13 +66,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(1, EditorExpressionType.Numeric, Label = "Initial iterator")]
-        public string InitExpression { get; set; } = "0";
+        public string Start { get; set; } = "0";
 
-        [XmlAttribute("InitExpression")]
-        public string Xml_InitExpression
+        [XmlAttribute("Start")]
+        public string Xml_Start
         {
-            get => XmlAttr.String(InitExpression, "0", omitWhitespace: false);
-            set => InitExpression = value;
+            get => XmlAttr.String(Start, "0", omitWhitespace: false);
+            set => Start = value;
         }
 
         /// <summary>
@@ -81,13 +81,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(2, EditorExpressionType.Numeric, Label = "Increment")]
-        public string IncrExpression { get; set; } = "1";
+        public string Step { get; set; } = "1";
 
-        [XmlAttribute("IncrExpression")]
-        public string Xml_IncrExpression
+        [XmlAttribute("Step")]
+        public string Xml_Step
         {
-            get => XmlAttr.String(IncrExpression, "1", omitWhitespace: false);
-            set => IncrExpression = value;
+            get => XmlAttr.String(Step, "1", omitWhitespace: false);
+            set => Step = value;
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate(
                 "internal/Action/descloop", "Loop with {0} actions at ({1}) ms intervals",
                 LoopActions?.Count(action => action.Enabled) ?? 0,
-                string.IsNullOrWhiteSpace(DelayExpression) ? "0" : DelayExpression
+                string.IsNullOrWhiteSpace(LoopDelay) ? "0" : LoopDelay
             );
         }
 
@@ -119,11 +119,11 @@ namespace Triggernometry.Core.Actions
             {
                 loopContext = ai.Context.Duplicate();
                 loopContext.loopActionId = Id;
-                loopContext.loopIterator = (int)ai.Context.EvaluateNumericExpression(ActionContextLogger, ai.Context, InitExpression);
+                loopContext.loopIterator = (int)ai.Context.EvaluateNumericExpression(ActionContextLogger, ai.Context, Start);
             }
             else
             {
-                loopContext.loopIterator += (int)loopContext.EvaluateNumericExpression(ActionContextLogger, loopContext, IncrExpression);
+                loopContext.loopIterator += (int)loopContext.EvaluateNumericExpression(ActionContextLogger, loopContext, Step);
             }
             // A failed initial test must not replace the caller's context.
             if (!LoopCondition.CheckCondition(loopContext, ActionContextLogger, loopContext)) return false;
@@ -151,9 +151,9 @@ namespace Triggernometry.Core.Actions
         {
             var action = new ActionLoop();
             oldAction.CopyCommonPropertiesTo(action);
-            action.DelayExpression = oldAction._LoopDelayExpression;
-            action.InitExpression = oldAction._LoopInitExpression;
-            action.IncrExpression = oldAction._LoopIncrExpression;
+            action.LoopDelay = oldAction._LoopDelayExpression;
+            action.Start = oldAction._LoopInitExpression;
+            action.Step = oldAction._LoopIncrExpression;
             action.LoopCondition = (ConditionGroup)oldAction.LoopCondition?.Duplicate() ?? new ConditionGroup();
             action.LoopActions = oldAction.LoopActions?.OrderBy(x => x.OrderNumber).Select(x => x.ConvertToNewAction()).ToList() ?? new List<ActionBase>();
             return action;
@@ -165,9 +165,9 @@ namespace Triggernometry.Core.Actions
             var oldAction = new ActionOld();
             action.CopyCommonPropertiesTo(oldAction);
             oldAction.ActionType = ActionOld.ActionTypeEnum.Loop;
-            oldAction._LoopDelayExpression = action.DelayExpression;
-            oldAction._LoopInitExpression = action.InitExpression;
-            oldAction._LoopIncrExpression = action.IncrExpression;
+            oldAction._LoopDelayExpression = action.LoopDelay;
+            oldAction._LoopInitExpression = action.Start;
+            oldAction._LoopIncrExpression = action.Step;
             oldAction.LoopCondition = (ConditionGroup)action.LoopCondition?.Duplicate() ?? new ConditionGroup();
             oldAction.LoopActions = action.LoopActions?.Select(x => x.ConvertToOldAction()).ToList() ?? new List<ActionOld>();
             return oldAction;

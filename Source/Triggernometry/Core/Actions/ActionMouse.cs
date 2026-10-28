@@ -78,13 +78,13 @@ namespace Triggernometry.Core.Actions
             "Absolute",
             "Relative",
         })]
-        public CoordinateEnum Coordinate { get; set; } = CoordinateEnum.Absolute;
+        public CoordinateEnum CoordMode { get; set; } = CoordinateEnum.Absolute;
 
-        [XmlAttribute("Coordinate")]
-        public string Xml_Coordinate
+        [XmlAttribute("CoordMode")]
+        public string Xml_CoordMode
         {
-            get => XmlAttr.Enum(Coordinate, CoordinateEnum.Absolute);
-            set => Coordinate = XmlAttr.Enum<CoordinateEnum>(value);
+            get => XmlAttr.Enum(CoordMode, CoordinateEnum.Absolute);
+            set => CoordMode = XmlAttr.Enum<CoordinateEnum>(value);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Triggernometry.Core.Actions
         internal override string DescribeImplementation()
         {
             string coorddesc = "";
-            switch (Coordinate)
+            switch (CoordMode)
             {
                 case CoordinateEnum.Absolute:
                     coorddesc = I18n.Translate("internal/Action/descmousecoordabsolute", "to absolute coordinates");
@@ -134,7 +134,7 @@ namespace Triggernometry.Core.Actions
                     coorddesc = I18n.Translate("internal/Action/descmousecoordrelative", "by relative coordinates");
                     break;
                 default:
-                    return NotImplementedEnumMessage(Coordinate);
+                    return NotImplementedEnumMessage(CoordMode);
             }
             switch (Operation)
             {
@@ -158,7 +158,7 @@ namespace Triggernometry.Core.Actions
             int mousex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
             int mousey = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
             WindowsUtils.MouseEventFlags flags = 0;
-            switch (Coordinate)
+            switch (CoordMode)
             {
                 case CoordinateEnum.Absolute:
                     flags |= WindowsUtils.MouseEventFlags.ABSOLUTE;
@@ -166,7 +166,7 @@ namespace Triggernometry.Core.Actions
                 case CoordinateEnum.Relative:
                     break;
                 default:
-                    throw NotImplementedEnumException(Coordinate);
+                    throw NotImplementedEnumException(CoordMode);
             }
             switch (Operation)
             {
@@ -218,7 +218,7 @@ namespace Triggernometry.Core.Actions
             var action = new ActionMouse();
             oldAction.CopyCommonPropertiesTo(action);
             action.Operation = (OperationEnum)(int)oldAction._MouseOpType;
-            action.Coordinate = (CoordinateEnum)(int)oldAction._MouseCoordType;
+            action.CoordMode = (CoordinateEnum)(int)oldAction._MouseCoordType;
             action.X = oldAction._MouseX;
             action.Y = oldAction._MouseY;
             return action;
@@ -231,7 +231,7 @@ namespace Triggernometry.Core.Actions
             action.CopyCommonPropertiesTo(oldAction);
             oldAction.ActionType = ActionOld.ActionTypeEnum.Mouse;
             oldAction._MouseOpType = (ActionOld.MouseOpEnum)(int)action.Operation;
-            oldAction._MouseCoordType = (ActionOld.MouseCoordEnum)(int)action.Coordinate;
+            oldAction._MouseCoordType = (ActionOld.MouseCoordEnum)(int)action.CoordMode;
             oldAction._MouseX = action.X;
             oldAction._MouseY = action.Y;
             return oldAction;

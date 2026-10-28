@@ -84,13 +84,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(3, Label = "Variable name")]
-        public string Variable { get; set; } = "";
+        public string TargetVar { get; set; } = "";
 
-        [XmlAttribute("Variable")]
-        public string Xml_Variable
+        [XmlAttribute("TargetVar")]
+        public string Xml_TargetVar
         {
-            get => XmlAttr.String(Variable, "", omitWhitespace: false);
-            set => Variable = value;
+            get => XmlAttr.String(TargetVar, "", omitWhitespace: false);
+            set => TargetVar = value;
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Triggernometry.Core.Actions
         /// </summary>
         [XmlIgnore]
         [ActionSpecificProperty]
-        [PersistenceEditor(4, nameof(Variable), Label = "Variable name")]
+        [PersistenceEditor(4, nameof(TargetVar), Label = "Variable name")]
         public bool Persistent { get; set; } = false;
 
         [XmlAttribute("Persistent")]
@@ -138,19 +138,19 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/descfilereadlistvar",
                         "read file ({0}) lines into {2}list variable ({1}){3}",
-                        Filename, Variable, persist, cache
+                        Filename, TargetVar, persist, cache
                     );
                 case OperationEnum.ReadIntoVariable:
                     return I18n.Translate(
                         "internal/Action/descfilereadvar",
                         "read file ({0}) lines into {2}scalar variable ({1}){3}",
-                        Filename, Variable, persist, cache
+                        Filename, TargetVar, persist, cache
                     );
                 case OperationEnum.ReadCSVIntoTableVariable:
                     return I18n.Translate(
                         "internal/Action/descfilereadcsvtable",
                         "read csv file ({0}) into {2}table variable ({1}){3}",
-                        Filename, Variable, persist, cache
+                        Filename, TargetVar, persist, cache
                     );
                 default:
                     return NotImplementedEnumMessage(Operation);
@@ -162,7 +162,7 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             string filename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Filename);
-            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Variable);
+            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
             string persist = I18n.TrlVarPersist(Persistent);
             string cache = I18n.TrlCacheFile(UseCache);
             VariableStore vs = plug.GetVariableStore(Persistent);
@@ -312,7 +312,7 @@ namespace Triggernometry.Core.Actions
             oldAction.CopyCommonPropertiesTo(action);
             action.Operation = (OperationEnum)(int)oldAction._DiskFileOp;
             action.Filename = oldAction._DiskFileOpName;
-            action.Variable = oldAction._DiskFileOpVar;
+            action.TargetVar = oldAction._DiskFileOpVar;
             action.UseCache = oldAction._DiskFileCache;
             action.Persistent = oldAction._DiskPersist;
             return action;
@@ -326,7 +326,7 @@ namespace Triggernometry.Core.Actions
             oldAction.ActionType = ActionOld.ActionTypeEnum.DiskFile;
             oldAction._DiskFileOp = (ActionOld.DiskFileOpEnum)(int)action.Operation;
             oldAction._DiskFileOpName = action.Filename;
-            oldAction._DiskFileOpVar = action.Variable;
+            oldAction._DiskFileOpVar = action.TargetVar;
             oldAction._DiskFileCache = action.UseCache;
             oldAction._DiskPersist = action.Persistent;
             return oldAction;

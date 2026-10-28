@@ -18,13 +18,6 @@ namespace Triggernometry.Core.Actions
     {
 
         #region Properties
-        /*
-        public enum MethodEnum
-        {
-            POST,
-            GET
-        }
-        */
 
         /// <summary>
         /// Discord webhook URL

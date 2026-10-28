@@ -243,8 +243,8 @@ namespace Triggernometry.UI.Forms
                 generalEditor?.Bind(draft, field => field.Member.DeclaringType == typeof(ActionBase));
                 if (cndCondition != null) cndCondition.ConditionToEdit = draft.Condition;
                 txtDescription.Text = draft.Description;
-                chkOverrideDesc.Checked = draft.DescriptionOverride;
-                expDescBgColor.Expression = draft.DescBgColor;
+                chkOverrideDesc.Checked = draft.DescOverride;
+                expDescBgColor.Expression = draft.DescBackColor;
                 expDescTextColor.Expression = draft.DescTextColor;
             }
             finally
@@ -318,8 +318,8 @@ namespace Triggernometry.UI.Forms
             if (isReadOnly) return;
             if (cndCondition != null) draft.Condition = cndCondition.ConditionToEdit;
             if (txtDescription.Text != (draft.Description ?? "")) draft.Description = txtDescription.Text;
-            draft.DescriptionOverride = chkOverrideDesc.Checked;
-            if (expDescBgColor.Expression != (draft.DescBgColor ?? "")) draft.DescBgColor = expDescBgColor.Expression;
+            draft.DescOverride = chkOverrideDesc.Checked;
+            if (expDescBgColor.Expression != (draft.DescBackColor ?? "")) draft.DescBackColor = expDescBgColor.Expression;
             if (expDescTextColor.Expression != (draft.DescTextColor ?? "")) draft.DescTextColor = expDescTextColor.Expression;
         }
 

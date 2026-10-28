@@ -19,7 +19,6 @@ namespace Triggernometry.UI.Forms
 
         bool cancomplain;
         internal RealPlugin plug => RealPlugin.Instance;
-        private bool firstchange = true;
         private List<Configuration.Substitution> subs = new List<Configuration.Substitution>();
         private Trigger template = new Trigger();
         private Dictionary<string, VariableScalar> consts = new Dictionary<string, VariableScalar>();
@@ -29,7 +28,6 @@ namespace Triggernometry.UI.Forms
         {
             InitializeComponent();
             cancomplain = false;
-            SetupJobOrder(null);
             label5.Tag = I18n.DoNotTranslate;
             label6.Tag = I18n.DoNotTranslate;
             RestoredSavedDimensions();
@@ -109,7 +107,6 @@ namespace Triggernometry.UI.Forms
             chkShortcutWrapTextWhenSelected.Checked = cfg.WrapTextWhenSelected;                        
             cbxDevMode.Checked = cfg.DeveloperMode;
             cbxAutoComplete.Checked = cfg.AutoComplete;
-            cbxFfxivJobMethod.SelectedIndex = (int)cfg.FfxivPartyOrdering;
             chkWelcome.Checked = cfg.ShowWelcome;
             chkWarnAdmin.Checked = cfg.WarnAdmin;
             cbxTestLive.Checked = cfg.TestLiveByDefault;
@@ -143,7 +140,6 @@ namespace Triggernometry.UI.Forms
             chkEndpointLog.Checked = cfg.LogEndpoint;
             cbxTriggerTemplate.Checked = cfg.UseTemplateTrigger;
             cfg.TemplateTrigger.CopySettingsTo(template);
-            SetupJobOrder(cfg);
             SecuritySettingsFromConfiguration(cfg);
             SetupConsts(plug.cfg.Constants);
 
@@ -201,7 +197,6 @@ namespace Triggernometry.UI.Forms
             cfg.LogEndpoint = chkEndpointLog.Checked;
             cfg.UseTemplateTrigger = cbxTriggerTemplate.Checked;
             template.CopySettingsTo(cfg.TemplateTrigger);
-            cfg.FfxivPartyOrdering = (Configuration.FfxivPartyOrderingEnum)cbxFfxivJobMethod.SelectedIndex;
             if (chkUpdates.Checked == true)
             {
                 cfg.UpdateNotifications = Configuration.UpdateNotificationsEnum.Yes;
@@ -232,12 +227,6 @@ namespace Triggernometry.UI.Forms
             {
                 cfg.StartupTriggerId = Guid.Empty;
             }
-            List<string> temp = new List<string>();
-            foreach (FfxivJobOrderItem oi in lstFfxivJobOrder.Items)
-            {
-                temp.Add(oi.JobId.ToString()); 
-            }
-            cfg.FfxivCustomPartyOrder = string.Join(", ", temp);
             cfg.Substitutions.Clear();
             cfg.Substitutions.AddRange(subs);
             MethodInfo setter = cfg.GetType().GetMethod("AddAPIUsage", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -360,164 +349,6 @@ namespace Triggernometry.UI.Forms
             lblFolderReminder.Visible = false;
         }
 
-        private void cbxFfxivJobMethod_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cbxFfxivJobMethod.SelectedIndex)
-            {
-                case 0:
-                    toolStrip1.Enabled = false;
-                    lstFfxivJobOrder.Enabled = false;
-                    break;
-                case 1:
-                    toolStrip1.Enabled = true;
-                    lstFfxivJobOrder.Enabled = true;                    
-                    break;
-                case 2:
-                    if (firstchange == false)
-                    {
-                        switch (MessageBox.Show(this, I18n.Translate("internal/ConfigurationForm/partyorderwarn", "Setting this option may break old triggers that rely on the player being the first party member on the list. Are you sure you would like to proceed?"), I18n.Translate("internal/ConfigurationForm/warning", "Warning"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
-                        {
-                            case DialogResult.Yes:
-                                break;
-                            case DialogResult.No:
-                                cbxFfxivJobMethod.SelectedIndex = (int)cbxFfxivJobMethod.Tag;
-                                return;
-                        }
-                    }
-                    toolStrip1.Enabled = true;
-                    lstFfxivJobOrder.Enabled = true;
-                    break;
-            }
-            cbxFfxivJobMethod.Tag = cbxFfxivJobMethod.SelectedIndex;
-            firstchange = false;
-        }
-
-        private void lstFfxivJobOrder_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            btnFfxivJobUp.Enabled = (lstFfxivJobOrder.SelectedIndex > 0);
-            btnFfxivJobDown.Enabled = (lstFfxivJobOrder.SelectedIndex >= 0 && lstFfxivJobOrder.SelectedIndex < lstFfxivJobOrder.Items.Count - 1);
-        }
-
-        private void lstFfxivJobOrder_EnabledChanged(object sender, EventArgs e)
-        {
-            if (lstFfxivJobOrder.Enabled == false)
-            {
-                lstFfxivJobOrder.ClearSelected();
-            }
-        }
-
-        internal class FfxivJobOrderItem
-        {
-
-            public string Name { get; set; }
-            public int JobId { get; set; }
-
-            public override string ToString()
-            {
-                return Name;
-            }
-
-        }
-
-        private void SetupJobOrder(Configuration cx)
-        {
-            lstFfxivJobOrder.Items.Clear();
-            List<FfxivJobOrderItem> order = new List<FfxivJobOrderItem>();            
-            order.Add(new FfxivJobOrderItem() { Name = "Paladin", JobId = 19 });
-            order.Add(new FfxivJobOrderItem() { Name = "Gladiator", JobId = 1 });
-            order.Add(new FfxivJobOrderItem() { Name = "Warrior", JobId = 21 });
-            order.Add(new FfxivJobOrderItem() { Name = "Marauder", JobId = 3 });
-            order.Add(new FfxivJobOrderItem() { Name = "Dark Knight", JobId = 32 });
-            order.Add(new FfxivJobOrderItem() { Name = "Gunbreaker", JobId = 37 });
-            order.Add(new FfxivJobOrderItem() { Name = "White Mage", JobId = 24 });
-            order.Add(new FfxivJobOrderItem() { Name = "Conjurer", JobId = 6 });
-            order.Add(new FfxivJobOrderItem() { Name = "Scholar", JobId = 28 });
-            order.Add(new FfxivJobOrderItem() { Name = "Astrologian", JobId = 33 });
-            order.Add(new FfxivJobOrderItem() { Name = "Sage", JobId = 40 });
-            order.Add(new FfxivJobOrderItem() { Name = "Monk", JobId = 20 });
-            order.Add(new FfxivJobOrderItem() { Name = "Pugilist", JobId = 2 });
-            order.Add(new FfxivJobOrderItem() { Name = "Dragoon", JobId = 22 });
-            order.Add(new FfxivJobOrderItem() { Name = "Lancer", JobId = 4 });
-            order.Add(new FfxivJobOrderItem() { Name = "Ninja", JobId = 30 });
-            order.Add(new FfxivJobOrderItem() { Name = "Rogue", JobId = 29 });
-            order.Add(new FfxivJobOrderItem() { Name = "Samurai", JobId = 34 });
-            order.Add(new FfxivJobOrderItem() { Name = "Reaper", JobId = 39 });
-            order.Add(new FfxivJobOrderItem() { Name = "Viper", JobId = 41 });
-            order.Add(new FfxivJobOrderItem() { Name = "Bard", JobId = 23 });
-            order.Add(new FfxivJobOrderItem() { Name = "Archer", JobId = 5 });
-            order.Add(new FfxivJobOrderItem() { Name = "Machinist", JobId = 31 });
-            order.Add(new FfxivJobOrderItem() { Name = "Dancer", JobId = 38 });
-            order.Add(new FfxivJobOrderItem() { Name = "Black Mage", JobId = 25 });
-            order.Add(new FfxivJobOrderItem() { Name = "Pictomancer", JobId = 42 });
-            order.Add(new FfxivJobOrderItem() { Name = "Thaumaturge", JobId = 7 });
-            order.Add(new FfxivJobOrderItem() { Name = "Summoner", JobId = 27 });
-            order.Add(new FfxivJobOrderItem() { Name = "Arcanist", JobId = 26 });
-            order.Add(new FfxivJobOrderItem() { Name = "Red Mage", JobId = 35 });
-            order.Add(new FfxivJobOrderItem() { Name = "Blue Mage", JobId = 36 });
-            foreach (FfxivJobOrderItem i in order)
-            {
-                i.Name = I18n.Translate(GetType().Name + "/lstFfxivJobOrder[" + i.Name + "]", i.Name);
-            }
-            if (cx != null)
-            {
-                order.Sort((a, b) =>
-                {
-                    int av = cx.GetPartyOrderValue(a.JobId);
-                    int bv = cx.GetPartyOrderValue(b.JobId);
-                    if (av < bv)
-                    {
-                        return -1;
-                    }
-                    if (av > bv)
-                    {
-                        return 1;
-                    }
-                    return a.Name.CompareTo(b.Name);
-                });
-            }
-            foreach (FfxivJobOrderItem x in order)
-            {
-                lstFfxivJobOrder.Items.Add(x);
-            }
-        }
-
-        private void btnFfxivJobRestore_Click(object sender, EventArgs e)
-        {
-            SetupJobOrder(null);
-        }
-
-        private void btnFfxivJobUp_Click(object sender, EventArgs e)
-        {
-            MoveItem(-1);
-        }
-
-        private void btnFfxivJobDown_Click(object sender, EventArgs e)
-        {
-            MoveItem(1);
-        }
-
-        public void MoveItem(int direction)
-        {
-            // Checking selected item
-            if (lstFfxivJobOrder.SelectedItem == null || lstFfxivJobOrder.SelectedIndex < 0)
-                return; // No selected item - nothing to do
-
-            // Calculate new index using move direction
-            int newIndex = lstFfxivJobOrder.SelectedIndex + direction;
-
-            // Checking bounds of the range
-            if (newIndex < 0 || newIndex >= lstFfxivJobOrder.Items.Count)
-                return; // Index out of range - nothing to do
-
-            object selected = lstFfxivJobOrder.SelectedItem;
-
-            // Removing removable element
-            lstFfxivJobOrder.Items.Remove(selected);
-            // Insert it in new position
-            lstFfxivJobOrder.Items.Insert(newIndex, selected);
-            // Restore selection
-            lstFfxivJobOrder.SetSelected(newIndex, true);
-        }
 
         private void trvTrigger_AfterSelect(object sender, TreeViewEventArgs e)
         {

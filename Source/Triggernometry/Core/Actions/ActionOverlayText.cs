@@ -165,13 +165,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ColorEditor(8, Label = "Text color")]
-        public string ForeColor { get; set; } = "";
+        public string TextColor { get; set; } = "";
 
-        [XmlAttribute("ForeColor")]
-        public string Xml_ForeColor
+        [XmlAttribute("TextColor")]
+        public string Xml_TextColor
         {
-            get => XmlAttr.String(ForeColor, "", omitWhitespace: false);
-            set => ForeColor = value;
+            get => XmlAttr.String(TextColor, "", omitWhitespace: false);
+            set => TextColor = value;
         }
 
         /// <summary>
@@ -241,13 +241,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(11, EditorExpressionType.Numeric, Label = "X location expression",
             LabelQualifier = "Initial values")]
-        public string XIniExpression { get; set; } = "";
+        public string X_0 { get; set; } = "";
 
-        [XmlAttribute("XIniExpression")]
-        public string Xml_XIniExpression
+        [XmlAttribute("X_0")]
+        public string Xml_X_0
         {
-            get => XmlAttr.String(XIniExpression, "", omitWhitespace: false);
-            set => XIniExpression = value;
+            get => XmlAttr.String(X_0, "", omitWhitespace: false);
+            set => X_0 = value;
         }
 
         /// <summary>
@@ -257,13 +257,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(13, EditorExpressionType.Numeric, Label = "Y location expression",
             LabelQualifier = "Initial values")]
-        public string YIniExpression { get; set; } = "";
+        public string Y_0 { get; set; } = "";
 
-        [XmlAttribute("YIniExpression")]
-        public string Xml_YIniExpression
+        [XmlAttribute("Y_0")]
+        public string Xml_Y_0
         {
-            get => XmlAttr.String(YIniExpression, "", omitWhitespace: false);
-            set => YIniExpression = value;
+            get => XmlAttr.String(Y_0, "", omitWhitespace: false);
+            set => Y_0 = value;
         }
 
         /// <summary>
@@ -273,13 +273,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(15, EditorExpressionType.Numeric, Label = "Width expression",
             LabelQualifier = "Initial values")]
-        public string WIniExpression { get; set; } = "";
+        public string W_0 { get; set; } = "";
 
-        [XmlAttribute("WIniExpression")]
-        public string Xml_WIniExpression
+        [XmlAttribute("W_0")]
+        public string Xml_W_0
         {
-            get => XmlAttr.String(WIniExpression, "", omitWhitespace: false);
-            set => WIniExpression = value;
+            get => XmlAttr.String(W_0, "", omitWhitespace: false);
+            set => W_0 = value;
         }
 
         /// <summary>
@@ -289,13 +289,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(17, EditorExpressionType.Numeric, Label = "Height expression",
             LabelQualifier = "Initial values")]
-        public string HIniExpression { get; set; } = "";
+        public string H_0 { get; set; } = "";
 
-        [XmlAttribute("HIniExpression")]
-        public string Xml_HIniExpression
+        [XmlAttribute("H_0")]
+        public string Xml_H_0
         {
-            get => XmlAttr.String(HIniExpression, "", omitWhitespace: false);
-            set => HIniExpression = value;
+            get => XmlAttr.String(H_0, "", omitWhitespace: false);
+            set => H_0 = value;
         }
 
         /// <summary>
@@ -305,13 +305,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(19, EditorExpressionType.Numeric, Label = "Opacity expression",
             LabelQualifier = "Initial values")]
-        public string OIniExpression { get; set; } = "";
+        public string O_0 { get; set; } = "";
 
-        [XmlAttribute("OIniExpression")]
-        public string Xml_OIniExpression
+        [XmlAttribute("O_0")]
+        public string Xml_O_0
         {
-            get => XmlAttr.String(OIniExpression, "", omitWhitespace: false);
-            set => OIniExpression = value;
+            get => XmlAttr.String(O_0, "", omitWhitespace: false);
+            set => O_0 = value;
         }
 
         /// <summary>
@@ -321,13 +321,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(12, EditorExpressionType.Numeric, Label = "X location expression",
             LabelQualifier = "Update tick (20 ms) expressions")]
-        public string XTickExpression { get; set; } = "";
+        public string X_t { get; set; } = "";
 
-        [XmlAttribute("XTickExpression")]
-        public string Xml_XTickExpression
+        [XmlAttribute("X_t")]
+        public string Xml_X_t
         {
-            get => XmlAttr.String(XTickExpression, "", omitWhitespace: false);
-            set => XTickExpression = value;
+            get => XmlAttr.String(X_t, "", omitWhitespace: false);
+            set => X_t = value;
         }
 
         /// <summary>
@@ -337,13 +337,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(14, EditorExpressionType.Numeric, Label = "Y location expression",
             LabelQualifier = "Update tick (20 ms) expressions")]
-        public string YTickExpression { get; set; } = "";
+        public string Y_t { get; set; } = "";
 
-        [XmlAttribute("YTickExpression")]
-        public string Xml_YTickExpression
+        [XmlAttribute("Y_t")]
+        public string Xml_Y_t
         {
-            get => XmlAttr.String(YTickExpression, "", omitWhitespace: false);
-            set => YTickExpression = value;
+            get => XmlAttr.String(Y_t, "", omitWhitespace: false);
+            set => Y_t = value;
         }
 
         /// <summary>
@@ -353,13 +353,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(16, EditorExpressionType.Numeric, Label = "Width expression",
             LabelQualifier = "Update tick (20 ms) expressions")]
-        public string WTickExpression { get; set; } = "";
+        public string W_t { get; set; } = "";
 
-        [XmlAttribute("WTickExpression")]
-        public string Xml_WTickExpression
+        [XmlAttribute("W_t")]
+        public string Xml_W_t
         {
-            get => XmlAttr.String(WTickExpression, "", omitWhitespace: false);
-            set => WTickExpression = value;
+            get => XmlAttr.String(W_t, "", omitWhitespace: false);
+            set => W_t = value;
         }
 
         /// <summary>
@@ -369,13 +369,13 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(18, EditorExpressionType.Numeric, Label = "Height expression",
             LabelQualifier = "Update tick (20 ms) expressions")]
-        public string HTickExpression { get; set; } = "";
+        public string H_t { get; set; } = "";
 
-        [XmlAttribute("HTickExpression")]
-        public string Xml_HTickExpression
+        [XmlAttribute("H_t")]
+        public string Xml_H_t
         {
-            get => XmlAttr.String(HTickExpression, "", omitWhitespace: false);
-            set => HTickExpression = value;
+            get => XmlAttr.String(H_t, "", omitWhitespace: false);
+            set => H_t = value;
         }
 
         /// <summary>
@@ -385,29 +385,29 @@ namespace Triggernometry.Core.Actions
         [ActionSpecificProperty]
         [ExpressionEditor(20, EditorExpressionType.Numeric, Label = "Opacity expression",
             LabelQualifier = "Update tick (20 ms) expressions")]
-        public string OTickExpression { get; set; } = "";
+        public string O_t { get; set; } = "";
 
-        [XmlAttribute("OTickExpression")]
-        public string Xml_OTickExpression
+        [XmlAttribute("O_t")]
+        public string Xml_O_t
         {
-            get => XmlAttr.String(OTickExpression, "", omitWhitespace: false);
-            set => OTickExpression = value;
+            get => XmlAttr.String(O_t, "", omitWhitespace: false);
+            set => O_t = value;
         }
 
         /// <summary>
-        /// Exoression for checking overlay life cycle
+        /// Numeric lifetime check evaluated on each update; a negative result deactivates the overlay
         /// </summary>
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(21, EditorExpressionType.Numeric, Label = "Time-to-live expression",
             LabelQualifier = "Update tick (20 ms) expressions")]
-        public string TTLTickExpression { get; set; } = "";
+        public string AliveCondition { get; set; } = "";
 
-        [XmlAttribute("TTLTickExpression")]
-        public string Xml_TTLTickExpression
+        [XmlAttribute("AliveCondition")]
+        public string Xml_AliveCondition
         {
-            get => XmlAttr.String(TTLTickExpression, "", omitWhitespace: false);
-            set => TTLTickExpression = value;
+            get => XmlAttr.String(AliveCondition, "", omitWhitespace: false);
+            set => AliveCondition = value;
         }
 
         /// <summary>
@@ -489,22 +489,22 @@ namespace Triggernometry.Core.Actions
             action.Name = oldAction._TextAuraName;
             action.Text = oldAction._TextAuraExpression;
             action.Alignment = (TextAlignment)(int)oldAction._TextAuraAlignment;
-            action.XIniExpression = oldAction._TextAuraXIniExpression;
-            action.YIniExpression = oldAction._TextAuraYIniExpression;
-            action.WIniExpression = oldAction._TextAuraWIniExpression;
-            action.HIniExpression = oldAction._TextAuraHIniExpression;
-            action.OIniExpression = oldAction._TextAuraOIniExpression;
-            action.XTickExpression = oldAction._TextAuraXTickExpression;
-            action.YTickExpression = oldAction._TextAuraYTickExpression;
-            action.WTickExpression = oldAction._TextAuraWTickExpression;
-            action.HTickExpression = oldAction._TextAuraHTickExpression;
-            action.OTickExpression = oldAction._TextAuraOTickExpression;
-            action.TTLTickExpression = oldAction._TextAuraTTLTickExpression;
+            action.X_0 = oldAction._TextAuraXIniExpression;
+            action.Y_0 = oldAction._TextAuraYIniExpression;
+            action.W_0 = oldAction._TextAuraWIniExpression;
+            action.H_0 = oldAction._TextAuraHIniExpression;
+            action.O_0 = oldAction._TextAuraOIniExpression;
+            action.X_t = oldAction._TextAuraXTickExpression;
+            action.Y_t = oldAction._TextAuraYTickExpression;
+            action.W_t = oldAction._TextAuraWTickExpression;
+            action.H_t = oldAction._TextAuraHTickExpression;
+            action.O_t = oldAction._TextAuraOTickExpression;
+            action.AliveCondition = oldAction._TextAuraTTLTickExpression;
             action.Font = oldAction._TextAuraFontName;
             action.FontSize = oldAction._TextAuraFontSize.ToString(CultureInfo.InvariantCulture);
             action.Effect = (EffectEnum)(int)oldAction._TextAuraEffect;
             action.OutlineColor = oldAction._TextAuraOutlineClInt;
-            action.ForeColor = oldAction._TextAuraForegroundClInt;
+            action.TextColor = oldAction._TextAuraForegroundClInt;
             action.BackColor = oldAction._TextAuraBackgroundClInt;
             return action;
         }
@@ -519,22 +519,22 @@ namespace Triggernometry.Core.Actions
             oldAction._TextAuraName = action.Name;
             oldAction._TextAuraExpression = action.Text;
             oldAction._TextAuraAlignment = (ActionOld.TextAuraAlignmentEnum)(int)action.Alignment;
-            oldAction._TextAuraXIniExpression = action.XIniExpression;
-            oldAction._TextAuraYIniExpression = action.YIniExpression;
-            oldAction._TextAuraWIniExpression = action.WIniExpression;
-            oldAction._TextAuraHIniExpression = action.HIniExpression;
-            oldAction._TextAuraOIniExpression = action.OIniExpression;
-            oldAction._TextAuraXTickExpression = action.XTickExpression;
-            oldAction._TextAuraYTickExpression = action.YTickExpression;
-            oldAction._TextAuraWTickExpression = action.WTickExpression;
-            oldAction._TextAuraHTickExpression = action.HTickExpression;
-            oldAction._TextAuraOTickExpression = action.OTickExpression;
-            oldAction._TextAuraTTLTickExpression = action.TTLTickExpression;
+            oldAction._TextAuraXIniExpression = action.X_0;
+            oldAction._TextAuraYIniExpression = action.Y_0;
+            oldAction._TextAuraWIniExpression = action.W_0;
+            oldAction._TextAuraHIniExpression = action.H_0;
+            oldAction._TextAuraOIniExpression = action.O_0;
+            oldAction._TextAuraXTickExpression = action.X_t;
+            oldAction._TextAuraYTickExpression = action.Y_t;
+            oldAction._TextAuraWTickExpression = action.W_t;
+            oldAction._TextAuraHTickExpression = action.H_t;
+            oldAction._TextAuraOTickExpression = action.O_t;
+            oldAction._TextAuraTTLTickExpression = action.AliveCondition;
             oldAction._TextAuraFontName = action.Font;
             oldAction._TextAuraFontSize = float.Parse(action.FontSize, CultureInfo.InvariantCulture);
             oldAction._TextAuraEffect = (ActionOld.TextAuraEffectEnum)(int)action.Effect;
             oldAction._TextAuraOutlineClInt = action.OutlineColor;
-            oldAction._TextAuraForegroundClInt = action.ForeColor;
+            oldAction._TextAuraForegroundClInt = action.TextColor;
             oldAction._TextAuraBackgroundClInt = action.BackColor;
             return oldAction;
         }

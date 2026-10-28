@@ -42,13 +42,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(2, EditorExpressionType.Regex, Label = "Window title")]
-        public string WindowTitle { get; set; } = "";
+        public string WinTitleRegex { get; set; } = "";
 
-        [XmlAttribute("WindowTitle")]
-        public string Xml_WindowTitle
+        [XmlAttribute("WinTitleRegex")]
+        public string Xml_WinTitleRegex
         {
-            get => XmlAttr.String(WindowTitle, "", omitWhitespace: false);
-            set => WindowTitle = value;
+            get => XmlAttr.String(WinTitleRegex, "", omitWhitespace: false);
+            set => WinTitleRegex = value;
         }
 
         /// <summary>
@@ -105,22 +105,22 @@ namespace Triggernometry.Core.Actions
         {
             string target;
             ProcessId = ProcessId.Trim();
-            if (WindowTitle.Trim().Length == 0)
+            if (WinTitleRegex.Trim().Length == 0)
             {
                 // the same condition check as in WindowsUtils.FindWindowsByTitleRegex
                 target = I18n.Translate("internal/Action/descwindowtargetnone", "(unspecified window name)");
             }
             if (ProcessId == "" || ProcessId == "0")
             {
-                target = I18n.Translate("internal/Action/descwindowtargetsingle", "the first window whose title match ({0})", WindowTitle);
+                target = I18n.Translate("internal/Action/descwindowtargetsingle", "the first window whose title match ({0})", WinTitleRegex);
             }
             else if (ProcessId == "-1")
             {
-                target = I18n.Translate("internal/Action/descwindowtargetall", "all windows whose titles match ({0})", WindowTitle);
+                target = I18n.Translate("internal/Action/descwindowtargetall", "all windows whose titles match ({0})", WinTitleRegex);
             }
             else
             {
-                target = I18n.Translate("internal/Action/descwindowtargetid", "windows in the process id ({0}) whose titles match ({1})", ProcessId, WindowTitle);
+                target = I18n.Translate("internal/Action/descwindowtargetid", "windows in the process id ({0}) whose titles match ({1})", ProcessId, WinTitleRegex);
             }
             return I18n.Translate("internal/Action/descwmsg", "Send message ({0}) wparam ({1}) lparam ({2}) to {3}", MessageId, Wparam, Lparam, target);
         }
@@ -130,7 +130,7 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             int procid = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ProcessId);
-            string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WindowTitle);
+            string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WinTitleRegex);
             int code = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, MessageId);
             IntPtr wparam = (IntPtr)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Wparam);
             IntPtr lparam = (IntPtr)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Lparam);
@@ -147,7 +147,7 @@ namespace Triggernometry.Core.Actions
             var action = new ActionWindowMessage();
             oldAction.CopyCommonPropertiesTo(action);
             action.ProcessId = oldAction._WmsgProcId;
-            action.WindowTitle = oldAction._WmsgTitle;
+            action.WinTitleRegex = oldAction._WmsgTitle;
             action.MessageId = oldAction._WmsgCode;
             action.Wparam = oldAction._WmsgWparam;
             action.Lparam = oldAction._WmsgLparam;
@@ -161,7 +161,7 @@ namespace Triggernometry.Core.Actions
             action.CopyCommonPropertiesTo(oldAction);
             oldAction.ActionType = ActionOld.ActionTypeEnum.WindowMessage;
             oldAction._WmsgProcId = action.ProcessId;
-            oldAction._WmsgTitle = action.WindowTitle;
+            oldAction._WmsgTitle = action.WinTitleRegex;
             oldAction._WmsgCode = action.MessageId;
             oldAction._WmsgWparam = action.Wparam;
             oldAction._WmsgLparam = action.Lparam;

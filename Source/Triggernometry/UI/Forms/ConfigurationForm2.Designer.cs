@@ -254,19 +254,6 @@
             this.tabGameSpecific = new System.Windows.Forms.TabPage();
             this.tbcGames = new System.Windows.Forms.TabControl();
             this.tabFFXIV = new System.Windows.Forms.TabPage();
-            this.panel25 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblFfxivJobOrder = new System.Windows.Forms.Label();
-            this.lblFfxivJobMethod = new System.Windows.Forms.Label();
-            this.cbxFfxivJobMethod = new System.Windows.Forms.ComboBox();
-            this.panel26 = new System.Windows.Forms.Panel();
-            this.lstFfxivJobOrder = new System.Windows.Forms.ListBox();
-            this.tlsFfxivPartyOrder = new System.Windows.Forms.ToolStrip();
-            this.btnFfxivJobUp = new System.Windows.Forms.ToolStripButton();
-            this.btnFfxivJobDown = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnFfxivJobRestore = new System.Windows.Forms.ToolStripButton();
-            this.capFfxivPartyOrder = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.panel24 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.lblFfxivLogNetwork = new System.Windows.Forms.Label();
@@ -399,10 +386,6 @@
             this.tabGameSpecific.SuspendLayout();
             this.tbcGames.SuspendLayout();
             this.tabFFXIV.SuspendLayout();
-            this.panel25.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            this.panel26.SuspendLayout();
-            this.tlsFfxivPartyOrder.SuspendLayout();
             this.panel24.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
             this.tabSecurity.SuspendLayout();
@@ -3782,8 +3765,6 @@
             // 
             // tabFFXIV
             // 
-            this.tabFFXIV.Controls.Add(this.panel25);
-            this.tabFFXIV.Controls.Add(this.capFfxivPartyOrder);
             this.tabFFXIV.Controls.Add(this.panel24);
             this.tabFFXIV.Controls.Add(this.capFfxivLogging);
             this.tabFFXIV.Location = new System.Drawing.Point(4, 25);
@@ -3794,175 +3775,6 @@
             this.tabFFXIV.TabIndex = 0;
             this.tabFFXIV.Text = "Final Fantasy XIV";
             this.tabFFXIV.UseVisualStyleBackColor = true;
-            // 
-            // panel25
-            // 
-            this.panel25.Controls.Add(this.tableLayoutPanel5);
-            this.panel25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel25.Location = new System.Drawing.Point(11, 126);
-            this.panel25.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel25.Name = "panel25";
-            this.panel25.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel25.Size = new System.Drawing.Size(826, 433);
-            this.panel25.TabIndex = 23;
-            // 
-            // tableLayoutPanel5
-            // 
-            this.tableLayoutPanel5.AutoSize = true;
-            this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Controls.Add(this.lblFfxivJobOrder, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.lblFfxivJobMethod, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.cbxFfxivJobMethod, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.panel26, 1, 1);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(826, 424);
-            this.tableLayoutPanel5.TabIndex = 1;
-            // 
-            // lblFfxivJobOrder
-            // 
-            this.lblFfxivJobOrder.AutoEllipsis = true;
-            this.lblFfxivJobOrder.AutoSize = true;
-            this.lblFfxivJobOrder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblFfxivJobOrder.Location = new System.Drawing.Point(4, 29);
-            this.lblFfxivJobOrder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblFfxivJobOrder.MinimumSize = new System.Drawing.Size(200, 0);
-            this.lblFfxivJobOrder.Name = "lblFfxivJobOrder";
-            this.lblFfxivJobOrder.Padding = new System.Windows.Forms.Padding(0, 6, 0, 0);
-            this.lblFfxivJobOrder.Size = new System.Drawing.Size(200, 395);
-            this.lblFfxivJobOrder.TabIndex = 0;
-            this.lblFfxivJobOrder.Text = "Job order";
-            // 
-            // lblFfxivJobMethod
-            // 
-            this.lblFfxivJobMethod.AutoEllipsis = true;
-            this.lblFfxivJobMethod.AutoSize = true;
-            this.lblFfxivJobMethod.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblFfxivJobMethod.Location = new System.Drawing.Point(4, 0);
-            this.lblFfxivJobMethod.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblFfxivJobMethod.MinimumSize = new System.Drawing.Size(200, 0);
-            this.lblFfxivJobMethod.Name = "lblFfxivJobMethod";
-            this.lblFfxivJobMethod.Size = new System.Drawing.Size(200, 29);
-            this.lblFfxivJobMethod.TabIndex = 1;
-            this.lblFfxivJobMethod.Text = "Ordering method";
-            this.lblFfxivJobMethod.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // cbxFfxivJobMethod
-            // 
-            this.cbxFfxivJobMethod.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cbxFfxivJobMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbxFfxivJobMethod.FormattingEnabled = true;
-            this.cbxFfxivJobMethod.Items.AddRange(new object[] {
-            "Player first, rest unordered (legacy)",
-            "Player first, sort the rest by custom party order",
-            "Sort everyone by custom party order"});
-            this.cbxFfxivJobMethod.Location = new System.Drawing.Point(212, 3);
-            this.cbxFfxivJobMethod.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.cbxFfxivJobMethod.Name = "cbxFfxivJobMethod";
-            this.cbxFfxivJobMethod.Size = new System.Drawing.Size(610, 23);
-            this.cbxFfxivJobMethod.TabIndex = 2;
-            this.cbxFfxivJobMethod.TabStop = false;
-            this.cbxFfxivJobMethod.SelectedIndexChanged += new System.EventHandler(this.cbxFfxivJobMethod_SelectedIndexChanged);
-            // 
-            // panel26
-            // 
-            this.panel26.Controls.Add(this.lstFfxivJobOrder);
-            this.panel26.Controls.Add(this.tlsFfxivPartyOrder);
-            this.panel26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel26.Location = new System.Drawing.Point(212, 32);
-            this.panel26.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel26.Name = "panel26";
-            this.panel26.Size = new System.Drawing.Size(610, 389);
-            this.panel26.TabIndex = 3;
-            // 
-            // lstFfxivJobOrder
-            // 
-            this.lstFfxivJobOrder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstFfxivJobOrder.FormattingEnabled = true;
-            this.lstFfxivJobOrder.IntegralHeight = false;
-            this.lstFfxivJobOrder.ItemHeight = 15;
-            this.lstFfxivJobOrder.Location = new System.Drawing.Point(0, 39);
-            this.lstFfxivJobOrder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lstFfxivJobOrder.Name = "lstFfxivJobOrder";
-            this.lstFfxivJobOrder.Size = new System.Drawing.Size(610, 350);
-            this.lstFfxivJobOrder.TabIndex = 0;
-            this.lstFfxivJobOrder.TabStop = false;
-            this.lstFfxivJobOrder.SelectedIndexChanged += new System.EventHandler(this.lstFfxivJobOrder_SelectedIndexChanged);
-            this.lstFfxivJobOrder.EnabledChanged += new System.EventHandler(this.lstFfxivJobOrder_EnabledChanged);
-            // 
-            // tlsFfxivPartyOrder
-            // 
-            this.tlsFfxivPartyOrder.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.tlsFfxivPartyOrder.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.tlsFfxivPartyOrder.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnFfxivJobUp,
-            this.btnFfxivJobDown,
-            this.toolStripSeparator1,
-            this.btnFfxivJobRestore});
-            this.tlsFfxivPartyOrder.Location = new System.Drawing.Point(0, 0);
-            this.tlsFfxivPartyOrder.Name = "tlsFfxivPartyOrder";
-            this.tlsFfxivPartyOrder.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tlsFfxivPartyOrder.Size = new System.Drawing.Size(610, 39);
-            this.tlsFfxivPartyOrder.TabIndex = 1;
-            // 
-            // btnFfxivJobUp
-            // 
-            this.btnFfxivJobUp.Enabled = false;
-            this.btnFfxivJobUp.Image = ((System.Drawing.Image)(resources.GetObject("btnFfxivJobUp.Image")));
-            this.btnFfxivJobUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnFfxivJobUp.Name = "btnFfxivJobUp";
-            this.btnFfxivJobUp.Padding = new System.Windows.Forms.Padding(4);
-            this.btnFfxivJobUp.Size = new System.Drawing.Size(106, 32);
-            this.btnFfxivJobUp.Text = "Move up";
-            this.btnFfxivJobUp.Click += new System.EventHandler(this.btnFfxivJobUp_Click);
-            // 
-            // btnFfxivJobDown
-            // 
-            this.btnFfxivJobDown.Enabled = false;
-            this.btnFfxivJobDown.Image = ((System.Drawing.Image)(resources.GetObject("btnFfxivJobDown.Image")));
-            this.btnFfxivJobDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnFfxivJobDown.Name = "btnFfxivJobDown";
-            this.btnFfxivJobDown.Padding = new System.Windows.Forms.Padding(4);
-            this.btnFfxivJobDown.Size = new System.Drawing.Size(128, 32);
-            this.btnFfxivJobDown.Text = "Move down";
-            this.btnFfxivJobDown.Click += new System.EventHandler(this.btnFfxivJobDown_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 35);
-            // 
-            // btnFfxivJobRestore
-            // 
-            this.btnFfxivJobRestore.Image = ((System.Drawing.Image)(resources.GetObject("btnFfxivJobRestore.Image")));
-            this.btnFfxivJobRestore.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnFfxivJobRestore.Name = "btnFfxivJobRestore";
-            this.btnFfxivJobRestore.Padding = new System.Windows.Forms.Padding(4);
-            this.btnFfxivJobRestore.Size = new System.Drawing.Size(153, 32);
-            this.btnFfxivJobRestore.Text = "Restore default";
-            this.btnFfxivJobRestore.Click += new System.EventHandler(this.btnFfxivJobRestore_Click);
-            // 
-            // capFfxivPartyOrder
-            // 
-            this.capFfxivPartyOrder.Caption = "Party list ordering";
-            this.capFfxivPartyOrder.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.capFfxivPartyOrder.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.capFfxivPartyOrder.Collapsed = false;
-            this.capFfxivPartyOrder.Collapsee = null;
-            this.capFfxivPartyOrder.Collapsible = false;
-            this.capFfxivPartyOrder.Dock = System.Windows.Forms.DockStyle.Top;
-            this.capFfxivPartyOrder.Location = new System.Drawing.Point(11, 91);
-            this.capFfxivPartyOrder.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            this.capFfxivPartyOrder.Name = "capFfxivPartyOrder";
-            this.capFfxivPartyOrder.Size = new System.Drawing.Size(826, 35);
-            this.capFfxivPartyOrder.TabIndex = 22;
             // 
             // panel24
             // 
@@ -5034,14 +4846,6 @@
             this.tbcGames.ResumeLayout(false);
             this.tabFFXIV.ResumeLayout(false);
             this.tabFFXIV.PerformLayout();
-            this.panel25.ResumeLayout(false);
-            this.panel25.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
-            this.panel26.ResumeLayout(false);
-            this.panel26.PerformLayout();
-            this.tlsFfxivPartyOrder.ResumeLayout(false);
-            this.tlsFfxivPartyOrder.PerformLayout();
             this.panel24.ResumeLayout(false);
             this.panel24.PerformLayout();
             this.tableLayoutPanel9.ResumeLayout(false);
@@ -5250,19 +5054,6 @@
         private System.Windows.Forms.Panel panel24;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
         private System.Windows.Forms.CheckBox chkFfxivLogNetwork;
-        private System.Windows.Forms.Panel panel25;
-        private CustomControls.PrettyCaption capFfxivPartyOrder;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
-        private System.Windows.Forms.Label lblFfxivJobOrder;
-        private System.Windows.Forms.Label lblFfxivJobMethod;
-        private System.Windows.Forms.ComboBox cbxFfxivJobMethod;
-        private System.Windows.Forms.Panel panel26;
-        private System.Windows.Forms.ListBox lstFfxivJobOrder;
-        private System.Windows.Forms.ToolStrip tlsFfxivPartyOrder;
-        private System.Windows.Forms.ToolStripButton btnFfxivJobUp;
-        private System.Windows.Forms.ToolStripButton btnFfxivJobDown;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton btnFfxivJobRestore;
         private System.Windows.Forms.Panel panel7;
         private CustomControls.DataGridViewEx dgvEndpointHistory;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;

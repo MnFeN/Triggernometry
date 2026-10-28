@@ -73,14 +73,14 @@ namespace Triggernometry.Core.Actions
         // todo remove?
         [XmlIgnore]
         [ActionSpecificProperty]
-        [CheckBoxEditor(3, Label = "Use exclusive sound player to prevent conflicts with other sounds")]
-        public bool ExclusivePlayer { get; set; } = true;
+        [CheckBoxEditor(3, Label = "Use shared sound player")]
+        public bool UseSharedPlayer { get; set; } = false;
 
-        [XmlAttribute("ExclusivePlayer")]
-        public string Xml_ExclusivePlayer
+        [XmlAttribute("UseSharedPlayer")]
+        public string Xml_UseSharedPlayer
         {
-            get => XmlAttr.Bool(ExclusivePlayer, true);
-            set => ExclusivePlayer = XmlAttr.Bool(value);
+            get => XmlAttr.Bool(UseSharedPlayer, false);
+            set => UseSharedPlayer = XmlAttr.Bool(value);
         }
 
         #endregion
@@ -149,7 +149,7 @@ namespace Triggernometry.Core.Actions
             oldAction.CopyCommonPropertiesTo(action);
             action.Filename = oldAction._PlaySoundFileExpression;
             action.Volume = oldAction._PlaySoundVolumeExpression;
-            action.ExclusivePlayer = oldAction._PlaySoundExclusive;
+            action.UseSharedPlayer = !oldAction._PlaySoundExclusive;
             action.AudioTarget = oldAction._SoundRouting;
             return action;
         }
@@ -162,7 +162,7 @@ namespace Triggernometry.Core.Actions
             oldAction.ActionType = ActionOld.ActionTypeEnum.PlaySound;
             oldAction._PlaySoundFileExpression = action.Filename;
             oldAction._PlaySoundVolumeExpression = action.Volume;
-            oldAction._PlaySoundExclusive = action.ExclusivePlayer;
+            oldAction._PlaySoundExclusive = !action.UseSharedPlayer;
             oldAction._SoundRouting = action.AudioTarget;
             return oldAction;
         }

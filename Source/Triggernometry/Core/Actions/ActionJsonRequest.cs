@@ -101,13 +101,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(5, Label = "Variable to store response to", Autofill = EditorAutofillType.Scalar)]
-        public string ResultVariable { get; set; } = "";
+        public string ResponseVar { get; set; } = "";
 
-        [XmlAttribute("ResultVariable")]
-        public string Xml_ResultVariable
+        [XmlAttribute("ResponseVar")]
+        public string Xml_ResponseVar
         {
-            get => XmlAttr.String(ResultVariable, "", omitWhitespace: false);
-            set => ResultVariable = value;
+            get => XmlAttr.String(ResponseVar, "", omitWhitespace: false);
+            set => ResponseVar = value;
         }
 
         /// <summary>
@@ -116,13 +116,13 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(7, Label = "Response firing expression")]
-        public string FiringExpression { get; set; } = "";
+        public string ResponseLogTemplate { get; set; } = "";
 
-        [XmlAttribute("FiringExpression")]
-        public string Xml_FiringExpression
+        [XmlAttribute("ResponseLogTemplate")]
+        public string Xml_ResponseLogTemplate
         {
-            get => XmlAttr.String(FiringExpression, "", omitWhitespace: false);
-            set => FiringExpression = value;
+            get => XmlAttr.String(ResponseLogTemplate, "", omitWhitespace: false);
+            set => ResponseLogTemplate = value;
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Triggernometry.Core.Actions
         /// </summary>
         [XmlIgnore]
         [ActionSpecificProperty]
-        [PersistenceEditor(6, nameof(ResultVariable), Label = "Variable to store response to")]
+        [PersistenceEditor(6, nameof(ResponseVar), Label = "Variable to store response to")]
         public bool Persistent { get; set; } = false;
 
         [XmlAttribute("Persistent")]
@@ -170,7 +170,7 @@ namespace Triggernometry.Core.Actions
         internal override string DescribeImplementation()
         {
             string cache = I18n.TrlCacheFile(UseCache);
-            if (FiringExpression != null && FiringExpression.Trim().Length > 0)
+            if (ResponseLogTemplate != null && ResponseLogTemplate.Trim().Length > 0)
             {
                 return I18n.Translate(
                     "internal/Action/descjsonsendrelay",
@@ -197,7 +197,7 @@ namespace Triggernometry.Core.Actions
             string endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Endpoint);
             string payload = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Payload);
             string headers = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Headers).Trim();
-            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, ResultVariable);
+            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, ResponseVar);
             string persist = I18n.TrlVarPersist(Persistent);
             List<string> headerslist = new List<string>();
             if (headers.Length > 0)
@@ -274,9 +274,9 @@ namespace Triggernometry.Core.Actions
             ctx.contextResponseCode = responseCode;
             ctx.contextJsonResponse = null;
             ctx.isContextJsonParsed = false;
-            if (FiringExpression != null && FiringExpression.Trim().Length > 0)
+            if (ResponseLogTemplate != null && ResponseLogTemplate.Trim().Length > 0)
             {
-                string firing = ctx.EvaluateStringExpression(ActionContextLogger, ctx, FiringExpression);
+                string firing = ctx.EvaluateStringExpression(ActionContextLogger, ctx, ResponseLogTemplate);
                 if (firing.Length > 0)
                 {
                     plug.LogLineQueuer(firing, "", LogEvent.SourceEnum.Log);
@@ -297,8 +297,8 @@ namespace Triggernometry.Core.Actions
             action.Method = (MethodEnum)(int)oldAction._JsonOperationType;
             action.Payload = oldAction._JsonPayloadExpression;
             action.Headers = oldAction._JsonHeaderExpression;
-            action.ResultVariable = oldAction._JsonResultVariable;
-            action.FiringExpression = oldAction._JsonFiringExpression;
+            action.ResponseVar = oldAction._JsonResultVariable;
+            action.ResponseLogTemplate = oldAction._JsonFiringExpression;
             action.UseCache = oldAction._JsonCacheRequest;
             action.Persistent = oldAction._JsonResultVariablePersist;
             return action;
@@ -314,8 +314,8 @@ namespace Triggernometry.Core.Actions
             oldAction._JsonOperationType = (ActionOld.HTTPMethodEnum)(int)action.Method;
             oldAction._JsonPayloadExpression = action.Payload;
             oldAction._JsonHeaderExpression = action.Headers;
-            oldAction._JsonResultVariable = action.ResultVariable;
-            oldAction._JsonFiringExpression = action.FiringExpression;
+            oldAction._JsonResultVariable = action.ResponseVar;
+            oldAction._JsonFiringExpression = action.ResponseLogTemplate;
             oldAction._JsonCacheRequest = action.UseCache;
             oldAction._JsonResultVariablePersist = action.Persistent;
             return oldAction;

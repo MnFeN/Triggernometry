@@ -152,25 +152,25 @@ namespace Triggernometry.Core.Actions
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(9, Label = "Target variable name", Autofill = EditorAutofillType.Dict)]
-        public string TargetVariable { get; set; } = "";
+        public string TargetVar { get; set; } = "";
 
-        [XmlAttribute("TargetVariable")]
-        public string Xml_TargetVariable
+        [XmlAttribute("TargetVar")]
+        public string Xml_TargetVar
         {
-            get => XmlAttr.String(TargetVariable, "", omitWhitespace: false);
-            set => TargetVariable = value;
+            get => XmlAttr.String(TargetVar, "", omitWhitespace: false);
+            set => TargetVar = value;
         }
 
         [XmlIgnore]
         [ActionSpecificProperty]
         [ExpressionEditor(4, Label = "Length")]
-        public string VariableLength { get; set; } = "";
+        public string Count { get; set; } = "";
 
-        [XmlAttribute("VariableLength")]
-        public string Xml_VariableLength
+        [XmlAttribute("Count")]
+        public string Xml_Count
         {
-            get => XmlAttr.String(VariableLength, "", omitWhitespace: false);
-            set => VariableLength = value;
+            get => XmlAttr.String(Count, "", omitWhitespace: false);
+            set => Count = value;
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Triggernometry.Core.Actions
         /// </summary>
         [XmlIgnore]
         [ActionSpecificProperty]
-        [PersistenceEditor(10, nameof(TargetVariable), Label = "Target variable name")]
+        [PersistenceEditor(10, nameof(TargetVar), Label = "Target variable name")]
         public bool TargetPersistent { get; set; } = false;
 
         [XmlAttribute("TargetPersistent")]
@@ -240,12 +240,12 @@ namespace Triggernometry.Core.Actions
         {
             var operation = editor.GetEditor(nameof(Operation));
             var name = editor.GetEditor(nameof(Name));
-            var length = editor.GetEditor(nameof(VariableLength));
+            var length = editor.GetEditor(nameof(Count));
             var key = editor.GetEditor(nameof(Key));
             var keyType = editor.GetEditor(nameof(KeyType));
             var value = editor.GetEditor(nameof(Value));
             var valueType = editor.GetEditor(nameof(ValueType));
-            var target = editor.GetEditor(nameof(TargetVariable));
+            var target = editor.GetEditor(nameof(TargetVar));
             var persistent = editor.GetEditor(nameof(Persistent));
             var targetPersistent = editor.GetEditor(nameof(TargetPersistent));
             return () =>
@@ -329,7 +329,7 @@ namespace Triggernometry.Core.Actions
                         return I18n.Translate(
                             "internal/Action/descdictbuild",
                             "build {1}dict variable ({0}) from string ({2}) separated by ({3}) ({4})",
-                            TargetVariable, tPersistD,
+                            TargetVar, tPersistD,
                             Value.Length < 2 ? "" : Value.Substring(2),
                             Value.Length < 1 ? "" : Value.Substring(0, 1),
                             Value.Length < 2 ? "" : Value.Substring(1, 1)
@@ -338,16 +338,16 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/descdictbuildraw",
                         "build {1}dict variable ({0}) from {3} expression ({2}) separated by its first 2 characters",
-                        TargetVariable, tPersistD, Value, valueType
+                        TargetVar, tPersistD, Value, valueType
                     );
                 case OperationEnum.Filter:
                     return I18n.Translate(
                         "internal/Action/descdictfilter",
                         "Use expression ({4}) to filter {1}dict ({0}) into {3}dict ({2})",
-                        Name, sPersistD, TargetVariable, tPersistD, Value
+                        Name, sPersistD, TargetVar, tPersistD, Value
                     );
                 case OperationEnum.SetAll:
-                    if (string.IsNullOrWhiteSpace(VariableLength))
+                    if (string.IsNullOrWhiteSpace(Count))
                     {
                         return I18n.Translate(
                             "internal/Action/descdictsetall",
@@ -358,19 +358,19 @@ namespace Triggernometry.Core.Actions
                     return I18n.Translate(
                         "internal/Action/descdictsetallbyindex",
                         "set {6} key value pairs in {1}dict ({0}) to {3} expr ({2}) : {5} expr ({4})",
-                        Name, sPersistD, Key, keyType, Value, valueType, VariableLength
+                        Name, sPersistD, Key, keyType, Value, valueType, Count
                     );
                 case OperationEnum.Merge:
                     return I18n.Translate(
                         "internal/Action/descdictmerge",
                         "merge {1}dict variable ({0}) into {3}dict variable ({2}), and keep the values of repeated keys",
-                        Name, sPersistD, TargetVariable, tPersistD
+                        Name, sPersistD, TargetVar, tPersistD
                     );                    
                 case OperationEnum.MergeHard:
                     return I18n.Translate(
                         "internal/Action/descdictmergehard",
                         "merge {1}dict variable ({0}) into {3}dict variable ({2}), and overwrite the values of repeated keys",
-                        Name, sPersistD, TargetVariable, tPersistD
+                        Name, sPersistD, TargetVar, tPersistD
                     );
                 case OperationEnum.GetEntity:
                     {
@@ -403,7 +403,7 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
-            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVariable);
+            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
             VariableStore svs = plug.GetVariableStore(Persistent);
             VariableStore tvs = plug.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
@@ -595,8 +595,8 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.SetAll:
                     {
-                        bool isLengthMode = !string.IsNullOrWhiteSpace(VariableLength);
-                        int length = isLengthMode ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, VariableLength) : 0;
+                        bool isLengthMode = !string.IsNullOrWhiteSpace(Count);
+                        int length = isLengthMode ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Count) : 0;
                         // Only length-based generation establishes an index for each entry.
                         string[] invalidExprs = isLengthMode
                             ? new[] { "${_row", "${_col", "${_this}" }
@@ -660,8 +660,8 @@ namespace Triggernometry.Core.Actions
             action.KeyType = (ExpressionType)(int)oldAction._DictVariableKeyType;
             action.ValueType = (ExpressionType)(int)oldAction._DictVariableValueType;
             action.Name = oldAction._DictVariableName;
-            action.TargetVariable = oldAction._DictVariableTarget;
-            action.VariableLength = oldAction._DictVariableLength;
+            action.TargetVar = oldAction._DictVariableTarget;
+            action.Count = oldAction._DictVariableLength;
             action.Key = oldAction._DictVariableKey;
             action.Value = oldAction._DictVariableValue;
             action.Persistent = oldAction._DictSourcePersist;
@@ -679,8 +679,8 @@ namespace Triggernometry.Core.Actions
             oldAction._DictVariableKeyType = (ActionOld.DictVariableExpTypeEnum)(int)action.KeyType;
             oldAction._DictVariableValueType = (ActionOld.DictVariableExpTypeEnum)(int)action.ValueType;
             oldAction._DictVariableName = action.Name;
-            oldAction._DictVariableTarget = action.TargetVariable;
-            oldAction._DictVariableLength = action.VariableLength;
+            oldAction._DictVariableTarget = action.TargetVar;
+            oldAction._DictVariableLength = action.Count;
             oldAction._DictVariableKey = action.Key;
             oldAction._DictVariableValue = action.Value;
             oldAction._DictSourcePersist = action.Persistent;
