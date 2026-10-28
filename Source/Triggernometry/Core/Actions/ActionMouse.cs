@@ -224,19 +224,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionMouse action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.Mouse;
-            oldAction._MouseOpType = (ActionOld.MouseOpEnum)(int)action.Operation;
-            oldAction._MouseCoordType = (ActionOld.MouseCoordEnum)(int)action.CoordMode;
-            oldAction._MouseX = action.X;
-            oldAction._MouseY = action.Y;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
 
     }

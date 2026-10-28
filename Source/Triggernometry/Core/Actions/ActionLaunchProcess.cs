@@ -130,7 +130,7 @@ namespace Triggernometry.Core.Actions
             psi.FileName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Path);
             p.StartInfo = psi;
             p.Start();
-            if (Asynchronous == false)
+            if (Async == false)
             {
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/waitingprocexit", "Waiting for process to exit"));
                 p.WaitForExit();
@@ -151,19 +151,6 @@ namespace Triggernometry.Core.Actions
             action.Arguments = oldAction._LaunchProcessCmdlineExpression;
             action.WorkingDirectory = oldAction._LaunchProcessWorkingDirExpression;
             return action;
-        }
-
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionLaunchProcess action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.LaunchProcess;
-            oldAction._LaunchProcessWindowStyle = action.WindowStyle;
-            oldAction._LaunchProcessPathExpression = action.Path;
-            oldAction._LaunchProcessCmdlineExpression = action.Arguments;
-            oldAction._LaunchProcessWorkingDirExpression = action.WorkingDirectory;
-            return oldAction;
         }
 
         #endregion Old Action Converter

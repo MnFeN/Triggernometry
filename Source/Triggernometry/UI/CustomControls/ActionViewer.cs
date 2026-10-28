@@ -621,7 +621,7 @@ namespace Triggernometry.UI.CustomControls
         {
             foreach (Core.ActionBase a in SelectedActions())
             {
-                a.Asynchronous = true;
+                a.Async = true;
             }
             dgvActions.Refresh();
             OnActionsUpdated();
@@ -631,7 +631,7 @@ namespace Triggernometry.UI.CustomControls
         {
             foreach (Core.ActionBase a in SelectedActions())
             {
-                a.Asynchronous = false;
+                a.Async = false;
             }
             dgvActions.Refresh();
             OnActionsUpdated();
@@ -693,7 +693,7 @@ namespace Triggernometry.UI.CustomControls
             foreach (Core.ActionBase a in SelectedActions())
             {
                 a.DescOverride = false;
-                a.Description = "";
+                a.Desc = "";
             }
             dgvActions.Refresh();
             OnActionsUpdated();

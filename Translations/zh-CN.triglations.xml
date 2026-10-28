@@ -999,7 +999,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionActInteraction/Operation[Set ACT combat state]" Translation="ACT 战斗状态" />
     <TranslationEntry Key="internal/EditorFields/ActionActInteraction/Operation[Use Deucalion (injection)]" Translation="解析插件：注入" />
     <TranslationEntry Key="internal/EditorFields/ActionActInteraction/StringParam" Translation="文本参数" />
-    <TranslationEntry Key="internal/EditorFields/ActionBase/Asynchronous" Translation="异步执行（否则阻塞全部来源的动作直至动作结束）" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/Async" Translation="异步执行（否则阻塞全部来源的动作直至动作结束）" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel" Translation="日志过滤级别" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[(inherit from trigger)]" Translation="（继承于触发器）" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[Above custom 2]" Translation="高于用户 2" />

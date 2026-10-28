@@ -999,7 +999,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionActInteraction/Operation[Set ACT combat state]" Translation="Set ACT combat state" />
     <TranslationEntry Key="internal/EditorFields/ActionActInteraction/Operation[Use Deucalion (injection)]" Translation="Use Deucalion (injection)" />
     <TranslationEntry Key="internal/EditorFields/ActionActInteraction/StringParam" Translation="String Param" />
-    <TranslationEntry Key="internal/EditorFields/ActionBase/Asynchronous" Translation="他のアクションの実行をブロックせず非同期で実行" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/Async" Translation="他のアクションの実行をブロックせず非同期で実行" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel" Translation="ログフィルタのレベル" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[(inherit from trigger)]" Translation="(トリガーから継承)" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[Above custom 2]" Translation="Above custom 2" />

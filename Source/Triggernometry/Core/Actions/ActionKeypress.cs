@@ -231,20 +231,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionKeypress action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.KeyPress;
-            oldAction._KeypressType = (ActionOld.KeypressTypeEnum)(int)action.Operation;
-            oldAction._KeyPressExpression = action.Keypress;
-            oldAction._KeyPressCode = action.Keycode;
-            oldAction._KeyPressWindow = action.WinTitleRegex;
-            oldAction._KeyPressProcId = action.ProcessId;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
 
     }

@@ -240,20 +240,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionLogMessage action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.LogMessage;
-            oldAction._LogMessageTarget = (LogEvent.SourceEnum)(int)action.LogSource;
-            oldAction._LogMessageText = action.Message;
-            oldAction._LogProcess = action.ProcessAsLogline;
-            oldAction._LogProcessACT = action.AddToACTEncounter;
-            oldAction._LogLevel = (ActionOld.LogMessageEnum)(int)action.Level;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
 
     }

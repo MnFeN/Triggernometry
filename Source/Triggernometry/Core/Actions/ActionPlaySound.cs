@@ -154,19 +154,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionPlaySound action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.PlaySound;
-            oldAction._PlaySoundFileExpression = action.Filename;
-            oldAction._PlaySoundVolumeExpression = action.Volume;
-            oldAction._PlaySoundExclusive = !action.UseSharedPlayer;
-            oldAction._SoundRouting = action.AudioTarget;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
     }
 

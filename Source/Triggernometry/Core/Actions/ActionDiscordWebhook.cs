@@ -121,18 +121,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionDiscordWebhook action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.DiscordWebhook;
-            oldAction._DiscordWebhookURL = action.WebhookURL;
-            oldAction._DiscordWebhookMessage = action.Message;
-            oldAction._DiscordTts = action.UseTTS;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
 
     }

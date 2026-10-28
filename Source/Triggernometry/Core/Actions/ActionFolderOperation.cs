@@ -174,17 +174,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionFolderOperation action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.Folder;
-            oldAction._FolderOp = (ActionOld.FolderOpEnum)(int)action.Operation;
-            oldAction._FolderId = action.FolderId;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
 
     }

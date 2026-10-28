@@ -370,30 +370,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionOverlayImage action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.Aura;
-            oldAction._AuraOp = (ActionOld.AuraOpEnum)(int)action.Operation;
-            oldAction._AuraName = action.Name;
-            oldAction._AuraImage = action.Filename;
-            oldAction._AuraImageMode = action.SizeMode;
-            oldAction._AuraXIniExpression = action.X_0;
-            oldAction._AuraYIniExpression = action.Y_0;
-            oldAction._AuraWIniExpression = action.W_0;
-            oldAction._AuraHIniExpression = action.H_0;
-            oldAction._AuraOIniExpression = action.O_0;
-            oldAction._AuraXTickExpression = action.X_t;
-            oldAction._AuraYTickExpression = action.Y_t;
-            oldAction._AuraWTickExpression = action.W_t;
-            oldAction._AuraHTickExpression = action.H_t;
-            oldAction._AuraOTickExpression = action.O_t;
-            oldAction._AuraTTLTickExpression = action.AliveCondition;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
     }
 

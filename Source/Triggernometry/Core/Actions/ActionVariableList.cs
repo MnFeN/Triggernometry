@@ -957,23 +957,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionVariableList action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.ListVariable;
-            oldAction._ListVariableOp = (ActionOld.ListVariableOpEnum)Enum.Parse(typeof(ActionOld.ListVariableOpEnum), action.Operation.ToString());
-            oldAction._ListVariableExpressionType = (ActionOld.ListVariableExpTypeEnum)(int)action.ValueType;
-            oldAction._ListVariableName = action.Name;
-            oldAction._ListVariableExpression = action.Value;
-            oldAction._ListVariableIndex = action.Index;
-            oldAction._ListVariableTarget = action.TargetVar;
-            oldAction._ListSourcePersist = action.Persistent;
-            oldAction._ListTargetPersist = action.TargetPersistent;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
     }
 

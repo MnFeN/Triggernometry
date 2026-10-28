@@ -215,13 +215,13 @@ namespace Triggernometry.Core
 
         [XmlIgnore]
         [CheckBoxEditor(4, Label = "Execute asynchronously without blocking other actions from executing")]
-        public bool Asynchronous { get; set; } = false;
+        public bool Async { get; set; } = false;
 
-        [XmlAttribute("Asynchronous")]
-        public string Xml_Asynchronous
+        [XmlAttribute("Async")]
+        public string Xml_Async
         {
-            get => XmlAttr.Bool(Asynchronous, false);
-            set => Asynchronous = XmlAttr.Bool(value);
+            get => XmlAttr.Bool(Async, false);
+            set => Async = XmlAttr.Bool(value);
         }
 
 
@@ -277,13 +277,13 @@ namespace Triggernometry.Core
 
 
         [XmlIgnore]
-        public string Description { get; set; } = "";
+        public string Desc { get; set; } = "";
 
-        [XmlAttribute("Description")]
-        public string Xml_Description
+        [XmlAttribute("Desc")]
+        public string Xml_Desc
         {
-            get => XmlAttr.String(Description, "", omitWhitespace: false);
-            set => Description = value;
+            get => XmlAttr.String(Desc, "", omitWhitespace: false);
+            set => Desc = value;
         }
 
 
@@ -368,9 +368,9 @@ namespace Triggernometry.Core
             {
                 if (DescOverride)
                 {
-                    return Description ?? "";
+                    return Desc ?? "";
                 }
-                string temp = I18n.TrlAsync(Asynchronous);
+                string temp = I18n.TrlAsync(Async);
                 if (!string.IsNullOrWhiteSpace(ExecDelay) && ExecDelay.Trim() != "0")
                 {
                     string delay = double.TryParse(ExecDelay.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out _) ? ExecDelay : $"({ExecDelay})";
@@ -425,7 +425,7 @@ namespace Triggernometry.Core
             {
                 lock (ctx.Plugin.ActionQueue) ctx.Plugin.ExecutingActions.Add(ai);
             }
-            CancellationToken? ct = Asynchronous ? ctx.Plugin?.GetCancellationToken() : null;
+            CancellationToken? ct = Async ? ctx.Plugin?.GetCancellationToken() : null;
             void ExecuteCore()
             {
                 try
@@ -433,12 +433,9 @@ namespace Triggernometry.Core
                     ct?.ThrowIfCancellationRequested();
                     ExecutionImplementation(ai ?? new ActionInstance(default, 0, null, this, ctx, false), ctx);
                 }
-                finally
-                {
-                    ai?.ActionFinished();
-                }
+                finally { ai?.ActionFinished(); }
             }
-            if (Asynchronous) Task.Run((Action)ExecuteCore);
+            if (Async) Task.Run((Action)ExecuteCore);
             else ExecuteCore();
         }
 
@@ -735,74 +732,6 @@ namespace Triggernometry.Core
 
         #endregion
 
-        /// <summary>Converts this action's settings to the legacy model through its concrete converter.</summary>
-        internal ActionOld ConvertToOldAction()
-        {
-            switch (this)
-            {
-                case ActionBeep value:
-                    return (ActionOld)value;
-                case ActionPlaySound value:
-                    return (ActionOld)value;
-                case ActionPlaySpeech value:
-                    return (ActionOld)value;
-                case ActionMessageBox value:
-                    return (ActionOld)value;
-                case ActionOverlayText value:
-                    return (ActionOld)value;
-                case ActionOverlayImage value:
-                    return (ActionOld)value;
-                case ActionVariableScalar value:
-                    return (ActionOld)value;
-                case ActionVariableList value:
-                    return (ActionOld)value;
-                case ActionVariableTable value:
-                    return (ActionOld)value;
-                case ActionVariableDict value:
-                    return (ActionOld)value;
-                case ActionLogMessage value:
-                    return (ActionOld)value;
-                case ActionNamedCallback value:
-                    return (ActionOld)value;
-                case ActionExecuteScript value:
-                    return (ActionOld)value;
-                case ActionLoop value:
-                    return (ActionOld)value;
-                case ActionMutex value:
-                    return (ActionOld)value;
-                case ActionTriggerOperation value:
-                    return (ActionOld)value;
-                case ActionFolderOperation value:
-                    return (ActionOld)value;
-                case ActionRepository value:
-                    return (ActionOld)value;
-                case ActionMouse value:
-                    return (ActionOld)value;
-                case ActionKeypress value:
-                    return (ActionOld)value;
-                case ActionWindowMessage value:
-                    return (ActionOld)value;
-                case ActionLaunchProcess value:
-                    return (ActionOld)value;
-                case ActionDiskOperation value:
-                    return (ActionOld)value;
-                case ActionActInteraction value:
-                    return (ActionOld)value;
-                case ActionJsonRequest value:
-                    return (ActionOld)value;
-                case ActionDiscordWebhook value:
-                    return (ActionOld)value;
-                case ActionObsControl value:
-                    return (ActionOld)value;
-                case ActionLiveSplitControl value:
-                    return (ActionOld)value;
-                case ActionPlaceholder value:
-                    return (ActionOld)value;
-                default:
-                    throw new NotSupportedException(GetType().FullName);
-            }
-        }
-
         /// <summary>Enumerates actions and their loop descendants in tree order.</summary>
         internal static IEnumerable<ActionBase> RecursiveGetActions(IEnumerable<ActionBase> actions)
         {
@@ -867,33 +796,12 @@ namespace Triggernometry.Core
             action.ReplaceQueued = ReplaceQueued;
             action.PreventDuplicateQueue = PreventDuplicateQueue;
             action.ExecDelay = ExecDelay;
-            action.Asynchronous = Asynchronous;
+            action.Async = Async;
             action.DebugLevel = DebugLevel;
-            action.Description = Description;
+            action.Desc = Desc;
             action.DescBackColor = DescBackColor;
             action.DescTextColor = DescTextColor;
             action.DescOverride = DescOverride;
-        }
-
-        internal void CopyCommonPropertiesTo(ActionOld oldAction)
-        {
-            if (oldAction == null)
-                throw new ArgumentNullException(nameof(oldAction));
-
-            oldAction.Enabled = Enabled;
-            oldAction.Id = Id;
-            oldAction.ParentTrigger = ParentTrigger;
-            oldAction.Condition = (ConditionGroup)Condition?.Duplicate();
-            oldAction.Tag = Tag;
-            oldAction.RefireInterrupt = ReplaceQueued;
-            oldAction.RefireRequeue = !PreventDuplicateQueue;
-            oldAction.ExecutionDelayExpression = ExecDelay;
-            oldAction.Asynchronous = Asynchronous;
-            oldAction.DebugLevel = DebugLevel;
-            oldAction.Description = Description;
-            oldAction.DescBgColor = DescBackColor;
-            oldAction.DescTextColor = DescTextColor;
-            oldAction.DescriptionOverride = DescOverride;
         }
 
         /// <summary>

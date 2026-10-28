@@ -122,19 +122,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionPlaySpeech action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.UseTTS;
-            oldAction._UseTTSTextExpression = action.Message;
-            oldAction._UseTTSVolumeExpression = action.Volume;
-            oldAction._UseTTSRateExpression = action.Rate;
-            oldAction._TTSRouting = action.AudioTarget;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
     }
 

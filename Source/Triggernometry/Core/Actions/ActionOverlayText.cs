@@ -509,36 +509,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionOverlayText action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.TextAura;
-            oldAction._TextAuraOp = (ActionOld.AuraOpEnum)(int)action.Operation;
-            oldAction._TextAuraName = action.Name;
-            oldAction._TextAuraExpression = action.Text;
-            oldAction._TextAuraAlignment = (ActionOld.TextAuraAlignmentEnum)(int)action.Alignment;
-            oldAction._TextAuraXIniExpression = action.X_0;
-            oldAction._TextAuraYIniExpression = action.Y_0;
-            oldAction._TextAuraWIniExpression = action.W_0;
-            oldAction._TextAuraHIniExpression = action.H_0;
-            oldAction._TextAuraOIniExpression = action.O_0;
-            oldAction._TextAuraXTickExpression = action.X_t;
-            oldAction._TextAuraYTickExpression = action.Y_t;
-            oldAction._TextAuraWTickExpression = action.W_t;
-            oldAction._TextAuraHTickExpression = action.H_t;
-            oldAction._TextAuraOTickExpression = action.O_t;
-            oldAction._TextAuraTTLTickExpression = action.AliveCondition;
-            oldAction._TextAuraFontName = action.Font;
-            oldAction._TextAuraFontSize = float.Parse(action.FontSize, CultureInfo.InvariantCulture);
-            oldAction._TextAuraEffect = (ActionOld.TextAuraEffectEnum)(int)action.Effect;
-            oldAction._TextAuraOutlineClInt = action.OutlineColor;
-            oldAction._TextAuraForegroundClInt = action.TextColor;
-            oldAction._TextAuraBackgroundClInt = action.BackColor;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
     }
 

@@ -155,22 +155,9 @@ namespace Triggernometry.Core.Actions
             action.Start = oldAction._LoopInitExpression;
             action.Step = oldAction._LoopIncrExpression;
             action.LoopCondition = (ConditionGroup)oldAction.LoopCondition?.Duplicate() ?? new ConditionGroup();
-            action.LoopActions = oldAction.LoopActions?.OrderBy(x => x.OrderNumber).Select(x => x.ConvertToNewAction()).ToList() ?? new List<ActionBase>();
-            return action;
-        }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionLoop action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.Loop;
-            oldAction._LoopDelayExpression = action.LoopDelay;
-            oldAction._LoopInitExpression = action.Start;
-            oldAction._LoopIncrExpression = action.Step;
-            oldAction.LoopCondition = (ConditionGroup)action.LoopCondition?.Duplicate() ?? new ConditionGroup();
-            oldAction.LoopActions = action.LoopActions?.Select(x => x.ConvertToOldAction()).ToList() ?? new List<ActionOld>();
-            return oldAction;
+            action.LoopActions = oldAction.LoopActions?.Select(child => child.Copy()).ToList() ?? new List<ActionBase>();
+            return action;
         }
 
         #endregion Old Action Converter

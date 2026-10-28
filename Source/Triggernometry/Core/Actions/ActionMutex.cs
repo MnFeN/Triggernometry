@@ -118,17 +118,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionMutex action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.Mutex;
-            oldAction._MutexOpType = (ActionOld.MutexOpEnum)(int)action.Operation;
-            oldAction._MutexName = action.Name;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
 
     }

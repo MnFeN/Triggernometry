@@ -117,17 +117,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionBeep action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.SystemBeep;
-            oldAction._SystemBeepFreqExpression = action.Frequency;
-            oldAction._SystemBeepLengthExpression = action.Duration;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
     }
 

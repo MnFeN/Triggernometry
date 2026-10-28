@@ -154,20 +154,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionWindowMessage action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.WindowMessage;
-            oldAction._WmsgProcId = action.ProcessId;
-            oldAction._WmsgTitle = action.WinTitleRegex;
-            oldAction._WmsgCode = action.MessageId;
-            oldAction._WmsgWparam = action.Wparam;
-            oldAction._WmsgLparam = action.Lparam;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
     }
 

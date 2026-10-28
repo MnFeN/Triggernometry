@@ -406,21 +406,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionObsControl action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.ObsControl;
-            oldAction._OBSControlType = (ActionOld.ObsControlTypeEnum)(int)action.Operation;
-            oldAction._OBSEndPoint = action.Endpoint;
-            oldAction._OBSPassword = action.Password;
-            oldAction._OBSSceneName = action.SceneName;
-            oldAction._OBSSourceName = action.SourceName;
-            oldAction._OBSJSONPayload = action.JSONPayload;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
     }
 

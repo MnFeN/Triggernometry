@@ -81,17 +81,6 @@ namespace Triggernometry.Core.Actions
             return action;
         }
 
-        // (ActionOld)this
-        public static explicit operator ActionOld(ActionNamedCallback action)
-        {
-            var oldAction = new ActionOld();
-            action.CopyCommonPropertiesTo(oldAction);
-            oldAction.ActionType = ActionOld.ActionTypeEnum.NamedCallback;
-            oldAction._NamedCallbackName = action.Name;
-            oldAction._NamedCallbackParam = action.Parameter;
-            return oldAction;
-        }
-
         #endregion Old Action Converter
 
     }
