@@ -69,7 +69,7 @@
     <TranslationEntry Key="ActionForm/lblTextColor" Translation="Colors" />
     <TranslationEntry Key="ActionForm/lblWmsgWarning" Translation="このタイプのアクションには潜在的な危険性があります。トリガーが期待値の範囲外のパラメーターで起動された場合などに意図しない損害を引き起こす可能性があります。十分に注意を払い自己責任で使用してください。" />
     <TranslationEntry Key="ActionForm/rtbHelper" Translation="[Show Help]" />
-    <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="値を文字列式として評価し、結果をクリップボードにコピーします。&#10;結果が空の場合はクリップボードを消去します。&#10;&#10;`${{var:Name}}` または `${{pvar:Name}}` で一時変数または永続変数を参照できます。&#10;`${{_clipboard}}` でクリップボードを参照できます。" />
+    <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="値を文字列式として評価し、結果をクリップボードにコピーします。&#10;結果が空の場合はクリップボードを消去します。&#10;&#10;クリップボードに書き込んだテキストは `${{_clipboard}}` で読み取れます。" />
     <TranslationEntry Key="ActionForm/tabActionCondition" Translation="アクションの条件式" />
     <TranslationEntry Key="ActionForm/tabActionSettings" Translation="アクション固有の設定" />
     <TranslationEntry Key="ActionForm/tabDebugging" Translation="デバッグ" />

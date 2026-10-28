@@ -69,7 +69,7 @@
     <TranslationEntry Key="ActionForm/lblTextColor" Translation="Colors" />
     <TranslationEntry Key="ActionForm/lblWmsgWarning" Translation="Actions of this type may be potentially dangerous and cause damage if, for example, the trigger is fired with parameters that fall outside of the expected values. Please be aware of the risk." />
     <TranslationEntry Key="ActionForm/rtbHelper" Translation="[Show Help]" />
-    <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="Evaluates the value as a text expression and copies the result to the clipboard.&#10;An empty result clears the clipboard.&#10;&#10;Use `${{var:Name}}` or `${{pvar:Name}}` to read session or permanent scalar variables.&#10;Use `${{_clipboard}}` to read the clipboard." />
+    <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="Evaluates the value as a text expression and copies the result to the clipboard.&#10;An empty result clears the clipboard.&#10;&#10;After writing text to the clipboard, use `${{_clipboard}}` to read it." />
     <TranslationEntry Key="ActionForm/tabActionCondition" Translation="Action condition" />
     <TranslationEntry Key="ActionForm/tabActionSettings" Translation="Action-specific settings" />
     <TranslationEntry Key="ActionForm/tabDebugging" Translation="Debugging" />
