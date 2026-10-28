@@ -28,7 +28,7 @@ namespace Triggernometry.Core.Conditions
                 : Text.Replace("\r\n", " ").Replace('\r', ' ').Replace('\n', ' ');
         }
 
-        internal override bool CheckCondition(Context ctx, Context.LoggerDelegate logger, object o)
+        internal override bool Check(Context ctx, Context.LoggerDelegate logger, object o)
         {
             // ConditionGroup skips comments before evaluating its children.
             return false;

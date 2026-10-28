@@ -166,7 +166,7 @@ namespace Triggernometry.UI.Forms
                 stTime = st.ElapsedTicks;
                 if (t.Condition != null && t.Condition.Enabled == true)
                 {
-                    t.Condition.CheckCondition(Context.Unbound, t.TriggerContextLogger, plug);
+                    t.Condition.Check(Context.Unbound, t.TriggerContextLogger, plug);
                 }
                 bi.TimeOnConditions += st.ElapsedTicks - stTime;
                 i++;

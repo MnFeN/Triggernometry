@@ -16,6 +16,7 @@
     <TranslationEntry Key="ActionForm/btnTextAuraGuide" Translation="Use visual guide for placement (right-click for more options)" />
     <TranslationEntry Key="ActionForm/btnTextAuraHide" Translation="Hide" />
     <TranslationEntry Key="ActionForm/cbxActionType[ACT Interaction]" Translation="ACT Interaction" />
+    <TranslationEntry Key="ActionForm/cbxActionType[Copy to clipboard]" Translation="Copy to clipboard" />
     <TranslationEntry Key="ActionForm/cbxActionType[Dict variable operation]" Translation="Dict variable operation" />
     <TranslationEntry Key="ActionForm/cbxActionType[Discord webhook]" Translation="Discord webhook" />
     <TranslationEntry Key="ActionForm/cbxActionType[Execute script]" Translation="Execute script" />
@@ -68,6 +69,7 @@
     <TranslationEntry Key="ActionForm/lblTextColor" Translation="Colors" />
     <TranslationEntry Key="ActionForm/lblWmsgWarning" Translation="Actions of this type may be potentially dangerous and cause damage if, for example, the trigger is fired with parameters that fall outside of the expected values. Please be aware of the risk." />
     <TranslationEntry Key="ActionForm/rtbHelper" Translation="[Show Help]" />
+    <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="Evaluates the value as a text expression and copies the result to the clipboard.&#10;An empty result clears the clipboard.&#10;&#10;Use `${{var:Name}}` or `${{pvar:Name}}` to read session or permanent scalar variables.&#10;Use `${{_clipboard}}` to read the clipboard." />
     <TranslationEntry Key="ActionForm/tabActionCondition" Translation="Action condition" />
     <TranslationEntry Key="ActionForm/tabActionSettings" Translation="Action-specific settings" />
     <TranslationEntry Key="ActionForm/tabDebugging" Translation="Debugging" />
@@ -135,7 +137,6 @@
     <TranslationEntry Key="ActionForm/███rtbHelperTvarUnset" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperTvarUnsetAll" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperTvarUnsetRegex" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperVarClipboard" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperVarIncrement" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperVarQueryJsonPath" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperVarQueryJsonPathList" Translation="" />
@@ -524,6 +525,7 @@
     <TranslationEntry Key="internal/Action/cancelfolder" Translation="Cancelled {1} queued action(s) from {2} triggers in folder ({0})" />
     <TranslationEntry Key="internal/Action/changetagtestmode" Translation="Action '{0}' test mode" />
     <TranslationEntry Key="internal/Action/changetagtrigaction" Translation="Trigger '{0}' action '{1}'" />
+    <TranslationEntry Key="internal/Action/clipboardset" Translation="Set text ({0}) to clipboard" />
     <TranslationEntry Key="internal/Action/descactcombatend" Translation="End ACT encounter" />
     <TranslationEntry Key="internal/Action/descactcombatstart" Translation="Start ACT encounter" />
     <TranslationEntry Key="internal/Action/descactlogallnetwork" Translation="{0} option: Log all network data" />
@@ -532,6 +534,7 @@
     <TranslationEntry Key="internal/Action/descassumingcondition" Translation="assuming condition is met, " />
     <TranslationEntry Key="internal/Action/descbeep" Translation="beep at ({0}) hz for ({1}) ms" />
     <TranslationEntry Key="internal/Action/desccancelfolder" Translation="cancel all actions from folder ({0})" />
+    <TranslationEntry Key="internal/Action/descclipboard" Translation="Copy ({0}) to clipboard" />
     <TranslationEntry Key="internal/Action/descdictbuild" Translation="build {1}dict variable ({0}) from string ({2}) separated by ({3}) ({4})" />
     <TranslationEntry Key="internal/Action/descdictbuildraw" Translation="build {1}dict variable ({0}) from {3} expression ({2}) separated by its first 2 characters" />
     <TranslationEntry Key="internal/Action/descdictfilter" Translation="Use expression ({4}) to filter {1}dict ({0}) into {3}dict ({2})" />
@@ -634,8 +637,6 @@
     <TranslationEntry Key="internal/Action/descplaysound" Translation="play sound file ({0}) at volume ({1}) %" />
     <TranslationEntry Key="internal/Action/descprocessmessage" Translation="process message ({0}) as {1}" />
     <TranslationEntry Key="internal/Action/descrepoinvalidref" Translation="repository action with an invalid repository reference ({0})" />
-    <TranslationEntry Key="internal/Action/descscalarclipboardexpr" Translation="Copy string expression ({0}) to clipboard" />
-    <TranslationEntry Key="internal/Action/descscalarclipboardvar" Translation="Copy {1}scalar variable ({0}) value to clipboard" />
     <TranslationEntry Key="internal/Action/descscalarincrement" Translation="increment the value of {1}scalar variable ({0}) by ({2})" />
     <TranslationEntry Key="internal/Action/descscalarqueryjson" Translation="query {1} variable ({0}) with JSON path ({2}) and store result to {4}scalar variable ({3})" />
     <TranslationEntry Key="internal/Action/descscalarqueryjsonlist" Translation="query {1} variable ({0}) with JSON path ({2}) and store result to {4}list variable ({3})" />
@@ -771,7 +772,6 @@
     <TranslationEntry Key="internal/Action/repoupdateall" Translation="Update all repositories" />
     <TranslationEntry Key="internal/Action/repoupdateself" Translation="Update containing repository" />
     <TranslationEntry Key="internal/Action/repoupdatespecific" Translation="Update repository ({0})" />
-    <TranslationEntry Key="internal/Action/scalarclipboard" Translation="Set text ({0}) to clipboard" />
     <TranslationEntry Key="internal/Action/scalarset" Translation="{2}Scalar variable ({0}) value set to ({1})" />
     <TranslationEntry Key="internal/Action/scalarsetjson" Translation="{1}Scalar variable ({0}) value set to JSON response" />
     <TranslationEntry Key="internal/Action/scalarunset" Translation="{1}Scalar variable ({0}) unset" />
@@ -1015,6 +1015,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionBase/Tag" Translation="Tag" />
     <TranslationEntry Key="internal/EditorFields/ActionBeep/Duration" Translation="Beep length (ms)" />
     <TranslationEntry Key="internal/EditorFields/ActionBeep/Frequency" Translation="Beep frequency (hz)" />
+    <TranslationEntry Key="internal/EditorFields/ActionClipboard/Value" Translation="Value" />
     <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/Message" Translation="Message to send" />
     <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/UseTTS" Translation="Send as a text-to-speech message" />
     <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/WebhookURL" Translation="Webhook URL" />
@@ -1314,7 +1315,6 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/ValueType[String]" Translation="String" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Name" Translation="Scalar variable name" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation" Translation="Operation type" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Copy scalar variable or expression to the clipboard]" Translation="Copy scalar variable or expression to the clipboard" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Increment scalar variable value]" Translation="Increment scalar variable value" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Query variable with JSONPath and store list value]" Translation="Query variable with JSONPath and store list value" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Query variable with JSONPath and store scalar value]" Translation="Query variable with JSONPath and store scalar value" />
@@ -1680,6 +1680,7 @@
     <TranslationEntry Key="internal/SearchForm/hitactiontriggertext" Translation="Action #{0} trigger firing text" />
     <TranslationEntry Key="internal/SearchForm/hitbeepfreq" Translation="Action #{0} beep frequency" />
     <TranslationEntry Key="internal/SearchForm/hitbeeplen" Translation="Action #{0} beep length" />
+    <TranslationEntry Key="internal/SearchForm/hitclipboardvalue" Translation="Action #{0} clipboard value" />
     <TranslationEntry Key="internal/SearchForm/hitdiscordmsg" Translation="Action #{0} Discord webhook message" />
     <TranslationEntry Key="internal/SearchForm/hitdiscordurl" Translation="Action #{0} Discord webhook URL" />
     <TranslationEntry Key="internal/SearchForm/hitdiskfilename" Translation="Action #{0} disk operation file name" />

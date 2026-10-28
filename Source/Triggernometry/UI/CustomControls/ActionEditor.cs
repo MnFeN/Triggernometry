@@ -422,7 +422,7 @@ namespace Triggernometry.UI.CustomControls
             ActionBase hidden = action.Copy();
             if (hidden is ActionOverlayImage image) image.Operation = ActionOverlayImage.OperationEnum.Deactivate;
             if (hidden is ActionOverlayText text) text.Operation = ActionOverlayText.OperationEnum.Deactivate;
-            hidden.Execute(null, new Context(UiContext?.Trigger) { testByPlaceholder = true });
+            hidden.Execute(new Context(UiContext?.Trigger) { testByPlaceholder = true });
         }
 
         /// <summary>打开可视化设计器，并将布局结果写回动作草稿。</summary>

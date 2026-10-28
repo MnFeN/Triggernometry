@@ -16,6 +16,7 @@
     <TranslationEntry Key="ActionForm/btnTextAuraGuide" Translation="使用即时设置（右键悬浮窗获取更多设置）" />
     <TranslationEntry Key="ActionForm/btnTextAuraHide" Translation="隐藏" />
     <TranslationEntry Key="ActionForm/cbxActionType[ACT Interaction]" Translation="ACT / 插件交互" />
+    <TranslationEntry Key="ActionForm/cbxActionType[Copy to clipboard]" Translation="写入剪贴板" />
     <TranslationEntry Key="ActionForm/cbxActionType[Dict variable operation]" Translation="字典变量" />
     <TranslationEntry Key="ActionForm/cbxActionType[Discord webhook]" Translation="Discord 聊天室" />
     <TranslationEntry Key="ActionForm/cbxActionType[Execute script]" Translation="执行 C# 代码" />
@@ -74,6 +75,7 @@
     <!-- e.g. "ActionForm/███rtbHelperCallback" => "ActionForm/rtbHelperCallback".   -->
     <!-- 注意转义规则：{ } 应写为 {{ }}    半角双引号：&quot;      半角小于/大于：&lt; / &gt;     换行：&#xD;&#xA; -->
     <TranslationEntry Key="ActionForm/rtbHelperCallback" Translation="发送具名回调，如调用鲶鱼精邮差等插件。&#xD;&#xA;&#xD;&#xA;鲶鱼精邮差使用简介：&#xD;&#xA;&#xD;&#xA;向游戏发送文本指令：&#xD;&#xA;回调名称：`command`&#xA;回调参数：`/e test &lt;se.1&gt;`&#xA;&#xA;向游戏发送本地标点（取消 `A`，场中标记 `1`，其他标点不改变）：&#xD;&#xA;回调名称：`place`&#xA;回调参数：`&#xD;&#xA;{{&#xD;&#xA;    &quot;A&quot;: {{}},&#xD;&#xA;    &quot;One&quot;: {{&quot;X&quot;: 100, &quot;Y&quot;: 100, &quot;Z&quot;: 0, &quot;Active&quot;: true}}&#xD;&#xA;}}`&#xD;&#xA;&#xD;&#xA;注：本地标点仅自己可见。若需全队可见，需要手动或自动将本地标点存入游戏预设并重新加载；&#xD;&#xA;字符串的换行和缩进无关紧要。&#xD;&#xA;更多用法详见 `Github`: `Natsukage/PostNamazu`" />
+    <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="将值按文本表达式解析，并将结果写入剪贴板。&#10;结果为空时清空剪贴板。&#10;&#10;使用 `${{var:名称}}` 或 `${{pvar:名称}}` 读取临时或永久标量变量。&#10;使用 `${{_clipboard}}` 读取剪贴板。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictBuild" Translation="以表达式经过解析后的第一个字符作为键与值的分隔符，第二个字符作为键值对间的分隔符，将表达式剩余部分构筑为字典。&#xD;&#xA;&#xD;&#xA;例：输入表达式 `=,a=1,b=2,c=3` 可构筑字典：`a = 1, b = 2, c = 3`；&#xD;&#xA;输入表达式 `=,${{tvar:table.hjoin('=', ',')}}` 可将一个两列的表格变量 `table` 转化为字典，两列分别作为键与值。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictFilter" Translation="解析每个键值对所对应的动态表达式数值，并将结果为真（非零）的键值对过滤为目标字典。&#xD;&#xA;&#xD;&#xA;可使用的动态表达式：&#xD;&#xA;`${{_key}}`：当前键值对的键；&#xD;&#xA;`${{_val}}`：当前键值对的值。&#xD;&#xA;&#xD;&#xA;例：源字典为：`10A = 0, 10F = 3, 40C = 2, 402 = 0`；&#xD;&#xA;经表达式 `${{_val}}` 过滤可得：`10F = 3, 40C = 2`；&#xD;&#xA;经表达式 `${{func:startwith(1):${{_key}}}}` 过滤可得：`10A = 0, 10F = 3`。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictGetEntity" Translation="获取一个指定实体的指定属性，并存入字典变量。&#xD;&#xA;每个键是一个属性名，相应的值为属性值。&#xD;&#xA;与 `_ffxiventity` 相同，只会返回查找到的第一个名称符合的实体数据。&#xD;&#xA;&#xD;&#xA;键表达式：&#xD;&#xA;需要查询的全部属性，以逗号分隔。&#xD;&#xA;如：`ID, Name, X, Y, HasStatus(50), Heading`。&#xD;&#xA;可以使用的属性即为表达式 `${{_ffxiventity[name].property}}` 中可用的全部属性。&#xD;&#xA;如未提供键表达式，则会使用一系列默认属性（包含大多数可用属性）。&#xD;&#xA;&#xD;&#xA;值表达式：&#xD;&#xA;指定的实体。&#xD;&#xA;· 使用 ID：`103CDDB2`&#xD;&#xA;· 使用名称：`木人`&#xD;&#xA;· 使用数学表达式：&#xD;&#xA;以属性表达式为占位符，如：`IsT &amp;&amp; HasStatus(50) &amp;&amp; Distance &lt; 5`。&#xD;&#xA;&#xD;&#xA;未查找到实体时，返回空字典并生成警告日志。" />
@@ -129,7 +131,6 @@
     <TranslationEntry Key="ActionForm/rtbHelperTvarUnset" Translation="销毁指定名称的表格变量。可以选择是临时变量或永久变量。" />
     <TranslationEntry Key="ActionForm/rtbHelperTvarUnsetAll" Translation="销毁全部表格变量。可以选择是临时变量或永久变量。" />
     <TranslationEntry Key="ActionForm/rtbHelperTvarUnsetRegex" Translation="销毁全部名称与正则表达式匹配的表格变量。&#xD;&#xA;可以选择销毁临时变量或永久变量。&#xD;&#xA;&#xD;&#xA;正则匹配模式为部分匹配：&#xD;&#xA;如 `1|2|3` 不仅可以匹配名为 `1`、`2`、`3` 的变量，还可以匹配名为 `ab1cd` 的变量。&#xD;&#xA;如需完全匹配，可以限定开头结尾，如 `^(1|2|3)$`。" />
-    <TranslationEntry Key="ActionForm/rtbHelperVarClipboard" Translation="变量名和表达式仅可以提供其一。&#xD;&#xA;若提供变量名，则将变量值直接存入剪贴板；&#xD;&#xA;若提供表达式，则按文本解析后存入剪贴板。&#xD;&#xA;&#xD;&#xA;此外，剪贴板存入的内容可以使用表达式 `${{_clipboard}}` 在其他地方调用。&#xD;&#xA;注意如果剪贴板中的内容包含 `${{_clipboard}}`，则会因试图无限循环解析而抛出异常。" />
     <TranslationEntry Key="ActionForm/rtbHelperVarIncrement" Translation="将变量的值与表达式相加，并重新赋值给变量。&#xD;&#xA;&#xD;&#xA;若未提供表达式，则默认递增 `1`；&#xD;&#xA;若变量不存在或为空白值，则初始值视为 `0`；&#xD;&#xA;除此之外的值必须可以解析为数值表达式。&#xD;&#xA;&#xD;&#xA;本动作相当于“将变量 `name` 赋值为数值表达式 `${{var:name}} + i`”的简化写法。" />
     <TranslationEntry Key="ActionForm/rtbHelperVarQueryJsonPath" Translation="提供存有 JSON 格式文本的标量变量名，将表达式作为 JSONPath 查询，结果存入目标标量。&#xD;&#xA;&#xD;&#xA;若没有查询到结果，则返回一个空字符串；&#xD;&#xA;若查询到一个结果，则将结果直接转为字符串；&#xD;&#xA;若查询到多个结果，则将所有的结果序列化为 JSON 数组字符串。&#xD;&#xA;&#xD;&#xA;例：源标量的内容为：`&#xD;&#xA;{{&#xD;&#xA;    &quot;name&quot;: &quot;Athena&quot;,&#xD;&#xA;    &quot;pos&quot;: &#xD;&#xA;    {{&#xD;&#xA;        &quot;x&quot;: &quot;100&quot;,&#xD;&#xA;        &quot;y&quot;: &quot;80&quot;&#xD;&#xA;    }}&#xD;&#xA;}}` &#xD;&#xA;JSONPath 表达式为 `$.name` 时，查询结果为 `Athena`；&#xD;&#xA;JSONPath 表达式为 `$.pos.x` 时，查询结果为 `100`。&#xD;&#xA;更多语法可自行查阅 JSONPath。 " />
     <TranslationEntry Key="ActionForm/rtbHelperVarQueryJsonPathList" Translation="提供存有 JSON 格式文本的标量变量名，将表达式作为 JSONPath 查询，结果存入目标列表。&#xD;&#xA;&#xD;&#xA;若没有查询到结果，返回空列表；&#xD;&#xA;若查询到一个或多个结果，将每个结果单独转换为字符串并存入列表。" />
@@ -524,6 +525,7 @@
     <TranslationEntry Key="internal/Action/cancelfolder" Translation="取消队列中来自分组 ({0}) 内 {2} 个触发器的 {1} 个动作" />
     <TranslationEntry Key="internal/Action/changetagtestmode" Translation="动作 '{0}' 测试模式" />
     <TranslationEntry Key="internal/Action/changetagtrigaction" Translation="触发器 '{0}' 动作 '{1}'" />
+    <TranslationEntry Key="internal/Action/clipboardset" Translation="已将文本 ({0}) 复制到剪贴板" />
     <TranslationEntry Key="internal/Action/descactcombatend" Translation="ACT 设为脱战状态" />
     <TranslationEntry Key="internal/Action/descactcombatstart" Translation="ACT 设为进战状态" />
     <TranslationEntry Key="internal/Action/descactlogallnetwork" Translation="{0} 选项：解析插件记录所有网络数据" />
@@ -532,6 +534,7 @@
     <TranslationEntry Key="internal/Action/descassumingcondition" Translation="[条] " />
     <TranslationEntry Key="internal/Action/descbeep" Translation="蜂鸣 ({0}) Hz，持续 ({1}) 毫秒" />
     <TranslationEntry Key="internal/Action/desccancelfolder" Translation="中断分组 ({0}) 中的全部触发器动作" />
+    <TranslationEntry Key="internal/Action/descclipboard" Translation="将 ({0}) 写入剪贴板" />
     <TranslationEntry Key="internal/Action/descdictbuild" Translation="将文本 ({2}) 以 ({3}) ({4}) 拆分，构筑为{1}字典 ({0})" />
     <TranslationEntry Key="internal/Action/descdictbuildraw" Translation="将 {3} 表达式 ({2}) 以开头两个字符拆分，构筑为{1}字典 ({0})" />
     <TranslationEntry Key="internal/Action/descdictfilter" Translation="根据表达式 ({4})，将{1}字典 ({0}) 过滤为{3}字典 ({2})" />
@@ -634,8 +637,6 @@
     <TranslationEntry Key="internal/Action/descplaysound" Translation="播放声音文件 ({0}) 音量 ({1}) %" />
     <TranslationEntry Key="internal/Action/descprocessmessage" Translation="处理消息 ({0}) 为 {1}" />
     <TranslationEntry Key="internal/Action/descrepoinvalidref" Translation="无效的远程仓库索引： ({0})" />
-    <TranslationEntry Key="internal/Action/descscalarclipboardexpr" Translation="将文本表达式 ({0})复制到剪贴板" />
-    <TranslationEntry Key="internal/Action/descscalarclipboardvar" Translation="将{1}标量 ({0}) 的值复制到剪贴板" />
     <TranslationEntry Key="internal/Action/descscalarincrement" Translation="{1}标量 ({0}) 数值递增 ({2})" />
     <TranslationEntry Key="internal/Action/descscalarqueryjson" Translation="以 JSONPath ({2}) 查询{1}标量 ({0}) ，结果存入{4}标量 ({3})" />
     <TranslationEntry Key="internal/Action/descscalarqueryjsonlist" Translation="以 JSONPath ({2}) 查询{1}标量 ({0}) ，结果存入{4}列表 ({3})" />
@@ -771,7 +772,6 @@
     <TranslationEntry Key="internal/Action/repoupdateall" Translation="更新全部远程仓库" />
     <TranslationEntry Key="internal/Action/repoupdateself" Translation="更新所处于的远程仓库" />
     <TranslationEntry Key="internal/Action/repoupdatespecific" Translation="更新远程仓库 ({0})" />
-    <TranslationEntry Key="internal/Action/scalarclipboard" Translation="已将文本 ({0}) 复制到剪贴板" />
     <TranslationEntry Key="internal/Action/scalarset" Translation="{2}标量 ({0}) 值设置为 ({1})" />
     <TranslationEntry Key="internal/Action/scalarsetjson" Translation="已将 JSON 响应的值设置到{1}标量 ({0})" />
     <TranslationEntry Key="internal/Action/scalarunset" Translation="{1}标量 ({0}) 已销毁" />
@@ -1015,6 +1015,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionBase/Tag" Translation="动作标签" />
     <TranslationEntry Key="internal/EditorFields/ActionBeep/Duration" Translation="时长 / ms" />
     <TranslationEntry Key="internal/EditorFields/ActionBeep/Frequency" Translation="频率 / Hz" />
+    <TranslationEntry Key="internal/EditorFields/ActionClipboard/Value" Translation="值" />
     <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/Message" Translation="发送的消息" />
     <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/UseTTS" Translation="发送 TTS 消息" />
     <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/WebhookURL" Translation="接口 URL" />
@@ -1314,7 +1315,6 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/ValueType[String]" Translation="文本" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Name" Translation="源变量" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation" Translation="操作" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Copy scalar variable or expression to the clipboard]" Translation="写入剪贴板" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Increment scalar variable value]" Translation="数值递增" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Query variable with JSONPath and store list value]" Translation="JSONPath 查询标量（存入列表）" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Query variable with JSONPath and store scalar value]" Translation="JSONPath 查询标量（存入标量）" />
@@ -1680,6 +1680,7 @@
     <TranslationEntry Key="internal/SearchForm/hitactiontriggertext" Translation="操作 #{0} 的触发其他触发器的文本" />
     <TranslationEntry Key="internal/SearchForm/hitbeepfreq" Translation="操作 #{0} 系统音效频率 (Hz)" />
     <TranslationEntry Key="internal/SearchForm/hitbeeplen" Translation="操作 #{0} 系统音效频率 (Hz)" />
+    <TranslationEntry Key="internal/SearchForm/hitclipboardvalue" Translation="动作 #{0} 剪贴板的值" />
     <TranslationEntry Key="internal/SearchForm/hitdiscordmsg" Translation="操作 #{0} Discord 聊天室消息" />
     <TranslationEntry Key="internal/SearchForm/hitdiscordurl" Translation="操作 #{0} Discord 聊天室 URL" />
     <TranslationEntry Key="internal/SearchForm/hitdiskfilename" Translation="操作 #{0} 文件操作的文件名" />

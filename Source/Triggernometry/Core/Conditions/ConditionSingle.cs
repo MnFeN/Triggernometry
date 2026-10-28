@@ -268,7 +268,7 @@ namespace Triggernometry.Core.Conditions
             }
         }
 
-        internal override bool CheckCondition(Context ctx, Context.LoggerDelegate logger, object o)
+        internal override bool Check(Context ctx, Context.LoggerDelegate logger, object o)
         {
             try
             {

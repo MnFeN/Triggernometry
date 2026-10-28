@@ -378,7 +378,7 @@ namespace Triggernometry.UI.Forms
             if (!TryWriteValues()) return;
             ActionBase action = SettingsToAction();
             if (ignoreConditions) action.Condition = new Core.Conditions.ConditionGroup();
-            Action execute = () => action.Execute(null, new Context(ParentTrigger)
+            Action execute = () => action.Execute(new Context(ParentTrigger)
             {
                 testByPlaceholder = !useLiveValues,
                 soundhook = Plugin.SoundPlaybackSmart,

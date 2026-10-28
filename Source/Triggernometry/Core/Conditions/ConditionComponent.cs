@@ -22,7 +22,7 @@ namespace Triggernometry.Core.Conditions
             OnPropertyChange?.Invoke(this);
         }
 
-        internal abstract bool CheckCondition(Context ctx, Context.LoggerDelegate logger, object o);
+        internal abstract bool Check(Context ctx, Context.LoggerDelegate logger, object o);
         internal abstract ConditionComponent Duplicate();
     }
 

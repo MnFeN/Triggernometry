@@ -612,7 +612,7 @@ namespace Triggernometry.Core
             if (Condition?.Enabled != true)
                 return false;
 
-            if (Condition.CheckCondition(ctx, TriggerContextLogger, ctx.Plugin) == true)
+            if (Condition.Check(ctx, TriggerContextLogger, ctx.Plugin) == true)
                 return false;
 
             AddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/trignotfired", "Trigger '{0}' not fired, condition not met", LogName));
@@ -728,7 +728,7 @@ namespace Triggernometry.Core
             int removedCount = 0;
             lock (ctx.Plugin.ActionQueue)
             {
-                foreach (ActionBase.ActionInstance qa in GetSelfQueuedActions(ctx).ToList())
+                foreach (ActionInstance qa in GetSelfQueuedActions(ctx).ToList())
                 {
                     ctx.Plugin.ActionQueue.Remove(qa);
                     removedCount++;
@@ -743,7 +743,7 @@ namespace Triggernometry.Core
                 return GetSelfQueuedActions(ctx).Count();
         }
 
-        private IEnumerable<ActionBase.ActionInstance> GetSelfQueuedActions(Context ctx)
+        private IEnumerable<ActionInstance> GetSelfQueuedActions(Context ctx)
             => ctx.Plugin.ActionQueue.Where(action => action.Context.Trigger.Id == Id);
 
         public void QueueActions(Context ctx, DateTime curtime, RealPlugin.MutexInfo mutex)

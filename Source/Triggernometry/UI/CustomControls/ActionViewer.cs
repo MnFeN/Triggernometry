@@ -566,7 +566,7 @@ namespace Triggernometry.UI.CustomControls
                     break;
             }
             
-            a.Execute(null, ctx);
+            a.Execute(ctx);
         }
 
         private void ctxEditPropCopyCnd_Click(object sender, EventArgs e)

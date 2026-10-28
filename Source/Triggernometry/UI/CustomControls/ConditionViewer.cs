@@ -985,12 +985,12 @@ namespace Triggernometry.UI.CustomControls
             Context fakectx = new Context(Trigger);
             if (selectedNode.Tag is ConditionGroup group)
             {
-                string result = group.CheckCondition(fakectx, null, null) ? "True" : "False";
+                string result = group.Check(fakectx, null, null) ? "True" : "False";
                 MessageBox.Show(result, I18n.Translate("internal/ConditionViewer/testtitle", "Test"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else if (selectedNode.Tag is ConditionSingle condition)
             {
-                string result = condition.CheckCondition(fakectx, null, null) ? "True" : "False";
+                string result = condition.Check(fakectx, null, null) ? "True" : "False";
                 string GetExprResult(Func<string> func)
                 {
                     try { return func(); }

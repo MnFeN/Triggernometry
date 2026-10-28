@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using Triggernometry.Core.Actions;
 using Triggernometry.Localization;
-using static Triggernometry.Core.ActionBase;
 
 namespace Triggernometry.Core
 {
@@ -154,18 +153,18 @@ namespace Triggernometry.Core
                             int removedCount = ActionQueue.RemoveAll(actionInstance => actionInstance.Action.Id == action.Id);
                             if (removedCount > 0)
                             {
-                                action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig.LogName, action.Describe()));
+                                action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig?.LogName ?? "(null)", action.Describe()));
                             }
                         }
                         if (action.PreventDuplicateQueue)
                         {
-                            action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig.LogName, action.Describe()));
+                            action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig?.LogName ?? "(null)", action.Describe()));
                             return false;
                         }
                     }
                 }
                 lock (this) instance.QueueSequence = curOrdinal++;
-                action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig.LogName, action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
+                action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig?.LogName ?? "(null)", action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
                 Context tagContext = instance.LoopContext ?? ctx;
                 var actionTag = tagContext.EvaluateStringExpression(null, tagContext, action.Tag);
                 if (!string.IsNullOrWhiteSpace(actionTag))
@@ -248,7 +247,8 @@ namespace Triggernometry.Core
                 ActionQueue.RemoveAt(0);
                 ExecutingActions.Add(instance);
             }
-            instance.Action.Execute(instance, instance.Context);
+            // 实例在任务完成后自行续排和收尾，队列线程继续处理其他动作。
+            _ = instance.Dispatch();
         }
 
         /// <summary>Returns the next wait duration, or an indefinite wait while paused or empty.</summary>

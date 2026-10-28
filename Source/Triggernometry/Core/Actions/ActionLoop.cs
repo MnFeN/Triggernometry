@@ -106,7 +106,9 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(Context ctx)
         {
-            // To-do: Loop iterations are now handled by the base scheduling path.
+            // 直接调用只负责启动循环；后续迭代和子动作仍由队列推进。
+            var iteration = new ActionInstance(DateTime.Now, 0, null, this, ctx, false);
+            QueueIteration(iteration);
         }
 
         /// <summary>Queues the next iteration using this invocation's iterator and return path.</summary>
@@ -126,11 +128,11 @@ namespace Triggernometry.Core.Actions
                 loopContext.loopIterator += (int)loopContext.EvaluateNumericExpression(ActionContextLogger, loopContext, Step);
             }
             // A failed initial test must not replace the caller's context.
-            if (!LoopCondition.CheckCondition(loopContext, ActionContextLogger, loopContext)) return false;
+            if (!LoopCondition.Check(loopContext, ActionContextLogger, loopContext)) return false;
             ai.LoopContext = loopContext;
 
             return loopContext.Plugin.QueueActions(loopContext, DateTime.Now, LoopActions,
-                loopContext.Trigger.Sequential, ai.Mutex, ActionContextLogger, ai) != null;
+                loopContext.Trigger?.Sequential ?? true, ai.Mutex, ActionContextLogger, ai) != null;
         }
 
         /// <summary>Copies loop conditions and child actions without sharing editable objects.</summary>

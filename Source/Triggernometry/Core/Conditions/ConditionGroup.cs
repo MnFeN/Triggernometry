@@ -95,7 +95,7 @@ namespace Triggernometry.Core.Conditions
             }
         }
 
-        internal override bool CheckCondition(Context ctx, Context.LoggerDelegate logger, object o)
+        internal override bool Check(Context ctx, Context.LoggerDelegate logger, object o)
         {
             // A root containing only notes behaves like an empty condition tree.
             if (Parent == null && Children.All(cc => cc is ConditionComment))
@@ -119,7 +119,7 @@ namespace Triggernometry.Core.Conditions
                                 continue;
                             }
                             actives = true;
-                            if (cc.CheckCondition(ctx, logger, o) == false)
+                            if (cc.Check(ctx, logger, o) == false)
                             {
                                 if (System.Diagnostics.Debugger.IsAttached == true)
                                 {
@@ -151,7 +151,7 @@ namespace Triggernometry.Core.Conditions
                                 }
                                 continue;
                             }
-                            if (cc.CheckCondition(ctx, logger, o) == true)
+                            if (cc.Check(ctx, logger, o) == true)
                             {
                                 if (System.Diagnostics.Debugger.IsAttached == true)
                                 {
@@ -176,7 +176,7 @@ namespace Triggernometry.Core.Conditions
                                 }
                                 continue;
                             }
-                            if (cc.CheckCondition(ctx, logger, o) == true)
+                            if (cc.Check(ctx, logger, o) == true)
                             {
                                 if (truefound == true)
                                 {
@@ -212,7 +212,7 @@ namespace Triggernometry.Core.Conditions
                                 }
                                 continue;
                             }
-                            if (cc.CheckCondition(ctx, logger, o) == true)
+                            if (cc.Check(ctx, logger, o) == true)
                             {
                                 if (System.Diagnostics.Debugger.IsAttached == true)
                                 {
@@ -228,7 +228,7 @@ namespace Triggernometry.Core.Conditions
                         return true;
                     }
             }
-            if (System.Diagnostics.Debugger.IsAttached == true)
+            if (System.Diagnostics.Debugger.IsAttached)
             {
                 System.Diagnostics.Debug.WriteLine("GENERAL: Condition on '" + ToString() + "' " + (Children.Count > 0 && Grouping == CndGroupingEnum.And ? "passed" : "did not pass"));
             }

@@ -46,6 +46,7 @@ namespace Triggernometry.Core
     [XmlInclude(typeof(ActionWindowMessage))]
     [XmlInclude(typeof(ActionLaunchProcess))]
     [XmlInclude(typeof(ActionDiskOperation))]
+    [XmlInclude(typeof(ActionClipboard))]
     [XmlInclude(typeof(ActionActInteraction))]
     [XmlInclude(typeof(ActionJsonRequest))]
     [XmlInclude(typeof(ActionDiscordWebhook))]
@@ -92,76 +93,6 @@ namespace Triggernometry.Core
         /// <summary>Copied automatically by <see cref="CopySpecificPropertiesTo"/> via reflection.</summary>
         [AttributeUsage(AttributeTargets.Property, Inherited = true)]
         public sealed class ActionSpecificPropertyAttribute : Attribute { }
-
-        /// <summary>
-        /// When an action is queued for execution, it's wrapped in an ActionInstance that carries all the relevant data for execution.
-        /// </summary>
-        public class ActionInstance : IComparable<ActionInstance>
-        {
-
-            internal DateTime ExecuteAt { get; set; }
-            internal long QueueSequence { get; set; }
-            internal MutexInfo Mutex { get; set; }
-            internal ActionBase Action { get; set; }
-            internal Context Context { get; set; }
-            internal bool ShouldReleaseMutex { get; set; } = false;
-
-            // Continuations belong to this execution, never to the shared action definition.
-            internal ActionInstance NextAction { get; set; }
-            internal ActionInstance LoopParent { get; set; }
-            internal Context LoopContext { get; set; }
-            internal bool IsLoopTail { get; set; }
-
-            /// <summary>
-            /// The effective tag text used by the action,
-            /// with expressions evaluated when the action is queued. <br />
-            /// If this action’s <see cref="ActionBase.Tag"/> is not specified, or evaluates to a whitespace-string,
-            /// the <see cref="Trigger.Tag"/> from the parent trigger will be used instead. <br />
-            /// Empty if no tag is specified anywhere.
-            /// </summary>
-            internal string ParsedTag { get; set; } = "";
-
-            public ActionInstance(DateTime executeAt, long queueSequence, MutexInfo mutextx, ActionBase action, Context ctx, bool shouldReleaseMutex)
-            {
-                ExecuteAt = executeAt;
-                QueueSequence = queueSequence;
-                Mutex = mutextx;
-                Action = action;
-                Context = ctx;
-                ShouldReleaseMutex = shouldReleaseMutex;
-            }
-
-            /// <summary>
-            /// Invoked by <see cref="List.BinarySearch"/> in <see cref="RealPlugin.QueueAction"/>
-            /// </summary>
-            /// <param name="other"></param>
-            /// <returns></returns>
-            public int CompareTo(ActionInstance other)
-            {
-                if (other == null) return 1;
-                int execTimeComparison = ExecuteAt.CompareTo(other.ExecuteAt);
-                if (execTimeComparison != 0)
-                {
-                    return execTimeComparison;
-                }
-                return QueueSequence.CompareTo(other.QueueSequence);
-            }
-
-            public void ActionFinished()
-            {
-                lock (Context.Plugin.ActionQueue)
-                {
-                    Context.Plugin.ExecutingActions.Remove(this);
-                    if (Mutex != null && ShouldReleaseMutex)
-                    {
-                        Mutex.Release(Context);
-                        Mutex = null;
-                    }
-                }
-            }
-
-        }
-
 
         #endregion
 
@@ -398,10 +329,7 @@ namespace Triggernometry.Core
         /// </summary>
         internal bool LastExecutionResult
         {
-            get
-            {
-                return _LastExecutionResult;
-            }
+            get => _LastExecutionResult;
             set
             {
                 _LastExecutionResult = value;
@@ -416,102 +344,65 @@ namespace Triggernometry.Core
         /// <summary>在指定上下文中执行具体动作的业务逻辑。</summary>
         internal abstract void ExecuteImplementation(Context ctx);
 
-        /// <summary>Executes a queued instance through the same lifecycle as direct UI tests.</summary>
-        public void Execute(ActionInstance ai) => Execute(ai, ai.Context);
+        /// <summary>
+        /// 按 Async 同步或异步执行动作；缺省创建独立上下文，不应用 ExecDelay。
+        /// 返回的任务表示本次执行结束；循环动作仅表示启动完成，子动作仍由队列推进。
+        /// </summary>
+        public Task Execute(Context ctx = null)
+            => Execute(ctx ?? new Context(ParentTrigger), null);
 
-        internal void Execute(ActionInstance ai, Context ctx)
+        /// <summary>统一处理条件、日志、异常和异步调度；循环可由队列提供本轮迭代的执行逻辑。</summary>
+        internal async Task Execute(Context ctx, Action execute)
         {
-            if (ai != null)
-            {
-                lock (ctx.Plugin.ActionQueue) ctx.Plugin.ExecutingActions.Add(ai);
-            }
-            CancellationToken? ct = Async ? ctx.Plugin?.GetCancellationToken() : null;
             void ExecuteCore()
             {
                 try
                 {
-                    ct?.ThrowIfCancellationRequested();
-                    ExecutionImplementation(ai ?? new ActionInstance(default, 0, null, this, ctx, false), ctx);
+                    var shouldCheckCondition = !ctx.forceType.HasFlag(ActionTriggerOperation.ForceEnum.SkipConditions) && !ctx.testByPlaceholder;
+                    var conditionFailed = shouldCheckCondition && Condition?.Enabled == true && !Condition.Check(ctx, ActionContextLogger, ctx);
+                    if (conditionFailed)
+                    {
+                        ctx.PushActionResult(0);
+                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", IndexInTrigger, ctx.Trigger?.LogName ?? "(null)"));
+                        return;
+                    }
+                    ctx.PushActionResult(1);
+                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
+                    if (execute != null) execute();
+                    else ExecuteImplementation(ctx);
                 }
-                finally { ai?.ActionFinished(); }
+                catch (Exception ex)
+                {
+                    LogExecutionException(ctx, ex);
+                    // 通过任务告知队列执行失败，避免继续排入后续动作。
+                    throw;
+                    // To-do: 需要重新考虑动作失败后应该如何处理，包括顺序和非顺序的情况。
+                    // 现在的顺序模式下出错会导致后续动作不再执行，这似乎并非预期设计。
+                }
             }
-            if (Async) Task.Run((Action)ExecuteCore);
+
+            if (Async)
+            { 
+                var cancelToken = ctx.Plugin?.GetCancellationToken() ?? CancellationToken.None;
+                await Task.Run(ExecuteCore, cancelToken).ConfigureAwait(false);
+            }
             else ExecuteCore();
         }
 
-        /// <summary>检查动作条件、执行业务并安排后续动作。</summary>
-        private void ExecutionImplementation(ActionInstance ai, Context ctx)
+        /// <summary>统一记录直接执行和队列执行中的异常，并保留回调的原始异常。</summary>
+        internal void LogExecutionException(Context ctx, Exception ex)
         {
-            try
-            {
-                if ((ctx.forceType & ActionTriggerOperation.ForceEnum.SkipConditions) == 0 && !ctx.testByPlaceholder &&
-                    Condition?.Enabled == true && Condition.CheckCondition(ctx, ActionContextLogger, ctx) == false)
-                {
-                    ctx.PushActionResult(0);
-                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", IndexInTrigger, ctx.Trigger?.LogName ?? "(null)"));
-                }
-                else
-                {
-                    ctx.PushActionResult(1);
-                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
+            if (this is ActionNamedCallback && ex is TargetInvocationException tiex && tiex.InnerException != null)
+                ex = tiex.InnerException;
+            string triggerPath = ctx?.Trigger?.FullPath ?? "(null)";
+            string actionDesc = "";
+            try { actionDesc = Describe(); } catch { }
+            actionDesc = actionDesc.Length > 300 ? actionDesc.Substring(0, 297) + "..." : actionDesc;
+            string detail = ex.FullMessage();
 
-                    if (this is ActionLoop loop)
-                    {
-                        if (loop.QueueIteration(ai)) return;
-                        // A nested loop restores its caller's iterator; a root loop keeps its final value.
-                        if (ai.LoopParent == null && ai.LoopContext != null) ctx = ai.LoopContext;
-                    }
-                    else
-                    {
-                        ExecuteImplementation(ctx);
-                    }
-                }
-
-                ActionInstance next = ai.NextAction;
-                if (next != null)
-                {
-                    next.Context = ctx;
-                    next.ExecuteAt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, next.Action.ExecDelay));
-                }
-                else if (ai.IsLoopTail)
-                {
-                    ActionInstance parent = ai.LoopParent;
-                    DateTime when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ((ActionLoop)parent.Action).LoopDelay));
-                    next = new ActionInstance(when, 0, ai.Mutex, parent.Action, parent.Context, false)
-                    {
-                        NextAction = parent.NextAction,
-                        LoopParent = parent.LoopParent,
-                        LoopContext = parent.LoopContext,
-                        IsLoopTail = parent.IsLoopTail
-                    };
-                }
-                if (next != null)
-                {
-                    lock (ctx.Plugin.ActionQueue)
-                    {
-                        // Only a successfully queued successor takes over the mutex release.
-                        next.ShouldReleaseMutex = ai.ShouldReleaseMutex;
-                        if (ctx.Plugin.QueueAction(next)) ai.ShouldReleaseMutex = false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (this is ActionNamedCallback)
-                {
-                    if (ex is TargetInvocationException tiex && tiex.InnerException != null)
-                        ex = tiex.InnerException;
-                }
-                string triggerPath = ai?.Context?.Trigger?.FullPath ?? "(null)";
-                string actionDesc = "";
-                try { actionDesc = Describe(); } catch { }
-                actionDesc = actionDesc.Length > 300 ? actionDesc.Substring(0, 297) + "..." : actionDesc;
-                string detail = ex.FullMessage();
-
-                AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/exception",
-                    "Action exception: {0}  \nIn action: {1}  \nIn trigger: {2}{3}",
-                    ex.Message, actionDesc, triggerPath, detail));
-            }
+            AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/exception",
+                "Action exception: {0}  \nIn action: {1}  \nIn trigger: {2}{3}",
+                ex.Message, actionDesc, triggerPath, detail));
         }
 
         internal DebugLevelEnum GetDebugLevel(Context ctx)
