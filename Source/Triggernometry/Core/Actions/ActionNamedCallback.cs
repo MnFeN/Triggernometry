@@ -2,6 +2,7 @@
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -9,7 +10,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Named callback invocation
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
+    [Action("Named callback operation", ActionAttribute.CategoryType.Programming)]
     [XmlRoot(ElementName = "ActionNamedCallback")]
     public class ActionNamedCallback : ActionBase
     {
@@ -20,7 +21,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the callback to invoke
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, Label = "Callback name", Autofill = EditorAutofillType.Callback)]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -34,7 +36,8 @@ namespace Triggernometry.Core.Actions
         /// Parameter value to pass to the callback
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Callback parameter")]
         public string Parameter { get; set; } = "";
 
         [XmlAttribute("Parameter")]
@@ -54,9 +57,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/descnamedcallback", "Invoke named callback ({0}) with parameter ({1})", Name, Parameter);
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             string cbname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);

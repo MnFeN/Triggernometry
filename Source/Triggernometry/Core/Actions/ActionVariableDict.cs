@@ -10,6 +10,9 @@ using Triggernometry.Expressions.String.Evaluators;
 using Triggernometry.Expressions.String.Parsers;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
+using Autofill = Triggernometry.UI.CustomControls.ExpressionTextBox.AutofillTypeEnum;
 
 namespace Triggernometry.Core.Actions
 {
@@ -17,7 +20,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Dictionary variable operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Variable)]
+    [Action("Dict variable operation", ActionAttribute.CategoryType.Variables)]
     [XmlRoot(ElementName = "ActionVariableDict")]
     public class ActionVariableDict : ActionBase
     {
@@ -47,7 +50,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Expression types
         /// </summary>
-        public enum ExpressionTypeEnum
+        public enum ExpressionType
         {
             /// <summary>
             /// String expression
@@ -63,7 +66,22 @@ namespace Triggernometry.Core.Actions
         /// Dictionary variable operation type
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation type",
+            ChoiceLabels = new[]
+        {
+            "Unset dictionary variable",
+            "Set value of the given key",
+            "Remove the given key",
+            "Set all keys and values",
+            "Build from the expression",
+            "Filter into another dictionary",
+            "Merge two dictionaries (keep)",
+            "Merge two dictionaries (overwrite)",
+            "Get specified properties of a specified FFXIV entity",
+            "Unset all dictionary variables",
+            "Unset dictionary variables matching regular expression",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.Unset;
 
         [XmlAttribute("Operation")]
@@ -77,35 +95,48 @@ namespace Triggernometry.Core.Actions
         /// Type of the key expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
-        public ExpressionTypeEnum KeyType { get; set; } = ExpressionTypeEnum.String;
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(5, Label = "Key Expr type",
+            ChoiceLabels = new[]
+        {
+            "String",
+            "Numeric",
+        })]
+        public ExpressionType KeyType { get; set; } = ExpressionType.String;
 
         [XmlAttribute("KeyType")]
         public string Xml_KeyType
         {
-            get => XmlAttr.Enum(KeyType, ExpressionTypeEnum.String);
-            set => KeyType = XmlAttr.Enum<ExpressionTypeEnum>(value);
+            get => XmlAttr.Enum(KeyType, ExpressionType.String);
+            set => KeyType = XmlAttr.Enum<ExpressionType>(value);
         }
 
         /// <summary>
         /// Type of the value expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3)]
-        public ExpressionTypeEnum ValueType { get; set; } = ExpressionTypeEnum.String;
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(7, Label = "Value Expr type",
+            ChoiceLabels = new[]
+        {
+            "String",
+            "Numeric",
+        })]
+        public ExpressionType ValueType { get; set; } = ExpressionType.String;
 
         [XmlAttribute("ValueType")]
         public string Xml_ValueType
         {
-            get => XmlAttr.Enum(ValueType, ExpressionTypeEnum.String);
-            set => ValueType = XmlAttr.Enum<ExpressionTypeEnum>(value);
+            get => XmlAttr.Enum(ValueType, ExpressionType.String);
+            set => ValueType = XmlAttr.Enum<ExpressionType>(value);
         }
 
         /// <summary>
         /// Name of the dictionary variable
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Source variable name", Autofill = EditorAutofillType.Dict)]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -119,7 +150,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the target variable for some operations
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(9, Label = "Target variable name", Autofill = EditorAutofillType.Dict)]
         public string TargetVariable { get; set; } = "";
 
         [XmlAttribute("TargetVariable")]
@@ -130,7 +162,8 @@ namespace Triggernometry.Core.Actions
         }
 
         [XmlIgnore]
-        [Action(order: 6)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(4, Label = "Length")]
         public string VariableLength { get; set; } = "";
 
         [XmlAttribute("VariableLength")]
@@ -144,7 +177,8 @@ namespace Triggernometry.Core.Actions
         /// Key expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 7)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(6, Label = "Key")]
         public string Key { get; set; } = "";
 
         [XmlAttribute("Key")]
@@ -158,7 +192,8 @@ namespace Triggernometry.Core.Actions
         /// Value expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 8)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(8, Label = "Value")]
         public string Value { get; set; } = "";
 
         [XmlAttribute("Value")]
@@ -172,7 +207,8 @@ namespace Triggernometry.Core.Actions
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
         [XmlIgnore]
-        [Action(order: 9)] // todo need to couple this with variable on editor
+        [ActionSpecificProperty]
+        [PersistenceEditor(3, nameof(Name), Label = "Source variable name")]
         public bool Persistent { get; set; } = false;
 
         [XmlAttribute("Persistent")]
@@ -186,7 +222,8 @@ namespace Triggernometry.Core.Actions
         /// Indicates whether referenced target variable is persistent or not
         /// </summary>
         [XmlIgnore]
-        [Action(order: 10)] // todo need to couple this with variable on editor
+        [ActionSpecificProperty]
+        [PersistenceEditor(10, nameof(TargetVariable), Label = "Target variable name")]
         public bool TargetPersistent { get; set; } = false;
 
         [XmlAttribute("TargetPersistent")]
@@ -199,14 +236,69 @@ namespace Triggernometry.Core.Actions
         #endregion
 
 
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var name = editor.GetEditor(nameof(Name));
+            var length = editor.GetEditor(nameof(VariableLength));
+            var key = editor.GetEditor(nameof(Key));
+            var keyType = editor.GetEditor(nameof(KeyType));
+            var value = editor.GetEditor(nameof(Value));
+            var valueType = editor.GetEditor(nameof(ValueType));
+            var target = editor.GetEditor(nameof(TargetVariable));
+            var persistent = editor.GetEditor(nameof(Persistent));
+            var targetPersistent = editor.GetEditor(nameof(TargetPersistent));
+            return () =>
+            {
+                var op = (OperationEnum)operation.GetValue();
+                switch (op)
+                {
+                    case OperationEnum.UnsetAll: 
+                        editor.EnableOnly(operation); break;
+                    case OperationEnum.Set: 
+                        editor.EnableOnly(operation, name, key, keyType, value, valueType); break;
+                    case OperationEnum.Remove: 
+                        editor.EnableOnly(operation, name, key, keyType); break;
+                    case OperationEnum.SetAll: 
+                        editor.EnableOnly(operation, name, length, key, keyType, value, valueType); break;
+                    case OperationEnum.Build: 
+                        editor.EnableOnly(operation, value, valueType, target); break;
+                    case OperationEnum.Filter: 
+                        editor.EnableOnly(operation, name, value, target); break;
+                    case OperationEnum.Merge:
+                    case OperationEnum.MergeHard: 
+                        editor.EnableOnly(operation, name, target); break;
+                    case OperationEnum.GetEntity: 
+                        editor.EnableOnly(operation, name, key, value); break;
+                    default: 
+                        editor.EnableOnly(operation, name); break;
+                }
+                if (op == OperationEnum.Filter) valueType.SetValue(ExpressionType.Numeric);
+                else if (op == OperationEnum.GetEntity)
+                {
+                    keyType.SetValue(ExpressionType.String);
+                    valueType.SetValue(ExpressionType.String);
+                }
+                editor.SetExpressionType((ExpressionType)keyType.GetValue() == ExpressionType.Numeric 
+                    ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric : ExpressionTextBox.SupportedExpressionTypeEnum.String, key);
+                editor.SetExpressionType((ExpressionType)valueType.GetValue() == ExpressionType.Numeric 
+                    ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric : ExpressionTextBox.SupportedExpressionTypeEnum.String, value);
+                editor.SetExpressionType(ExpressionTextBox.SupportedExpressionTypeEnum.Numeric, length);
+                name.SetVariableNameMode(Autofill.Dict, op == OperationEnum.UnsetRegex);
+                target.Expression.AutofillType = Autofill.Dict;
+                editor.SetEnabled(name.Enabled || op == OperationEnum.UnsetAll, persistent);
+                editor.SetEnabled(target.Enabled, targetPersistent);
+            };
+        }
+
         #region Implementation
 
         internal override string DescribeImplementation()
         {
             string sPersistD = I18n.TrlVarPersist(Persistent);
             string tPersistD = I18n.TrlVarPersist(TargetPersistent);
-            string keyType = I18n.TrlExprType(KeyType == ExpressionTypeEnum.String);
-            string valueType = I18n.TrlExprType(ValueType == ExpressionTypeEnum.String);
+            string keyType = I18n.TrlExprType(KeyType == ExpressionType.String);
+            string valueType = I18n.TrlExprType(ValueType == ExpressionType.String);
             switch (Operation)
             {
                 case OperationEnum.Unset:
@@ -228,9 +320,9 @@ namespace Triggernometry.Core.Actions
                     );
                 case OperationEnum.Build:
                     int dollarIndex = Value.IndexOf("$");
-                    int crcIndex = Value.IndexOf("¡è{");
+                    int crcIndex = Value.IndexOf("¤{");
                     if (
-                        ValueType == ExpressionTypeEnum.String
+                        ValueType == ExpressionType.String
                         && dollarIndex != 0 && dollarIndex != 1 && crcIndex != 0 && crcIndex != 1
                     )
                     {
@@ -306,9 +398,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
@@ -320,7 +411,7 @@ namespace Triggernometry.Core.Actions
 
             string ParseKey()
             {
-                if (KeyType == ExpressionTypeEnum.String)
+                if (KeyType == ExpressionType.String)
                     return ctx.EvaluateStringExpression(ActionContextLogger, ctx, Key);
                 else
                     return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Key));
@@ -328,7 +419,7 @@ namespace Triggernometry.Core.Actions
             }
             string ParseValue()
             {
-                if (ValueType == ExpressionTypeEnum.String)
+                if (ValueType == ExpressionType.String)
                     return ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                 else
                     return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
@@ -566,8 +657,8 @@ namespace Triggernometry.Core.Actions
             var action = new ActionVariableDict();
             oldAction.CopyCommonPropertiesTo(action);
             action.Operation = (OperationEnum)(int)oldAction._DictVariableOp;
-            action.KeyType = (ExpressionTypeEnum)(int)oldAction._DictVariableKeyType;
-            action.ValueType = (ExpressionTypeEnum)(int)oldAction._DictVariableValueType;
+            action.KeyType = (ExpressionType)(int)oldAction._DictVariableKeyType;
+            action.ValueType = (ExpressionType)(int)oldAction._DictVariableValueType;
             action.Name = oldAction._DictVariableName;
             action.TargetVariable = oldAction._DictVariableTarget;
             action.VariableLength = oldAction._DictVariableLength;

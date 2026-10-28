@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core.Actions
@@ -13,7 +15,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Trigger operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
+    [Action("Trigger operation", ActionAttribute.CategoryType.TriggerManagement)]
     [XmlRoot(ElementName = "ActionTriggerOperation")]
     public class ActionTriggerOperation : ActionBase
     {
@@ -106,7 +108,13 @@ namespace Triggernometry.Core.Actions
         /// Type of the zone information provided
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(3, Label = "Zone type",
+            ChoiceLabels = new[]
+        {
+            "Zone name",
+            "FFXIV zone ID",
+        })]
         public ZoneTypeEnum ZoneType { get; set; } = ZoneTypeEnum.ZoneName;
 
         [XmlAttribute("ZoneType")]
@@ -120,7 +128,16 @@ namespace Triggernometry.Core.Actions
         /// Type of the trigger operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation",
+            ChoiceLabels = new[]
+        {
+            "Fire the specified trigger",
+            "Cancel all actions queued from the specified trigger",
+            "Enable the specified trigger",
+            "Disable the specified trigger",
+            "Cancel all actions from all triggers",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.FireTrigger;
 
         [XmlAttribute("Operation")]
@@ -134,7 +151,8 @@ namespace Triggernometry.Core.Actions
         /// Reference to the trigger
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3, specialtype: ActionAttribute.SpecialTypeEnum.TriggerReference)]
+        [ActionSpecificProperty]
+        [ReferenceEditor(7, EditorReferenceType.Trigger, Label = "Trigger")]
         public Guid TriggerId { get; set; } = Guid.Empty;
 
         [XmlAttribute("TriggerId")]
@@ -148,7 +166,8 @@ namespace Triggernometry.Core.Actions
         /// Event text the trigger is fired with
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Event text for firing")]
         public string Text { get; set; } = "";
 
         [XmlAttribute("Text")]
@@ -162,7 +181,8 @@ namespace Triggernometry.Core.Actions
         /// Zone information the trigger is fired with
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(4, Label = "Zone name")]
         public string Zone { get; set; } = "";
 
         [XmlAttribute("Zone")]
@@ -176,7 +196,8 @@ namespace Triggernometry.Core.Actions
         /// Action tag (to interrupt actions)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 6)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(5, EditorExpressionType.Regex, Label = "Action Tag")]
         public string TagRegex { get; set; } = "";
 
         [XmlAttribute("TagRegex")]
@@ -190,7 +211,16 @@ namespace Triggernometry.Core.Actions
         /// Trigger force firing flags
         /// </summary>
         [XmlIgnore]
-        [Action(order: 7)]
+        [ActionSpecificProperty]
+        [EnumFlagsEditor(6, Label = "Firing options",
+            ChoiceLabels = new[]
+        {
+            "Ignore regular expression",
+            "Ignore conditions",
+            "Ignore refire delay",
+            "Ignore parent folder restrictions",
+            "Ignore enabled/disabled status",
+        }, ChoiceValues = new[] { 1, 2, 4, 8, 16 })]
         public ForceEnum Force { get; set; } = ForceEnum.NoSkip;
 
         [XmlAttribute("Force")]
@@ -272,6 +302,29 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var force = editor.GetEditor(nameof(Force));
+            var text = editor.GetEditor(nameof(Text));
+            var zone = editor.GetEditor(nameof(Zone));
+            var zoneType = editor.GetEditor(nameof(ZoneType));
+            var tag = editor.GetEditor(nameof(TagRegex));
+            var trigger = editor.GetEditor(nameof(TriggerId));
+            return () =>
+            {
+                var op = (OperationEnum)operation.GetValue();
+                bool isFireOperation = op == OperationEnum.FireTrigger;
+                bool skipRegex = ((ForceEnum)force.GetValue() & ForceEnum.SkipRegexp) != 0;
+                editor.SetEnabled(isFireOperation, force);
+                editor.SetEnabled(isFireOperation && !skipRegex, text, zone, zoneType);
+                editor.SetEnabled(op == OperationEnum.CancelTrigger || op == OperationEnum.CancelAllTrigger, tag);
+                editor.SetEnabled(op != OperationEnum.CancelAllTrigger, trigger);
+                zone.Label.Text = (ZoneTypeEnum)zoneType.GetValue() == ZoneTypeEnum.ZoneName
+                    ? I18n.Translate("TestInputForm/lblZoneName", "Zone name") : I18n.Translate("TestInputForm/ffxivzoneid", "Zone ID");
+            };
+        }
 
         #region Implementation
 
@@ -361,9 +414,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             Trigger t = plug.GetTriggerById(TriggerId, ctx.Trigger?.Repo);
@@ -402,7 +454,7 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.CancelTrigger:
                     {
-                        bool trigFilter(ActionInstance action) => action?.ctx?.Trigger == t;
+                        bool trigFilter(ActionInstance action) => action?.Context?.Trigger == t;
 
                         if (!string.IsNullOrWhiteSpace(TagRegex))
                         {

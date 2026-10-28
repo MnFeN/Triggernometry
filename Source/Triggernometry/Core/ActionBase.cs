@@ -16,184 +16,95 @@ using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core
 {
 
-    [XmlInclude(typeof(ActionActInteraction))]
     [XmlInclude(typeof(ActionBeep))]
-    [XmlInclude(typeof(ActionDiscordWebhook))]
-    [XmlInclude(typeof(ActionDiskOperation))]
-    [XmlInclude(typeof(ActionExecuteScript))]
-    [XmlInclude(typeof(ActionFolderOperation))]
-    [XmlInclude(typeof(ActionJsonRequest))]
-    [XmlInclude(typeof(ActionKeypress))]
-    [XmlInclude(typeof(ActionLaunchProcess))]
-    [XmlInclude(typeof(ActionLiveSplitControl))]
-    [XmlInclude(typeof(ActionLogMessage))]
-    [XmlInclude(typeof(ActionLoop))]
-    [XmlInclude(typeof(ActionMessageBox))]
-    [XmlInclude(typeof(ActionMouse))]
-    [XmlInclude(typeof(ActionMutex))]
-    [XmlInclude(typeof(ActionNamedCallback))]
-    [XmlInclude(typeof(ActionObsControl))]
-    [XmlInclude(typeof(ActionOverlayImage))]
-    [XmlInclude(typeof(ActionOverlayText))]
-    [XmlInclude(typeof(ActionPlaceholder))]
     [XmlInclude(typeof(ActionPlaySound))]
     [XmlInclude(typeof(ActionPlaySpeech))]
-    [XmlInclude(typeof(ActionRepository))]
-    [XmlInclude(typeof(ActionTriggerOperation))]
-    [XmlInclude(typeof(ActionVariableDict))]
-    [XmlInclude(typeof(ActionVariableList))]
+    [XmlInclude(typeof(ActionMessageBox))]
+    [XmlInclude(typeof(ActionOverlayText))]
+    [XmlInclude(typeof(ActionOverlayImage))]
     [XmlInclude(typeof(ActionVariableScalar))]
+    [XmlInclude(typeof(ActionVariableList))]
     [XmlInclude(typeof(ActionVariableTable))]
+    [XmlInclude(typeof(ActionVariableDict))]
+    [XmlInclude(typeof(ActionLogMessage))]
+    [XmlInclude(typeof(ActionNamedCallback))]
+    [XmlInclude(typeof(ActionExecuteScript))]
+    [XmlInclude(typeof(ActionLoop))]
+    [XmlInclude(typeof(ActionMutex))]
+    [XmlInclude(typeof(ActionTriggerOperation))]
+    [XmlInclude(typeof(ActionFolderOperation))]
+    [XmlInclude(typeof(ActionRepository))]
+    [XmlInclude(typeof(ActionMouse))]
+    [XmlInclude(typeof(ActionKeypress))]
     [XmlInclude(typeof(ActionWindowMessage))]
-    public abstract class ActionBase
+    [XmlInclude(typeof(ActionLaunchProcess))]
+    [XmlInclude(typeof(ActionDiskOperation))]
+    [XmlInclude(typeof(ActionActInteraction))]
+    [XmlInclude(typeof(ActionJsonRequest))]
+    [XmlInclude(typeof(ActionDiscordWebhook))]
+    [XmlInclude(typeof(ActionObsControl))]
+    [XmlInclude(typeof(ActionLiveSplitControl))]
+    [XmlInclude(typeof(ActionPlaceholder))]
+    public abstract class ActionBase : IEditorRulesProvider
     {
+
+        /// <summary>创建动作参数的控件联动规则。</summary>
+        public virtual Action CreateEditorRules(ConfigEditor editor) => null;
 
         #region Classes and enums
 
-        /// <summary>
-        /// This class attribute determines the category in which the action belongs into.
-        /// The category in turn is used by the trigger action editor to assign it to the right menu.
-        /// </summary>
-        [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-        public class ActionCategory : Attribute
+        /// <summary>声明动作类型的显示名称和分类。</summary>
+        [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+        public sealed class ActionAttribute : Attribute
         {
-
-            public enum CategoryTypeEnum
+            /// <summary>动作选择器中的分类，供菜单与滚轮切换使用。</summary>
+            public enum CategoryType
             {
-                /// <summary>
-                /// Miscellaneous actions that don't really belong into any other group
-                /// </summary>
-                Miscellaneous,
-                /// <summary>
-                /// Audio actions (TTS, play sound, ..)
-                /// </summary>
                 Audio,
-                /// <summary>
-                /// Overlay actions (show image, show text, ..)
-                /// </summary>
-                Overlay,
-                /// <summary>
-                /// Communication actions (Discord webhook, JSON requests, ..)
-                /// </summary>
-                Networking,
-                /// <summary>
-                /// Variable actions (scalars, lists, ..)
-                /// </summary>
-                Variable,
-                /// <summary>
-                /// File actions (read file, ..)
-                /// </summary>
-                File,
-                /// <summary>
-                /// External application remote control actions (OBS, LiveSplit, ..)
-                /// </summary>
-                RemoteControl,
-                /// <summary>
-                /// Programming types (scripting, mutex, ..)
-                /// </summary>
+                Display,
+                Variables,
                 Programming,
-                /// <summary>
-                /// Input types (keypress, mouse, ..)
-                /// </summary>
-                Input,
+                TriggerManagement,
+                SystemInteraction,
+                ExternalInteraction,
+                Placeholder,
             }
 
-            internal CategoryTypeEnum _categoryType;
+            public string Name { get; }
+            public CategoryType Category { get; }
+            public string TranslationKey => "ActionForm/cbxActionType[" + Name + "]";
 
-            public ActionCategory(CategoryTypeEnum categoryType = CategoryTypeEnum.Miscellaneous)
+            /// <summary>设置动作类型的显示名称和分类。</summary>
+            public ActionAttribute(string name, CategoryType category)
             {
-                _categoryType = categoryType;
+                Name = name;
+                Category = category;
             }
-
         }
 
-        /// <summary>
-        /// Marks action-specific settings for copying and provides editor metadata.
-        /// </summary>
-        [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
-        public class ActionAttribute : Attribute
-        {
-
-            public enum SpecialTypeEnum
-            {
-                None,
-                /// <summary>
-                /// For GUID type, means that this guid is a reference to a trigger
-                /// </summary>
-                TriggerReference,
-                /// <summary>
-                /// For GUID type, means that this guid is a reference to a folder
-                /// </summary>
-                FolderReference,
-                /// <summary>
-                /// For GUID type, means that this guid is a reference to a remote repository
-                /// </summary>
-                RepoReference,
-                /// <summary>
-                /// For string type, means that this is a path to a generic file
-                /// </summary>
-                FileSelector,
-                /// <summary>
-                /// For string type, means that this is a path to an executable
-                /// </summary>
-                ExecutableSelector,
-                /// <summary>
-                /// For string type, means that this is a path to an audio file
-                /// </summary>
-                AudioSelector,
-                /// <summary>
-                /// For string type, means that this is a path to an image file
-                /// </summary>
-                ImageSelector,
-                /// <summary>
-                /// For string type, means that a keypress recorder should be provided
-                /// </summary>
-                KeypressRecorder
-            }
-
-            /// <summary>
-            /// Display order number (smallest first)
-            /// </summary>
-            internal int _order;
-
-            /// <summary>
-            /// Type hint for the generic editor, can be different from the underlying datatype.
-            /// For example, underlying data might be string, but we want to have an editor for numeric expression.
-            /// If null, type is taken from underlying datatype.
-            /// </summary>
-            internal Type _typehint;
-
-            /// <summary>
-            /// Setting that applies special meaning to properties of specific types, namely System.Guid and System.String
-            /// </summary>
-            internal SpecialTypeEnum _specialtype;
-
-            public ActionAttribute(int order = 0, Type typehint = null, SpecialTypeEnum specialtype = SpecialTypeEnum.None)
-            {
-                _order = order;
-                _typehint = typehint;
-                _specialtype = specialtype;
-            }
-
-        }
+        /// <summary>Copied automatically by <see cref="CopySpecificPropertiesTo"/> via reflection.</summary>
+        [AttributeUsage(AttributeTargets.Property, Inherited = true)]
+        public sealed class ActionSpecificPropertyAttribute : Attribute { }
 
         /// <summary>
         /// When an action is queued for execution, it's wrapped in an ActionInstance that carries all the relevant data for execution.
         /// </summary>
-        public class ActionInstance : IComparable
+        public class ActionInstance : IComparable<ActionInstance>
         {
 
-            internal DateTime when { get; set; }
-            internal long ordinal { get; set; }
-            internal MutexInformation mutex { get; set; }
-            internal ActionBase act { get; set; }
-            internal Context ctx { get; set; }
-            internal bool releaseMutex { get; set; } = false;
+            internal DateTime ExecuteAt { get; set; }
+            internal long QueueSequence { get; set; }
+            internal MutexInfo Mutex { get; set; }
+            internal ActionBase Action { get; set; }
+            internal Context Context { get; set; }
+            internal bool ShouldReleaseMutex { get; set; } = false;
 
             // Continuations belong to this execution, never to the shared action definition.
             internal ActionInstance NextAction { get; set; }
@@ -210,36 +121,41 @@ namespace Triggernometry.Core
             /// </summary>
             internal string ParsedTag { get; set; } = "";
 
-            public ActionInstance(DateTime when, long ordinal, MutexInformation mtx, ActionBase act, Context ctx, bool releaseMutex)
+            public ActionInstance(DateTime executeAt, long queueSequence, MutexInfo mutextx, ActionBase action, Context ctx, bool shouldReleaseMutex)
             {
-                this.when = when;
-                this.ordinal = ordinal;
-                mutex = mtx;
-                this.act = act;
-                this.ctx = ctx;
-                this.releaseMutex = releaseMutex;
+                ExecuteAt = executeAt;
+                QueueSequence = queueSequence;
+                Mutex = mutextx;
+                Action = action;
+                Context = ctx;
+                ShouldReleaseMutex = shouldReleaseMutex;
             }
 
-            public int CompareTo(object o)
+            /// <summary>
+            /// Invoked by <see cref="List.BinarySearch"/> in <see cref="RealPlugin.QueueAction"/>
+            /// </summary>
+            /// <param name="other"></param>
+            /// <returns></returns>
+            public int CompareTo(ActionInstance other)
             {
-                ActionInstance b = (ActionInstance)o;
-                int ex = when.CompareTo(b.when);
-                if (ex != 0)
+                if (other == null) return 1;
+                int execTimeComparison = ExecuteAt.CompareTo(other.ExecuteAt);
+                if (execTimeComparison != 0)
                 {
-                    return ex;
+                    return execTimeComparison;
                 }
-                return ordinal.CompareTo(b.ordinal);
+                return QueueSequence.CompareTo(other.QueueSequence);
             }
 
             public void ActionFinished()
             {
-                lock (ctx.Plugin.ActionQueue)
+                lock (Context.Plugin.ActionQueue)
                 {
-                    ctx.Plugin.ExecutingActions.Remove(this);
-                    if (mutex != null && releaseMutex == true)
+                    Context.Plugin.ExecutingActions.Remove(this);
+                    if (Mutex != null && ShouldReleaseMutex)
                     {
-                        mutex.Release(ctx);
-                        mutex = null;
+                        Mutex.Release(Context);
+                        Mutex = null;
                     }
                 }
             }
@@ -285,6 +201,7 @@ namespace Triggernometry.Core
 
 
         [XmlIgnore]
+        [ExpressionEditor(3, EditorExpressionType.Numeric, Label = "Execution delay from last action (ms)")]
         public string ExecutionDelayExpression { get; set; } = "0";
 
         [XmlAttribute("ExecutionDelayExpression")]
@@ -297,18 +214,31 @@ namespace Triggernometry.Core
 
 
         [XmlIgnore]
-        public bool Asynchronous { get; set; } = true;
+        [CheckBoxEditor(4, Label = "Execute asynchronously without blocking other actions from executing")]
+        public bool Asynchronous { get; set; } = false;
 
         [XmlAttribute("Asynchronous")]
         public string Xml_Asynchronous
         {
-            get => XmlAttr.Bool(Asynchronous, true);
+            get => XmlAttr.Bool(Asynchronous, false);
             set => Asynchronous = XmlAttr.Bool(value);
         }
 
 
 
         [XmlIgnore]
+        [EnumChoiceEditor(1, Label = "Logging filtering level",
+            ChoiceLabels = new[]
+        {
+            "Nothing",
+            "Errors only",
+            "Errors and warnings",
+            "Above custom",
+            "Above custom 2",
+            "All informational messages",
+            "Verbose debug",
+            "(inherit from trigger)",
+        })]
         public DebugLevelEnum DebugLevel { get; set; } = DebugLevelEnum.Inherit;
 
         [XmlAttribute("DebugLevel")]
@@ -321,6 +251,7 @@ namespace Triggernometry.Core
 
 
         [XmlIgnore]
+        [CheckBoxEditor(5, Label = "Interrupt previously queued instances of this action")]
         public bool RefireInterrupt { get; set; } = false;
 
         [XmlAttribute("RefireInterrupt")]
@@ -333,13 +264,14 @@ namespace Triggernometry.Core
 
 
         [XmlIgnore]
-        public bool RefireRequeue { get; set; } = true;
+        [CheckBoxEditor(6, Label = "Prevent the same action from being queued again")]
+        public bool PreventDuplicateQueue { get; set; } = false;
 
-        [XmlAttribute("RefireRequeue")]
-        public string Xml_RefireRequeue
+        [XmlAttribute("PreventDuplicateQueue")]
+        public string Xml_PreventDuplicateQueue
         {
-            get => XmlAttr.Bool(RefireRequeue, true);
-            set => RefireRequeue = XmlAttr.Bool(value);
+            get => XmlAttr.Bool(PreventDuplicateQueue, false);
+            set => PreventDuplicateQueue = XmlAttr.Bool(value);
         }
 
 
@@ -394,6 +326,7 @@ namespace Triggernometry.Core
 
         /// <summary>A string tag used in trigger/folder actions to interrupt specific actions.</summary>
         [XmlIgnore]
+        [ExpressionEditor(2, Label = "Tag")]
         public string Tag { get; set; }
 
         [XmlAttribute("Tag")]
@@ -480,10 +413,11 @@ namespace Triggernometry.Core
         internal DateTime LastExecutionTime { get; set; } = DateTime.MinValue;
         internal int ExecutionCount { get; set; } = 0;
 
-        internal abstract void ExecuteImplementation(ActionInstance ai);
+        /// <summary>在指定上下文中执行具体动作的业务逻辑。</summary>
+        internal abstract void ExecuteImplementation(Context ctx);
 
         /// <summary>Executes a queued instance through the same lifecycle as direct UI tests.</summary>
-        public void Execute(ActionInstance ai) => Execute(ai, ai.ctx);
+        public void Execute(ActionInstance ai) => Execute(ai, ai.Context);
 
         internal void Execute(ActionInstance ai, Context ctx)
         {
@@ -508,6 +442,7 @@ namespace Triggernometry.Core
             else ExecuteCore();
         }
 
+        /// <summary>检查动作条件、执行业务并安排后续动作。</summary>
         private void ExecutionImplementation(ActionInstance ai, Context ctx)
         {
             try
@@ -531,21 +466,21 @@ namespace Triggernometry.Core
                     }
                     else
                     {
-                        ExecuteImplementation(ai);
+                        ExecuteImplementation(ctx);
                     }
                 }
 
                 ActionInstance next = ai.NextAction;
                 if (next != null)
                 {
-                    next.ctx = ctx;
-                    next.when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, next.act.ExecutionDelayExpression));
+                    next.Context = ctx;
+                    next.ExecuteAt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, next.Action.ExecutionDelayExpression));
                 }
                 else if (ai.IsLoopTail)
                 {
                     ActionInstance parent = ai.LoopParent;
-                    DateTime when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ((ActionLoop)parent.act).DelayExpression));
-                    next = new ActionInstance(when, 0, ai.mutex, parent.act, parent.ctx, false)
+                    DateTime when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ((ActionLoop)parent.Action).DelayExpression));
+                    next = new ActionInstance(when, 0, ai.Mutex, parent.Action, parent.Context, false)
                     {
                         NextAction = parent.NextAction,
                         LoopParent = parent.LoopParent,
@@ -558,8 +493,8 @@ namespace Triggernometry.Core
                     lock (ctx.Plugin.ActionQueue)
                     {
                         // Only a successfully queued successor takes over the mutex release.
-                        next.releaseMutex = ai.releaseMutex;
-                        if (ctx.Plugin.QueueAction(next)) ai.releaseMutex = false;
+                        next.ShouldReleaseMutex = ai.ShouldReleaseMutex;
+                        if (ctx.Plugin.QueueAction(next)) ai.ShouldReleaseMutex = false;
                     }
                 }
             }
@@ -570,7 +505,7 @@ namespace Triggernometry.Core
                     if (ex is TargetInvocationException tiex && tiex.InnerException != null)
                         ex = tiex.InnerException;
                 }
-                string triggerPath = ai?.ctx?.Trigger?.FullPath ?? "(null)";
+                string triggerPath = ai?.Context?.Trigger?.FullPath ?? "(null)";
                 string actionDesc = "";
                 try { actionDesc = Describe(); } catch { }
                 actionDesc = actionDesc.Length > 300 ? actionDesc.Substring(0, 297) + "..." : actionDesc;
@@ -805,36 +740,66 @@ namespace Triggernometry.Core
         {
             switch (this)
             {
-                case ActionActInteraction value: return (ActionOld)value;
-                case ActionBeep value: return (ActionOld)value;
-                case ActionDiscordWebhook value: return (ActionOld)value;
-                case ActionDiskOperation value: return (ActionOld)value;
-                case ActionExecuteScript value: return (ActionOld)value;
-                case ActionFolderOperation value: return (ActionOld)value;
-                case ActionJsonRequest value: return (ActionOld)value;
-                case ActionKeypress value: return (ActionOld)value;
-                case ActionLaunchProcess value: return (ActionOld)value;
-                case ActionLiveSplitControl value: return (ActionOld)value;
-                case ActionLogMessage value: return (ActionOld)value;
-                case ActionLoop value: return (ActionOld)value;
-                case ActionMessageBox value: return (ActionOld)value;
-                case ActionMouse value: return (ActionOld)value;
-                case ActionMutex value: return (ActionOld)value;
-                case ActionNamedCallback value: return (ActionOld)value;
-                case ActionObsControl value: return (ActionOld)value;
-                case ActionOverlayImage value: return (ActionOld)value;
-                case ActionOverlayText value: return (ActionOld)value;
-                case ActionPlaceholder value: return (ActionOld)value;
-                case ActionPlaySound value: return (ActionOld)value;
-                case ActionPlaySpeech value: return (ActionOld)value;
-                case ActionRepository value: return (ActionOld)value;
-                case ActionTriggerOperation value: return (ActionOld)value;
-                case ActionVariableDict value: return (ActionOld)value;
-                case ActionVariableList value: return (ActionOld)value;
-                case ActionVariableScalar value: return (ActionOld)value;
-                case ActionVariableTable value: return (ActionOld)value;
-                case ActionWindowMessage value: return (ActionOld)value;
-                default: throw new NotSupportedException(GetType().FullName);
+                case ActionBeep value:
+                    return (ActionOld)value;
+                case ActionPlaySound value:
+                    return (ActionOld)value;
+                case ActionPlaySpeech value:
+                    return (ActionOld)value;
+                case ActionMessageBox value:
+                    return (ActionOld)value;
+                case ActionOverlayText value:
+                    return (ActionOld)value;
+                case ActionOverlayImage value:
+                    return (ActionOld)value;
+                case ActionVariableScalar value:
+                    return (ActionOld)value;
+                case ActionVariableList value:
+                    return (ActionOld)value;
+                case ActionVariableTable value:
+                    return (ActionOld)value;
+                case ActionVariableDict value:
+                    return (ActionOld)value;
+                case ActionLogMessage value:
+                    return (ActionOld)value;
+                case ActionNamedCallback value:
+                    return (ActionOld)value;
+                case ActionExecuteScript value:
+                    return (ActionOld)value;
+                case ActionLoop value:
+                    return (ActionOld)value;
+                case ActionMutex value:
+                    return (ActionOld)value;
+                case ActionTriggerOperation value:
+                    return (ActionOld)value;
+                case ActionFolderOperation value:
+                    return (ActionOld)value;
+                case ActionRepository value:
+                    return (ActionOld)value;
+                case ActionMouse value:
+                    return (ActionOld)value;
+                case ActionKeypress value:
+                    return (ActionOld)value;
+                case ActionWindowMessage value:
+                    return (ActionOld)value;
+                case ActionLaunchProcess value:
+                    return (ActionOld)value;
+                case ActionDiskOperation value:
+                    return (ActionOld)value;
+                case ActionActInteraction value:
+                    return (ActionOld)value;
+                case ActionJsonRequest value:
+                    return (ActionOld)value;
+                case ActionDiscordWebhook value:
+                    return (ActionOld)value;
+                case ActionObsControl value:
+                    return (ActionOld)value;
+                case ActionLiveSplitControl value:
+                    return (ActionOld)value;
+                case ActionPlaceholder value:
+                    return (ActionOld)value;
+                default:
+                    throw new NotSupportedException(GetType().FullName);
             }
         }
 
@@ -900,7 +865,7 @@ namespace Triggernometry.Core
             action.Condition = (ConditionGroup)Condition?.Duplicate();
             action.Tag = Tag;
             action.RefireInterrupt = RefireInterrupt;
-            action.RefireRequeue = RefireRequeue;
+            action.PreventDuplicateQueue = PreventDuplicateQueue;
             action.ExecutionDelayExpression = ExecutionDelayExpression;
             action.Asynchronous = Asynchronous;
             action.DebugLevel = DebugLevel;
@@ -921,7 +886,7 @@ namespace Triggernometry.Core
             oldAction.Condition = (ConditionGroup)Condition?.Duplicate();
             oldAction.Tag = Tag;
             oldAction.RefireInterrupt = RefireInterrupt;
-            oldAction.RefireRequeue = RefireRequeue;
+            oldAction.RefireRequeue = !PreventDuplicateQueue;
             oldAction.ExecutionDelayExpression = ExecutionDelayExpression;
             oldAction.Asynchronous = Asynchronous;
             oldAction.DebugLevel = DebugLevel;
@@ -938,7 +903,7 @@ namespace Triggernometry.Core
             = new ConcurrentDictionary<Type, Action<ActionBase, ActionBase>>();
 
         /// <summary>
-        /// Copies all subclass-specific properties with <see cref="ActionAttribute"/> from this instance into <paramref name="clone"/>.  <br />
+        /// Copies all subclass-specific properties with <see cref="ActionSpecificPropertyAttribute"/> from this instance into <paramref name="clone"/>.  <br />
         /// Builds and caches an optimized compiled delegate per type.
         /// </summary>
         internal virtual void CopySpecificPropertiesTo(ActionBase clone)
@@ -957,7 +922,7 @@ namespace Triggernometry.Core
 
                 foreach (var prop in t.GetProperties(flags))
                 {
-                    if (prop.GetCustomAttribute<ActionAttribute>() == null)
+                    if (prop.GetCustomAttribute<ActionSpecificPropertyAttribute>() == null)
                         continue;
 
                     // Build dst.Prop = src.Prop;

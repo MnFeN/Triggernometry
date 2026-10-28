@@ -106,4 +106,26 @@
 		<Compile Remove="UI\Forms\testi2.cs" />
 		<Compile Remove="UI\Forms\testi2.Designer.cs" />
 	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="UI\CustomControls\ActionEditor.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="UI\CustomControls\ActionEditor.*.cs">
+			<SubType>Code</SubType>
+			<DependentUpon>ActionEditor.cs</DependentUpon>
+		</Compile>
+		<EmbeddedResource Update="UI\CustomControls\ActionEditor.resx">
+			<DependentUpon>ActionEditor.cs</DependentUpon>
+		</EmbeddedResource>
+		<Compile Update="UI\Forms\ActionForm.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="UI\Forms\ActionForm.Designer.cs">
+			<SubType>Code</SubType>
+			<DependentUpon>ActionForm.cs</DependentUpon>
+		</Compile>
+		<EmbeddedResource Update="UI\Forms\ActionForm.resx">
+			<DependentUpon>ActionForm.cs</DependentUpon>
+		</EmbeddedResource>
+	</ItemGroup>
 </Project>

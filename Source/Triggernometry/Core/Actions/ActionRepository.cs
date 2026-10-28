@@ -3,6 +3,8 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -10,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Remote repository operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
+    [Action("Repository operation", ActionAttribute.CategoryType.TriggerManagement)]
     [XmlRoot(ElementName = "ActionRepository")]
     public class ActionRepository : ActionBase
     {
@@ -40,7 +42,14 @@ namespace Triggernometry.Core.Actions
         /// Type of the repository operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation",
+            ChoiceLabels = new[]
+        {
+            "Update containing repository",
+            "Update selected repository",
+            "Update all enabled repositories",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.UpdateSelf;
 
         [XmlAttribute("Operation")]
@@ -54,7 +63,8 @@ namespace Triggernometry.Core.Actions
         /// Reference to remote respository
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.RepoReference)]
+        [ActionSpecificProperty]
+        [ReferenceEditor(2, EditorReferenceType.Repository, Label = "Repository")]
         public Guid RepositoryId { get; set; } = Guid.Empty;
 
         [XmlAttribute("RepositoryId")]
@@ -65,6 +75,13 @@ namespace Triggernometry.Core.Actions
         }
 
         #endregion
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var repository = editor.GetEditor(nameof(RepositoryId));
+            return () => editor.SetEnabled((OperationEnum)operation.GetValue() == OperationEnum.UpdateRepo, repository);
+        }
 
         #region Implementation
 
@@ -88,9 +105,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             Repository r = null;

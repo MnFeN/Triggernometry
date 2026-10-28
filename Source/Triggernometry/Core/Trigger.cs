@@ -508,11 +508,11 @@ namespace Triggernometry.Core
         /// · <see langword="true"/> if actions are queued, or a deferred fire is successfully scheduled (mutex capture). <br />
         /// · <see langword="false"/> if blocked (repository/condition/refire rules) or an exception occurs.
         /// </summary>
-        public bool Fire(Context ctx, RealPlugin.MutexInformation mtx = null)
+        public bool Fire(Context ctx, RealPlugin.MutexInfo mutex = null)
 		{
             try
             {
-                if (TryScheduleDeferredFireWithMutexCapture(ctx, mtx))
+                if (TryScheduleDeferredFireWithMutexCapture(ctx, mutex))
                     return true;
 
                 if (TryBlockByCondition(ctx))
@@ -527,7 +527,7 @@ namespace Triggernometry.Core
                 if (!ApplyPrevActionsPolicy(ctx))
                     return false;
 
-                QueueActions(ctx, scheduleBaseTime, mtx);
+                QueueActions(ctx, scheduleBaseTime, mutex);
                 return true;
             }
             catch (Exception ex)
@@ -558,18 +558,18 @@ namespace Triggernometry.Core
         /// <summary>
         /// Schedules a deferred fire when this trigger needs to capture a mutex by name. <br />
         /// · <see langword="true"/> if a background task is scheduled and the caller should stop further processing. <br />
-        /// · <see langword="false"/> if mutex capture is not applicable (mtx already present or no MutexToCapture configured).
+        /// · <see langword="false"/> if mutex capture is not applicable (mutex already present or no MutexToCapture configured).
         /// </summary>
-        private bool TryScheduleDeferredFireWithMutexCapture(Context ctx, RealPlugin.MutexInformation mtx)
+        private bool TryScheduleDeferredFireWithMutexCapture(Context ctx, RealPlugin.MutexInfo mutex)
         {
-            if (mtx != null)
+            if (mutex != null)
                 return false;
 
             if (string.IsNullOrWhiteSpace(MutexToCapture))
                 return false;
 
             string mn = ctx.EvaluateStringExpression(TriggerContextLogger, ctx.Plugin, MutexToCapture);
-            RealPlugin.MutexInformation mi = ctx.Plugin.GetMutex(mn);
+            RealPlugin.MutexInfo mi = ctx.Plugin.GetMutex(mn);
             RealPlugin.MutexTicket m = mi.QueueForAcquisition(ctx);
 
             _ = Task.Run(() =>
@@ -591,14 +591,14 @@ namespace Triggernometry.Core
             return true;
         }
 
-        internal void DeferredFire(Context ctx, RealPlugin.MutexInformation mi, RealPlugin.MutexTicket m)
+        internal void DeferredFire(Context ctx, RealPlugin.MutexInfo mutex, RealPlugin.MutexTicket mutexTicket)
         {
-            using (m)
+            using (mutexTicket)
             {
-                mi.Acquire(ctx, m);
-                if (Fire(ctx, mi) == false)
+                mutex.Acquire(ctx, mutexTicket);
+                if (Fire(ctx, mutex) == false)
                 {
-                    mi.Release(ctx);
+                    mutex.Release(ctx);
                 }
             }
         }
@@ -655,10 +655,10 @@ namespace Triggernometry.Core
                 // The queue is ordered by execution time, so search from the end.
                 lock (ctx.Plugin.ActionQueue)
                 {
-                    var lastQueuedAction = ctx.Plugin.ActionQueue.FindLast(qa => qa.ctx.Trigger.Id == Id);
+                    var lastQueuedAction = ctx.Plugin.ActionQueue.FindLast(action => action.Context.Trigger.Id == Id);
                     if (lastQueuedAction != null)
                     {
-                        scheduleBaseTime = lastQueuedAction.when;
+                        scheduleBaseTime = lastQueuedAction.ExecuteAt;
                         AddToLog(RealPlugin.DebugLevelEnum.Info, I18n.Translate("internal/Trigger/lastactionfound", "Last action for trigger '{0}' found at {1}", LogName, scheduleBaseTime));
                     }
                 }
@@ -744,13 +744,13 @@ namespace Triggernometry.Core
         }
 
         private IEnumerable<ActionBase.ActionInstance> GetSelfQueuedActions(Context ctx)
-            => ctx.Plugin.ActionQueue.Where(qa => qa.ctx.Trigger.Id == Id);
+            => ctx.Plugin.ActionQueue.Where(action => action.Context.Trigger.Id == Id);
 
-        public void QueueActions(Context ctx, DateTime curtime, RealPlugin.MutexInformation mtx)
+        public void QueueActions(Context ctx, DateTime curtime, RealPlugin.MutexInfo mutex)
         {
             //System.Diagnostics.Debug.WriteLine("### queuing actions for " + ctx.ToString());
-            if (RealPlugin.Instance.QueueActions(ctx, curtime, Actions, Sequential, mtx, TriggerContextLogger) == null)
-                mtx?.Release(ctx);
+            if (RealPlugin.Instance.QueueActions(ctx, curtime, Actions, Sequential, mutex, TriggerContextLogger) == null)
+                mutex?.Release(ctx);
         }
 
         #endregion Firing Pipeline

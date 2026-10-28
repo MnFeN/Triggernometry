@@ -30,8 +30,8 @@ namespace Triggernometry.UI.Aura
             }
         }
 
-        private Core.Actions.ActionOverlayText.TextAlignmentEnum _TextAlignment;
-        internal Core.Actions.ActionOverlayText.TextAlignmentEnum TextAlignment
+        private Core.Actions.ActionOverlayText.TextAlignment _TextAlignment;
+        internal Core.Actions.ActionOverlayText.TextAlignment TextAlignment
         {
             get
             {

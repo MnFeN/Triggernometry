@@ -501,7 +501,7 @@ namespace Triggernometry.Core
                                     Color.Empty);
                             si.UseOutline = si.OutlineColor != Color.Empty;
                             si.FontName = a.Font;
-                            si.FontSize = a.FontSize;
+                            si.FontSize = a.EvaluateFontSize(ctx);
                             si.FontStyle = fs;
                             si.ctx = ctx;
                             si.BackgroundColor = ExpressionTextBox.ParseColor(
@@ -563,6 +563,7 @@ namespace Triggernometry.Core
                         bool newAura = false;
                         try
                         {
+                            float fontSize = a.EvaluateFontSize(ctx);
                             lock (ctx.Plugin.textauras)
                             {
                                 if (ctx.Plugin.textauras.ContainsKey(ax) == true)
@@ -589,25 +590,25 @@ namespace Triggernometry.Core
                                 acf.UseOutline = acf.OutlineColor != Color.Empty;
                                 if (acf.AuraFont != null)
                                 {
-                                    FontStyle fs = FontStyle.Regular;
+                                    FontStyle style = FontStyle.Regular;
                                     if ((a.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
                                     {
-                                        fs |= FontStyle.Bold;
+                                        style |= FontStyle.Bold;
                                     }
                                     if ((a.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
                                     {
-                                        fs |= FontStyle.Italic;
+                                        style |= FontStyle.Italic;
                                     }
                                     if ((a.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
                                     {
-                                        fs |= FontStyle.Underline;
+                                        style |= FontStyle.Underline;
                                     }
                                     if ((a.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
                                     {
-                                        fs |= FontStyle.Strikeout;
+                                        style |= FontStyle.Strikeout;
                                     }
                                     Font x = acf.AuraFont;
-                                    if (x.Style != fs || x.Size != a.FontSize || x.Name != a.Font)
+                                    if (x.Style != style || x.Size != fontSize || x.Name != a.Font)
                                     {
                                         x.Dispose();
                                         acf.AuraFont = null;
@@ -615,29 +616,24 @@ namespace Triggernometry.Core
                                 }
                                 if (acf.AuraFont == null)
                                 {
-                                    FontStyle fs = FontStyle.Regular;
+                                    FontStyle style = FontStyle.Regular;
                                     if ((a.Effect & ActionOverlayText.EffectEnum.Bold) != 0)
                                     {
-                                        fs |= FontStyle.Bold;
+                                        style |= FontStyle.Bold;
                                     }
                                     if ((a.Effect & ActionOverlayText.EffectEnum.Italic) != 0)
                                     {
-                                        fs |= FontStyle.Italic;
+                                        style |= FontStyle.Italic;
                                     }
                                     if ((a.Effect & ActionOverlayText.EffectEnum.Underline) != 0)
                                     {
-                                        fs |= FontStyle.Underline;
+                                        style |= FontStyle.Underline;
                                     }
                                     if ((a.Effect & ActionOverlayText.EffectEnum.Strikeout) != 0)
                                     {
-                                        fs |= FontStyle.Strikeout;
+                                        style |= FontStyle.Strikeout;
                                     }
-                                    float ex = a.FontSize;
-                                    if (ex < 1)
-                                    {
-                                        ex = 1;
-                                    }
-                                    acf.AuraFont = new Font(a.Font, ex, fs, GraphicsUnit.Point);
+                                    acf.AuraFont = new Font(a.Font, fontSize, style, GraphicsUnit.Point);
                                 }
                                 acf.BackgroundColor = ExpressionTextBox.ParseColor(
                                     ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.BackColor),

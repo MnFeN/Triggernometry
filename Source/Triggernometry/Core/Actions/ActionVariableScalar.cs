@@ -8,6 +8,10 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
+using ExpressionType = Triggernometry.UI.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum;
+using Autofill = Triggernometry.UI.CustomControls.ExpressionTextBox.AutofillTypeEnum;
 
 namespace Triggernometry.Core.Actions
 {
@@ -15,7 +19,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Scalar variable operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Variable)]
+    [Action("Scalar variable operation", ActionAttribute.CategoryType.Variables)]
     [XmlRoot(ElementName = "ActionVariableScalar")]
     public class ActionVariableScalar : ActionBase
     {
@@ -71,7 +75,21 @@ namespace Triggernometry.Core.Actions
         /// Scalar variable operation type
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation type",
+            ChoiceLabels = new[]
+        {
+            "Unset scalar variable",
+            "Set scalar variable value with string expression",
+            "Set scalar variable value with numeric expression",
+            "Increment scalar variable value",
+            "Copy scalar variable or expression to the clipboard",
+            "Unset all scalar variables",
+            "Unset scalar variables matching regular expression",
+            "Unset all types of variables matching regular expression",
+            "Query variable with JSONPath and store scalar value",
+            "Query variable with JSONPath and store list value",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.Unset;
 
         [XmlAttribute("Operation")]
@@ -85,7 +103,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the scalar variable
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Scalar variable name", Autofill = EditorAutofillType.Scalar)]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -99,7 +118,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the target variable for some JSON operations
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(5, Label = "Target variable name")]
         public string JsonTargetName { get; set; } = "";
 
         [XmlAttribute("JsonTargetName")]
@@ -113,7 +133,8 @@ namespace Triggernometry.Core.Actions
         /// Value expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(4, Label = "Expression")]
         public string Value { get; set; } = "";
 
         [XmlAttribute("Value")]
@@ -127,7 +148,8 @@ namespace Triggernometry.Core.Actions
         /// Indicates whether referenced target variable is persistent or not
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5)] // todo need to couple this with variable on editor
+        [ActionSpecificProperty]
+        [PersistenceEditor(6, nameof(JsonTargetName), Label = "Target variable name")]
         public bool JsonTargetPersistent { get; set; } = false;
 
         [XmlAttribute("JsonTargetPersistent")]
@@ -141,7 +163,8 @@ namespace Triggernometry.Core.Actions
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
         [XmlIgnore]
-        [Action(order: 6)] // todo need to couple this with variable on editor
+        [ActionSpecificProperty]
+        [PersistenceEditor(3, nameof(Name), Label = "Scalar variable name")]
         public bool Persistent { get; set; } = false;
 
         [XmlAttribute("Persistent")]
@@ -153,6 +176,39 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var name = editor.GetEditor(nameof(Name));
+            var value = editor.GetEditor(nameof(Value));
+            var target = editor.GetEditor(nameof(JsonTargetName));
+            var persistent = editor.GetEditor(nameof(Persistent));
+            var targetPersistent = editor.GetEditor(nameof(JsonTargetPersistent));
+            return () =>
+            {
+                var op = (OperationEnum)operation.GetValue();
+                switch (op)
+                {
+                    case OperationEnum.UnsetAll:
+                        editor.EnableOnly(operation); break;
+                    case OperationEnum.Unset:
+                    case OperationEnum.UnsetRegex:
+                    case OperationEnum.UnsetRegexUniversal:
+                        editor.EnableOnly(operation, name); break;
+                    case OperationEnum.QueryJsonPath:
+                    case OperationEnum.QueryJsonPathList:
+                        editor.EnableOnly(operation, name, value, target); break;
+                    default:
+                        editor.EnableOnly(operation, name, value); break;
+                }
+                editor.SetEnabled(true, persistent);
+                editor.SetEnabled(target.Enabled, targetPersistent);
+                name.SetVariableNameMode(Autofill.Scalar, op == OperationEnum.UnsetRegex || op == OperationEnum.UnsetRegexUniversal);
+                editor.SetExpressionType(op == OperationEnum.SetNumeric || op == OperationEnum.Increment ? ExpressionType.Numeric : ExpressionType.String, value);
+                target.Expression.AutofillType = op == OperationEnum.QueryJsonPathList ? Autofill.List : Autofill.Scalar;
+            };
+        }
 
         #region Implementation
 
@@ -233,9 +289,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);

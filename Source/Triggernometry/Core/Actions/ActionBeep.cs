@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Triggernometry.Common.Audio;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core.Actions
@@ -12,7 +13,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Beep
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Audio)]
+    [Action("System beep", ActionAttribute.CategoryType.Audio)]
     [XmlRoot(ElementName = "ActionBeep")]
     public class ActionBeep : ActionBase
     {
@@ -23,7 +24,8 @@ namespace Triggernometry.Core.Actions
         /// Frequency of the beep
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, EditorExpressionType.Numeric, Label = "Beep frequency (hz)")]
         public string Frequency { get; set; } = "1046.5"; // freq(C6)
 
         [XmlAttribute("Frequency")]
@@ -37,7 +39,8 @@ namespace Triggernometry.Core.Actions
         /// Duration of the beep
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2, typehint: typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, EditorExpressionType.Numeric, Label = "Beep length (ms)")]
         public string Duration { get; set; } = "100";
 
         [XmlAttribute("Duration")]
@@ -57,9 +60,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/descbeep", "Beep at ({0}) hz for ({1}) ms", Frequency, Duration);
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
             bool useSimulatedBeep = plug.cfg.UseSimulatedBeep;
 

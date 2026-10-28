@@ -12,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Mouse operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Input)]
+    [Action("Mouse operation", ActionAttribute.CategoryType.SystemInteraction)]
     [XmlRoot(ElementName = "ActionMouse")]
     public class ActionMouse : ActionBase
     {
@@ -49,7 +49,15 @@ namespace Triggernometry.Core.Actions
         /// Type of the mouse operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation",
+            ChoiceLabels = new[]
+        {
+            "Move mouse",
+            "Left click",
+            "Middle click",
+            "Right click",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.Move;
 
         [XmlAttribute("Operation")]
@@ -63,7 +71,13 @@ namespace Triggernometry.Core.Actions
         /// Coordinate system to use
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(2, Label = "Coordinate system",
+            ChoiceLabels = new[]
+        {
+            "Absolute",
+            "Relative",
+        })]
         public CoordinateEnum Coordinate { get; set; } = CoordinateEnum.Absolute;
 
         [XmlAttribute("Coordinate")]
@@ -77,7 +91,8 @@ namespace Triggernometry.Core.Actions
         /// Mouse X position/offset
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3, typehint: typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, EditorExpressionType.Numeric, Label = "X coordinate")]
         public string X { get; set; } = "0";
 
         [XmlAttribute("X")]
@@ -91,7 +106,8 @@ namespace Triggernometry.Core.Actions
         /// Mouse Y position/offset
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4, typehint: typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(4, EditorExpressionType.Numeric, Label = "Y coordinate")]
         public string Y { get; set; } = "0";
 
         [XmlAttribute("Y")]
@@ -135,9 +151,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai) // todo: avoid Sleep
+        internal override void ExecuteImplementation(Context ctx) // todo: avoid Sleep
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             int mousex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);

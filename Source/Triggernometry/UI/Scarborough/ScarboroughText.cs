@@ -20,8 +20,8 @@ namespace Scarborough
         internal bool NeedFont { get; set; }
         internal string FontName { get; set; }
 
-        private ActionOverlayText.TextAlignmentEnum _TextAlignment;
-        internal ActionOverlayText.TextAlignmentEnum TextAlignment
+        private ActionOverlayText.TextAlignment _TextAlignment;
+        internal ActionOverlayText.TextAlignment TextAlignment
         {
             get
             {
@@ -199,6 +199,7 @@ namespace Scarborough
             TextBrush = new SolidBrush(_graphics.GetRenderTarget());            
         }
 
+        /// <summary>更新文本布局并使用 Direct2D 绘制悬浮窗。</summary>
         public override void Render()
         {
             if (NeedFont == true)
@@ -259,33 +260,33 @@ namespace Scarborough
             SharpDX.DirectWrite.TextAlignment ta = SharpDX.DirectWrite.TextAlignment.Center;
             switch (TextAlignment)
             {
-                case ActionOverlayText.TextAlignmentEnum.TopLeft:
+                case ActionOverlayText.TextAlignment.TopLeft:
                     pa = SharpDX.DirectWrite.ParagraphAlignment.Near;
                     ta = SharpDX.DirectWrite.TextAlignment.Leading;
                     break;
-                case ActionOverlayText.TextAlignmentEnum.TopCenter:
+                case ActionOverlayText.TextAlignment.TopCenter:
                     pa = SharpDX.DirectWrite.ParagraphAlignment.Near;
                     break;
-                case ActionOverlayText.TextAlignmentEnum.TopRight:
+                case ActionOverlayText.TextAlignment.TopRight:
                     pa = SharpDX.DirectWrite.ParagraphAlignment.Near;
                     ta = SharpDX.DirectWrite.TextAlignment.Trailing;
                     break;
-                case ActionOverlayText.TextAlignmentEnum.MiddleLeft:
+                case ActionOverlayText.TextAlignment.MiddleLeft:
                     ta = SharpDX.DirectWrite.TextAlignment.Leading;
                     break;
-                case ActionOverlayText.TextAlignmentEnum.MiddleCenter:
+                case ActionOverlayText.TextAlignment.MiddleCenter:
                     break;
-                case ActionOverlayText.TextAlignmentEnum.MiddleRight:
+                case ActionOverlayText.TextAlignment.MiddleRight:
                     ta = SharpDX.DirectWrite.TextAlignment.Trailing;
                     break;
-                case ActionOverlayText.TextAlignmentEnum.BottomLeft:
+                case ActionOverlayText.TextAlignment.BottomLeft:
                     pa = SharpDX.DirectWrite.ParagraphAlignment.Far;
                     ta = SharpDX.DirectWrite.TextAlignment.Leading;
                     break;
-                case ActionOverlayText.TextAlignmentEnum.BottomCenter:
+                case ActionOverlayText.TextAlignment.BottomCenter:
                     pa = SharpDX.DirectWrite.ParagraphAlignment.Far;
                     break;
-                case ActionOverlayText.TextAlignmentEnum.BottomRight:
+                case ActionOverlayText.TextAlignment.BottomRight:
                     pa = SharpDX.DirectWrite.ParagraphAlignment.Far;
                     ta = SharpDX.DirectWrite.TextAlignment.Trailing;
                     break;

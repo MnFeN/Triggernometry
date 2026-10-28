@@ -11,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Send window message
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
+    [Action("Send window message", ActionAttribute.CategoryType.SystemInteraction)]
     [XmlRoot(ElementName = "ActionWindowMessage")]
     public class ActionWindowMessage : ActionBase
     {
@@ -25,7 +25,8 @@ namespace Triggernometry.Core.Actions
         /// If >0, message is sent to all windows in all processes with matching title in the given process.
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1, typehint: typeof(uint))] // -1 uint? 
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, EditorExpressionType.Numeric, Label = "Process ID")]
         public string ProcessId { get; set; } = "";
 
         [XmlAttribute("ProcessId")]
@@ -39,7 +40,8 @@ namespace Triggernometry.Core.Actions
         /// Window title to send window message to
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, EditorExpressionType.Regex, Label = "Window title")]
         public string WindowTitle { get; set; } = "";
 
         [XmlAttribute("WindowTitle")]
@@ -53,7 +55,8 @@ namespace Triggernometry.Core.Actions
         /// Id of the window message
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3, typehint: typeof(uint))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, EditorExpressionType.Numeric, Label = "Message code")]
         public string MessageId { get; set; } = "";
 
         [XmlAttribute("MessageId")]
@@ -67,7 +70,8 @@ namespace Triggernometry.Core.Actions
         /// Wparam of the window message
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4, typehint: typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(4, EditorExpressionType.Numeric, Label = "WParam")]
         public string Wparam { get; set; } = "";
 
         [XmlAttribute("Wparam")]
@@ -81,7 +85,8 @@ namespace Triggernometry.Core.Actions
         /// Lparam of the window message
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5, typehint: typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(5, EditorExpressionType.Numeric, Label = "LParam")]
         public string Lparam { get; set; } = "";
 
         [XmlAttribute("Lparam")]
@@ -120,9 +125,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/descwmsg", "Send message ({0}) wparam ({1}) lparam ({2}) to {3}", MessageId, Wparam, Lparam, target);
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             int procid = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ProcessId);

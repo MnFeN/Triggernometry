@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Conditions;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -13,29 +14,26 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Loop
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
+    [Action("Loop", ActionAttribute.CategoryType.Programming)]
     [XmlRoot(ElementName = "ActionLoop")]
     public class ActionLoop : ActionBase
     {
 
         #region Properties
 
-        // todo probably needs a custom property editor
-
-        private bool ShouldSerializeLoopCondition()
-        {
-            return LoopCondition.Children.Count > 0;
-        }
+        private bool ShouldSerializeLoopCondition() => LoopCondition.Children.Count > 0;
 
         /// <summary>
         /// Condition that is checked before every iterator whether loop should continue or not
         /// </summary>
+        [EditorField(4, Label = "Loop condition (must be true to iterate)")]
         public ConditionGroup LoopCondition = new ConditionGroup();
 
         /// <summary>
         /// Actions within the loop
         /// </summary>
         [XmlIgnore]
+        [EditorField(5, Label = "Loop actions")]
         public List<ActionBase> LoopActions = new List<ActionBase>();
 
         [XmlElement("LoopActions")]
@@ -51,7 +49,8 @@ namespace Triggernometry.Core.Actions
         /// Delay between every loop iteration
         /// </summary>        
         [XmlIgnore]
-        [Action(order: 1, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, EditorExpressionType.Numeric, Label = "Loop iteration delay")]
         public string DelayExpression { get; set; } = "";
 
         [XmlAttribute("DelayExpression")]
@@ -65,7 +64,8 @@ namespace Triggernometry.Core.Actions
         /// Expression for the initial value of the loop iterator
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2, typehint: typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, EditorExpressionType.Numeric, Label = "Initial iterator")]
         public string InitExpression { get; set; } = "0";
 
         [XmlAttribute("InitExpression")]
@@ -79,7 +79,8 @@ namespace Triggernometry.Core.Actions
         /// Expression for the addition to the loop iterator after every iteration
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3, typehint: typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, EditorExpressionType.Numeric, Label = "Increment")]
         public string IncrExpression { get; set; } = "1";
 
         [XmlAttribute("IncrExpression")]
@@ -103,9 +104,9 @@ namespace Triggernometry.Core.Actions
             );
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            QueueIteration(ai);
+            // To-do: Loop iterations are now handled by the base scheduling path.
         }
 
         /// <summary>Queues the next iteration using this invocation's iterator and return path.</summary>
@@ -116,9 +117,9 @@ namespace Triggernometry.Core.Actions
             Context loopContext = ai.LoopContext;
             if (loopContext == null)
             {
-                loopContext = ai.ctx.Duplicate();
+                loopContext = ai.Context.Duplicate();
                 loopContext.loopActionId = Id;
-                loopContext.loopIterator = (int)ai.ctx.EvaluateNumericExpression(ActionContextLogger, ai.ctx, InitExpression);
+                loopContext.loopIterator = (int)ai.Context.EvaluateNumericExpression(ActionContextLogger, ai.Context, InitExpression);
             }
             else
             {
@@ -129,7 +130,7 @@ namespace Triggernometry.Core.Actions
             ai.LoopContext = loopContext;
 
             return loopContext.Plugin.QueueActions(loopContext, DateTime.Now, LoopActions,
-                loopContext.Trigger.Sequential, ai.mutex, ActionContextLogger, ai) != null;
+                loopContext.Trigger.Sequential, ai.Mutex, ActionContextLogger, ai) != null;
         }
 
         /// <summary>Copies loop conditions and child actions without sharing editable objects.</summary>

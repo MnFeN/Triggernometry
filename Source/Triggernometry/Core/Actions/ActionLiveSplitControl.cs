@@ -4,6 +4,8 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.PluginBridges.ExternalTools;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core.Actions
@@ -12,7 +14,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// LiveSplit remote control operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
+    [Action("LiveSplit remote control operation", ActionAttribute.CategoryType.ExternalInteraction)]
     [XmlRoot(ElementName = "ActionLiveSplitControl")]
     public class ActionLiveSplitControl : ActionBase
     {
@@ -39,7 +41,20 @@ namespace Triggernometry.Core.Actions
         /// Type of the LiveSplit control operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation type",
+            ChoiceLabels = new[]
+        {
+            "Start run or split",
+            "Start run",
+            "Split",
+            "Undo split",
+            "Skip split",
+            "Reset run",
+            "Pause run",
+            "Resume run",
+            "Custom payload",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.StartOrSplit;
 
         [XmlAttribute("Operation")]
@@ -53,7 +68,8 @@ namespace Triggernometry.Core.Actions
         /// Custom payload to send to LiveSplit
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Custom payload")]
         public string CustomPayload { get; set; } = "";
 
         [XmlAttribute("CustomPayload")]
@@ -65,6 +81,13 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var payload = editor.GetEditor(nameof(CustomPayload));
+            return () => editor.SetEnabled((OperationEnum)operation.GetValue() == OperationEnum.CustomPayload, payload);
+        }
 
         #region Implementation
 
@@ -95,9 +118,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             LiveSplitController livesplitController = plug._livesplit;

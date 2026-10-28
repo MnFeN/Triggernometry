@@ -29,6 +29,13 @@ namespace Triggernometry.UI.CustomControls
         internal List<int> PrevSelectedIndices { get; set; }
         private static ConditionGroup copiedCondition;
 
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            if (toolStrip2 != null) toolStrip2.Font = Font;
+            if (ctxAction != null) ctxAction.Font = Font;
+        }
+
         public ActionViewer()
         {
             InitializeComponent();
@@ -105,7 +112,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void btnAddAction_Click(object sender, EventArgs e)
         {
-            ActionBase a = new ActionBeep();
+            ActionBase a = new ActionPlaceholder(); // default
             using (ActionForm af = new ActionForm(a, UiContext, TreeView, Images))
             {
                 if (IsReadonly == true)

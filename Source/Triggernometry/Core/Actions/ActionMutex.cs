@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -10,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Mutex operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
+    [Action("Mutex operation", ActionAttribute.CategoryType.Programming)]
     [XmlRoot(ElementName = "ActionMutex")]
     public class ActionMutex : ActionBase
     {
@@ -30,7 +31,13 @@ namespace Triggernometry.Core.Actions
         /// Type of the mutex operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation type",
+            ChoiceLabels = new[]
+        {
+            "Release mutex",
+            "Acquire mutex",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.Release;
 
         [XmlAttribute("Operation")]
@@ -44,7 +51,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the mutex
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Mutex name")]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -72,23 +80,22 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
-            string mn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
+            string mutexName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
             switch (Operation)
             {
                 case OperationEnum.Acquire:
                     {
-                        RealPlugin.MutexInformation mi = plug.GetMutex(mn);
+                        RealPlugin.MutexInfo mi = plug.GetMutex(mutexName);
                         mi.Acquire(ctx);
                     }
                     break;
                 case OperationEnum.Release:
                     {
-                        RealPlugin.MutexInformation mi = plug.GetMutex(mn);
+                        RealPlugin.MutexInfo mi = plug.GetMutex(mutexName);
                         mi.Release(ctx);
                     }
                     break;

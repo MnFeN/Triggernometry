@@ -9,6 +9,9 @@ using Triggernometry.Core.Variables;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
+using Autofill = Triggernometry.UI.CustomControls.ExpressionTextBox.AutofillTypeEnum;
 
 namespace Triggernometry.Core.Actions
 {
@@ -16,7 +19,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// List variable operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Variable)]
+    [Action("List variable operation", ActionAttribute.CategoryType.Variables)]
     [XmlRoot(ElementName = "ActionVariableList")]
     public class ActionVariableList : ActionBase
     {
@@ -57,7 +60,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Expression types
         /// </summary>
-        public enum ExpressionTypeEnum
+        public enum ExpressionType
         {
             /// <summary>
             /// String expression
@@ -73,7 +76,35 @@ namespace Triggernometry.Core.Actions
         /// List variable operation type
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation type",
+            ChoiceLabels = new[]
+        {
+            "Unset list variable",
+            "Push value to the end of the list variable",
+            "Insert value to the given index of the list variable",
+            "Set value at the given index of the list variable",
+            "Set all values on the list variable to the expression",
+            "Remove value at the given index of the list variable",
+            "Pop the given index from list variable into a scalar variable",
+            "Pop and insert a value from a list into another list",
+            "Pop and set a value from a list into another list",
+            "Build a list variable from the expression separated by its first character",
+            "Filter elements into another list",
+            "Join all values in the list variable into a scalar variable (separator in expression)",
+            "Split a scalar variable into a list variable (separator in expression)",
+            "Copy whole list variable to another list variable",
+            "Insert list variable into another list variable at the given index",
+            "Sort list in a numerically ascending order",
+            "Sort list in a numerically descending order",
+            "Sort list in an alphabetically ascending order",
+            "Sort list in an alphabetically descending order",
+            "Sort list in an ascending order based on FFXIV party job order",
+            "Sort list in a descending order based on FFXIV party job order",
+            "Sort list by the key functions",
+            "Unset all list variables",
+            "Unset list variables matching regular expression",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.Unset;
 
         [XmlAttribute("Operation")]
@@ -98,21 +129,28 @@ namespace Triggernometry.Core.Actions
         /// Type of the value expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
-        public ExpressionTypeEnum ValueType { get; set; } = ExpressionTypeEnum.String;
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(4, Label = "Expression type",
+            ChoiceLabels = new[]
+        {
+            "String",
+            "Numeric",
+        })]
+        public ExpressionType ValueType { get; set; } = ExpressionType.String;
 
         [XmlAttribute("ValueType")]
         public string Xml_ValueType
         {
-            get => XmlAttr.Enum(ValueType, ExpressionTypeEnum.String);
-            set => ValueType = XmlAttr.Enum<ExpressionTypeEnum>(value);
+            get => XmlAttr.Enum(ValueType, ExpressionType.String);
+            set => ValueType = XmlAttr.Enum<ExpressionType>(value);
         }
 
         /// <summary>
         /// Name of the list variable
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Source variable name", Autofill = EditorAutofillType.List)]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -126,7 +164,8 @@ namespace Triggernometry.Core.Actions
         /// Value expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(5, Label = "Expression")]
         public string ValueExpression { get; set; } = "";
 
         [XmlAttribute("ValueExpression")]
@@ -140,7 +179,8 @@ namespace Triggernometry.Core.Actions
         /// Index inside the list variable (zero-based)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(6, Label = "List index number")]
         public string Index { get; set; } = "";
 
         [XmlAttribute("Index")]
@@ -154,7 +194,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the target variable for some operations
         /// </summary>
         [XmlIgnore]
-        [Action(order: 6)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(7, Label = "Target variable name", Autofill = EditorAutofillType.List)]
         public string Target { get; set; } = "";
 
         [XmlAttribute("Target")]
@@ -168,7 +209,8 @@ namespace Triggernometry.Core.Actions
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
         [XmlIgnore]
-        [Action(order: 7)] // todo need to couple this with variable on editor
+        [ActionSpecificProperty]
+        [PersistenceEditor(3, nameof(Name), Label = "Source variable name")]
         public bool Persistent { get; set; } = false;
 
         [XmlAttribute("Persistent")]
@@ -182,7 +224,8 @@ namespace Triggernometry.Core.Actions
         /// Indicates whether referenced target variable is persistent or not
         /// </summary>
         [XmlIgnore]
-        [Action(order: 8)] // todo need to couple this with variable on editor
+        [ActionSpecificProperty]
+        [PersistenceEditor(8, nameof(Target), Label = "Target variable name")]
         public bool TargetPersistent { get; set; } = false;
 
         [XmlAttribute("TargetPersistent")]
@@ -195,13 +238,74 @@ namespace Triggernometry.Core.Actions
         #endregion
 
 
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var name = editor.GetEditor(nameof(Name));
+            var value = editor.GetEditor(nameof(ValueExpression));
+            string valueLabel = value.Label.Text;
+            string targetIndexLabel = I18n.Translate(value.Field.TranslationKey + "/TargetIndex", "Target Index");
+            var valueType = editor.GetEditor(nameof(ValueType));
+            var index = editor.GetEditor(nameof(Index));
+            var target = editor.GetEditor(nameof(Target));
+            var persistent = editor.GetEditor(nameof(Persistent));
+            var targetPersistent = editor.GetEditor(nameof(TargetPersistent));
+            return () =>
+            {
+                var op = (OperationEnum)operation.GetValue();
+                switch (op)
+                {
+                    case OperationEnum.UnsetAll: 
+                        editor.EnableOnly(operation); break;
+                    case OperationEnum.Push: 
+                        editor.EnableOnly(operation, name, value, valueType); break;
+                    case OperationEnum.Insert:
+                    case OperationEnum.Set:
+                    case OperationEnum.SetAll: 
+                        editor.EnableOnly(operation, name, value, valueType, index); break;
+                    case OperationEnum.Remove: 
+                        editor.EnableOnly(operation, name, index); break;
+                    case OperationEnum.PopFirst:
+                    case OperationEnum.InsertList: 
+                        editor.EnableOnly(operation, name, index, target); break;
+                    case OperationEnum.PopToListInsert:
+                    case OperationEnum.PopToListSet: 
+                        editor.EnableOnly(operation, name, value, index, target); break;
+                    case OperationEnum.Build: 
+                        editor.EnableOnly(operation, value, valueType, target); break;
+                    case OperationEnum.Filter: 
+                        editor.EnableOnly(operation, name, value, target); break;
+                    case OperationEnum.Join:
+                    case OperationEnum.Split: 
+                        editor.EnableOnly(operation, name, value, valueType, target); break;
+                    case OperationEnum.Copy: 
+                        editor.EnableOnly(operation, name, target); break;
+                    case OperationEnum.SortByKeys: 
+                        editor.EnableOnly(operation, name, value); break;
+                    default: 
+                        editor.EnableOnly(operation, name); break;
+                }
+                bool targetIndex = op == OperationEnum.PopToListInsert || op == OperationEnum.PopToListSet;
+                if (targetIndex || op == OperationEnum.Filter) valueType.SetValue(ExpressionType.Numeric);
+                else if (op == OperationEnum.SortByKeys) valueType.SetValue(ExpressionType.String);
+                editor.SetExpressionType((ExpressionType)valueType.GetValue()
+                    == ExpressionType.Numeric ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric : ExpressionTextBox.SupportedExpressionTypeEnum.String, value);
+                editor.SetExpressionType(ExpressionTextBox.SupportedExpressionTypeEnum.Numeric, index);
+                name.SetVariableNameMode(op == OperationEnum.Split ? Autofill.Scalar : Autofill.List, op == OperationEnum.UnsetRegex);
+                target.Expression.AutofillType = op == OperationEnum.PopFirst || op == OperationEnum.Join ? Autofill.Scalar : Autofill.List;
+                editor.SetEnabled(name.Enabled || op == OperationEnum.UnsetAll, persistent);
+                editor.SetEnabled(target.Enabled, targetPersistent);
+                value.Label.Text = targetIndex ? targetIndexLabel : valueLabel;
+            };
+        }
+
         #region Implementation
 
         internal override string DescribeImplementation()
         {
             string sPersistL = I18n.TrlVarPersist(Persistent);
             string tPersistL = I18n.TrlVarPersist(TargetPersistent);
-            string exprTypeL = I18n.TrlExprType(ValueType == ExpressionTypeEnum.String);
+            string exprTypeL = I18n.TrlExprType(ValueType == ExpressionType.String);
             switch (Operation)
             {
                 case OperationEnum.Unset:
@@ -329,8 +433,8 @@ namespace Triggernometry.Core.Actions
                     );
                 case OperationEnum.Build:
                     if (
-                        ValueType == ExpressionTypeEnum.String
-                        && !ValueExpression.StartsWith("$") && !ValueExpression.StartsWith("¡è{")
+                        ValueType == ExpressionType.String
+                        && !ValueExpression.StartsWith("$") && !ValueExpression.StartsWith("¤{")
                     )
                     {
                         return I18n.Translate(
@@ -365,21 +469,20 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        private string GetListExpressionValue(Context ctx, ExpressionTypeEnum typ, string expr)
+        private string GetListExpressionValue(Context ctx, ExpressionType typ, string expr)
         {
             switch (typ)
             {
-                case ExpressionTypeEnum.Numeric:
+                case ExpressionType.Numeric:
                     return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, expr));
-                case ExpressionTypeEnum.String:
+                case ExpressionType.String:
                     return ctx.EvaluateStringExpression(ActionContextLogger, ctx, expr);
             }
             return "";
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
@@ -880,7 +983,7 @@ namespace Triggernometry.Core.Actions
             var action = new ActionVariableList();
             oldAction.CopyCommonPropertiesTo(action);
             action.Operation = (OperationEnum)(int)oldAction._ListVariableOp;
-            action.ValueType = (ExpressionTypeEnum)(int)oldAction._ListVariableExpressionType;
+            action.ValueType = (ExpressionType)(int)oldAction._ListVariableExpressionType;
             action.Name = oldAction._ListVariableName;
             action.ValueExpression = oldAction._ListVariableExpression;
             action.Index = oldAction._ListVariableIndex;

@@ -4,6 +4,9 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
+using Autofill = Triggernometry.UI.CustomControls.ExpressionTextBox.AutofillTypeEnum;
 
 namespace Triggernometry.Core.Actions
 {
@@ -11,7 +14,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Text overlay operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Overlay)]
+    [Action("Text aura operation", ActionAttribute.CategoryType.Display)]
     [XmlRoot(ElementName = "ActionOverlayText")]
     public class ActionOverlayText : ActionBase
     {
@@ -50,7 +53,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>
         /// Text alignment within area
         /// </summary>
-        public enum TextAlignmentEnum
+        public enum TextAlignment
         {
             TopLeft,
             TopCenter,
@@ -81,7 +84,15 @@ namespace Triggernometry.Core.Actions
         /// Type of the text overlay operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation",
+            ChoiceLabels = new[]
+        {
+            "Activate or modify the specified text aura",
+            "Deactivate the specified text aura",
+            "Deactivate all text auras",
+            "Deactivate text auras by regular expression",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.Activate;
 
         [XmlAttribute("Operation")]
@@ -95,21 +106,35 @@ namespace Triggernometry.Core.Actions
         /// Alignment of text within overlay area
         /// </summary>
         [XmlIgnore]
-        [Action(order: 6)]
-        public TextAlignmentEnum Alignment { get; set; } = TextAlignmentEnum.MiddleCenter;
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(7, Label = "Text alignment",
+            ChoiceLabels = new[]
+        {
+            "Top left",
+            "Top center",
+            "Top right",
+            "Middle left",
+            "Middle center",
+            "Middle right",
+            "Bottom left",
+            "Bottom center",
+            "Bottom right",
+        })]
+        public TextAlignment Alignment { get; set; } = TextAlignment.MiddleCenter;
 
         [XmlAttribute("Alignment")]
         public string Xml_Alignment
         {
-            get => XmlAttr.Enum(Alignment, TextAlignmentEnum.MiddleCenter);
-            set => Alignment = XmlAttr.Enum<TextAlignmentEnum>(value);
+            get => XmlAttr.Enum(Alignment, TextAlignment.MiddleCenter);
+            set => Alignment = XmlAttr.Enum<TextAlignment>(value);
         }
 
         /// <summary>
         /// Text display effect
         /// </summary>
         [XmlIgnore]
-        [Action(order: 7)]
+        [ActionSpecificProperty]
+        [EnumFlagsEditor(6, Label = "Text effect")]
         public EffectEnum Effect { get; set; } = EffectEnum.None;
 
         [XmlAttribute("Effect")]
@@ -120,24 +145,26 @@ namespace Triggernometry.Core.Actions
         }
 
         /// <summary>
-        /// Font size
+        /// Numeric expression for the font size, evaluated when the overlay is activated
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5)]
-        public float FontSize { get; set; } = 10.0f;
+        [ActionSpecificProperty]
+        [ExpressionEditor(5, EditorExpressionType.Numeric, Label = "Font size")]
+        public string FontSize { get; set; } = "10";
 
         [XmlAttribute("FontSize")]
         public string Xml_FontSize
         {
-            get => XmlAttr.Float(FontSize, 10.0f);
-            set => FontSize = XmlAttr.Float(value);
+            get => XmlAttr.String(FontSize, "10", omitWhitespace: false);
+            set => FontSize = value;
         }
 
         /// <summary>
         /// Color of the text
         /// </summary>
         [XmlIgnore]
-        [Action(order: 8)]
+        [ActionSpecificProperty]
+        [ColorEditor(8, Label = "Text color")]
         public string ForeColor { get; set; } = "";
 
         [XmlAttribute("ForeColor")]
@@ -151,7 +178,8 @@ namespace Triggernometry.Core.Actions
         /// Background color of the overlay
         /// </summary>
         [XmlIgnore]
-        [Action(order: 9)]
+        [ActionSpecificProperty]
+        [ColorEditor(9, Label = "Background color")]
         public string BackColor { get; set; } = "";
 
         [XmlAttribute("BackColor")]
@@ -165,7 +193,8 @@ namespace Triggernometry.Core.Actions
         /// Color of the text outline
         /// </summary>
         [XmlIgnore]
-        [Action(order: 10)]
+        [ActionSpecificProperty]
+        [ColorEditor(10, Label = "Outline color")]
         public string OutlineColor { get; set; } = "";
 
         [XmlAttribute("OutlineColor")]
@@ -179,7 +208,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the text overlay
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Unique identifier")]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -193,7 +223,8 @@ namespace Triggernometry.Core.Actions
         /// Text expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, Label = "Text to display")]
         public string Text { get; set; } = "";
 
         [XmlAttribute("Text")]
@@ -207,7 +238,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay X position
         /// </summary>
         [XmlIgnore]
-        [Action(order: 11, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(11, EditorExpressionType.Numeric, Label = "X location expression",
+            LabelQualifier = "Initial values")]
         public string XIniExpression { get; set; } = "";
 
         [XmlAttribute("XIniExpression")]
@@ -221,7 +254,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay Y position
         /// </summary>
         [XmlIgnore]
-        [Action(order: 12, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(13, EditorExpressionType.Numeric, Label = "Y location expression",
+            LabelQualifier = "Initial values")]
         public string YIniExpression { get; set; } = "";
 
         [XmlAttribute("YIniExpression")]
@@ -235,7 +270,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay width
         /// </summary>
         [XmlIgnore]
-        [Action(order: 13, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(15, EditorExpressionType.Numeric, Label = "Width expression",
+            LabelQualifier = "Initial values")]
         public string WIniExpression { get; set; } = "";
 
         [XmlAttribute("WIniExpression")]
@@ -249,7 +286,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay height
         /// </summary>
         [XmlIgnore]
-        [Action(order: 14, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(17, EditorExpressionType.Numeric, Label = "Height expression",
+            LabelQualifier = "Initial values")]
         public string HIniExpression { get; set; } = "";
 
         [XmlAttribute("HIniExpression")]
@@ -263,7 +302,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay opacity
         /// </summary>
         [XmlIgnore]
-        [Action(order: 15, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(19, EditorExpressionType.Numeric, Label = "Opacity expression",
+            LabelQualifier = "Initial values")]
         public string OIniExpression { get; set; } = "";
 
         [XmlAttribute("OIniExpression")]
@@ -277,7 +318,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay X position
         /// </summary>
         [XmlIgnore]
-        [Action(order: 16, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(12, EditorExpressionType.Numeric, Label = "X location expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string XTickExpression { get; set; } = "";
 
         [XmlAttribute("XTickExpression")]
@@ -291,7 +334,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay Y position
         /// </summary>
         [XmlIgnore]
-        [Action(order: 17, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(14, EditorExpressionType.Numeric, Label = "Y location expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string YTickExpression { get; set; } = "";
 
         [XmlAttribute("YTickExpression")]
@@ -305,7 +350,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay width
         /// </summary>
         [XmlIgnore]
-        [Action(order: 18, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(16, EditorExpressionType.Numeric, Label = "Width expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string WTickExpression { get; set; } = "";
 
         [XmlAttribute("WTickExpression")]
@@ -319,7 +366,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay height
         /// </summary>
         [XmlIgnore]
-        [Action(order: 19, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(18, EditorExpressionType.Numeric, Label = "Height expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string HTickExpression { get; set; } = "";
 
         [XmlAttribute("HTickExpression")]
@@ -333,7 +382,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay opacity
         /// </summary>
         [XmlIgnore]
-        [Action(order: 20, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(20, EditorExpressionType.Numeric, Label = "Opacity expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string OTickExpression { get; set; } = "";
 
         [XmlAttribute("OTickExpression")]
@@ -347,7 +398,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for checking overlay life cycle
         /// </summary>
         [XmlIgnore]
-        [Action(order: 21, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(21, EditorExpressionType.Numeric, Label = "Time-to-live expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string TTLTickExpression { get; set; } = "";
 
         [XmlAttribute("TTLTickExpression")]
@@ -361,7 +414,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the font to use
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [FontEditor(4, Label = "Font")]
         public string Font { get; set; } = "";
 
         [XmlAttribute("Font")]
@@ -374,7 +428,29 @@ namespace Triggernometry.Core.Actions
         #endregion
 
 
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var name = editor.GetEditor(nameof(Name));
+            return () =>
+            {
+                var op = (OperationEnum)operation.GetValue();
+                if (op == OperationEnum.Activate)
+                    foreach (var field in editor.Editors) editor.SetEnabled(true, field);
+                else if (op == OperationEnum.DeactivateAll) editor.EnableOnly(operation);
+                else editor.EnableOnly(operation, name);
+                name.SetVariableNameMode(Autofill.Text, op == OperationEnum.DeactivateRegex);
+            };
+        }
+
         #region Implementation
+
+        /// <summary>Evaluates the font size for one activation or preview, with a minimum of one point.</summary>
+        internal float EvaluateFontSize(Context ctx)
+        {
+            var size = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, FontSize);
+            return Math.Max(1, (float)size);
+        }
 
         internal override string DescribeImplementation()
         {
@@ -393,9 +469,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             plug.TextAuraManagement(ctx, this);
@@ -413,7 +488,7 @@ namespace Triggernometry.Core.Actions
             action.Operation = (OperationEnum)(int)oldAction._TextAuraOp;
             action.Name = oldAction._TextAuraName;
             action.Text = oldAction._TextAuraExpression;
-            action.Alignment = (TextAlignmentEnum)(int)oldAction._TextAuraAlignment;
+            action.Alignment = (TextAlignment)(int)oldAction._TextAuraAlignment;
             action.XIniExpression = oldAction._TextAuraXIniExpression;
             action.YIniExpression = oldAction._TextAuraYIniExpression;
             action.WIniExpression = oldAction._TextAuraWIniExpression;
@@ -426,7 +501,7 @@ namespace Triggernometry.Core.Actions
             action.OTickExpression = oldAction._TextAuraOTickExpression;
             action.TTLTickExpression = oldAction._TextAuraTTLTickExpression;
             action.Font = oldAction._TextAuraFontName;
-            action.FontSize = oldAction._TextAuraFontSize;
+            action.FontSize = oldAction._TextAuraFontSize.ToString(CultureInfo.InvariantCulture);
             action.Effect = (EffectEnum)(int)oldAction._TextAuraEffect;
             action.OutlineColor = oldAction._TextAuraOutlineClInt;
             action.ForeColor = oldAction._TextAuraForegroundClInt;
@@ -456,7 +531,7 @@ namespace Triggernometry.Core.Actions
             oldAction._TextAuraOTickExpression = action.OTickExpression;
             oldAction._TextAuraTTLTickExpression = action.TTLTickExpression;
             oldAction._TextAuraFontName = action.Font;
-            oldAction._TextAuraFontSize = action.FontSize;
+            oldAction._TextAuraFontSize = float.Parse(action.FontSize, CultureInfo.InvariantCulture);
             oldAction._TextAuraEffect = (ActionOld.TextAuraEffectEnum)(int)action.Effect;
             oldAction._TextAuraOutlineClInt = action.OutlineColor;
             oldAction._TextAuraForegroundClInt = action.ForeColor;

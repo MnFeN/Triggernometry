@@ -38,7 +38,7 @@ namespace Triggernometry.UI.Forms
         internal Context ctx { get; set; }
 
         internal string TextExpression { get; set; }
-        internal ActionOverlayText.TextAlignmentEnum TextAlignment { get; set; }
+        internal ActionOverlayText.TextAlignment TextAlignment { get; set; }
         internal Color TextColor { get; set; }
         internal Color OutlineColor { get; set; }
         internal Color BackgroundColor { get; set; }
@@ -445,6 +445,7 @@ namespace Triggernometry.UI.Forms
             return true;
         }
 
+        /// <summary>按字体、描边和对齐方式绘制文本悬浮窗。</summary>
         internal void PaintText(Graphics gr)
         {
             using (StringFormat sf = new StringFormat())
@@ -452,39 +453,39 @@ namespace Triggernometry.UI.Forms
                 Rectangle r = new Rectangle(ClientRectangle.Location, ClientRectangle.Size);
                 switch (TextAlignment)
                 {
-                    case ActionOverlayText.TextAlignmentEnum.TopLeft:
+                    case ActionOverlayText.TextAlignment.TopLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case ActionOverlayText.TextAlignmentEnum.TopCenter:
+                    case ActionOverlayText.TextAlignment.TopCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case ActionOverlayText.TextAlignmentEnum.TopRight:
+                    case ActionOverlayText.TextAlignment.TopRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case ActionOverlayText.TextAlignmentEnum.MiddleLeft:
+                    case ActionOverlayText.TextAlignment.MiddleLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case ActionOverlayText.TextAlignmentEnum.MiddleCenter:
+                    case ActionOverlayText.TextAlignment.MiddleCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case ActionOverlayText.TextAlignmentEnum.MiddleRight:
+                    case ActionOverlayText.TextAlignment.MiddleRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case ActionOverlayText.TextAlignmentEnum.BottomLeft:
+                    case ActionOverlayText.TextAlignment.BottomLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
-                    case ActionOverlayText.TextAlignmentEnum.BottomCenter:
+                    case ActionOverlayText.TextAlignment.BottomCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
-                    case ActionOverlayText.TextAlignmentEnum.BottomRight:
+                    case ActionOverlayText.TextAlignment.BottomRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Far;
                         break;

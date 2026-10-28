@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Triggernometry.PluginBridges;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -11,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// ACT interaction operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
+    [Action("ACT Interaction", ActionAttribute.CategoryType.ExternalInteraction)]
     [XmlRoot(ElementName = "ActionActInteraction")]
     public class ActionActInteraction : ActionBase
     {
@@ -41,7 +42,14 @@ namespace Triggernometry.Core.Actions
         /// Type of ACT interaction
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Option",
+            ChoiceLabels = new[]
+        {
+            "Set ACT combat state",
+            "Log all network data",
+            "Use Deucalion (injection)",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.SetCombatState;
 
         [XmlAttribute("Operation")]
@@ -55,7 +63,13 @@ namespace Triggernometry.Core.Actions
         /// Value to set
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(2, Label = "State",
+            ChoiceLabels = new[]
+        {
+            "End/Disable",
+            "Start/Enable",
+        })]
         public bool BoolParam { get; set; } = false;
 
         [XmlAttribute("BoolParam")]
@@ -66,7 +80,8 @@ namespace Triggernometry.Core.Actions
         }
 
         [XmlIgnore]
-        [Action(order: 3)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, Label = "String Param")]
         public string StringParam { get; set; } = "";
 
         [XmlAttribute("StringParam")]
@@ -96,9 +111,8 @@ namespace Triggernometry.Core.Actions
                     return NotImplementedEnumMessage(Operation);
             }
         }
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
             switch (Operation)
             {

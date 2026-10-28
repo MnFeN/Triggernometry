@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using WMPLib;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -11,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Sound playback
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Audio)]
+    [Action("Play sound file", ActionAttribute.CategoryType.Audio)]
     [XmlRoot(ElementName = "ActionPlaySound")]
     public class ActionPlaySound : ActionBase
     {
@@ -22,7 +23,14 @@ namespace Triggernometry.Core.Actions
         /// Audio target where speech will be directed (None means default)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(4, Label = "Audio output method",
+            ChoiceLabels = new[]
+        {
+            "Default",
+            "Windows Media Player API",
+            "ACT",
+        })]
         public Configuration.AudioRoutingMethodEnum AudioTarget { get; set; } = Configuration.AudioRoutingMethodEnum.None;
 
         [XmlAttribute("AudioTarget")]
@@ -36,7 +44,8 @@ namespace Triggernometry.Core.Actions
         /// Sound file name expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.AudioSelector)]
+        [ActionSpecificProperty]
+        [FileEditor(1, EditorFileType.Audio, Label = "Sound file to play")]
         public string Filename { get; set; } = "";
 
         [XmlAttribute("Filename")]
@@ -50,7 +59,8 @@ namespace Triggernometry.Core.Actions
         /// Volume expression (0 - 100)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3, typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, EditorExpressionType.Numeric, Label = "Sound volume (0 ... 100 %)")]
         public string Volume { get; set; } = "100";
 
         [XmlAttribute("Volume")]
@@ -62,7 +72,8 @@ namespace Triggernometry.Core.Actions
 
         // todo remove?
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [CheckBoxEditor(3, Label = "Use exclusive sound player to prevent conflicts with other sounds")]
         public bool ExclusivePlayer { get; set; } = true;
 
         [XmlAttribute("ExclusivePlayer")]
@@ -122,9 +133,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/descplaysound", "play sound file ({0}) at volume ({1}) %", Filename, Volume);
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             ctx.soundhook(ctx, this);
         }
 

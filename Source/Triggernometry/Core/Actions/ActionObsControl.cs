@@ -4,6 +4,8 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.PluginBridges.ExternalTools;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
 using static Triggernometry.Core.RealPlugin;
 
 namespace Triggernometry.Core.Actions
@@ -12,7 +14,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// OBS remote control operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
+    [Action("OBS remote control operation", ActionAttribute.CategoryType.ExternalInteraction)]
     [XmlRoot(ElementName = "ActionObsControl")]
     public class ActionObsControl : ActionBase
     {
@@ -49,7 +51,30 @@ namespace Triggernometry.Core.Actions
         /// Type of the OBS control operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(3, Label = "Operation type",
+            ChoiceLabels = new[]
+        {
+            "Start streaming",
+            "Stop streaming",
+            "Start/stop streaming (toggle)",
+            "Start recording",
+            "Stop recording",
+            "Start/stop recording (toggle)",
+            "Stop then start recording",
+            "Stop then start recording (if currently recording)",
+            "Resume recording",
+            "Pause recording",
+            "Resume/pause recording (toggle)",
+            "Start replay buffer",
+            "Stop replay buffer",
+            "Start/stop replay buffer (toggle)",
+            "Save replay buffer",
+            "Set scene",
+            "Show source",
+            "Hide source",
+            "Custom JSON payload",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.StartStreaming;
 
         [XmlAttribute("Operation")]
@@ -63,7 +88,8 @@ namespace Triggernometry.Core.Actions
         /// OBS WebSocket endpoint
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, Label = "Endpoint URL")]
         public string Endpoint { get; set; } = @"ws://${_const[OBSWebsocketEndpoint]}:${_const[OBSWebsocketPort]}";
 
         [XmlAttribute("Endpoint")]
@@ -77,7 +103,8 @@ namespace Triggernometry.Core.Actions
         /// Optional password for the OBS endpoint
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Password")]
         public string Password { get; set; } = @"${_const[OBSWebsocketPassword]}";
 
         [XmlAttribute("Password")]
@@ -91,7 +118,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the scene referenced in some operations
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(4, Label = "Scene name")]
         public string SceneName { get; set; } = "";
 
         [XmlAttribute("SceneName")]
@@ -105,7 +133,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the source referenced in some operations
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(5, Label = "Source name")]
         public string SourceName { get; set; } = "";
 
         [XmlAttribute("SourceName")]
@@ -119,7 +148,8 @@ namespace Triggernometry.Core.Actions
         /// Custom JSON payload
         /// </summary>
         [XmlIgnore]
-        [Action(order: 6)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(6, Label = "JSON payload")]
         public string JSONPayload { get; set; } = "";
 
         [XmlAttribute("JSONPayload")]
@@ -131,6 +161,22 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var scene = editor.GetEditor(nameof(SceneName));
+            var source = editor.GetEditor(nameof(SourceName));
+            var payload = editor.GetEditor(nameof(JSONPayload));
+            return () =>
+            {
+                var op = (OperationEnum)operation.GetValue();
+                bool isSourceOperation = op == OperationEnum.ShowSource || op == OperationEnum.HideSource;
+                editor.SetEnabled(op == OperationEnum.SetScene || isSourceOperation, scene);
+                editor.SetEnabled(isSourceOperation, source);
+                editor.SetEnabled(op == OperationEnum.JSONPayload, payload);
+            };
+        }
 
         #region Implementation
 
@@ -181,9 +227,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             ObsController obsController = plug._obs;

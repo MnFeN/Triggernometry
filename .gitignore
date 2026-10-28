@@ -2,9 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/Translations/olddefault.triglations.xml
 /.vs
 /Source/Triggernometry/PluginBridges/BridgeNamazu/Modules/ExecuteCommandModule.cs
 /Source/TriggernometryScripts/UserScript/*
 !/Source/TriggernometryScripts/UserScript/.keep
 /.agents
+/publish/

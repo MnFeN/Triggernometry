@@ -109,6 +109,14 @@ namespace Triggernometry.UI.CustomControls
             return null;
         }
 
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            // ToolStrip uses its own default font instead of inheriting the viewer font.
+            if (toolStrip1 != null) toolStrip1.Font = Font;
+            if (contextMenuStrip1 != null) contextMenuStrip1.Font = Font;
+        }
+
         public ConditionViewer()
         {
             InitializeComponent();

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -10,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Text-to-speech
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Audio)]
+    [Action("Use text-to-speech", ActionAttribute.CategoryType.Audio)]
     [XmlRoot(ElementName = "ActionPlaySpeech")]
     public class ActionPlaySpeech : ActionBase
     {
@@ -21,7 +22,14 @@ namespace Triggernometry.Core.Actions
         /// Audio target where speech will be directed (None means default)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(4, Label = "Audio output method",
+            ChoiceLabels = new[]
+        {
+            "Default",
+            "Windows Speech API",
+            "ACT",
+        })]
         public Configuration.AudioRoutingMethodEnum AudioTarget { get; set; } = Configuration.AudioRoutingMethodEnum.None;
 
         [XmlAttribute("AudioTarget")]
@@ -35,7 +43,8 @@ namespace Triggernometry.Core.Actions
         /// Message expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, Label = "Text to say")]
         public string Message { get; set; } = "";
 
         [XmlAttribute("Message")]
@@ -49,7 +58,8 @@ namespace Triggernometry.Core.Actions
         /// Volume expression (0 - 100)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3, typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, EditorExpressionType.Numeric, Label = "Speech volume (0 ... 100 %)")]
         public string Volume { get; set; } = "100";
 
         [XmlAttribute("Volume")]
@@ -63,7 +73,8 @@ namespace Triggernometry.Core.Actions
         /// Rate (speech speed) expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4, typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, EditorExpressionType.Numeric, Label = "Speech speed rate (-10 ... +10)")]
         public string Rate { get; set; } = "0";
 
         [XmlAttribute("Rate")]
@@ -71,18 +82,6 @@ namespace Triggernometry.Core.Actions
         {
             get => XmlAttr.String(Rate, "0", omitWhitespace: false);
             set => Rate = value;
-        }
-
-        // todo remove?
-        [XmlIgnore]
-        [Action(order: 5)]
-        public bool ExclusivePlayer { get; set; } = true;
-
-        [XmlAttribute("ExclusivePlayer")]
-        public string Xml_ExclusivePlayer
-        {
-            get => XmlAttr.Bool(ExclusivePlayer, true);
-            set => ExclusivePlayer = XmlAttr.Bool(value);
         }
 
         #endregion
@@ -95,9 +94,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/desctts", "say ({0}) at volume ({1}) %, using speed ({2})", Message, Volume, Rate);
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             ctx.ttshook(ctx, this);
 
             /* to-do: cactbot-like 文本显示
@@ -120,7 +118,6 @@ namespace Triggernometry.Core.Actions
             action.Message = oldAction._UseTTSTextExpression;
             action.Volume = oldAction._UseTTSVolumeExpression;
             action.Rate = oldAction._UseTTSRateExpression;
-            action.ExclusivePlayer = oldAction._UseTTSExclusive;
             action.AudioTarget = oldAction._TTSRouting;
             return action;
         }
@@ -134,7 +131,6 @@ namespace Triggernometry.Core.Actions
             oldAction._UseTTSTextExpression = action.Message;
             oldAction._UseTTSVolumeExpression = action.Volume;
             oldAction._UseTTSRateExpression = action.Rate;
-            oldAction._UseTTSExclusive = action.ExclusivePlayer;
             oldAction._TTSRouting = action.AudioTarget;
             return oldAction;
         }

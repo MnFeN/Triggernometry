@@ -44,366 +44,35 @@
     <TranslationEntry Key="ActionForm/cbxActionType[Text aura operation]" Translation="Text aura operation" />
     <TranslationEntry Key="ActionForm/cbxActionType[Trigger operation]" Translation="Trigger operation" />
     <TranslationEntry Key="ActionForm/cbxActionType[Use text-to-speech]" Translation="Use text-to-speech" />
-    <TranslationEntry Key="ActionForm/cbxActOpBoolParam[End/Disable]" Translation="End/Disable" />
-    <TranslationEntry Key="ActionForm/cbxActOpBoolParam[Start/Enable]" Translation="Start/Enable" />
-    <TranslationEntry Key="ActionForm/cbxActOpType[Log all network data]" Translation="Log all network data" />
-    <TranslationEntry Key="ActionForm/cbxActOpType[Set ACT combat state]" Translation="Set ACT combat state" />
-    <TranslationEntry Key="ActionForm/cbxActOpType[Use Deucalion (injection)]" Translation="Use Deucalion (injection)" />
-    <TranslationEntry Key="ActionForm/cbxAuraDisplay[Centered]" Translation="Centered" />
-    <TranslationEntry Key="ActionForm/cbxAuraDisplay[Normal]" Translation="Normal" />
-    <TranslationEntry Key="ActionForm/cbxAuraDisplay[Stretched to fill]" Translation="Stretched to fill" />
-    <TranslationEntry Key="ActionForm/cbxAuraDisplay[Zoomed to fill respecting Aspect Ratio]" Translation="Zoomed to fill respecting Aspect Ratio" />
-    <TranslationEntry Key="ActionForm/cbxAuraOp[Activate or modify the specified image aura]" Translation="Activate or modify the specified image aura" />
-    <TranslationEntry Key="ActionForm/cbxAuraOp[Deactivate all image auras]" Translation="Deactivate all image auras" />
-    <TranslationEntry Key="ActionForm/cbxAuraOp[Deactivate image auras by regular expression]" Translation="Deactivate image auras by regular expression" />
-    <TranslationEntry Key="ActionForm/cbxAuraOp[Deactivate the specified image aura]" Translation="Deactivate the specified image aura" />
-    <TranslationEntry Key="ActionForm/cbxDictKeyType[Numeric]" Translation="Numeric" />
-    <TranslationEntry Key="ActionForm/cbxDictKeyType[String]" Translation="String" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Build from the expression]" Translation="Build from the expression" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Filter into another dictionary]" Translation="Filter into another dictionary" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Get specified properties of a specified FFXIV entity]" Translation="Get specified properties of a specified FFXIV entity" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Merge two dictionaries (keep)]" Translation="Merge two dictionaries (keep)" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Merge two dictionaries (overwrite)]" Translation="Merge two dictionaries (overwrite)" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Remove the given key]" Translation="Remove the given key" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Set all keys and values]" Translation="Set all keys and values" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Set value of the given key]" Translation="Set value of the given key" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Unset all dictionary variables]" Translation="Unset all dictionary variables" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Unset dictionary variable]" Translation="Unset dict variable" />
-    <TranslationEntry Key="ActionForm/cbxDictOpType[Unset dictionary variables matching regular expression]" Translation="Unset dictionary variables matching regular expression" />
-    <TranslationEntry Key="ActionForm/cbxDictValueType[Numeric]" Translation="Numeric" />
-    <TranslationEntry Key="ActionForm/cbxDictValueType[String]" Translation="String" />
-    <TranslationEntry Key="ActionForm/cbxDiscordTts" Translation="Send as a text-to-speech message" />
     <TranslationEntry Key="ActionForm/cbxExecScriptLang[C#]" Translation="C#" />
     <TranslationEntry Key="ActionForm/cbxExecScriptLang[Visual Basic]" Translation="Visual Basic" />
-    <TranslationEntry Key="ActionForm/cbxFileOpCache" Translation="Cache file on disk" />
-    <TranslationEntry Key="ActionForm/cbxFileOpType[Read CSV file into table variable]" Translation="Read CSV file into table variable" />
-    <TranslationEntry Key="ActionForm/cbxFileOpType[Read file into scalar variable]" Translation="Read file into scalar variable" />
-    <TranslationEntry Key="ActionForm/cbxFileOpType[Read file lines into list variable]" Translation="Read file lines into list variable" />
-    <TranslationEntry Key="ActionForm/cbxFiringOptions[Ignore conditions]" Translation="Ignore conditions" />
-    <TranslationEntry Key="ActionForm/cbxFiringOptions[Ignore enabled/disabled status]" Translation="Ignore enabled/disabled status" />
-    <TranslationEntry Key="ActionForm/cbxFiringOptions[Ignore parent folder restrictions]" Translation="Ignore parent folder restrictions" />
-    <TranslationEntry Key="ActionForm/cbxFiringOptions[Ignore refire delay]" Translation="Ignore refire delay" />
-    <TranslationEntry Key="ActionForm/cbxFiringOptions[Ignore regular expression]" Translation="Ignore regular expression" />
-    <TranslationEntry Key="ActionForm/cbxFolderOp[Cancel all actions in the specified folder]" Translation="Cancel all actions in the specified folder" />
-    <TranslationEntry Key="ActionForm/cbxFolderOp[Disable the specified folder]" Translation="Disable the specified folder" />
-    <TranslationEntry Key="ActionForm/cbxFolderOp[Enable the specified folder]" Translation="Enable the specified folder" />
-    <TranslationEntry Key="ActionForm/cbxJsonCache" Translation="Cache response on disk" />
-    <TranslationEntry Key="ActionForm/cbxJsonType[GET]" Translation="GET" />
-    <TranslationEntry Key="ActionForm/cbxJsonType[POST]" Translation="POST" />
-    <TranslationEntry Key="ActionForm/cbxKeypressMethod[Multiple window messages]" Translation="Multiple Window Messages" />
-    <TranslationEntry Key="ActionForm/cbxKeypressMethod[SendKeys]" Translation="SendKeys" />
-    <TranslationEntry Key="ActionForm/cbxKeypressMethod[Window message]" Translation="Window message" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[(inherit from trigger)]" Translation="(inherit from trigger)" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[Above custom 2]" Translation="Above custom 2" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[Above custom]" Translation="Above custom" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[All informational messages]" Translation="All informational messages" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[Errors and warnings]" Translation="Errors and warnings" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[Errors only]" Translation="Errors only" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[Nothing]" Translation="Nothing" />
-    <TranslationEntry Key="ActionForm/cbxLoggingLevel[Verbose debug]" Translation="Verbose debug" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Custom 2]" Translation="Custom 2" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Custom]" Translation="Custom" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Error]" Translation="Error" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Info]" Translation="Info" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Verbose]" Translation="Verbose" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageLevel[Warning]" Translation="Warning" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageTarget[ACT event]" Translation="ACT event" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageTarget[FFXIV network event]" Translation="FFXIV network event" />
-    <TranslationEntry Key="ActionForm/cbxLogMessageTarget[Normal log line]" Translation="Normal log line" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Custom payload]" Translation="Custom payload" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Pause run]" Translation="Pause run" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Reset run]" Translation="Reset run" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Resume run]" Translation="Resume run" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Skip split]" Translation="Skip split" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Split]" Translation="Split" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Start run or split]" Translation="Start run or split" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Start run]" Translation="Start run" />
-    <TranslationEntry Key="ActionForm/cbxLsOpType[Undo split]" Translation="Undo split" />
-    <TranslationEntry Key="ActionForm/cbxLvarExpType[Numeric]" Translation="Numeric" />
-    <TranslationEntry Key="ActionForm/cbxLvarExpType[String]" Translation="String" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Build a list variable from the expression separated by its first character]" Translation="Build a list variable from the expression separated by its first character" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Copy whole list variable to another list variable]" Translation="Copy whole list variable to another list variable" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Filter elements into another list]" Translation="Filter elements into another list" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Insert list variable into another list variable at the given index]" Translation="Insert list variable into another list variable at the given index" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Insert value to the given index of the list variable]" Translation="Insert value to the given index of the list variable" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Join all values in the list variable into a scalar variable (separator in expression)]" Translation="Join all values in the list variable into a scalar variable (separator in expression)" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Pop and insert a value from a list into another list]" Translation="Pop and insert a value from a list into another list" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Pop and set a value from a list into another list]" Translation="Pop and set a value from a list into another list" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Pop the given index from list variable into a scalar variable]" Translation="Pop the given index from list variable into a scalar variable" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Push value to the end of the list variable]" Translation="Push value to the end of the list variable" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Remove value at the given index of the list variable]" Translation="Remove value at the given index of the list variable" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Set all values on the list variable to the expression]" Translation="Set all values on the list variable to the expression" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Set value at the given index of the list variable]" Translation="Set value at the given index of the list variable" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Sort list by the key functions]" Translation="Sort list by the key functions" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Sort list in a descending order based on FFXIV party job order]" Translation="Sort list in a descending order based on FFXIV party job order" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Sort list in a numerically ascending order]" Translation="Sort list in a numerically ascending order" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Sort list in a numerically descending order]" Translation="Sort list in a numerically descending order" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Sort list in an alphabetically ascending order]" Translation="Sort list in an alphabetically ascending order" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Sort list in an alphabetically descending order]" Translation="Sort list in an alphabetically descending order" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Sort list in an ascending order based on FFXIV party job order]" Translation="Sort list in an ascending order based on FFXIV party job order" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Split a scalar variable into a list variable (separator in expression)]" Translation="Split a scalar variable into a list variable (separator in expression)" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Unset all list variables]" Translation="Unset all list variables" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Unset list variable]" Translation="Unset list variable" />
-    <TranslationEntry Key="ActionForm/cbxLvarOperation[Unset list variables matching regular expression]" Translation="Unset list variables matching regular expression" />
-    <TranslationEntry Key="ActionForm/cbxMessageBoxIcon[Error]" Translation="Error" />
-    <TranslationEntry Key="ActionForm/cbxMessageBoxIcon[Information]" Translation="Information" />
-    <TranslationEntry Key="ActionForm/cbxMessageBoxIcon[None]" Translation="None" />
-    <TranslationEntry Key="ActionForm/cbxMessageBoxIcon[Question]" Translation="Question" />
-    <TranslationEntry Key="ActionForm/cbxMessageBoxIcon[Warning]" Translation="Warning" />
-    <TranslationEntry Key="ActionForm/cbxMouseCoord[Absolute]" Translation="Absolute" />
-    <TranslationEntry Key="ActionForm/cbxMouseCoord[Relative]" Translation="Relative" />
-    <TranslationEntry Key="ActionForm/cbxMouseOp[Left click]" Translation="Left click" />
-    <TranslationEntry Key="ActionForm/cbxMouseOp[Middle click]" Translation="Middle click" />
-    <TranslationEntry Key="ActionForm/cbxMouseOp[Move mouse]" Translation="Move mouse" />
-    <TranslationEntry Key="ActionForm/cbxMouseOp[Right click]" Translation="Right click" />
-    <TranslationEntry Key="ActionForm/cbxMutexOp[Acquire mutex]" Translation="Acquire mutex" />
-    <TranslationEntry Key="ActionForm/cbxMutexOp[Release mutex]" Translation="Release mutex" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Custom JSON payload]" Translation="Custom JSON payload" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Hide source]" Translation="Hide source" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Pause recording]" Translation="Pause recording" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Resume recording]" Translation="Resume recording" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Resume/pause recording (toggle)]" Translation="Resume/pause recording (toggle)" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Save replay buffer]" Translation="Save replay buffer" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Set scene]" Translation="Set scene" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Show source]" Translation="Show source" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Start recording]" Translation="Start recording" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Start replay buffer]" Translation="Start replay buffer" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Start streaming]" Translation="Start streaming" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Start/stop recording (toggle)]" Translation="Start/stop recording (toggle)" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Start/stop replay buffer (toggle)]" Translation="Start/stop replay buffer (toggle)" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Start/stop streaming (toggle)]" Translation="Start/stop streaming (toggle)" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Stop recording]" Translation="Stop recording" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Stop replay buffer]" Translation="Stop replay buffer" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Stop streaming]" Translation="Stop streaming" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Stop then start recording (if currently recording)]" Translation="Stop then start recording (if currently recording)" />
-    <TranslationEntry Key="ActionForm/cbxObsOpType[Stop then start recording]" Translation="Stop then start recording" />
-    <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Hidden from view]" Translation="Hidden from view" />
-    <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Maximized to fullscreen]" Translation="Maximized to fullscreen" />
-    <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Minimized to taskbar]" Translation="Minimized to taskbar" />
-    <TranslationEntry Key="ActionForm/cbxProcessWindowStyle[Normal]" Translation="Normal" />
     <TranslationEntry Key="ActionForm/cbxRefireOption1[Interrupt all previously queued instances...]" Translation="Interrupt all previously queued instances..." />
     <TranslationEntry Key="ActionForm/cbxRefireOption1[Keep all previously queued instances...]" Translation="Keep all previously queued instances..." />
     <TranslationEntry Key="ActionForm/cbxRefireOption2[...and do not queue a new instance this action]" Translation="...and do not queue a new instance this action" />
     <TranslationEntry Key="ActionForm/cbxRefireOption2[...and queue a new instance this action]" Translation="...and queue a new instance this action" />
-    <TranslationEntry Key="ActionForm/cbxRepositoryOp[Update all enabled repositories]" Translation="Update all enabled repositories" />
-    <TranslationEntry Key="ActionForm/cbxRepositoryOp[Update containing repository]" Translation="Update containing repository" />
-    <TranslationEntry Key="ActionForm/cbxRepositoryOp[Update selected repository]" Translation="Update selected repository" />
-    <TranslationEntry Key="ActionForm/cbxSoundMethod[ACT]" Translation="ACT" />
-    <TranslationEntry Key="ActionForm/cbxSoundMethod[Default]" Translation="Default" />
-    <TranslationEntry Key="ActionForm/cbxSoundMethod[Windows Media Player API]" Translation="Windows Media Player API" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Bottom center]" Translation="Bottom center" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Bottom left]" Translation="Bottom left" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Bottom right]" Translation="Bottom right" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Middle center]" Translation="Middle center" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Middle left]" Translation="Middle left" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Middle right]" Translation="Middle right" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Top center]" Translation="Top center" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Top left]" Translation="Top left" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraAlignment[Top right]" Translation="Top right" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraOp[Activate or modify the specified text aura]" Translation="Activate or modify the specified text aura" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraOp[Deactivate all text auras]" Translation="Deactivate all text auras" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraOp[Deactivate text auras by regular expression]" Translation="Deactivate text auras by regular expression" />
-    <TranslationEntry Key="ActionForm/cbxTextAuraOp[Deactivate the specified text aura]" Translation="Deactivate the specified text aura" />
-    <TranslationEntry Key="ActionForm/cbxTriggerOp[Cancel all actions from all triggers]" Translation="Cancel all actions from all triggers" />
-    <TranslationEntry Key="ActionForm/cbxTriggerOp[Cancel all actions queued from the specified trigger]" Translation="Cancel all actions queued from the specified trigger" />
-    <TranslationEntry Key="ActionForm/cbxTriggerOp[Disable the specified trigger]" Translation="Disable the specified trigger" />
-    <TranslationEntry Key="ActionForm/cbxTriggerOp[Enable the specified trigger]" Translation="Enable the specified trigger" />
-    <TranslationEntry Key="ActionForm/cbxTriggerOp[Fire the specified trigger]" Translation="Fire the specified trigger" />
-    <TranslationEntry Key="ActionForm/cbxTriggerZoneType[FFXIV zone ID]" Translation="FFXIV zone ID" />
-    <TranslationEntry Key="ActionForm/cbxTriggerZoneType[Zone name]" Translation="Zone name" />
-    <TranslationEntry Key="ActionForm/cbxTtsMethod[ACT]" Translation="ACT" />
-    <TranslationEntry Key="ActionForm/cbxTtsMethod[Default]" Translation="Default" />
-    <TranslationEntry Key="ActionForm/cbxTtsMethod[Windows Speech API]" Translation="Windows Speech API" />
-    <TranslationEntry Key="ActionForm/cbxTvarExpType[Numeric]" Translation="Numeric" />
-    <TranslationEntry Key="ActionForm/cbxTvarExpType[String]" Translation="String" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Append whole table variable to another table horizontally]" Translation="Append whole table variable to another table horizontally" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Append whole table variable to another table vertically]" Translation="Append whole table variable to another table vertically" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Build from the expression]" Translation="Build from the expression" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Copy whole table variable to another table variable]" Translation="Copy whole table variable to another table variable" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Filter elements into another list]" Translation="Filter elements into another list" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Filter rows/cols into another table]" Translation="Filter rows/cols into another table" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Get specified properties for specified FFXIV entities]" Translation="Get specified properties for specified FFXIV entities" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Insert values at the given col or row]" Translation="Insert values at the given col or row" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Remove the given column or row]" Translation="Remove the given column or row" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Resize table variable]" Translation="Resize table variable" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Set all values in the selected rows and columns]" Translation="Set all values in the selected rows and columns" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Set all values in the table variable]" Translation="Set all values in the table variable" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Set value to the given row and column on the table variable]" Translation="Set value to the given row and column on the table variable " />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Set values to the given col or row]" Translation="Set values to the given col or row" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Sort the rows/cols by the key functions]" Translation="Sort the rows/cols by the key functions" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Unset all table variables]" Translation="Unset all table variables" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Unset table variable]" Translation="Unset table variable" />
-    <TranslationEntry Key="ActionForm/cbxTvarOpType[Unset table variables matching regular expression]" Translation="Unset table variables matching regular expression" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Copy scalar variable or expression to the clipboard]" Translation="Copy scalar variable or expression to the clipboard" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Increment scalar variable value]" Translation="Increment scalar variable value" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Query variable with JSONPath and store list value]" Translation="Query variable with JSONPath and store list value" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Query variable with JSONPath and store scalar value]" Translation="Query variable with JSONPath and store scalar value" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Set scalar variable value with numeric expression]" Translation="Set scalar variable value with numeric expression" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Set scalar variable value with string expression]" Translation="Set scalar variable value with string expression" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Unset all scalar variables]" Translation="Unset all scalar variables" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Unset all types of variables matching regular expression]" Translation="Unset all types of variables matching regular expression" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Unset scalar variable]" Translation="Unset scalar variable" />
-    <TranslationEntry Key="ActionForm/cbxVariableOp[Unset scalar variables matching regular expression]" Translation="Unset scalar variables matching regular expression" />
-    <TranslationEntry Key="ActionForm/chkExecuteAsync" Translation="Execute asynchronously without blocking other actions from executing" />
     <TranslationEntry Key="ActionForm/chkOverrideDesc" Translation="Override autogenerated action description" />
-    <TranslationEntry Key="ActionForm/chkProcessLog" Translation="Process message as log line" />
-    <TranslationEntry Key="ActionForm/chkProcessLogACT" Translation="Add the log message to ACT combat log" />
-    <TranslationEntry Key="ActionForm/chkSoundExclusive" Translation="Use exclusive sound player to prevent conflicts with other sounds" />
     <TranslationEntry Key="ActionForm/chkSoundMyOutput" Translation="Use Triggernometry for output regardless of ACT hook configuration" />
-    <TranslationEntry Key="ActionForm/chkSpeechExclusive" Translation="Use exclusive speech synthesizer to prevent conflicts with other speech" />
     <TranslationEntry Key="ActionForm/chkSpeechMyOutput" Translation="Use Triggernometry for output regardless of ACT hook configuration" />
     <TranslationEntry Key="ActionForm/grpGeneralSettings" Translation=" General settings " />
-    <TranslationEntry Key="ActionForm/label2" Translation="Mutex name" />
-    <TranslationEntry Key="ActionForm/label3" Translation="Operation type" />
-    <TranslationEntry Key="ActionForm/label4" Translation="Loop condition (must be true to iterate)" />
-    <TranslationEntry Key="ActionForm/label5" Translation="Loop actions" />
-    <TranslationEntry Key="ActionForm/label6" Translation="Target Variable Name" />
     <TranslationEntry Key="ActionForm/lblActionType" Translation="Action type" />
-    <TranslationEntry Key="ActionForm/lblActOpBoolParam" Translation="State" />
-    <TranslationEntry Key="ActionForm/lblActOpStringParam" Translation="String Param" />
-    <TranslationEntry Key="ActionForm/lblActOpType" Translation="Option" />
-    <TranslationEntry Key="ActionForm/lblAuraDisplay" Translation="Display method" />
-    <TranslationEntry Key="ActionForm/lblAuraHeight" Translation="Height expression" />
-    <TranslationEntry Key="ActionForm/lblAuraImage" Translation="Image to display" />
-    <TranslationEntry Key="ActionForm/lblAuraName" Translation="Unique identifier" />
-    <TranslationEntry Key="ActionForm/lblAuraOp" Translation="Operation" />
-    <TranslationEntry Key="ActionForm/lblAuraOpacity" Translation="Opacity expression" />
-    <TranslationEntry Key="ActionForm/lblAuraTtl" Translation="Time-to-live expression" />
-    <TranslationEntry Key="ActionForm/lblAuraWidth" Translation="Width expression" />
-    <TranslationEntry Key="ActionForm/lblAuraX" Translation="X location expression" />
-    <TranslationEntry Key="ActionForm/lblAuraY" Translation="Y location expression" />
-    <TranslationEntry Key="ActionForm/lblBeepFrequency" Translation="Beep frequency (hz)" />
-    <TranslationEntry Key="ActionForm/lblBeepLength" Translation="Beep length (ms)" />
-    <TranslationEntry Key="ActionForm/lblCallbackName" Translation="Callback name" />
-    <TranslationEntry Key="ActionForm/lblCallbackParam" Translation="Callback parameter" />
     <TranslationEntry Key="ActionForm/lblDescBgColor" Translation="Background Color" />
     <TranslationEntry Key="ActionForm/lblDescTextColor" Translation="Text Color" />
-    <TranslationEntry Key="ActionForm/lblDictKey" Translation="Key" />
-    <TranslationEntry Key="ActionForm/lblDictKeyType" Translation="Key Expr type" />
-    <TranslationEntry Key="ActionForm/lblDictLength" Translation="Length" />
-    <TranslationEntry Key="ActionForm/lblDictName" Translation="Source variable name" />
-    <TranslationEntry Key="ActionForm/lblDictOpType" Translation="Operation type" />
-    <TranslationEntry Key="ActionForm/lblDictTarget" Translation="Target variable name" />
-    <TranslationEntry Key="ActionForm/lblDictValue" Translation="Value" />
-    <TranslationEntry Key="ActionForm/lblDictValueType" Translation="Value Expr type" />
-    <TranslationEntry Key="ActionForm/lblDiscordMessage" Translation="Message to send" />
-    <TranslationEntry Key="ActionForm/lblDiscordUrl" Translation="Webhook URL" />
-    <TranslationEntry Key="ActionForm/lblExecScriptAssemblies" Translation="List of assemblies to reference" />
-    <TranslationEntry Key="ActionForm/lblExecScriptCode" Translation="Script code" />
-    <TranslationEntry Key="ActionForm/lblExecutionDelay" Translation="Execution delay from last action (ms)" />
-    <TranslationEntry Key="ActionForm/lblFileOpName" Translation="File name" />
-    <TranslationEntry Key="ActionForm/lblFileOpType" Translation="Operation type" />
-    <TranslationEntry Key="ActionForm/lblFileOpVariable" Translation="Variable name" />
     <TranslationEntry Key="ActionForm/lblFileWarning" Translation="Actions of this type may be potentially dangerous and cause damage if, for example, the trigger is fired with parameters that fall outside of the expected values. Please be aware of the risk." />
-    <TranslationEntry Key="ActionForm/lblFiringOptions" Translation="Firing options" />
-    <TranslationEntry Key="ActionForm/lblFolder" Translation="Folder" />
-    <TranslationEntry Key="ActionForm/lblFolderOp" Translation="Operation" />
-    <TranslationEntry Key="ActionForm/lblInitialValues" Translation="Initial values" />
-    <TranslationEntry Key="ActionForm/lblJsonEndpoint" Translation="Endpoint URL" />
-    <TranslationEntry Key="ActionForm/lblJsonFiring" Translation="Response firing expression" />
-    <TranslationEntry Key="ActionForm/lblJsonHeaders" Translation="Headers to send" />
-    <TranslationEntry Key="ActionForm/lblJsonPayload" Translation="Payload to send" />
-    <TranslationEntry Key="ActionForm/lblJsonType" Translation="HTTP method" />
-    <TranslationEntry Key="ActionForm/lblJsonVariable" Translation="Variable to store response to" />
-    <TranslationEntry Key="ActionForm/lblKeypress" Translation="Keycode to send" />
-    <TranslationEntry Key="ActionForm/lblKeypresses" Translation="Keypresses to send" />
-    <TranslationEntry Key="ActionForm/lblKeypressMethod" Translation="Keypress send method" />
-    <TranslationEntry Key="ActionForm/lblKeypressProcId" Translation="Process ID" />
-    <TranslationEntry Key="ActionForm/lblKeypressWindow" Translation="Window title" />
-    <TranslationEntry Key="ActionForm/lblLoggingLevel" Translation="Logging filtering level" />
-    <TranslationEntry Key="ActionForm/lblLogMessageLevel" Translation="Message Level" />
-    <TranslationEntry Key="ActionForm/lblLogMessageTarget" Translation="Target event source" />
-    <TranslationEntry Key="ActionForm/lblLogMessageText" Translation="Message to log" />
-    <TranslationEntry Key="ActionForm/lblLoopDelay" Translation="Loop iteration delay" />
-    <TranslationEntry Key="ActionForm/lblLoopIncr" Translation="Increment" />
-    <TranslationEntry Key="ActionForm/lblLoopInit" Translation="Initial iterator" />
-    <TranslationEntry Key="ActionForm/lblLsCustPayload" Translation="Custom payload" />
-    <TranslationEntry Key="ActionForm/lblLsOpType" Translation="Operation type" />
-    <TranslationEntry Key="ActionForm/lblLvarExpType" Translation="Expression type" />
-    <TranslationEntry Key="ActionForm/lblLvarIndex" Translation="List index number" />
-    <TranslationEntry Key="ActionForm/lblLvarName" Translation="Source variable name" />
-    <TranslationEntry Key="ActionForm/lblLvarOperation" Translation="Operation type" />
-    <TranslationEntry Key="ActionForm/lblLvarTarget" Translation="Target variable name" />
-    <TranslationEntry Key="ActionForm/lblLvarValue" Translation="Expression" />
-    <TranslationEntry Key="ActionForm/lblLvarValueTgtIndex" Translation="Target Index" />
-    <TranslationEntry Key="ActionForm/lblMessageBoxIcon" Translation="Message box icon" />
-    <TranslationEntry Key="ActionForm/lblMessageBoxText" Translation="Text to display" />
-    <TranslationEntry Key="ActionForm/lblMouseCoord" Translation="Coordinate system" />
-    <TranslationEntry Key="ActionForm/lblMouseOp" Translation="Operation" />
-    <TranslationEntry Key="ActionForm/lblMouseX" Translation="X coordinate" />
-    <TranslationEntry Key="ActionForm/lblMouseY" Translation="Y coordinate" />
-    <TranslationEntry Key="ActionForm/lblObsEndpoint" Translation="Endpoint URL" />
-    <TranslationEntry Key="ActionForm/lblObsJSONPayload" Translation="JSON Payload" />
-    <TranslationEntry Key="ActionForm/lblObsOpType" Translation="Operation type" />
-    <TranslationEntry Key="ActionForm/lblObsPassword" Translation="Password" />
-    <TranslationEntry Key="ActionForm/lblObsSceneName" Translation="Scene name" />
-    <TranslationEntry Key="ActionForm/lblObsSourceName" Translation="Source name" />
     <TranslationEntry Key="ActionForm/lblObsWebsocketInfo" Translation="If the endpoint or password fields are left empty, the values defined in Trigger Configuration - Constants will be used automatically:&#xD;&#xA;- Endpoint: ws://(OBSWebsocketEndpoint):(OBSWebsocketPort)&#xD;&#xA;- Password: (OBSWebsocketPassword)&#xD;&#xA;&#xD;&#xA;If you are using OBS v27 or older, you will have to install the OBS WebSocket plugin to use OBS remote control features. There is a simple installer available at:" />
     <TranslationEntry Key="ActionForm/lblPlaceholderNoParams" Translation="This action has no configurable parameters." />
-    <TranslationEntry Key="ActionForm/lblProcessName" Translation="Process to launch" />
-    <TranslationEntry Key="ActionForm/lblProcessParameters" Translation="Command line parameters" />
     <TranslationEntry Key="ActionForm/lblProcessWarning" Translation="Actions of this type may be potentially dangerous and cause damage if, for example, the trigger is fired with parameters that fall outside of the expected values. Please be aware of the risk." />
-    <TranslationEntry Key="ActionForm/lblProcessWindowStyle" Translation="Process window" />
-    <TranslationEntry Key="ActionForm/lblProcessWorkingDir" Translation="Working directory" />
     <TranslationEntry Key="ActionForm/lblReadOnly" Translation="You are in read-only mode, as the configuration of remote triggers can't be edited locally. If you wish to edit the action, you will need to make a local copy of the trigger." />
     <TranslationEntry Key="ActionForm/lblRefireOption1" Translation="If the trigger fires again while this action is still in queue" />
-    <TranslationEntry Key="ActionForm/lblRepositoryLink" Translation="Repository" />
-    <TranslationEntry Key="ActionForm/lblRepositoryOp" Translation="Operation" />
     <TranslationEntry Key="ActionForm/lblScriptExtEditor" Translation="External editor has been launched - script contents will be read back from the disk and refreshed when you close the external editor." />
     <TranslationEntry Key="ActionForm/lblScriptWarning" Translation="Actions of this type may be potentially dangerous and cause damage if, for example, the trigger is fired with parameters that fall outside of the expected values. Please be aware of the risk." />
-    <TranslationEntry Key="ActionForm/lblSoundFile" Translation="Sound file to play" />
-    <TranslationEntry Key="ActionForm/lblSoundMethod" Translation="Audio output method" />
-    <TranslationEntry Key="ActionForm/lblSoundVolume" Translation="Sound volume (0 ... 100 %)" />
-    <TranslationEntry Key="ActionForm/lblSpeechRate" Translation="Speech speed rate (-10 ... +10)" />
-    <TranslationEntry Key="ActionForm/lblSpeechRouting" Translation="Audio output method" />
-    <TranslationEntry Key="ActionForm/lblSpeechVolume" Translation="Speech volume (0 ... 100 %)" />
-    <TranslationEntry Key="ActionForm/lblTag" Translation="Tag" />
-    <TranslationEntry Key="ActionForm/lblTextAuraAlignment" Translation="Text alignment" />
-    <TranslationEntry Key="ActionForm/lblTextAuraFont" Translation="Font" />
-    <TranslationEntry Key="ActionForm/lblTextAuraHeight" Translation="Height expression" />
-    <TranslationEntry Key="ActionForm/lblTextAuraIniValues" Translation="Initial values" />
-    <TranslationEntry Key="ActionForm/lblTextAuraName" Translation="Unique identifier" />
-    <TranslationEntry Key="ActionForm/lblTextAuraOp" Translation="Operation" />
-    <TranslationEntry Key="ActionForm/lblTextAuraOpacity" Translation="Opacity expression" />
-    <TranslationEntry Key="ActionForm/lblTextAuraText" Translation="Text to display" />
-    <TranslationEntry Key="ActionForm/lblTextAuraTtlExp" Translation="Time-to-live expression" />
-    <TranslationEntry Key="ActionForm/lblTextAuraUpdValues" Translation="Update tick (20 ms) expressions" />
-    <TranslationEntry Key="ActionForm/lblTextAuraWidth" Translation="Width expression" />
-    <TranslationEntry Key="ActionForm/lblTextAuraX" Translation="X location expression" />
-    <TranslationEntry Key="ActionForm/lblTextAuraY" Translation="Y location expression" />
-    <TranslationEntry Key="ActionForm/lblTextBackColor" Translation="Back" />
     <TranslationEntry Key="ActionForm/lblTextColor" Translation="Colors" />
-    <TranslationEntry Key="ActionForm/lblTextForeColor" Translation="Text" />
-    <TranslationEntry Key="ActionForm/lblTextOutlineColor" Translation="Outline" />
-    <TranslationEntry Key="ActionForm/lblTextToSay" Translation="Text to say" />
-    <TranslationEntry Key="ActionForm/lblTrigger" Translation="Trigger" />
-    <TranslationEntry Key="ActionForm/lblTriggerOp" Translation="Operation" />
-    <TranslationEntry Key="ActionForm/lblTriggerTagRegex" Translation="Tag Regex" />
-    <TranslationEntry Key="ActionForm/lblTriggerText" Translation="Event text for firing" />
-    <TranslationEntry Key="ActionForm/lblTriggerZone" Translation="Zone name for firing" />
-    <TranslationEntry Key="ActionForm/lblTriggerZoneType" Translation="Zone Type" />
-    <TranslationEntry Key="ActionForm/lblTvarColumn" Translation="Column definition" />
-    <TranslationEntry Key="ActionForm/lblTvarExpType" Translation="Expression type" />
-    <TranslationEntry Key="ActionForm/lblTvarName" Translation="Source variable name" />
-    <TranslationEntry Key="ActionForm/lblTvarOpType" Translation="Operation type" />
-    <TranslationEntry Key="ActionForm/lblTvarRow" Translation="Row definition" />
-    <TranslationEntry Key="ActionForm/lblTvarTarget" Translation="Target variable name" />
-    <TranslationEntry Key="ActionForm/lblTvarValue" Translation="Expression" />
-    <TranslationEntry Key="ActionForm/lblUpdateTickExp" Translation="Update tick (20 ms) expressions" />
-    <TranslationEntry Key="ActionForm/lblVariableExpression" Translation="Expression" />
-    <TranslationEntry Key="ActionForm/lblVariableName" Translation="Scalar variable name" />
-    <TranslationEntry Key="ActionForm/lblVariableOp" Translation="Operation type" />
-    <TranslationEntry Key="ActionForm/lblWmsgCode" Translation="Message code" />
-    <TranslationEntry Key="ActionForm/lblWmsgLparam" Translation="LParam" />
-    <TranslationEntry Key="ActionForm/lblWmsgProcid" Translation="Process ID" />
-    <TranslationEntry Key="ActionForm/lblWmsgTitle" Translation="Window title" />
     <TranslationEntry Key="ActionForm/lblWmsgWarning" Translation="Actions of this type may be potentially dangerous and cause damage if, for example, the trigger is fired with parameters that fall outside of the expected values. Please be aware of the risk." />
-    <TranslationEntry Key="ActionForm/lblWmsgWparam" Translation="WParam" />
     <TranslationEntry Key="ActionForm/rtbHelper" Translation="[Show Help]" />
     <TranslationEntry Key="ActionForm/tabActionCondition" Translation="Action condition" />
     <TranslationEntry Key="ActionForm/tabActionSettings" Translation="Action-specific settings" />
     <TranslationEntry Key="ActionForm/tabDebugging" Translation="Debugging" />
     <TranslationEntry Key="ActionForm/tabDescription" Translation="Description" />
+    <TranslationEntry Key="ActionForm/tabGeneral" Translation="General settings" />
     <TranslationEntry Key="ActionForm/tabScheduling" Translation="Scheduling" />
     <!-- Note: The raw RichTextboxHelper text after this line are not included in this file due to the length.-->
     <!-- Please check the English text by clicking [Show Help] in Triggernometry actions.-->
@@ -1191,6 +860,14 @@
     <TranslationEntry Key="internal/Action/unknownxmlelement" Translation="Unknown action XML element '{0}'." />
     <TranslationEntry Key="internal/Action/waitingprocexit" Translation="Waiting for process to exit" />
     <TranslationEntry Key="internal/Action/warndiscordtrunc" Translation="Discord message too long, capping to {0}" />
+    <TranslationEntry Key="internal/ActionForm/categoryAudio" Translation="Audio" />
+    <TranslationEntry Key="internal/ActionForm/categoryDisplay" Translation="Information display" />
+    <TranslationEntry Key="internal/ActionForm/categoryExternalInteraction" Translation="External interaction" />
+    <TranslationEntry Key="internal/ActionForm/categoryPlaceholder" Translation="Placeholder" />
+    <TranslationEntry Key="internal/ActionForm/categoryProgramming" Translation="Programming and flow control" />
+    <TranslationEntry Key="internal/ActionForm/categorySystemInteraction" Translation="System interaction" />
+    <TranslationEntry Key="internal/ActionForm/categoryTriggerManagement" Translation="Trigger management" />
+    <TranslationEntry Key="internal/ActionForm/categoryVariables" Translation="Variables" />
     <TranslationEntry Key="internal/ActionForm/confirmkeypress" Translation="The keypresses you defined will be sent in two seconds after you hit OK, to allow you to change to the window you want to send the keypresses to." />
     <TranslationEntry Key="internal/ActionForm/confirmkeypressdelay" Translation="Confirm" />
     <TranslationEntry Key="internal/ActionForm/error" Translation="Error" />
@@ -1206,6 +883,7 @@
     <TranslationEntry Key="internal/ActionForm/textunderline" Translation="underline" />
     <TranslationEntry Key="internal/ActionForm/urlSendKey" Translation="https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys.send" />
     <TranslationEntry Key="internal/ActionForm/urlWinMessage" Translation="https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.keys" />
+    <TranslationEntry Key="internal/ActionForm/visualdesign" Translation="Visual design" />
     <TranslationEntry Key="internal/ActionLoop/specialhandling" Translation="Loop actions require special handling." />
     <TranslationEntry Key="internal/ActionViewer/invalidmovetype" Translation="Invalid moveType argument: {0}" />
     <TranslationEntry Key="internal/ActionViewer/setBgColor" Translation="Set Description Background Color To" />
@@ -1287,6 +965,7 @@
     <TranslationEntry Key="internal/Configuration/configtitle" Translation="Triggernometry configuration" />
     <TranslationEntry Key="internal/Configuration/local" Translation="Local triggers" />
     <TranslationEntry Key="internal/Configuration/remote" Translation="Remote triggers" />
+    <TranslationEntry Key="internal/ConfigurationEditor/invalidvalue" Translation="Invalid value for &#x27;{0}&#x27;: {1}" />
     <TranslationEntry Key="internal/ConfigurationForm/actttswarn" Translation="Using ACT for text-to-speech will cause the rate and volume options on text-to-speech actions to be ignored. Change anyway?" />
     <TranslationEntry Key="internal/ConfigurationForm/areyousureplural" Translation="Are you sure you want to remove the selected constants?" />
     <TranslationEntry Key="internal/ConfigurationForm/areyousurepluralsub" Translation="Are you sure you want to remove the selected substitutions?" />
@@ -1351,6 +1030,385 @@
     <TranslationEntry Key="internal/DictEvaluator/unknownmethod" Translation="Unknown dict method '{0}' in expression '{1}'." />
     <TranslationEntry Key="internal/DynamicImport/libraryfailed" Translation="DynamicImport failed to import library '{0}'." />
     <TranslationEntry Key="internal/DynamicImport/methodfailed" Translation="DynamicImport failed to find method '{0}' in module 0x{1}." />
+    <TranslationEntry Key="internal/EditorEnums/ActionOverlayText/EffectEnum/Bold" Translation="Bold" />
+    <TranslationEntry Key="internal/EditorEnums/ActionOverlayText/EffectEnum/Italic" Translation="Italic" />
+    <TranslationEntry Key="internal/EditorEnums/ActionOverlayText/EffectEnum/None" Translation="None" />
+    <TranslationEntry Key="internal/EditorEnums/ActionOverlayText/EffectEnum/Outline" Translation="Outline" />
+    <TranslationEntry Key="internal/EditorEnums/ActionOverlayText/EffectEnum/Strikeout" Translation="Strikeout" />
+    <TranslationEntry Key="internal/EditorEnums/ActionOverlayText/EffectEnum/Underline" Translation="Underline" />
+    <TranslationEntry Key="internal/EditorFields/ActionActInteraction/BoolParam" Translation="State" />
+    <TranslationEntry Key="internal/EditorFields/ActionActInteraction/BoolParam[End/Disable]" Translation="End/Disable" />
+    <TranslationEntry Key="internal/EditorFields/ActionActInteraction/BoolParam[Start/Enable]" Translation="Start/Enable" />
+    <TranslationEntry Key="internal/EditorFields/ActionActInteraction/Operation" Translation="Option" />
+    <TranslationEntry Key="internal/EditorFields/ActionActInteraction/Operation[Log all network data]" Translation="Log all network data" />
+    <TranslationEntry Key="internal/EditorFields/ActionActInteraction/Operation[Set ACT combat state]" Translation="Set ACT combat state" />
+    <TranslationEntry Key="internal/EditorFields/ActionActInteraction/Operation[Use Deucalion (injection)]" Translation="Use Deucalion (injection)" />
+    <TranslationEntry Key="internal/EditorFields/ActionActInteraction/StringParam" Translation="String Param" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/Asynchronous" Translation="Execute asynchronously without blocking other actions from executing" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel" Translation="Logging filtering level" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[(inherit from trigger)]" Translation="(inherit from trigger)" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[Above custom 2]" Translation="Above custom 2" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[Above custom]" Translation="Above custom" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[All informational messages]" Translation="All informational messages" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[Errors and warnings]" Translation="Errors and warnings" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[Errors only]" Translation="Errors only" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[Nothing]" Translation="Nothing" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/DebugLevel[Verbose debug]" Translation="Verbose debug" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/ExecutionDelayExpression" Translation="Execution delay from last action (ms)" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/PreventDuplicateQueue" Translation="Prevent the same action from being queued again" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/RefireInterrupt" Translation="Refire Interrupt" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/Tag" Translation="Tag" />
+    <TranslationEntry Key="internal/EditorFields/ActionBeep/Duration" Translation="Beep length (ms)" />
+    <TranslationEntry Key="internal/EditorFields/ActionBeep/Frequency" Translation="Beep frequency (hz)" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/Message" Translation="Message to send" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/UseTTS" Translation="Send as a text-to-speech message" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiscordWebhook/WebhookURL" Translation="Webhook URL" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiskOperation/Filename" Translation="File name" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiskOperation/Operation" Translation="Operation type" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiskOperation/Operation[Read CSV file into table variable]" Translation="Read CSV file into table variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiskOperation/Operation[Read file into scalar variable]" Translation="Read file into scalar variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiskOperation/Operation[Read file lines into list variable]" Translation="Read file lines into list variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiskOperation/Persistent" Translation="Variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiskOperation/UseCache" Translation="Cache file on disk" />
+    <TranslationEntry Key="internal/EditorFields/ActionDiskOperation/Variable" Translation="Variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Assemblies" Translation="List of assemblies to reference" />
+    <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Script" Translation="Script code" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/FolderId" Translation="Folder" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation" Translation="Operation" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in the specified folder]" Translation="Cancel all actions in the specified folder" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Disable the specified folder]" Translation="Disable the specified folder" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Enable the specified folder]" Translation="Enable the specified folder" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/Endpoint" Translation="Endpoint URL" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/FiringExpression" Translation="Response firing expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/Headers" Translation="Headers to send" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/Method" Translation="HTTP method" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/Method[GET]" Translation="GET" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/Method[POST]" Translation="POST" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/Payload" Translation="Payload to send" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/Persistent" Translation="Variable to store response to" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/ResultVariable" Translation="Variable to store response to" />
+    <TranslationEntry Key="internal/EditorFields/ActionJsonRequest/UseCache" Translation="Cache response on disk" />
+    <TranslationEntry Key="internal/EditorFields/ActionKeypress/Keycode" Translation="Keycode to send" />
+    <TranslationEntry Key="internal/EditorFields/ActionKeypress/Keypress" Translation="Keypresses to send" />
+    <TranslationEntry Key="internal/EditorFields/ActionKeypress/Operation" Translation="Keypress send method" />
+    <TranslationEntry Key="internal/EditorFields/ActionKeypress/Operation[Multiple window messages]" Translation="Multiple Window Messages" />
+    <TranslationEntry Key="internal/EditorFields/ActionKeypress/Operation[SendKeys]" Translation="SendKeys" />
+    <TranslationEntry Key="internal/EditorFields/ActionKeypress/Operation[Window message]" Translation="Window message" />
+    <TranslationEntry Key="internal/EditorFields/ActionKeypress/ProcessId" Translation="Process ID" />
+    <TranslationEntry Key="internal/EditorFields/ActionKeypress/WindowTitle" Translation="Window title" />
+    <TranslationEntry Key="internal/EditorFields/ActionLaunchProcess/Arguments" Translation="Command line parameters" />
+    <TranslationEntry Key="internal/EditorFields/ActionLaunchProcess/Path" Translation="Process to launch" />
+    <TranslationEntry Key="internal/EditorFields/ActionLaunchProcess/WindowStyle" Translation="Process window" />
+    <TranslationEntry Key="internal/EditorFields/ActionLaunchProcess/WindowStyle[Hidden from view]" Translation="Hidden from view" />
+    <TranslationEntry Key="internal/EditorFields/ActionLaunchProcess/WindowStyle[Maximized to fullscreen]" Translation="Maximized to fullscreen" />
+    <TranslationEntry Key="internal/EditorFields/ActionLaunchProcess/WindowStyle[Minimized to taskbar]" Translation="Minimized to taskbar" />
+    <TranslationEntry Key="internal/EditorFields/ActionLaunchProcess/WindowStyle[Normal]" Translation="Normal" />
+    <TranslationEntry Key="internal/EditorFields/ActionLaunchProcess/WorkingDirectory" Translation="Working directory" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/CustomPayload" Translation="Custom payload" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation" Translation="Operation type" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Custom payload]" Translation="Custom payload" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Pause run]" Translation="Pause run" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Reset run]" Translation="Reset run" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Resume run]" Translation="Resume run" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Skip split]" Translation="Skip split" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Split]" Translation="Split" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Start run or split]" Translation="Start run or split" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Start run]" Translation="Start run" />
+    <TranslationEntry Key="internal/EditorFields/ActionLiveSplitControl/Operation[Undo split]" Translation="Undo split" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/AddToACTEncounter" Translation="Add the log message to ACT combat log" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Level" Translation="Message Level" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Level[Custom 2]" Translation="Custom 2" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Level[Custom]" Translation="Custom" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Level[Error]" Translation="Error" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Level[Info]" Translation="Info" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Level[Verbose]" Translation="Verbose" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Level[Warning]" Translation="Warning" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Message" Translation="Message to log" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/ProcessAsLogline" Translation="Process message as log line" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Target" Translation="Target event source" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Target[ACT event]" Translation="ACT event" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Target[FFXIV network event]" Translation="FFXIV network event" />
+    <TranslationEntry Key="internal/EditorFields/ActionLogMessage/Target[Normal log line]" Translation="Normal log line" />
+    <TranslationEntry Key="internal/EditorFields/ActionLoop/DelayExpression" Translation="Loop iteration delay" />
+    <TranslationEntry Key="internal/EditorFields/ActionLoop/IncrExpression" Translation="Increment" />
+    <TranslationEntry Key="internal/EditorFields/ActionLoop/InitExpression" Translation="Initial iterator" />
+    <TranslationEntry Key="internal/EditorFields/ActionLoop/LoopActions" Translation="Loop actions" />
+    <TranslationEntry Key="internal/EditorFields/ActionLoop/LoopCondition" Translation="Loop condition (must be true to iterate)" />
+    <TranslationEntry Key="internal/EditorFields/ActionMessageBox/Icon" Translation="Message box icon" />
+    <TranslationEntry Key="internal/EditorFields/ActionMessageBox/Icon[Error]" Translation="Error" />
+    <TranslationEntry Key="internal/EditorFields/ActionMessageBox/Icon[Information]" Translation="Information" />
+    <TranslationEntry Key="internal/EditorFields/ActionMessageBox/Icon[None]" Translation="None" />
+    <TranslationEntry Key="internal/EditorFields/ActionMessageBox/Icon[Question]" Translation="Question" />
+    <TranslationEntry Key="internal/EditorFields/ActionMessageBox/Icon[Warning]" Translation="Warning" />
+    <TranslationEntry Key="internal/EditorFields/ActionMessageBox/Text" Translation="Text to display" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Coordinate" Translation="Coordinate system" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Coordinate[Absolute]" Translation="Absolute" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Coordinate[Relative]" Translation="Relative" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Operation" Translation="Operation" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Operation[Left click]" Translation="Left click" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Operation[Middle click]" Translation="Middle click" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Operation[Move mouse]" Translation="Move mouse" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Operation[Right click]" Translation="Right click" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/X" Translation="X coordinate" />
+    <TranslationEntry Key="internal/EditorFields/ActionMouse/Y" Translation="Y coordinate" />
+    <TranslationEntry Key="internal/EditorFields/ActionMutex/Name" Translation="Mutex name" />
+    <TranslationEntry Key="internal/EditorFields/ActionMutex/Operation" Translation="Operation type" />
+    <TranslationEntry Key="internal/EditorFields/ActionMutex/Operation[Acquire mutex]" Translation="Acquire mutex" />
+    <TranslationEntry Key="internal/EditorFields/ActionMutex/Operation[Release mutex]" Translation="Release mutex" />
+    <TranslationEntry Key="internal/EditorFields/ActionNamedCallback/Name" Translation="Callback name" />
+    <TranslationEntry Key="internal/EditorFields/ActionNamedCallback/Parameter" Translation="Callback parameter" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Endpoint" Translation="Endpoint URL" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/JSONPayload" Translation="JSON Payload" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation" Translation="Operation type" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Custom JSON payload]" Translation="Custom JSON payload" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Hide source]" Translation="Hide source" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Pause recording]" Translation="Pause recording" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Resume recording]" Translation="Resume recording" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Resume/pause recording (toggle)]" Translation="Resume/pause recording (toggle)" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Save replay buffer]" Translation="Save replay buffer" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Set scene]" Translation="Set scene" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Show source]" Translation="Show source" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Start recording]" Translation="Start recording" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Start replay buffer]" Translation="Start replay buffer" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Start streaming]" Translation="Start streaming" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Start/stop recording (toggle)]" Translation="Start/stop recording (toggle)" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Start/stop replay buffer (toggle)]" Translation="Start/stop replay buffer (toggle)" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Start/stop streaming (toggle)]" Translation="Start/stop streaming (toggle)" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Stop recording]" Translation="Stop recording" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Stop replay buffer]" Translation="Stop replay buffer" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Stop streaming]" Translation="Stop streaming" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Stop then start recording (if currently recording)]" Translation="Stop then start recording (if currently recording)" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Operation[Stop then start recording]" Translation="Stop then start recording" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/Password" Translation="Password" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/SceneName" Translation="Scene name" />
+    <TranslationEntry Key="internal/EditorFields/ActionObsControl/SourceName" Translation="Source name" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/Filename" Translation="Image to display" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/HIniExpression" Translation="Height expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/HIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/HTickExpression" Translation="Height expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/HTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/Name" Translation="Unique identifier" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/OIniExpression" Translation="Opacity expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/OIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/Operation" Translation="Operation" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/Operation[Activate or modify the specified image aura]" Translation="Activate or modify the specified image aura" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/Operation[Deactivate all image auras]" Translation="Deactivate all image auras" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/Operation[Deactivate image auras by regular expression]" Translation="Deactivate image auras by regular expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/Operation[Deactivate the specified image aura]" Translation="Deactivate the specified image aura" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/OTickExpression" Translation="Opacity expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/OTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/SizeMode" Translation="Display method" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/SizeMode[Centered]" Translation="Centered" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/SizeMode[Normal]" Translation="Normal" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/SizeMode[Stretched to fill]" Translation="Stretched to fill" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/SizeMode[Zoomed to fill respecting Aspect Ratio]" Translation="Zoomed to fill respecting Aspect Ratio" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/TTLTickExpression" Translation="Time-to-live expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/TTLTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/WIniExpression" Translation="Width expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/WIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/WTickExpression" Translation="Width expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/WTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/XIniExpression" Translation="X location expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/XIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/XTickExpression" Translation="X location expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/XTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/YIniExpression" Translation="Y location expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/YIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/YTickExpression" Translation="Y location expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayImage/YTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment" Translation="Text alignment" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Bottom center]" Translation="Bottom center" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Bottom left]" Translation="Bottom left" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Bottom right]" Translation="Bottom right" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Middle center]" Translation="Middle center" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Middle left]" Translation="Middle left" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Middle right]" Translation="Middle right" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Top center]" Translation="Top center" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Top left]" Translation="Top left" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Alignment[Top right]" Translation="Top right" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/BackColor" Translation="Background color" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Effect" Translation="Effect" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Font" Translation="Font" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/FontSize" Translation="Font Size" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/ForeColor" Translation="Text color" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/HIniExpression" Translation="Height expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/HIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/HTickExpression" Translation="Height expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/HTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Name" Translation="Unique identifier" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/OIniExpression" Translation="Opacity expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/OIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Operation" Translation="Operation" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Operation[Activate or modify the specified text aura]" Translation="Activate or modify the specified text aura" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Operation[Deactivate all text auras]" Translation="Deactivate all text auras" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Operation[Deactivate text auras by regular expression]" Translation="Deactivate text auras by regular expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Operation[Deactivate the specified text aura]" Translation="Deactivate the specified text aura" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/OTickExpression" Translation="Opacity expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/OTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/OutlineColor" Translation="Outline color" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/Text" Translation="Text to display" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/TTLTickExpression" Translation="Time-to-live expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/TTLTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/WIniExpression" Translation="Width expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/WIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/WTickExpression" Translation="Width expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/WTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/XIniExpression" Translation="X location expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/XIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/XTickExpression" Translation="X location expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/XTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/YIniExpression" Translation="Y location expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/YIniExpression/Qualifier" Translation="Initial values" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/YTickExpression" Translation="Y location expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionOverlayText/YTickExpression/Qualifier" Translation="Update tick (20 ms) expressions" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySound/AudioTarget" Translation="Audio output method" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySound/AudioTarget[ACT]" Translation="ACT" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySound/AudioTarget[Default]" Translation="Default" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySound/AudioTarget[Windows Media Player API]" Translation="Windows Media Player API" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySound/ExclusivePlayer" Translation="Use exclusive sound player to prevent conflicts with other sounds" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySound/Filename" Translation="Sound file to play" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySound/Volume" Translation="Sound volume (0 ... 100 %)" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySpeech/AudioTarget" Translation="Audio output method" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySpeech/AudioTarget[ACT]" Translation="ACT" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySpeech/AudioTarget[Default]" Translation="Default" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySpeech/AudioTarget[Windows Speech API]" Translation="Windows Speech API" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySpeech/Message" Translation="Text to say" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySpeech/Rate" Translation="Speech speed rate (-10 ... +10)" />
+    <TranslationEntry Key="internal/EditorFields/ActionPlaySpeech/Volume" Translation="Speech volume (0 ... 100 %)" />
+    <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation" Translation="Operation" />
+    <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update all enabled repositories]" Translation="Update all enabled repositories" />
+    <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update containing repository]" Translation="Update containing repository" />
+    <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update selected repository]" Translation="Update selected repository" />
+    <TranslationEntry Key="internal/EditorFields/ActionRepository/RepositoryId" Translation="Repository" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force" Translation="Firing options" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore conditions]" Translation="Ignore conditions" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore enabled/disabled status]" Translation="Ignore enabled/disabled status" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore parent folder restrictions]" Translation="Ignore parent folder restrictions" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore refire delay]" Translation="Ignore refire delay" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore regular expression]" Translation="Ignore regular expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation" Translation="Operation" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Cancel all actions from all triggers]" Translation="Cancel all actions from all triggers" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Cancel all actions queued from the specified trigger]" Translation="Cancel all actions queued from the specified trigger" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Disable the specified trigger]" Translation="Disable the specified trigger" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Enable the specified trigger]" Translation="Enable the specified trigger" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Fire the specified trigger]" Translation="Fire the specified trigger" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/TagRegex" Translation="Tag Regex" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Text" Translation="Event text for firing" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/TriggerId" Translation="Trigger" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Zone" Translation="Zone name for firing" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/ZoneType" Translation="Zone Type" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/ZoneType[FFXIV zone ID]" Translation="FFXIV zone ID" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/ZoneType[Zone name]" Translation="Zone name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Key" Translation="Key" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/KeyType" Translation="Key Expr type" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/KeyType[Numeric]" Translation="Numeric" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/KeyType[String]" Translation="String" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Name" Translation="Source variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation" Translation="Operation type" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Build from the expression]" Translation="Build from the expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Filter into another dictionary]" Translation="Filter into another dictionary" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Get specified properties of a specified FFXIV entity]" Translation="Get specified properties of a specified FFXIV entity" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Merge two dictionaries (keep)]" Translation="Merge two dictionaries (keep)" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Merge two dictionaries (overwrite)]" Translation="Merge two dictionaries (overwrite)" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Remove the given key]" Translation="Remove the given key" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Set all keys and values]" Translation="Set all keys and values" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Set value of the given key]" Translation="Set value of the given key" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Unset all dictionary variables]" Translation="Unset all dictionary variables" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Unset dictionary variable]" Translation="Unset dict variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Unset dictionary variables matching regular expression]" Translation="Unset dictionary variables matching regular expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Persistent" Translation="Source variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/TargetPersistent" Translation="Target variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/TargetVariable" Translation="Target variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Value" Translation="Value" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/ValueType" Translation="Value Expr type" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/ValueType[Numeric]" Translation="Numeric" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/ValueType[String]" Translation="String" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/VariableLength" Translation="Length" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Index" Translation="List index number" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Name" Translation="Source variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation" Translation="Operation type" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Build a list variable from the expression separated by its first character]" Translation="Build a list variable from the expression separated by its first character" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Copy whole list variable to another list variable]" Translation="Copy whole list variable to another list variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Filter elements into another list]" Translation="Filter elements into another list" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Insert list variable into another list variable at the given index]" Translation="Insert list variable into another list variable at the given index" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Insert value to the given index of the list variable]" Translation="Insert value to the given index of the list variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Join all values in the list variable into a scalar variable (separator in expression)]" Translation="Join all values in the list variable into a scalar variable (separator in expression)" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Pop and insert a value from a list into another list]" Translation="Pop and insert a value from a list into another list" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Pop and set a value from a list into another list]" Translation="Pop and set a value from a list into another list" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Pop the given index from list variable into a scalar variable]" Translation="Pop the given index from list variable into a scalar variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Push value to the end of the list variable]" Translation="Push value to the end of the list variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Remove value at the given index of the list variable]" Translation="Remove value at the given index of the list variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set all values on the list variable to the expression]" Translation="Set all values on the list variable to the expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set value at the given index of the list variable]" Translation="Set value at the given index of the list variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list by the key functions]" Translation="Sort list by the key functions" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in a descending order based on FFXIV party job order]" Translation="Sort list in a descending order based on FFXIV party job order" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in a numerically ascending order]" Translation="Sort list in a numerically ascending order" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in a numerically descending order]" Translation="Sort list in a numerically descending order" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in an alphabetically ascending order]" Translation="Sort list in an alphabetically ascending order" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in an alphabetically descending order]" Translation="Sort list in an alphabetically descending order" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in an ascending order based on FFXIV party job order]" Translation="Sort list in an ascending order based on FFXIV party job order" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Split a scalar variable into a list variable (separator in expression)]" Translation="Split a scalar variable into a list variable (separator in expression)" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Unset all list variables]" Translation="Unset all list variables" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Unset list variable]" Translation="Unset list variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Unset list variables matching regular expression]" Translation="Unset list variables matching regular expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Persistent" Translation="Source variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Target" Translation="Target variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/TargetPersistent" Translation="Target variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/ValueExpression" Translation="Expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/ValueExpression/TargetIndex" Translation="Target Index" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/ValueType" Translation="Expression type" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/ValueType[Numeric]" Translation="Numeric" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/ValueType[String]" Translation="String" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/JsonTargetName" Translation="Target Variable Name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/JsonTargetPersistent" Translation="Target Variable Name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Name" Translation="Scalar variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation" Translation="Operation type" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Copy scalar variable or expression to the clipboard]" Translation="Copy scalar variable or expression to the clipboard" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Increment scalar variable value]" Translation="Increment scalar variable value" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Query variable with JSONPath and store list value]" Translation="Query variable with JSONPath and store list value" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Query variable with JSONPath and store scalar value]" Translation="Query variable with JSONPath and store scalar value" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Set scalar variable value with numeric expression]" Translation="Set scalar variable value with numeric expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Set scalar variable value with string expression]" Translation="Set scalar variable value with string expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Unset all scalar variables]" Translation="Unset all scalar variables" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Unset all types of variables matching regular expression]" Translation="Unset all types of variables matching regular expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Unset scalar variable]" Translation="Unset scalar variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Operation[Unset scalar variables matching regular expression]" Translation="Unset scalar variables matching regular expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Persistent" Translation="Scalar variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableScalar/Value" Translation="Expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Name" Translation="Source variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation" Translation="Operation type" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Append whole table variable to another table horizontally]" Translation="Append whole table variable to another table horizontally" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Append whole table variable to another table vertically]" Translation="Append whole table variable to another table vertically" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Build from the expression]" Translation="Build from the expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Copy whole table variable to another table variable]" Translation="Copy whole table variable to another table variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Filter elements into another list]" Translation="Filter elements into another list" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Filter rows/cols into another table]" Translation="Filter rows/cols into another table" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Get specified properties for specified FFXIV entities]" Translation="Get specified properties for specified FFXIV entities" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Insert values at the given col or row]" Translation="Insert values at the given col or row" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Remove the given column or row]" Translation="Remove the given column or row" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Resize table variable]" Translation="Resize table variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Set all values in the selected rows and columns]" Translation="Set all values in the selected rows and columns" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Set all values in the table variable]" Translation="Set all values in the table variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Set value to the given row and column on the table variable]" Translation="Set value to the given row and column on the table variable " />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Set values to the given col or row]" Translation="Set values to the given col or row" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Sort the rows/cols by the key functions]" Translation="Sort the rows/cols by the key functions" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Unset all table variables]" Translation="Unset all table variables" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Unset table variable]" Translation="Unset table variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Operation[Unset table variables matching regular expression]" Translation="Unset table variables matching regular expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Persistent" Translation="Source variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/TargetName" Translation="Target variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/TargetPersistent" Translation="Target variable name" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Value" Translation="Expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/ValueType" Translation="Expression type" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/ValueType[Numeric]" Translation="Numeric" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/ValueType[String]" Translation="String" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/X" Translation="Column definition" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableTable/Y" Translation="Row definition" />
+    <TranslationEntry Key="internal/EditorFields/ActionWindowMessage/Lparam" Translation="LParam" />
+    <TranslationEntry Key="internal/EditorFields/ActionWindowMessage/MessageId" Translation="Message code" />
+    <TranslationEntry Key="internal/EditorFields/ActionWindowMessage/ProcessId" Translation="Process ID" />
+    <TranslationEntry Key="internal/EditorFields/ActionWindowMessage/WindowTitle" Translation="Window title" />
+    <TranslationEntry Key="internal/EditorFields/ActionWindowMessage/Wparam" Translation="WParam" />
     <TranslationEntry Key="internal/Endpoint/notpost" Translation="Received request was not HTTP POST." />
     <TranslationEntry Key="internal/EquationHelper/zerocoefficient" Translation="A must not be zero" />
     <TranslationEntry Key="internal/ExportForm/exception" Translation="Exception" />

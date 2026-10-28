@@ -6,7 +6,9 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Expressions.Maths;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
 using Triggernometry.Utilities;
+using ExpressionType = Triggernometry.UI.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum;
 
 namespace Triggernometry.Core.Actions
 {
@@ -14,7 +16,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Keypress operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Input)]
+    [Action("Send keypresses to active window", ActionAttribute.CategoryType.SystemInteraction)]
     [XmlRoot(ElementName = "ActionKeypress")]
     public class ActionKeypress : ActionBase
     {
@@ -44,7 +46,14 @@ namespace Triggernometry.Core.Actions
         /// Type of the keypress operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Keypress send method",
+            ChoiceLabels = new[]
+        {
+            "SendKeys",
+            "Window message",
+            "Multiple window messages",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.SendKeys;
 
         [XmlAttribute("Operation")]
@@ -58,7 +67,8 @@ namespace Triggernometry.Core.Actions
         /// Keypress expression (relevant only for SendKeys)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.KeypressRecorder)]
+        [ActionSpecificProperty]
+        [KeypressEditor(3, Label = "Keypresses to send")]
         public string Keypress { get; set; } = "";
 
         [XmlAttribute("Keypress")]
@@ -72,7 +82,8 @@ namespace Triggernometry.Core.Actions
         /// Keycode (relevant only for window message modes)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3, specialtype: ActionAttribute.SpecialTypeEnum.KeypressRecorder)]
+        [ActionSpecificProperty]
+        [KeypressEditor(5, Label = "Keycode to send", Keycode = true)]
         public string Keycode { get; set; } = "";
 
         [XmlAttribute("Keycode")]
@@ -86,7 +97,8 @@ namespace Triggernometry.Core.Actions
         /// Window title to send keypress to (relevant only for window message modes)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(4, EditorExpressionType.Regex, Label = "Window title")]
         public string WindowTitle { get; set; } = "";
 
         [XmlAttribute("WindowTitle")]
@@ -100,7 +112,8 @@ namespace Triggernometry.Core.Actions
         /// Process ID to send keypress to (relevant only for window message modes)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5, typehint: typeof(int))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, EditorExpressionType.Numeric, Label = "Process ID")]
         public string ProcessId { get; set; } = "";
 
         [XmlAttribute("ProcessId")]
@@ -112,6 +125,22 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var keys = editor.GetEditor(nameof(Keypress));
+            var code = editor.GetEditor(nameof(Keycode));
+            var window = editor.GetEditor(nameof(WindowTitle));
+            var process = editor.GetEditor(nameof(ProcessId));
+            return () =>
+            {
+                var op = (OperationEnum)operation.GetValue();
+                if (op == OperationEnum.SendKeys) editor.EnableOnly(operation, keys);
+                else editor.EnableOnly(operation, code, window, process);
+                editor.SetExpressionType(op == OperationEnum.WindowMessageCombo ? ExpressionType.String : ExpressionType.Numeric, code);
+            };
+        }
 
         #region Implementation
 
@@ -151,9 +180,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             switch (Operation)

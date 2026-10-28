@@ -14,10 +14,10 @@ namespace Triggernometry.UI.CustomControls
 
     public class RichTextBoxHelper : ReadonlyRichTextBox // to do: change to CustomControls
     {
-        private readonly Form ParentForm;
         private readonly TableLayoutPanel ParentTable;
+        private readonly Func<string> helpKey;
 
-        internal static bool _Expanded = false;  // all textboxes share the same state
+        internal static bool _Expanded = false;  // 所有帮助框共用展开状态。
         public bool Expanded
         {
             get { return _Expanded; }
@@ -28,18 +28,20 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        /// <summary> Append the RichTextBoxHelper to the end of the given TableLayoutPanel in the given form.</summary>
-        public RichTextBoxHelper(string name, Form parentForm, TableLayoutPanel table, int colIndex = 1)
+        /// <summary>在布局末尾添加可展开的帮助区域。</summary>
+        public RichTextBoxHelper(string name, Form parentForm, TableLayoutPanel table, int colIndex = 1, Func<string> helpKey = null)
         {
             Name = name;
             Tag = I18n.DoNotTranslate;
-            Dock = DockStyle.Left;
+            Dock = DockStyle.Fill;
             Margin = new Padding(3, 15, 15, 7);
             ScrollBars = RichTextBoxScrollBars.Vertical;
 
-            ParentForm = parentForm;
+            this.helpKey = helpKey;
             ParentTable = table;
-            // append to the last row and span to the last grid of the row
+            // 应用富文本样式前先继承编辑器字体。
+            ResetFont();
+            // 追加到最后一行，并占满该行剩余列。
             ParentTable.RowCount += 1;
             ParentTable.RowStyles.Add(new RowStyle());
             ParentTable.Controls.Add(this, colIndex, ParentTable.RowCount - 1);
@@ -52,39 +54,22 @@ namespace Triggernometry.UI.CustomControls
             Expanded = _Expanded;
         }
 
+        /// <summary>按展开状态和当前帮助键更新文本及格式。</summary>
         internal void UpdateText()
         {
             Lock();
             if (_Expanded)
             {
-                Dock = DockStyle.Fill;
-                string key = "";
-                switch (Name)
-                {
-                    case "rtbVariableHelper":
-                        key = "rtbHelperVar" + Enum.GetName(typeof(ActionVariableScalar.OperationEnum), ((ActionForm)ParentForm).cbxVariableOp.SelectedIndex); break;
-                    case "rtbLvarHelper":
-                        key = "rtbHelperLvar" + Enum.GetName(typeof(ActionVariableList.OperationEnum), ((ActionForm)ParentForm).cbxLvarOperation.SelectedIndex); break;
-                    case "rtbTvarHelper":
-                        key = "rtbHelperTvar" + Enum.GetName(typeof(ActionVariableTable.OperationEnum), ((ActionForm)ParentForm).cbxTvarOpType.SelectedIndex); break;
-                    case "rtbDictHelper":
-                        key = "rtbHelperDict" + Enum.GetName(typeof(ActionVariableDict.OperationEnum), ((ActionForm)ParentForm).cbxDictOpType.SelectedIndex); break;
-                    case "rtbSendKeysHelper":
-                        key = "rtbHelperSendKeys" + Enum.GetName(typeof(ActionKeypress.OperationEnum), ((ActionForm)ParentForm).cbxKeypressMethod.SelectedIndex); break;
-                    case "rtbCallbackHelper": key = "rtbHelperCallback"; break;
-                    case "rtbWmsgHelper": key = "rtbHelperWmsg"; break;
-                    case "rtbJsonHelper": key = "rtbHelperJson"; break;
-                }
+                string key = helpKey?.Invoke() ?? "";
                 var resources = new System.ComponentModel.ComponentResourceManager(typeof(ActionForm));
                 Text = I18n.Translate($"ActionForm/{key}", resources.GetString($"{key}.Text") ?? "");
             }
             else
             {
-                Dock = DockStyle.Left;
                 Text = I18n.Translate("ActionForm/rtbHelper", "[Show Help]");
             }
             SetStyles();
-            SetHeight();
+            UpdateHeight();
             Unlock();
         }
 
@@ -110,25 +95,22 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        private void SetHeight()
+        /// <summary>根据可用空间和文本长度调整帮助区高度。</summary>
+        internal void UpdateHeight()
         {
-            int residueHeight;
-            if (ParentTable.Parent is TabPage tabPage)
-            {
-                Point rtbLocation = ParentTable.PointToScreen(Location);
-                int tabControlBottom = tabPage.PointToScreen(new Point(0, tabPage.Height)).Y;
-                residueHeight = tabControlBottom - rtbLocation.Y - 10;
-            }
-            else
-            {
-                residueHeight = 200;
-            }
-
-            int totalLines = GetLineFromCharIndex(TextLength) + 1;
             int lineHeight = (int)(Font.Height * 1.5);
-            int textHeight = totalLines * lineHeight;
-
-            Height = Math.Min(residueHeight, textHeight);
+            int height = lineHeight;
+            if (_Expanded && ParentTable.Parent is ScrollableControl viewport)
+            {
+                const int minimumHeight = 200;
+                // 使用未滚动时的位置计算空间，避免滚动反过来改变帮助区高度。
+                int top = ParentTable.Top - viewport.AutoScrollPosition.Y + Top;
+                int availableHeight = viewport.ClientSize.Height - top - Margin.Bottom - ParentTable.Padding.Bottom;
+                int maximumHeight = Math.Max(minimumHeight, availableHeight);
+                int textHeight = (GetLineFromCharIndex(TextLength) + 1) * lineHeight;
+                height = Math.Min(maximumHeight, Math.Max(minimumHeight, textHeight));
+            }
+            if (Height != height) Height = height;
         }
 
         internal static Color[] expressionColors = {
@@ -335,12 +317,16 @@ namespace Triggernometry.UI.CustomControls
             Refresh();
         }
 
+        /// <summary>从父控件链中取得不透明背景色。</summary>
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
             if (Parent != null)
             {
-                BackColor = Parent.BackColor;
+                // 原生 RichEdit 不支持透明背景，需要沿父控件链寻找不透明颜色。
+                Control background = Parent;
+                while (background != null && background.BackColor.A != 255) background = background.Parent;
+                BackColor = background?.BackColor ?? SystemColors.Control;
             }
         }
 

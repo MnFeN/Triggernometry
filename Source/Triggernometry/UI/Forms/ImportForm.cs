@@ -560,7 +560,7 @@ namespace Triggernometry.UI.Forms
                     action = new ActionPlaySound { Filename = soundData, Volume = "100", ExclusivePlayer = true };
                     break;
                 case 3:
-                    action = new ActionPlaySpeech { Message = soundData, Volume = "100", Rate = "0", ExclusivePlayer = true };
+                    action = new ActionPlaySpeech { Message = soundData, Volume = "100", Rate = "0" };
                     break;
             }
             if (action != null)

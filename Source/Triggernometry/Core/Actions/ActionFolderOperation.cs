@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -11,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Folder operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
+    [Action("Folder operation", ActionAttribute.CategoryType.TriggerManagement)]
     [XmlRoot(ElementName = "ActionFolderOperation")]
     public class ActionFolderOperation : ActionBase
     {
@@ -32,7 +33,14 @@ namespace Triggernometry.Core.Actions
         /// Type of the folder operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation",
+            ChoiceLabels = new[]
+        {
+            "Enable the specified folder",
+            "Disable the specified folder",
+            "Cancel all actions in the specified folder",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.Enable;
 
         [XmlAttribute("Operation")]
@@ -46,7 +54,8 @@ namespace Triggernometry.Core.Actions
         /// Reference to the folder
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.FolderReference)]
+        [ActionSpecificProperty]
+        [ReferenceEditor(2, EditorReferenceType.Folder, Label = "Folder")]
         public Guid FolderId { get; set; } = Guid.Empty;
 
         [XmlAttribute("FolderId")]
@@ -80,9 +89,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/descinvalidfolderref", "folder action with an invalid folder reference ({0})", FolderId);
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             Folder f = plug.GetFolderById(FolderId, ctx.Trigger?.Repo);
@@ -140,7 +148,7 @@ namespace Triggernometry.Core.Actions
                     {
                         var triggersInFolder = new HashSet<Trigger>(f.RecursiveGetTriggers());
                         int removed = RealPlugin.Instance.CancelQueuedActions(
-                            _qa => _qa?.ctx?.Trigger != null && triggersInFolder.Contains(_qa.ctx.Trigger)
+                            _qa => _qa?.Context?.Trigger != null && triggersInFolder.Contains(_qa.Context.Trigger)
                         );
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfolder",
                             "Cancelled {1} queued action(s) from {2} triggers in folder ({0})",

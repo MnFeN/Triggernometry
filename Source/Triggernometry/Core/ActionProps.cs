@@ -19,35 +19,36 @@ namespace Triggernometry.Core
 
         public enum ActionTypeEnum
         {
-            SystemBeep,
-            PlaySound,
-            UseTTS,
-            Variable,
-            ListVariable,
-            TableVariable,
-            DictVariable,
-            MessageBox,
-            LogMessage,
-            TextAura,
-            Aura,
-            Mouse,
-            KeyPress,
-            NamedCallback,
-            WindowMessage,
-            DiskFile,
-            LaunchProcess,
-            ExecuteScript,
-            Mutex,
-            Loop,
-            GenericJson,
-            DiscordWebhook,
-            LiveSplitControl,
-            ObsControl,
-            ActInteraction,
-            Trigger,
-            Folder,
-            Repository,
-            Placeholder,
+            // Keep legacy numeric values while listing types in the selector order.
+            SystemBeep = 0,
+            PlaySound = 1,
+            UseTTS = 2,
+            MessageBox = 7,
+            TextAura = 9,
+            Aura = 10,
+            Variable = 3,
+            ListVariable = 4,
+            TableVariable = 5,
+            DictVariable = 6,
+            LogMessage = 8,
+            NamedCallback = 13,
+            ExecuteScript = 17,
+            Loop = 19,
+            Mutex = 18,
+            Trigger = 25,
+            Folder = 26,
+            Repository = 27,
+            Mouse = 11,
+            KeyPress = 12,
+            WindowMessage = 14,
+            LaunchProcess = 16,
+            DiskFile = 15,
+            ActInteraction = 24,
+            GenericJson = 20,
+            DiscordWebhook = 21,
+            ObsControl = 23,
+            LiveSplitControl = 22,
+            Placeholder = 28,
             // Old actions:
             // EndEncounter => ActInteraction
         }
@@ -2254,24 +2255,6 @@ namespace Triggernometry.Core
             set
             {
                 _UseTTSRateExpression = value;
-            }
-        }
-
-        internal bool _UseTTSExclusive { get; set; } = true;
-        [XmlAttribute]
-        public string UseTTSExclusive
-        {
-            get
-            {
-                if (_UseTTSExclusive == true)
-                {
-                    return null;
-                }
-                return _UseTTSExclusive.ToString();
-            }
-            set
-            {
-                _UseTTSExclusive = bool.Parse(value);
             }
         }
 

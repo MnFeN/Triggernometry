@@ -3,6 +3,9 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
+using Autofill = Triggernometry.UI.CustomControls.ExpressionTextBox.AutofillTypeEnum;
 
 namespace Triggernometry.Core.Actions
 {
@@ -10,7 +13,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Image overlay operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Overlay)]
+    [Action("Image aura operation", ActionAttribute.CategoryType.Display)]
     [XmlRoot(ElementName = "ActionOverlayImage")]
     public class ActionOverlayImage : ActionBase
     {
@@ -50,7 +53,15 @@ namespace Triggernometry.Core.Actions
         /// Type of the image overlay operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation",
+            ChoiceLabels = new[]
+        {
+            "Activate or modify the specified image aura",
+            "Deactivate the specified image aura",
+            "Deactivate all image auras",
+            "Deactivate image auras by regular expression",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.Activate;
 
         [XmlAttribute("Operation")]
@@ -64,7 +75,15 @@ namespace Triggernometry.Core.Actions
         /// Image sizing mode within overlay
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(4, Label = "Display method",
+            ChoiceLabels = new[]
+        {
+            "Normal",
+            "Stretched to fill",
+            "Centered",
+            "Zoomed to fill respecting Aspect Ratio",
+        }, ChoiceValues = new[] { 0, 1, 3, 4 })]
         public PictureBoxSizeMode SizeMode { get; set; } = PictureBoxSizeMode.Normal;
 
         [XmlAttribute("SizeMode")]
@@ -78,7 +97,8 @@ namespace Triggernometry.Core.Actions
         /// Name of the image overlay
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Unique identifier")]
         public string Name { get; set; } = "";
 
         [XmlAttribute("Name")]
@@ -92,7 +112,8 @@ namespace Triggernometry.Core.Actions
         /// Image file name expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3, specialtype: ActionAttribute.SpecialTypeEnum.ImageSelector)]
+        [ActionSpecificProperty]
+        [FileEditor(3, EditorFileType.Image, Label = "Image to display")]
         public string Filename { get; set; } = "";
 
         [XmlAttribute("Filename")]
@@ -106,7 +127,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay X position
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(5, EditorExpressionType.Numeric, Label = "X location expression",
+            LabelQualifier = "Initial values")]
         public string XIniExpression { get; set; } = "";
 
         [XmlAttribute("XIniExpression")]
@@ -120,7 +143,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay Y position
         /// </summary>
         [XmlIgnore]
-        [Action(order: 6, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(7, EditorExpressionType.Numeric, Label = "Y location expression",
+            LabelQualifier = "Initial values")]
         public string YIniExpression { get; set; } = "";
 
         [XmlAttribute("YIniExpression")]
@@ -134,7 +159,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay width
         /// </summary>
         [XmlIgnore]
-        [Action(order: 7, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(9, EditorExpressionType.Numeric, Label = "Width expression",
+            LabelQualifier = "Initial values")]
         public string WIniExpression { get; set; } = "";
 
         [XmlAttribute("WIniExpression")]
@@ -148,7 +175,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay height
         /// </summary>
         [XmlIgnore]
-        [Action(order: 8, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(11, EditorExpressionType.Numeric, Label = "Height expression",
+            LabelQualifier = "Initial values")]
         public string HIniExpression { get; set; } = "";
 
         [XmlAttribute("HIniExpression")]
@@ -162,7 +191,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for initializing overlay opacity
         /// </summary>
         [XmlIgnore]
-        [Action(order: 9, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(13, EditorExpressionType.Numeric, Label = "Opacity expression",
+            LabelQualifier = "Initial values")]
         public string OIniExpression { get; set; } = "";
 
         [XmlAttribute("OIniExpression")]
@@ -176,7 +207,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay X position
         /// </summary>
         [XmlIgnore]
-        [Action(order: 10, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(6, EditorExpressionType.Numeric, Label = "X location expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string XTickExpression { get; set; } = "";
 
         [XmlAttribute("XTickExpression")]
@@ -190,7 +223,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay Y position
         /// </summary>
         [XmlIgnore]
-        [Action(order: 11, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(8, EditorExpressionType.Numeric, Label = "Y location expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string YTickExpression { get; set; } = "";
 
         [XmlAttribute("YTickExpression")]
@@ -204,7 +239,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay width
         /// </summary>
         [XmlIgnore]
-        [Action(order: 12, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(10, EditorExpressionType.Numeric, Label = "Width expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string WTickExpression { get; set; } = "";
 
         [XmlAttribute("WTickExpression")]
@@ -218,7 +255,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay height
         /// </summary>
         [XmlIgnore]
-        [Action(order: 13, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(12, EditorExpressionType.Numeric, Label = "Height expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string HTickExpression { get; set; } = "";
 
         [XmlAttribute("HTickExpression")]
@@ -232,7 +271,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for updating overlay opacity
         /// </summary>
         [XmlIgnore]
-        [Action(order: 14, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(14, EditorExpressionType.Numeric, Label = "Opacity expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string OTickExpression { get; set; } = "";
 
         [XmlAttribute("OTickExpression")]
@@ -246,7 +287,9 @@ namespace Triggernometry.Core.Actions
         /// Exoression for checking overlay life cycle
         /// </summary>
         [XmlIgnore]
-        [Action(order: 15, typehint: typeof(float))]
+        [ActionSpecificProperty]
+        [ExpressionEditor(15, EditorExpressionType.Numeric, Label = "Time-to-live expression",
+            LabelQualifier = "Update tick (20 ms) expressions")]
         public string TTLTickExpression { get; set; } = "";
 
         [XmlAttribute("TTLTickExpression")]
@@ -258,6 +301,21 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var name = editor.GetEditor(nameof(Name));
+            return () =>
+            {
+                var op = (OperationEnum)operation.GetValue();
+                if (op == OperationEnum.Activate)
+                    foreach (var field in editor.Editors) editor.SetEnabled(true, field);
+                else if (op == OperationEnum.DeactivateAll) editor.EnableOnly(operation);
+                else editor.EnableOnly(operation, name);
+                name.SetVariableNameMode(Autofill.Image, op == OperationEnum.DeactivateRegex);
+            };
+        }
 
         #region Implementation
 
@@ -278,9 +336,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             plug.ImageAuraManagement(ctx, this);

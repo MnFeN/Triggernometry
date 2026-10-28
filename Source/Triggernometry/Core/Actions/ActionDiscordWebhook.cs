@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -11,7 +12,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Discord webhook operation
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.RemoteControl)]
+    [Action("Discord webhook", ActionAttribute.CategoryType.ExternalInteraction)]
     [XmlRoot(ElementName = "ActionDiscordWebhook")]
     public class ActionDiscordWebhook : ActionBase
     {
@@ -29,7 +30,8 @@ namespace Triggernometry.Core.Actions
         /// Discord webhook URL
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, Label = "Webhook URL")]
         public string WebhookURL { get; set; } = "";
 
         [XmlAttribute("WebhookURL")]
@@ -43,7 +45,8 @@ namespace Triggernometry.Core.Actions
         /// Message to send to the webhook
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Message to send")]
         public string Message { get; set; } = "";
 
         [XmlAttribute("Message")]
@@ -57,7 +60,8 @@ namespace Triggernometry.Core.Actions
         /// If set, sent telegram will be flagged as a TTS message
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3)]
+        [ActionSpecificProperty]
+        [CheckBoxEditor(3, Label = "Send as a text-to-speech message")]
         public bool UseTTS { get; set; } = false;
 
         [XmlAttribute("UseTTS")]
@@ -81,9 +85,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/descdiscordmsg", "send message ({0}) to Discord webhook ({1})", Message, WebhookURL);
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             string msg = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Message);

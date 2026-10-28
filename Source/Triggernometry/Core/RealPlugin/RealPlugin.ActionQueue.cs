@@ -64,17 +64,19 @@ namespace Triggernometry.Core
                 foreach (var qa in toRemove)
                     ActionQueue.Remove(qa);
 
-                foreach (var group in toRemove.Where(qa => qa.mutex != null)
-                    .GroupBy(qa => new { qa.mutex, qa.ctx.id }))
+                foreach (var group in toRemove.Where(qa => qa.Mutex != null)
+                    .GroupBy(qa => new { qa.Mutex, qa.Context.id }))
                 {
                     // Transfer the release to a surviving action, or finish the canceled chain.
-                    var last = ExecutingActions.Concat(ActionQueue).LastOrDefault(qa => qa.mutex == group.Key.mutex && qa.ctx.id == group.Key.id);
+                    var last = ExecutingActions.Concat(ActionQueue)
+                        .LastOrDefault(action => action.Mutex == group.Key.Mutex && action.Context.id == group.Key.id);
                     if (last != null)
                     {
-                        if (group.Any(qa => qa.releaseMutex)) last.releaseMutex = true;
+                        if (group.Any(action => action.ShouldReleaseMutex))
+                            last.ShouldReleaseMutex = true;
                     }
-                    else if (group.Any(qa => qa.releaseMutex || qa.ctx.Trigger.Sequential))
-                        group.Key.mutex.Release(group.First().ctx);
+                    else if (group.Any(action => action.ShouldReleaseMutex || action.Context.Trigger.Sequential))
+                        group.Key.Mutex.Release(group.First().Context);
                 }
                 if (removedCount > 0)
                     ActionUpdateEvent.Set();
@@ -84,7 +86,7 @@ namespace Triggernometry.Core
 
         /// <summary>Builds execution-local continuations and queues the first action or parallel batch.</summary>
         internal ActionInstance QueueActions(Context ctx, DateTime startingFrom, IEnumerable<ActionBase> actions, bool sequential,
-            MutexInformation mtx, Context.LoggerDelegate logger, ActionInstance loopParent = null)
+            MutexInfo mtx, Context.LoggerDelegate logger, ActionInstance loopParent = null)
         {
             var instances = new List<ActionInstance>();
             foreach (ActionBase action in actions)
@@ -103,9 +105,9 @@ namespace Triggernometry.Core
             {
                 try
                 {
-                    foreach (ActionInstance instance in instances)
+                    foreach (ActionInstance action in instances)
                     {
-                        if (QueueAction(instance)) lastQueued = instance;
+                        if (QueueAction(action)) lastQueued = action;
                         if (sequential) break;
                     }
                 }
@@ -114,16 +116,22 @@ namespace Triggernometry.Core
                     if (lastQueued != null)
                     {
                         // Transfer ownership before the worker can consume any of the new actions.
-                        lastQueued.releaseMutex = loopParent?.releaseMutex ?? true;
-                        if (loopParent != null) loopParent.releaseMutex = false;
-                        if (loopParent != null) instances[sequential ? instances.Count - 1 : instances.IndexOf(lastQueued)].IsLoopTail = true;
+                        lastQueued.ShouldReleaseMutex = loopParent?.ShouldReleaseMutex ?? true;
+                        if (loopParent != null) 
+                            loopParent.ShouldReleaseMutex = false;
+                        if (loopParent != null)
+                        {
+                            var index = sequential ? instances.Count - 1 : instances.IndexOf(lastQueued);
+                            instances[index].IsLoopTail = true;
+                        }
+                            
                     }
                 }
             }
             return lastQueued;
         }
 
-        public void QueueAction(Context ctx, Trigger trig, MutexInformation mutex, ActionBase action, DateTime when, bool releaseMutex)
+        public void QueueAction(Context ctx, Trigger trig, MutexInfo mutex, ActionBase action, DateTime when, bool releaseMutex)
         {
             var instance = new ActionInstance(when, 0, mutex, action, ctx, releaseMutex);
             if (!QueueAction(instance, trig) && releaseMutex && mutex != null) mutex.Release(ctx);
@@ -132,32 +140,32 @@ namespace Triggernometry.Core
         /// <summary>Queues an instance without releasing a rejected continuation's mutex.</summary>
         internal bool QueueAction(ActionInstance instance, Trigger trig = null)
         {
-            Context ctx = instance.ctx;
-            ActionBase action = instance.act;
+            Context ctx = instance.Context;
+            ActionBase action = instance.Action;
             trig = trig ?? ctx.Trigger;
             lock (ActionQueue)
             {
-                if (action.RefireRequeue == false || action.RefireInterrupt == true)
+                if (action.PreventDuplicateQueue || action.RefireInterrupt == true)
                 {
-                    if (ActionQueue.Any(actionInstance => actionInstance.act.Id == action.Id))
+                    if (ActionQueue.Any(actionInstance => actionInstance.Action.Id == action.Id))
                     {
                         if (action.RefireInterrupt == true)
                         {
-                            int removedCount = ActionQueue.RemoveAll(actionInstance => actionInstance.act.Id == action.Id);
+                            int removedCount = ActionQueue.RemoveAll(actionInstance => actionInstance.Action.Id == action.Id);
                             if (removedCount > 0)
                             {
                                 action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig.LogName, action.Describe()));
                             }
                         }
-                        if (action.RefireRequeue == false)
+                        if (action.PreventDuplicateQueue)
                         {
                             action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig.LogName, action.Describe()));
                             return false;
                         }
                     }
                 }
-                lock (this) instance.ordinal = curOrdinal++;
-                action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig.LogName, action.Describe(), FormatDateTime(instance.when), instance.ordinal));
+                lock (this) instance.QueueSequence = curOrdinal++;
+                action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig.LogName, action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
                 Context tagContext = instance.LoopContext ?? ctx;
                 var actionTag = tagContext.EvaluateStringExpression(null, tagContext, action.Tag);
                 if (!string.IsNullOrWhiteSpace(actionTag))
@@ -175,9 +183,10 @@ namespace Triggernometry.Core
                 return true;
             }
         }
+
         /// <summary>Converts legacy callers once before entering the typed action queue.</summary>
         [Obsolete("Use the typed action queue instead.")]
-        public void QueueAction(Context ctx, Trigger trig, MutexInformation mutex, ActionOld actionOld, DateTime when, bool releaseMutex)
+        public void QueueAction(Context ctx, Trigger trig, MutexInfo mutex, ActionOld actionOld, DateTime when, bool releaseMutex)
             => QueueAction(ctx, trig, mutex, actionOld.ConvertToNewAction(), when, releaseMutex);
 
         internal bool ReadyForOperation()
@@ -239,7 +248,7 @@ namespace Triggernometry.Core
                 ActionQueue.RemoveAt(0);
                 ExecutingActions.Add(instance);
             }
-            instance.act.Execute(instance, instance.ctx);
+            instance.Action.Execute(instance, instance.Context);
         }
 
         /// <summary>Returns the next wait duration, or an indefinite wait while paused or empty.</summary>
@@ -252,70 +261,67 @@ namespace Triggernometry.Core
                     if (!QueueProcessing) return Timeout.Infinite;
                 }
                 if (ActionQueue.Count == 0) return Timeout.Infinite;
-                return Math.Max(0, (int)Math.Ceiling((ActionQueue[0].when - DateTime.Now).TotalMilliseconds));
+                return Math.Max(0, (int)Math.Ceiling((ActionQueue[0].ExecuteAt - DateTime.Now).TotalMilliseconds));
             }
         }
 
 
         #region Mutex
 
-        internal Dictionary<string, MutexInformation> mutexes = new Dictionary<string, MutexInformation>();
+        internal Dictionary<string, MutexInfo> mutexes = new Dictionary<string, MutexInfo>();
 
         internal class MutexTicket : IDisposable
         {
 
-            internal Context ctx { get; set; }
-            internal ManualResetEvent ev { get; set; }
+            internal Context Context { get; set; }
+            internal ManualResetEvent ResetEvent { get; set; }
 
             internal MutexTicket(Context c)
             {
-                ctx = c;
-                ev = new ManualResetEvent(false);
+                Context = c;
+                ResetEvent = new ManualResetEvent(false);
             }
 
             public void Dispose()
             {
-                ev?.Dispose();
-                ev = null;
+                ResetEvent?.Dispose();
+                ResetEvent = null;
             }
 
         }
 
-        public class MutexInformation
+        public class MutexInfo
         {
 
-            private string name { get; set; }
-            internal int refCount { get; set; }
-            internal Context heldBy { get; set; }
-            internal List<MutexTicket> acquireQueue { get; set; }
+            private string Name { get; set; }
+            internal int RefCount { get; set; } = 0;
+            internal Context OwnerContext { get; set; } = null;
+            internal List<MutexTicket> AcquireQueue { get; set; } = new List<MutexTicket>();
 
-            internal MutexInformation(string name)
+            internal MutexInfo(string name)
             {
-                this.name = name;
-                refCount = 0;
-                heldBy = null;
-                acquireQueue = new List<MutexTicket>();
+                Name = name;
             }
 
             internal MutexTicket QueueForAcquisition(Context ctx)
             {
-                System.Diagnostics.Debug.WriteLine("### {0} - Queuing acquisition for context: {1}", name, ctx.ToString());
+                // System.Diagnostics.Debug.WriteLine("### {0} - Queuing acquisition for context: {1}", Name, ctx.ToString());
                 MutexTicket m = new MutexTicket(ctx);
                 lock (this)
                 {
-                    acquireQueue.Add(m);
+                    AcquireQueue.Add(m);
                 }
-                System.Diagnostics.Debug.WriteLine("### {0} - Queued acquisition {1} for context: {2}", name, m.GetHashCode(), ctx.ToString());
+                // System.Diagnostics.Debug.WriteLine("### {0} - Queued acquisition {1} for context: {2}", Name, m.GetHashCode(), ctx.ToString());
                 return m;
             }
 
             internal void Acquire(Context ctx)
             {
-                System.Diagnostics.Debug.WriteLine("### {0} - Acquiring for context: {1}", name, ctx.ToString());
+                // System.Diagnostics.Debug.WriteLine("### {0} - Acquiring for context: {1}", Name, ctx.ToString());
                 using (MutexTicket m = QueueForAcquisition(ctx))
                 {
                     Acquire(ctx, m);
-                    System.Diagnostics.Debug.WriteLine("### {0} - Acquired {1} for context: {2}", name, m.GetHashCode(), ctx.ToString());
+                    // System.Diagnostics.Debug.WriteLine("### {0} - Acquired {1} for context: {2}", Name, m.GetHashCode(), ctx.ToString());
                 }
             }
 
@@ -324,24 +330,24 @@ namespace Triggernometry.Core
                 DateTime start = DateTime.Now;
                 string ownername = "";
                 bool autoget = false;
-                System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 1 for context: {2}", name, m.GetHashCode(), ctx.ToString());
+                System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 1 for context: {2}", Name, m.GetHashCode(), ctx.ToString());
                 lock (this)
                 {
-                    if (heldBy == null)
+                    if (OwnerContext == null)
                     {
-                        MutexTicket first = acquireQueue.ElementAt(0);
+                        MutexTicket first = AcquireQueue.ElementAt(0);
                         if (first == m)
                         {
-                            m.ev.Set();
-                            refCount++;
-                            heldBy = ctx;
+                            m.ResetEvent.Set();
+                            RefCount++;
+                            OwnerContext = ctx;
                             autoget = true;
                         }
                     }
-                    else if (heldBy.id == ctx.id)
+                    else if (OwnerContext.id == ctx.id)
                     {
-                        m.ev.Set();
-                        refCount++;
+                        m.ResetEvent.Set();
+                        RefCount++;
                         autoget = true;
                     }
                     else
@@ -349,91 +355,91 @@ namespace Triggernometry.Core
                     }
                     if (autoget == false)
                     {
-                        ownername = heldBy != null ? heldBy.ToString() : null;
+                        ownername = OwnerContext != null ? OwnerContext.ToString() : null;
                     }
                 }
-                while (m.ev.WaitOne(5000) == false)
+                while (m.ResetEvent.WaitOne(5000) == false)
                 {
                     if (ctx.Plugin != null)
                     {
-                        ctx.Plugin.FilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Plugin/mutexdelayed", "Context '{0}' has been waiting for mutex '{1}' on {2} for {3} ms, current owner is '{4}'", ctx.ToString(), name, m.GetHashCode(), (DateTime.Now - start).TotalMilliseconds, ownername));
+                        ctx.Plugin.FilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Plugin/mutexdelayed", "Context '{0}' has been waiting for mutex '{1}' on {2} for {3} ms, current owner is '{4}'", ctx.ToString(), Name, m.GetHashCode(), (DateTime.Now - start).TotalMilliseconds, ownername));
                     }
                 }
-                System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 2 for context: {2}", name, m.GetHashCode(), ctx.ToString());
+                System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 2 for context: {2}", Name, m.GetHashCode(), ctx.ToString());
                 lock (this)
                 {
-                    System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 3 for context: {2}", name, m.GetHashCode(), ctx.ToString());
-                    acquireQueue.Remove(m);
+                    System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 3 for context: {2}", Name, m.GetHashCode(), ctx.ToString());
+                    AcquireQueue.Remove(m);
                     if (autoget == false)
                     {
-                        if (heldBy != null)
+                        if (OwnerContext != null)
                         {
-                            throw new InvalidOperationException(I18n.Translate("internal/Plugin/invalidacquiremutex", "Tried to acquire mutex '{0}' belonging to context '{1}' on context '{2}'", name, heldBy.ToString(), ctx.ToString()));
+                            throw new InvalidOperationException(I18n.Translate("internal/Plugin/invalidacquiremutex", "Tried to acquire mutex '{0}' belonging to context '{1}' on context '{2}'", Name, OwnerContext.ToString(), ctx.ToString()));
                         }
-                        heldBy = ctx;
-                        refCount++;
-                        System.Diagnostics.Debug.WriteLine("### {0} - New acquisition {1} for context: {2}", name, m.GetHashCode(), ctx.ToString());
+                        OwnerContext = ctx;
+                        RefCount++;
+                        System.Diagnostics.Debug.WriteLine("### {0} - New acquisition {1} for context: {2}", Name, m.GetHashCode(), ctx.ToString());
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("### {0} - Autoget acquisition {1} for context: {2}", name, m.GetHashCode(), ctx.ToString());
+                        System.Diagnostics.Debug.WriteLine("### {0} - Autoget acquisition {1} for context: {2}", Name, m.GetHashCode(), ctx.ToString());
                     }
                 }
-                System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 4 for context: {2}", name, m.GetHashCode(), ctx.ToString());
+                System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 4 for context: {2}", Name, m.GetHashCode(), ctx.ToString());
             }
 
             internal void Release(Context ctx)
             {
-                System.Diagnostics.Debug.WriteLine("### {0} - Releasing for context: {1}", name, ctx.ToString());
+                // System.Diagnostics.Debug.WriteLine("### {0} - Releasing for context: {1}", Name, ctx.ToString());
                 lock (this)
                 {
-                    if (heldBy == null || heldBy.id != ctx.id)
+                    if (OwnerContext == null || OwnerContext.id != ctx.id)
                     {
-                        throw new InvalidOperationException(I18n.Translate("internal/Plugin/releaseunownedmutex", "Tried to release unowned mutex '{0}' from context '{1}'", name, ctx.ToString()));
+                        throw new InvalidOperationException(I18n.Translate("internal/Plugin/releaseunownedmutex", "Tried to release unowned mutex '{0}' from context '{1}'", Name, ctx.ToString()));
                     }
-                    refCount--;
-                    if (refCount == 0)
+                    RefCount--;
+                    if (RefCount == 0)
                     {
-                        System.Diagnostics.Debug.WriteLine("### {0} - Fully released by context: {1}", name, ctx.ToString());
-                        heldBy = null;
+                        System.Diagnostics.Debug.WriteLine("### {0} - Fully released by context: {1}", Name, ctx.ToString());
+                        OwnerContext = null;
                         WakeupNext();
                     }
                 }
-                System.Diagnostics.Debug.WriteLine("### {0} - Released for context: {1}", name, ctx.ToString());
+                // System.Diagnostics.Debug.WriteLine("### {0} - Released for context: {1}", Name, ctx.ToString());
             }
 
             internal void ForceRelease()
             {
-                System.Diagnostics.Debug.WriteLine("### {0} - Releasing by force", name);
+                // System.Diagnostics.Debug.WriteLine("### {0} - Releasing by force", Name);
                 lock (this)
                 {
-                    refCount = 0;
-                    heldBy = null;
+                    RefCount = 0;
+                    OwnerContext = null;
                     WakeupNext();
                 }
-                System.Diagnostics.Debug.WriteLine("### {0} - Released by force", name);
+                // System.Diagnostics.Debug.WriteLine("### {0} - Released by force", Name);
             }
 
             private void WakeupNext()
             {
-                if (acquireQueue.Count > 0)
+                if (AcquireQueue.Count > 0)
                 {
-                    MutexTicket m = acquireQueue.ElementAt(0);
-                    System.Diagnostics.Debug.WriteLine("### {0} - Waking up next context in queue : {1}", name, m.ctx.ToString());
-                    m.ev.Set();
+                    MutexTicket m = AcquireQueue.ElementAt(0);
+                    System.Diagnostics.Debug.WriteLine("### {0} - Waking up next context in queue : {1}", Name, m.Context.ToString());
+                    m.ResetEvent.Set();
                 }
             }
 
         }
 
-        internal MutexInformation GetMutex(string name)
+        internal MutexInfo GetMutex(string name)
         {
-            MutexInformation mi = null;
+            MutexInfo mi = null;
             lock (mutexes)
             {
                 if (mutexes.ContainsKey(name) == false)
                 {
-                    mutexes[name] = new MutexInformation(name);
+                    mutexes[name] = new MutexInfo(name);
                 }
                 mi = mutexes[name];
             }

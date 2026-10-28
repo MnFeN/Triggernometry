@@ -6,6 +6,8 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
+using Triggernometry.UI.CustomControls;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -13,7 +15,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// JSON remote request
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Networking)]
+    [Action("Generic JSON operation", ActionAttribute.CategoryType.ExternalInteraction)]
     [XmlRoot(ElementName = "ActionJsonRequest")]
     public class ActionJsonRequest : ActionBase
     {
@@ -32,7 +34,8 @@ namespace Triggernometry.Core.Actions
         /// Remote endpoint expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, Label = "Endpoint URL")]
         public string Endpoint { get; set; } = "";
 
         [XmlAttribute("Endpoint")]
@@ -46,7 +49,13 @@ namespace Triggernometry.Core.Actions
         /// Request method to use
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(2, Label = "HTTP method",
+            ChoiceLabels = new[]
+        {
+            "POST",
+            "GET",
+        })]
         public MethodEnum Method { get; set; } = MethodEnum.POST;
 
         [XmlAttribute("Method")]
@@ -60,7 +69,8 @@ namespace Triggernometry.Core.Actions
         /// Payload expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, Label = "Payload to send")]
         public string Payload { get; set; } = "";
 
         [XmlAttribute("Payload")]
@@ -74,7 +84,8 @@ namespace Triggernometry.Core.Actions
         /// Header expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(4, Label = "Headers to send")]
         public string Headers { get; set; } = "";
 
         [XmlAttribute("Headers")]
@@ -88,7 +99,8 @@ namespace Triggernometry.Core.Actions
         /// Scalar variable in which the result of the request will be stored
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(5, Label = "Variable to store response to", Autofill = EditorAutofillType.Scalar)]
         public string ResultVariable { get; set; } = "";
 
         [XmlAttribute("ResultVariable")]
@@ -102,7 +114,8 @@ namespace Triggernometry.Core.Actions
         /// Expression to be used when the result of the request is intended to be fired as a log event
         /// </summary>
         [XmlIgnore]
-        [Action(order: 6)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(7, Label = "Response firing expression")]
         public string FiringExpression { get; set; } = "";
 
         [XmlAttribute("FiringExpression")]
@@ -116,7 +129,8 @@ namespace Triggernometry.Core.Actions
         /// If set, Triggernometry will check its cache for a similar request and return that
         /// </summary>
         [XmlIgnore]
-        [Action(order: 7)]
+        [ActionSpecificProperty]
+        [CheckBoxEditor(8, Label = "Cache response on disk")]
         public bool UseCache { get; set; } = false;
 
         [XmlAttribute("UseCache")]
@@ -130,7 +144,8 @@ namespace Triggernometry.Core.Actions
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
         [XmlIgnore]
-        [Action(order: 8)] // todo need to couple this with variable on editor
+        [ActionSpecificProperty]
+        [PersistenceEditor(6, nameof(ResultVariable), Label = "Variable to store response to")]
         public bool Persistent { get; set; } = false;
 
         [XmlAttribute("Persistent")]
@@ -142,6 +157,13 @@ namespace Triggernometry.Core.Actions
 
         #endregion
 
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var method = editor.GetEditor(nameof(Method));
+            var json = editor.GetEditor(nameof(Payload));
+            return () => editor.SetEnabled((MethodEnum)method.GetValue() == MethodEnum.POST, json);
+        }
 
         #region Implementation
 
@@ -166,9 +188,8 @@ namespace Triggernometry.Core.Actions
             }
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             string response = "";
@@ -195,7 +216,7 @@ namespace Triggernometry.Core.Actions
                     Directory.CreateDirectory(fn);
                 }
                 fn = Path.Combine(fn, fh + ".json");
-                bool fromcache = false;
+                bool isFromCache = false;
                 if (File.Exists(fn) == true)
                 {
                     FileInfo fi = new FileInfo(fn);
@@ -204,10 +225,10 @@ namespace Triggernometry.Core.Actions
                     {
                         responseCode = (int)HttpStatusCode.OK;
                         response = File.ReadAllText(fn);
-                        fromcache = true;
+                        isFromCache = true;
                     }
                 }
-                if (fromcache == false)
+                if (isFromCache == false)
                 {
                     Tuple<int, string> resp = SendJson(ctx, Method, endpoint, payload, headerslist, false);
                     responseCode = resp.Item1;

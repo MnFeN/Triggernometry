@@ -1697,7 +1697,7 @@ namespace Triggernometry.UI.Forms
                 {
                     return;
                 }
-                KeyValuePair<string, RealPlugin.MutexInformation> kp = plug.mutexes.ElementAt(e.RowIndex);
+                KeyValuePair<string, RealPlugin.MutexInfo> kp = plug.mutexes.ElementAt(e.RowIndex);
                 lock (kp.Value)
                 {
                     switch (e.ColumnIndex)
@@ -1706,17 +1706,17 @@ namespace Triggernometry.UI.Forms
                             e.Value = kp.Key;
                             break;
                         case 1:
-                            e.Value = kp.Value.heldBy != null ? kp.Value.heldBy.ToString() : "Not owned";
+                            e.Value = kp.Value.OwnerContext != null ? kp.Value.OwnerContext.ToString() : "Not owned";
                             break;
                         case 2:
-                            e.Value = kp.Value.refCount.ToString();
+                            e.Value = kp.Value.RefCount.ToString();
                             break;
                         case 3:
                             {
                                 List<string> acx = new List<string>();
-                                foreach (RealPlugin.MutexTicket m in kp.Value.acquireQueue)
+                                foreach (RealPlugin.MutexTicket m in kp.Value.AcquireQueue)
                                 {
-                                    acx.Add(m.ctx.ToString());
+                                    acx.Add(m.Context.ToString());
                                 }
                                 e.Value = string.Join(", ", acx);
                             }

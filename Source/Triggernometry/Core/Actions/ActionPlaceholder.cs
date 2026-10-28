@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -8,7 +9,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Placeholder (noop)
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
+    [Action("Placeholder", ActionAttribute.CategoryType.Placeholder)]
     [XmlRoot(ElementName = "ActionPlaceholder")]
     public class ActionPlaceholder : ActionBase
     {
@@ -20,7 +21,7 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/descplaceholder", "Placeholder");
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
             // nothing to execute            
         }

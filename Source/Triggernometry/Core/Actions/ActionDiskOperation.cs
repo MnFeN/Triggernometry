@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -15,7 +16,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// File system operations
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.File)]
+    [Action("File operation", ActionAttribute.CategoryType.SystemInteraction)]
     [XmlRoot(ElementName = "ActionDiskOperation")]
     public class ActionDiskOperation : ActionBase
     {
@@ -45,7 +46,14 @@ namespace Triggernometry.Core.Actions
         /// Type of the file system operation
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Operation type",
+            ChoiceLabels = new[]
+        {
+            "Read file into scalar variable",
+            "Read file lines into list variable",
+            "Read CSV file into table variable",
+        })]
         public OperationEnum Operation { get; set; } = OperationEnum.ReadIntoVariable;
 
         [XmlAttribute("Operation")]
@@ -59,7 +67,8 @@ namespace Triggernometry.Core.Actions
         /// File name
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2, specialtype: ActionAttribute.SpecialTypeEnum.FileSelector)]
+        [ActionSpecificProperty]
+        [FileEditor(2, EditorFileType.Any, Label = "File name")]
         public string Filename { get; set; } = "";
 
         [XmlAttribute("Filename")]
@@ -73,7 +82,8 @@ namespace Triggernometry.Core.Actions
         /// Target variable name
         /// </summary>
         [XmlIgnore]
-        [Action(order: 3)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, Label = "Variable name")]
         public string Variable { get; set; } = "";
 
         [XmlAttribute("Variable")]
@@ -87,7 +97,8 @@ namespace Triggernometry.Core.Actions
         /// If set, instructs Triggernometry to look at its own cache first for the file, reading that instead if found (applies to remote files)
         /// </summary>
         [XmlIgnore]
-        [Action(order: 4)]
+        [ActionSpecificProperty]
+        [CheckBoxEditor(5, Label = "Cache file on disk")]
         public bool UseCache { get; set; } = false;
 
         [XmlAttribute("UseCache")]
@@ -101,7 +112,8 @@ namespace Triggernometry.Core.Actions
         /// Indicates whether referenced variable is persistent or not
         /// </summary>
         [XmlIgnore]
-        [Action(order: 5)] // todo need to couple this with variable on editor
+        [ActionSpecificProperty]
+        [PersistenceEditor(4, nameof(Variable), Label = "Variable name")]
         public bool Persistent { get; set; } = false;
 
         [XmlAttribute("Persistent")]
@@ -145,9 +157,8 @@ namespace Triggernometry.Core.Actions
             }
         }        
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             string filename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Filename);
@@ -169,7 +180,7 @@ namespace Triggernometry.Core.Actions
                     }
                     string ext = Path.GetExtension(u.LocalPath);
                     fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
-                    bool fromcache = false;
+                    bool isFromCache = false;
                     if (File.Exists(fn) == true && UseCache == true)
                     {
                         FileInfo fi = new FileInfo(fn);
@@ -177,10 +188,10 @@ namespace Triggernometry.Core.Actions
                         if (fi.LastWriteTime > dt)
                         {
                             filename = fn;
-                            fromcache = true;
+                            isFromCache = true;
                         }
                     }
-                    if (fromcache == false)
+                    if (isFromCache == false)
                     {
                         using (WebClient wc = new WebClient())
                         {

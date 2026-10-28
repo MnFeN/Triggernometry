@@ -14,6 +14,23 @@ namespace Triggernometry.UI.CustomControls
 
     public partial class ColorSelector : UserControl
     {
+        private Font sampleFont;
+
+        /// <summary>由控件持有并负责释放的独立预览字体。</summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Font SampleFont
+        {
+            get => sampleFont ?? Font;
+            set
+            {
+                if (sampleFont == value) return;
+                sampleFont?.Dispose();
+                sampleFont = value;
+                Invalidate();
+            }
+        }
+
         public bool ChangeTextColor { get; set; }
 
         internal Color _textColor;
@@ -66,59 +83,61 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        private StringFormat sf = null;
-        private SolidBrush Brush = null;
+        private StringFormat stringFormat = null;
+        private SolidBrush brush = null;
 
         public ColorSelector()
         {
             InitializeComponent();
+            DoubleBuffered = true;
             Disposed += ColorSelector_Disposed;
-            Brush = new SolidBrush(Color.Black);
-            sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
-            sf.LineAlignment = StringAlignment.Center;
+            brush = new SolidBrush(Color.Black);
+            stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
         }
 
+        /// <summary>释放预览字体、画刷和文本格式资源。</summary>
         private void ColorSelector_Disposed(object sender, EventArgs e)
         {
-            if (Brush != null)
-            {
-                Brush.Dispose();
-                Brush = null;
-            }
-            if (sf != null)
-            {
-                sf.Dispose();
-                sf = null;
-            }
+            sampleFont?.Dispose();
+            sampleFont = null;
+            brush?.Dispose();
+            brush = null;
+            stringFormat?.Dispose();
+            stringFormat = null;
         }
 
+        /// <summary>绘制当前字体的颜色和描边预览。</summary>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             Graphics gr = e.Graphics;
-            gr.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            // 使用 ClearType 呈现小字号字体的平滑笔画。
+            gr.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             Rectangle r = new Rectangle(ClientRectangle.Location, ClientRectangle.Size);
             r.Width -= button1.Width;
             string smpl = I18n.Translate("internal/ColorSelector/sample", "Sample");
             if (ChangeTextOutlineColor == true)
             {
-                Brush.Color = TextOutlineColor;
+                brush.Color = TextOutlineColor;
                 r.Y -= 1;
-                gr.DrawString(smpl, Font, Brush, r, sf);
+                gr.DrawString(smpl, SampleFont, brush, r, stringFormat);
                 r.Y += 2;
-                gr.DrawString(smpl, Font, Brush, r, sf);
+                gr.DrawString(smpl, SampleFont, brush, r, stringFormat);
                 r.Y -= 1;
                 r.X -= 1;
-                gr.DrawString(smpl, Font, Brush, r, sf);
+                gr.DrawString(smpl, SampleFont, brush, r, stringFormat);
                 r.X += 2;
-                gr.DrawString(smpl, Font, Brush, r, sf);
+                gr.DrawString(smpl, SampleFont, brush, r, stringFormat);
                 r.X -= 1;
             }
             if (ChangeTextColor == true)
             {
-                Brush.Color = TextColor;
-                gr.DrawString(smpl, Font, Brush, r, sf);
+                brush.Color = TextColor;
+                gr.DrawString(smpl, SampleFont, brush, r, stringFormat);
             }
         }
 

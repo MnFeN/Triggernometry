@@ -31,7 +31,7 @@ namespace Triggernometry.UI.Forms
         const int ResizeThreshold = 10;
 
         internal AuraContainerForm.AuraTypeEnum AuraType { get; set; }
-        internal Core.Actions.ActionOverlayText.TextAlignmentEnum TextAlignment { get; set; }
+        internal Core.Actions.ActionOverlayText.TextAlignment TextAlignment { get; set; }
         internal Font AuraFont { get; set; }
 
         internal SolidBrush Brush = null;
@@ -137,6 +137,7 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>根据当前设计模式与文本样式更新右键菜单。</summary>
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             switch (AuraType)
@@ -166,31 +167,31 @@ namespace Triggernometry.UI.Forms
                     {
                         switch (TextAlignment)
                         {
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopLeft:
+                            case Core.Actions.ActionOverlayText.TextAlignment.TopLeft:
                                 topLeftToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopCenter:
+                            case Core.Actions.ActionOverlayText.TextAlignment.TopCenter:
                                 topCenterToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopRight:
+                            case Core.Actions.ActionOverlayText.TextAlignment.TopRight:
                                 topRightToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleLeft:
+                            case Core.Actions.ActionOverlayText.TextAlignment.MiddleLeft:
                                 middleLeftToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleCenter:
+                            case Core.Actions.ActionOverlayText.TextAlignment.MiddleCenter:
                                 middleCenterToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleRight:
+                            case Core.Actions.ActionOverlayText.TextAlignment.MiddleRight:
                                 middleRightToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomLeft:
+                            case Core.Actions.ActionOverlayText.TextAlignment.BottomLeft:
                                 bottomLeftToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomCenter:
+                            case Core.Actions.ActionOverlayText.TextAlignment.BottomCenter:
                                 bottomCenterToolStripMenuItem.Checked = true;
                                 break;
-                            case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomRight:
+                            case Core.Actions.ActionOverlayText.TextAlignment.BottomRight:
                                 bottomRightToolStripMenuItem.Checked = true;
                                 break;
                         }
@@ -212,11 +213,12 @@ namespace Triggernometry.UI.Forms
 
         }
 
+        /// <summary>将文本对齐方式切换为左上，并同步菜单勾选状态。</summary>
         private void topLeftToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (topLeftToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.TopLeft;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.TopLeft;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
                 middleLeftToolStripMenuItem.Checked = false;
@@ -229,11 +231,12 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>将文本对齐方式切换为顶部居中，并同步菜单勾选状态。</summary>
         private void topCenterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (topCenterToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.TopCenter;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.TopCenter;
                 topLeftToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
                 middleLeftToolStripMenuItem.Checked = false;
@@ -246,11 +249,12 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>将文本对齐方式切换为右上，并同步菜单勾选状态。</summary>
         private void topRightToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (topRightToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.TopRight;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.TopRight;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 middleLeftToolStripMenuItem.Checked = false;
@@ -263,11 +267,12 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>将文本对齐方式切换为左侧居中，并同步菜单勾选状态。</summary>
         private void middleLeftToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (middleLeftToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleLeft;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.MiddleLeft;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -280,11 +285,12 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>将文本对齐方式切换为居中，并同步菜单勾选状态。</summary>
         private void middleCenterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (middleCenterToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleCenter;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.MiddleCenter;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -297,11 +303,12 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>将文本对齐方式切换为右侧居中，并同步菜单勾选状态。</summary>
         private void middleRightToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (middleRightToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleRight;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.MiddleRight;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -314,11 +321,12 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>将文本对齐方式切换为左下，并同步菜单勾选状态。</summary>
         private void bottomLeftToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (bottomLeftToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomLeft;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.BottomLeft;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -331,11 +339,12 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>将文本对齐方式切换为底部居中，并同步菜单勾选状态。</summary>
         private void bottomCenterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (bottomCenterToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomCenter;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.BottomCenter;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -348,11 +357,12 @@ namespace Triggernometry.UI.Forms
             }
         }
 
+        /// <summary>将文本对齐方式切换为右下，并同步菜单勾选状态。</summary>
         private void bottomRightToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (bottomRightToolStripMenuItem.Checked == true)
             {
-                TextAlignment = Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomRight;
+                TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.BottomRight;
                 topLeftToolStripMenuItem.Checked = false;
                 topCenterToolStripMenuItem.Checked = false;
                 topRightToolStripMenuItem.Checked = false;
@@ -395,6 +405,7 @@ namespace Triggernometry.UI.Forms
             hb.Dispose();
         }
 
+        /// <summary>绘制设计器中的文本、描边和对齐预览。</summary>
         internal void PaintText(Graphics gr)
         {                        
             using (StringFormat sf = new StringFormat())
@@ -402,39 +413,39 @@ namespace Triggernometry.UI.Forms
                 Rectangle r = new Rectangle(ClientRectangle.Location, ClientRectangle.Size);
                 switch (TextAlignment)
                 {
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopLeft:
+                    case Core.Actions.ActionOverlayText.TextAlignment.TopLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Near;                        
                         break;
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopCenter:
+                    case Core.Actions.ActionOverlayText.TextAlignment.TopCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.TopRight:
+                    case Core.Actions.ActionOverlayText.TextAlignment.TopRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Near;
                         break;
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleLeft:
+                    case Core.Actions.ActionOverlayText.TextAlignment.MiddleLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleCenter:
+                    case Core.Actions.ActionOverlayText.TextAlignment.MiddleCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.MiddleRight:
+                    case Core.Actions.ActionOverlayText.TextAlignment.MiddleRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Center;
                         break;
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomLeft:
+                    case Core.Actions.ActionOverlayText.TextAlignment.BottomLeft:
                         sf.Alignment = StringAlignment.Near;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomCenter:
+                    case Core.Actions.ActionOverlayText.TextAlignment.BottomCenter:
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Far;
                         break;
-                    case Core.Actions.ActionOverlayText.TextAlignmentEnum.BottomRight:
+                    case Core.Actions.ActionOverlayText.TextAlignment.BottomRight:
                         sf.Alignment = StringAlignment.Far;
                         sf.LineAlignment = StringAlignment.Far;
                         break;

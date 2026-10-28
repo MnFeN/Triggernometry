@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -10,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Message box
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
+    [Action("Show message box", ActionAttribute.CategoryType.Display)]
     [XmlRoot(ElementName = "ActionMessageBox")]
     public class ActionMessageBox : ActionBase
     {
@@ -35,7 +36,16 @@ namespace Triggernometry.Core.Actions
         /// Icon to display on message box
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [EnumChoiceEditor(1, Label = "Message box icon",
+            ChoiceLabels = new[]
+        {
+            "None",
+            "Error",
+            "Question",
+            "Warning",
+            "Information",
+        }, ChoiceValues = new[] { 0, 16, 32, 48, 64 })]
         public MessageBoxIconEnum Icon { get; set; } = MessageBoxIconEnum.None;
 
         [XmlAttribute("Icon")]
@@ -49,7 +59,8 @@ namespace Triggernometry.Core.Actions
         /// Text to display on message box
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "Text to display")]
         public string Text { get; set; } = "";
 
         [XmlAttribute("Text")]
@@ -71,9 +82,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate($"internal/Action/descmsgbox{Icon}", "show a message box saying ({0}) with icon (" + Icon.ToString() + ")", Text);
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             Form activeForm = Form.ActiveForm;

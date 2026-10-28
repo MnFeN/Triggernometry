@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Utilities;
 
 namespace Triggernometry.Core.Actions
 {
@@ -10,7 +11,7 @@ namespace Triggernometry.Core.Actions
     /// <summary>
     /// Script execution
     /// </summary>
-    [ActionCategory(ActionCategory.CategoryTypeEnum.Programming)]
+    [Action("Execute script", ActionAttribute.CategoryType.Programming)]
     [XmlRoot(ElementName = "ActionExecuteScript")]
     public class ActionExecuteScript : ActionBase
     {
@@ -21,7 +22,8 @@ namespace Triggernometry.Core.Actions
         /// Comma-separated list of referenced assemblies
         /// </summary>
         [XmlIgnore]
-        [Action(order: 1)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(2, Label = "List of assemblies to reference")]
         public string Assemblies { get; set; } = "";
 
         [XmlAttribute("Assemblies")]
@@ -35,7 +37,8 @@ namespace Triggernometry.Core.Actions
         /// Script code expression
         /// </summary>
         [XmlIgnore]
-        [Action(order: 2)]
+        [ActionSpecificProperty]
+        [ExpressionEditor(1, Label = "Script code")]
         public string Script { get; set; } = "";
 
         [XmlAttribute("Script")]
@@ -55,9 +58,8 @@ namespace Triggernometry.Core.Actions
             return I18n.Translate("internal/Action/descexecscript", "execute C# script");
         }
 
-        internal override void ExecuteImplementation(ActionInstance ai)
+        internal override void ExecuteImplementation(Context ctx)
         {
-            Context ctx = ai?.ctx ?? Context.Unbound;
             RealPlugin plug = ctx.Plugin;
 
             string scp = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Script);

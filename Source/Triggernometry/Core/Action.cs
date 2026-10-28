@@ -223,7 +223,8 @@ namespace Triggernometry.Core
             action.Condition = (ConditionGroup)Condition?.Duplicate();
             action.Tag = Tag;
             action.RefireInterrupt = RefireInterrupt;
-            action.RefireRequeue = RefireRequeue;
+            // Legacy XML uses the opposite (allow requeue) logic.
+            action.PreventDuplicateQueue = !RefireRequeue;
             action.ExecutionDelayExpression = ExecutionDelayExpression;
             action.Asynchronous = Asynchronous;
             action.DebugLevel = DebugLevel;
@@ -237,64 +238,64 @@ namespace Triggernometry.Core
         {
             switch (ActionType)
             {
-                case ActionTypeEnum.ActInteraction:
-                    return (ActionActInteraction)this;
                 case ActionTypeEnum.SystemBeep:
                     return (ActionBeep)this;
-                case ActionTypeEnum.DiscordWebhook:
-                    return (ActionDiscordWebhook)this;
-                case ActionTypeEnum.DiskFile:
-                    return (ActionDiskOperation)this;
-                case ActionTypeEnum.ExecuteScript:
-                    return (ActionExecuteScript)this;
-                case ActionTypeEnum.Folder:
-                    return (ActionFolderOperation)this;
-                case ActionTypeEnum.GenericJson:
-                    return (ActionJsonRequest)this;
-                case ActionTypeEnum.KeyPress:
-                    return (ActionKeypress)this;
-                case ActionTypeEnum.LaunchProcess:
-                    return (ActionLaunchProcess)this;
-                case ActionTypeEnum.LiveSplitControl:
-                    return (ActionLiveSplitControl)this;
-                case ActionTypeEnum.LogMessage:
-                    return (ActionLogMessage)this;
-                case ActionTypeEnum.Loop:
-                    return (ActionLoop)this;
-                case ActionTypeEnum.MessageBox:
-                    return (ActionMessageBox)this;
-                case ActionTypeEnum.Mouse:
-                    return (ActionMouse)this;
-                case ActionTypeEnum.Mutex:
-                    return (ActionMutex)this;
-                case ActionTypeEnum.NamedCallback:
-                    return (ActionNamedCallback)this;
-                case ActionTypeEnum.ObsControl:
-                    return (ActionObsControl)this;
-                case ActionTypeEnum.Aura:
-                    return (ActionOverlayImage)this;
-                case ActionTypeEnum.TextAura:
-                    return (ActionOverlayText)this;
-                case ActionTypeEnum.Placeholder:
-                    return (ActionPlaceholder)this;
                 case ActionTypeEnum.PlaySound:
                     return (ActionPlaySound)this;
                 case ActionTypeEnum.UseTTS:
                     return (ActionPlaySpeech)this;
-                case ActionTypeEnum.Repository:
-                    return (ActionRepository)this;
-                case ActionTypeEnum.Trigger:
-                    return (ActionTriggerOperation)this;
-                case ActionTypeEnum.DictVariable:
-                    return (ActionVariableDict)this;
-                case ActionTypeEnum.ListVariable:
-                    return (ActionVariableList)this;
+                case ActionTypeEnum.MessageBox:
+                    return (ActionMessageBox)this;
+                case ActionTypeEnum.TextAura:
+                    return (ActionOverlayText)this;
+                case ActionTypeEnum.Aura:
+                    return (ActionOverlayImage)this;
                 case ActionTypeEnum.Variable:
                     return (ActionVariableScalar)this;
+                case ActionTypeEnum.ListVariable:
+                    return (ActionVariableList)this;
                 case ActionTypeEnum.TableVariable:
                     return (ActionVariableTable)this;
+                case ActionTypeEnum.DictVariable:
+                    return (ActionVariableDict)this;
+                case ActionTypeEnum.LogMessage:
+                    return (ActionLogMessage)this;
+                case ActionTypeEnum.NamedCallback:
+                    return (ActionNamedCallback)this;
+                case ActionTypeEnum.ExecuteScript:
+                    return (ActionExecuteScript)this;
+                case ActionTypeEnum.Loop:
+                    return (ActionLoop)this;
+                case ActionTypeEnum.Mutex:
+                    return (ActionMutex)this;
+                case ActionTypeEnum.Trigger:
+                    return (ActionTriggerOperation)this;
+                case ActionTypeEnum.Folder:
+                    return (ActionFolderOperation)this;
+                case ActionTypeEnum.Repository:
+                    return (ActionRepository)this;
+                case ActionTypeEnum.Mouse:
+                    return (ActionMouse)this;
+                case ActionTypeEnum.KeyPress:
+                    return (ActionKeypress)this;
                 case ActionTypeEnum.WindowMessage:
                     return (ActionWindowMessage)this;
+                case ActionTypeEnum.LaunchProcess:
+                    return (ActionLaunchProcess)this;
+                case ActionTypeEnum.DiskFile:
+                    return (ActionDiskOperation)this;
+                case ActionTypeEnum.ActInteraction:
+                    return (ActionActInteraction)this;
+                case ActionTypeEnum.GenericJson:
+                    return (ActionJsonRequest)this;
+                case ActionTypeEnum.DiscordWebhook:
+                    return (ActionDiscordWebhook)this;
+                case ActionTypeEnum.ObsControl:
+                    return (ActionObsControl)this;
+                case ActionTypeEnum.LiveSplitControl:
+                    return (ActionLiveSplitControl)this;
+                case ActionTypeEnum.Placeholder:
+                    return (ActionPlaceholder)this;
 
                 default:
                     throw new NotSupportedException(I18n.Translate("internal/Action/unknowntype", "Unknown ActionType: {0}", ActionType));
