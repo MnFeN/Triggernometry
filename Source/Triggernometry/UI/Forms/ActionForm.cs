@@ -46,6 +46,7 @@ namespace Triggernometry.UI.Forms
             typeof(ActionWindowMessage),
             typeof(ActionLaunchProcess),
             typeof(ActionDiskOperation),
+            typeof(ActionClipboard),
 
             typeof(ActionActInteraction),
             typeof(ActionJsonRequest),

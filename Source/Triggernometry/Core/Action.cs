@@ -254,6 +254,7 @@ namespace Triggernometry.Core
                 case ActionTypeEnum.Aura:
                     return (ActionOverlayImage)this;
                 case ActionTypeEnum.Variable:
+                    if (_VariableOp == VariableOpEnum.Clipboard) return (ActionClipboard)this;
                     return (ActionVariableScalar)this;
                 case ActionTypeEnum.ListVariable:
                     if (_ListVariableOp == ListVariableOpEnum.SortFfxivPartyAsc || _ListVariableOp == ListVariableOpEnum.SortFfxivPartyDesc)

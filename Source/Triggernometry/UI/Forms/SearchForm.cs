@@ -312,6 +312,10 @@ namespace Triggernometry.UI.Forms
                             if (RegexMatches(rex, playSpeech.Message) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitttstext", "Action #{0} TTS text", i), Match = tn });
                             if (RegexMatches(rex, playSpeech.Volume) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitttsvol", "Action #{0} TTS volume", i), Match = tn });
                         }
+                        if (a is ActionClipboard clipboard)
+                        {
+                            if (RegexMatches(rex, clipboard.Value)) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitclipboardvalue", "Action #{0} clipboard value", i), Match = tn });
+                        }
                         if (a is ActionVariableScalar variableScalar)
                         {
                             if (RegexMatches(rex, variableScalar.Value) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitvarexpr", "Action #{0} variable expression", i), Match = tn });

@@ -48,10 +48,6 @@ namespace Triggernometry.Core.Actions
             /// </summary>
             Increment,
             /// <summary>
-            /// Copy value from scalar variable to clipboard
-            /// </summary>
-            Clipboard,
-            /// <summary>
             /// Unset all scalar variables
             /// </summary>
             UnsetAll,
@@ -83,7 +79,6 @@ namespace Triggernometry.Core.Actions
             "Set scalar variable value with string expression",
             "Set scalar variable value with numeric expression",
             "Increment scalar variable value",
-            "Copy scalar variable or expression to the clipboard",
             "Unset all scalar variables",
             "Unset scalar variables matching regular expression",
             "Unset all types of variables matching regular expression",
@@ -233,21 +228,6 @@ namespace Triggernometry.Core.Actions
                         "increment the value of {1}scalar variable ({0}) by ({2})",
                         Name, sPersist, value
                     );                    
-                case OperationEnum.Clipboard:
-                    bool isName = !string.IsNullOrWhiteSpace(Name);
-                    if (isName)
-                    {
-                        return I18n.Translate(
-                            "internal/Action/descscalarclipboardvar", 
-                            "Copy {1}scalar variable ({0}) value to clipboard",
-                            Name, sPersist
-                        );
-                    }
-                    return I18n.Translate(
-                        "internal/Action/descscalarclipboardexpr",
-                        "Copy string expression ({0}) to clipboard",
-                        Value
-                    );
                 case OperationEnum.Unset:
                     return I18n.Translate(
                         "internal/Action/descscalarunset",
@@ -387,24 +367,6 @@ namespace Triggernometry.Core.Actions
                         }
                         break;
                     }
-                case OperationEnum.Clipboard:
-                    {
-                        bool isName = !string.IsNullOrWhiteSpace(Name);
-                        string text = "";
-                        if (isName)
-                            lock (vs.Scalar)
-                            {
-                                text = vs.GetScalarVariable(varname, false).Value;
-                            }
-                        else
-                        {
-                            text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
-                        }
-                        RealPlugin.ClipboardSetText(text);
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarclipboard",
-                            "Set text ({0}) to clipboard", text));
-                        break;
-                    }
                 case OperationEnum.QueryJsonPath:
                     {
                         newval = vs.GetScalarVariable(varname, false).Value;
@@ -472,7 +434,8 @@ namespace Triggernometry.Core.Actions
         {
             var action = new ActionVariableScalar();
             oldAction.CopyCommonPropertiesTo(action);
-            action.Operation = (OperationEnum)(int)oldAction._VariableOp;
+            // Clipboard 已拆为独立动作，按名称映射以保留后续操作的旧编号含义。
+            action.Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), oldAction._VariableOp.ToString());
             action.Name = oldAction._VariableName;
             action.TargetVar = oldAction._VariableJsonTarget;
             action.Value = oldAction._VariableExpression;

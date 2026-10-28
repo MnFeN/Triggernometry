@@ -240,6 +240,7 @@ namespace Triggernometry.UI.CustomControls
             else if (action is ActionVariableTable) prefix = "rtbHelperTvar";
             else if (action is ActionVariableDict) prefix = "rtbHelperDict";
             else if (action is ActionKeypress) prefix = "rtbHelperSendKeys";
+            else if (action is ActionClipboard) return "rtbHelperClipboard";
             else if (action is ActionNamedCallback) return "rtbHelperCallback";
             else if (action is ActionWindowMessage) return "rtbHelperWmsg";
             else if (action is ActionJsonRequest) return "rtbHelperJson";

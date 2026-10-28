@@ -522,13 +522,12 @@ The regex match mode is partial match:
 For instance, `1|2|3` can match variables named `1`, `2`, `3`, but also `ab1cd`. 
 For an exact match, you can specify the start and end, such as `^(1|2|3)$`.</value>
   </data>
-  <data name="rtbHelperVarClipboard.Text" xml:space="preserve">
-    <value>You can provide either a variable name or an expression.
-If you provide a variable name, the value of that variable will be directly stored in the clipboard;
-If you provide an expression, it will be parsed as text and then stored in the clipboard.
+  <data name="rtbHelperClipboard.Text" xml:space="preserve">
+    <value>Evaluates the value as a text expression and copies the result to the clipboard.
+An empty result clears the clipboard.
 
-Additionally, content stored in the clipboard can be invoked elsewhere using the expression `${{_clipboard}}`.
-Please note if the content in the clipboard contains `${{_clipboard}}`, an exception will be thrown due to an attempt to parse it in an infinite loop.</value>
+Use `${{var:Name}}` or `${{pvar:Name}}` to read session or permanent scalar variables.
+Use `${{_clipboard}}` to read the clipboard.</value>
   </data>
   <data name="rtbHelperVarQueryJsonPath.Text" xml:space="preserve">
     <value>Provide the name of a scalar containing JSON-formatted text, use the expression as a JSONPath query, and the result is stored in the target scalar.
@@ -1439,6 +1438,31 @@ The table can be further processed with filtering, sorting, and other table acti
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADZ3PGEAAAAAXRSTlMAQObYZgAAAEVJREFUeNqFz0EO
         wCAMA0GS2v3/kwkEUZMemOPKQaK1O5s0+GA1uO2lPUICwgp5ApLwEogaCA3xyBn24p1kkb7FgvT/awfI
         YAHWJ1rNqQAAAABJRU5ErkJggg==
+    </value>
+  </data>
+  <data name="actionType.ActionClipboard" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAADAFBMVEUAAAB/fwA8WXE8WnD/AAA/Lx88
+        PDxYcYZQbIKHnq5uhZhTboVTan1LPC0AJCSqVVWAXjqfdUORaz15j5+zzd+Gna2Zr7+fvtVxal2mdDyP
+        a0F1WTcAAAD/f3+JZTrdqGTEonVle4uJo7iAma2JorRvjaaKhnnfr3PDklRxUzJ/fz+NYzPHqIHe6/bO
+        1tuzvsi5w8y2wcq4w8vh6O7T2Nm4jFR2VTCMYzPIqoPx+P/////f4d+1i1V3Vy/Iq4Pt9f290eCrxNiv
+        yNqvyNuowtbZ5vHg4t60ilTu9v/+/v7l4+a6jVd0Vy/J2ua5z+C+0uK/0+XQ3++LsIejgkmLWzgAfwDt
+        8/fm7vXj7PTN3uG80cvT4NdCh0BOhTZhYTZVfyri6/LV4u3y9vprn2NhnVJooV56r2uExW08iTQdXinI
+        qoLv9vzT3+nC1OLm7fNdl1RvtFV9vWJ7u2BssVJnsUxKkD0wdC2NYzLGqYXp9//////4//9ZlVZcp0Fk
+        rUlirEdkrElnsExLlD4ydC+KZDjWqnHMvqnNvqfPv6hajUlJkTtOkj9Rl0FmsExDijonayqCYTqkeESk
+        dT2hdD2jdD2Qc0CEbz6FbT1HgjhBhjg0aSw/fz9dSS5bSDZ5SDCFVTaIUDc6eTMubi4AAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACKikZ9AAAAo3RSTlMAAj8iARAVkL//57hDEQcDaevu
+        ///////+7tclAQLH///8/P/+/P///2UEvP77///////++v1fvv/8//v/YP/8////////+//8//v/YP//
+        ////+/9fAv////////v/Ywb////////+/uEr//z//////////v/sT7z+/P7+/v7+//3+/3DI//7/////
+        //v/9k57+Pf6+vr6+f/rPwQmKioqKYYsk2H5CgAAAORJREFUeNpjYGBgZAACJmYQycIABqxs7BycXNw8
+        vHwgHj+DgKCQsIiomLiEpJS0DCODLIOcvIKikrKKqpq6hiaDFlBAW0dXT9/A0MjYxNQMLGBuYWkFBtY2
+        thABO3sHRydnF1c3d6iAhQdYgaeXtw9UhYevn39AoFVQcEgoVEVYeERkVHRMbBxDPEQgITEpOSU1LT0j
+        kwEkkJWdk5uXX1BYVFxSWgYUKK+orKqqrqmtq29obGoGCrS0trW3d3R2dff09vWD/DJh4qTJk6dMnTZ9
+        xsxZDLNB/pszFwjmzV+wcBGQDwAhFj9hS8KbWQAAAABJRU5ErkJggg==
     </value>
   </data>
   <data name="actionType.ActionActInteraction" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
