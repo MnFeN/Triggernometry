@@ -42,23 +42,13 @@ namespace Triggernometry.Core
             ActionUpdateEvent = null;
         }
 
-        /// <summary>
-        /// Remove queued actions from the global action queue based on the specified filter. <br/>
-        /// If <paramref name="filter"/> is <c>null</c>, all queued actions are cleared. <br/>
-        /// If any actions are removed, the action queue is re-sorted and the update event is signaled.
-        /// </summary>
-        /// <param name="filter">
-        /// Select which queued actions to remove. <br/>
-        /// If <c>null</c>, all actions will be removed.
-        /// </param>
-        /// <returns>The number of queued actions removed from the queue.</returns>
-
+        /// <summary>取消允许打断且符合筛选条件的排队动作，并转交或释放互斥锁；空筛选表示全部可打断动作。</summary>
         internal int CancelQueuedActions(Func<ActionInstance, bool> filter = null)
         {
             int removedCount = 0;
             lock (ActionQueue)
             {
-                var toRemove = ActionQueue.Where(qa => filter == null || filter(qa)).ToList();
+                var toRemove = ActionQueue.Where(qa => !qa.Action.Uninterruptible && (filter == null || filter(qa))).ToList();
                 removedCount = toRemove.Count;
                 foreach (var qa in toRemove)
                     ActionQueue.Remove(qa);
@@ -144,25 +134,27 @@ namespace Triggernometry.Core
             trig = trig ?? ctx.Trigger;
             lock (ActionQueue)
             {
-                if (action.PreventDuplicateQueue || action.ReplaceQueued == true)
+                bool canReplaceQueued = action.ReplaceQueued && !action.Uninterruptible;
+                bool shouldCheckDuplicates = action.PreventDuplicateQueue || canReplaceQueued;
+                bool hasQueuedDuplicate = shouldCheckDuplicates && ActionQueue.Any(a => a.Action.Id == action.Id);
+
+                if (hasQueuedDuplicate)
                 {
-                    if (ActionQueue.Any(actionInstance => actionInstance.Action.Id == action.Id))
+                    if (canReplaceQueued)
                     {
-                        if (action.ReplaceQueued == true)
+                        int removedCount = CancelQueuedActions(a => a.Action.Id == action.Id);
+                        if (removedCount > 0)
                         {
-                            int removedCount = ActionQueue.RemoveAll(actionInstance => actionInstance.Action.Id == action.Id);
-                            if (removedCount > 0)
-                            {
-                                action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig?.LogName ?? "(null)", action.Describe()));
-                            }
-                        }
-                        if (action.PreventDuplicateQueue)
-                        {
-                            action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig?.LogName ?? "(null)", action.Describe()));
-                            return false;
+                            action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig?.LogName ?? "(null)", action.Describe()));
                         }
                     }
-                }
+                    if (action.PreventDuplicateQueue)
+                    {
+                        action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig?.LogName ?? "(null)", action.Describe()));
+                        return false;
+                    }
+                }    
+                
                 lock (this) instance.QueueSequence = curOrdinal++;
                 action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig?.LogName ?? "(null)", action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
                 Context tagContext = instance.LoopContext ?? ctx;

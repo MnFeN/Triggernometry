@@ -1012,6 +1012,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionBase/ExecDelay" Translation="动作延迟 / ms" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/PreventDuplicateQueue" Translation="禁止同一动作重复排队" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/ReplaceQueued" Translation="中断此前排队的同一动作" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/Uninterruptible" Translation="永远禁止打断" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/Tag" Translation="动作标签" />
     <TranslationEntry Key="internal/EditorFields/ActionBeep/Duration" Translation="时长 / ms" />
     <TranslationEntry Key="internal/EditorFields/ActionBeep/Frequency" Translation="频率 / Hz" />

@@ -1012,6 +1012,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionBase/ExecDelay" Translation="次の実行までのディレイ (ms)" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/PreventDuplicateQueue" Translation="同じアクションの重複キュー登録を禁止" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/ReplaceQueued" Translation="同じアクションの保留中の実行を中断" />
+    <TranslationEntry Key="internal/EditorFields/ActionBase/Uninterruptible" Translation="このアクションの中断を常に禁止" />
     <TranslationEntry Key="internal/EditorFields/ActionBase/Tag" Translation="Tag" />
     <TranslationEntry Key="internal/EditorFields/ActionBeep/Duration" Translation="ビープ音の長さ (ms)" />
     <TranslationEntry Key="internal/EditorFields/ActionBeep/Frequency" Translation="ビープ音の周波数 (Hz)" />

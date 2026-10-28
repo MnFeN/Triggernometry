@@ -21,6 +21,7 @@ namespace Triggernometry.UI.CustomControls
         internal ImageList Images { get; set; }
         private ActionBase action;
         private bool isBinding;
+        private Action updateGeneralRules;
         private readonly Dictionary<string, ExpressionTextBox> expressions = new Dictionary<string, ExpressionTextBox>();
         private RichTextBoxHelper help;
         private TextBox documentationLink;
@@ -38,6 +39,7 @@ namespace Triggernometry.UI.CustomControls
             configurationEditor.ValueChanged += (s, e) =>
             {
                 if (isBinding) return;
+                updateGeneralRules?.Invoke();
                 UpdateOverlayTools();
                 help?.UpdateText();
                 UpdateDocumentationLink();
@@ -62,7 +64,12 @@ namespace Triggernometry.UI.CustomControls
                 fontPreview = null;
                 fontSummary = null;
                 isBinding = true;
-                try { configurationEditor.Bind(value, include, applyRules: ShowActionTools); }
+                try
+                {
+                    configurationEditor.Bind(value, include, applyRules: ShowActionTools);
+                    updateGeneralRules = ShowActionTools ? null : value.CreateGeneralEditorRules(configurationEditor);
+                    updateGeneralRules?.Invoke();
+                }
                 finally { isBinding = false; }
                 foreach (Control control in tools.Controls.Cast<Control>().ToArray()) control.Dispose();
                 tools.Controls.Clear();

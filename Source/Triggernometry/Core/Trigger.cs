@@ -724,18 +724,7 @@ namespace Triggernometry.Core
         }
 
         private int RemoveSelfQueuedActions(Context ctx)
-        {
-            int removedCount = 0;
-            lock (ctx.Plugin.ActionQueue)
-            {
-                foreach (ActionInstance qa in GetSelfQueuedActions(ctx).ToList())
-                {
-                    ctx.Plugin.ActionQueue.Remove(qa);
-                    removedCount++;
-                }
-            }
-            return removedCount;
-        }
+            => ctx.Plugin.CancelQueuedActions(action => action.Context.Trigger?.Id == Id);
 
         private int CountSelfQueuedActions(Context ctx)
         {

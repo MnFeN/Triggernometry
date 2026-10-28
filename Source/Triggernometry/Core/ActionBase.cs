@@ -59,6 +59,19 @@ namespace Triggernometry.Core
         /// <summary>创建动作参数的控件联动规则。</summary>
         public virtual Action CreateEditorRules(ConfigEditor editor) => null;
 
+        /// <summary>通用动作的 UI 选项联动规则</summary>
+        internal Action CreateGeneralEditorRules(ConfigEditor editor)
+        {
+            var uninterruptible = editor.GetEditor(nameof(Uninterruptible));
+            var replaceQueued = editor.GetEditor(nameof(ReplaceQueued));
+            return () =>
+            {
+                bool isUninterruptible = (bool)uninterruptible.GetValue();
+                if (isUninterruptible) replaceQueued.SetValue(false);
+                editor.SetEnabled(!isUninterruptible, replaceQueued);
+            };
+        }
+
         #region Classes and enums
 
         /// <summary>声明动作类型的显示名称和分类。</summary>
@@ -203,6 +216,23 @@ namespace Triggernometry.Core
         {
             get => XmlAttr.Bool(PreventDuplicateQueue, false);
             set => PreventDuplicateQueue = XmlAttr.Bool(value);
+        }
+
+
+
+        /// <summary>
+        /// 保留已排队的动作，并忽略全局取消请求；<br />
+        /// 不保护尚未入队的后续动作或循环子动作。
+        /// </summary>
+        [XmlIgnore]
+        [CheckBoxEditor(7, Label = "Never interrupt this action")]
+        public bool Uninterruptible { get; set; } = false;
+
+        [XmlAttribute("Uninterruptible")]
+        public string Xml_Uninterruptible
+        {
+            get => XmlAttr.Bool(Uninterruptible, false);
+            set => Uninterruptible = XmlAttr.Bool(value);
         }
 
 
@@ -383,7 +413,7 @@ namespace Triggernometry.Core
 
             if (Async)
             { 
-                var cancelToken = ctx.Plugin?.GetCancellationToken() ?? CancellationToken.None;
+                var cancelToken = Uninterruptible ? CancellationToken.None : ctx.Plugin?.GetCancellationToken() ?? CancellationToken.None;
                 await Task.Run(ExecuteCore, cancelToken).ConfigureAwait(false);
             }
             else ExecuteCore();
@@ -686,6 +716,7 @@ namespace Triggernometry.Core
             action.Tag = Tag;
             action.ReplaceQueued = ReplaceQueued;
             action.PreventDuplicateQueue = PreventDuplicateQueue;
+            action.Uninterruptible = Uninterruptible;
             action.ExecDelay = ExecDelay;
             action.Async = Async;
             action.DebugLevel = DebugLevel;
