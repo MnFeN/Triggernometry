@@ -67,7 +67,7 @@ namespace Triggernometry.UI.Forms
             public ActionOverlayText.EffectEnum Effect { get; set; }
         }
 
-        private ActionBase draft;
+        private ActionBase draftAction;
         private bool isReadOnly;
         private int actionTypeWheelDelta;
         private ActionEditor specificEditor;
@@ -158,7 +158,7 @@ namespace Triggernometry.UI.Forms
             int steps = actionTypeWheelDelta / SystemInformation.MouseWheelScrollDelta;
             actionTypeWheelDelta %= SystemInformation.MouseWheelScrollDelta;
             if (steps == 0) return;
-            int current = Array.FindIndex(actionTypes, item => item.Type == draft.GetType());
+            int current = Array.FindIndex(actionTypes, item => item.Type == draftAction.GetType());
             int next = Math.Max(0, Math.Min(actionTypes.Length - 1, current - steps));
             SelectActionType(actionTypes[next].Type);
         }
@@ -192,7 +192,7 @@ namespace Triggernometry.UI.Forms
         /// <summary>同步当前动作对应的菜单选中状态和显示文本。</summary>
         private void UpdateActionTypeSelection()
         {
-            Type selectedType = draft.GetType();
+            Type selectedType = draftAction.GetType();
             foreach (ToolStripMenuItem category in actionTypeMenu.Items)
             {
                 category.Checked = category.Tag is Type type && type == selectedType;
@@ -209,7 +209,7 @@ namespace Triggernometry.UI.Forms
         /// <summary>复制待编辑动作并刷新界面。</summary>
         internal void SettingsFromAction(ActionBase action)
         {
-            draft = action.Copy();
+            draftAction = action.Copy();
             UpdateActionTypeSelection();
             BindEditors();
         }
@@ -240,13 +240,13 @@ namespace Triggernometry.UI.Forms
             try
             {
                 if (specificEditor == null) specificEditor = CreateEditor(tabActionSettings);
-                specificEditor.Bind(draft, field => field.Member.DeclaringType != typeof(ActionBase));
-                generalEditor?.Bind(draft, field => field.Member.DeclaringType == typeof(ActionBase));
-                if (cndCondition != null) cndCondition.ConditionToEdit = draft.Condition;
-                txtDescription.Text = draft.Desc;
-                chkOverrideDesc.Checked = draft.DescOverride;
-                expDescBgColor.Expression = draft.DescBackColor;
-                expDescTextColor.Expression = draft.DescTextColor;
+                specificEditor.Bind(draftAction, field => field.Member.DeclaringType != typeof(ActionBase));
+                generalEditor?.Bind(draftAction, field => field.Member.DeclaringType == typeof(ActionBase));
+                if (cndCondition != null) cndCondition.ConditionToEdit = draftAction.Condition;
+                txtDescription.Text = draftAction.Desc;
+                chkOverrideDesc.Checked = draftAction.DescOverride;
+                expDescBgColor.Expression = draftAction.DescBackColor;
+                expDescTextColor.Expression = draftAction.DescTextColor;
             }
             finally
             {
@@ -272,14 +272,14 @@ namespace Triggernometry.UI.Forms
             if (tabs.SelectedTab == tabGeneral && generalEditor == null)
             {
                 generalEditor = CreateEditor(tabGeneral);
-                generalEditor.Bind(draft, field => field.Member.DeclaringType == typeof(ActionBase));
+                generalEditor.Bind(draftAction, field => field.Member.DeclaringType == typeof(ActionBase));
             }
             if (tabs.SelectedTab == tabActionCondition && cndCondition == null)
             {
                 cndCondition = new ConditionViewer { Font = tabActionCondition.Font, Dock = DockStyle.Fill, UiContext = UiContext, Name = "cndCondition" };
                 I18n.TranslateControl("", cndCondition);
                 tabActionCondition.Controls.Add(cndCondition);
-                cndCondition.ConditionToEdit = draft.Condition;
+                cndCondition.ConditionToEdit = draftAction.Condition;
                 if (isReadOnly) cndCondition.SetReadOnly();
             }
         }
@@ -287,28 +287,28 @@ namespace Triggernometry.UI.Forms
         /// <summary>切换标签页后确保对应编辑器已载入。</summary>
         private void Tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (draft != null) EnsureSelectedEditor();
+            if (draftAction != null) EnsureSelectedEditor();
         }
 
         /// <summary>切换动作类型，并将通用设置复制到新动作。</summary>
         private void SelectActionType(Type type)
         {
-            if (isReadOnly || draft == null || type == draft.GetType() || !TryWriteValues()) return;
+            if (isReadOnly || draftAction == null || type == draftAction.GetType() || !TryWriteValues()) return;
             ActionBase replacement = type == typeof(ActionObsControl)
                 ? new ActionObsControl { Endpoint = "", Password = "" } : (ActionBase)Activator.CreateInstance(type);
-            draft.CopyCommonPropertiesTo(replacement);
-            draft = replacement;
+            draftAction.CopyCommonPropertiesTo(replacement);
+            draftAction = replacement;
             UpdateActionTypeSelection();
             BindEditors();
         }
 
-        /// <summary>生成包含当前设置和父级关系的动作副本。</summary>
+        /// <summary>将当前界面设置写入草稿，并返回包含父级关系的独立动作副本。</summary>
         internal ActionBase SettingsToAction()
         {
             WriteValues();
-            ActionBase result = draft.Copy();
-            ActionBase.RebuildParentage(new[] { result }, ParentTrigger);
-            return result;
+            ActionBase action = draftAction.Copy();
+            ActionBase.RebuildParentage(new[] { action }, ParentTrigger);
+            return action;
         }
 
         /// <summary>将参数、条件和描述区域的内容写回动作草稿。</summary>
@@ -317,11 +317,15 @@ namespace Triggernometry.UI.Forms
             specificEditor?.WriteValues();
             generalEditor?.WriteValues();
             if (isReadOnly) return;
-            if (cndCondition != null) draft.Condition = cndCondition.ConditionToEdit;
-            if (txtDescription.Text != (draft.Desc ?? "")) draft.Desc = txtDescription.Text;
-            draft.DescOverride = chkOverrideDesc.Checked;
-            if (expDescBgColor.Expression != (draft.DescBackColor ?? "")) draft.DescBackColor = expDescBgColor.Expression;
-            if (expDescTextColor.Expression != (draft.DescTextColor ?? "")) draft.DescTextColor = expDescTextColor.Expression;
+            if (cndCondition != null) 
+                draftAction.Condition = cndCondition.ConditionToEdit;
+            if (txtDescription.Text != (draftAction.Desc ?? "")) 
+                draftAction.Desc = txtDescription.Text;
+            draftAction.DescOverride = chkOverrideDesc.Checked;
+            if (expDescBgColor.Expression != (draftAction.DescBackColor ?? "")) 
+                draftAction.DescBackColor = expDescBgColor.Expression;
+            if (expDescTextColor.Expression != (draftAction.DescTextColor ?? "")) 
+                draftAction.DescTextColor = expDescTextColor.Expression;
         }
 
         /// <summary>校验并保存界面值，失败时显示提示。</summary>
@@ -376,14 +380,17 @@ namespace Triggernometry.UI.Forms
         private void TestAction(bool useLiveValues, bool ignoreConditions)
         {
             if (!TryWriteValues()) return;
-            ActionBase action = SettingsToAction();
+            ActionBase action = draftAction.Copy();
+            ActionBase.RebuildParentage(new[] { action }, ParentTrigger);
             if (ignoreConditions) action.Condition = new Core.Conditions.ConditionGroup();
-            Action execute = () => action.Execute(new Context(ParentTrigger)
+            
+            void execute() => action.Execute(new Context(ParentTrigger)
             {
                 testByPlaceholder = !useLiveValues,
                 soundhook = Plugin.SoundPlaybackSmart,
                 ttshook = Plugin.TtsPlaybackSmart
             });
+
             if (action is ActionKeypress keypress && keypress.Operation == ActionKeypress.OperationEnum.SendKeys)
             {
                 if (MessageBox.Show(this, I18n.Translate("internal/ActionForm/confirmkeypress",
@@ -391,7 +398,12 @@ namespace Triggernometry.UI.Forms
                     I18n.Translate("internal/ActionForm/confirmkeypressdelay", "Confirm"), MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Information) != DialogResult.OK) return;
                 var timer = new Timer(components) { Interval = 2000 };
-                timer.Tick += (s, e) => { timer.Stop(); timer.Dispose(); execute(); };
+                timer.Tick += (s, e) => 
+                { 
+                    timer.Stop(); 
+                    timer.Dispose(); 
+                    execute(); 
+                };
                 timer.Start();
             }
             else execute();
