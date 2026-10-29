@@ -194,9 +194,9 @@ namespace Triggernometry.Core.Actions
 
             string response = "";
             int responseCode = 0;
-            string endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Endpoint);
-            string payload = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Payload);
-            string headers = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Headers).Trim();
+            string endpoint = EvalString(Endpoint, ctx);
+            string payload = EvalString(Payload, ctx);
+            string headers = EvalString(Headers, ctx).Trim();
             var (tgtName, tgtStore) = ResolveVariable(ctx, ResponseVar, Persistent);
             string persist = I18n.TrlVarPersist(Persistent);
             List<string> headerslist = new List<string>();
@@ -268,7 +268,7 @@ namespace Triggernometry.Core.Actions
             ctx.isContextJsonParsed = false;
             if (ResponseLogTemplate != null && ResponseLogTemplate.Trim().Length > 0)
             {
-                string firing = ctx.EvaluateStringExpression(ActionContextLogger, ctx, ResponseLogTemplate);
+                string firing = EvalString(ResponseLogTemplate, ctx);
                 if (firing.Length > 0)
                 {
                     plug.LogLineQueuer(firing, "", LogEvent.SourceEnum.Log);

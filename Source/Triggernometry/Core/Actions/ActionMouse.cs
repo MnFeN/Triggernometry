@@ -155,8 +155,8 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            int mousex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
-            int mousey = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
+            int mousex = (int)EvalNumeric(X, ctx);
+            int mousey = (int)EvalNumeric(Y, ctx);
             WindowsUtils.MouseEventFlags flags = 0;
             switch (CoordMode)
             {

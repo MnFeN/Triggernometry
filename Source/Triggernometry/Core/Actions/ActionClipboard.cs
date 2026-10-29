@@ -29,7 +29,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>解析表达式，并通过现有 UI 线程入口写入或清空剪贴板。</summary>
         internal override void ExecuteImplementation(Context ctx)
         {
-            string text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
+            string text = EvalString(Value, ctx);
             RealPlugin.ClipboardSetText(text);
             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose,
                 I18n.Translate("internal/Action/clipboardset", "Set text ({0}) to clipboard", text));

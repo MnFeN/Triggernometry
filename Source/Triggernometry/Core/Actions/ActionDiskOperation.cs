@@ -161,7 +161,7 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            string filename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Filename);
+            string filename = EvalString(Filename, ctx);
             var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, Persistent);
             string persist = I18n.TrlVarPersist(Persistent);
             string cache = I18n.TrlCacheFile(UseCache);

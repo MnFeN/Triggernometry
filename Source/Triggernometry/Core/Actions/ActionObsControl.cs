@@ -237,7 +237,7 @@ namespace Triggernometry.Core.Actions
             string endpoint = "";
             if (!string.IsNullOrWhiteSpace(Endpoint))
             {
-                endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Endpoint);
+                endpoint = EvalString(Endpoint, ctx);
             }
             else
             {
@@ -249,7 +249,7 @@ namespace Triggernometry.Core.Actions
             string password = "";
             if (!string.IsNullOrWhiteSpace(Password))
             {
-                password = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Password);
+                password = EvalString(Password, ctx);
             }
             else
             {
@@ -313,27 +313,27 @@ namespace Triggernometry.Core.Actions
                             break;
                         case OperationEnum.SetScene:
                             {
-                                string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
+                                string scn = EvalString(SceneName, ctx);
                                 obsController.SetCurrentScene(scn);
                             }
                             break;
                         case OperationEnum.ShowSource:
                             {
-                                string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
-                                string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SourceName);
+                                string scn = EvalString(SceneName, ctx);
+                                string src = EvalString(SourceName, ctx);
                                 obsController.ShowHideSource(scn, src, true);
                             }
                             break;
                         case OperationEnum.HideSource:
                             {
-                                string scn = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SceneName);
-                                string src = ctx.EvaluateStringExpression(ActionContextLogger, ctx, SourceName);
+                                string scn = EvalString(SceneName, ctx);
+                                string src = EvalString(SourceName, ctx);
                                 obsController.ShowHideSource(scn, src, false);
                             }
                             break;
                         case OperationEnum.JSONPayload:
                             {
-                                string json = ctx.EvaluateStringExpression(ActionContextLogger, ctx, JSONPayload);
+                                string json = EvalString(JSONPayload, ctx);
                                 obsController.JSONPayload(json);
                             }
                             break;

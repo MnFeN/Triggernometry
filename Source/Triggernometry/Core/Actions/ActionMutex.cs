@@ -84,7 +84,7 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            string mutexName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
+            string mutexName = EvalString(Name, ctx);
             switch (Operation)
             {
                 case OperationEnum.Acquire:

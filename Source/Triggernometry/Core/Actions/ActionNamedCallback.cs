@@ -61,8 +61,8 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            string cbname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
-            string cbparm = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Parameter);
+            string cbname = EvalString(Name, ctx);
+            string cbparm = EvalString(Parameter, ctx);
             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/callbackinvoke", "Invoking named callback ({0}) with parameter ({1})", cbname, cbparm));
             plug.InvokeNamedCallback(cbname, cbparm);
         }

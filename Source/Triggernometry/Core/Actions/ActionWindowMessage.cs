@@ -129,11 +129,11 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            int procid = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ProcessId);
-            string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WinTitleRegex);
-            int code = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, MessageId);
-            IntPtr wparam = (IntPtr)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Wparam);
-            IntPtr lparam = (IntPtr)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Lparam);
+            int procid = (int)EvalNumeric(ProcessId, ctx);
+            string window = EvalString(WinTitleRegex, ctx);
+            int code = (int)EvalNumeric(MessageId, ctx);
+            IntPtr wparam = (IntPtr)EvalNumeric(Wparam, ctx);
+            IntPtr lparam = (IntPtr)EvalNumeric(Lparam, ctx);
             WindowsUtils.SendMessageToWindow(procid, window, (ushort)code, wparam, lparam);
         }
 

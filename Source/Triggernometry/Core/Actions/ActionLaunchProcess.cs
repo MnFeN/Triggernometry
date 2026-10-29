@@ -125,10 +125,10 @@ namespace Triggernometry.Core.Actions
             using (Process p = new Process())
             {
                 ProcessStartInfo psi = new ProcessStartInfo();
-                psi.Arguments = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Arguments);
+                psi.Arguments = EvalString(Arguments, ctx);
                 psi.WindowStyle = WindowStyle;
-                psi.WorkingDirectory = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WorkingDirectory);
-                psi.FileName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Path);
+                psi.WorkingDirectory = EvalString(WorkingDirectory, ctx);
+                psi.FileName = EvalString(Path, ctx);
                 p.StartInfo = psi;
                 p.Start();
                 if (Async == false)

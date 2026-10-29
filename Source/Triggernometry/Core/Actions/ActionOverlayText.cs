@@ -448,7 +448,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>Evaluates the font size for one activation or preview, with a minimum of one point.</summary>
         internal float EvaluateFontSize(Context ctx)
         {
-            var size = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, FontSize);
+            var size = EvalNumeric(FontSize, ctx);
             return Math.Max(1, (float)size);
         }
 

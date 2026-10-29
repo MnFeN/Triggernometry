@@ -531,9 +531,9 @@ namespace Triggernometry.Core.Actions
             string ParseExpr()
             {
                 if (ValueType == ExpressionType.String)
-                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
+                    return EvalString(Value, ctx);
                 else
-                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
+                    return I18n.ThingToString(EvalNumeric(Value, ctx));
             }
 
             string vtchanger = DescribeVariableChanger(ctx);
@@ -559,8 +559,8 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Resize:
                     {
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
-                        int w = string.IsNullOrWhiteSpace(X) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
-                        int h = string.IsNullOrWhiteSpace(Y) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
+                        int w = string.IsNullOrWhiteSpace(X) ? int.MinValue : (int)EvalNumeric(X, ctx);
+                        int h = string.IsNullOrWhiteSpace(Y) ? int.MinValue : (int)EvalNumeric(Y, ctx);
                         lock (srcStore.Table)
                         {
                             VariableTable vt = srcStore.GetTableVariable(srcName, true);
@@ -651,8 +651,8 @@ namespace Triggernometry.Core.Actions
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
 
-                        int x = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
-                        int y = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
+                        int x = (int)EvalNumeric(X, ctx);
+                        int y = (int)EvalNumeric(Y, ctx);
 
                         lock (srcStore.Table)
                         {
@@ -679,8 +679,8 @@ namespace Triggernometry.Core.Actions
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
-                        int newWidth = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
-                        int newHeight = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
+                        int newWidth = (int)EvalNumeric(X, ctx);
+                        int newHeight = (int)EvalNumeric(Y, ctx);
                         VariableTable vtNew = new VariableTable { LastChanger = vtchanger, LastChanged = DateTime.Now };
                         lock (srcStore.Table)
                         {
@@ -711,8 +711,8 @@ namespace Triggernometry.Core.Actions
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
-                        string colSlicesStr = ctx.EvaluateStringExpression(ActionContextLogger, ctx, X);
-                        string rowSlicesStr = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Y);
+                        string colSlicesStr = EvalString(X, ctx);
+                        string rowSlicesStr = EvalString(Y, ctx);
                         VariableTable vtNew;
                         lock (srcStore.Table)
                         {
@@ -788,7 +788,7 @@ namespace Triggernometry.Core.Actions
                                 for (int colIndex = 0; colIndex < vt.Width; colIndex++)
                                 {
                                     ctx.tableColIndex = colIndex + 1;   // for ${_col}
-                                    double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
+                                    double result = EvalNumeric(Value, ctx);
                                     if (!MathParser.IsZero(result))
                                     {
                                         vlResult.Values.Add(vt.Rows[rowIndex].Values[colIndex].Duplicate());
@@ -831,7 +831,7 @@ namespace Triggernometry.Core.Actions
                                 for (int colIndex = 0; colIndex < vt.Width; colIndex++)
                                 {
                                     ctx.tableColIndex = colIndex + 1;          // for ${_col}
-                                    double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, rawExpr);
+                                    double result = EvalNumeric(rawExpr, ctx);
                                     if (!MathParser.IsZero(result))
                                     {
                                         for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
@@ -847,7 +847,7 @@ namespace Triggernometry.Core.Actions
                                 for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
                                 {
                                     ctx.tableRowIndex = rowIndex + 1;      // for ${_row}
-                                    double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, rawExpr);
+                                    double result = EvalNumeric(rawExpr, ctx);
                                     if (!MathParser.IsZero(result))
                                     {
                                         var newRow = new VariableTable.VariableTableRow();
@@ -882,7 +882,7 @@ namespace Triggernometry.Core.Actions
                         string[] newValues = separator.Length > 0 ? splitval.Split(separator[0]) : new string[0];
                         bool isRow = string.IsNullOrWhiteSpace(X);
                         string lineType = I18n.TrlTableColOrRow(!isRow);
-                        int rawIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, isRow ? Y : X);
+                        int rawIndex = (int)EvalNumeric(isRow ? Y : X, ctx);
 
                         lock (srcStore.Table)
                         {
@@ -929,8 +929,8 @@ namespace Triggernometry.Core.Actions
                         {
                             VariableTable vt = srcStore.GetTableVariable(srcName, true);
                             int tableLength = isRow ? vt.Height : vt.Width;
-                            int rawIndex = isRow ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y)
-                                                   : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
+                            int rawIndex = isRow ? (int)EvalNumeric(Y, ctx)
+                                                   : (int)EvalNumeric(X, ctx);
                             // index start from 0
                             int index = rawIndex < 0 ? rawIndex + tableLength : rawIndex - 1;
 
@@ -972,8 +972,8 @@ namespace Triggernometry.Core.Actions
                                     for (int keyIndex = 0; keyIndex < keysCount; keyIndex++)
                                     {
                                         string keyValue = isNumeric[keyIndex]
-                                            ? I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, keysExpr[keyIndex]))
-                                            : ctx.EvaluateStringExpression(ActionContextLogger, ctx, keysExpr[keyIndex]);
+                                            ? I18n.ThingToString(EvalNumeric(keysExpr[keyIndex], ctx))
+                                            : EvalString(keysExpr[keyIndex], ctx);
                                         values[keyIndex].Add(keyValue);
                                     }
                                 }
@@ -994,8 +994,8 @@ namespace Triggernometry.Core.Actions
                                     for (int keyIndex = 0; keyIndex < keysCount; keyIndex++)
                                     {
                                         string keyValue = isNumeric[keyIndex]
-                                            ? I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, keysExpr[keyIndex]))
-                                            : ctx.EvaluateStringExpression(ActionContextLogger, ctx, keysExpr[keyIndex]);
+                                            ? I18n.ThingToString(EvalNumeric(keysExpr[keyIndex], ctx))
+                                            : EvalString(keysExpr[keyIndex], ctx);
                                         values[keyIndex].Add(keyValue);
                                     }
                                 }
@@ -1025,12 +1025,12 @@ namespace Triggernometry.Core.Actions
                         var entities = string.IsNullOrWhiteSpace(Y)
                             ? FFXIV.Entity.GetEntities()
                             : XivEntityParser.GetEntitiesByCondition(
-                                ctx.EvaluateStringExpression(ActionContextLogger, ctx, Y),
+                                EvalString(Y, ctx),
                                 false);
 
                         var propNames = string.IsNullOrWhiteSpace(X)
                             ? FFXIV.Entity.RecommendedEntityPropNames.Select(x => x.ToLower()).Concat(FFXIV.Job.LegalJobPropNames).OrderBy(s => s)
-                            : (IEnumerable<string>)ArgHelper.SplitArguments(ctx.EvaluateStringExpression(ActionContextLogger, ctx, X), false);
+                            : (IEnumerable<string>)ArgHelper.SplitArguments(EvalString(X, ctx), false);
                         if (string.IsNullOrWhiteSpace(X))
                         {
                             var specialKeys = new List<string> { "id", "name", "x", "y", "z", "h", "bnpcid" };

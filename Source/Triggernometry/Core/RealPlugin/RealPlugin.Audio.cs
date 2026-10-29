@@ -73,7 +73,7 @@ namespace Triggernometry.Core
                     return;
                 }
             }
-            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
+            double vol = ctx.EvaluateNumericExpression(a.ExpressionLogger, ctx, a.Volume);
             vol *= ctx.Plugin.Config.SfxVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
@@ -88,7 +88,7 @@ namespace Triggernometry.Core
 
         internal string TtsPlaybackGetTextFromAction(Context ctx, ActionPlaySpeech a)
         {
-            string text = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Message);
+            string text = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Message);
             if (ctx.Plugin != null)
             {
                 text = ctx.Plugin.Config.PerformSubstitution(text, Configuration.Substitution.SubstitutionScopeEnum.TextToSpeech);
@@ -111,7 +111,7 @@ namespace Triggernometry.Core
                 }
             }
             SpeechSynthesizer mytts = new SpeechSynthesizer();
-            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
+            double vol = ctx.EvaluateNumericExpression(a.ExpressionLogger, ctx, a.Volume);
             vol *= ctx.Plugin.Config.TtsVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
@@ -121,7 +121,7 @@ namespace Triggernometry.Core
             {
                 vol = 100.0;
             }
-            double rate = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Rate);
+            double rate = ctx.EvaluateNumericExpression(a.ExpressionLogger, ctx, a.Rate);
             if (rate < -10.0)
             {
                 rate = -10.0;
@@ -159,7 +159,7 @@ namespace Triggernometry.Core
             {
                 mywmp = wmp;
             }
-            double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
+            double vol = ctx.EvaluateNumericExpression(a.ExpressionLogger, ctx, a.Volume);
             vol *= ctx.Plugin.Config.SfxVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
@@ -270,7 +270,7 @@ namespace Triggernometry.Core
 
         internal void SoundPlaybackSmart(Context ctx, ActionPlaySound a)
         {
-            string filename = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Filename);
+            string filename = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Filename);
             Uri u = new Uri(filename);
             if (u.IsFile == false)
             {

@@ -89,11 +89,11 @@ namespace Triggernometry.Core.Actions
             Form activeForm = Form.ActiveForm;
             if (activeForm != null)
             {
-                MessageBox.Show(activeForm, ctx.EvaluateStringExpression(ActionContextLogger, ctx, Text), "", MessageBoxButtons.OK, (MessageBoxIcon)Icon);
+                MessageBox.Show(activeForm, EvalString(Text, ctx), "", MessageBoxButtons.OK, (MessageBoxIcon)Icon);
             }
             else
             {
-                MessageBox.Show(ctx.EvaluateStringExpression(ActionContextLogger, ctx, Text), "", MessageBoxButtons.OK, (MessageBoxIcon)Icon);
+                MessageBox.Show(EvalString(Text, ctx), "", MessageBoxButtons.OK, (MessageBoxIcon)Icon);
             }
         }
 

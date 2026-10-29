@@ -226,7 +226,7 @@ namespace Triggernometry.Core
             {
                 case ActionOverlayImage.OperationEnum.Activate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actimageaura", "Activating image aura '{0}'", ax));
                         try
                         {
@@ -255,7 +255,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOverlayImage.OperationEnum.Deactivate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaura", "Deactivating image aura '{0}'", ax));
                         sc.Deactivate(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Image);
                     }
@@ -268,7 +268,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOverlayImage.OperationEnum.DeactivateRegex:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaurarex", "Deactivating image auras matching '{0}'", ax));
                         sc.DeactivateRegex(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Image);
                     }
@@ -286,7 +286,7 @@ namespace Triggernometry.Core
         {
             if (mainform.InvokeRequired == true)
             {
-                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                 FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/invokeimageaura", "Invoke required for image aura '{0}'", ax));
                 mainform.Invoke(new Action<Context, ActionOverlayImage>(ImageAuraManagement), ctx, a);
                 return;
@@ -295,7 +295,7 @@ namespace Triggernometry.Core
             {
                 case ActionOverlayImage.OperationEnum.Activate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actimageaura", "Activating image aura '{0}'", ax));
                         AuraContainerForm acf = null;
                         bool newAura = false;
@@ -378,7 +378,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOverlayImage.OperationEnum.Deactivate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaura", "Deactivating image aura '{0}'", ax));
                         lock (ctx.Plugin.imageauras)
                         {
@@ -412,7 +412,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOverlayImage.OperationEnum.DeactivateRegex:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         Regex rex = new Regex(ax);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deactimageaurarex", "Deactivating image auras matching '{0}'", ax));
                         List<string> toRem = new List<string>();
@@ -449,7 +449,7 @@ namespace Triggernometry.Core
         {
             if (mainform.InvokeRequired == true)
             {
-                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                 FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/invoketextaura", "Invoke required for text aura '{0}'", ax));
                 mainform.Invoke(new Action<Context, ActionOverlayText>(TextAuraManagement), ctx, a);
                 return;
@@ -458,7 +458,7 @@ namespace Triggernometry.Core
             {
                 case ActionOverlayText.OperationEnum.Activate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/acttextaura", "Activating text aura '{0}'", ax));
                         try
                         {
@@ -494,10 +494,10 @@ namespace Triggernometry.Core
                             si.TextExpression = a.Text;
                             si.TextAlignment = a.Alignment;
                             si.TextColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.TextColor),
+                                    ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.TextColor),
                                     Color.Black);
                             si.OutlineColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.OutlineColor),
+                                    ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.OutlineColor),
                                     Color.Empty);
                             si.UseOutline = si.OutlineColor != Color.Empty;
                             si.FontName = a.Font;
@@ -505,7 +505,7 @@ namespace Triggernometry.Core
                             si.FontStyle = fs;
                             si.ctx = ctx;
                             si.BackgroundColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.BackColor),
+                                    ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.BackColor),
                                     Color.Transparent);
                             sc.Activate(ax, si);
                         }
@@ -517,7 +517,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOverlayText.OperationEnum.Deactivate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaura", "Deactivating text aura '{0}'", ax));
                         sc.Deactivate(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Text);
                     }
@@ -530,7 +530,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOverlayText.OperationEnum.DeactivateRegex:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaurarex", "Deactivating text auras matching '{0}'", ax));
                         sc.DeactivateRegex(ax, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Text);
                     }
@@ -548,7 +548,7 @@ namespace Triggernometry.Core
         {
             if (mainform.InvokeRequired == true)
             {
-                string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                 FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/invoketextaura", "Invoke required for text aura '{0}'", ax));
                 mainform.Invoke(new Action<Context, ActionOverlayText>(TextAuraManagement), ctx, a);
                 return;
@@ -557,7 +557,7 @@ namespace Triggernometry.Core
             {
                 case ActionOverlayText.OperationEnum.Activate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/acttextaura", "Activating text aura '{0}'", ax));
                         AuraContainerForm acf = null;
                         bool newAura = false;
@@ -582,10 +582,10 @@ namespace Triggernometry.Core
                                 acf.TextExpression = a.Text;
                                 acf.TextAlignment = a.Alignment;
                                 acf.TextColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.TextColor),
+                                    ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.TextColor),
                                     Color.Black);
                                 acf.OutlineColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.OutlineColor),
+                                    ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.OutlineColor),
                                     Color.Empty);
                                 acf.UseOutline = acf.OutlineColor != Color.Empty;
                                 if (acf.AuraFont != null)
@@ -636,7 +636,7 @@ namespace Triggernometry.Core
                                     acf.AuraFont = new Font(a.Font, fontSize, style, GraphicsUnit.Point);
                                 }
                                 acf.BackgroundColor = ExpressionTextBox.ParseColor(
-                                    ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.BackColor),
+                                    ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.BackColor),
                                     Color.Transparent);
                                 if (acf.BackgroundColor == Color.Transparent)
                                 {
@@ -702,7 +702,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOverlayText.OperationEnum.Deactivate:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaura", "Deactivating text aura '{0}'", ax));
                         lock (ctx.Plugin.textauras)
                         {
@@ -736,7 +736,7 @@ namespace Triggernometry.Core
                     break;
                 case ActionOverlayText.OperationEnum.DeactivateRegex:
                     {
-                        string ax = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Name);
+                        string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
                         Regex rex = new Regex(ax);
                         FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/deacttextaurarex", "Deactivating text auras matching '{0}'", ax));
                         List<string> toRem = new List<string>();

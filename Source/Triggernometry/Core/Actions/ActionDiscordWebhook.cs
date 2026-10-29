@@ -82,8 +82,8 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            string msg = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Message);
-            string url = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WebhookURL);
+            string msg = EvalString(Message, ctx);
+            string url = EvalString(WebhookURL, ctx);
             if (UseTTS == true)
             {
                 if (msg.Length > 1970)

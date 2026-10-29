@@ -188,11 +188,11 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            string message = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Message);
+            string message = EvalString(Message, ctx);
 
             if (ProcessAsLogline)
             {
-                string zone = ctx.EvaluateStringExpression(ActionContextLogger, ctx, plug.currentZone);
+                string zone = EvalString(plug.currentZone, ctx);
                 plug.LogLineQueuer(message, zone, LogSource);
             }
             else

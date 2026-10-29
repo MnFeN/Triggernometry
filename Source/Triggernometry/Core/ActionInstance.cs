@@ -83,18 +83,18 @@ namespace Triggernometry.Core
             {
                 loopContext = Context.Duplicate();
                 loopContext.loopActionId = loop.Id;
-                loopContext.loopIterator = (int)Context.EvaluateNumericExpression(loop.ActionContextLogger, Context, loop.Start);
+                loopContext.loopIterator = (int)Context.EvaluateNumericExpression(loop.ExpressionLogger, Context, loop.Start);
             }
             else
             {
-                loopContext.loopIterator += (int)loopContext.EvaluateNumericExpression(loop.ActionContextLogger, loopContext, loop.Step);
+                loopContext.loopIterator += (int)loopContext.EvaluateNumericExpression(loop.ExpressionLogger, loopContext, loop.Step);
             }
             // 首次判断失败时不替换调用者的上下文。
-            if (!loop.LoopCondition.Check(loopContext, loop.ActionContextLogger, loopContext)) return false;
+            if (!loop.LoopCondition.Check(loopContext, loop.ExpressionLogger, loopContext)) return false;
             LoopContext = loopContext;
 
             return loopContext.Plugin.QueueActions(loopContext, DateTime.Now, loop.LoopActions,
-                loopContext.Trigger?.Sequential ?? true, Mutex, loop.ActionContextLogger, this) != null;
+                loopContext.Trigger?.Sequential ?? true, Mutex, loop.ExpressionLogger, this) != null;
         }
 
         /// <summary>安排下一个顺序动作或下一轮循环，并转交互斥锁的释放责任。</summary>
@@ -107,12 +107,12 @@ namespace Triggernometry.Core
                 if (nextAction != null)
                 {
                     nextAction.Context = ctx;
-                    nextAction.ExecuteAt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(action.ActionContextLogger, ctx, nextAction.Action.ExecDelay));
+                    nextAction.ExecuteAt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(action.ExpressionLogger, ctx, nextAction.Action.ExecDelay));
                 }
                 else if (IsLoopTail)
                 {
                     ActionInstance parent = LoopParent;
-                    DateTime when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(action.ActionContextLogger, ctx, ((ActionLoop)parent.Action).LoopDelay));
+                    DateTime when = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(action.ExpressionLogger, ctx, ((ActionLoop)parent.Action).LoopDelay));
                     nextAction = new ActionInstance(when, 0, Mutex, parent.Action, parent.Context, false)
                     {
                         NextAction = parent.NextAction,

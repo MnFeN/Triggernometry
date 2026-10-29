@@ -65,14 +65,14 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
             bool useSimulatedBeep = plug.Config.UseSimulatedBeep;
 
-            double beepLength = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Duration);
+            double beepLength = EvalNumeric(Duration, ctx);
             if (beepLength < 0.0)
             {
                 beepLength = 0.0;
                 AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/beeplengthlo", "Beep length below limit, capping to {0}", beepLength));
             }
 
-            double frequency = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Frequency);
+            double frequency = EvalNumeric(Frequency, ctx);
             if (!useSimulatedBeep)
             {
                 if (frequency < 37.0)

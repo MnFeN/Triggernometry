@@ -456,9 +456,9 @@ namespace Triggernometry.Core.Actions
             switch (typ)
             {
                 case ExpressionType.Numeric:
-                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, expr));
+                    return I18n.ThingToString(EvalNumeric(expr, ctx));
                 case ExpressionType.String:
-                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, expr);
+                    return EvalString(expr, ctx);
             }
             return "";
         }
@@ -496,7 +496,7 @@ namespace Triggernometry.Core.Actions
                     {
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string value = GetListExpressionValue(ctx, ValueType, Value);
-                        int index = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
+                        int index = (int)EvalNumeric(Index, ctx);
                         lock (srcStore.List)
                         {
                             VariableList vl = srcStore.GetListVariable(srcName, true);
@@ -514,7 +514,7 @@ namespace Triggernometry.Core.Actions
                         CheckInvalidDymanicExpr(Value, invalidExprs);
 
                         string value;
-                        int index = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
+                        int index = (int)EvalNumeric(Index, ctx);
                         lock (srcStore.List)
                         {
                             VariableList vl = srcStore.GetListVariable(srcName, true);
@@ -534,7 +534,7 @@ namespace Triggernometry.Core.Actions
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
-                        int newLength = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
+                        int newLength = (int)EvalNumeric(Index, ctx);
                         // create a new list to avoid setting values base on previously edited ones
                         VariableList vlNew = new VariableList();
                         lock (srcStore.List)
@@ -558,7 +558,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.Remove:
                     {
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
-                        int index = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
+                        int index = (int)EvalNumeric(Index, ctx);
                         lock (srcStore.List)
                         {
                             VariableList vl = srcStore.GetListVariable(srcName, false);
@@ -573,7 +573,7 @@ namespace Triggernometry.Core.Actions
                     {
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
-                        int rawIndex = string.IsNullOrWhiteSpace(Index) ? 1 : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
+                        int rawIndex = string.IsNullOrWhiteSpace(Index) ? 1 : (int)EvalNumeric(Index, ctx);
 
                         string newval = "";
                         lock (srcStore.List)
@@ -602,11 +602,11 @@ namespace Triggernometry.Core.Actions
                         bool isInsert = Operation == OperationEnum.PopToListInsert;
                         bool popToEnd = isInsert && string.IsNullOrWhiteSpace(Value);
 
-                        int rawSourceIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
+                        int rawSourceIndex = (int)EvalNumeric(Index, ctx);
                         int rawTargetIndex = 0;
                         if (!popToEnd)
                         {
-                            rawTargetIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
+                            rawTargetIndex = (int)EvalNumeric(Value, ctx);
                         }
 
                         VariableScalar popped;
@@ -690,8 +690,8 @@ namespace Triggernometry.Core.Actions
                                 for (int keyIndex = 0; keyIndex < keysCount; keyIndex++)
                                 {
                                     string keyValue = isNumeric[keyIndex]
-                                        ? I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, keysExpr[keyIndex]))
-                                        : ctx.EvaluateStringExpression(ActionContextLogger, ctx, keysExpr[keyIndex]);
+                                        ? I18n.ThingToString(EvalNumeric(keysExpr[keyIndex], ctx))
+                                        : EvalString(keysExpr[keyIndex], ctx);
                                     values[keyIndex].Add(keyValue);
                                 }
                             }
@@ -740,7 +740,7 @@ namespace Triggernometry.Core.Actions
                     {
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
-                        int rawIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Index);
+                        int rawIndex = (int)EvalNumeric(Index, ctx);
                         VariableList vl = null;
                         VariableList vlcopy = null;
                         lock (srcStore.List)
@@ -783,7 +783,7 @@ namespace Triggernometry.Core.Actions
                             for (int i = 0; i < vl.Size; i++)
                             {
                                 ctx.listIndex = i + 1;  // for ${_idx}
-                                double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
+                                double result = EvalNumeric(Value, ctx);
                                 if (!MathParser.IsZero(result))
                                 {
                                     vlResult.Values.Add(vl.Values[i].Duplicate());

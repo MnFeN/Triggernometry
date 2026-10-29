@@ -319,11 +319,11 @@ namespace Triggernometry.Core.Actions
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         if (Operation == OperationEnum.SetString)
                         {
-                            newval = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
+                            newval = EvalString(Value, ctx);
                         }
                         else
                         {
-                            newval = I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
+                            newval = I18n.ThingToString(EvalNumeric(Value, ctx));
                         }
 
                         VariableScalar x = new VariableScalar();
@@ -343,7 +343,7 @@ namespace Triggernometry.Core.Actions
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         double original = 0;
                         double increment = string.IsNullOrWhiteSpace(Value)
-                            ? 1 : ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
+                            ? 1 : EvalNumeric(Value, ctx);
                         VariableScalar x = new VariableScalar { LastChanger = changer, LastChanged = DateTime.Now };
                         lock (srcStore.Scalar)
                         {
@@ -351,7 +351,7 @@ namespace Triggernometry.Core.Actions
                             {
                                 if (!string.IsNullOrWhiteSpace(originalVar.Value))
                                 {
-                                    original = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, originalVar.Value);
+                                    original = EvalNumeric(originalVar.Value, ctx);
                                 }
                             }
                             x.Value = I18n.ThingToString(original + increment);
@@ -366,7 +366,7 @@ namespace Triggernometry.Core.Actions
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         newval = srcStore.GetScalarVariable(srcName, false).Value;
                         var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
-                        string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
+                        string query = EvalString(Value, ctx);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         object p = new Utilities.JsonParser().Parse(newval);
                         object[] result = pc.Select(p, query).ToArray();
@@ -394,7 +394,7 @@ namespace Triggernometry.Core.Actions
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         newval = srcStore.GetScalarVariable(srcName, false).Value;
                         var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
-                        string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
+                        string query = EvalString(Value, ctx);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         object p = new Utilities.JsonParser().Parse(newval);
                         object[] result = pc.Select(p, query).ToArray();

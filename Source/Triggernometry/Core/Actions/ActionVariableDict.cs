@@ -406,17 +406,17 @@ namespace Triggernometry.Core.Actions
             string ParseKey()
             {
                 if (KeyType == ExpressionType.String)
-                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, Key);
+                    return EvalString(Key, ctx);
                 else
-                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Key));
+                    return I18n.ThingToString(EvalNumeric(Key, ctx));
 
             }
             string ParseValue()
             {
                 if (ValueType == ExpressionType.String)
-                    return ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
+                    return EvalString(Value, ctx);
                 else
-                    return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
+                    return I18n.ThingToString(EvalNumeric(Value, ctx));
             }
 
             string changer = DescribeVariableChanger(ctx);
@@ -584,7 +584,7 @@ namespace Triggernometry.Core.Actions
                             {
                                 ctx.dictKey = pair.Key;                 // for ${_key}
                                 ctx.dictValue = pair.Value.ToString();  // for ${_val}
-                                double result = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
+                                double result = EvalNumeric(Value, ctx);
                                 if (!MathParser.IsZero(result))
                                 {
                                     vdResult.Values[pair.Key] = pair.Value.Duplicate();
@@ -606,7 +606,7 @@ namespace Triggernometry.Core.Actions
                     {
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         bool isLengthMode = !string.IsNullOrWhiteSpace(Count);
-                        int length = isLengthMode ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Count) : 0;
+                        int length = isLengthMode ? (int)EvalNumeric(Count, ctx) : 0;
                         // Only length-based generation establishes an index for each entry.
                         string[] invalidExprs = isLengthMode
                             ? new[] { "${_row", "${_col", "${_this}" }

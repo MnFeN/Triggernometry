@@ -432,7 +432,7 @@ namespace Triggernometry.Core.Actions
                         // Specified Tag Regex
                         if (!string.IsNullOrWhiteSpace(TagRegex))
                         {
-                            var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, TagRegex);
+                            var tag = ctx.EvaluateStringExpression(ExpressionLogger, null, TagRegex);
                             var regex = new Regex(tag);
                             var removedCount = plug.CancelQueuedActions(
                                 _qa => regex.IsMatch(_qa?.ParsedTag ?? "")
@@ -458,7 +458,7 @@ namespace Triggernometry.Core.Actions
 
                         if (!string.IsNullOrWhiteSpace(TagRegex))
                         {
-                            var tag = ctx.EvaluateStringExpression(ActionContextLogger, null, TagRegex);
+                            var tag = ctx.EvaluateStringExpression(ExpressionLogger, null, TagRegex);
                             var regex = new Regex(tag);
                             var removedCount = plug.CancelQueuedActions(
                                 _qa => trigFilter(_qa) && regex.IsMatch(_qa?.ParsedTag ?? "")
@@ -482,8 +482,8 @@ namespace Triggernometry.Core.Actions
                     {
                         LogEvent le = new LogEvent
                         {
-                            Text = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Text),
-                            ZoneName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Zone)
+                            Text = EvalString(Text, ctx),
+                            ZoneName = EvalString(Zone, ctx)
                         };
                         if (ZoneType == ZoneTypeEnum.ZoneIdFFXIV && le.ZoneName.Trim().Length > 0)
                         {

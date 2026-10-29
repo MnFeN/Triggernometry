@@ -188,23 +188,23 @@ namespace Triggernometry.Core.Actions
             {
                 case OperationEnum.SendKeys:
                     {
-                        string ks = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Keypress);
+                        string ks = EvalString(Keypress, ctx);
                         SendKeys.SendWait(ks);
                     }
                     break;
                 case OperationEnum.WindowMessage:
                     {
-                        int procid = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ProcessId);
-                        string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WinTitleRegex);
-                        int keycode = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Keycode);
+                        int procid = (int)EvalNumeric(ProcessId, ctx);
+                        string window = EvalString(WinTitleRegex, ctx);
+                        int keycode = (int)EvalNumeric(Keycode, ctx);
                         WindowsUtils.SendKeycode(procid, window, keycode);
                     }
                     break;
                 case OperationEnum.WindowMessageCombo:
                     {
-                        int procid = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, ProcessId);
-                        string window = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WinTitleRegex);
-                        int[] keycodes = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Keycode)
+                        int procid = (int)EvalNumeric(ProcessId, ctx);
+                        string window = EvalString(WinTitleRegex, ctx);
+                        int[] keycodes = EvalString(Keycode, ctx)
                             .Split(',').Select(kx => Convert.ToInt32(kx.Trim())).ToArray();
                         WindowsUtils.SendKeycodes(procid, window, keycodes);
                     }

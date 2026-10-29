@@ -421,7 +421,7 @@ namespace Triggernometry.Core
                 try
                 {
                     var shouldCheckCondition = !ctx.forceType.HasFlag(ActionTriggerOperation.ForceEnum.SkipConditions) && !ctx.testByPlaceholder;
-                    var conditionFailed = shouldCheckCondition && Condition?.Enabled == true && !Condition.Check(ctx, ActionContextLogger, ctx);
+                    var conditionFailed = shouldCheckCondition && Condition?.Enabled == true && !Condition.Check(ctx, ExpressionLogger, ctx);
                     if (conditionFailed)
                     {
                         ctx.PushActionResult(0);
@@ -494,10 +494,24 @@ namespace Triggernometry.Core
 
         #region Action helpers
 
+        private Context.LoggerDelegate _expressionLogger;
+
+        /// <summary>复用仅绑定当前动作的日志委托，执行上下文仍由调用方传入。</summary>
+        internal Context.LoggerDelegate ExpressionLogger
+            => _expressionLogger ?? (_expressionLogger = ActionContextLogger);
+
         public void ActionContextLogger(object o, string msg)
         {
             AddToLog((Context)o, DebugLevelEnum.Verbose, msg);
         }
+
+        /// <summary>使用当前动作的日志回调解析数值表达式。</summary>
+        protected double EvalNumeric(string expression, Context ctx)
+            => ctx.EvaluateNumericExpression(ExpressionLogger, ctx, expression);
+
+        /// <summary>使用当前动作的日志回调解析文本表达式。</summary>
+        protected string EvalString(string expression, Context ctx)
+            => ctx.EvaluateStringExpression(ExpressionLogger, ctx, expression);
 
         /// <summary>生成变量修改来源文本，区分触发器执行和独立执行。</summary>
         protected string DescribeVariableChanger(Context ctx)
@@ -512,7 +526,7 @@ namespace Triggernometry.Core
         protected (string Name, VariableStore Store) ResolveVariable(Context ctx, string expression, bool persistent)
         {
             RealPlugin plug = ctx.Plugin;
-            return (ctx.EvaluateStringExpression(ActionContextLogger, ctx, expression), plug.GetVariableStore(persistent));
+            return (EvalString(expression, ctx), plug.GetVariableStore(persistent));
         }
 
         protected IOrderedEnumerable<int> ApplySorting(int elementCount, List<bool> isNumeric, List<bool> isAscending, List<List<string>> values)

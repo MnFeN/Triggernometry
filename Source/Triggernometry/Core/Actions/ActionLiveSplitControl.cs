@@ -161,7 +161,7 @@ namespace Triggernometry.Core.Actions
                             livesplitController.Resume();
                             break;
                         case OperationEnum.CustomPayload:
-                            string lscommand = ctx.EvaluateStringExpression(ActionContextLogger, ctx, CustomPayload);
+                            string lscommand = EvalString(CustomPayload, ctx);
                             livesplitController.SendCommand(lscommand);
                             break;
                     }

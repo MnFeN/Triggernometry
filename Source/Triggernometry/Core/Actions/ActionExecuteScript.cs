@@ -61,8 +61,8 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            string scp = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Script);
-            string assy = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Assemblies);
+            string scp = EvalString(Script, ctx);
+            string assy = EvalString(Assemblies, ctx);
             while (plug.scriptingInited == false)
             {
                 Thread.Sleep(10);
