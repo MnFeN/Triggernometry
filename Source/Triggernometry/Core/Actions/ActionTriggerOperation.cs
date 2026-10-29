@@ -499,42 +499,24 @@ namespace Triggernometry.Core.Actions
                     }
                     break;
                 case OperationEnum.EnableTrigger:
-                    {
-                        t.Enabled = true;
-                        plug.ui.Invoke((System.Action)(() =>
-                        {
-                            bool isLocal = ctx.Trigger == null || ctx.Trigger.Repo == null;
-                            TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
-
-                            if (tn != null)
-                            {
-                                AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/trigenable", "Trigger '{0}' enabled", t.LogName));
-                                tn.Checked = true;
-                            }
-                            else
-                            {
-                                AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodetrigenable", "Could not find tree node to modify for enabling trigger {0}", t.LogName));
-                            }
-                        }));
-                    }
-                    break;
                 case OperationEnum.DisableTrigger:
                     {
-                        t.Enabled = false;
-                        plug.ui.Invoke((System.Action)(() =>
+                        bool isEnable = Operation == OperationEnum.EnableTrigger;
+                        t.Enabled = isEnable;
+                        plug.ui.Invoke((Action)(() =>
                         {
-                            bool isLocal = ctx.Trigger == null || ctx.Trigger.Repo == null;
+                            bool isLocal = ctx.Trigger?.Repo == null;
                             TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
-
                             if (tn != null)
                             {
-                                AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/trigdisable", "Trigger '{0}' disabled", t.LogName));
-                                tn.Checked = false;
+                                AddToLog(ctx, DebugLevelEnum.Verbose, isEnable
+                                    ? I18n.Translate("internal/Action/trigenable", "Trigger '{0}' enabled", t.LogName)
+                                    : I18n.Translate("internal/Action/trigdisable", "Trigger '{0}' disabled", t.LogName));
+                                tn.Checked = isEnable;
                             }
-                            else
-                            {
-                                AddToLog(ctx, DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodetrigdisable", "Could not find tree node to modify for disabling trigger {0}", t.LogName));
-                            }
+                            else AddToLog(ctx, DebugLevelEnum.Warning, isEnable
+                                ? I18n.Translate("internal/Action/notreenodetrigenable", "Could not find tree node to modify for enabling trigger {0}", t.LogName)
+                                : I18n.Translate("internal/Action/notreenodetrigdisable", "Could not find tree node to modify for disabling trigger {0}", t.LogName));
                         }));
                     }
                     break;
