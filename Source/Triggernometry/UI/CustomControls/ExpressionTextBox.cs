@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Data;
@@ -1556,6 +1556,36 @@ namespace Triggernometry.UI.CustomControls
             lock (lockObject ?? variables) return variables.Keys.ToList();
         }
 
+        /// <summary>检查名称是否已存在，只查询支持动态补全历史的数据源。</summary>
+        private static bool IsExistingAutofillName(string name, AutofillTypeEnum type, bool isPersistent)
+        {
+            bool Contains<T>(Dictionary<string, T> variables)
+            {
+                lock (variables) return variables.ContainsKey(name);
+            }
+            var plug = RealPlugin.Instance;
+            var store = plug.GetVariableStore(isPersistent);
+            switch (type)
+            {
+                case AutofillTypeEnum.Registered:
+                    return Contains(plug.RegisteredVariables);
+                case AutofillTypeEnum.Scalar:
+                    return Contains(store.Scalar);
+                case AutofillTypeEnum.List:
+                    return Contains(store.List);
+                case AutofillTypeEnum.Table:
+                    return Contains(store.Table);
+                case AutofillTypeEnum.Dict:
+                    return Contains(store.Dict);
+                case AutofillTypeEnum.Text:
+                    return plug.sc != null ? Contains(plug.sc.textitems) : Contains(plug.textauras);
+                case AutofillTypeEnum.Image:
+                    return plug.sc != null ? Contains(plug.sc.imageitems) : Contains(plug.imageauras);
+                default:
+                    return false;
+            }
+        }
+
         private void RegisterAutofillNames()
         {
             if (ExpressionType == SupportedExpressionTypeEnum.Regex)
@@ -1592,8 +1622,7 @@ namespace Triggernometry.UI.CustomControls
             }
             dynamicNames.Remove(name);
 
-            List<string> existingNames = GetExistingAutofillNameList(type, isPersistent);
-            if (!existingNames.Contains(name))
+            if (!IsExistingAutofillName(name, type, isPersistent))
             {
                 dynamicNames.Add(name);
                 if (dynamicNames.Count > 30)
