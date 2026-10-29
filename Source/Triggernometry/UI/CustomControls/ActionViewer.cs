@@ -349,9 +349,11 @@ namespace Triggernometry.UI.CustomControls
                 }
                 else
                 {
-                    e.InheritedRowStyle.BackColor = (bgColor != Color.Empty) ? bgColor : dgvActions.DefaultCellStyle.BackColor;
-                    e.InheritedRowStyle.ForeColor = (textColor != Color.Empty) ? textColor :
-                                            (a.Enabled) ? dgvActions.DefaultCellStyle.ForeColor : Color.FromArgb(176, 192, 208);
+                    e.InheritedRowStyle.BackColor = (bgColor != Color.Empty)
+                        ? bgColor : dgvActions.DefaultCellStyle.BackColor;
+                    e.InheritedRowStyle.ForeColor = (textColor != Color.Empty)
+                        ? textColor : (a.Enabled)
+                            ? dgvActions.DefaultCellStyle.ForeColor : Color.FromArgb(176, 192, 208);
                 }
             }
         }
@@ -741,7 +743,7 @@ namespace Triggernometry.UI.CustomControls
 
         private bool OkToPasteAction()
         {
-            string data = System.Windows.Forms.Clipboard.GetText(TextDataFormat.UnicodeText);
+            string data = Clipboard.GetText(TextDataFormat.UnicodeText);
             return IsReadonly == false && (data != null && data.Length > 0);
         }
 

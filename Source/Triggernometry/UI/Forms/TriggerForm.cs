@@ -88,9 +88,12 @@ namespace Triggernometry.UI.Forms
             TreeView = treeView;
             Images = imageList;
 
-            if (isReadOnly) SetReadOnly();
-            if (isReadMe) EnterReadmeMode();
-            else BtnOkUpdateText();
+            if (isReadOnly)
+                SetReadOnly();
+            if (isReadMe)
+                EnterReadmeMode();
+            else
+                BtnOkUpdateText();
 
             _isInitializing = false;
             initialTriggerXml = GetTriggerSettingsXml();
@@ -118,7 +121,7 @@ namespace Triggernometry.UI.Forms
         private void CloseTree(TreeNode tn)
         {
             if (tn.Tag is Folder folder)
-            { 
+            {
                 tn.ImageIndex = (int)CustomControls.UserInterface.GetImageIndexForClosedFolder(folder);
                 tn.SelectedImageIndex = tn.ImageIndex;
             }
@@ -201,7 +204,7 @@ namespace Triggernometry.UI.Forms
             t.PrevActions = (Trigger.PrevActionsEnum)cbxRefireOption1.SelectedIndex;
             t.PrevActionsRefire = (Trigger.RefireEnum)cbxRefireOption2.SelectedIndex;
             t.Scheduling = (Trigger.SchedulingEnum)cbxScheduleFrom.SelectedIndex;
-            t.PeriodRefire = (Trigger.RefireEnum)cbxRefireWithinPeriod.SelectedIndex; 
+            t.PeriodRefire = (Trigger.RefireEnum)cbxRefireWithinPeriod.SelectedIndex;
             t.Source = (Trigger.TriggerSourceEnum)cbxTriggerSource.SelectedIndex;
             t.Tag = expTag.Expression;
             t.RefirePeriodExpression = expRefirePeriod.Expression;
@@ -237,7 +240,7 @@ namespace Triggernometry.UI.Forms
                 return true;
             }
             if (tn.Tag is Trigger)
-            {                                
+            {
                 return true;
             }
             List<TreeNode> rems = new List<TreeNode>();
@@ -327,47 +330,54 @@ namespace Triggernometry.UI.Forms
 
         internal void GetDescInterrupt()
         {
-            if (_isInitializing) return; 
+            if (_isInitializing)
+                return;
             interrupt = (cbxRefireOption1.SelectedIndex != (int)Trigger.PrevActionsEnum.Keep || cbxRefireOption2.SelectedIndex != (int)Trigger.RefireEnum.Allow) ;
         }
 
         internal void GetDescCooldown()
         {
-            if (_isInitializing) return;
-            try 
-            { 
+            if (_isInitializing)
+                return;
+            try
+            {
                 cooldown = (cbxRefireWithinPeriod.SelectedIndex == 0) ? 0
-                         : Math.Round(UiContext.EvaluateNumericExpression(null, null, expRefirePeriod.Text)); 
+                         : Math.Round(UiContext.EvaluateNumericExpression(null, null, expRefirePeriod.Text));
             }
             catch { cooldown = double.NaN; }
         }
 
         private void actionViewer1_ActionsUpdated(object sender, EventArgs e)
         {
-            if (_isInitializing) return;
+            if (_isInitializing)
+                return;
             SetTriggerDescription();
         }
 
         private void cndCondition_ConditionsUpdated(object sender, EventArgs e)
         {
-            if (_isInitializing) return;
+            if (_isInitializing)
+                return;
             SetTriggerDescription();
         }
 
         private void interrupt_Changed(object sender, EventArgs e)
         {
-            if (_isInitializing) return;
+            if (_isInitializing)
+                return;
             SetTriggerDescription();
         }
         private void cooldown_Changed(object sender, EventArgs e)
         {
-            if (_isInitializing) return;
+            if (_isInitializing)
+                return;
             SetTriggerDescription();
         }
 
         private void UpdateTriggerDescription(object sender, EventArgs e)
         {
-            if (_isInitializing) return;
+            if (_isInitializing)
+                return;
             SetTriggerDescription();
         }
 
@@ -400,7 +410,7 @@ namespace Triggernometry.UI.Forms
             // [Conditions: 2 (OR)]
             if (rootConditionCount != 0)
             {
-                string count = (rootConditionCount > 0) 
+                string count = (rootConditionCount > 0)
                              ? rootConditionCount.ToString()                             // > 0: active nodes are all triggers
                              : I18n.Translate("internal/TriggerForm/descCndGrouped", "Grouped");  // -1: contains active group folder
                 if (rootConditionCount > 1)
@@ -409,7 +419,7 @@ namespace Triggernometry.UI.Forms
                     string logicDesc = I18n.Translate($"internal/TriggerForm/descCndType{logic}", logic.ToUpper());
                     desc += I18n.Translate("internal/TriggerForm/descCndCntLogic", "[Conditions: {0} ({1})]  ", count, logicDesc);
                 }
-                else 
+                else
                 {
                     desc += I18n.Translate("internal/TriggerForm/descCndCnt", "[Conditions: {0}]  ", count);
                 }
@@ -444,7 +454,7 @@ namespace Triggernometry.UI.Forms
                       : I18n.Translate("internal/TriggerForm/descCooldown", "[Cooldown] ");
 
             // [Mutex]
-            if (expMutexName.Text != "") 
+            if (expMutexName.Text != "")
                 desc += I18n.Translate("internal/TriggerForm/descMutex", "[Mutex] ");
 
             // [Sequential]
@@ -464,7 +474,7 @@ namespace Triggernometry.UI.Forms
                 {
                     continue;
                 }
-                
+
                 CancelDgvSelectionAttachToAll(control);
             }
         }

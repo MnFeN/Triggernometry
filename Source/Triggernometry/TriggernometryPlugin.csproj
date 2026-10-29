@@ -107,6 +107,10 @@
 		<Compile Remove="UI\Forms\testi2.Designer.cs" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="UI\CustomControls\ExpressionTextBox.Autocomplete.cs;UI\CustomControls\ExpressionTextBox.TextBox.cs">
+			<SubType>Code</SubType>
+			<DependentUpon>ExpressionTextBox.cs</DependentUpon>
+		</Compile>
 		<Compile Update="UI\CustomControls\ActionEditor.cs">
 			<SubType>UserControl</SubType>
 		</Compile>
