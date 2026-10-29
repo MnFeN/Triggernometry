@@ -267,11 +267,11 @@ namespace Triggernometry.UI.Forms
 
             public static double? AskForSpeed()
             {
-                string inputSpeed = new SimpleInputForm(
+                string inputSpeed = SimpleInputForm.GetInput(
                     I18n.Translate("internal/TestInputForm/debugspeed", "Enter a positive number for the speed:"),
                     ExpressionTextBox.SupportedExpressionTypeEnum.Numeric,
                     PreviousSpeed ?? "1"
-                    ).GetInput();
+                    );
                 if (inputSpeed == null) // cancel
                     return null;
                 double speed;

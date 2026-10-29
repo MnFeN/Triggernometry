@@ -639,16 +639,14 @@ namespace Triggernometry.UI.CustomControls
 
         private void ctxEditPropDelay_Click(object sender, EventArgs e)
         {
-            string value = new SimpleInputForm(
+            string value = SimpleInputForm.GetInput(
                 I18n.Translate("internal/ActionViewer/setDelay", "Set Core.Action Delay To (ms)"),
                 ExpressionTextBox.SupportedExpressionTypeEnum.Numeric
-                ).GetInput();
-            if (value != null)
+                );
+            if (value == null) return;
+            foreach (Core.ActionBase a in SelectedActions())
             {
-                foreach (Core.ActionBase a in SelectedActions())
-                {
-                    a.ExecDelay = value;
-                }
+                a.ExecDelay = value;
             }
             dgvActions.Refresh();
             OnActionsUpdated();
@@ -656,16 +654,14 @@ namespace Triggernometry.UI.CustomControls
 
         private void ctxEditPropBgColor_Click(object sender, EventArgs e)
         {
-            string value = new SimpleInputForm(
+            string value = SimpleInputForm.GetInput(
                 I18n.Translate("internal/ActionViewer/setBgColor", "Set Description Background Color To"),
                 ExpressionTextBox.SupportedExpressionTypeEnum.Color
-                ).GetInput();
-            if (value != null)
+                );
+            if (value == null) return;
+            foreach (Core.ActionBase a in SelectedActions())
             {
-                foreach (Core.ActionBase a in SelectedActions())
-                {
-                    a.DescBackColor = value;
-                }
+                a.DescBackColor = value;
             }
             dgvActions.Refresh();
             OnActionsUpdated();
@@ -673,16 +669,14 @@ namespace Triggernometry.UI.CustomControls
 
         private void ctxEditPropTextColor_Click(object sender, EventArgs e)
         {
-            string value = new SimpleInputForm(
+            string value = SimpleInputForm.GetInput(
                 I18n.Translate("internal/ActionViewer/setTextColor", "Set Description Text Color To"), 
                 ExpressionTextBox.SupportedExpressionTypeEnum.Color
-                ).GetInput();
-            if (value != null)
+                );
+            if (value == null) return;
+            foreach (Core.ActionBase a in SelectedActions())
             {
-                foreach (Core.ActionBase a in SelectedActions())
-                {
-                    a.DescTextColor = value;
-                }
+                a.DescTextColor = value;
             }
             dgvActions.Refresh();
             OnActionsUpdated();

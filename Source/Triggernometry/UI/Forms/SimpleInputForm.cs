@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Triggernometry.Core;
@@ -78,6 +78,15 @@ namespace Triggernometry.UI.Forms
             Close();
         }
 
+        /// <summary>创建输入窗口并返回结果，取消返回 null；窗口在取值后自动释放。</summary>
+        public static string GetInput(string title, ExpressionTextBox.SupportedExpressionTypeEnum exprType,
+            string defaultValue = "", bool multiline = false, IWin32Window owner = null)
+        {
+            using (var form = new SimpleInputForm(title, exprType, defaultValue, multiline))
+                return form.GetInput(owner);
+        }
+
+        /// <summary>显示当前窗口并返回输入，取消返回 null；由调用方负责释放窗口。</summary>
         public string GetInput(IWin32Window owner = null)
         {
             return ShowDialog(owner) == DialogResult.OK ? expEditedValue.Text : null;
