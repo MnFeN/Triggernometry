@@ -129,7 +129,7 @@ namespace Triggernometry.Core
 
         internal void RecordCaptureGroups(Trigger trigger, Match match)
         {
-            bool shouldLogCaptures = Plugin != null && (Plugin.cfg == null || Plugin.cfg.DebugLevel >= DebugLevelEnum.Verbose);
+            bool shouldLogCaptures = Plugin != null && (Plugin.Config == null || Plugin.Config.DebugLevel >= DebugLevelEnum.Verbose);
 
             _numRegexGroups = new List<string>();
             foreach (int idx in trigger.regexCache.GetGroupNumbers())
@@ -175,7 +175,7 @@ namespace Triggernometry.Core
 
             if (result != null && Plugin != null)
             {
-                result = Plugin.cfg.PerformSubstitution(result, Substitution.SubstitutionScopeEnum.CaptureGroup);
+                result = Plugin.Config.PerformSubstitution(result, Substitution.SubstitutionScopeEnum.CaptureGroup);
             }
             return result;
         }
@@ -197,7 +197,7 @@ namespace Triggernometry.Core
 
             if (result != null && Plugin != null)
             {
-                result = Plugin.cfg.PerformSubstitution(result, Substitution.SubstitutionScopeEnum.CaptureGroup);
+                result = Plugin.Config.PerformSubstitution(result, Substitution.SubstitutionScopeEnum.CaptureGroup);
             }
             return result;
         }
@@ -237,7 +237,7 @@ namespace Triggernometry.Core
             string exp = ExpandVariables(logger, o, true, expr ?? "");
             if (Plugin != null)
             {
-                exp = Plugin.cfg.PerformSubstitution(exp, Configuration.Substitution.SubstitutionScopeEnum.NumericExpression);
+                exp = Plugin.Config.PerformSubstitution(exp, Configuration.Substitution.SubstitutionScopeEnum.NumericExpression);
             }
             return MathParser.Parse(exp);
         }
@@ -247,7 +247,7 @@ namespace Triggernometry.Core
             string exp = ExpandVariables(logger, o, false, expr ?? "");
             if (Plugin != null)
             {
-                exp = Plugin.cfg.PerformSubstitution(exp, Configuration.Substitution.SubstitutionScopeEnum.StringExpression);
+                exp = Plugin.Config.PerformSubstitution(exp, Configuration.Substitution.SubstitutionScopeEnum.StringExpression);
             }
             return exp;
         }
@@ -259,7 +259,7 @@ namespace Triggernometry.Core
         {
             var result = StringParser.Parse(expr, this, isNumeric);
             // log expansions: ${...} => ...
-            if (Plugin?.cfg?.LogVariableExpansions == true &&
+            if (Plugin?.Config?.LogVariableExpansions == true &&
                 result != expr &&
                 Trigger?.GetDebugLevel(Plugin) >= RealPlugin.DebugLevelEnum.Verbose) // should not be DebugLevelEnum.Inherit here
             {

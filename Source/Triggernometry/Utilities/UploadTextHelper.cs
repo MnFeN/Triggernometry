@@ -98,7 +98,7 @@ namespace Triggernometry.Utilities
         /// <summary> 从随机 Guid <see cref="Configuration.Id" /> 生成的四字随机名，以 3500 个常用汉字编码。</summary>
         public static string GetFakeName()
         {
-            var id = RealPlugin.Instance.cfg.Id;
+            var id = RealPlugin.Instance.Config.Id;
             if (id == Guid.Empty)
                 return "○○○○";
 

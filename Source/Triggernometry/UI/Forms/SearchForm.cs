@@ -350,11 +350,11 @@ namespace Triggernometry.UI.Forms
                 Regex rex = new Regex(text, RegexOptions.IgnoreCase);
                 if ((filter & SearchFilterEnum.ScopeLocal) != 0)
                 {
-                    results.AddRange(SearchIn(plug.cfg.Root, Context.Unbound, rex, filter));
+                    results.AddRange(SearchIn(plug.Config.Root, Context.Unbound, rex, filter));
                 }
                 if ((filter & SearchFilterEnum.Scoperemote) != 0)
                 {
-                    foreach (Repository r in plug.cfg.RepositoryRoot.Repositories)
+                    foreach (Repository r in plug.Config.RepositoryRoot.Repositories)
                     {
                         pathPrefix = I18n.Translate("internal/Configuration/remote", "Remote triggers") + @"\" + r.Name + @"\";
                         if ((filter & SearchFilterEnum.IncludeDisabled) == 0 && r.Enabled == false)

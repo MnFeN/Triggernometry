@@ -16,15 +16,15 @@ namespace Triggernometry.Core
         internal const string UpdateRemotePathCN = "https://1824544011.cdn.123clouddisk.com/1824544011/Triggernometry_Release_CN/";
         private void FixConfigurationOnStartCN()
         {
-            cfg.ShowWelcome = false;
-            cfg.TestLiveByDefault = true;
-            cfg.TestIgnoreConditionsByDefault = true;
-            cfg.TtsMethod = Configuration.AudioRoutingMethodEnum.ACT;
-            cfg.AutosaveEnabled = true;
-            cfg.UpdateNotifications = Configuration.UpdateNotificationsEnum.Yes;
-            cfg.UpdateCheckMethod = Configuration.UpdateCheckMethodEnum.External;
-            cfg.UpdateExternalChannelUrl = UpdateRemotePathCN + "UpdateManifest.xml";
-            var apis = (List<Configuration.APIUsage>)cfg?.GetType()?.GetProperty("_APIUsages", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(cfg);
+            Config.ShowWelcome = false;
+            Config.TestLiveByDefault = true;
+            Config.TestIgnoreConditionsByDefault = true;
+            Config.TtsMethod = Configuration.AudioRoutingMethodEnum.ACT;
+            Config.AutosaveEnabled = true;
+            Config.UpdateNotifications = Configuration.UpdateNotificationsEnum.Yes;
+            Config.UpdateCheckMethod = Configuration.UpdateCheckMethodEnum.External;
+            Config.UpdateExternalChannelUrl = UpdateRemotePathCN + "UpdateManifest.xml";
+            var apis = (List<Configuration.APIUsage>)Config?.GetType()?.GetProperty("_APIUsages", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(Config);
             var utilities = apis?.FirstOrDefault(a => a.Name == "Triggernometry.Utilities");
             if (utilities != null)
             { 

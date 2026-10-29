@@ -160,7 +160,7 @@ namespace Triggernometry.Expressions.String.Parsers
                     return plug.pluginPath;
 
                 case "_pluginversion":
-                    return plug.cfg.PluginVersion;
+                    return plug.Config.PluginVersion;
 
 
                 // ===== Screen =====

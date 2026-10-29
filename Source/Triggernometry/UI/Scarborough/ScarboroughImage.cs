@@ -234,7 +234,7 @@ namespace Scarborough
                 if (File.Exists(fn) == true)
                 {
                     FileInfo fi = new FileInfo(fn);
-                    DateTime dt = DateTime.Now.AddMinutes(0 - plug.cfg.CacheImageExpiry);
+                    DateTime dt = DateTime.Now.AddMinutes(0 - plug.Config.CacheImageExpiry);
                     if (fi.LastWriteTime > dt)
                     {
                         LoadImageDataFromFile(plug, g, fn);

@@ -390,7 +390,7 @@ namespace Triggernometry.Localization
             }
         }
 
-        public static bool IsChineseEnvironment => (RealPlugin.Instance.cfg.Language ?? "").Contains("zh") || CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "zh";
+        public static bool IsChineseEnvironment => (RealPlugin.Instance.Config.Language ?? "").Contains("zh") || CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "zh";
 
     }
 

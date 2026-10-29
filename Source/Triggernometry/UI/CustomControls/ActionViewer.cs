@@ -548,8 +548,8 @@ namespace Triggernometry.UI.CustomControls
             switch (item.Name)
             {
                 case "ctxTestAction":
-                    ctx.testByPlaceholder = RealPlugin.Instance.cfg.TestLiveByDefault == false;
-                    if (Plugin.cfg.TestIgnoreConditionsByDefault)
+                    ctx.testByPlaceholder = RealPlugin.Instance.Config.TestLiveByDefault == false;
+                    if (Plugin.Config.TestIgnoreConditionsByDefault)
                         a.Condition = new ConditionGroup();
                     ctxAction.Close();
                     break;
@@ -561,7 +561,7 @@ namespace Triggernometry.UI.CustomControls
                     break;
                 case "ctxTestLiveIgnoreCnd":
                     ctx.testByPlaceholder = false;
-                    if (Plugin.cfg.TestIgnoreConditionsByDefault)
+                    if (Plugin.Config.TestIgnoreConditionsByDefault)
                         a.Condition = new ConditionGroup();
                     break;
             }

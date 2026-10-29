@@ -856,9 +856,6 @@
     <TranslationEntry Key="internal/BenchmarkForm/estmaximum" Translation="(Estimated maximum sustainable event load per second)" />
     <TranslationEntry Key="internal/BenchmarkForm/esttotal" Translation="(Estimated total evaluation time per event)" />
     <TranslationEntry Key="internal/BenchmarkForm/exception" Translation="An exception occurred during benchmark" />
-    <TranslationEntry Key="internal/BenchmarkForm/microsecond" Translation="µs" />
-    <TranslationEntry Key="internal/BenchmarkForm/millisecond" Translation="ms" />
-    <TranslationEntry Key="internal/BenchmarkForm/nanosecond" Translation="ns" />
     <TranslationEntry Key="internal/BenchmarkForm/resultexception" Translation="An exception occurred during compiling benchmark results" />
     <TranslationEntry Key="internal/BridgeCactbot/configfailed" Translation="Failed to retrieve Cactbot configuration." />
     <TranslationEntry Key="internal/BridgeCafe/invalidobjecttype" Translation="Object '{0}' is not of type {1}." />

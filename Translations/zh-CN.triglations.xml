@@ -856,9 +856,6 @@
     <TranslationEntry Key="internal/BenchmarkForm/estmaximum" Translation="（估计每秒最大可持续事件负载）" />
     <TranslationEntry Key="internal/BenchmarkForm/esttotal" Translation="（估计每个事件的总评估时间）" />
     <TranslationEntry Key="internal/BenchmarkForm/exception" Translation="基准测试期间发生异常" />
-    <TranslationEntry Key="internal/BenchmarkForm/microsecond" Translation="μs" />
-    <TranslationEntry Key="internal/BenchmarkForm/millisecond" Translation="ms" />
-    <TranslationEntry Key="internal/BenchmarkForm/nanosecond" Translation="ns" />
     <TranslationEntry Key="internal/BenchmarkForm/resultexception" Translation="编译基准测试结果时发生异常" />
     <TranslationEntry Key="internal/BridgeCactbot/configfailed" Translation="获取 Cactbot 配置失败." />
     <TranslationEntry Key="internal/BridgeCafe/invalidobjecttype" Translation="对象“{0}”不是 {1} 类型。" />

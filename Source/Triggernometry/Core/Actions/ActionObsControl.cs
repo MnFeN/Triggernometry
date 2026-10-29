@@ -241,7 +241,7 @@ namespace Triggernometry.Core.Actions
             }
             else
             {
-                var constants = RealPlugin.Instance.cfg.Constants;
+                var constants = RealPlugin.Instance.Config.Constants;
                 if (constants.TryGetValue("OBSWebsocketEndpoint", out var e) && constants.TryGetValue("OBSWebsocketPort", out var p))
                     endpoint = $"ws://{e}:{p}";
             }
@@ -253,7 +253,7 @@ namespace Triggernometry.Core.Actions
             }
             else
             {
-                var constants = RealPlugin.Instance.cfg.Constants;
+                var constants = RealPlugin.Instance.Config.Constants;
                 if (constants.TryGetValue("OBSWebsocketPassword", out var pw))
                     password = pw.ToString();
             }

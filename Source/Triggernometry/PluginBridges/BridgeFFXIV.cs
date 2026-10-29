@@ -19,7 +19,7 @@ namespace Triggernometry.PluginBridges
 
         private const string ActPluginName = "FFXIV_ACT_Plugin.dll";
         private const string ActPluginType = "FFXIV_ACT_Plugin.FFXIV_ACT_Plugin";
-        public static Configuration cfg = RealPlugin.Instance.cfg;
+        public static Configuration cfg = RealPlugin.Instance.Config;
 
         internal delegate void LoggingDelegate(RealPlugin.DebugLevelEnum level, string text);
         internal static event LoggingDelegate OnLogEvent;

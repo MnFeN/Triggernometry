@@ -48,10 +48,10 @@ namespace Triggernometry.Core
 
         private void SetupDefaultSecurity()
         {
-            MethodInfo setter = cfg.GetType().GetMethod("AddAPIUsage", BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo setter = Config.GetType().GetMethod("AddAPIUsage", BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (Configuration.APIUsage a in DefaultAPIUsages)
             {
-                setter.Invoke(cfg, new object[] { a, false });
+                setter.Invoke(Config, new object[] { a, false });
             }
         }
 

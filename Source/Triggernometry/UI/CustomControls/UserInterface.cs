@@ -578,7 +578,7 @@ namespace Triggernometry.UI.CustomControls
             else
             {
                 object tag = selectedNode.Tag;
-                if (tag == plug.cfg.RepositoryRoot)
+                if (tag == plug.Config.RepositoryRoot)
                 {
                     btnAdd.Enabled = true;
                     btnUpdate.Enabled = true;
@@ -1124,7 +1124,7 @@ namespace Triggernometry.UI.CustomControls
         internal void btnImportTrigger_Click(object sender, EventArgs e)
         {
             // repo root: redirect to add remote trigger
-            if (treeView1.SelectedNode?.Tag == plug.cfg.RepositoryRoot)
+            if (treeView1.SelectedNode?.Tag == plug.Config.RepositoryRoot)
             {
                 remoteTriggerRepositoryToolStripMenuItem_Click(sender, e);
                 return;
@@ -1169,7 +1169,7 @@ namespace Triggernometry.UI.CustomControls
         internal TriggernometryExport ExportSelection()
         {
             TriggernometryExport exp = new TriggernometryExport();
-            exp.PluginVersion = RealPlugin.Instance.cfg.PluginVersion;
+            exp.PluginVersion = RealPlugin.Instance.Config.PluginVersion;
             if (treeView1.SelectedNode.Tag is Trigger t)
             {
                 exp.ExportedTrigger = t;
@@ -1287,12 +1287,12 @@ namespace Triggernometry.UI.CustomControls
                 cf.trvTrigger.ImageList = imageList1;
                 cf.trvTrigger.Nodes.Add((TreeNode)treeView1.Nodes[0].Clone());
                 CloseTree(cf.trvTrigger.Nodes[0]);
-                cf.SettingsFromConfiguration(plug.cfg);
+                cf.SettingsFromConfiguration(plug.Config);
                 if (cf.ShowDialog() == DialogResult.OK)
                 {
-                    lock (plug.cfg) // verified
+                    lock (plug.Config) // verified
                     {
-                        cf.SettingsToConfiguration(plug.cfg);
+                        cf.SettingsToConfiguration(plug.Config);
                     }
                     UpdateUiFont();
                 }

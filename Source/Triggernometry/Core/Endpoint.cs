@@ -76,13 +76,13 @@ namespace Triggernometry.Core
                 SetStatus(StatusEnum.Starting, null);
                 HttpListener http = new HttpListener();
                 http.Prefixes.Clear();
-                http.Prefixes.Add(plug.cfg.HttpEndpoint);
-                lock (plug.cfg.Constants)
+                http.Prefixes.Add(plug.Config.HttpEndpoint);
+                lock (plug.Config.Constants)
                 {
-                    plug.cfg.Constants["TriggernometryEndpoint"] = new VariableScalar() { Value = plug.cfg.HttpEndpoint };
+                    plug.Config.Constants["TriggernometryEndpoint"] = new VariableScalar() { Value = plug.Config.HttpEndpoint };
                 }
                 Thread th = new Thread(new ParameterizedThreadStart(ThreadProc));
-                Context ctx = new Context() { Endpoint = plug.cfg.HttpEndpoint, Running = true, CtxThread = th, Listener = http };
+                Context ctx = new Context() { Endpoint = plug.Config.HttpEndpoint, Running = true, CtxThread = th, Listener = http };
                 lock (this)
                 {
                     if (curctx != null)

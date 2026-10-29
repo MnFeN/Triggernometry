@@ -148,7 +148,7 @@ namespace Triggernometry.Core
 
         internal Repository GetRepositoryById(Guid id)
         {
-            return (from ix in cfg.RepositoryRoot.Repositories where ix.Id == id select ix).FirstOrDefault();
+            return (from ix in Config.RepositoryRoot.Repositories where ix.Id == id select ix).FirstOrDefault();
         }
 
         internal Trigger GetTriggerById(Guid id, Repository repo)
@@ -179,7 +179,7 @@ namespace Triggernometry.Core
             }
             else
             {
-                return RecursiveFolderSearch(cfg.Root, id, repo);
+                return RecursiveFolderSearch(Config.Root, id, repo);
             }
         }
 

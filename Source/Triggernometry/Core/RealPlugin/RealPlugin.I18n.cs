@@ -29,15 +29,15 @@ namespace Triggernometry.Core
                 FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/langchangeok", "Language is now '{0}'",
                     I18n.CurrentLanguage != null ? I18n.CurrentLanguage.LanguageName : "(not set)"
                 ));
-                if (cfg != null && I18n.CurrentLanguage != null)
+                if (Config != null && I18n.CurrentLanguage != null)
                 {
                     if (langname == null)
                     {
-                        cfg.Language = null;
+                        Config.Language = null;
                     }
                     else
                     {
-                        cfg.Language = I18n.CurrentLanguage.LanguageName;
+                        Config.Language = I18n.CurrentLanguage.LanguageName;
                     }
                 }
             }

@@ -37,7 +37,7 @@ namespace Triggernometry.UI.Forms
         protected void RestoredSavedDimensions()
         {
             I18n.TranslateForm(this);
-            Configuration cfg = RealPlugin.Instance.cfg;
+            Configuration cfg = RealPlugin.Instance.Config;
             if (cfg.UiFontDefault == false)
             {
                 try

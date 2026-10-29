@@ -35,7 +35,7 @@ namespace Triggernometry.UI.Forms
             ClientSize = multiline ? new Size(900, 560) : new Size(480, 130);
             okButton.Text = I18n.Translate("internal/SimpleInputForm/ok", "OK");
             cancelButton.Text = I18n.Translate("internal/SimpleInputForm/cancel", "Cancel");
-            Configuration cfg = RealPlugin.Instance.cfg;
+            Configuration cfg = RealPlugin.Instance.Config;
             if (!cfg.UiFontDefault)
             {
                 fontOverride = RealPlugin.CreateFontFromDefinition(cfg.UiFontName, cfg.UiFontSize, cfg.UiFontEffect);

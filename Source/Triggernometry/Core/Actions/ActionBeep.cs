@@ -63,7 +63,7 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(Context ctx)
         {
             RealPlugin plug = ctx.Plugin;
-            bool useSimulatedBeep = plug.cfg.UseSimulatedBeep;
+            bool useSimulatedBeep = plug.Config.UseSimulatedBeep;
 
             double beepLength = ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Duration);
             if (beepLength < 0.0)
@@ -87,7 +87,7 @@ namespace Triggernometry.Core.Actions
                 }
             }
 
-            double volume = plug.cfg.SimulatedBeepVolume / 100.0;
+            double volume = plug.Config.SimulatedBeepVolume / 100.0;
             Beep(frequency, beepLength, volume, useSimulatedBeep);
         }
 

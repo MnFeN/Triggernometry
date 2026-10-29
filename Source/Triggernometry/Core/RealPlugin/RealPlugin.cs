@@ -320,7 +320,7 @@ namespace Triggernometry.Core
                 LoadLanguages();
 
                 exwhere = I18n.Translate("internal/Plugin/inicfg", "loading configuration");
-                _cfg = LoadConfigFromFile(Path.Combine(ConfigPath, pluginName + ".config.xml"));
+                _config = LoadConfigFromFile(Path.Combine(ConfigPath, pluginName + ".config.xml"));
                 SetupDefaultSecurity();
                 AutofixConfiguration();
                 ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
@@ -334,8 +334,8 @@ namespace Triggernometry.Core
                 ChangeLanguage("简体中文 (zh-CN)");
                 // end
                 HandleVersionUpdate();
-                FixDuplicateFolderReferences(null, cfg, null);
-                PluginBridges.BridgeFFXIV.cfg = cfg;
+                FixDuplicateFolderReferences(null, Config, null);
+                PluginBridges.BridgeFFXIV.cfg = Config;
                 
                 exwhere = I18n.Translate("internal/Plugin/iniactui", "setting up ACT ui");
                 mytp = pluginScreenSpace;
@@ -347,15 +347,15 @@ namespace Triggernometry.Core
                 exwhere = I18n.Translate("internal/Plugin/iniui", "creating user interface");
                 ui = new UserInterface();
                 ui.btnCornerPopup.Tag = pluginScreenSpace;
-                ui.cfg = cfg;
+                ui.cfg = Config;
                 I18n.TranslateControl("Plugin", ui);
                 ui.UpdateUiFont();
                 ui.Dock = DockStyle.Fill;
                 ui.plug = this;
                 pluginScreenSpace.Controls.Add(ui);
-                if (cfg.corruptRecoveryError != "")
+                if (Config.corruptRecoveryError != "")
                 {
-                    FilteredAddToLog(DebugLevelEnum.Error, cfg.corruptRecoveryError);
+                    FilteredAddToLog(DebugLevelEnum.Error, Config.corruptRecoveryError);
                 }
                 exwhere = I18n.Translate("internal/Plugin/inicache", "performing cache cleanup");
                 ClearCache();
@@ -364,7 +364,7 @@ namespace Triggernometry.Core
                 ui.pnlWelcome.Dock = DockStyle.Fill;
                 ui.pnlUi.Dock = DockStyle.Fill;
                 FixConfigurationOnStartCN(); // start
-                if (cfg != null && cfg.ShowWelcome == true)
+                if (Config != null && Config.ShowWelcome == true)
                 {
                     ui.pnlUi.Visible = false;
                     ui.pnlWelcome.Visible = true;
@@ -376,7 +376,7 @@ namespace Triggernometry.Core
                     ui.pnlWelcome.Visible = false;
                     ui.btnOptions.Enabled = true;
                 }
-                if (cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes)
+                if (Config.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes)
                 {
                     exwhere = I18n.Translate("internal/Plugin/iniupdates", "checking for updates");
                     CheckForUpdates();
@@ -388,7 +388,7 @@ namespace Triggernometry.Core
                 }
                 ui.SetupToasts();
                 ui.SetupLanguageMenu();
-                isRunningAsAdmin = CheckIfAdministrator(cfg.WarnAdmin);
+                isRunningAsAdmin = CheckIfAdministrator(Config.WarnAdmin);
                 exwhere = I18n.Translate("internal/Plugin/initree", "building internal data");
                 currentZone = CurrentZoneHook?.Invoke();
                 ui.BuildFullTreeFromConfiguration();
@@ -429,7 +429,7 @@ namespace Triggernometry.Core
                 _livesplit = new LiveSplitController();
                 InitScripting();
                 exwhere = I18n.Translate("internal/Plugin/iniendpoint", "starting endpoint");
-                if (cfg.StartEndpointOnLaunch == true)
+                if (Config.StartEndpointOnLaunch == true)
                 {
                     _ep.Start();
                 }
@@ -750,7 +750,7 @@ namespace Triggernometry.Core
             string detectedZone = currentZone ?? "";
             try
             {
-                if (cfg.LogEndpoint == true)
+                if (Config.LogEndpoint == true)
                 {
                     FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/endpointline", "Endpoint data: ({0})", data));
                 }
@@ -776,7 +776,7 @@ namespace Triggernometry.Core
             }
             try
             {
-                if (cfg.FfxivLogNetwork == true)
+                if (Config.FfxivLogNetwork == true)
                 {
                     FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/ffxivnetworklogline", "Network log line: ({0})", logLine));
                 }
@@ -806,7 +806,7 @@ namespace Triggernometry.Core
             }
             try
             {
-                if (cfg.LogNormalEvents == true)
+                if (Config.LogNormalEvents == true)
                 {
                     FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/logline", "Log line: ({0})", logLine));
                 }
@@ -836,28 +836,28 @@ namespace Triggernometry.Core
         private void ClearCache()
         {
             int cleared = 0, clearedt = 0;
-            cleared = ClearCache("TriggernometryRemoteImages", cfg.CacheImageExpiry);
+            cleared = ClearCache("TriggernometryRemoteImages", Config.CacheImageExpiry);
             if (cleared > 0)
             {
-                FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cachecleanimage", "{0} item(s) cleared from image cache with expiry {1}", cleared, cfg.CacheImageExpiry));
+                FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cachecleanimage", "{0} item(s) cleared from image cache with expiry {1}", cleared, Config.CacheImageExpiry));
                 clearedt += cleared;
             }
-            cleared = ClearCache("TriggernometryRemoteSounds", cfg.CacheSoundExpiry);
+            cleared = ClearCache("TriggernometryRemoteSounds", Config.CacheSoundExpiry);
             if (cleared > 0)
             {
-                FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cachecleansound", "{0} item(s) cleared from sound cache with expiry {1}", cleared, cfg.CacheSoundExpiry));
+                FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cachecleansound", "{0} item(s) cleared from sound cache with expiry {1}", cleared, Config.CacheSoundExpiry));
                 clearedt += cleared;
             }
-            cleared = ClearCache("TriggernometryJsonCache", cfg.CacheJsonExpiry);
+            cleared = ClearCache("TriggernometryJsonCache", Config.CacheJsonExpiry);
             if (cleared > 0)
             {
-                FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cachecleanjson", "{0} item(s) cleared from JSON cache with expiry {1}", cleared, cfg.CacheJsonExpiry));
+                FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cachecleanjson", "{0} item(s) cleared from JSON cache with expiry {1}", cleared, Config.CacheJsonExpiry));
                 clearedt += cleared;
             }
-            cleared = ClearCache("TriggernometryRepoBackups", cfg.CacheRepoExpiry);
+            cleared = ClearCache("TriggernometryRepoBackups", Config.CacheRepoExpiry);
             if (cleared > 0)
             {
-                FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cachecleanrepo", "{0} item(s) cleared from repository cache with expiry {1}", cleared, cfg.CacheRepoExpiry));
+                FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/cachecleanrepo", "{0} item(s) cleared from repository cache with expiry {1}", cleared, Config.CacheRepoExpiry));
                 clearedt += cleared;
             }
             if (clearedt > 0)
@@ -889,7 +889,7 @@ namespace Triggernometry.Core
         }
 
         public VariableStore GetVariableStore(bool isPersistent)
-            => isPersistent ? cfg.PersistentVariables : sessionvars;
+            => isPersistent ? Config.PersistentVariables : sessionvars;
     }
 
 }

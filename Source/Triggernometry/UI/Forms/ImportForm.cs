@@ -356,7 +356,7 @@ namespace Triggernometry.UI.Forms
 
             lblWarning.Text = I18n.Translate("internal/ImportForm/version", 
                 "Source plugin version: {0}    Current plugin version: {1}",
-                tex.PluginVersionDescription, RealPlugin.Instance.cfg.PluginVersion);
+                tex.PluginVersionDescription, RealPlugin.Instance.Config.PluginVersion);
 
             List<string> warningComponents = new List<string>();
 

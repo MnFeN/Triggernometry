@@ -210,19 +210,19 @@ namespace Triggernometry.Core
         /// <summary>Fires the configured startup trigger or the direct children of its folder.</summary>
         private void RunStartupTriggers()
         {
-            if (cfg.StartupTriggerId == Guid.Empty) return;
+            if (Config.StartupTriggerId == Guid.Empty) return;
 
             var logEvent = new LogEvent { Text = "", ZoneName = "", Timestamp = DateTime.Now };
-            switch (cfg.StartupTriggerType)
+            switch (Config.StartupTriggerType)
             {
                 case Configuration.StartupTriggerTypeEnum.Trigger:
-                    Trigger trigger = GetTriggerById(cfg.StartupTriggerId, null);
+                    Trigger trigger = GetTriggerById(Config.StartupTriggerId, null);
                     if (trigger != null)
                         TestTrigger(trigger, logEvent, ActionTriggerOperation.ForceEnum.SkipAll);
                     break;
 
                 case Configuration.StartupTriggerTypeEnum.Folder:
-                    Folder folder = GetFolderById(cfg.StartupTriggerId, null);
+                    Folder folder = GetFolderById(Config.StartupTriggerId, null);
                     if (folder == null) return;
                     foreach (Trigger child in folder.Triggers)
                         TestTrigger(child, logEvent, ActionTriggerOperation.ForceEnum.SkipAll);

@@ -30,7 +30,7 @@ namespace Triggernometry.Core
         internal void CheckForUpdates(bool isManual = false)
         {
             UpdateLastChecked = DateTime.Now;
-            switch (cfg.UpdateCheckMethod)
+            switch (Config.UpdateCheckMethod)
             {
                 case Configuration.UpdateCheckMethodEnum.ACT:
                     CheckForUpdatesACT();
@@ -39,7 +39,7 @@ namespace Triggernometry.Core
                     CheckForUpdatesBuiltin(alwaysNotify: isManual);
                     break;
                 case Configuration.UpdateCheckMethodEnum.External:
-                    CheckForUpdatesExternal(cfg.UpdateExternalChannelUrl, notifyIfLatest: isManual);
+                    CheckForUpdatesExternal(Config.UpdateExternalChannelUrl, notifyIfLatest: isManual);
                     break;
             }
         }
@@ -191,7 +191,7 @@ namespace Triggernometry.Core
 
         public void CheckForUpdatesExternal(string manifestUrl = null, bool notifyIfLatest = false, bool forceAutoUpdate = false)
         {
-            manifestUrl = manifestUrl ?? cfg.UpdateExternalChannelUrl;
+            manifestUrl = manifestUrl ?? Config.UpdateExternalChannelUrl;
 
             Task.Run(async () =>
             {
@@ -222,7 +222,7 @@ namespace Triggernometry.Core
                     FilteredAddToLog(DebugLevelEnum.Info, I18n.Translate("internal/Plugin/verchecknew",
                         "Version check: A new version {0} is available to replace current version {1}", remoteVersion, localVersion));
 
-                    if (forceAutoUpdate || cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes)
+                    if (forceAutoUpdate || Config.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes)
                     {
                         UpdatePluginExternal(um, localVersion);
                         return;
@@ -307,13 +307,13 @@ namespace Triggernometry.Core
                     Instance.FilteredAddToLog(DebugLevelEnum.Error, ex.ToString());
                     Instance.FilteredAddToLog(DebugLevelEnum.Warning, msg);
                 }
-                cfg.PreviousNotifiedPluginVersion = um.Version.ToString();
+                Config.PreviousNotifiedPluginVersion = um.Version.ToString();
             });
         }
 
         public async Task UpdateTranslationExternal()
         {
-            string manifestData = await client.GetStringAsync(cfg.UpdateExternalChannelUrl);
+            string manifestData = await client.GetStringAsync(Config.UpdateExternalChannelUrl);
             UpdateManifest um;
             using (var sr = new StringReader(manifestData))
             {
@@ -426,7 +426,7 @@ namespace Triggernometry.Core
 
         public async Task UpdateAllRepositoriesAsync(bool isStartup)
         {
-            await UpdateRepositoriesAsync(cfg.RepositoryRoot.Repositories.Where(r => r.Enabled), isStartup);
+            await UpdateRepositoriesAsync(Config.RepositoryRoot.Repositories.Where(r => r.Enabled), isStartup);
         }
 
         internal async Task UpdateSingleRepositoryAsync(Repository r)

@@ -56,7 +56,7 @@ namespace Triggernometry.Core
             }
             lock (TtsRepetitions)
             {
-                if (RegisterRepetition(TtsRepetitions, cfg.TtsRepCooldown, text) == false)
+                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text) == false)
                 {
                     return;
                 }
@@ -68,13 +68,13 @@ namespace Triggernometry.Core
         {
             lock (SoundRepetitions)
             {
-                if (RegisterRepetition(SoundRepetitions, cfg.SoundRepCooldown, filename) == false)
+                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename) == false)
                 {
                     return;
                 }
             }
             double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
-            vol *= ctx.Plugin.cfg.SfxVolumeAdjustment / 100.0;
+            vol *= ctx.Plugin.Config.SfxVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
                 vol = 0.0;
@@ -91,7 +91,7 @@ namespace Triggernometry.Core
             string text = ctx.EvaluateStringExpression(a.ActionContextLogger, ctx, a.Message);
             if (ctx.Plugin != null)
             {
-                text = ctx.Plugin.cfg.PerformSubstitution(text, Configuration.Substitution.SubstitutionScopeEnum.TextToSpeech);
+                text = ctx.Plugin.Config.PerformSubstitution(text, Configuration.Substitution.SubstitutionScopeEnum.TextToSpeech);
             }
             return text;
         }
@@ -105,14 +105,14 @@ namespace Triggernometry.Core
             }
             lock (TtsRepetitions)
             {
-                if (RegisterRepetition(TtsRepetitions, cfg.TtsRepCooldown, text) == false)
+                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text) == false)
                 {
                     return;
                 }
             }
             SpeechSynthesizer mytts = new SpeechSynthesizer();
             double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
-            vol *= ctx.Plugin.cfg.TtsVolumeAdjustment / 100.0;
+            vol *= ctx.Plugin.Config.TtsVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
                 vol = 0.0;
@@ -139,7 +139,7 @@ namespace Triggernometry.Core
         {
             lock (SoundRepetitions)
             {
-                if (RegisterRepetition(SoundRepetitions, cfg.SoundRepCooldown, filename) == false)
+                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename) == false)
                 {
                     return;
                 }
@@ -160,7 +160,7 @@ namespace Triggernometry.Core
                 mywmp = wmp;
             }
             double vol = ctx.EvaluateNumericExpression(a.ActionContextLogger, ctx, a.Volume);
-            vol *= ctx.Plugin.cfg.SfxVolumeAdjustment / 100.0;
+            vol *= ctx.Plugin.Config.SfxVolumeAdjustment / 100.0;
             if (vol < 0.0)
             {
                 vol = 0.0;
@@ -176,7 +176,7 @@ namespace Triggernometry.Core
 
         internal void TtsPlaybackExternal(Context ctx, ActionPlaySpeech a)
         {
-            string proc = (cfg.TtsExternalApp ?? "").Trim();
+            string proc = (Config.TtsExternalApp ?? "").Trim();
             if (proc.Length == 0)
             {
                 return;
@@ -188,12 +188,12 @@ namespace Triggernometry.Core
             }
             lock (TtsRepetitions)
             {
-                if (RegisterRepetition(TtsRepetitions, cfg.TtsRepCooldown, text) == false)
+                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text) == false)
                 {
                     return;
                 }
             }
-            string args = cfg.TtsExternalAppArgs ?? "";
+            string args = Config.TtsExternalAppArgs ?? "";
             args = args.Replace("$source", text);
             Process.Start(proc, args);
         }
@@ -202,17 +202,17 @@ namespace Triggernometry.Core
         {
             lock (SoundRepetitions)
             {
-                if (RegisterRepetition(SoundRepetitions, cfg.SoundRepCooldown, filename) == false)
+                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename) == false)
                 {
                     return;
                 }
             }
-            string proc = (cfg.SoundExternalApp ?? "").Trim();
+            string proc = (Config.SoundExternalApp ?? "").Trim();
             if (proc.Length == 0)
             {
                 return;
             }
-            string args = cfg.SoundExternalAppArgs ?? "";
+            string args = Config.SoundExternalAppArgs ?? "";
             args = args.Replace("$source", filename);
             Process.Start(proc, args);
         }
@@ -246,15 +246,15 @@ namespace Triggernometry.Core
             switch (a.AudioTarget)
             {
                 case Configuration.AudioRoutingMethodEnum.None:
-                    if (cfg.TtsMethod == Configuration.AudioRoutingMethodEnum.ExternalApplication)
+                    if (Config.TtsMethod == Configuration.AudioRoutingMethodEnum.ExternalApplication)
                     {
                         TtsPlaybackExternal(ctx, a);
                     }
-                    else if (cfg.TtsMethod == Configuration.AudioRoutingMethodEnum.ACT)
+                    else if (Config.TtsMethod == Configuration.AudioRoutingMethodEnum.ACT)
                     {
                         TtsPlaybackAct(ctx, a);
                     }
-                    else if (cfg.TtsMethod == Configuration.AudioRoutingMethodEnum.Triggernometry)
+                    else if (Config.TtsMethod == Configuration.AudioRoutingMethodEnum.Triggernometry)
                     {
                         TtsPlaybackSelf(ctx, a);
                     }
@@ -285,7 +285,7 @@ namespace Triggernometry.Core
                 if (File.Exists(fn) == true)
                 {
                     FileInfo fi = new FileInfo(fn);
-                    DateTime dt = DateTime.Now.AddMinutes(0 - cfg.CacheSoundExpiry);
+                    DateTime dt = DateTime.Now.AddMinutes(0 - Config.CacheSoundExpiry);
                     if (fi.LastWriteTime > dt)
                     {
                         filename = fn;
@@ -306,15 +306,15 @@ namespace Triggernometry.Core
             switch (a.AudioTarget)
             {
                 case Configuration.AudioRoutingMethodEnum.None:
-                    if (cfg.SoundMethod == Configuration.AudioRoutingMethodEnum.ExternalApplication)
+                    if (Config.SoundMethod == Configuration.AudioRoutingMethodEnum.ExternalApplication)
                     {
                         SoundPlaybackExternal(ctx, a, filename);
                     }
-                    else if (WMPUnavailable == true || cfg.SoundMethod == Configuration.AudioRoutingMethodEnum.ACT)
+                    else if (WMPUnavailable == true || Config.SoundMethod == Configuration.AudioRoutingMethodEnum.ACT)
                     {
                         SoundPlaybackAct(ctx, a, filename);
                     }
-                    else if (cfg.SoundMethod == Configuration.AudioRoutingMethodEnum.Triggernometry)
+                    else if (Config.SoundMethod == Configuration.AudioRoutingMethodEnum.Triggernometry)
                     {
                         SoundPlaybackSelf(ctx, a, filename);
                     }

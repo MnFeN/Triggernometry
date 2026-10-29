@@ -82,7 +82,7 @@ namespace Triggernometry.Core
 
         public void FilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig, ActionBase action)
         {
-            if (cfg != null && level > cfg.DebugLevel)
+            if (Config != null && level > Config.DebugLevel)
             {
                 return;
             }

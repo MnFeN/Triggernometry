@@ -100,28 +100,28 @@ namespace Triggernometry.Expressions.String.Parsers
                     return scriptingObj?.ToDataString() ?? "";
 
                 case "_const":
-                    lock (plug.cfg.Constants)
+                    lock (plug.Config.Constants)
                     {
-                        _ = plug.cfg.Constants.TryGetValue(expr.Index, out var constant);
+                        _ = plug.Config.Constants.TryGetValue(expr.Index, out var constant);
                         return constant?.Value ?? "";
                     }
 
                 case "_config":
                     switch (expr.Index)
                     {
-                        case "DebugLevel": return ((int)plug.cfg.DebugLevel).ToString();
-                        case "UseACTForSound": return plug.cfg.SoundMethod == AudioRoutingMethodEnum.ACT ? "1" : "0";
-                        case "UseACTForTTS": return plug.cfg.TtsMethod == AudioRoutingMethodEnum.ACT ? "1" : "0";
-                        case "FfxivLogNetwork": return plug.cfg.FfxivLogNetwork ? "1" : "0";
+                        case "DebugLevel": return ((int)plug.Config.DebugLevel).ToString();
+                        case "UseACTForSound": return plug.Config.SoundMethod == AudioRoutingMethodEnum.ACT ? "1" : "0";
+                        case "UseACTForTTS": return plug.Config.TtsMethod == AudioRoutingMethodEnum.ACT ? "1" : "0";
+                        case "FfxivLogNetwork": return plug.Config.FfxivLogNetwork ? "1" : "0";
                         case "UseOsClipboard": return "1";
-                        case "DeveloperMode": return plug.cfg.DeveloperMode ? "1" : "0";
-                        case "AutoComplete": return plug.cfg.AutoComplete ? "1" : "0";
-                        case "Autosave": return plug.cfg.AutosaveEnabled ? plug.cfg.AutosaveInterval.ToString() : "0";
-                        case "Language": return plug.cfg.Language;
-                        case "UnsafeUsage": return ((int)plug.cfg.UnsafeUsage).ToString();
-                        case "DynamicUsage": return ((int)plug.cfg.DynamicUsage).ToString();
+                        case "DeveloperMode": return plug.Config.DeveloperMode ? "1" : "0";
+                        case "AutoComplete": return plug.Config.AutoComplete ? "1" : "0";
+                        case "Autosave": return plug.Config.AutosaveEnabled ? plug.Config.AutosaveInterval.ToString() : "0";
+                        case "Language": return plug.Config.Language;
+                        case "UnsafeUsage": return ((int)plug.Config.UnsafeUsage).ToString();
+                        case "DynamicUsage": return ((int)plug.Config.DynamicUsage).ToString();
                         default:
-                            var api = plug.cfg.GetAPIUsages().FirstOrDefault(a => a.Name == expr.Index) ?? new APIUsage();
+                            var api = plug.Config.GetAPIUsages().FirstOrDefault(a => a.Name == expr.Index) ?? new APIUsage();
                             return ((api.AllowLocal ? 1 : 0) + (api.AllowRemote ? 2 : 0) + (api.AllowAdmin ? 4 : 0)).ToString();
                     }
 

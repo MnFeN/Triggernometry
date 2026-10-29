@@ -912,7 +912,7 @@ namespace Triggernometry.UI.CustomControls
         {
             UpdateBackground();
             if (textBox1.Multiline) { MultiLineAdjustHeight(); }
-            if (RealPlugin.Instance.cfg.AutoComplete == true)
+            if (RealPlugin.Instance.Config.AutoComplete == true)
             {
                 if (ExpressionType != SupportedExpressionTypeEnum.Regex && textBox1.Focused)
                 {
@@ -1122,7 +1122,7 @@ namespace Triggernometry.UI.CustomControls
                 List<string> keys = null;
                 switch (m.Groups["struct"].Value)
                 {
-                    case "const": keys = RealPlugin.Instance.cfg.Constants.Keys.ToList(); break;
+                    case "const": keys = RealPlugin.Instance.Config.Constants.Keys.ToList(); break;
                     case "textaura":
                         {
                             keys = (RealPlugin.Instance.sc != null) ? RealPlugin.Instance.sc.textitems.Keys.ToList() : RealPlugin.Instance.textauras.Keys.ToList();
@@ -1957,7 +1957,7 @@ namespace Triggernometry.UI.CustomControls
 
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                if (e.Control && e.Shift && !e.Alt && RealPlugin.Instance.cfg.EnableShortcutTemplates)
+                if (e.Control && e.Shift && !e.Alt && RealPlugin.Instance.Config.EnableShortcutTemplates)
                 {
                     if (ReadOnly && e.KeyCode != Keys.A)
                     {
@@ -1965,8 +1965,8 @@ namespace Triggernometry.UI.CustomControls
                         return;
                     }
                     bool handled = true;
-                    bool shouldWrap = SelectionLength != 0 && RealPlugin.Instance.cfg.WrapTextWhenSelected;
-                    bool useAbbrev = RealPlugin.Instance.cfg.UseAbbrevInTemplates;
+                    bool shouldWrap = SelectionLength != 0 && RealPlugin.Instance.Config.WrapTextWhenSelected;
+                    bool useAbbrev = RealPlugin.Instance.Config.UseAbbrevInTemplates;
                     switch (e.KeyCode)
                     {
                         // Ctrl + Shift + 4: ${}

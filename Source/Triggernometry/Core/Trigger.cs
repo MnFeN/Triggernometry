@@ -468,9 +468,9 @@ namespace Triggernometry.Core
         {
             if (DebugLevel == RealPlugin.DebugLevelEnum.Inherit)
             {
-                if (p?.cfg != null)
+                if (p?.Config != null)
                 {
-                    return p.cfg.DebugLevel;
+                    return p.Config.DebugLevel;
                 }
                 else
                 {

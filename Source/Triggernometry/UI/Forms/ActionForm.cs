@@ -374,7 +374,7 @@ namespace Triggernometry.UI.Forms
 
         /// <summary>按配置中的默认方式测试当前动作。</summary>
         private void BtnTest_Click(object sender, EventArgs e) =>
-            TestAction(Plugin.cfg.TestLiveByDefault, Plugin.cfg.TestIgnoreConditionsByDefault);
+            TestAction(Plugin.Config.TestLiveByDefault, Plugin.Config.TestIgnoreConditionsByDefault);
 
         /// <summary>使用当前动作副本及指定的取值和条件选项进行测试。</summary>
         private void TestAction(bool useLiveValues, bool ignoreConditions)

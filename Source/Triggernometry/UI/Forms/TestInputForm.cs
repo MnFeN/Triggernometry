@@ -78,7 +78,7 @@ namespace Triggernometry.UI.Forms
             if (!speed.HasValue) return;
             DebugTriggerGenerator debug = new DebugTriggerGenerator(txtEvent.Text, src, speed.Value);
             Clipboard.SetText(new TriggernometryExport { 
-                PluginVersion = RealPlugin.Instance.cfg.PluginVersion, 
+                PluginVersion = RealPlugin.Instance.Config.PluginVersion, 
                 ExportedTrigger = debug.Trig 
             }.Serialize());
             string info = I18n.Translate("internal/TestInputForm/debugcopied", "Debug trigger has been copied to clipboard.");

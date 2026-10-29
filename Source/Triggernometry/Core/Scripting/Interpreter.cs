@@ -50,7 +50,7 @@ namespace Triggernometry.Core.Scripting
             ScriptOptions scriptOptions = BuildScriptOptions(extraAssembliesInput, ctx);
 
             string[] restrictedApis = ScriptSecurity.GetRestrictedApisFromConfig(ctx);
-            bool allowDynamic = ScriptSecurity.IsFeatureAllowedByConfig(ctx.Plugin.cfg.DynamicUsage, ctx);
+            bool allowDynamic = ScriptSecurity.IsFeatureAllowedByConfig(ctx.Plugin.Config.DynamicUsage, ctx);
 
             // nothing restricted: run directly
             if (restrictedApis.Length == 0 && allowDynamic)
@@ -77,7 +77,7 @@ namespace Triggernometry.Core.Scripting
         /// </summary>
         private ScriptOptions BuildScriptOptions(string extraAssembliesInput, Context ctx)
         {
-            var allowUnsafe = ScriptSecurity.IsFeatureAllowedByConfig(ctx.Plugin.cfg.UnsafeUsage, ctx);
+            var allowUnsafe = ScriptSecurity.IsFeatureAllowedByConfig(ctx.Plugin.Config.UnsafeUsage, ctx);
             ScriptOptions scriptOptions = _scriptOptions.WithAllowUnsafe(allowUnsafe);
 
             if (string.IsNullOrEmpty(extraAssembliesInput))

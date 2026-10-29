@@ -547,7 +547,7 @@ namespace Triggernometry.Core
         [XmlAttribute]
         public string PluginVersion { get; set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-        internal bool isnew = true;
+        internal bool isNew = true;
         internal DateTime lastWrite = DateTime.Now;
         internal string corruptRecoveryError = "";
 

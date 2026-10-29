@@ -29,7 +29,7 @@ namespace Triggernometry.Core
             AuraUpdateThread.Name = "AuraUpdateThread";
             AuraUpdateThread.Start();
 
-            if (cfg.UseScarborough == true)
+            if (Config.UseScarborough == true)
             {
                 sc = new Scarborough.Scarborough();
                 sc.plug = this;
@@ -158,8 +158,8 @@ namespace Triggernometry.Core
 
         private void VerifyProcessWindow()
         {
-            HideAllAuras = !string.IsNullOrWhiteSpace(cfg.WindowToMonitor)
-                && !WindowsUtils.IsInFocus(cfg.WindowToMonitor);
+            HideAllAuras = !string.IsNullOrWhiteSpace(Config.WindowToMonitor)
+                && !WindowsUtils.IsInFocus(Config.WindowToMonitor);
         }
 
         internal void UpdateAuras(int numTicks)

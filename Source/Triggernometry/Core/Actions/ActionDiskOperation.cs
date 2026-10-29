@@ -184,7 +184,7 @@ namespace Triggernometry.Core.Actions
                     if (File.Exists(fn) == true && UseCache == true)
                     {
                         FileInfo fi = new FileInfo(fn);
-                        DateTime dt = DateTime.Now.AddMinutes(0 - plug.cfg.CacheFileExpiry);
+                        DateTime dt = DateTime.Now.AddMinutes(0 - plug.Config.CacheFileExpiry);
                         if (fi.LastWriteTime > dt)
                         {
                             filename = fn;

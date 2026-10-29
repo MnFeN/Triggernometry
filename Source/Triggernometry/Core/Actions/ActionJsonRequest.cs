@@ -220,7 +220,7 @@ namespace Triggernometry.Core.Actions
                 if (File.Exists(fn) == true)
                 {
                     FileInfo fi = new FileInfo(fn);
-                    DateTime dt = DateTime.Now.AddMinutes(0 - plug.cfg.CacheJsonExpiry);
+                    DateTime dt = DateTime.Now.AddMinutes(0 - plug.Config.CacheJsonExpiry);
                     if (fi.LastWriteTime > dt && fi.Length > 0)
                     {
                         responseCode = (int)HttpStatusCode.OK;

@@ -42,7 +42,7 @@ namespace Triggernometry.Core.Scripting
         {
             bool isRemote = ctx.Trigger?.Repo != null;
             bool isAdmin = ctx.Plugin.isRunningAsAdmin;
-            return ctx.Plugin.cfg.GetAPIUsages().Where(a =>
+            return ctx.Plugin.Config.GetAPIUsages().Where(a =>
                 isAdmin && !a.AllowAdmin ||
                 !isRemote && !a.AllowLocal ||
                 isRemote && !a.AllowRemote

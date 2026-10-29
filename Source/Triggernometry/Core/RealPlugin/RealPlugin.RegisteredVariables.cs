@@ -68,10 +68,10 @@ namespace Triggernometry.Core
             {
                 var disabled = new List<Folder>();
                 var enabled = new List<Folder>();
-                CollectFolderVariableChanges(cfg.Root, true, zone, disabled, enabled);
-                foreach (Repository repo in cfg.RepositoryRoot.Repositories)
+                CollectFolderVariableChanges(Config.Root, true, zone, disabled, enabled);
+                foreach (Repository repo in Config.RepositoryRoot.Repositories)
                 {
-                    CollectFolderVariableChanges(repo.Root, cfg.RepositoryRoot.Enabled && repo.Enabled, zone, disabled, enabled);
+                    CollectFolderVariableChanges(repo.Root, Config.RepositoryRoot.Enabled && repo.Enabled, zone, disabled, enabled);
                 }
                 // Finish removals first so a departing folder cannot delete a newly loaded value.
                 foreach (Folder folder in disabled)

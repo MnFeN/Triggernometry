@@ -141,7 +141,7 @@ namespace Triggernometry.UI.Forms
             cbxTriggerTemplate.Checked = cfg.UseTemplateTrigger;
             cfg.TemplateTrigger.CopySettingsTo(template);
             SecuritySettingsFromConfiguration(cfg);
-            SetupConsts(plug.cfg.Constants);
+            SetupConsts(plug.Config.Constants);
 
             if (cfg.StartupTriggerType == Configuration.StartupTriggerTypeEnum.Trigger)
             {
@@ -259,12 +259,12 @@ namespace Triggernometry.UI.Forms
                         break;
                 }
             };
-            lock (plug.cfg.Constants)
+            lock (plug.Config.Constants)
             {
-                plug.cfg.Constants.Clear();
+                plug.Config.Constants.Clear();
                 foreach (KeyValuePair<string, VariableScalar> kp in consts)
                 {
-                    plug.cfg.Constants[kp.Key] = kp.Value;
+                    plug.Config.Constants[kp.Key] = kp.Value;
                 }
             }
         }

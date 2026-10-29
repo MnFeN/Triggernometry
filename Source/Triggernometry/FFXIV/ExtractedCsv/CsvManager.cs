@@ -132,7 +132,7 @@ namespace Triggernometry.FFXIV.ExtractedCsv
         private string GetFolderPath(string folder = null)
         {
             if (folder == null &&
-                (!RealPlugin.Instance.cfg.Constants.TryGetValue("XivExtractedCsvPath", out var v) ||
+                (!RealPlugin.Instance.Config.Constants.TryGetValue("XivExtractedCsvPath", out var v) ||
                  string.IsNullOrEmpty(folder = v.Value.Trim())))
             {
                 throw new InvalidOperationException(I18n.Translate("internal/CsvManager/missingpath", "The current configuration does not contain a valid 'XivExtractedCsvPath' setting."));
