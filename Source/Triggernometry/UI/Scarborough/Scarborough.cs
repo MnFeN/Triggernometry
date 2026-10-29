@@ -214,31 +214,27 @@ namespace Scarborough
                         {
                             case ItemAction.ItemTypeEnum.Image:
                                 {
-                                    toRem.AddRange(from sx in imageitems where sx.Value.ctx.Trigger.Id.ToString() == ia.Id select sx.Key);
+                                    // 脚本创建的悬浮窗可能没有触发器归属，按触发器清理时跳过。
+                                    toRem.AddRange(from sx in imageitems where sx.Value.ctx?.Trigger?.Id.ToString() == ia.Id select sx.Key);
                                     foreach (string rem in toRem)
                                     {
                                         ScarboroughImage si = null;
                                         si = imageitems[rem];
                                         lock (imageitems) imageitems.Remove(rem);
-                                        if (si != null)
-                                        {
-                                            si.Dispose();
-                                        }
+                                        si?.Dispose();
                                     }
                                 }
                                 break;
                             case ItemAction.ItemTypeEnum.Text:
                                 {
-                                    toRem.AddRange(from sx in textitems where sx.Value.ctx.Trigger.Id.ToString() == ia.Id select sx.Key);
+                                    // 脚本创建的悬浮窗可能没有触发器归属，按触发器清理时跳过。
+                                    toRem.AddRange(from sx in textitems where sx.Value.ctx?.Trigger?.Id.ToString() == ia.Id select sx.Key);
                                     foreach (string rem in toRem)
                                     {
                                         ScarboroughText si = null;
                                         si = textitems[rem];
                                         lock (textitems) textitems.Remove(rem);
-                                        if (si != null)
-                                        {
-                                            si.Dispose();
-                                        }
+                                        si?.Dispose();
                                     }
                                 }
                                 break;
