@@ -1833,9 +1833,6 @@
     <TranslationEntry Key="internal/UserInterface/edittemplatetrigger" Translation="Edit template trigger" />
     <TranslationEntry Key="internal/UserInterface/edittrigger" Translation="Edit trigger '{0}'" />
     <TranslationEntry Key="internal/UserInterface/edittriggerreadme" Translation="Instructions for repository '{0}'" />
-    <TranslationEntry Key="internal/UserInterface/errorCount0" Translation="No new errors" />
-    <TranslationEntry Key="internal/UserInterface/errorCount1" Translation="1 error" />
-    <TranslationEntry Key="internal/UserInterface/errorCountN" Translation="{0} errors" />
     <TranslationEntry Key="internal/UserInterface/folderidreassign" Translation="Reassigning new id ({0}) for folder ({1}) due to already assigned id ({2}) on folder ({3})" />
     <TranslationEntry Key="internal/UserInterface/folderplural" Translation="{0} folders" />
     <TranslationEntry Key="internal/UserInterface/foldersingular" Translation="{0} folder" />
@@ -2234,6 +2231,7 @@
     <TranslationEntry Key="UserInterface/btnExportTrigger" Translation="Export" />
     <TranslationEntry Key="UserInterface/btnGotoConfig" Translation="Go to configuration folder" />
     <TranslationEntry Key="UserInterface/btnImportTrigger" Translation="Import" />
+    <TranslationEntry Key="UserInterface/lblNewLogCounts" Translation="New" />
     <TranslationEntry Key="UserInterface/btnLanguages" Translation="Language" />
     <TranslationEntry Key="UserInterface/btnOptions" Translation="Options" />
     <TranslationEntry Key="UserInterface/btnRemoveTrigger" Translation="Remove" />

@@ -1833,9 +1833,6 @@
     <TranslationEntry Key="internal/UserInterface/edittemplatetrigger" Translation="编辑触发器模板" />
     <TranslationEntry Key="internal/UserInterface/edittrigger" Translation="编辑触发器 '{0}'" />
     <TranslationEntry Key="internal/UserInterface/edittriggerreadme" Translation="仓库 '{0}' 的使用说明" />
-    <TranslationEntry Key="internal/UserInterface/errorCount0" Translation="无错误" />
-    <TranslationEntry Key="internal/UserInterface/errorCount1" Translation="1 条错误" />
-    <TranslationEntry Key="internal/UserInterface/errorCountN" Translation="{0} 条错误" />
     <TranslationEntry Key="internal/UserInterface/folderidreassign" Translation="由于分组 ID ({2}) 已被分组 ({3}) 占用，分组 ({1}) 被分配了一个新的分组 ID ({0})" />
     <TranslationEntry Key="internal/UserInterface/folderplural" Translation="{0} 分组" />
     <TranslationEntry Key="internal/UserInterface/foldersingular" Translation="{0} 分组" />
@@ -2234,6 +2231,7 @@
     <TranslationEntry Key="UserInterface/btnExportTrigger" Translation="导出" />
     <TranslationEntry Key="UserInterface/btnGotoConfig" Translation="转到配置文件夹" />
     <TranslationEntry Key="UserInterface/btnImportTrigger" Translation="导入" />
+    <TranslationEntry Key="UserInterface/lblNewLogCounts" Translation="新增" />
     <TranslationEntry Key="UserInterface/btnLanguages" Translation="翻译" />
     <TranslationEntry Key="UserInterface/btnOptions" Translation="选项" />
     <TranslationEntry Key="UserInterface/btnRemoveTrigger" Translation="移除" />

@@ -95,8 +95,11 @@
             this.btnLanguages = new System.Windows.Forms.ToolStripDropDownButton();
             this.btnDefaultLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-            this.errCountSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.errThing1 = new System.Windows.Forms.ToolStripLabel();
+            this.logCountSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.logCountRightSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.lblNewLogCounts = new System.Windows.Forms.ToolStripLabel();
+            this.btnErrorCount = new System.Windows.Forms.ToolStripButton();
+            this.btnWarningCount = new System.Windows.Forms.ToolStripButton();
             this.pnlUi = new System.Windows.Forms.Panel();
             this.treeView1 = new Triggernometry.UI.CustomControls.TreeViewEx();
             this.btnCornerPopup = new System.Windows.Forms.Button();
@@ -123,6 +126,7 @@
             this.prgStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.tlsStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.errorBlinkTimer = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnlUi.SuspendLayout();
@@ -378,8 +382,11 @@
             this.btnOptions,
             this.toolStripSeparator9,
             this.btnLanguages,
-            this.errCountSeparator,
-            this.errThing1});
+            this.logCountRightSeparator,
+            this.btnWarningCount,
+            this.btnErrorCount,
+            this.lblNewLogCounts,
+            this.logCountSeparator});
             this.toolStrip1.Location = new System.Drawing.Point(5, 5);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1338, 25);
@@ -729,21 +736,47 @@
             this.toolStripSeparator10.Size = new System.Drawing.Size(157, 6);
             this.toolStripSeparator10.Visible = false;
             // 
-            // errCountSeparator
-            // 
-            this.errCountSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.errCountSeparator.Name = "errCountSeparator";
-            this.errCountSeparator.Size = new System.Drawing.Size(6, 25);
-            // 
-            // errThing1
-            // 
-            this.errThing1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.errThing1.Image = ((System.Drawing.Image)(resources.GetObject("errThing1.Image")));
-            this.errThing1.Name = "errThing1";
-            this.errThing1.Size = new System.Drawing.Size(97, 22);
-            this.errThing1.Text = "No new errors";
-            this.errThing1.Click += new System.EventHandler(this.errThing1_Click);
-            // 
+            // logCountSeparator
+            //
+            this.logCountSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.logCountSeparator.Name = "logCountSeparator";
+            this.logCountSeparator.Size = new System.Drawing.Size(6, 25);
+            //
+            // logCountRightSeparator
+            //
+            this.logCountRightSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.logCountRightSeparator.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.logCountRightSeparator.Name = "logCountRightSeparator";
+            this.logCountRightSeparator.Size = new System.Drawing.Size(6, 25);
+            //
+            // lblNewLogCounts
+            //
+            this.lblNewLogCounts.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.lblNewLogCounts.Margin = new System.Windows.Forms.Padding(3, 1, 4, 1);
+            this.lblNewLogCounts.Name = "lblNewLogCounts";
+            this.lblNewLogCounts.Size = new System.Drawing.Size(30, 22);
+            this.lblNewLogCounts.Text = "New";
+            //
+            // btnErrorCount
+            //
+            this.btnErrorCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnErrorCount.Image = ((System.Drawing.Image)(resources.GetObject("btnErrorCount.Image")));
+            this.btnErrorCount.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.btnErrorCount.Name = "btnErrorCount";
+            this.btnErrorCount.Size = new System.Drawing.Size(62, 22);
+            this.btnErrorCount.Text = "Error 0";
+            this.btnErrorCount.Click += new System.EventHandler(this.LogCounts_Click);
+            //
+            // btnWarningCount
+            //
+            this.btnWarningCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnWarningCount.Image = ((System.Drawing.Image)(resources.GetObject("btnWarningCount.Image")));
+            this.btnWarningCount.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.btnWarningCount.Name = "btnWarningCount";
+            this.btnWarningCount.Size = new System.Drawing.Size(80, 22);
+            this.btnWarningCount.Text = "Warning 0";
+            this.btnWarningCount.Click += new System.EventHandler(this.LogCounts_Click);
+            //
             // pnlUi
             // 
             this.pnlUi.Controls.Add(this.treeView1);
@@ -1066,6 +1099,11 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 30000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            //
+            // errorBlinkTimer
+            //
+            this.errorBlinkTimer.Interval = 500;
+            this.errorBlinkTimer.Tick += new System.EventHandler(this.ErrorBlinkTimer_Tick);
             // 
             // UserInterface
             // 
@@ -1143,8 +1181,11 @@
         private System.Windows.Forms.ToolStripMenuItem ctxPaste;
         private System.Windows.Forms.ToolStripMenuItem ctxCopyRegex;
         private System.Windows.Forms.ToolStripMenuItem btnClearVars;
-        private System.Windows.Forms.ToolStripSeparator errCountSeparator;
-        private System.Windows.Forms.ToolStripLabel errThing1;
+        private System.Windows.Forms.ToolStripSeparator logCountSeparator;
+        private System.Windows.Forms.ToolStripSeparator logCountRightSeparator;
+        private System.Windows.Forms.ToolStripLabel lblNewLogCounts;
+        private System.Windows.Forms.ToolStripButton btnErrorCount;
+        private System.Windows.Forms.ToolStripButton btnWarningCount;
         private System.Windows.Forms.ToolStripMenuItem btnSaveConfig;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         internal System.Windows.Forms.Panel pnlUi;
@@ -1194,5 +1235,6 @@
         private System.Windows.Forms.ToolStripMenuItem btnUpdateCheck;
         private System.Windows.Forms.ToolStripMenuItem btnShowChangeLog;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer errorBlinkTimer;
     }
 }

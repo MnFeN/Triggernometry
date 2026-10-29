@@ -34,7 +34,7 @@ namespace Triggernometry.Core
             {
                 lock (queue) queue.Clear();
             }
-            ui?.ClearErrorCount();
+            ui?.ClearLogCounts();
         }
 
         internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig = null)
@@ -57,10 +57,6 @@ namespace Triggernometry.Core
             {
                 System.Diagnostics.Debug.WriteLine(il.ToString());
             }
-            if (level == DebugLevelEnum.Error)
-            {
-                ui?.IncrementErrorCount();
-            }
             var queue = log[level];
             lock (queue)
             {
@@ -71,6 +67,11 @@ namespace Triggernometry.Core
                 {
                     queue.Dequeue();
                 }
+            }
+            // 记录入队后再通知 UI，确保点击计数时能够查询到对应日志。
+            if (level == DebugLevelEnum.Error || level == DebugLevelEnum.Warning)
+            {
+                ui?.IncrementLogCount(level);
             }
         }
 

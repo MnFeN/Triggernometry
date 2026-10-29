@@ -98,28 +98,30 @@ namespace Triggernometry.UI.Forms
 
         private void LogForm_Shown(object sender, EventArgs e)
         {
-            if (startWithErrorSearch == true)
+            ResetFilters(startWithErrorSearch);
+            rexSearch.Focus();
+        }
+
+        /// <summary>恢复默认筛选，或仅显示错误与警告；适用于已打开的日志窗口。</summary>
+        internal void ResetFilters(bool errorsAndWarningsOnly)
+        {
+            isChkProgrammaticChange = true;
+            try
             {
                 chkAll.Checked = false;
                 chkError.Checked = true;
                 chkWarning.Checked = true;
-                chkInfo.Checked = false;
+                chkInfo.Checked = !errorsAndWarningsOnly;
                 chkVerbose.Checked = false;
-                chkCustom.Checked = false;
-                chkCustom2.Checked = false;
+                chkCustom.Checked = !errorsAndWarningsOnly;
+                chkCustom2.Checked = !errorsAndWarningsOnly;
+                rexSearch.Text = "";
             }
-            else
+            finally
             {
-                chkAll.Checked = false;
-                chkError.Checked = true;
-                chkWarning.Checked = true;
-                chkInfo.Checked = true;
-                chkVerbose.Checked = false;
-                chkCustom.Checked = true;
-                chkCustom2.Checked = true;
+                isChkProgrammaticChange = false;
             }
             RefreshLog();
-            rexSearch.Focus();
         }
 
         private void RefreshLog()

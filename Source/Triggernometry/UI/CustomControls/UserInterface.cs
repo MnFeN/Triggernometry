@@ -127,13 +127,17 @@ namespace Triggernometry.UI.CustomControls
             treeView1.DragEnter += TreeView1_DragEnter;
             treeView1.DragOver += TreeView1_DragOver;
             statusStrip1.VisibleChanged += StatusStrip1_VisibleChanged;
-            HandleCreated += (sender, e) => UpdateErrorCount();
-            UpdateErrorCount();
+            btnErrorCount.Tag = btnWarningCount.Tag = I18n.DoNotTranslate;
+            errorCountIcon = btnErrorCount.Image;
+            blankErrorCountIcon = new Bitmap(errorCountIcon.Width, errorCountIcon.Height);
+            HandleCreated += (sender, e) => UpdateLogCounts();
+            UpdateLogCounts();
             Disposed += UserInterface_Disposed;
         }
 
         private void UserInterface_Disposed(object sender, EventArgs e)
         {
+            blankErrorCountIcon.Dispose();
             if (_FontOverride != null)
             {
                 _FontOverride.Dispose();
@@ -1343,7 +1347,7 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        internal void OpenLogForm(bool errorSearch)
+        internal void OpenLogForm(bool errorSearch, bool resetFilters = false)
         {
             lock (formmgmt)
             {
@@ -1356,6 +1360,7 @@ namespace Triggernometry.UI.CustomControls
                 }
                 else
                 {
+                    if (resetFilters) formlog.ResetFilters(errorSearch);
                     formlog.BringToFront();
                     formlog.Focus();
                 }
@@ -1609,65 +1614,76 @@ namespace Triggernometry.UI.CustomControls
         }
 
         private int newErrorCount;
+        private int newWarningCount;
         private int displayedErrorCount = -1;
-        private int errorCountUpdatePending;
+        private int displayedWarningCount = -1;
+        private int logCountUpdatePending;
+        private readonly Image errorCountIcon;
+        private readonly Bitmap blankErrorCountIcon;
 
-        /// <summary>在 UI 线程显示最新计数，多条错误合并为一次刷新。</summary>
-        private void UpdateErrorCount()
+        /// <summary>在 UI 线程合并刷新错误和警告计数，只改动发生变化的文字。</summary>
+        private void UpdateLogCounts()
         {
-            // 先允许提交下一次通知，再取快照，避免刷新期间新增的错误丢失通知。
-            Interlocked.Exchange(ref errorCountUpdatePending, 0);
+            // 先允许提交下一次通知，再取快照，避免漏掉刷新期间新增的记录。
+            Interlocked.Exchange(ref logCountUpdatePending, 0);
             if (IsDisposed || Disposing) return;
-            int count = Math.Min(Volatile.Read(ref newErrorCount), 10000);
-            if (count == displayedErrorCount) return;
-
-            if (count == 0)
-                errThing1.Text = I18n.Translate("internal/UserInterface/errorCount0", "No new errors");
-            else if (count == 1)
-                errThing1.Text = I18n.Translate("internal/UserInterface/errorCount1", "1 error");
-            else
-                errThing1.Text = I18n.Translate("internal/UserInterface/errorCountN", "{0} errors", count == 10000 ? (object)"9999+" : count);
-
-            // 首次刷新可能直接收到多条错误，不能依赖计数恰好为 1 才切换图标。
-            if (count == 0 || displayedErrorCount <= 0)
+            int errors = Math.Min(Volatile.Read(ref newErrorCount), 10000);
+            int warnings = Math.Min(Volatile.Read(ref newWarningCount), 10000);
+            if (errors != displayedErrorCount)
             {
-                var resources = new ComponentResourceManager(typeof(UserInterface));
-                errThing1.Image = (Image)resources.GetObject(count == 0 ? "btnViewLog.Image" : "errThing1.Image");
+                btnErrorCount.Text = I18n.Translate("LogForm/chkError", "Error") + " " + (errors == 10000 ? "9999+" : errors.ToString());
+                displayedErrorCount = errors;
+                // 只在启停状态改变时更新计时器，连续新增错误不重置闪烁相位。
+                errorBlinkTimer.Enabled = errors > 0;
+                if (errors == 0) btnErrorCount.Image = errorCountIcon;
             }
-            displayedErrorCount = count;
+            if (warnings != displayedWarningCount)
+            {
+                btnWarningCount.Text = I18n.Translate("LogForm/chkWarning", "Warning") + " " + (warnings == 10000 ? "9999+" : warnings.ToString());
+                displayedWarningCount = warnings;
+            }
+        }
+
+        /// <summary>每半秒切换图标；透明图保持占位，文字和按钮宽度不变。</summary>
+        private void ErrorBlinkTimer_Tick(object sender, EventArgs e)
+        {
+            btnErrorCount.Image = btnErrorCount.Image == errorCountIcon ? blankErrorCountIcon : errorCountIcon;
         }
 
         /// <summary>只保留一个待处理的 UI 通知，后台线程不等待界面。</summary>
-        private void RequestErrorCountUpdate()
+        private void RequestLogCountUpdate()
         {
             if (IsDisposed || Disposing || !IsHandleCreated) return;
-            if (Interlocked.Exchange(ref errorCountUpdatePending, 1) != 0) return;
+            if (Interlocked.Exchange(ref logCountUpdatePending, 1) != 0) return;
             try
             {
-                BeginInvoke(new Action(UpdateErrorCount));
+                BeginInvoke(new Action(UpdateLogCounts));
             }
             catch (InvalidOperationException)
             {
                 // 通知提交前控件可能已销毁；计数保留，句柄重建时会重新刷新。
-                Interlocked.Exchange(ref errorCountUpdatePending, 0);
+                Interlocked.Exchange(ref logCountUpdatePending, 0);
             }
         }
 
         /// <summary>原子清零；在 UI 线程调用时立即刷新显示。</summary>
-        internal void ClearErrorCount()
+        internal void ClearLogCounts()
         {
             if (IsDisposed) return;
             Interlocked.Exchange(ref newErrorCount, 0);
-            if (IsHandleCreated && !InvokeRequired) UpdateErrorCount();
-            else RequestErrorCountUpdate();
+            Interlocked.Exchange(ref newWarningCount, 0);
+            if (IsHandleCreated && !InvokeRequired) UpdateLogCounts();
+            else RequestLogCountUpdate();
         }
 
         /// <summary>后台只累加计数，翻译、图标和按钮文字由 UI 合并更新。</summary>
-        internal void IncrementErrorCount()
+        internal void IncrementLogCount(DebugLevelEnum level)
         {
             if (IsDisposed) return;
-            Interlocked.Increment(ref newErrorCount);
-            RequestErrorCountUpdate();
+            if (level == DebugLevelEnum.Error) Interlocked.Increment(ref newErrorCount);
+            else if (level == DebugLevelEnum.Warning) Interlocked.Increment(ref newWarningCount);
+            else return;
+            RequestLogCountUpdate();
         }
 
         internal void PasteSelected()
@@ -1966,6 +1982,8 @@ namespace Triggernometry.UI.CustomControls
                     RetranslateTreeRoots();
                     I18n.TranslateControl("Plugin", this);
                 }
+                displayedErrorCount = displayedWarningCount = -1;
+                UpdateLogCounts();
             }
             else
             {
@@ -2136,10 +2154,13 @@ namespace Triggernometry.UI.CustomControls
             btnAddRepoList_Click(sender, e);
         }
 
-        private void errThing1_Click(object sender, EventArgs e)
+        private void LogCounts_Click(object sender, EventArgs e)
         {
-            OpenLogForm(true);
-            ClearErrorCount();
+            // 在打开窗口前消费已提示的计数，打开期间新增的记录仍保留提示。
+            int errors = Interlocked.Exchange(ref newErrorCount, 0);
+            int warnings = Interlocked.Exchange(ref newWarningCount, 0);
+            UpdateLogCounts();
+            OpenLogForm(errors > 0 || warnings > 0, resetFilters: true);
         }
 
         private void ctxCollapse_Click(object sender, EventArgs e)
