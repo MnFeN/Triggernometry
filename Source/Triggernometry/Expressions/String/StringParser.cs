@@ -48,7 +48,11 @@ namespace Triggernometry.Expressions.String
             int depth;
             for (depth = 0; depth < MAX_DEPTH; depth++)
             {
-                var templates = TemplateParser.FindNonNestedTemplates(newExpr);
+                int templateStart = newExpr?.IndexOf('$') ?? -1;
+                if (templateStart < 0)
+                    break;
+
+                var templates = TemplateParser.FindNonNestedTemplates(newExpr, templateStart);
                 if (templates.Count == 0)
                     break;
 
@@ -60,7 +64,6 @@ namespace Triggernometry.Expressions.String
                 {
                     throw new Exception(I18n.Translate("internal/StringParser/expressionerror",
                         "Error parsing string expression: {0}\nFull expression: {1}", ex.Message, expr), ex);
-                    //\n触发器：{ctx?.Trigger?.LogName ?? (null)}
                 }
             }
 
@@ -74,7 +77,7 @@ namespace Triggernometry.Expressions.String
             newExpr = TemplateParser.ReplaceCurrencyTemplates(newExpr);
 
             // '⏎' => '\r' '\n' 
-            newExpr = newExpr.Replace(LINEBREAK.ToString(), Environment.NewLine);
+            newExpr = newExpr.Replace(LINEBREAK_STR, Environment.NewLine);
             return newExpr;
         }
 

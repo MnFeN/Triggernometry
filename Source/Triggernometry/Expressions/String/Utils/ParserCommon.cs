@@ -10,6 +10,7 @@ namespace Triggernometry.Expressions.String.Utils
     public static class ParserCommon
     {
         internal static Regex reHex8 = new Regex("^[0-9A-Fa-f]{1,8}$", RegexOptions.Compiled);
+        private static readonly char[] lineBreakChars = { '\r', '\n' };
         public const char LINEBREAK = '⏎';
         public const string LINEBREAK_STR = "⏎";
         public const int MAX_DEPTH = 10000;
@@ -25,10 +26,10 @@ namespace Triggernometry.Expressions.String.Utils
                 return null;
 
             // fast path: no linebreaks
-            if (str.IndexOfAny(new[] { '\r', '\n' }) < 0)
+            if (str.IndexOfAny(lineBreakChars) < 0)
                 return str;
 
-            placeholder = placeholder ?? LINEBREAK.ToString();
+            placeholder = placeholder ?? LINEBREAK_STR;
 
             var sb = new StringBuilder(str.Length);
             for (int i = 0; i < str.Length; i++)

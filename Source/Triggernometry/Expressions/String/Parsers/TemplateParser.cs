@@ -60,14 +60,14 @@ namespace Triggernometry.Expressions.String.Parsers
         /// <summary>
         /// Find all non-nested template expressions <c>$n</c> or <c>${...}</c> in the given string.
         /// </summary>
-        internal static List<TemplateMatch> FindNonNestedTemplates(string expr)
+        internal static List<TemplateMatch> FindNonNestedTemplates(string expr, int startIndex)
         {
             var results = new List<TemplateMatch>();
             if (string.IsNullOrEmpty(expr)) return results;
 
             int fullLength = expr.Length;
 
-            for (int i = 0; i < fullLength - 1; i++)
+            for (int i = startIndex; i < fullLength - 1; i++)
             {
                 // Find the next template marker, skipping plain text in between.
                 i = expr.IndexOf('$', i);
