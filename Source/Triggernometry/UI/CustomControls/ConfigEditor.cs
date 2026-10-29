@@ -42,7 +42,8 @@ namespace Triggernometry.UI.CustomControls
         /// <summary>将编辑结果写入对象的字段或属性。</summary>
         public void SetValue(object instance, object value)
         {
-            if (Member is PropertyInfo property) property.SetValue(instance, value);
+            if (Member is PropertyInfo property)
+                property.SetValue(instance, value);
             else ((FieldInfo)Member).SetValue(instance, value);
         }
 
@@ -52,7 +53,8 @@ namespace Triggernometry.UI.CustomControls
             {
                 string label = I18n.Translate(TranslationKey,
                     Options.Label ?? ConfigEditor.SplitName(Member.Name));
-                if (Options.LabelQualifier == null) return label;
+                if (Options.LabelQualifier == null)
+                    return label;
                 return I18n.Translate(Options.QualifierTranslationKey ?? TranslationKey + "/Qualifier", Options.LabelQualifier) + " / " + label;
             }
         }
@@ -82,7 +84,8 @@ namespace Triggernometry.UI.CustomControls
         {
             Control.Enabled = Enabled;
             SetReadOnly(readOnly || !Enabled);
-            if (Label != null) Label.Enabled = Enabled;
+            if (Label != null)
+                Label.Enabled = Enabled;
         }
 
         /// <summary>设置变量名输入框的校验模式和名称补全来源。</summary>
@@ -171,7 +174,8 @@ namespace Triggernometry.UI.CustomControls
             int maximumWidth = Math.Max(0, (table.ClientSize.Width - table.Padding.Horizontal) * 2 / 3);
             int width = Math.Min(preferredWidth, maximumWidth);
             // 统一设置标签列宽，避免逐个调整标签而反复触发布局。
-            if (table.ColumnStyles[0].Width != width) table.ColumnStyles[0].Width = width;
+            if (table.ColumnStyles[0].Width != width)
+                table.ColumnStyles[0].Width = width;
         }
 
         /// <summary>拆分标识符中的单词，生成缺省显示文本。</summary>
@@ -206,6 +210,16 @@ namespace Triggernometry.UI.CustomControls
             finally { updating = false; }
         }
 
+        /// <summary>为相同字段换绑配置对象，复用当前控件。</summary>
+        public void Rebind(object value, bool applyRules = true)
+        {
+            if (value == null || editors.Any(entry => !entry.Field.Member.DeclaringType.IsInstanceOfType(value)))
+                throw new ArgumentException(nameof(value));
+            instance = value;
+            updateRules = applyRules && value is IEditorRulesProvider provider ? provider.CreateEditorRules(this) : null;
+            ReloadValues();
+        }
+
         /// <summary>先构建完整的新表格，再替换当前编辑界面。</summary>
         private void BindControls(object value, Predicate<EditorField> include, bool applyRules)
         {
@@ -231,8 +245,10 @@ namespace Triggernometry.UI.CustomControls
                         editor.Control.Margin = new Padding(4);
                         editor.SetValue(field.GetValue(value));
                         editor.SetReadOnly(readOnly);
-                        if (editor.Expression != null) editor.Expression.TextChanged += (s, e) => OnValueChanged();
-                        else if (editor.Control is TextBoxBase text) text.TextChanged += (s, e) => OnValueChanged();
+                        if (editor.Expression != null)
+                            editor.Expression.TextChanged += (s, e) => OnValueChanged();
+                        else if (editor.Control is TextBoxBase text)
+                            text.TextChanged += (s, e) => OnValueChanged();
                         nextEditors.Add(editor);
                     }
                     foreach (var entry in nextEditors.Where(entry => entry.InlineWith == null))
@@ -315,7 +331,8 @@ namespace Triggernometry.UI.CustomControls
         /// <summary>先校验全部控件，再将编辑结果写回配置对象。</summary>
         public void WriteValues()
         {
-            if (instance == null || readOnly) return;
+            if (instance == null || readOnly)
+                return;
             var values = new List<object>(editors.Count);
             foreach (var entry in editors)
             {
@@ -345,7 +362,8 @@ namespace Triggernometry.UI.CustomControls
         /// <summary>更新联动规则后通知宿主，并阻止递归更新。</summary>
         private void OnValueChanged()
         {
-            if (updating) return;
+            if (updating)
+                return;
             updating = true;
             try { updateRules?.Invoke(); }
             finally { updating = false; }
@@ -394,10 +412,14 @@ namespace Triggernometry.UI.CustomControls
         private ConfigValueEditor CreateDefaultEditor(EditorField field)
         {
             Type type = field.ValueType;
-            if (field.Options is EnumFlagsEditorAttribute flags) return CreateFlagsEditor(field, flags);
-            if (field.Options is EnumChoiceEditorAttribute choice) return CreateChoiceEditor(field, choice);
-            if (field.Options is NumericEditorAttribute numeric) return CreateNumericEditor(field, numeric);
-            if (field.Options is ExpressionEditorAttribute) return CreateExpressionEditor(field);
+            if (field.Options is EnumFlagsEditorAttribute flags)
+                return CreateFlagsEditor(field, flags);
+            if (field.Options is EnumChoiceEditorAttribute choice)
+                return CreateChoiceEditor(field, choice);
+            if (field.Options is NumericEditorAttribute numeric)
+                return CreateNumericEditor(field, numeric);
+            if (field.Options is ExpressionEditorAttribute)
+                return CreateExpressionEditor(field);
             bool automatic = field.Options.GetType() == typeof(EditorFieldAttribute);
             if (field.Options is CheckBoxEditorAttribute || automatic && type == typeof(bool))
             {
@@ -414,9 +436,12 @@ namespace Triggernometry.UI.CustomControls
             object original = null;
             return new ConfigValueEditor(text, () =>
             {
-                if (type == typeof(string)) return original == null && text.Text.Length == 0 ? null : text.Text;
-                if (type == typeof(Guid)) return Guid.Parse(text.Text);
-                if (type.IsEnum) return Enum.Parse(type, text.Text);
+                if (type == typeof(string))
+                    return original == null && text.Text.Length == 0 ? null : text.Text;
+                if (type == typeof(Guid))
+                    return Guid.Parse(text.Text);
+                if (type.IsEnum)
+                    return Enum.Parse(type, text.Text);
                 return Convert.ChangeType(text.Text, type, CultureInfo.InvariantCulture);
             }, value => { original = value; text.Text = Convert.ToString(value, CultureInfo.InvariantCulture); }, value => text.ReadOnly = value);
         }
@@ -430,7 +455,8 @@ namespace Triggernometry.UI.CustomControls
                 ExpressionType = (ExpressionTextBox.SupportedExpressionTypeEnum)options.ExpressionType,
                 AutofillType = (ExpressionTextBox.AutofillTypeEnum)options.Autofill
             };
-            if (options.Multiline) expression.ToggleExpand();
+            if (options.Multiline)
+                expression.ToggleExpand();
             object original = null;
             return new ConfigValueEditor(expression,
                 () => original == null && expression.Expression.Length == 0 ? null : expression.Expression,

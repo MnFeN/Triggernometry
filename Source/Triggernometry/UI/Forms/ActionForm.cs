@@ -241,8 +241,9 @@ namespace Triggernometry.UI.Forms
             {
                 if (specificEditor == null) specificEditor = CreateEditor(tabActionSettings);
                 specificEditor.Bind(draftAction, field => field.Member.DeclaringType != typeof(ActionBase));
-                generalEditor?.Bind(draftAction, field => field.Member.DeclaringType == typeof(ActionBase));
-                if (cndCondition != null) cndCondition.ConditionToEdit = draftAction.Condition;
+                generalEditor?.Rebind(draftAction);
+                if (cndCondition != null)
+                    cndCondition.ConditionToEdit = draftAction.Condition;
                 txtDescription.Text = draftAction.Desc;
                 chkOverrideDesc.Checked = draftAction.DescOverride;
                 expDescBgColor.Expression = draftAction.DescBackColor;

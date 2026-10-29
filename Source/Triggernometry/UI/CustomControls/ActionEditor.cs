@@ -90,10 +90,25 @@ namespace Triggernometry.UI.CustomControls
             finally { ResumeLayout(true); }
         }
 
+        /// <summary>换绑通用设置，保留已生成的控件与事件。</summary>
+        internal void Rebind(ActionBase value)
+        {
+            isBinding = true;
+            try
+            {
+                action = value;
+                configurationEditor.Rebind(value, applyRules: false);
+                updateGeneralRules = value.CreateGeneralEditorRules(configurationEditor);
+                updateGeneralRules?.Invoke();
+            }
+            finally { isBinding = false; }
+        }
+
         /// <summary>按悬浮窗操作更新设计和隐藏按钮的可用状态。</summary>
         private void UpdateOverlayTools()
         {
-            if (!ShowActionTools || !(action is ActionOverlayImage || action is ActionOverlayText)) return;
+            if (!ShowActionTools || !(action is ActionOverlayImage || action is ActionOverlayText))
+                return;
             var operation = configurationEditor.GetEditor("Operation");
             var op = (ActionOverlayImage.OperationEnum)Convert.ToInt32(operation.GetValue());
             tools.Controls[0].Enabled = operation.Control.Enabled && op == ActionOverlayImage.OperationEnum.Activate;
