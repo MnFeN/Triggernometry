@@ -38,7 +38,8 @@ namespace Triggernometry.UI.CustomControls
             configurationEditor.Layout += (s, e) => help?.UpdateHeight();
             configurationEditor.ValueChanged += (s, e) =>
             {
-                if (isBinding) return;
+                if (isBinding)
+                    return;
                 updateGeneralRules?.Invoke();
                 UpdateOverlayTools();
                 help?.UpdateText();
@@ -82,7 +83,8 @@ namespace Triggernometry.UI.CustomControls
                 UpdateOverlayTools();
                 UpdateOverlayFontPreview(true);
                 bool showHelp = ShowActionTools && GetHelpKey() != null;
-                if (ShowActionTools) AddActionInformation();
+                if (ShowActionTools)
+                    AddActionInformation();
                 if (showHelp)
                     help = new RichTextBoxHelper("help", FindForm(), helpLayout, 0, GetHelpKey) { Margin = new Padding(4) };
                 helpLayout.Visible = helpLayout.Controls.Count > 0;
@@ -170,7 +172,8 @@ namespace Triggernometry.UI.CustomControls
         /// <summary>按当前操作更新文档链接。</summary>
         private void UpdateDocumentationLink()
         {
-            if (documentationLink == null) return;
+            if (documentationLink == null)
+                return;
             if (action is ActionObsControl)
                 documentationLink.Text = "https://obsproject.com/forum/resources/obs-websocket-remote-control-of-obs-studio-made-easy.466/";
             else
@@ -195,7 +198,11 @@ namespace Triggernometry.UI.CustomControls
                 var viewer = new ConditionViewer { Font = Font, UiContext = UiContext, Height = 320 };
                 I18n.TranslateControl("", viewer);
                 e.Editor = new ConfigValueEditor(viewer, () => viewer.ConditionToEdit,
-                    value => viewer.ConditionToEdit = (ConditionGroup)value, value => { if (value) viewer.SetReadOnly(); }) { FullWidth = true };
+                    value => viewer.ConditionToEdit = (ConditionGroup)value, value =>
+                    {
+                        if (value)
+                            viewer.SetReadOnly();
+                    }) { FullWidth = true };
                 return;
             }
             if (e.Field.ValueType == typeof(List<ActionBase>))
@@ -206,7 +213,11 @@ namespace Triggernometry.UI.CustomControls
                 {
                     viewer.Actions = (List<ActionBase>)value;
                     viewer.RefreshDgv();
-                }, value => { if (value) viewer.SetReadOnly(); }) { FullWidth = true };
+                }, value =>
+                {
+                    if (value)
+                        viewer.SetReadOnly();
+                }) { FullWidth = true };
                 return;
             }
             if (e.Field.Options is ReferenceEditorAttribute reference)
@@ -221,7 +232,8 @@ namespace Triggernometry.UI.CustomControls
                     value => button.IsPersistent = (bool)value, value => button.Enabled = !value) { InlineWith = persistence.VariableMember };
                 return;
             }
-            if (!(e.Field.Options is ExpressionEditorAttribute)) return;
+            if (!(e.Field.Options is ExpressionEditorAttribute))
+                return;
             ConfigValueEditor editor = ConfigEditor.CreateExpressionEditor(e.Field, UiContext);
             var expression = (ExpressionTextBox)editor.Control;
             expression.Font = Font;
@@ -248,8 +260,10 @@ namespace Triggernometry.UI.CustomControls
             e.Editor = new ConfigValueEditor(control, editor.GetValue, editor.SetValue, value =>
             {
                 editor.SetReadOnly(value);
-                if (picker != null) picker.Enabled = !value;
-                if (preview != null) preview.Enabled = !value;
+                if (picker != null)
+                    picker.Enabled = !value;
+                if (preview != null)
+                    preview.Enabled = !value;
             }) { Expression = expression };
         }
 
@@ -257,15 +271,24 @@ namespace Triggernometry.UI.CustomControls
         private string GetHelpKey()
         {
             string prefix;
-            if (action is ActionVariableScalar) prefix = "rtbHelperVar";
-            else if (action is ActionVariableList) prefix = "rtbHelperLvar";
-            else if (action is ActionVariableTable) prefix = "rtbHelperTvar";
-            else if (action is ActionVariableDict) prefix = "rtbHelperDict";
-            else if (action is ActionKeypress) prefix = "rtbHelperSendKeys";
-            else if (action is ActionClipboard) return "rtbHelperClipboard";
-            else if (action is ActionNamedCallback) return "rtbHelperCallback";
-            else if (action is ActionWindowMessage) return "rtbHelperWmsg";
-            else if (action is ActionJsonRequest) return "rtbHelperJson";
+            if (action is ActionVariableScalar)
+                prefix = "rtbHelperVar";
+            else if (action is ActionVariableList)
+                prefix = "rtbHelperLvar";
+            else if (action is ActionVariableTable)
+                prefix = "rtbHelperTvar";
+            else if (action is ActionVariableDict)
+                prefix = "rtbHelperDict";
+            else if (action is ActionKeypress)
+                prefix = "rtbHelperSendKeys";
+            else if (action is ActionClipboard)
+                return "rtbHelperClipboard";
+            else if (action is ActionNamedCallback)
+                return "rtbHelperCallback";
+            else if (action is ActionWindowMessage)
+                return "rtbHelperWmsg";
+            else if (action is ActionJsonRequest)
+                return "rtbHelperJson";
             else return null;
             return prefix + configurationEditor.GetEditor("Operation").GetValue();
         }
@@ -299,9 +322,11 @@ namespace Triggernometry.UI.CustomControls
             configurationEditor.WriteValues();
             using (var dialog = new KeyListenForm())
             {
-                if (dialog.ShowDialog(this) != DialogResult.OK) return;
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                    return;
                 var keypress = (ActionKeypress)action;
-                if (keypress.Operation == ActionKeypress.OperationEnum.SendKeys) text.Expression += ToSendKeys(dialog.CurrentKey);
+                if (keypress.Operation == ActionKeypress.OperationEnum.SendKeys)
+                    text.Expression += ToSendKeys(dialog.CurrentKey);
                 else if (keypress.Operation == ActionKeypress.OperationEnum.WindowMessageCombo)
                     text.Expression += (text.Expression.Length == 0 ? "" : ",") + ((int)dialog.CurrentKey).ToString(CultureInfo.InvariantCulture);
                 else text.Expression = ((int)dialog.CurrentKey).ToString(CultureInfo.InvariantCulture);
@@ -314,14 +339,16 @@ namespace Triggernometry.UI.CustomControls
             if (kind == EditorFileType.Directory)
             {
                 using (var dialog = new FolderBrowserDialog())
-                    if (dialog.ShowDialog(this) == DialogResult.OK) text.Expression = dialog.SelectedPath;
+                    if (dialog.ShowDialog(this) == DialogResult.OK)
+                        text.Expression = dialog.SelectedPath;
                 return;
             }
             using (var dialog = new OpenFileDialog())
             {
                 dialog.CheckFileExists = false;
                 dialog.FileName = text.Expression;
-                if (dialog.ShowDialog(this) == DialogResult.OK) text.Expression = dialog.FileName;
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    text.Expression = dialog.FileName;
             }
         }
 
@@ -347,7 +374,8 @@ namespace Triggernometry.UI.CustomControls
         {
             string prefix = ((keys & Keys.Control) != 0 ? "^" : "") + ((keys & Keys.Shift) != 0 ? "+" : "") + ((keys & Keys.Alt) != 0 ? "%" : "");
             Keys code = keys & Keys.KeyCode;
-            if (_sendKeysMap.TryGetValue(code.ToString(), out string key)) return prefix + key;
+            if (_sendKeysMap.TryGetValue(code.ToString(), out string key))
+                return prefix + key;
             MessageBox.Show(this, I18n.Translate("internal/ActionForm/sendkeyinvalid", "This key is not supported in the SendKeys method."),
                 I18n.Translate("internal/ConfigurationForm/warning", "Warning"));
             return "";
@@ -359,35 +387,51 @@ namespace Triggernometry.UI.CustomControls
             var tree = new TreeViewEx { Font = Font, ImageList = Images, HideSelection = false, Height = 260 };
             Func<TreeNode, Guid?> getId = node =>
             {
-                if (kind == EditorReferenceType.Trigger && node?.Tag is Trigger trigger) return trigger.Id;
-                if (kind == EditorReferenceType.Folder && node?.Tag is Folder folder) return folder.Id;
-                if (kind == EditorReferenceType.Repository && node?.Tag is Repository repo) return repo.Id;
+                if (kind == EditorReferenceType.Trigger && node?.Tag is Trigger trigger)
+                    return trigger.Id;
+                if (kind == EditorReferenceType.Folder && node?.Tag is Folder folder)
+                    return folder.Id;
+                if (kind == EditorReferenceType.Repository && node?.Tag is Repository repo)
+                    return repo.Id;
                 return null;
             };
             tree.BeforeSelect += (s, e) => e.Cancel = !getId(e.Node).HasValue;
             tree.BeforeExpand += (s, e) => SetFolderIcon(e.Node, true);
             tree.BeforeCollapse += (s, e) => SetFolderIcon(e.Node, false);
             var nodesById = new Dictionary<Guid, TreeNode>();
-            // 筛选可用节点，并建立 GUID 到克隆节点的索引。
-            void PrepareNode(TreeNode node)
+            // 复制时直接跳过无关子树，不先克隆所有触发器再删除。
+            TreeNode CopyNode(TreeNode source)
             {
-                foreach (TreeNode child in node.Nodes.Cast<TreeNode>().ToArray())
+                var node = new TreeNode(source.Text, source.ImageIndex, source.SelectedImageIndex)
+                {
+                    Name = source.Name, Tag = source.Tag, StateImageIndex = source.StateImageIndex,
+                    Checked = source.Checked, ForeColor = source.ForeColor, BackColor = source.BackColor,
+                    NodeFont = source.NodeFont, ToolTipText = source.ToolTipText
+                };
+                if (!string.IsNullOrEmpty(source.ImageKey))
+                    node.ImageKey = source.ImageKey;
+                if (!string.IsNullOrEmpty(source.SelectedImageKey))
+                    node.SelectedImageKey = source.SelectedImageKey;
+                if (!string.IsNullOrEmpty(source.StateImageKey))
+                    node.StateImageKey = source.StateImageKey;
+                foreach (TreeNode child in source.Nodes)
                 {
                     if (kind == EditorReferenceType.Folder && !(child.Tag is Folder) ||
-                        kind == EditorReferenceType.Repository && !(child.Tag is Repository)) child.Remove();
-                    else PrepareNode(child);
+                        kind == EditorReferenceType.Repository && !(child.Tag is Repository))
+                        continue;
+
+                    node.Nodes.Add(CopyNode(child));
                 }
-                node.Collapse();
                 SetFolderIcon(node, false);
                 Guid? id = getId(node);
-                if (id.HasValue) nodesById[id.Value] = node;
+                if (id.HasValue)
+                    nodesById[id.Value] = node;
+                return node;
             }
             int rootIndex = kind == EditorReferenceType.Repository ? 1 : 0;
             if (TreeView != null && TreeView.Nodes.Count > rootIndex)
             {
-                var root = (TreeNode)TreeView.Nodes[rootIndex].Clone();
-                tree.Nodes.Add(root);
-                PrepareNode(root);
+                tree.Nodes.Add(CopyNode(TreeView.Nodes[rootIndex]));
             }
             Guid originalId = Guid.Empty;
             return new ConfigValueEditor(tree, () => getId(tree.SelectedNode) ?? originalId, value =>
@@ -402,7 +446,7 @@ namespace Triggernometry.UI.CustomControls
                     else if (kind == EditorReferenceType.Folder)
                     {
                         // 新建触发器尚未设置 Parent 时，使用主树中准备添加到的分组。
-                        Folder folder = UiContext?.Trigger?.Parent 
+                        Folder folder = UiContext?.Trigger?.Parent
                             ?? (TreeView?.SelectedNode?.Tag as Folder)
                             ?? (TreeView?.SelectedNode?.Tag as Trigger)?.Parent;
                         originalId = folder?.Id ?? Guid.Empty;
@@ -440,7 +484,8 @@ namespace Triggernometry.UI.CustomControls
             using (var font = RealPlugin.CreateFontFromDefinition(overlay.Font, overlay.EvaluateFontSize(UiContext ?? Context.Unbound), overlay.Effect))
             using (var dialog = new FontDialog { Font = font })
             {
-                if (dialog.ShowDialog(this) != DialogResult.OK) return;
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                    return;
                 overlay.Font = dialog.Font.Name;
                 // 只修改字体或样式时，保留独立的字号表达式。
                 if (dialog.Font.SizeInPoints != font.SizeInPoints)
@@ -456,8 +501,10 @@ namespace Triggernometry.UI.CustomControls
         {
             WriteValues();
             ActionBase hidden = action.Copy();
-            if (hidden is ActionOverlayImage image) image.Operation = ActionOverlayImage.OperationEnum.Deactivate;
-            if (hidden is ActionOverlayText text) text.Operation = ActionOverlayText.OperationEnum.Deactivate;
+            if (hidden is ActionOverlayImage image)
+                image.Operation = ActionOverlayImage.OperationEnum.Deactivate;
+            if (hidden is ActionOverlayText text)
+                text.Operation = ActionOverlayText.OperationEnum.Deactivate;
             hidden.Execute(new Context(UiContext?.Trigger) { testByPlaceholder = true });
         }
 
@@ -494,20 +541,25 @@ namespace Triggernometry.UI.CustomControls
                         var type = action.GetType();
                         string[] properties = { nameof(ActionOverlayImage.X_0), nameof(ActionOverlayImage.Y_0), nameof(ActionOverlayImage.W_0), nameof(ActionOverlayImage.H_0) };
                         string[] values = properties.Select(name => (string)type.GetProperty(name).GetValue(action)).ToArray();
-                        if (values.All(string.IsNullOrWhiteSpace)) dialog.StartPosition = FormStartPosition.CenterParent;
+                        if (values.All(string.IsNullOrWhiteSpace))
+                            dialog.StartPosition = FormStartPosition.CenterParent;
                         else
                         {
                             int[] rectangle = values.Select(value => (int)Math.Round(context.EvaluateNumericExpression(null, null, value))).ToArray();
                             dialog.StartPosition = FormStartPosition.Manual;
                             dialog.SetBounds(rectangle[0], rectangle[1], Math.Max(1, rectangle[2]), Math.Max(1, rectangle[3]));
                         }
-                        if (dialog.ShowDialog(this) != DialogResult.OK) return;
+                        if (dialog.ShowDialog(this) != DialogResult.OK)
+                            return;
                         int[] bounds = { dialog.Left, dialog.Top, dialog.Width, dialog.Height };
                         for (int i = 0; i < properties.Length; i++) type.GetProperty(properties[i]).SetValue(action, bounds[i].ToString(CultureInfo.InvariantCulture));
                         var opacity = type.GetProperty(nameof(ActionOverlayImage.O_0));
-                        if (string.IsNullOrWhiteSpace((string)opacity.GetValue(action))) opacity.SetValue(action, "100");
-                        if (action is ActionOverlayImage resultImage) resultImage.SizeMode = dialog.GetImageDisplay();
-                        if (action is ActionOverlayText resultText) resultText.Alignment = dialog.TextAlignment;
+                        if (string.IsNullOrWhiteSpace((string)opacity.GetValue(action)))
+                            opacity.SetValue(action, "100");
+                        if (action is ActionOverlayImage resultImage)
+                            resultImage.SizeMode = dialog.GetImageDisplay();
+                        if (action is ActionOverlayText resultText)
+                            resultText.Alignment = dialog.TextAlignment;
                         ReloadEditorValues();
                     }
                     finally { font?.Dispose(); bitmap?.Dispose(); }
