@@ -60,7 +60,7 @@ namespace Triggernometry.Core
             }
             try
             {
-                await Action.Execute(ctx, execute).ConfigureAwait(false);
+                await Action.InternalExecute(ctx, execute).ConfigureAwait(false);
                 if (!isIterationQueued) QueueNext(ctx);
             }
             catch

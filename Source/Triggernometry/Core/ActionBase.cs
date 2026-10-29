@@ -380,9 +380,14 @@ namespace Triggernometry.Core
         /// </summary>
         public Task Execute(Context ctx = null)
             => Execute(ctx ?? new Context(ParentTrigger), null);
+        public async Task ExecuteAsync(Context ctx = null)
+            => await InternalExecute(ctx ?? new Context(ParentTrigger), null).ConfigureAwait(false);
 
-        /// <summary>统一处理条件、日志、异常和异步调度；循环可由队列提供本轮迭代的执行逻辑。</summary>
-        internal async Task Execute(Context ctx, Action execute)
+        /// <summary>
+        /// 统一处理条件、日志、异常和异步调度；
+        /// 循环可由队列提供本轮迭代的执行逻辑。
+        /// </summary>
+        internal Task InternalExecute(Context ctx, Action execute)
         {
             void ExecuteCore()
             {

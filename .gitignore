@@ -7,4 +7,5 @@
 /Source/TriggernometryScripts/UserScript/*
 !/Source/TriggernometryScripts/UserScript/.keep
 /.agents
+/.agent
 /publish/
