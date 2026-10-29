@@ -13,9 +13,10 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                ClearReverseLookup();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -551,7 +552,7 @@
             // 
             this.ctxPasteOver.Image = ((System.Drawing.Image)(resources.GetObject("ctxPasteOver.Image")));
             this.ctxPasteOver.Name = "ctxPasteOver";
-            this.ctxPasteOver.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.ctxPasteOver.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.V)));
             this.ctxPasteOver.Size = new System.Drawing.Size(201, 22);
             this.ctxPasteOver.Text = "Paste over";

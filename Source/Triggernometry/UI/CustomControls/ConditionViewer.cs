@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -23,6 +23,7 @@ namespace Triggernometry.UI.CustomControls
 
         private Dictionary<ConditionComponent, TreeNode> _reverseNodeLookup = new Dictionary<ConditionComponent, TreeNode>();
         private bool isReadOnly;
+        private bool isLoadingCondition;
         private Color disabledNodeColor;
 
         /// <summary> Set by parent form. </summary>
@@ -67,36 +68,50 @@ namespace Triggernometry.UI.CustomControls
             }
             set
             {
-                if (_ConditionToEdit != value)
+                isLoadingCondition = true;
+                trvNodes.BeginUpdate();
+                try
                 {
                     ClearReverseLookup();
                     trvNodes.Nodes.Clear();
+                    _ConditionToEdit = value;
+                    if (value == null)
+                        UpdateEditorToConditionComponent(null);
+                    else
+                    {
+                        UpdateEditorToCondition(value);
+                        RecolorStartingFromNode(trvNodes.Nodes[0], value.Enabled);
+                        trvNodes.ExpandAll();
+                    }
                 }
-                _ConditionToEdit = value;
-                if (_ConditionToEdit != null)
+                finally
                 {
-                    UpdateEditorToCondition(_ConditionToEdit);
-                    trvNodes.ExpandAll();
+                    isLoadingCondition = false;
+                    trvNodes.EndUpdate();
                 }
             }
         }
 
+        /// <summary>解绑旧模型事件，避免已关闭的编辑器继续被条件对象引用。</summary>
         private void ClearReverseLookup()
         {
+            foreach (var condition in _reverseNodeLookup.Keys) condition.OnPropertyChange -= Re_OnPropertyChange;
             _reverseNodeLookup.Clear();
-            //System.Diagnostics.Debug.WriteLine("CV: Reverse look cleared");
         }
 
         private void RemoveReverseLookup(ConditionComponent cc)
         {
             if (_reverseNodeLookup.ContainsKey(cc) == true)
             {
+                cc.OnPropertyChange -= Re_OnPropertyChange;
                 _reverseNodeLookup.Remove(cc);
             }
         }
 
         private void SetReverseLookup(ConditionComponent cc, TreeNode tn)
         {
+            if (!_reverseNodeLookup.ContainsKey(cc))
+                cc.OnPropertyChange += Re_OnPropertyChange;
             _reverseNodeLookup[cc] = tn;
         }
 
@@ -113,8 +128,10 @@ namespace Triggernometry.UI.CustomControls
         {
             base.OnFontChanged(e);
             // ToolStrip uses its own default font instead of inheriting the viewer font.
-            if (toolStrip1 != null) toolStrip1.Font = Font;
-            if (contextMenuStrip1 != null) contextMenuStrip1.Font = Font;
+            if (toolStrip1 != null)
+                toolStrip1.Font = Font;
+            if (contextMenuStrip1 != null)
+                contextMenuStrip1.Font = Font;
         }
 
         public ConditionViewer()
@@ -129,7 +146,7 @@ namespace Triggernometry.UI.CustomControls
             disabledNodeColor = Color.Red;
             trvNodes.BeforeCheck += trvNodes_BeforeCheck;
             pnlEditorGroup.Visible = false;
-            pnlEditorSingle.Visible = false;            
+            pnlEditorSingle.Visible = false;
             pnlEditorComment.Visible = false;
             PanelStateFromSelection = false;
             expLeft.textBox1.TextChanged += expLeft_TextChanged;
@@ -152,15 +169,19 @@ namespace Triggernometry.UI.CustomControls
 
         private void trvNodes_BeforeCheck(object sender, TreeViewCancelEventArgs e)
         {
-            if (isReadOnly || e.Node.Tag is ConditionComment) e.Cancel = true;
+            if (isReadOnly || e.Node.Tag is ConditionComment)
+                e.Cancel = true;
         }
 
         internal void OnConditionsUpdated()
         {
-            ConditionsUpdated?.Invoke(this, EventArgs.Empty);
+            if (!isLoadingCondition)
+                ConditionsUpdated?.Invoke(this, EventArgs.Empty);
         }
         private void expLeft_TextChanged(object sender, EventArgs e)
         {
+            if (isLoadingCondition)
+                return;
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             re.ExpressionL = expLeft.Expression;
@@ -168,6 +189,8 @@ namespace Triggernometry.UI.CustomControls
 
         private void expRight_TextChanged(object sender, EventArgs e)
         {
+            if (isLoadingCondition)
+                return;
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             re.ExpressionR = expRight.Expression;
@@ -207,12 +230,15 @@ namespace Triggernometry.UI.CustomControls
             target = null;
             index = -1;
             if (isReadOnly || dragged?.Parent == null || dragged.TreeView != trvNodes
-                || (e.AllowedEffect & DragDropEffects.Move) == 0) return false;
+                || (e.AllowedEffect & DragDropEffects.Move) == 0)
+                return false;
 
             Point point = trvNodes.PointToClient(new Point(e.X, e.Y));
-            if (!trvNodes.ClientRectangle.Contains(point)) return false;
+            if (!trvNodes.ClientRectangle.Contains(point))
+                return false;
             target = trvNodes.GetNodeAt(point) ?? trvNodes.Nodes[0];
-            if (target == dragged) return false;
+            if (target == dragged)
+                return false;
             Rectangle bounds = target.Bounds;
             if (!(target.Tag is ConditionGroup) || (target.Parent != null
                 && (point.Y < bounds.Top + bounds.Height / 4 || point.Y >= bounds.Bottom - bounds.Height / 4)))
@@ -220,10 +246,12 @@ namespace Triggernometry.UI.CustomControls
                 index = target.Index + (point.Y < bounds.Top + bounds.Height / 2 ? 0 : 1);
             }
             TreeNode parent = index < 0 ? target : target.Parent;
-            if (parent == null) return false;
+            if (parent == null)
+                return false;
             for (TreeNode ancestor = parent; ancestor != null; ancestor = ancestor.Parent)
             {
-                if (ancestor == dragged) return false;
+                if (ancestor == dragged)
+                    return false;
             }
             return true;
         }
@@ -235,7 +263,8 @@ namespace Triggernometry.UI.CustomControls
                 e.Effect = DragDropEffects.Move;
                 trvNodes.SelectedNode = target;
                 trvNodes.SetInsertionMark(index < 0 ? null : target, index > target.Index);
-                if (index < 0) target.Expand();
+                if (index < 0)
+                    target.Expand();
             }
             else
             {
@@ -262,11 +291,15 @@ namespace Triggernometry.UI.CustomControls
         internal void trvNodes_DragDrop(object sender, DragEventArgs e)
         {
             trvNodes.SetInsertionMark(null, false);
-            if (e.Effect != DragDropEffects.Move || !TryGetDropTarget(e, out TreeNode dragged, out TreeNode target, out int index)) return;
+            if (e.Effect != DragDropEffects.Move || !TryGetDropTarget(e, out TreeNode dragged, out TreeNode target, out int index))
+                return;
             TreeNode parent = index < 0 ? target : target.Parent;
-            if (index < 0) index = parent.Nodes.Count;
-            if (dragged.Parent == parent && dragged.Index < index) index--;
-            if (dragged.Parent == parent && dragged.Index == index) return;
+            if (index < 0)
+                index = parent.Nodes.Count;
+            if (dragged.Parent == parent && dragged.Index < index)
+                index--;
+            if (dragged.Parent == parent && dragged.Index == index)
+                return;
 
             // Tree order is also the serialized and short-circuit evaluation order.
             ConditionComponent condition = (ConditionComponent)dragged.Tag;
@@ -332,18 +365,20 @@ namespace Triggernometry.UI.CustomControls
             tn.Tag = re;
             tn.Text = re.ToString();
             tn.Checked = !(re is ConditionComment) && re.Enabled;
-            if (re is ConditionComment) tn.ForeColor = disabledNodeColor;
+            if (re is ConditionComment)
+                tn.ForeColor = disabledNodeColor;
             if (re != null)
             {
                 SetReverseLookup(re, tn);
             }
-            re.OnPropertyChange += Re_OnPropertyChange;
             UpdateNodeIcon(tn);
         }
 
         private void Re_OnPropertyChange(ConditionComponent re)
         {
             TreeNode tn = GetReverseLookup(re);
+            if (tn == null)
+                return;
             UpdateNodeIcon(tn);
             tn.Text = re.ToString();
         }
@@ -357,79 +392,85 @@ namespace Triggernometry.UI.CustomControls
 
         private void UpdateEditorToConditionComponent(ConditionComponent re)
         {
-            pnlEditorComment.Visible = false;
-            if (re is ConditionSingle)
+            bool wasLoading = isLoadingCondition;
+            isLoadingCondition = true;
+            try
             {
-                pnlEditorGroup.Visible = false;
-                PanelStateFromSelection = true;                
-                ConditionSingle r = (ConditionSingle)re;
-                expLeft.Expression = r.ExpressionL;
-                expRight.Expression = r.ExpressionR;
-                switch (r.ExpressionTypeL)
+                pnlEditorComment.Visible = false;
+                if (re is ConditionSingle)
                 {
-                    case ConditionSingle.ExprTypeEnum.String:
-                        cbxExpLType.SelectedIndex = 0;
-                        break;
-                    case ConditionSingle.ExprTypeEnum.Numeric:
-                        cbxExpLType.SelectedIndex = 1;
-                        break;
+                    pnlEditorGroup.Visible = false;
+                    PanelStateFromSelection = true;
+                    ConditionSingle r = (ConditionSingle)re;
+                    expLeft.Expression = r.ExpressionL;
+                    expRight.Expression = r.ExpressionR;
+                    switch (r.ExpressionTypeL)
+                    {
+                        case ConditionSingle.ExprTypeEnum.String:
+                            cbxExpLType.SelectedIndex = 0;
+                            break;
+                        case ConditionSingle.ExprTypeEnum.Numeric:
+                            cbxExpLType.SelectedIndex = 1;
+                            break;
+                    }
+                    switch (r.ExpressionTypeR)
+                    {
+                        case ConditionSingle.ExprTypeEnum.String:
+                            cbxExpRType.SelectedIndex = 0;
+                            break;
+                        case ConditionSingle.ExprTypeEnum.Numeric:
+                            cbxExpRType.SelectedIndex = 1;
+                            break;
+                    }
+                    cbxOpType.SelectedIndex = (int)r.ConditionType;
+                    expLeft.ExpressionType = r.ExpressionTypeL == ConditionSingle.ExprTypeEnum.Numeric
+                        ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric : ExpressionTextBox.SupportedExpressionTypeEnum.String;
+                    UpdateRightExpressionType();
+                    capProperties.Caption = I18n.Translate("internal/ConditionViewer/condprops", "Condition properties");
+                    pnlEditorSingle.Visible = true;
                 }
-                switch (r.ExpressionTypeR)
+                else if (re is ConditionGroup)
                 {
-                    case ConditionSingle.ExprTypeEnum.String:
-                        cbxExpRType.SelectedIndex = 0;
-                        break;
-                    case ConditionSingle.ExprTypeEnum.Numeric:
-                        cbxExpRType.SelectedIndex = 1;
-                        break;
+                    pnlEditorSingle.Visible = false;
+                    PanelStateFromSelection = true;
+                    ConditionGroup r = (ConditionGroup)re;
+                    switch (r.Grouping)
+                    {
+                        case ConditionGroup.CndGroupingEnum.And:
+                            cbxGroupingType.SelectedIndex = 0;
+                            break;
+                        case ConditionGroup.CndGroupingEnum.Or:
+                            cbxGroupingType.SelectedIndex = 1;
+                            break;
+                        case ConditionGroup.CndGroupingEnum.Xor:
+                            cbxGroupingType.SelectedIndex = 2;
+                            break;
+                        case ConditionGroup.CndGroupingEnum.Not:
+                            cbxGroupingType.SelectedIndex = 3;
+                            break;
+                    }
+                    capProperties.Caption = I18n.Translate("internal/ConditionViewer/groupprops", "Group properties");
+                    pnlEditorGroup.Visible = true;
                 }
-                cbxOpType.SelectedIndex = (int)r.ConditionType;
-                UpdateRightExpressionType();
-                capProperties.Caption = I18n.Translate("internal/ConditionViewer/condprops", "Condition properties");
-                pnlEditorSingle.Visible = true;
-            }
-            else if (re is ConditionGroup)
-            {
-                pnlEditorSingle.Visible = false;
-                PanelStateFromSelection = true;                
-                ConditionGroup r = (ConditionGroup)re;
-                switch (r.Grouping)
+                else if (re is ConditionComment comment)
                 {
-                    case ConditionGroup.CndGroupingEnum.And:
-                        cbxGroupingType.SelectedIndex = 0;
-                        break;
-                    case ConditionGroup.CndGroupingEnum.Or:
-                        cbxGroupingType.SelectedIndex = 1;
-                        break;
-                    case ConditionGroup.CndGroupingEnum.Xor:
-                        cbxGroupingType.SelectedIndex = 2;
-                        break;
-                    case ConditionGroup.CndGroupingEnum.Not:
-                        cbxGroupingType.SelectedIndex = 3;
-                        break;
+                    pnlEditorSingle.Visible = false;
+                    pnlEditorGroup.Visible = false;
+                    PanelStateFromSelection = true;
+                    txtComment.Text = comment.Text;
+                    capProperties.Caption = I18n.Translate("internal/ConditionViewer/commentprops", "Comment properties");
+                    pnlEditorComment.Visible = true;
                 }
-                capProperties.Caption = I18n.Translate("internal/ConditionViewer/groupprops", "Group properties");
-                pnlEditorGroup.Visible = true;
+                else
+                {
+                    pnlEditorSingle.Visible = false;
+                    pnlEditorGroup.Visible = false;
+                    PanelStateFromSelection = false;
+                }
+                btnAddGroup.Enabled = btnAddCondition.Enabled = btnAddComment.Enabled = !isReadOnly && re != null;
+                btnDelete.Enabled = !isReadOnly && re?.Parent != null;
             }
-            else if (re is ConditionComment comment)
-            {
-                pnlEditorSingle.Visible = false;
-                pnlEditorGroup.Visible = false;
-                PanelStateFromSelection = true;
-                txtComment.Text = comment.Text;
-                capProperties.Caption = I18n.Translate("internal/ConditionViewer/commentprops", "Comment properties");
-                pnlEditorComment.Visible = true;
-            }
-            else
-            {
-                pnlEditorSingle.Visible = false;
-                pnlEditorGroup.Visible = false;
-                PanelStateFromSelection = false;                
-            }
-            btnAddGroup.Enabled = !isReadOnly;
-            btnAddCondition.Enabled = !isReadOnly;
-            btnAddComment.Enabled = !isReadOnly;
-            btnDelete.Enabled = !isReadOnly && re.Parent != null;
+            finally { isLoadingCondition = wasLoading; }
         }
 
         private void trvNodes_AfterSelect(object sender, TreeViewEventArgs e)
@@ -516,8 +557,11 @@ namespace Triggernometry.UI.CustomControls
 
         private void txtComment_TextChanged(object sender, EventArgs e)
         {
+            if (isLoadingCondition)
+                return;
             ConditionComment comment = (ConditionComment)trvNodes.SelectedNode.Tag;
-            if (comment.Text == txtComment.Text) return;
+            if (comment.Text == txtComment.Text)
+                return;
             comment.Text = txtComment.Text;
             OnConditionsUpdated();
         }
@@ -528,7 +572,8 @@ namespace Triggernometry.UI.CustomControls
             TreeNode tn = new TreeNode();
             AttachConditionComponentToNode(tn, re);
             TreeNode tx = trvNodes.SelectedNode;
-            if (!(tx.Tag is ConditionGroup)) tx = tx.Parent;
+            if (!(tx.Tag is ConditionGroup))
+                tx = tx.Parent;
             ((ConditionGroup)tx.Tag).AddChild(re);
             tx.Nodes.Add(tn);
             RecolorStartingFromNode(tx, tx.Checked);
@@ -670,6 +715,8 @@ namespace Triggernometry.UI.CustomControls
 
         private void cbxExpRType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isLoadingCondition)
+                return;
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             switch (cbxExpRType.SelectedIndex)
@@ -698,6 +745,8 @@ namespace Triggernometry.UI.CustomControls
 
         private void cbxExpLType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isLoadingCondition)
+                return;
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             switch (cbxExpLType.SelectedIndex)
@@ -724,6 +773,8 @@ namespace Triggernometry.UI.CustomControls
 
         private void trvNodes_AfterCheck(object sender, TreeViewEventArgs e)
         {
+            if (isLoadingCondition)
+                return;
             RecolorStartingFromNode(e.Node, e.Node.Checked);
             OnConditionsUpdated();
         }
@@ -739,7 +790,8 @@ namespace Triggernometry.UI.CustomControls
             }
             tn.ForeColor = (!(o is ConditionComment) && tn.Checked && pstate) ? trvNodes.ForeColor : disabledNodeColor;
             ConditionComponent cc = (ConditionComponent)o;
-            if (!(cc is ConditionComment)) cc.Enabled = tn.Checked;
+            if (!(cc is ConditionComment))
+                cc.Enabled = tn.Checked;
             if (o is ConditionGroup)
             {
                 foreach (TreeNode tnn in tn.Nodes)
@@ -804,7 +856,8 @@ namespace Triggernometry.UI.CustomControls
 
         internal void PasteSelected(bool overWrite)
         {
-            if (isReadOnly) return;
+            if (isReadOnly)
+                return;
             string data = null;
             try
             {
@@ -867,7 +920,7 @@ namespace Triggernometry.UI.CustomControls
                             }
                             tc.Enabled = sc.Enabled;
                             tn.Checked = tc.Enabled;
-                            tc.Grouping = sc.Grouping;                            
+                            tc.Grouping = sc.Grouping;
                             RecolorStartingFromNode(tn, tn.Checked);
                             UpdateEditorToConditionComponent(target);
                             tn.Expand();
@@ -919,6 +972,8 @@ namespace Triggernometry.UI.CustomControls
 
         private void cbxGroupingType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isLoadingCondition)
+                return;
             TreeNode tn = trvNodes.SelectedNode;
             ConditionGroup re = (ConditionGroup)tn.Tag;
             switch (cbxGroupingType.SelectedIndex)
@@ -942,6 +997,8 @@ namespace Triggernometry.UI.CustomControls
 
         private void cbxOpType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isLoadingCondition)
+                return;
             TreeNode tn = trvNodes.SelectedNode;
             ConditionSingle re = (ConditionSingle)tn.Tag;
             re.ConditionType = (ConditionSingle.CndTypeEnum)cbxOpType.SelectedIndex;
@@ -955,7 +1012,7 @@ namespace Triggernometry.UI.CustomControls
             ConditionComponent cc = (ConditionComponent)tn.Tag;
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             string test = "";
-            ns.Add("", "");            
+            ns.Add("", "");
             XmlSerializer xs = new XmlSerializer(cc.GetType());
             using (MemoryStream ms = new MemoryStream())
             {
@@ -963,7 +1020,7 @@ namespace Triggernometry.UI.CustomControls
                 ms.Position = 0;
                 using (StreamReader sr = new StreamReader(ms))
                 {
-                    test = sr.ReadToEnd();                    
+                    test = sr.ReadToEnd();
                 }
             }
             return test;
