@@ -21,6 +21,7 @@ namespace Triggernometry.Core
         internal ActionInstance LoopParent { get; set; }
         internal Context LoopContext { get; set; }
         internal bool IsLoopTail { get; set; }
+        private bool isIterationQueued;
 
         /// <summary>
         /// The effective tag text used by the action,
@@ -45,32 +46,55 @@ namespace Triggernometry.Core
         /// <summary>等待动作实际执行结束，再推进队列并释放本次执行持有的资源。</summary>
         internal async Task Dispatch()
         {
-            Context ctx = Context;
-            bool isIterationQueued = false;
-            Action execute = null;
-            if (Action is ActionLoop loop)
-            {
-                execute = () =>
-                {
-                    isIterationQueued = loop.QueueIteration(this);
-                    // 嵌套循环恢复调用者的迭代器，根循环将最终迭代器传给后续动作。
-                    if (!isIterationQueued && LoopParent == null && LoopContext != null)
-                        ctx = LoopContext;
-                };
-            }
+            Action executeOverride = null;
+            // 仅循环绑定实例方法，普通动作不创建委托或闭包。
+            if (Action is ActionLoop) executeOverride = ExecuteLoop;
             try
             {
-                await Action.InternalExecute(ctx, execute).ConfigureAwait(false);
-                if (!isIterationQueued) QueueNext(ctx);
+                await Action.InternalExecute(Context, executeOverride).ConfigureAwait(false);
+                if (!isIterationQueued) QueueNext(Context);
             }
             catch
             {
-                // 动作异常已由 Execute 记录；取消或失败时均不再推进后续动作。
+                // 动作异常已由 InternalExecute 记录；取消或失败时均不再推进后续动作。
             }
             finally 
             { 
                 ActionFinished(); 
             }
+        }
+
+        /// <summary>推进本次循环，结束时选择后续动作使用的上下文。</summary>
+        internal void ExecuteLoop()
+        {
+            isIterationQueued = QueueIteration((ActionLoop)Action);
+            // 根循环传出最终迭代器；嵌套循环保留调用者的迭代器。
+            if (!isIterationQueued && LoopParent == null && LoopContext != null)
+                Context = LoopContext;
+        }
+
+        /// <summary>初始化或递增迭代器，满足循环条件时排入本轮子动作。</summary>
+        private bool QueueIteration(ActionLoop loop)
+        {
+            if (!loop.LoopCondition.Enabled) return false;
+
+            Context loopContext = LoopContext;
+            if (loopContext == null)
+            {
+                loopContext = Context.Duplicate();
+                loopContext.loopActionId = loop.Id;
+                loopContext.loopIterator = (int)Context.EvaluateNumericExpression(loop.ActionContextLogger, Context, loop.Start);
+            }
+            else
+            {
+                loopContext.loopIterator += (int)loopContext.EvaluateNumericExpression(loop.ActionContextLogger, loopContext, loop.Step);
+            }
+            // 首次判断失败时不替换调用者的上下文。
+            if (!loop.LoopCondition.Check(loopContext, loop.ActionContextLogger, loopContext)) return false;
+            LoopContext = loopContext;
+
+            return loopContext.Plugin.QueueActions(loopContext, DateTime.Now, loop.LoopActions,
+                loopContext.Trigger?.Sequential ?? true, Mutex, loop.ActionContextLogger, this) != null;
         }
 
         /// <summary>安排下一个顺序动作或下一轮循环，并转交互斥锁的释放责任。</summary>

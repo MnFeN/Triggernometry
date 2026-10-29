@@ -108,31 +108,7 @@ namespace Triggernometry.Core.Actions
         {
             // 直接调用只负责启动循环；后续迭代和子动作仍由队列推进。
             var iteration = new ActionInstance(DateTime.Now, 0, null, this, ctx, false);
-            QueueIteration(iteration);
-        }
-
-        /// <summary>Queues the next iteration using this invocation's iterator and return path.</summary>
-        internal bool QueueIteration(ActionInstance ai)
-        {
-            if (!LoopCondition.Enabled) return false;
-
-            Context loopContext = ai.LoopContext;
-            if (loopContext == null)
-            {
-                loopContext = ai.Context.Duplicate();
-                loopContext.loopActionId = Id;
-                loopContext.loopIterator = (int)ai.Context.EvaluateNumericExpression(ActionContextLogger, ai.Context, Start);
-            }
-            else
-            {
-                loopContext.loopIterator += (int)loopContext.EvaluateNumericExpression(ActionContextLogger, loopContext, Step);
-            }
-            // A failed initial test must not replace the caller's context.
-            if (!LoopCondition.Check(loopContext, ActionContextLogger, loopContext)) return false;
-            ai.LoopContext = loopContext;
-
-            return loopContext.Plugin.QueueActions(loopContext, DateTime.Now, LoopActions,
-                loopContext.Trigger?.Sequential ?? true, ai.Mutex, ActionContextLogger, ai) != null;
+            iteration.ExecuteLoop();
         }
 
         /// <summary>Copies loop conditions and child actions without sharing editable objects.</summary>

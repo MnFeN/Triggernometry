@@ -383,9 +383,9 @@ namespace Triggernometry.Core
         /// 两种模式的业务异常均被捕获并记录日志。<br/><br/>
         /// 循环动作仅表示启动完成，不等待子动作和后续迭代。
         /// </remarks>
-        public void Execute(Context ctx = null)
+        public void Execute(Context context = null)
         {
-            Task task = ExecuteAsync(ctx);
+            Task task = ExecuteAsync(context);
             if (!Async)
             {
                 try { task.GetAwaiter().GetResult(); }
@@ -406,14 +406,14 @@ namespace Triggernometry.Core
         /// 直接调用不会抛出异常；await / GetAwaiter().GetResult() 时会重新抛出。<br/><br/>
         /// 循环动作仅表示启动完成，不包含子动作和后续迭代。
         /// </remarks>
-        public async Task ExecuteAsync(Context ctx = null)
-            => await InternalExecute(ctx ?? new Context(ParentTrigger), null).ConfigureAwait(false);
+        public async Task ExecuteAsync(Context context = null)
+            => await InternalExecute(context ?? new Context(ParentTrigger)).ConfigureAwait(false);
 
         /// <summary>
-        /// 统一处理条件、日志、异常和异步调度；
-        /// 循环可由队列提供本轮迭代的执行逻辑。
+        /// 统一处理条件、日志、异常和异步调度。<br />
+        /// <paramref name="executeOverride"/> ：用于循环等特殊动作，替代默认业务逻辑。
         /// </summary>
-        internal Task InternalExecute(Context ctx, Action execute)
+        internal Task InternalExecute(Context ctx, Action executeOverride = null)
         {
             void ExecuteCore()
             {
@@ -429,8 +429,11 @@ namespace Triggernometry.Core
                     }
                     ctx.PushActionResult(1);
                     AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
-                    if (execute != null) execute();
-                    else ExecuteImplementation(ctx);
+
+                    if (executeOverride != null) 
+                        executeOverride();
+                    else 
+                        ExecuteImplementation(ctx);
                 }
                 catch (Exception ex)
                 {
