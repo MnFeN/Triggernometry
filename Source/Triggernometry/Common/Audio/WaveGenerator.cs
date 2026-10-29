@@ -39,10 +39,11 @@ namespace Triggernometry.Common.Audio
         private static byte[] GenerateWavBytes(Func<double, double> waveFunc, int frequency, int durationMs, int sampleRate = 44100, double volume = 1.0)
         {
             var buffer = GenerateWave(waveFunc, frequency, durationMs, sampleRate, volume);
-            using (var memStream = new MemoryStream())
+            int dataLength = buffer.Length * sizeof(short);
+            byte[] wavBytes = new byte[44 + dataLength];
+            using (var memStream = new MemoryStream(wavBytes))
             using (var binWriter = new BinaryWriter(memStream))
             {
-                int dataLength = buffer.Length * sizeof(short);
                 int fileLength = 36 + dataLength;
 
                 // === WAV Header ===
@@ -59,11 +60,9 @@ namespace Triggernometry.Common.Audio
                 binWriter.Write(System.Text.Encoding.ASCII.GetBytes("data"));
                 binWriter.Write(dataLength);
 
-                // === PCM Data ===
-                foreach (var s in buffer)
-                    binWriter.Write(s);
-
-                return memStream.ToArray();
+                // Windows uses little-endian PCM; copy samples directly into the final WAV buffer.
+                Buffer.BlockCopy(buffer, 0, wavBytes, 44, dataLength);
+                return wavBytes;
             }
         }
 

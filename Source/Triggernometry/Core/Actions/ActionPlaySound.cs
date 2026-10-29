@@ -91,41 +91,44 @@ namespace Triggernometry.Core.Actions
         // Each sound action owns the players used for overlapping playback.
         internal readonly List<WindowsMediaPlayer> players = new List<WindowsMediaPlayer>();
 
-        internal void Mywmp_PlayStateChange(int NewState)
+        /// <summary>跟踪当前专用播放器，停止、媒体出错或启动失败时解绑并移除。</summary>
+        internal Action TrackPlayer(WindowsMediaPlayer player)
         {
-            if ((WMPPlayState)NewState != WMPPlayState.wmppsStopped)
-            {
-                return;
-            }
-            WindowsMediaPlayer wmp;
-            lock (players) // verified
-            {
-                do
-                {
-                    wmp = null;
-                    foreach (WindowsMediaPlayer player in players)
-                    {
-                        if (player.playState == WMPPlayState.wmppsStopped)
-                        {
-                            wmp = player;
-                            break;
-                        }
-                    }
-                    if (wmp != null)
-                    {
-                        players.Remove(wmp);
-                    }
-                } while (wmp != null);
-            }
-        }
+            _WMPOCXEvents_PlayStateChangeEventHandler stateChanged = null;
+            _WMPOCXEvents_MediaErrorEventHandler mediaError = null;
 
-        internal void Mywmp_MediaError(object pMediaObject)
-        {
-            WindowsMediaPlayer wmp = (WindowsMediaPlayer)pMediaObject;
-            lock (players) // verified
+            void StopTracking()
             {
-                players.Remove(wmp);
+                lock (players)
+                {
+                    if (!players.Remove(player)) return;
+                }
+                // 在集合锁外解绑，避免 COM 调用阻塞其他播放器的登记。
+                try { player.PlayStateChange -= stateChanged; }
+                finally { player.MediaError -= mediaError; }
             }
+
+            stateChanged = state =>
+            {
+                // 延迟到达的停止通知不能移除已经继续播放的实例。
+                if ((WMPPlayState)state == WMPPlayState.wmppsStopped && player.playState == WMPPlayState.wmppsStopped)
+                    StopTracking();
+            };
+            // MediaError 的参数是媒体对象，不是播放器；使用注册时绑定的实例。
+            mediaError = _ => StopTracking();
+
+            lock (players) players.Add(player);
+            try
+            {
+                player.PlayStateChange += stateChanged;
+                player.MediaError += mediaError;
+            }
+            catch
+            {
+                StopTracking();
+                throw;
+            }
+            return StopTracking;
         }
 
         internal override string DescribeImplementation()

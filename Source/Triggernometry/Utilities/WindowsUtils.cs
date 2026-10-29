@@ -127,44 +127,30 @@ namespace Triggernometry.Utilities
 
         public static List<IntPtr> FindWindows(int procid, Regex titleRegex)
         {
-            // find all windows matching the title regex
             List<IntPtr> wins = new List<IntPtr>();
             EnumWindows((hWnd, lParam) =>
             {
+                // 指定进程时先筛选，避免读取和匹配其他进程的窗口标题。
+                if (procid > 0)
+                {
+                    GetWindowThreadProcessId(hWnd, out uint windowProcId);
+                    if (windowProcId != procid) return true;
+                }
                 try
                 {
-                    string t = GetWindowTextFromHandle(hWnd);
-                    Match m = titleRegex.Match(t);
-                    if (m.Success == true)
+                    if (titleRegex.IsMatch(GetWindowTextFromHandle(hWnd)))
                     {
                         wins.Add(hWnd);
+                        // 0 只取枚举顺序中的首个匹配；负数及指定进程保留全部匹配。
+                        return procid != 0;
                     }
                 }
                 catch (Exception)
                 {
                 }
                 return true;
-            }
-                , IntPtr.Zero
-            );
-
-            // filter by process id
-            if (procid < 0) // all windows
-            {
-                return wins;
-            }
-            else if (procid == 0) // first window
-            {
-                return wins.Count > 0 ? new List<IntPtr> { wins[0] } : new List<IntPtr>();
-            }
-            else
-            {
-                return wins.Where(win =>
-                {
-                    GetWindowThreadProcessId(win, out uint windowProcId);
-                    return windowProcId == procid;
-                }).ToList();
-            }
+            }, IntPtr.Zero);
+            return wins;
         }
 
         public static void SendKeycode(int procid, string titleRegex, int keycode)

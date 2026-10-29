@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Speech.Synthesis;
 using Triggernometry.Core.Actions;
@@ -16,6 +15,8 @@ namespace Triggernometry.Core
     {
         internal Dictionary<string, DateTime> TtsRepetitions = new Dictionary<string, DateTime>();
         internal Dictionary<string, DateTime> SoundRepetitions = new Dictionary<string, DateTime>();
+        private DateTime oldestTtsRepetition = DateTime.MaxValue;
+        private DateTime oldestSoundRepetition = DateTime.MaxValue;
         internal WindowsMediaPlayer wmp;
         internal SpeechSynthesizer tts;
         internal bool WMPUnavailable;
@@ -56,7 +57,7 @@ namespace Triggernometry.Core
             }
             lock (TtsRepetitions)
             {
-                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text) == false)
+                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text, ref oldestTtsRepetition) == false)
                 {
                     return;
                 }
@@ -68,7 +69,7 @@ namespace Triggernometry.Core
         {
             lock (SoundRepetitions)
             {
-                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename) == false)
+                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename, ref oldestSoundRepetition) == false)
                 {
                     return;
                 }
@@ -105,7 +106,7 @@ namespace Triggernometry.Core
             }
             lock (TtsRepetitions)
             {
-                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text) == false)
+                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text, ref oldestTtsRepetition) == false)
                 {
                     return;
                 }
@@ -139,39 +140,45 @@ namespace Triggernometry.Core
         {
             lock (SoundRepetitions)
             {
-                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename) == false)
+                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename, ref oldestSoundRepetition) == false)
                 {
                     return;
                 }
             }
             WindowsMediaPlayer mywmp;
-            if (!a.UseSharedPlayer)
+            Action stopTracking = null;
+            bool useSharedPlayer = a.UseSharedPlayer;
+            if (!useSharedPlayer)
             {
                 mywmp = new WindowsMediaPlayer();
-                lock (a.players) // verified
-                {
-                    a.players.Add(mywmp);
-                }
-                mywmp.MediaError += a.Mywmp_MediaError;
-                mywmp.PlayStateChange += a.Mywmp_PlayStateChange;
+                stopTracking = a.TrackPlayer(mywmp);
             }
             else
             {
                 mywmp = wmp;
             }
-            double vol = ctx.EvaluateNumericExpression(a.ExpressionLogger, ctx, a.Volume);
-            vol *= ctx.Plugin.Config.SfxVolumeAdjustment / 100.0;
-            if (vol < 0.0)
+            try
             {
-                vol = 0.0;
+                double vol = ctx.EvaluateNumericExpression(a.ExpressionLogger, ctx, a.Volume);
+                vol *= ctx.Plugin.Config.SfxVolumeAdjustment / 100.0;
+                if (vol < 0.0)
+                {
+                    vol = 0.0;
+                }
+                if (vol > 100.0)
+                {
+                    vol = 100.0;
+                }
+                // 新播放器没有旧媒体，只对共享实例执行重置。
+                if (useSharedPlayer) mywmp.URL = "";
+                mywmp.settings.volume = (int)Math.Ceiling(vol);
+                mywmp.URL = filename;
             }
-            if (vol > 100.0)
+            catch
             {
-                vol = 100.0;
+                stopTracking?.Invoke();
+                throw;
             }
-            mywmp.URL = "";
-            mywmp.settings.volume = (int)Math.Ceiling(vol);
-            mywmp.URL = filename;
         }
 
         internal void TtsPlaybackExternal(Context ctx, ActionPlaySpeech a)
@@ -188,21 +195,21 @@ namespace Triggernometry.Core
             }
             lock (TtsRepetitions)
             {
-                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text) == false)
+                if (RegisterRepetition(TtsRepetitions, Config.TtsRepCooldown, text, ref oldestTtsRepetition) == false)
                 {
                     return;
                 }
             }
             string args = Config.TtsExternalAppArgs ?? "";
             args = args.Replace("$source", text);
-            Process.Start(proc, args);
+            Process.Start(proc, args)?.Dispose();
         }
 
         internal void SoundPlaybackExternal(Context ctx, ActionPlaySound a, string filename)
         {
             lock (SoundRepetitions)
             {
-                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename) == false)
+                if (RegisterRepetition(SoundRepetitions, Config.SoundRepCooldown, filename, ref oldestSoundRepetition) == false)
                 {
                     return;
                 }
@@ -214,30 +221,41 @@ namespace Triggernometry.Core
             }
             string args = Config.SoundExternalAppArgs ?? "";
             args = args.Replace("$source", filename);
-            Process.Start(proc, args);
+            Process.Start(proc, args)?.Dispose();
         }
 
-        internal bool RegisterRepetition(Dictionary<string, DateTime> repstore, int cooldown, string item)
+        /// <summary>在存储区锁内登记去重时间，仅可能存在过期项时扫描清理。</summary>
+        internal bool RegisterRepetition(Dictionary<string, DateTime> repstore, int cooldown, string item, ref DateTime oldestEntry)
         {
             if (cooldown == 0)
             {
                 return true;
             }
+            DateTime now = DateTime.Now;
             if (repstore.TryGetValue(item, out DateTime last) == true)
             {
-                if (last.AddMilliseconds(cooldown) > DateTime.Now)
+                if (last.AddMilliseconds(cooldown) > now)
                 {
                     return false;
                 }
             }
-            repstore[item] = DateTime.Now;
-            // clean old entries while we're here
-            DateTime expiresBefore = DateTime.Now.AddMilliseconds(-(double)cooldown);
-            var olds = (from rx in repstore where rx.Value < expiresBefore select rx.Key).ToList();
-            foreach (var old in olds)
+            repstore[item] = now;
+            if (now < oldestEntry) oldestEntry = now;
+            DateTime expiresBefore = now.AddMilliseconds(-(double)cooldown);
+            if (oldestEntry >= expiresBefore) return true;
+
+            // 起点可能已被覆盖；保留这个较早的下界只会多扫描一次，不会漏删过期项。
+            oldestEntry = DateTime.MaxValue;
+            List<string> expired = null;
+            foreach (var pair in repstore)
             {
-                repstore.Remove(old);
+                if (pair.Value < expiresBefore)
+                    (expired ?? (expired = new List<string>())).Add(pair.Key);
+                else if (pair.Value < oldestEntry)
+                    oldestEntry = pair.Value;
             }
+            if (expired != null)
+                foreach (string key in expired) repstore.Remove(key);
             return true;
         }
 
