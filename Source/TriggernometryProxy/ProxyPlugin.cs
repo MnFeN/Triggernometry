@@ -77,23 +77,20 @@ namespace TriggernometryProxy
         {
             lock (this)
             {
-                // private void UnregisterNamedCallback(int id)
-                var unregisterNamedCallbackMethod = Instance.GetType().GetMethod(
-                    "UnregisterNamedCallback",
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null,
-                    new Type[] { typeof(int) },
-                    null
-                ) ?? throw new MissingMethodException("RealPlugin", "UnregisterNamedCallback(int)");
                 if (Instance != null)
                 {
+                    // private void UnregisterNamedCallback(int id)
+                    var unregisterNamedCallbackMethod = Instance.GetType().GetMethod(
+                        "UnregisterNamedCallback",
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null,
+                        new Type[] { typeof(int) },
+                        null
+                    ) ?? throw new MissingMethodException("RealPlugin", "UnregisterNamedCallback(int)");
                     unregisterNamedCallbackMethod.Invoke(Instance, new object[] { id });
                 }
                 else
                 {
-                    foreach (var tuple in queuedRegs.Where(tuple => tuple.Item1 == id).ToList())
-                    {
-                        queuedRegs.Remove(tuple);
-                    }
+                    queuedRegs.RemoveAll(tuple => tuple.Item1 == id);
                 }
             }
         }
