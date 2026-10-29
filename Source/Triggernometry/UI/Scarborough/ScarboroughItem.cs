@@ -278,6 +278,13 @@ namespace Scarborough
             }
         }
 
+        /// <summary>释放旧绘图目标的资源，要求静态项目也在下一帧重绘。</summary>
+        protected virtual void OnRenderTargetRecreated()
+        {
+            Free();
+            NeedRender = true;
+        }
+
         protected bool AdjustSurface()
         {
             InvalidSize = (Width <= 0 || Height <= 0);
@@ -303,6 +310,7 @@ namespace Scarborough
                     VSync = false,
                     WindowHandle = IntPtr.Zero
                 };
+                _graphics.RenderTargetRecreated += OnRenderTargetRecreated;
                 _window.CreateWindow();
                 _graphics.WindowHandle = _window.Handle;
                 _graphics.Setup();

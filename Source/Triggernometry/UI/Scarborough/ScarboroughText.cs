@@ -33,6 +33,7 @@ namespace Scarborough
                 {
                     Changed = true;
                     _TextAlignment = value;
+                    layoutChanged = true;
                 }
             }
         }
@@ -67,6 +68,7 @@ namespace Scarborough
                 {
                     Changed = true;
                     _FontSize = value;
+                    layoutChanged = true;
                 }
             }
         }
@@ -84,6 +86,7 @@ namespace Scarborough
                 {
                     Changed = true;
                     _Text = value;
+                    layoutChanged = true;
                 }
             }
         }
@@ -162,12 +165,16 @@ namespace Scarborough
                 {
                     Changed = true;
                     _FontStyle = value;
+                    layoutChanged = true;
                 }
             }
         }
 
         private Font TextFont { get; set; } = null;
         private SolidBrush TextBrush { get; set; } = null;
+        private SharpDX.DirectWrite.TextLayout textLayout;
+        private bool layoutChanged = true;
+        private int layoutWidth, layoutHeight;
 
         public ScarboroughText(Scarborough own) : base(own)
         {
@@ -175,6 +182,9 @@ namespace Scarborough
 
         public override void Free()
         {
+            textLayout?.Dispose();
+            textLayout = null;
+            layoutChanged = true;
             if (TextFont != null)
             {
                 TextFont.Dispose();
@@ -256,6 +266,31 @@ namespace Scarborough
                 _bgColor.A = Opacity / 100.0f;
             }
             _graphics.ClearScene(_bgColor);
+            var layout = GetTextLayout();
+            if (layout != null)
+            {
+                if (UseOutline == true)
+                {
+                    TextBrush.Color = new Color(OutlineColor.R, OutlineColor.G, OutlineColor.B, Opacity / 100.0f);
+                    _graphics.DrawTextLayout(layout, TextBrush, 1, 0);
+                    _graphics.DrawTextLayout(layout, TextBrush, -1, 0);
+                    _graphics.DrawTextLayout(layout, TextBrush, 0, 1);
+                    _graphics.DrawTextLayout(layout, TextBrush, 0, -1);
+                }
+                TextBrush.Color = new Color(TextColor.R, TextColor.G, TextColor.B, Opacity / 100.0f);
+                _graphics.DrawTextLayout(layout, TextBrush, 0, 0);
+            }
+            _graphics.EndScene();
+        }
+
+        /// <summary>仅在文字、字体、对齐或尺寸改变时重建排版，移动和颜色变化复用现有排版。</summary>
+        private SharpDX.DirectWrite.TextLayout GetTextLayout()
+        {
+            if (!layoutChanged && layoutWidth == Width && layoutHeight == Height)
+                return textLayout;
+
+            textLayout?.Dispose();
+            textLayout = null;
             SharpDX.DirectWrite.ParagraphAlignment pa = SharpDX.DirectWrite.ParagraphAlignment.Center;
             SharpDX.DirectWrite.TextAlignment ta = SharpDX.DirectWrite.TextAlignment.Center;
             switch (TextAlignment)
@@ -291,23 +326,18 @@ namespace Scarborough
                     ta = SharpDX.DirectWrite.TextAlignment.Trailing;
                     break;
             }
-            using (var layout = _graphics.CreateTextLayout(TextFont, FontStyle, FontSize * 1.3f, pa, ta, Width, Height, Text))
-            {
-                if (layout != null)
-                {
-                    if (UseOutline == true)
-                    {
-                        TextBrush.Color = new Color(OutlineColor.R, OutlineColor.G, OutlineColor.B, Opacity / 100.0f);
-                        _graphics.DrawTextLayout(layout, TextBrush, 1, 0);
-                        _graphics.DrawTextLayout(layout, TextBrush, -1, 0);
-                        _graphics.DrawTextLayout(layout, TextBrush, 0, 1);
-                        _graphics.DrawTextLayout(layout, TextBrush, 0, -1);
-                    }
-                    TextBrush.Color = new Color(TextColor.R, TextColor.G, TextColor.B, Opacity / 100.0f);
-                    _graphics.DrawTextLayout(layout, TextBrush, 0, 0);
-                }
-            }
-            _graphics.EndScene();
+            textLayout = _graphics.CreateTextLayout(TextFont, FontStyle, FontSize * 1.3f, pa, ta, Width, Height, Text);
+            layoutWidth = Width;
+            layoutHeight = Height;
+            layoutChanged = false;
+            return textLayout;
+        }
+
+        /// <summary>绘图目标重建后重新加载字体和画刷，并在下一帧重绘。</summary>
+        protected override void OnRenderTargetRecreated()
+        {
+            base.OnRenderTargetRecreated();
+            NeedFont = true;
         }
 
         internal void LoadFontData(RealPlugin plug)

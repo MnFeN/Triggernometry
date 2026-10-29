@@ -324,6 +324,13 @@ namespace Scarborough
             }
         }
 
+        /// <summary>绘图目标重建后重新创建图片位图，包括动画帧。</summary>
+        protected override void OnRenderTargetRecreated()
+        {
+            base.OnRenderTargetRecreated();
+            NeedImage = true;
+        }
+
         public override void Render()
         {
             if (NeedImage == true)

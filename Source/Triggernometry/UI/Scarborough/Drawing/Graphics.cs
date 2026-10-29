@@ -34,6 +34,9 @@ namespace Scarborough.Drawing
 
         private readonly Stopwatch _watch;
 
+        /// <summary>绘图目标重建成功后，通知宿主释放并重新加载目标相关资源。</summary>
+        internal event Action RenderTargetRecreated;
+
         private volatile bool _resize;
 
         private volatile int _resizeWidth;
@@ -345,11 +348,13 @@ namespace Scarborough.Drawing
 
             long exa, exb;
             var result = _device.TryEndDraw(out exa, out exb);
+            IsDrawing = false;
 
             if (result.Failure)
             {
                 Destroy();
                 Setup();
+                RenderTargetRecreated?.Invoke();
             }
 
             if (MeasureFPS && _watch.IsRunning)
@@ -365,8 +370,6 @@ namespace Scarborough.Drawing
                     _watch.Stop();
                 }
             }
-
-            IsDrawing = false;
         }
 
         /// <summary>

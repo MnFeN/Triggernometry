@@ -1,6 +1,7 @@
 ﻿using Triggernometry.Localization;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 using Scarborough.PInvoke;
@@ -287,16 +288,16 @@ namespace Scarborough.Windows
             Dispose(false);
         }
 
-        /// <summary>
-        /// Setup and initializes the window.
-        /// </summary>
+        /// <summary>创建窗口并等待初始化完成，失败时向调用方抛出异常。</summary>
         public void CreateWindow()
         {
             lock (_lock)
             {
+                if (disposedValue) throw new ObjectDisposedException(nameof(OverlayWindow));
                 if (_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/alreadyinitialized", "OverlayWindow is already initialized."));
 
-                _windowThread = new Thread(WindowThread)
+                var initialized = new TaskCompletionSource<bool>();
+                _windowThread = new Thread(() => WindowThread(initialized))
                 {
                     IsBackground = true
                 };
@@ -305,18 +306,19 @@ namespace Scarborough.Windows
 
                 _windowThread.Start();
 
-                while (!_isInitialized) Thread.Sleep(10);
+                // 一次性等待窗口就绪；初始化失败也会结束等待并传回原异常。
+                initialized.Task.GetAwaiter().GetResult();
             }
         }
 
-        /// <summary>
-        /// Waits until the Thread used by this instance has exited.
-        /// </summary>
+        /// <summary>等待窗口线程退出，释放窗口后仍可调用。</summary>
         public void JoinWindowThread()
         {
+            Thread windowThread;
+            lock (_lock) windowThread = _windowThread;
             try
             {
-                _windowThread.Join();
+                if (windowThread != Thread.CurrentThread) windowThread?.Join();
             }
             catch { }
         }
@@ -519,17 +521,19 @@ namespace Scarborough.Windows
             }
         }
 
-        private void WindowThread()
+        /// <summary>创建窗口并处理消息，退出时在所属线程销毁句柄。</summary>
+        private void WindowThread(TaskCompletionSource<bool> initialized)
         {
-            User32.MakeThreadDpiAware();
-
-            SetupWindow();
-
-            _isInitialized = true;
-            _running = true;
-
+            Exception failure = null;
             try
             {
+                User32.MakeThreadDpiAware();
+                SetupWindow();
+
+                _isInitialized = true;
+                _running = true;
+                initialized.SetResult(true);
+
                 while (_running)
                 {
                     User32.WaitMessage();
@@ -543,7 +547,6 @@ namespace Scarborough.Windows
                             //case WindowMessage.Quit:
                             //    continue; // TODO: test
                             case CustomDestroyWindowMessage:
-                                User32.DestroyWindow(_handle);
                                 _running = false;
                                 break;
                             default:
@@ -554,16 +557,28 @@ namespace Scarborough.Windows
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                failure = ex;
             }
-
-            _isInitialized = false;
-
-            _handle = IntPtr.Zero;
-
-            IsVisible = false;
-            IsTopmost = false;
+            finally
+            {
+                try
+                {
+                    if (_handle != IntPtr.Zero) User32.DestroyWindow(_handle);
+                }
+                catch (Exception ex)
+                {
+                    if (failure == null) failure = ex;
+                }
+                _running = false;
+                _isInitialized = false;
+                _handle = IntPtr.Zero;
+                _isVisible = false;
+                _isTopmost = false;
+                // 失败时先完成清理，调用方才可以安全地重试或释放。
+                if (failure != null) initialized.TrySetException(failure);
+            }
         }
 
         private void SetupWindow()
@@ -623,6 +638,9 @@ namespace Scarborough.Windows
                 _width, _height,
                 IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 
+            if (_handle == IntPtr.Zero)
+                throw new InvalidOperationException("Failed to create the overlay window.");
+
             User32.SetLayeredWindowAttributes(_handle, 0, 255, LayeredWindowAttributes.Alpha);
             User32.UpdateWindow(_handle);
 
@@ -637,9 +655,8 @@ namespace Scarborough.Windows
         {
             lock (_lock)
             {
-                if (!_isInitialized) throw new InvalidOperationException(I18n.Translate("internal/OverlayWindow/uninitialized", "OverlayWindow is not initialized."));
-
-                User32.PostMessage(Handle, CustomDestroyWindowMessage, IntPtr.Zero, IntPtr.Zero);
+                if (_isInitialized)
+                    User32.PostMessage(Handle, CustomDestroyWindowMessage, IntPtr.Zero, IntPtr.Zero);
             }
         }
 
@@ -743,8 +760,9 @@ namespace Scarborough.Windows
         /// <param name="disposing">A Boolean value indicating whether this is called from the destructor.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            lock (_lock)
             {
+                if (disposedValue) return;
                 if (_isInitialized)
                 {
                     DestroyWindow();
@@ -754,7 +772,7 @@ namespace Scarborough.Windows
                 PositionChanged = null;
                 VisibilityChanged = null;
 
-                _windowThread = null;
+                // 保留线程引用，使释放后仍可等待窗口真正退出。
                 //_windowProc = null;
 
                 _title = null;

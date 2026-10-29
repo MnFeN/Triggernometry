@@ -41,11 +41,13 @@ namespace Scarborough
             public ScarboroughItem Item { get; set; }
             public ItemTypeEnum ItemType { get; set; }
             public ManualResetEvent Completed { get; set; } = null;
+            public Action CompletedAction { get; set; }
             public string Id { get; set; }
 
         }
 
         private Int64 CurOrdinal = 1;
+        private bool renderOrderChanged = true;
         private ManualResetEvent exitEvent = null;
         private Thread drawThread = null;
         internal bool RenderingActive { get; set; }
@@ -107,6 +109,7 @@ namespace Scarborough
                 finally
                 {
                     action.Completed?.Set();
+                    action.CompletedAction?.Invoke();
                 }
             }
         }
@@ -138,8 +141,11 @@ namespace Scarborough
             }
         }
 
-        internal void ExecuteAction(ItemAction ia)
+        private void ExecuteAction(ItemAction ia)
         {
+            // 只有集合或前后顺序可能变化的命令才使渲染顺序失效；失败的命令也可能已完成部分修改。
+            if (ia.Action != ItemAction.ActionTypeEnum.RenderingOn && ia.Action != ItemAction.ActionTypeEnum.RenderingOff)
+                renderOrderChanged = true;
             switch (ia.Action)
             {
                 case ItemAction.ActionTypeEnum.RenderingOn:
@@ -321,11 +327,11 @@ namespace Scarborough
             }
         }
 
-        public void Deactivate(string id, ItemAction.ItemTypeEnum it)
+        public void Deactivate(string id, ItemAction.ItemTypeEnum it, Action completed = null)
         {
             lock (ItemActions)
             {
-                ItemActions.Enqueue(new ItemAction() { Action = ItemAction.ActionTypeEnum.Deactivate, Id = id, ItemType = it });
+                ItemActions.Enqueue(new ItemAction() { Action = ItemAction.ActionTypeEnum.Deactivate, Id = id, ItemType = it, CompletedAction = completed });
             }
         }
 
@@ -498,7 +504,7 @@ namespace Scarborough
         }
 
         /// <summary>共用图片和文本的更新、删除及延迟日志流程。</summary>
-        private void UpdateItems<T>(Dictionary<string, T> items, int numTicks, RenderCollection rc) where T : ScarboroughItem
+        private void UpdateItems<T>(Dictionary<string, T> items, int numTicks) where T : ScarboroughItem
         {
             List<string> toRem = null;
             List<DeferredMessage> messages = null;
@@ -517,7 +523,6 @@ namespace Scarborough
                             si.Value.NeedRender = true;
                             si.Value.Changed = false;
                         }
-                        rc.Add(si.Value);
                     }
                 }
                 catch (Exception ex)
@@ -549,6 +554,7 @@ namespace Scarborough
             }
             if (toRem != null)
             {
+                renderOrderChanged = true;
                 foreach (string si in toRem)
                 {
                     T sit = items[si];
@@ -597,11 +603,11 @@ namespace Scarborough
             }
         }
 
-        private void Render(RenderCollection rc)
+        private void Render(List<ScarboroughItem> items)
         {
             List<ScarboroughItem> toRem = null;
             List<DeferredMessage> messages = null;
-            foreach (ScarboroughItem si in rc.items)
+            foreach (ScarboroughItem si in items)
             {
                 try
                 {
@@ -636,6 +642,7 @@ namespace Scarborough
             }
             if (toRem != null)
             {
+                renderOrderChanged = true;
                 foreach (ScarboroughItem si in toRem)
                 {
                     if (si.ctx != null && si.ctx.Trigger != null)
@@ -672,32 +679,23 @@ namespace Scarborough
                             if (textitems.TryGetValue(si.Name, out var current) && ReferenceEquals(current, si))
                                 textitems.Remove(si.Name);
                     }
+                    // 本轮之后仍可能继续渲染，不能保留已经释放的项目。
+                    items.Remove(si);
                     si.Dispose();
                 }
             }
             ProcessMessages(messages);
         }
 
-        private class RenderCollection
+        /// <summary>集合或激活顺序变化时重建渲染列表，普通更新继续复用原顺序。</summary>
+        private void UpdateRenderOrder(List<ScarboroughItem> items)
         {
-
-            public List<ScarboroughItem> items = new List<ScarboroughItem>();
-
-            public RenderCollection()
-            {
-                Clear();
-            }
-
-            public void Clear()
-            {
-                items.Clear();
-            }
-
-            public void Add(ScarboroughItem si)
-            {
-                items.Add(si);
-            }
-
+            if (!renderOrderChanged) return;
+            items.Clear();
+            items.AddRange(imageitems.Values);
+            items.AddRange(textitems.Values);
+            items.Sort((a, b) => a.Ordinal.CompareTo(b.Ordinal));
+            renderOrderChanged = false;
         }
 
         public void Render()
@@ -705,7 +703,7 @@ namespace Scarborough
             int numTicks = 0;
             long prevTick = Stopwatch.GetTimestamp(), tickTime;
             double msSince, lag = 0.0;
-            RenderCollection rc = new RenderCollection();
+            var items = new List<ScarboroughItem>();
             try
             {
                 while (true)
@@ -723,16 +721,15 @@ namespace Scarborough
                         prevTick = tickTime;
                         if (numTicks > 0)
                         {
-                            rc.Clear();
                             ExecuteActions();
-                            UpdateItems(imageitems, numTicks, rc);
-                            UpdateItems(textitems, numTicks, rc);
-                            // The render list only changes when the logic tick rebuilds it.
-                            rc.items.Sort((a, b) => a.Ordinal.CompareTo(b.Ordinal));
+                            UpdateItems(imageitems, numTicks);
+                            UpdateItems(textitems, numTicks);
                         }
-                        if (rc.items.Count > 0)
+                        // 更新或释放失败后也会在下一轮重新读取集合，避免继续使用过期的列表。
+                        UpdateRenderOrder(items);
+                        if (items.Count > 0)
                         {
-                            Render(rc);
+                            Render(items);
                         }
                     }
                     catch (Exception)

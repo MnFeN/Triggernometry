@@ -1,17 +1,14 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Triggernometry.UI.CustomControls;
-using Triggernometry.Localization;
-using Triggernometry.UI.Forms;
-using Triggernometry.Core.Variables;
 using Triggernometry.Core;
+using Triggernometry.Core.Variables;
+using Triggernometry.Localization;
 
 namespace Triggernometry.UI.Forms
 {
@@ -1774,6 +1771,20 @@ namespace Triggernometry.UI.Forms
 
         #endregion
 
+        /// <summary>由绘图线程关闭悬浮窗，整批完成后再通知界面刷新。</summary>
+        private void QueueAuraClosures(List<string> names, Scarborough.Scarborough.ItemAction.ItemTypeEnum type, Action refresh)
+        {
+            if (names.Count == 0) return;
+            Action completed = () =>
+            {
+                if (IsDisposed || !IsHandleCreated) return;
+                try { BeginInvoke(refresh); }
+                catch (InvalidOperationException) { } // 窗体可能在提交刷新前已经关闭。
+            };
+            for (int i = 0; i < names.Count; i++)
+                plug.sc.Deactivate(names[i], type, i == names.Count - 1 ? completed : null);
+        }
+
         #region Image auras
         private void RefreshImageAuras()
         {
@@ -1815,15 +1826,9 @@ namespace Triggernometry.UI.Forms
             }
             if (plug.sc != null)
             {
-                Scarborough.Scarborough.ItemAction ia = new Scarborough.Scarborough.ItemAction();
-                ia.Action = Scarborough.Scarborough.ItemAction.ActionTypeEnum.Deactivate;
-                ia.Item = null;
-                ia.ItemType = Scarborough.Scarborough.ItemAction.ItemTypeEnum.Image;
-                foreach (string aname in anames)
-                {
-                    ia.Id = aname;
-                    plug.sc.ExecuteAction(ia);
-                }
+                dgvImage.ClearSelection();
+                QueueAuraClosures(anames, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Image, RefreshImageAuras);
+                return;
             }
             else
             {
@@ -1833,7 +1838,7 @@ namespace Triggernometry.UI.Forms
                     {
                         if (plug.imageauras.ContainsKey(aname) == true)
                         {
-                            Forms.AuraContainerForm acf = plug.imageauras[aname];
+                            AuraContainerForm acf = plug.imageauras[aname];
                             acf.AuraDeactivate();
                         }
                     }
@@ -1927,15 +1932,9 @@ namespace Triggernometry.UI.Forms
             }
             if (plug.sc != null)
             {
-                Scarborough.Scarborough.ItemAction ia = new Scarborough.Scarborough.ItemAction();
-                ia.Action = Scarborough.Scarborough.ItemAction.ActionTypeEnum.Deactivate;
-                ia.Item = null;
-                ia.ItemType = Scarborough.Scarborough.ItemAction.ItemTypeEnum.Text;
-                foreach (string aname in anames)
-                {
-                    ia.Id = aname;
-                    plug.sc.ExecuteAction(ia);
-                }
+                dgvText.ClearSelection();
+                QueueAuraClosures(anames, Scarborough.Scarborough.ItemAction.ItemTypeEnum.Text, RefreshTextAuras);
+                return;
             }
             else
             {
