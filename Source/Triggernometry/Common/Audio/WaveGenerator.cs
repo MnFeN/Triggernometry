@@ -23,7 +23,7 @@ namespace Triggernometry.Common.Audio
 
         public static short[] GenerateWave(Func<double, double> waveFunc, int freq, int durationMs, int sampleRate, double volume = 1.0)
         {
-            int samples = (int)(sampleRate * durationMs / 1000.0);
+            int samples = checked((int)((long)sampleRate * durationMs / 1000));
             short[] buffer = new short[samples];
 
             for (int i = 0; i < samples; i++)
