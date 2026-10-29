@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Triggernometry.Core;
@@ -28,6 +29,8 @@ namespace Triggernometry.UI.Forms
             sortAsc = true;
             dgvScalarVariables.Columns[0].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
             SetAllHeadersMinWidth(this);
+            foreach (var grid in new[] { dgvListVariables, dgvPeListVariables, dgvDictVariables, dgvPeDictVariables })
+                grid.Columns[2].CellTemplate = new VariablePreviewCell();
         }
 
         private void VariableForm_Shown(object sender, EventArgs e)
@@ -174,9 +177,190 @@ namespace Triggernometry.UI.Forms
             return null;
         }
 
+        private List<string> mutexKeys = new List<string>();
+        private List<string> imageAuraKeys = new List<string>();
+        private List<string> textAuraKeys = new List<string>();
+
         private List<string> sortedVariableKeys;
         private string sortType;
         private bool sortAsc;
+        private static readonly IComparer<string> textSortComparer = StringComparer.Ordinal;
+        private static readonly IComparer<Variable> variableSortComparer = Comparer<Variable>.Create(CompareVariableValues);
+
+        /// <summary>保留排序键的原类型，并始终按名称或 ID 升序处理相同排序值。</summary>
+        private List<TKey> SortKeys<TKey, TValue, TSort>(Dictionary<TKey, TValue> variables,
+            Func<KeyValuePair<TKey, TValue>, TSort> selector)
+        {
+            lock (variables)
+            {
+                IComparer<TSort> comparer = typeof(TSort) == typeof(string) ? (IComparer<TSort>)textSortComparer
+                    : typeof(Variable).IsAssignableFrom(typeof(TSort)) ? (IComparer<TSort>)variableSortComparer
+                    : Comparer<TSort>.Default;
+                IComparer<TKey> keyComparer = typeof(TKey) == typeof(string) ? (IComparer<TKey>)textSortComparer : Comparer<TKey>.Default;
+                var ordered = sortAsc ? variables.OrderBy(selector, comparer) : variables.OrderByDescending(selector, comparer);
+                return ordered.ThenBy(pair => pair.Key, keyComparer).Select(pair => pair.Key).ToList();
+            }
+        }
+
+        /// <summary>变量值保留原有类型和大小优先级，内部文本统一按 Ordinal 比较。</summary>
+        private static int CompareVariableValues(Variable left, Variable right)
+        {
+            if (ReferenceEquals(left, right)) return 0;
+            if (left == null) return -1;
+            if (right == null) return 1;
+            if (left is VariableScalar leftScalar && right is VariableScalar rightScalar)
+                return textSortComparer.Compare(leftScalar.Value, rightScalar.Value);
+            if (left is VariableList leftList && right is VariableList rightList)
+            {
+                int result = leftList.Size.CompareTo(rightList.Size);
+                if (result != 0) return result;
+                for (int i = 0; i < leftList.Size; i++)
+                {
+                    result = CompareVariableValues(leftList.Values[i], rightList.Values[i]);
+                    if (result != 0) return result;
+                }
+                return 0;
+            }
+            if (left is VariableDictionary leftDict && right is VariableDictionary rightDict)
+            {
+                int result = leftDict.Size.CompareTo(rightDict.Size);
+                if (result != 0) return result;
+                var leftKeys = leftDict.Values.Keys.OrderBy(key => key, textSortComparer).ToArray();
+                var rightKeys = rightDict.Values.Keys.OrderBy(key => key, textSortComparer).ToArray();
+                for (int i = 0; i < leftKeys.Length; i++)
+                {
+                    result = textSortComparer.Compare(leftKeys[i], rightKeys[i]);
+                    if (result != 0) return result;
+                    result = CompareVariableValues(leftDict.Values[leftKeys[i]], rightDict.Values[rightKeys[i]]);
+                    if (result != 0) return result;
+                }
+                return 0;
+            }
+            if (left is VariableTable leftTable && right is VariableTable rightTable)
+            {
+                int result = leftTable.Height.CompareTo(rightTable.Height);
+                if (result != 0) return result;
+                result = leftTable.Width.CompareTo(rightTable.Width);
+                if (result != 0) return result;
+                for (int y = 1; y <= leftTable.Height; y++)
+                    for (int x = 1; x <= leftTable.Width; x++)
+                    {
+                        result = CompareVariableValues(leftTable.Peek(x, y), rightTable.Peek(x, y));
+                        if (result != 0) return result;
+                    }
+                return 0;
+            }
+            return left.CompareTo(right);
+        }
+
+        private const int PreviewTextLimit = 1024;
+
+        /// <summary>只生成有限长度的预览，嵌套列表和字典也在达到上限时停止。</summary>
+        private static string GetVariablePreview(Variable value)
+        {
+            string full = GetShortListPreview(value);
+            if (full != null) return full;
+            var text = new StringBuilder();
+            AppendVariablePreview(text, value, true);
+            if (text.Length > PreviewTextLimit)
+            {
+                text.Length = PreviewTextLimit;
+                if (char.IsHighSurrogate(text[text.Length - 1])) text.Length--;
+                text.Append('…');
+            }
+            return text.ToString();
+        }
+
+        /// <summary>能直接完整显示的短列表复用原拼接，避免增加预览分配。</summary>
+        private static string GetShortListPreview(Variable value)
+        {
+            if (value is VariableList list && list.Size <= 32)
+            {
+                int length = Math.Max(0, list.Size - 1) * 2;
+                foreach (Variable item in list.Values)
+                {
+                    if (item != null && item.GetType() != typeof(VariableScalar)) return null;
+                    length += ((VariableScalar)item)?.Value?.Length ?? 0;
+                    if (length > PreviewTextLimit) return null;
+                }
+                return list.Join(", ");
+            }
+            return null;
+        }
+
+        /// <summary>沿用原来的列表和字典分隔符，避免先构造完整的嵌套文本。</summary>
+        private static void AppendVariablePreview(StringBuilder text, Variable value, bool isRoot = false)
+        {
+            if (text.Length > PreviewTextLimit) return;
+            if (value is VariableList list && (isRoot || value.GetType() == typeof(VariableList)))
+            {
+                bool isFirst = true;
+                foreach (Variable item in list.Values)
+                {
+                    if (!isFirst) AppendPreviewText(text, isRoot ? ", " : ",");
+                    isFirst = false;
+                    AppendVariablePreview(text, item);
+                    if (text.Length > PreviewTextLimit) break;
+                }
+            }
+            else if (value is VariableDictionary dict)
+            {
+                bool isFirst = true;
+                foreach (var pair in dict.Values)
+                {
+                    if (!isFirst) AppendPreviewText(text, isRoot ? ", " : ",");
+                    isFirst = false;
+                    AppendPreviewText(text, pair.Key);
+                    AppendPreviewText(text, isRoot ? ":" : "=");
+                    AppendVariablePreview(text, pair.Value);
+                    if (text.Length > PreviewTextLimit) break;
+                }
+            }
+            else
+            {
+                // 自定义变量子类仍使用自己的 ToString；普通标量不产生额外的完整副本。
+                AppendPreviewText(text, value?.ToString());
+            }
+        }
+
+        /// <summary>最多保留一个超出上限的字符，用于判断是否需要省略号。</summary>
+        private static void AppendPreviewText(StringBuilder text, string value)
+        {
+            if (value != null && text.Length <= PreviewTextLimit)
+                text.Append(value, 0, Math.Min(value.Length, PreviewTextLimit + 1 - text.Length));
+        }
+
+        /// <summary>复制时才读取完整内容，不把界面中的省略号写入剪贴板。</summary>
+        private string GetFullVariableText(DataGridView grid, int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= sortedVariableKeys.Count) return null;
+            string key = sortedVariableKeys[rowIndex];
+            var store = plug.GetVariableStore(grid == dgvPeListVariables || grid == dgvPeDictVariables);
+            if (grid == dgvListVariables || grid == dgvPeListVariables)
+            {
+                lock (store.List)
+                    return store.List.TryGetValue(key, out var list) ? list.Join(", ") : null;
+            }
+            lock (store.Dict)
+                return store.Dict.TryGetValue(key, out var dict) ? dict.JoinAll(":", ", ") : null;
+        }
+
+        /// <summary>普通显示使用短预览；保留表格原有文本、CSV 和 HTML 的完整复制流程。</summary>
+        private sealed class VariablePreviewCell : DataGridViewTextBoxCell
+        {
+            public VariablePreviewCell() { }
+
+            protected override object GetFormattedValue(object value, int rowIndex,
+                ref DataGridViewCellStyle cellStyle, TypeConverter valueTypeConverter,
+                TypeConverter formattedValueTypeConverter, DataGridViewDataErrorContexts context)
+            {
+                if ((context & DataGridViewDataErrorContexts.ClipboardContent) != 0
+                    && DataGridView?.FindForm() is StateForm form)
+                    value = form.GetFullVariableText(DataGridView, rowIndex);
+                return base.GetFormattedValue(value, rowIndex, ref cellStyle,
+                    valueTypeConverter, formattedValueTypeConverter, context);
+            }
+        }
 
         private Variable OpenVariableEditor(Variable v, ref string name, bool isNew)
         {
@@ -393,28 +577,16 @@ namespace Triggernometry.UI.Forms
         private void SortScalarVariables(VariableStore vs)
         {
             var variables = vs.Scalar;
-            Func<KeyValuePair<string, VariableScalar>, object> selector;
-
             switch (sortType)
             {
-                case "value": selector = kvp => kvp.Value; break;
-                case "lastchanged": selector = kvp => kvp.Value.LastChanged; break;
-                case "lastchanger": selector = kvp => kvp.Value.LastChanger; break;
-                default: selector = kvp => kvp.Key; break;
-            }
-
-            lock (vs.Scalar)
-            {
-                if (sortAsc)
-                {
-                    sortedVariableKeys = variables.OrderBy(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
-                else
-                {
-                    sortedVariableKeys = variables.OrderByDescending(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
+                case "value":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value); break;
+                case "lastchanged":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanged); break;
+                case "lastchanger":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanger); break;
+                default:
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Key); break;
             }
         }
 
@@ -663,29 +835,18 @@ namespace Triggernometry.UI.Forms
         private void SortListVariables(VariableStore vs)
         {
             var variables = vs.List;
-            Func<KeyValuePair<string, VariableList>, object> selector;
-
             switch (sortType)
             {
-                case "size": selector = kvp => kvp.Value.Size; break;
-                case "value": selector = kvp => kvp.Value; break;
-                case "lastchanged": selector = kvp => kvp.Value.LastChanged; break;
-                case "lastchanger": selector = kvp => kvp.Value.LastChanger; break;
-                default: selector = kvp => kvp.Key; break;
-            }
-
-            lock (vs.List)
-            {
-                if (sortAsc)
-                {
-                    sortedVariableKeys = variables.OrderBy(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
-                else
-                {
-                    sortedVariableKeys = variables.OrderByDescending(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
+                case "size":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.Size); break;
+                case "value":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value); break;
+                case "lastchanged":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanged); break;
+                case "lastchanger":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanger); break;
+                default:
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Key); break;
             }
         }
 
@@ -709,7 +870,7 @@ namespace Triggernometry.UI.Forms
                         e.Value = varValue.Size;
                         break;
                     case 2:
-                        e.Value = varValue.Join(", ");
+                        e.Value = GetVariablePreview(varValue);
                         break;
                     case 3:
                         e.Value = varValue.LastChanged.ToString();
@@ -949,28 +1110,18 @@ namespace Triggernometry.UI.Forms
         private void SortTableVariables(VariableStore vs)
         {
             var variables = vs.Table;
-            Func<KeyValuePair<string, VariableTable>, object> selector;
-
             switch (sortType)
             {
-                case "width": selector = kvp => kvp.Value.Width; break;
-                case "height": selector = kvp => kvp.Value.Height; break;
-                case "lastchanged": selector = kvp => kvp.Value.LastChanged; break;
-                case "lastchanger": selector = kvp => kvp.Value.LastChanger; break;
-                default: selector = kvp => kvp.Key; break;
-            }
-            lock (vs.Table)
-            {
-                if (sortAsc)
-                {
-                    sortedVariableKeys = variables.OrderBy(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
-                else
-                {
-                    sortedVariableKeys = variables.OrderByDescending(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
+                case "width":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.Width); break;
+                case "height":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.Height); break;
+                case "lastchanged":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanged); break;
+                case "lastchanger":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanger); break;
+                default:
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Key); break;
             }
         }
 
@@ -1234,28 +1385,16 @@ namespace Triggernometry.UI.Forms
         private void SortDictVariables(VariableStore vs)
         {
             var variables = vs.Dict;
-            Func<KeyValuePair<string, VariableDictionary>, object> selector;
-
             switch (sortType)
             {
-                case "size": selector = kvp => kvp.Value.Size; break;
-                case "lastchanged": selector = kvp => kvp.Value.LastChanged; break;
-                case "lastchanger": selector = kvp => kvp.Value.LastChanger; break;
-                default: selector = kvp => kvp.Key; break;
-            }
-
-            lock (vs.Dict)
-            {
-                if (sortAsc)
-                {
-                    sortedVariableKeys = variables.OrderBy(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
-                else
-                {
-                    sortedVariableKeys = variables.OrderByDescending(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
+                case "size":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.Size); break;
+                case "lastchanged":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanged); break;
+                case "lastchanger":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanger); break;
+                default:
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Key); break;
             }
         }
 
@@ -1280,7 +1419,7 @@ namespace Triggernometry.UI.Forms
                         e.Value = varDict.Size;
                         break;
                     case 2:
-                        e.Value = varDict.JoinAll(":", ", ");
+                        e.Value = GetVariablePreview(varDict);
                         break;
                     case 3:
                         e.Value = varDict.LastChanged.ToString();
@@ -1504,28 +1643,16 @@ namespace Triggernometry.UI.Forms
         private void SortRegisteredVariables()
         {
             var variables = plug.RegisteredVariables;
-            Func<KeyValuePair<string, VariableScalar>, object> selector;
-
             switch (sortType)
             {
-                case "value": selector = kvp => kvp.Value; break;
-                case "lastchanged": selector = kvp => kvp.Value.LastChanged; break;
-                case "lastchanger": selector = kvp => kvp.Value.LastChanger; break;
-                default: selector = kvp => kvp.Key; break;
-            }
-
-            lock (plug.RegisteredVariables)
-            {
-                if (sortAsc)
-                {
-                    sortedVariableKeys = variables.OrderBy(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
-                else
-                {
-                    sortedVariableKeys = variables.OrderByDescending(selector).ThenBy(kvp => kvp.Key)
-                        .Select(kvp => kvp.Key).ToList();
-                }
+                case "value":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value); break;
+                case "lastchanged":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanged); break;
+                case "lastchanger":
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Value.LastChanger); break;
+                default:
+                    sortedVariableKeys = SortKeys(variables, pair => pair.Key); break;
             }
         }
 
@@ -1697,33 +1824,26 @@ namespace Triggernometry.UI.Forms
         {
             lock (plug.mutexes)
             {
-                if (e.RowIndex >= plug.mutexes.Count)
+                if (e.RowIndex < 0 || e.RowIndex >= mutexKeys.Count) return;
+                string key = mutexKeys[e.RowIndex];
+                if (e.ColumnIndex == 0)
                 {
+                    e.Value = key;
                     return;
                 }
-                KeyValuePair<string, RealPlugin.MutexInfo> kp = plug.mutexes.ElementAt(e.RowIndex);
-                lock (kp.Value)
+                if (!plug.mutexes.TryGetValue(key, out var mutex)) return;
+                lock (mutex)
                 {
                     switch (e.ColumnIndex)
                     {
-                        case 0:
-                            e.Value = kp.Key;
-                            break;
                         case 1:
-                            e.Value = kp.Value.OwnerContext != null ? kp.Value.OwnerContext.ToString() : "Not owned";
+                            e.Value = mutex.OwnerContext != null ? mutex.OwnerContext.ToString() : "Not owned";
                             break;
                         case 2:
-                            e.Value = kp.Value.RefCount.ToString();
+                            e.Value = mutex.RefCount.ToString();
                             break;
                         case 3:
-                            {
-                                List<string> acx = new List<string>();
-                                foreach (RealPlugin.MutexTicket m in kp.Value.AcquireQueue)
-                                {
-                                    acx.Add(m.Context.ToString());
-                                }
-                                e.Value = string.Join(", ", acx);
-                            }
+                            e.Value = string.Join(", ", mutex.AcquireQueue.Select(ticket => ticket.Context.ToString()));
                             break;
                     }
                 }
@@ -1734,7 +1854,8 @@ namespace Triggernometry.UI.Forms
         {
             lock (plug.mutexes)
             {
-                dgvMutexes.RowCount = plug.mutexes.Count;
+                mutexKeys = plug.mutexes.Keys.ToList();
+                dgvMutexes.RowCount = mutexKeys.Count;
             }
             Refresh();
         }
@@ -1793,14 +1914,16 @@ namespace Triggernometry.UI.Forms
             {
                 lock (plug.sc.imageitems)
                 {
-                    dgvImage.RowCount = plug.sc.imageitems.Count;
+                    imageAuraKeys = plug.sc.imageitems.Keys.ToList();
+                    dgvImage.RowCount = imageAuraKeys.Count;
                 }
             }
             else
             {
                 lock (plug.imageauras)
                 {
-                    dgvImage.RowCount = plug.imageauras.Count;
+                    imageAuraKeys = plug.imageauras.Keys.ToList();
+                    dgvImage.RowCount = imageAuraKeys.Count;
                 }
             }
             Refresh();
@@ -1847,48 +1970,26 @@ namespace Triggernometry.UI.Forms
             btnImageRefresh_Click(sender, e);
         }
 
+        /// <summary>按刷新时的名称快照读取，后台增删不会把同一行的列映射到不同项目。</summary>
+        private static void AuraCellValueNeeded<T>(Dictionary<string, T> items, List<string> keys,
+            DataGridViewCellValueEventArgs e, Func<T, Context> context)
+        {
+            lock (items)
+            {
+                if (e.RowIndex < 0 || e.RowIndex >= keys.Count) return;
+                string key = keys[e.RowIndex];
+                if (e.ColumnIndex == 0) e.Value = key;
+                else if (e.ColumnIndex == 1 && items.TryGetValue(key, out T item))
+                    e.Value = context(item)?.ToString() ?? "(unknown)";
+            }
+        }
+
         private void dgvImage_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (plug.sc != null)
-            {
-                lock (plug.sc.imageitems)
-                {
-                    if (e.RowIndex >= plug.sc.imageitems.Count)
-                    {
-                        return;
-                    }
-                    KeyValuePair<string, Scarborough.ScarboroughImage> kp = plug.sc.imageitems.ElementAt(e.RowIndex);
-                    switch (e.ColumnIndex)
-                    {
-                        case 0:
-                            e.Value = kp.Key;
-                            break;
-                        case 1:
-                            e.Value = kp.Value.ctx != null ? kp.Value.ctx.ToString() : "(unknown)";
-                            break;
-                    }
-                }
-            }
+                AuraCellValueNeeded(plug.sc.imageitems, imageAuraKeys, e, item => item.ctx);
             else
-            {
-                lock (plug.imageauras)
-                {
-                    if (e.RowIndex >= plug.imageauras.Count)
-                    {
-                        return;
-                    }
-                    KeyValuePair<string, AuraContainerForm> kp = plug.imageauras.ElementAt(e.RowIndex);
-                    switch (e.ColumnIndex)
-                    {
-                        case 0:
-                            e.Value = kp.Key;
-                            break;
-                        case 1:
-                            e.Value = kp.Value.ctx != null ? kp.Value.ctx.ToString() : "(unknown)";
-                            break;
-                    }
-                }
-            }
+                AuraCellValueNeeded(plug.imageauras, imageAuraKeys, e, item => item.ctx);
         }
         #endregion
 
@@ -1899,14 +2000,16 @@ namespace Triggernometry.UI.Forms
             {
                 lock (plug.sc.textitems)
                 {
-                    dgvText.RowCount = plug.sc.textitems.Count;
+                    textAuraKeys = plug.sc.textitems.Keys.ToList();
+                    dgvText.RowCount = textAuraKeys.Count;
                 }
             }
             else
             {
                 lock (plug.textauras)
                 {
-                    dgvText.RowCount = plug.textauras.Count;
+                    textAuraKeys = plug.textauras.Keys.ToList();
+                    dgvText.RowCount = textAuraKeys.Count;
                 }
             }
             Refresh();
@@ -1956,45 +2059,9 @@ namespace Triggernometry.UI.Forms
         private void dgvText_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (plug.sc != null)
-            {
-                lock (plug.sc.textitems)
-                {
-                    if (e.RowIndex >= plug.sc.textitems.Count)
-                    {
-                        return;
-                    }
-                    KeyValuePair<string, Scarborough.ScarboroughText> kp = plug.sc.textitems.ElementAt(e.RowIndex);
-                    switch (e.ColumnIndex)
-                    {
-                        case 0:
-                            e.Value = kp.Key;
-                            break;
-                        case 1:
-                            e.Value = kp.Value.ctx != null ? kp.Value.ctx.ToString() : "(unknown)";
-                            break;
-                    }
-                }
-            }
+                AuraCellValueNeeded(plug.sc.textitems, textAuraKeys, e, item => item.ctx);
             else
-            {
-                lock (plug.textauras)
-                {
-                    if (e.RowIndex >= plug.textauras.Count)
-                    {
-                        return;
-                    }
-                    KeyValuePair<string, AuraContainerForm> kp = plug.textauras.ElementAt(e.RowIndex);
-                    switch (e.ColumnIndex)
-                    {
-                        case 0:
-                            e.Value = kp.Key;
-                            break;
-                        case 1:
-                            e.Value = kp.Value.ctx != null ? kp.Value.ctx.ToString() : "(unknown)";
-                            break;
-                    }
-                }
-            }
+                AuraCellValueNeeded(plug.textauras, textAuraKeys, e, item => item.ctx);
         }
         #endregion
 
@@ -2048,30 +2115,21 @@ namespace Triggernometry.UI.Forms
         private List<int> sortedCallbackKeys = new List<int>();
         private void SortCallbacks()
         {
-            lock (plug.callbacksById)
+            var variables = plug.callbacksById;
+            switch (sortType)
             {
-                var list = plug.callbacksById;
-
-                Func<KeyValuePair<int, RealPlugin.NamedCallback>, object> selector;
-
-                switch (sortType)
-                {
-                    case "id": selector = kv => kv.Value.Id; break;
-                    case "name": selector = kv => kv.Value.Name; break;
-                    case "registrant": selector = kv => kv.Value.Registrant ?? ""; break;
-                    case "lastRegistered": selector = kv => kv.Value.RegistrationTime; break;
-                    case "lastInvoked": selector = kv => kv.Value.LastInvoked ?? DateTime.MinValue; break;
-                    default: selector = kv => kv.Key; break;
-                }
-
-                if (sortAsc)
-                {
-                    sortedCallbackKeys = list.OrderBy(selector).ThenBy(kv => kv.Key).Select(kv => kv.Key).ToList();
-                }
-                else
-                {
-                    sortedCallbackKeys = list.OrderByDescending(selector).ThenBy(kv => kv.Key).Select(kv => kv.Key).ToList();
-                }
+                case "id":
+                    sortedCallbackKeys = SortKeys(variables, pair => pair.Value.Id); break;
+                case "name":
+                    sortedCallbackKeys = SortKeys(variables, pair => pair.Value.Name); break;
+                case "registrant":
+                    sortedCallbackKeys = SortKeys(variables, pair => pair.Value.Registrant ?? ""); break;
+                case "lastRegistered":
+                    sortedCallbackKeys = SortKeys(variables, pair => pair.Value.RegistrationTime); break;
+                case "lastInvoked":
+                    sortedCallbackKeys = SortKeys(variables, pair => pair.Value.LastInvoked ?? DateTime.MinValue); break;
+                default:
+                    sortedCallbackKeys = SortKeys(variables, pair => pair.Key); break;
             }
         }
 
