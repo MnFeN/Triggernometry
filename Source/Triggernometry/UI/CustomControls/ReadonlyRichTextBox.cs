@@ -259,9 +259,7 @@ namespace Triggernometry.UI.CustomControls
                 }
             }
 
-            GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                .SetValue(this, true, null);
+            DoubleBuffered = true;
         }
 
         private const int WM_SETFOCUS = 0x7;

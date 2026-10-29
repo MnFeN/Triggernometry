@@ -425,12 +425,13 @@ namespace Triggernometry.UI.Forms
         {
             lock (vs.Scalar)
             {
-                string key = sortedVariableKeys[e.RowIndex];
-                if (e.RowIndex >= sortedVariableKeys.Count || !vs.Scalar.ContainsKey(key))
-                {
+                if (e.RowIndex < 0 || e.RowIndex >= sortedVariableKeys.Count) 
                     return;
-                }
-                var varValue = vs.Scalar[key];
+
+                string key = sortedVariableKeys[e.RowIndex];
+                if (!vs.Scalar.TryGetValue(key, out var varValue)) 
+                    return;
+
                 switch (e.ColumnIndex)
                 {
                     case 0:
@@ -695,12 +696,13 @@ namespace Triggernometry.UI.Forms
         {
             lock (vs.List)
             {
-                string key = sortedVariableKeys[e.RowIndex];
-                if (e.RowIndex >= sortedVariableKeys.Count || !vs.List.ContainsKey(key))
-                {
+                if (e.RowIndex < 0 || e.RowIndex >= sortedVariableKeys.Count) 
                     return;
-                }
-                var varValue = vs.List[key];
+
+                string key = sortedVariableKeys[e.RowIndex];
+                if (!vs.List.TryGetValue(key, out var varValue)) 
+                    return;
+
                 switch (e.ColumnIndex)
                 {
                     case 0:
@@ -979,12 +981,13 @@ namespace Triggernometry.UI.Forms
         {
             lock (vs.Table)
             {
-                string key = sortedVariableKeys[e.RowIndex];
-                if (e.RowIndex >= sortedVariableKeys.Count || !vs.Table.ContainsKey(key))
-                {
+                if (e.RowIndex < 0 || e.RowIndex >= sortedVariableKeys.Count) 
                     return;
-                }
-                var varValue = vs.Table[key];
+
+                string key = sortedVariableKeys[e.RowIndex];
+                if (!vs.Table.TryGetValue(key, out var varValue)) 
+                    return;
+
                 switch (e.ColumnIndex)
                 {
                     case 0:
@@ -1263,12 +1266,14 @@ namespace Triggernometry.UI.Forms
         {
             lock (vs.Dict)
             {
-                string key = sortedVariableKeys[e.RowIndex];
-                if (e.RowIndex >= sortedVariableKeys.Count || !vs.Dict.ContainsKey(key))
-                {
+                // #83：索引保护必须在访问键列表之前，取值只查一次字典。
+                if (e.RowIndex < 0 || e.RowIndex >= sortedVariableKeys.Count) 
                     return;
-                }
-                var varDict = vs.Dict[key];
+
+                string key = sortedVariableKeys[e.RowIndex];
+                if (!vs.Dict.TryGetValue(key, out var varDict)) 
+                    return;
+
                 switch (e.ColumnIndex)
                 {
                     case 0:
@@ -1531,7 +1536,9 @@ namespace Triggernometry.UI.Forms
         {
             lock (plug.RegisteredVariables)
             {
-                if (e.RowIndex >= sortedVariableKeys.Count) return;
+                if (e.RowIndex < 0 || e.RowIndex >= sortedVariableKeys.Count) 
+                    return;
+
                 string key = sortedVariableKeys[e.RowIndex];
                 // Keep the displayed key available if its runtime value was removed.
                 if (e.ColumnIndex == 0)
@@ -2017,11 +2024,11 @@ namespace Triggernometry.UI.Forms
         {
             lock (plug.callbacksById)
             {
-                if (e.RowIndex >= sortedCallbackKeys.Count
+
+                if (e.RowIndex < 0 || e.RowIndex >= sortedCallbackKeys.Count
                     || !plug.callbacksById.TryGetValue(sortedCallbackKeys[e.RowIndex], out RealPlugin.NamedCallback cb))
-                {
                     return;
-                }
+
                 switch (e.ColumnIndex)
                 {
                     case 0:

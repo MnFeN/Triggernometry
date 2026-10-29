@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Triggernometry.Localization;
 using Triggernometry.UI.Forms;
 using Triggernometry.Core;
+using Triggernometry.Expressions.String.Utils;
 
 namespace Triggernometry.UI.Forms
 {
@@ -69,7 +70,7 @@ namespace Triggernometry.UI.Forms
 
         private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            bpf.DialogResult = DialogResult.OK;
+            bpf.DialogResult = e.Cancelled || e.Error != null ? DialogResult.Cancel : DialogResult.OK;
             bpf.Close();
             bpf.Dispose();          
             bpf = null;
@@ -87,28 +88,17 @@ namespace Triggernometry.UI.Forms
             backgroundWorker1.RunWorkerAsync();
         }
 
-        internal string TimeFormat(double x)
+        internal string TimeFormat(double seconds)
         {
-            int step = 0;
-            string name = "s";
-            while (x < 0.1)
-            {
-                x *= 1000.0;
-                step++;
-                switch (step)
-                {
-                    case 1:
-                        name = I18n.Translate("internal/BenchmarkForm/millisecond", "ms");
-                        break;
-                    case 2:
-                        name = I18n.Translate("internal/BenchmarkForm/microsecond", "µs");
-                        break;
-                    case 3:
-                        name = I18n.Translate("internal/BenchmarkForm/nanosecond", "ns");
-                        break;
-                }
-            }
-            return Math.Round(x, 3) + " " + name;
+            seconds = Math.Max(0, seconds);
+            if (seconds < 1E-6) 
+                return Math.Round(seconds * 1E9, 3).ToStringInvariant() + " ns";
+            if (seconds < 1E-3) 
+                return Math.Round(seconds * 1E6, 3).ToStringInvariant() + " µs";
+            if (seconds < 1) 
+                return Math.Round(seconds * 1E3, 3).ToStringInvariant() + " ms";
+            else
+                return Math.Round(seconds, 3).ToStringInvariant() + " s";
         }
 
         internal void ShowResults()
@@ -123,16 +113,16 @@ namespace Triggernometry.UI.Forms
                 temp.Sort((a, b) => b.TimeTotal.CompareTo(a.TimeTotal));
                 double dx = (double)(totaltime / 10000.0) / (double)Stopwatch.Frequency;
                 dgvResults.Rows.Add(new object[] { I18n.Translate("internal/BenchmarkForm/esttotal", "(Estimated total evaluation time per event)"), null, TimeFormat(dx), null, null, null });
-                dgvResults.Rows.Add(new object[] { I18n.Translate("internal/BenchmarkForm/estmaximum", "(Estimated maximum sustainable event load per second)"), null, Math.Round(1.0 / dx, 2), null, null });
+                dgvResults.Rows.Add(new object[] { I18n.Translate("internal/BenchmarkForm/estmaximum", "(Estimated maximum sustainable event load per second)"), null, dx > 0 ? (object)Math.Round(1.0 / dx, 2) : null, null, null });
                 foreach (BenchmarkItem bi in temp)
                 {                    
                     dgvResults.Rows.Add(new object[] {
                         bi.trig.FullPath, // name
-                        Math.Round((double)bi.TimeTotal / (double)totaltime * 100.0, 2) + " %", // relative exec time
+                        Math.Round(totaltime > 0 ? (double)bi.TimeTotal / totaltime * 100.0 : 0, 2) + " %", // relative exec time
                         TimeFormat((double)(bi.TimeTotal / 10000.0) / (double)Stopwatch.Frequency), // average exec time
-                        Math.Round((double)bi.TimeOnMatch / (double)bi.TimeTotal * 100.0, 2) + " %", // % on regexp
-                        Math.Round((double)bi.TimeOnParent / (double)bi.TimeTotal * 100.0, 2) + " %", // % on folder
-                        Math.Round((double)bi.TimeOnConditions / (double)bi.TimeTotal * 100.0, 2) + " %", // % on conditions
+                        Math.Round(bi.TimeTotal > 0 ? (double)bi.TimeOnMatch / bi.TimeTotal * 100.0 : 0, 2) + " %", // % on regexp
+                        Math.Round(bi.TimeTotal > 0 ? (double)bi.TimeOnParent / bi.TimeTotal * 100.0 : 0, 2) + " %", // % on folder
+                        Math.Round(bi.TimeTotal > 0 ? (double)bi.TimeOnConditions / bi.TimeTotal * 100.0 : 0, 2) + " %", // % on conditions
                     });
                 }
                 dgvResults.Invalidate();
@@ -211,6 +201,7 @@ namespace Triggernometry.UI.Forms
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            bool wasLoggingDisabled = plug.DisableLogging;
             try
             {
                 plug.DisableLogging = true;
@@ -225,6 +216,7 @@ namespace Triggernometry.UI.Forms
                 {
                     if (backgroundWorker1.CancellationPending == true)
                     {
+                        e.Cancel = true;
                         return;
                     }
                     if (t.Enabled == false)
@@ -235,17 +227,26 @@ namespace Triggernometry.UI.Forms
                     {
                         continue;
                     }
-                    temp.Add(BenchmarkTrigger(t));
+                    BenchmarkItem result = BenchmarkTrigger(t);
+                    if (result == null)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                    temp.Add(result);
                     i++;
                     backgroundWorker1.ReportProgress((int)Math.Ceiling(100.0f * (float)i / (float)j));
                 }
             }
             catch (Exception)
             {
-                plug.DisableLogging = false;
+                e.Cancel = true;
                 plug.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/BenchmarkForm/exception", "An exception occurred during benchmark"));
             }
-            plug.DisableLogging = false;
+            finally
+            {
+                plug.DisableLogging = wasLoggingDisabled;
+            }
         }
 
         private void btnCopyToClipboard_Click(object sender, EventArgs e)
