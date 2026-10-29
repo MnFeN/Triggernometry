@@ -375,11 +375,37 @@ namespace Triggernometry.Core
         internal abstract void ExecuteImplementation(Context ctx);
 
         /// <summary>
-        /// 按 Async 同步或异步执行动作；缺省创建独立上下文，不应用 ExecDelay。
-        /// 返回的任务表示本次执行结束；循环动作仅表示启动完成，子动作仍由队列推进。
+        /// 直接执行一个动作，忽略动作延迟属性。
         /// </summary>
-        public Task Execute(Context ctx = null)
-            => Execute(ctx ?? new Context(ParentTrigger), null);
+        /// <remarks>
+        /// 同步动作：等待动作结束；<br/>
+        /// 异步动作：提交到后台执行并直接返回。<br/><br/>
+        /// 两种模式的业务异常均被捕获并记录日志。<br/><br/>
+        /// 循环动作仅表示启动完成，不等待子动作和后续迭代。
+        /// </remarks>
+        public void Execute(Context ctx = null)
+        {
+            Task task = ExecuteAsync(ctx);
+            if (!Async)
+            {
+                try { task.GetAwaiter().GetResult(); }
+                catch
+                {
+                    // 业务异常已由执行路径记录，普通调用保留旧版不向外抛出的行为。
+                }
+            }
+        }
+
+        /// <summary>
+        /// 返回表示本次动作执行完成的任务，忽略动作延迟属性。
+        /// </summary>
+        /// <remarks>
+        /// 同步动作：业务仍在调用线程同步执行，返回时任务已结束；<br/>
+        /// 异步动作：业务在后台执行，调用方可 await 返回任务。<br/><br/>
+        /// 两种模式的业务异常均直接记录日志并保存于返回任务。<br/>
+        /// 直接调用不会抛出异常；await / GetAwaiter().GetResult() 时会重新抛出。<br/><br/>
+        /// 循环动作仅表示启动完成，不包含子动作和后续迭代。
+        /// </remarks>
         public async Task ExecuteAsync(Context ctx = null)
             => await InternalExecute(ctx ?? new Context(ParentTrigger), null).ConfigureAwait(false);
 
@@ -419,9 +445,10 @@ namespace Triggernometry.Core
             if (Async)
             { 
                 var cancelToken = Uninterruptible ? CancellationToken.None : ctx.Plugin?.GetCancellationToken() ?? CancellationToken.None;
-                await Task.Run(ExecuteCore, cancelToken).ConfigureAwait(false);
+                return Task.Run(ExecuteCore, cancelToken);
             }
             else ExecuteCore();
+            return Task.CompletedTask;
         }
 
         /// <summary>统一记录直接执行和队列执行中的异常，并保留回调的原始异常。</summary>
