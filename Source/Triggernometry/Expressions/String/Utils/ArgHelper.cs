@@ -85,7 +85,8 @@ namespace Triggernometry.Expressions.String.Utils
                     if (d <= 0)
                         throw new ArgumentException(I18n.Translate("internal/ArgHelper/invalidcountpattern",
                             "Invalid argument count expression: {0}\nIn: {1}", $"{last2}, {last1}, ...", requiredCount));
-                    checks.Add(i => i > last1 && (i - last1) % d == 0);
+                    int start = last1.Value; // 闭包
+                    checks.Add(i => i > start && (i - start) % d == 0);
                     last1 = null;
                 }
                 else
