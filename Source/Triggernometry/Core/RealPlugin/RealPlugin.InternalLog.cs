@@ -30,12 +30,9 @@ namespace Triggernometry.Core
 
         internal void ClearLog()
         {
-            lock (log)
+            foreach (var queue in log.Values)
             {
-                foreach (var pair in Instance.log)
-                {
-                    pair.Value.Clear();
-                }
+                lock (queue) queue.Clear();
             }
             ui?.ClearErrorCount();
         }

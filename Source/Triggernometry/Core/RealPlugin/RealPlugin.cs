@@ -569,27 +569,27 @@ namespace Triggernometry.Core
 
         internal void LogLineQueuerMass(IEnumerable<string> text, string zone, LogEvent.SourceEnum src, bool testMode, bool testModeZoneId)
         {
-            int max = text.Count();
-            int i = 0;
-            LogEvent[] lex = new LogEvent[text.Count()];
-            foreach (string x in text)
+            string[] lines = text as string[] ?? text.ToArray();
+            LogEvent[] logs = new LogEvent[lines.Length];
+            for (int i = 0; i < lines.Length; i++)
             {
-                lex[i] = new LogEvent();
-                lex[i].Text = x;
-                lex[i].ZoneName = zone;
-                lex[i].Source = src;
-                lex[i].Timestamp = DateTime.Now;
-                lex[i].TestMode = testMode;
-                lex[i].ZoneId = testModeZoneId ? zone : null;
-                i++;
+                logs[i] = new LogEvent
+                {
+                    Text = lines[i],
+                    ZoneName = zone,
+                    Source = src,
+                    Timestamp = DateTime.Now,
+                    TestMode = testMode,
+                    ZoneId = testModeZoneId ? zone : null
+                };
             }
-            if (lex.Count() > 0)
+            if (logs.Length > 0)
             {
                 lock (EventQueue)
                 {
-                    foreach (LogEvent le in lex)
+                    foreach (LogEvent log in logs)
                     {
-                        EventQueue.Enqueue(le);
+                        EventQueue.Enqueue(log);
                     }
                     QueueWakeupEvent.Set();
                 }

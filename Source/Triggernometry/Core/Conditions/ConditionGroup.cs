@@ -98,7 +98,7 @@ namespace Triggernometry.Core.Conditions
         internal override bool Check(Context ctx, Context.LoggerDelegate logger, object o)
         {
             // A root containing only notes behaves like an empty condition tree.
-            if (Parent == null && Children.All(cc => cc is ConditionComment))
+            if (Parent == null && Children.TrueForAll(cc => cc is ConditionComment))
             {
                 return true;
             }

@@ -154,8 +154,8 @@ namespace Triggernometry.Core
                         return false;
                     }
                 }    
-                
-                lock (this) instance.QueueSequence = curOrdinal++;
+                // already locked by ActionQueue
+                instance.QueueSequence = curOrdinal++;
                 action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig?.LogName ?? "(null)", action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
                 Context tagContext = instance.LoopContext ?? ctx;
                 var actionTag = tagContext.EvaluateStringExpression(null, tagContext, action.Tag);

@@ -713,13 +713,15 @@ namespace Scarborough
                     }
                     if (si is ScarboroughImage)
                     {
-                        var myKey = imageitems.FirstOrDefault(x => x.Value == si).Key;
-                        lock (imageitems) imageitems.Remove(myKey);
+                        lock (imageitems)
+                            if (imageitems.TryGetValue(si.Name, out var current) && ReferenceEquals(current, si))
+                                imageitems.Remove(si.Name);
                     }
                     if (si is ScarboroughText)
                     {
-                        var myKey = textitems.FirstOrDefault(x => x.Value == si).Key;
-                        lock (textitems) textitems.Remove(myKey);
+                        lock (textitems)
+                            if (textitems.TryGetValue(si.Name, out var current) && ReferenceEquals(current, si))
+                                textitems.Remove(si.Name);
                     }
                     si.Dispose();
                 }
