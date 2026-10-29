@@ -1,7 +1,6 @@
-﻿using Microsoft.CodeAnalysis;
-using System;
+﻿using System;
 using System.Drawing;
-using System.Linq;
+using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Triggernometry.Expressions.String.Utils;
@@ -16,6 +15,12 @@ namespace Triggernometry.UI.CustomControls
     {
         private readonly TableLayoutPanel ParentTable;
         private readonly Func<string> helpKey;
+        private static readonly System.ComponentModel.ComponentResourceManager resources =
+            new System.ComponentModel.ComponentResourceManager(typeof(ActionForm));
+        private string displayedKey;
+        private object displayedLanguage;
+        private Font displayedFont;
+        private bool? displayedExpanded;
 
         internal static bool _Expanded = false;  // 所有帮助框共用展开状态。
         public bool Expanded
@@ -57,20 +62,35 @@ namespace Triggernometry.UI.CustomControls
         /// <summary>按展开状态和当前帮助键更新文本及格式。</summary>
         internal void UpdateText()
         {
+            string key = _Expanded ? helpKey?.Invoke() ?? "" : "rtbHelper";
+            if (displayedExpanded == _Expanded && displayedKey == key &&
+                ReferenceEquals(displayedLanguage, I18n.CurrentLanguage) && Equals(displayedFont, Font))
+            {
+                UpdateHeight();
+                return;
+            }
             Lock();
-            if (_Expanded)
+            try
             {
-                string key = helpKey?.Invoke() ?? "";
-                var resources = new System.ComponentModel.ComponentResourceManager(typeof(ActionForm));
-                Text = I18n.Translate($"ActionForm/{key}", resources.GetString($"{key}.Text") ?? "");
+                Text = _Expanded
+                    ? I18n.Translate("ActionForm/" + key, resources.GetString(key + ".Text") ?? "")
+                    : I18n.Translate("ActionForm/rtbHelper", "[Show Help]");
+                SetStyles();
+                displayedKey = key;
+                displayedLanguage = I18n.CurrentLanguage;
+                displayedFont = Font;
+                displayedExpanded = _Expanded;
+                UpdateHeight();
             }
-            else
-            {
-                Text = I18n.Translate("ActionForm/rtbHelper", "[Show Help]");
-            }
-            SetStyles();
-            UpdateHeight();
-            Unlock();
+            finally { Unlock(); }
+        }
+
+        /// <summary>界面字号改变后重新应用帮助字体和着色。</summary>
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            if (ParentTable != null)
+                UpdateText();
         }
 
         private const int WM_SETCURSOR = 0x0020;
@@ -110,7 +130,8 @@ namespace Triggernometry.UI.CustomControls
                 int textHeight = (GetLineFromCharIndex(TextLength) + 1) * lineHeight;
                 height = Math.Min(maximumHeight, Math.Max(minimumHeight, textHeight));
             }
-            if (Height != height) Height = height;
+            if (Height != height)
+                Height = height;
         }
 
         internal static Color[] expressionColors = {
@@ -121,122 +142,105 @@ namespace Triggernometry.UI.CustomControls
         internal static Color stringColor = Color.FromArgb(34, 153, 0);
         internal static Color separatorColor = Color.FromArgb(204, 102, 0);
 
+        /// <summary>先计算文本样式，再按连续区间提交给 RichEdit，避免逐字符发送格式消息。</summary>
         public void SetStyles()
-        {   // this is currently a very rough implementation for setting colors for formatted text
+        {
             SelectAll();
+            SelectionFont = Font;
             if (!_Expanded)
             {
                 SelectionColor = Color.FromArgb(160, 160, 160);
+                Select(0, 0);
+                return;
             }
-            else
+            string raw = Text;
+            var colors = new Color[raw.Length];
+            var monospace = new bool[raw.Length];
+            var remove = new bool[raw.Length];
+            int depth = 0;
+            for (int i = 0; i < raw.Length; i++)
             {
-                // initial color
-                SelectionColor = Color.Black;
-
-                // set color for ${...}
-                int depth = 0;
-                int totalLength = Text.Length;
-                for (int i = 0; i < totalLength; i++)
+                if (i + 1 < raw.Length && raw[i] == '$' && raw[i + 1] == '{')
+                    depth++;
+                colors[i] = depth > 0 ? expressionColors[(depth - 1) % expressionColors.Length] : Color.Black;
+                if (depth > 0 && raw[i] == '}')
+                    depth--;
+            }
+            // 反引号隐藏；其中的表达式仍保留原有颜色，其余文字采用等宽字体颜色。
+            int start = 0;
+            while (start < raw.Length)
+            {
+                int open = raw.IndexOf('`', start);
+                int close = open < 0 ? -1 : raw.IndexOf('`', open + 1);
+                if (close < 0)
+                    break;
+                for (int i = open; i <= close; i++)
                 {
-                    if (i < totalLength - 1 && Text.Substring(i, 2) == "${")
-                    {
-                        depth++;
-                    }
-                    if (depth > 0)
-                    {
-                        Select(i, 1);
-                        SelectionColor = expressionColors[(depth - 1) % expressionColors.Count()];
-                        if (Text[i] == '}') { depth--; }
-                    }
+                    monospace[i] = true;
+                    if (colors[i] == Color.Black)
+                        colors[i] = monospaceColor;
                 }
-
-                // set color and style for `...`
-                Font monospaceFont = new Font("Consolas", Font.Size);
-                int start = 0;
-                while (start < Text.Length)
+                remove[open] = remove[close] = true;
+                start = close + 1;
+            }
+            var text = new StringBuilder(raw.Length);
+            int length = 0;
+            for (int i = 0; i < raw.Length; i++)
+            {
+                if (remove[i])
+                    continue;
+                text.Append(raw[i]);
+                colors[length] = colors[i];
+                monospace[length++] = monospace[i];
+            }
+            string formatted = text.ToString();
+            ApplyQuotedColors(formatted, '\'', colors);
+            ApplyQuotedColors(formatted, '"', colors);
+            for (int i = 0; i < length; i++)
+            {
+                char ch = formatted[i];
+                if (colors[i] == Color.Black || ch == ',' && colors[i] == stringColor)
+                    continue;
+                if (ch == ',' || ch == '|' || ch == '=' || ch == ';' || ch == ':' || ch == ParserCommon.LINEBREAK)
+                    colors[i] = separatorColor;
+            }
+            Text = formatted;
+            SelectAll();
+            SelectionFont = Font;
+            SelectionColor = Color.Black;
+            using (var codeFont = new Font("Consolas", Font.Size))
+            {
+                for (start = 0; start < length;)
                 {
-                    int openIndex = Find("`", start, RichTextBoxFinds.None);
-                    if (openIndex == -1) break;
-
-                    int closeIndex = Find("`", openIndex + 1, RichTextBoxFinds.None);
-                    if (closeIndex == -1) break;
-
-                    Select(openIndex, closeIndex - openIndex + 1);
-                    SelectionFont = monospaceFont;
-
-                    for (int i = openIndex; i <= closeIndex; i++)
-                    {
-                        Select(i, 1);
-                        if (SelectionColor == Color.Black)
-                        {
-                            SelectionColor = monospaceColor;
-                        }
-                    }
-                    Select(closeIndex, 1);
-                    SelectedText = "";
-                    Select(openIndex, 1);
-                    SelectedText = "";
-                    start = closeIndex - 1;
-                }
-
-                // set color for '...'
-                start = 0;
-                while (start < Text.Length)
-                {
-                    int openIndex = Find("'", start, RichTextBoxFinds.None);
-                    if (openIndex == -1) break;
-
-                    int closeIndex = Find("'", openIndex + 1, RichTextBoxFinds.None);
-                    if (closeIndex == -1) break;
-
-                    Select(openIndex, closeIndex - openIndex + 1);
-                    if (!SelectedText.Contains("$"))
-                    {
-                        SelectionColor = stringColor;
-                    }
-                    Select(openIndex, 1);
-                    SelectionColor = stringColor;
-                    Select(closeIndex, 1);
-                    SelectionColor = stringColor;
-                    start = closeIndex + 1;
-                }
-
-                // set color for "..."
-                start = 0;
-                while (start < Text.Length)
-                {
-                    int openIndex = Find("\"", start, RichTextBoxFinds.None);
-                    if (openIndex == -1) break;
-
-                    int closeIndex = Find("\"", openIndex + 1, RichTextBoxFinds.None);
-                    if (closeIndex == -1) break;
-
-                    Select(openIndex, closeIndex - openIndex + 1);
-                    if (!SelectedText.Contains("$"))
-                    {
-                        SelectionColor = stringColor;
-                    }
-                    Select(openIndex, 1);
-                    SelectionColor = stringColor;
-                    Select(closeIndex, 1);
-                    SelectionColor = stringColor;
-                    start = closeIndex + 1;
-                }
-
-                // set color for separators
-                for (start = 0; start < Text.Length; start++)
-                {
-                    Select(start, 1);
-                    char ch = Text[start];
-                    if (SelectionColor == Color.Black) { continue; } // plain text
-                    if (ch == ',' && SelectionColor == stringColor) { continue; }
-                    if (ch == ',' || ch == '|' || ch == '=' || ch == ';' || ch == ':' || ch == ParserCommon.LINEBREAK)
-                    {
-                        SelectionColor = separatorColor;
-                    }
+                    int end = start + 1;
+                    while (end < length && colors[end] == colors[start] && monospace[end] == monospace[start]) end++;
+                    Select(start, end - start);
+                    SelectionColor = colors[start];
+                    if (monospace[start])
+                        SelectionFont = codeFont;
+                    start = end;
                 }
             }
             Select(0, 0);
+        }
+
+        /// <summary>沿用引号优先级：包含表达式的片段只为两端引号着色。</summary>
+        private static void ApplyQuotedColors(string text, char quote, Color[] colors)
+        {
+            // 不使用 RichEdit.Find：它在文本末尾会回绕，可能将未配对引号误认为成对标记。
+            int start = 0;
+            while (start < text.Length)
+            {
+                int open = text.IndexOf(quote, start);
+                int close = open < 0 ? -1 : text.IndexOf(quote, open + 1);
+                if (close < 0)
+                    break;
+                int dollar = text.IndexOf('$', open, close - open + 1);
+                if (dollar < 0)
+                    for (int i = open; i <= close; i++) colors[i] = stringColor;
+                colors[open] = colors[close] = stringColor;
+                start = close + 1;
+            }
         }
 
     }
