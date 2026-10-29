@@ -122,18 +122,20 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            Process p = new Process();
-            ProcessStartInfo psi = new ProcessStartInfo();
-            psi.Arguments = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Arguments);
-            psi.WindowStyle = WindowStyle;
-            psi.WorkingDirectory = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WorkingDirectory);
-            psi.FileName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Path);
-            p.StartInfo = psi;
-            p.Start();
-            if (Async == false)
+            using (Process p = new Process())
             {
-                AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/waitingprocexit", "Waiting for process to exit"));
-                p.WaitForExit();
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.Arguments = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Arguments);
+                psi.WindowStyle = WindowStyle;
+                psi.WorkingDirectory = ctx.EvaluateStringExpression(ActionContextLogger, ctx, WorkingDirectory);
+                psi.FileName = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Path);
+                p.StartInfo = psi;
+                p.Start();
+                if (Async == false)
+                {
+                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/waitingprocexit", "Waiting for process to exit"));
+                    p.WaitForExit();
+                }
             }
         }
 
