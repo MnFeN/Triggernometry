@@ -862,7 +862,6 @@
     <TranslationEntry Key="internal/BridgeOverlay/failInitModule" Translation="OverlayPlugin {1} module initialization failed due to: {0}" />
     <TranslationEntry Key="internal/BridgeOverlay/initfail" Translation="OverlayPlugin initialization failed due to: {0}" />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="OverlayPlugin combatant memory is not ready. Entity data could not be retrieved via OverlayPlugin yet, will retry later." />
-    <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin combatant memory is ready." />
     <TranslationEntry Key="internal/BridgeOverlay/notfound" Translation="OverlayPlugin was not found." />
     <TranslationEntry Key="internal/BridgeOverlay/notready" Translation="OverlayPlugin is not ready." />
     <TranslationEntry Key="internal/BridgeOverlay/objectnotfound" Translation="Object '{0}' was not found." />

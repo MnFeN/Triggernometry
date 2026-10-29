@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -20,6 +22,11 @@ namespace Triggernometry.PluginBridges
         /// null: Before initialization
         /// </summary>
         public static bool? Ready;
+        private const int NotReadyWarningDelayMs = 15000;
+        private static readonly object initializationLock = new object();
+        private static Timer notReadyWarningTimer;
+        private static long notReadyWarningDeadline;
+
         private static object _combatantMemoryManager;
 
         private static MethodInfo _getCombatantListMethod;
@@ -49,7 +56,15 @@ namespace Triggernometry.PluginBridges
             Initialize();
         }
 
+        /// <summary>串行初始化实体内存；每次扫描未就绪都顺延预备警告。</summary>
         internal static void Initialize()
+        {
+            lock (initializationLock)
+                InitializeCore(false);
+        }
+
+        /// <summary>读取扫描结果并初始化反射字段，复查调用只报告失败、不重新预约。</summary>
+        private static void InitializeCore(bool reportNotReady)
         {
             try
             {
@@ -64,18 +79,23 @@ namespace Triggernometry.PluginBridges
                 if (_currentCombatantMemory == null) // OverlayPlugin is still scanning memory
                 {
                     Ready = false;
-                    RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
-                        "internal/BridgeOverlay/moduleCombatantsNotReady",
-                        "OverlayPlugin combatant memory is not ready. Could not retrieve entities via OverlayPlugin yet, will retry later."));
+                    if (reportNotReady)
+                    {
+                        RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
+                            "internal/BridgeOverlay/moduleCombatantsNotReady",
+                            "OverlayPlugin combatant memory is not ready. Could not retrieve entities via OverlayPlugin yet, will retry later."));
+                    }
+                    else
+                    {
+                        // 复用同一个一次性计时器，从最后一次失败调用起等待 15 秒。
+                        notReadyWarningDeadline = Stopwatch.GetTimestamp() + Stopwatch.Frequency * (NotReadyWarningDelayMs / 1000);
+                        if (notReadyWarningTimer == null)
+                            notReadyWarningTimer = new Timer(CheckPendingWarning, null, Timeout.Infinite, Timeout.Infinite);
+                        notReadyWarningTimer.Change(NotReadyWarningDelayMs, Timeout.Infinite);
+                    }
                     return;
                 }
-                if (Ready == false) // previously not ready (has generated the warning above)
-                {
-                    RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, I18n.Translate(
-                        "internal/BridgeOverlay/moduleCombatantsReady", 
-                        "OverlayPlugin combatant memory is ready."));
-                }
-                Ready = true;
+                CancelPendingWarning();
 
                 BuidCombatantMemoryOffsets();
 
@@ -93,6 +113,7 @@ namespace Triggernometry.PluginBridges
             }
             catch (Exception ex)
             {
+                CancelPendingWarning();
                 RealPlugin.Instance.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
                     I18n.Translate("internal/BridgeOverlay/failInitModule",
                     "OverlayPlugin {1} module initialization failed due to: {0}",
@@ -102,6 +123,32 @@ namespace Triggernometry.PluginBridges
                 return;
             }
             Ready = true;
+        }
+
+        /// <summary>到期重新检查实际扫描状态；已排队的旧回调不能越过新的截止时间。</summary>
+        private static void CheckPendingWarning(object state)
+        {
+            lock (initializationLock)
+            {
+                if (notReadyWarningDeadline == 0)
+                    return;
+                int remainingMs = (int)Math.Ceiling((notReadyWarningDeadline - Stopwatch.GetTimestamp()) * 1000.0 / Stopwatch.Frequency);
+                if (remainingMs > 0)
+                {
+                    notReadyWarningTimer.Change(remainingMs, Timeout.Infinite);
+                    return;
+                }
+                CancelPendingWarning();
+                // 不再顺延或自动轮询；只有本次复查仍未就绪才输出警告。
+                InitializeCore(true);
+            }
+        }
+
+        /// <summary>取消预备警告；就绪或初始化异常后不再补发旧警告。</summary>
+        private static void CancelPendingWarning()
+        {
+            notReadyWarningDeadline = 0;
+            notReadyWarningTimer?.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
         private static void BuidCombatantMemoryOffsets()

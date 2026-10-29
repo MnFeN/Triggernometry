@@ -862,7 +862,6 @@
     <TranslationEntry Key="internal/BridgeOverlay/failInitModule" Translation="OverlayPlugin 相关模块 {1} 初始化失败：{0}" />
     <TranslationEntry Key="internal/BridgeOverlay/initfail" Translation="OverlayPlugin 初始化失败：{0}" />
     <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsNotReady" Translation="OverlayPlugin 实体内存扫描未就绪，暂未通过 OverlayPlugin 获取实体，稍后重试。" />
-    <TranslationEntry Key="internal/BridgeOverlay/moduleCombatantsReady" Translation="OverlayPlugin 实体内存扫描已就绪。如果前面有几条“未就绪”的警告，可忽略。" />
     <TranslationEntry Key="internal/BridgeOverlay/notfound" Translation="未找到 OverlayPlugin。" />
     <TranslationEntry Key="internal/BridgeOverlay/notready" Translation="OverlayPlugin 尚未就绪。" />
     <TranslationEntry Key="internal/BridgeOverlay/objectnotfound" Translation="未找到对象“{0}”。" />
