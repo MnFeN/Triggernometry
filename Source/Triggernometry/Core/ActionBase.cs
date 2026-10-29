@@ -498,6 +498,15 @@ namespace Triggernometry.Core
             AddToLog((Context)o, DebugLevelEnum.Verbose, msg);
         }
 
+        /// <summary>生成变量修改来源文本，区分触发器执行和独立执行。</summary>
+        protected string DescribeVariableChanger(Context ctx)
+        {
+            // #18：集中保留原有翻译键及文本，各动作仍在原来的时机生成来源。
+            return ctx.Trigger != null
+                ? I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe())
+                : I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
+        }
+
         protected IOrderedEnumerable<int> ApplySorting(int elementCount, List<bool> isNumeric, List<bool> isAscending, List<List<string>> values)
         {
             // Create an enumeration of indices representing the initial order

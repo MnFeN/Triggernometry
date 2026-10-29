@@ -542,15 +542,7 @@ namespace Triggernometry.Core.Actions
                     return I18n.ThingToString(ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value));
             }
 
-            string vtchanger;
-            if (ctx.Trigger != null)
-            {
-                vtchanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
-            }
-            else
-            {
-                vtchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
-            }
+            string vtchanger = DescribeVariableChanger(ctx);
 
             switch (Operation)
             {

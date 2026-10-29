@@ -257,14 +257,7 @@ namespace Triggernometry.Core.Actions
                     }
                     VariableScalar x = vs.Scalar[varname];
                     x.Value = response;
-                    if (ctx.Trigger != null)
-                    {
-                        x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
-                    }
-                    else
-                    {
-                        x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
-                    }
+                    x.LastChanger = DescribeVariableChanger(ctx);
                     x.LastChanged = DateTime.Now;
                 }
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarsetjson",

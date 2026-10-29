@@ -478,15 +478,7 @@ namespace Triggernometry.Core.Actions
             VariableStore tvs = plug.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(TargetPersistent);
-            string changer;
-            if (ctx.Trigger != null)
-            {
-                changer = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
-            }
-            else
-            {
-                changer = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
-            }
+            string changer = DescribeVariableChanger(ctx);
             switch (Operation)
             {
                 case OperationEnum.Unset:

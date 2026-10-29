@@ -222,15 +222,7 @@ namespace Triggernometry.Core.Actions
                                 data.Add(x);
                             }
                         }
-                        string vtchanger;
-                        if (ctx.Trigger != null)
-                        {
-                            vtchanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
-                        }
-                        else
-                        {
-                            vtchanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
-                        }
+                        string vtchanger = DescribeVariableChanger(ctx);
                         VariableTable vt = VariableTable.ActualBuild(data, datawidth, data.Count);
                         vt.LastChanged = DateTime.Now;
                         vt.LastChanger = vtchanger;
@@ -256,14 +248,8 @@ namespace Triggernometry.Core.Actions
                             {
                                 x.Values.Add(new VariableScalar() { Value = dat });
                             }
-                            if (ctx.Trigger != null)
-                            {
-                                x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
-                            }
-                            else
-                            {
-                                x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
-                            }
+                            // #18：复用变量修改来源文本的生成逻辑。
+                            x.LastChanger = DescribeVariableChanger(ctx);
                             x.LastChanged = DateTime.Now;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/filelistset",
@@ -281,14 +267,8 @@ namespace Triggernometry.Core.Actions
                             }
                             VariableScalar x = vs.Scalar[varname];
                             x.Value = data;
-                            if (ctx.Trigger != null)
-                            {
-                                x.LastChanger = I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe());
-                            }
-                            else
-                            {
-                                x.LastChanger = I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
-                            }
+                            // #18：复用变量修改来源文本的生成逻辑。
+                            x.LastChanger = DescribeVariableChanger(ctx);
                             x.LastChanged = DateTime.Now;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/filescalarset",
