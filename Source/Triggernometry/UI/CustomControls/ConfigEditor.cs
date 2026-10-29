@@ -275,6 +275,17 @@ namespace Triggernometry.UI.CustomControls
                             Dock = DockStyle.Fill, TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 4, 8)
                         };
                         entry.Label = label;
+                        if (entry.Control is CheckBox box)
+                        {
+                            // 标签也作为复选框的点击区域，通过 CheckedChanged 复用原有联动。
+                            label.Click += (s, e) =>
+                            {
+                                if (!box.Enabled || !box.AutoCheck)
+                                    return;
+                                box.Focus();
+                                box.Checked = !box.Checked;
+                            };
+                        }
                         nextTable.Controls.Add(label, 0, row);
                         if (entry.FullWidth)
                         {
