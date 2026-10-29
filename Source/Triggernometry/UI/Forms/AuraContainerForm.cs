@@ -63,11 +63,8 @@ namespace Triggernometry.UI.Forms
         }
 
         internal RealPlugin plug;
-        
-        protected override bool ShowWithoutActivation
-        {
-            get { return true; }
-        }
+
+        protected override bool ShowWithoutActivation => true;
 
         internal static ImageConverter ic = new ImageConverter();
 
@@ -286,13 +283,17 @@ namespace Triggernometry.UI.Forms
             AuraDeactivateForm();
         }
 
-        private bool NextPending = false;
+        private bool IsNextPending = false;
         int NextLeft = 0, NextTop = 0, NextWidth = 0, NextHeight = 0;
         double NextPresentableOpacity = 0.0;
 
         private string PreprocessExpression(string exp)
         {
-            if (NextPending == true)
+            // fast path
+            if (exp.IndexOf("${_", StringComparison.Ordinal) < 0)
+                return exp;
+
+            if (IsNextPending)
             {
                 exp = exp.Replace("${_x}", NextLeft.ToString());
                 exp = exp.Replace("${_y}", NextTop.ToString());
@@ -324,7 +325,7 @@ namespace Triggernometry.UI.Forms
 
         internal bool UpdateAura(int numTicks)
         {
-            NextPending = false;
+            IsNextPending = false;
             bool chLeft = false, chTop = false, chWidth = false, chHeight = false, chOpacity = false;
             //Plugin.DebugLevelEnum levelFilter = Plugin.DebugLevelEnum.None;
             try
@@ -409,7 +410,7 @@ namespace Triggernometry.UI.Forms
                         }
                     }
                     numTicks--;
-                    NextPending = true;
+                    IsNextPending = true;
                 }
             }
             catch (Exception ex)

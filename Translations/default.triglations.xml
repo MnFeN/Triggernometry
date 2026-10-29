@@ -1665,6 +1665,7 @@
     <TranslationEntry Key="internal/RepositoryForm/exception" Translation="Exception" />
     <TranslationEntry Key="internal/RepositoryForm/unavailable" Translation="Unavailable" />
     <TranslationEntry Key="internal/RepositoryForm/warning" Translation="Warning" />
+    <TranslationEntry Key="internal/Scarborough/actionerror" Translation="Aura command &apos;{0}&apos; for &apos;{1}&apos; failed: {2}" />
     <TranslationEntry Key="internal/Scripting/callbacknotfound" Translation="Callback function '{0}' was not found." />
     <TranslationEntry Key="internal/Scripting/storedobjectnotdelegate" Translation="Stored object '{0}' is not a delegate." />
     <TranslationEntry Key="internal/SearchForm/hitactioncond" Translation="Action #{0} condition" />

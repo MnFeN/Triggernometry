@@ -1667,6 +1667,7 @@
     <TranslationEntry Key="internal/RepositoryForm/warning" Translation="警告" />
     <TranslationEntry Key="internal/Scripting/callbacknotfound" Translation="未找到回调函数“{0}”。" />
     <TranslationEntry Key="internal/Scripting/storedobjectnotdelegate" Translation="存储的对象“{0}”不是 Delegate 类型。" />
+    <TranslationEntry Key="internal/Scarborough/actionerror" Translation="悬浮窗命令 [{0}] 执行失败，名称 [{1}]：{2}" />
     <TranslationEntry Key="internal/SearchForm/hitactioncond" Translation="操作 #{0} 的条件" />
     <TranslationEntry Key="internal/SearchForm/hitactiondesc" Translation="操作 #{0} 的描述" />
     <TranslationEntry Key="internal/SearchForm/hitactionfolderid" Translation="操作 #{0} 的分组 ID" />

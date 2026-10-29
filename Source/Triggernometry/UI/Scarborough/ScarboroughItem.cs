@@ -156,6 +156,9 @@ namespace Scarborough
 
         private string PreprocessExpression(string exp)
         {
+            if (exp.IndexOf("${_", StringComparison.Ordinal) < 0)
+                return exp;
+
             exp = exp.Replace("${_x}", Left.ToString());
             exp = exp.Replace("${_y}", Top.ToString());
             exp = exp.Replace("${_width}", Width.ToString());

@@ -1651,7 +1651,7 @@ namespace Triggernometry.UI.CustomControls
             if (this.IsDisposed) return;
             if (this.InvokeRequired)
             {
-                this.Invoke(new System.Action(ClearErrorCount));
+                this.Invoke(new Action(ClearErrorCount));
             }
             else
             {
@@ -1661,10 +1661,11 @@ namespace Triggernometry.UI.CustomControls
 
         internal void IncrementErrorCount()
         {
-            if (this.IsDisposed) return;
-            if (this.InvokeRequired)
+            if (IsDisposed) return;
+            if (InvokeRequired)
             {
-                this.Invoke(new System.Action(IncrementErrorCount));
+                // BeginInvoke 避免后台线程等待 UI，而 UI 正在等待后台线程退出。
+                BeginInvoke(new Action(IncrementErrorCount));
             }
             else
             {
@@ -1677,7 +1678,7 @@ namespace Triggernometry.UI.CustomControls
             string data = null;
             try
             {                
-                data = System.Windows.Forms.Clipboard.GetText(TextDataFormat.UnicodeText);
+                data = Clipboard.GetText(TextDataFormat.UnicodeText);
                 if (data != null && data.Length > 0)
                 {
                     TriggernometryExport exp = TriggernometryExport.Unserialize(data);

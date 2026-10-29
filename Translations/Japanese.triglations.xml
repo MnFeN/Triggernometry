@@ -1665,6 +1665,7 @@
     <TranslationEntry Key="internal/RepositoryForm/exception" Translation="Exception" />
     <TranslationEntry Key="internal/RepositoryForm/unavailable" Translation="Unavailable" />
     <TranslationEntry Key="internal/RepositoryForm/warning" Translation="Warning" />
+    <TranslationEntry Key="internal/Scarborough/actionerror" Translation="オーラ &apos;{1}&apos; のコマンド &apos;{0}&apos; に失敗しました: {2}" />
     <TranslationEntry Key="internal/Scripting/callbacknotfound" Translation="コールバック関数「{0}」が見つかりません。" />
     <TranslationEntry Key="internal/Scripting/storedobjectnotdelegate" Translation="保存されたオブジェクト「{0}」は Delegate 型ではありません。" />
     <TranslationEntry Key="internal/SearchForm/hitactioncond" Translation="Action #{0} condition" />

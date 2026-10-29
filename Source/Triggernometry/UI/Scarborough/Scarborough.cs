@@ -3,6 +3,7 @@ using Scarborough.PInvoke;
 using Scarborough.Windows;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -66,6 +67,7 @@ namespace Scarborough
 
         public void Dispose()
         {
+            Shutdown();
             if (exitEvent != null)
             {
                 exitEvent.Dispose();
@@ -85,24 +87,53 @@ namespace Scarborough
             }
         }
 
+        /// <summary>按本轮开始时的队列长度处理命令，耗时操作不占用提交锁。</summary>
         private void ExecuteActions()
         {
-            lock (ItemActions)
+            int count;
+            lock (ItemActions) count = ItemActions.Count;
+            for (int i = 0; i < count; i++)
             {
-                while (ItemActions.Count > 0)
+                ItemAction action;
+                lock (ItemActions) action = ItemActions.Dequeue();
+                try
                 {
-                    try
-                    {
-                        ItemAction ia = ItemActions.Dequeue();
-                        ExecuteAction(ia);
-                        if (ia.Completed != null)
-                        {
-                            ia.Completed.Set();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
+                    ExecuteAction(action);
+                }
+                catch (Exception ex)
+                {
+                    LogActionException(action, ex);
+                }
+                finally
+                {
+                    action.Completed?.Set();
+                }
+            }
+        }
+
+        /// <summary>记录渲染线程执行命令时的异常。</summary>
+        private void LogActionException(ItemAction action, Exception ex)
+        {
+            plug?.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error,
+                Triggernometry.Localization.I18n.Translate("internal/Scarborough/actionerror",
+                    "Aura command '{0}' for '{1}' failed: {2}", action.Action, action.Id, ex.ToString()), action.Item?.ctx?.Trigger);
+        }
+
+        /// <summary>退出绘图线程时取出并释放全部活动项。</summary>
+        private void DisposeItems<T>(Dictionary<string, T> items) where T : ScarboroughItem
+        {
+            T[] activeItems;
+            lock (items)
+            {
+                activeItems = items.Values.ToArray();
+                items.Clear();
+            }
+            foreach (T item in activeItems)
+            {
+                try { item.Dispose(); }
+                catch (Exception ex)
+                {
+                    LogActionException(new ItemAction { Action = ItemAction.ActionTypeEnum.Deactivate, Id = item.Name, Item = item }, ex);
                 }
             }
         }
@@ -382,13 +413,14 @@ namespace Scarborough
                 existing.TextColor = si.TextColor;
                 existing.OutlineColor = si.OutlineColor;
                 existing.BackgroundColor = si.BackgroundColor;
+                existing.NeedFont |= existing.FontName != si.FontName ||
+                                     existing.FontSize != si.FontSize || existing.FontStyle != si.FontStyle;
                 existing.FontName = si.FontName;
                 existing.FontSize = si.FontSize;
                 existing.FontStyle = si.FontStyle;
                 existing.Text = si.EvaluateStringExpression(si.ctx, si.TextExpression);
                 existing.TextExpression = si.TextExpression;
                 existing.ctx = si.ctx;
-                existing.NeedFont = true;
             }
             else
             {
@@ -451,6 +483,7 @@ namespace Scarborough
 
         private void ProcessMessages(IEnumerable<DeferredMessage> msgs)
         {
+            if (msgs == null) return;
             foreach (DeferredMessage msg in msgs)
             {
                 if (msg.ctx != null)
@@ -464,18 +497,18 @@ namespace Scarborough
             }
         }
 
-        private void UpdateImages(int numTicks, ref RenderCollection rc)
+        /// <summary>共用图片和文本的更新、删除及延迟日志流程。</summary>
+        private void UpdateItems<T>(Dictionary<string, T> items, int numTicks, RenderCollection rc) where T : ScarboroughItem
         {
-            List<string> toRem = new List<string>();
-            List<DeferredMessage> messages = new List<DeferredMessage>();
-            toRem.Clear();
-            foreach (KeyValuePair<string, ScarboroughImage> si in imageitems)
+            List<string> toRem = null;
+            List<DeferredMessage> messages = null;
+            foreach (KeyValuePair<string, T> si in items)
             {
                 try
                 {
                     if (si.Value.Logic(numTicks) == false)
                     {
-                        toRem.Add(si.Key);
+                        (toRem ?? (toRem = new List<string>())).Add(si.Key);
                     }
                     else
                     {
@@ -491,7 +524,7 @@ namespace Scarborough
                 {
                     if (si.Value.ctx != null && si.Value.ctx.Trigger != null)
                     {
-                        messages.Add(new DeferredMessage()
+                        (messages ?? (messages = new List<DeferredMessage>())).Add(new DeferredMessage()
                         {
                             ctx = si.Value.ctx,
                             plug = plug,
@@ -502,7 +535,7 @@ namespace Scarborough
                     }
                     else
                     {
-                        messages.Add(new DeferredMessage()
+                        (messages ?? (messages = new List<DeferredMessage>())).Add(new DeferredMessage()
                         {
                             ctx = null,
                             plug = plug,
@@ -511,17 +544,17 @@ namespace Scarborough
                         }
                         );
                     }
-                    toRem.Add(si.Key);
+                    (toRem ?? (toRem = new List<string>())).Add(si.Key);
                 }
             }
-            if (toRem.Count > 0)
+            if (toRem != null)
             {
                 foreach (string si in toRem)
                 {
-                    ScarboroughImage sit = imageitems[si];
+                    T sit = items[si];
                     if (sit.ctx != null && sit.ctx.Trigger != null)
                     {
-                        messages.Add(new DeferredMessage()
+                        (messages ?? (messages = new List<DeferredMessage>())).Add(new DeferredMessage()
                         {
                             ctx = sit.ctx,
                             plug = plug,
@@ -532,7 +565,7 @@ namespace Scarborough
                     }
                     else
                     {
-                        messages.Add(new DeferredMessage()
+                        (messages ?? (messages = new List<DeferredMessage>())).Add(new DeferredMessage()
                         {
                             ctx = null,
                             plug = plug,
@@ -541,91 +574,7 @@ namespace Scarborough
                         }
                         );
                     }
-                    lock (imageitems) imageitems.Remove(si);
-                    sit.Dispose();
-                }
-            }
-            ProcessMessages(messages);
-        }
-
-        private void UpdateText(int numTicks, ref RenderCollection rc)
-        {
-            List<string> toRem = new List<string>();
-            List<DeferredMessage> messages = new List<DeferredMessage>();
-            toRem.Clear();
-            foreach (KeyValuePair<string, ScarboroughText> si in textitems)
-            {
-                try
-                {
-                    if (si.Value.Logic(numTicks) == false)
-                    {
-                        toRem.Add(si.Key);
-                    }
-                    else
-                    {
-                        if (si.Value.Changed == true)
-                        {
-                            si.Value.NeedRender = true;
-                            si.Value.Changed = false;
-                        }
-                        rc.Add(si.Value);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (si.Value.ctx != null && si.Value.ctx.Trigger != null)
-                    {
-                        messages.Add(new DeferredMessage()
-                        {
-                            ctx = si.Value.ctx,
-                            plug = plug,
-                            level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Error,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerrortrigger", "Deactivating aura '{0}' from trigger '{1}' due to update exception: {2}", si.Key, si.Value.ctx.Trigger.LogName, ex.Message)
-                        }
-                        );
-                    }
-                    else
-                    {
-                        messages.Add(new DeferredMessage()
-                        {
-                            ctx = null,
-                            plug = plug,
-                            level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Error,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/updateerror", "Deactivating aura '{0}' due to update exception: {1}", si.Key, ex.Message)
-                        }
-                        );
-                    }
-                    toRem.Add(si.Key);
-                }
-            }
-            if (toRem.Count > 0)
-            {
-                foreach (string si in toRem)
-                {
-                    ScarboroughText sit = textitems[si];
-                    if (sit.ctx != null && sit.ctx.Trigger != null)
-                    {
-                        messages.Add(new DeferredMessage()
-                        {
-                            ctx = sit.ctx,
-                            plug = plug,
-                            level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Verbose,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/closingaura", "Closing aura window")
-                        }
-                        );
-                    }
-                    else
-                    {
-                        messages.Add(new DeferredMessage()
-                        {
-                            ctx = null,
-                            plug = plug,
-                            level = Triggernometry.Core.RealPlugin.DebugLevelEnum.Verbose,
-                            Message = Triggernometry.Localization.I18n.Translate("internal/AuraContainer/closingaura", "Closing aura window")
-                        }
-                        );
-                    }
-                    lock (textitems) textitems.Remove(si);
+                    lock (items) items.Remove(si);
                     sit.Dispose();
                 }
             }
@@ -650,8 +599,8 @@ namespace Scarborough
 
         private void Render(RenderCollection rc)
         {
-            List<ScarboroughItem> toRem = new List<ScarboroughItem>();
-            List<DeferredMessage> messages = new List<DeferredMessage>();            
+            List<ScarboroughItem> toRem = null;
+            List<DeferredMessage> messages = null;
             foreach (ScarboroughItem si in rc.items)
             {
                 try
@@ -662,7 +611,7 @@ namespace Scarborough
                 {
                     if (si.ctx != null && si.ctx.Trigger != null)
                     {
-                        messages.Add(new DeferredMessage()
+                        (messages ?? (messages = new List<DeferredMessage>())).Add(new DeferredMessage()
                         {
                             ctx = si.ctx,
                             plug = plug,
@@ -673,7 +622,7 @@ namespace Scarborough
                     }
                     else
                     {
-                        messages.Add(new DeferredMessage()
+                        (messages ?? (messages = new List<DeferredMessage>())).Add(new DeferredMessage()
                         {
                             ctx = null,
                             plug = plug,
@@ -682,16 +631,16 @@ namespace Scarborough
                         }
                         );
                     }
-                    toRem.Add(si);
+                    (toRem ?? (toRem = new List<ScarboroughItem>())).Add(si);
                 }
             }
-            if (toRem.Count > 0)
+            if (toRem != null)
             {
                 foreach (ScarboroughItem si in toRem)
                 {
                     if (si.ctx != null && si.ctx.Trigger != null)
                     {
-                        messages.Add(new DeferredMessage()
+                        (messages ?? (messages = new List<DeferredMessage>())).Add(new DeferredMessage()
                         {
                             ctx = si.ctx,
                             plug = plug,
@@ -702,7 +651,7 @@ namespace Scarborough
                     }
                     else
                     {
-                        messages.Add(new DeferredMessage()
+                        (messages ?? (messages = new List<DeferredMessage>())).Add(new DeferredMessage()
                         {
                             ctx = null,
                             plug = plug,
@@ -754,39 +703,47 @@ namespace Scarborough
         public void Render()
         {
             int numTicks = 0;
-            DateTime prevTick = DateTime.Now, tickTime;
+            long prevTick = Stopwatch.GetTimestamp(), tickTime;
             double msSince, lag = 0.0;
             RenderCollection rc = new RenderCollection();
-            while (true)
+            try
             {
-                try
+                while (true)
                 {
-                    if (exitEvent.WaitOne(5) == true)
+                    try
                     {
-                        return;
+                        if (exitEvent.WaitOne(5) == true)
+                        {
+                            return;
+                        }
+                        tickTime = Stopwatch.GetTimestamp();
+                        msSince = (tickTime - prevTick) * 1000.0 / Stopwatch.Frequency + lag;
+                        numTicks = (int)Math.Floor(msSince / 20.0);
+                        lag = msSince - (numTicks * 20);
+                        prevTick = tickTime;
+                        if (numTicks > 0)
+                        {
+                            rc.Clear();
+                            ExecuteActions();
+                            UpdateItems(imageitems, numTicks, rc);
+                            UpdateItems(textitems, numTicks, rc);
+                            // The render list only changes when the logic tick rebuilds it.
+                            rc.items.Sort((a, b) => a.Ordinal.CompareTo(b.Ordinal));
+                        }
+                        if (rc.items.Count > 0)
+                        {
+                            Render(rc);
+                        }
                     }
-                    tickTime = DateTime.Now;
-                    msSince = (tickTime - prevTick).TotalMilliseconds + lag;
-                    numTicks = (int)Math.Floor(msSince / 20.0);
-                    lag = msSince - (numTicks * 20);
-                    prevTick = tickTime;
-                    if (numTicks > 0)
+                    catch (Exception)
                     {
-                        rc.Clear();
-                        ExecuteActions();
-                        UpdateImages(numTicks, ref rc);
-                        UpdateText(numTicks, ref rc);
-                        // The render list only changes when the logic tick rebuilds it.
-                        rc.items.Sort((a, b) => a.Ordinal.CompareTo(b.Ordinal));
-                    }
-                    if (rc.items.Count > 0)
-                    {
-                        Render(rc);
                     }
                 }
-                catch (Exception)
-                {
-                }
+            }
+            finally
+            {
+                DisposeItems(imageitems);
+                DisposeItems(textitems);
             }
         }
 

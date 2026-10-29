@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -124,7 +125,7 @@ namespace Triggernometry.Core
             WaitHandle[] wh = new WaitHandle[1];
             wh[0] = ExitEvent;
             int numTicks = 0, procticks = 0;
-            DateTime prevTick, tickTime;
+            long prevTick, tickTime;
             if (mainform.IsHandleCreated == false)
             {
                 do
@@ -132,7 +133,7 @@ namespace Triggernometry.Core
                     Thread.Sleep(100);
                 } while (mainform.IsHandleCreated == false);
             }
-            prevTick = DateTime.Now;
+            prevTick = Stopwatch.GetTimestamp();
             double msSince, lag = 0.0;
             while (true)
             {
@@ -145,13 +146,14 @@ namespace Triggernometry.Core
                     VerifyProcessWindow();
                     procticks = 0;
                 }
-                tickTime = DateTime.Now;
-                msSince = (tickTime - prevTick).TotalMilliseconds + lag;
+                tickTime = Stopwatch.GetTimestamp();
+                msSince = (tickTime - prevTick) * 1000.0 / Stopwatch.Frequency + lag;
                 numTicks = (int)Math.Floor(msSince / 20.0);
                 //System.Diagnostics.Debug.WriteLine(String.Format("{0}.{1} -> {2}.{3} = {4}+{5} = {6}x", prevTick, prevTick.Millisecond, tickTime, tickTime.Millisecond, msSince - lag, lag, numTicks));
                 lag = msSince - numTicks * 20;
                 prevTick = tickTime;
-                UpdateAuras(numTicks);
+                if (sc == null)
+                    UpdateAuras(numTicks);
                 procticks++;
             }
         }
@@ -447,13 +449,6 @@ namespace Triggernometry.Core
 
         internal void SbTextAuraManagement(Context ctx, ActionOverlayText a)
         {
-            if (mainform.InvokeRequired == true)
-            {
-                string ax = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Name);
-                FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/invoketextaura", "Invoke required for text aura '{0}'", ax));
-                mainform.Invoke(new Action<Context, ActionOverlayText>(TextAuraManagement), ctx, a);
-                return;
-            }
             switch (a.Operation)
             {
                 case ActionOverlayText.OperationEnum.Activate:

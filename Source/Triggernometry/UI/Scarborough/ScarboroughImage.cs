@@ -1,6 +1,7 @@
 ﻿using Scarborough.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -255,7 +256,7 @@ namespace Scarborough
         }
 
         private double TimeAccumulator = 0.0;
-        private DateTime LastAdvance = DateTime.MinValue;
+        private long LastAdvance;
         
         public ScarboroughImage(Scarborough own) : base(own)
         {
@@ -263,10 +264,11 @@ namespace Scarborough
 
         public bool AdvanceFrame()
         {
+            long now = Stopwatch.GetTimestamp();
             int prev = CurrentFrame;
             if (CurrentFrame == -1)
             {
-                LastAdvance = DateTime.Now;
+                LastAdvance = now;
                 TimeAccumulator = 0.0;
                 CurrentFrame = 0;
                 CurrentFrameDelay = FrameDelays[0];
@@ -274,8 +276,8 @@ namespace Scarborough
             }
             else
             {
-                TimeAccumulator += (DateTime.Now - LastAdvance).TotalMilliseconds;
-                LastAdvance = DateTime.Now;
+                TimeAccumulator += (now - LastAdvance) * 1000.0 / Stopwatch.Frequency;
+                LastAdvance = now;
                 while (TimeAccumulator >= CurrentFrameDelay)
                 {
                     CurrentFrame++;
