@@ -197,7 +197,7 @@ namespace Triggernometry.Core.Actions
             string endpoint = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Endpoint);
             string payload = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Payload);
             string headers = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Headers).Trim();
-            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, ResponseVar);
+            var (tgtName, tgtStore) = ResolveVariable(ctx, ResponseVar, Persistent);
             string persist = I18n.TrlVarPersist(Persistent);
             List<string> headerslist = new List<string>();
             if (headers.Length > 0)
@@ -246,22 +246,21 @@ namespace Triggernometry.Core.Actions
                 responseCode = resp.Item1;
                 response = resp.Item2;
             }
-            if (varname != "")
+            if (tgtName != "")
             {
-                VariableStore vs = plug.GetVariableStore(Persistent);
-                lock (vs.Scalar) // verified
+                lock (tgtStore.Scalar)
                 {
-                    if (vs.Scalar.ContainsKey(varname) == false)
+                    if (tgtStore.Scalar.ContainsKey(tgtName) == false)
                     {
-                        vs.Scalar[varname] = new VariableScalar();
+                        tgtStore.Scalar[tgtName] = new VariableScalar();
                     }
-                    VariableScalar x = vs.Scalar[varname];
+                    VariableScalar x = tgtStore.Scalar[tgtName];
                     x.Value = response;
                     x.LastChanger = DescribeVariableChanger(ctx);
                     x.LastChanged = DateTime.Now;
                 }
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarsetjson",
-                    "{1}Scalar variable ({0}) value set to JSON response", varname, persist));
+                    "{1}Scalar variable ({0}) value set to JSON response", tgtName, persist));
             }
             ctx.contextResponse = response;
             ctx.contextResponseCode = responseCode;

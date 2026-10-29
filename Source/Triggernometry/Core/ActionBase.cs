@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Triggernometry.Core.Actions;
 using Triggernometry.Core.Conditions;
+using Triggernometry.Core.Variables;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
@@ -505,6 +506,13 @@ namespace Triggernometry.Core
             return ctx.Trigger != null
                 ? I18n.Translate("internal/Action/changetagtrigaction", "Trigger '{0}' action '{1}'", ctx.Trigger.LogName, Describe())
                 : I18n.Translate("internal/Action/changetagtestmode", "Action '{0}' test mode", Describe());
+        }
+
+        /// <summary>解析变量名称并取得对应存储区，不读取或创建变量。</summary>
+        protected (string Name, VariableStore Store) ResolveVariable(Context ctx, string expression, bool persistent)
+        {
+            RealPlugin plug = ctx.Plugin;
+            return (ctx.EvaluateStringExpression(ActionContextLogger, ctx, expression), plug.GetVariableStore(persistent));
         }
 
         protected IOrderedEnumerable<int> ApplySorting(int elementCount, List<bool> isNumeric, List<bool> isAscending, List<List<string>> values)

@@ -400,12 +400,6 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(Context ctx)
         {
-            RealPlugin plug = ctx.Plugin;
-
-            string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
-            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
-            VariableStore svs = plug.GetVariableStore(Persistent);
-            VariableStore tvs = plug.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(TargetPersistent);
 
@@ -430,65 +424,78 @@ namespace Triggernometry.Core.Actions
             switch (Operation)
             {
                 case OperationEnum.UnsetAll:
-                    lock (svs.Dict)
                     {
-                        svs.Dict.Clear();
+                        var srcStore = ctx.Plugin.GetVariableStore(Persistent);
+                        lock (srcStore.Dict)
+                        {
+                            srcStore.Dict.Clear();
+                        }
+                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictunsetall",
+                            "All {0}dict variables unset", sPersist));
                     }
-                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictunsetall",
-                        "All {0}dict variables unset", sPersist));
                     break;
-                case OperationEnum.UnsetRegex:                    
-                    svs.UnsetVariableRegex(svs.Dict, sourcename);
-                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictunsetregex",
-                        "All {0}dict variables matching ({1}) unset", sPersist, sourcename));
+                case OperationEnum.UnsetRegex:
+                    {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        srcStore.UnsetVariableRegex(srcStore.Dict, srcName);
+                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictunsetregex",
+                            "All {0}dict variables matching ({1}) unset", sPersist, srcName));
+                    }
                     break;
                 case OperationEnum.Unset:
-                    svs.UnsetVariable(svs.Dict, sourcename);
-                    AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictunset",
-                        "Unset {1}dict variable ({0})", sourcename, sPersist));
+                    {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        srcStore.UnsetVariable(srcStore.Dict, srcName);
+                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictunset",
+                            "Unset {1}dict variable ({0})", srcName, sPersist));
+                    }
                     break;
                 case OperationEnum.Set:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_this}", "${_idx}", "${_key}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
 
                         string key = ParseKey();
                         string value;
-                        lock (svs.Dict)
+                        lock (srcStore.Dict)
                         {
-                            VariableDictionary vd = svs.GetDictVariable(sourcename, true);
+                            VariableDictionary vd = srcStore.GetDictVariable(srcName, true);
                             ctx.dictValue = vd.GetValue(key).ToString(); // for ${_val}
                             value = ParseValue();
                             vd.SetValue(key, value, changer);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictset",
-                            "Value of key ({2}) in {1}dict variable ({0}) set to ({3})", sourcename, sPersist, key, value));
+                            "Value of key ({2}) in {1}dict variable ({0}) set to ({3})", srcName, sPersist, key, value));
                     }
                     break;
                 case OperationEnum.Remove:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string key = ParseKey();
-                        lock (svs.Dict)
+                        lock (srcStore.Dict)
                         {
-                            VariableDictionary vd = svs.GetDictVariable(sourcename, true);
+                            VariableDictionary vd = srcStore.GetDictVariable(srcName, true);
                             vd.RemoveKey(key, changer);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictremove",
-                            "Removed key ({2}) from {1}dict variable ({0})", sourcename, sPersist, key));
+                            "Removed key ({2}) from {1}dict variable ({0})", srcName, sPersist, key));
                     }
                     break;
                 case OperationEnum.Merge:
                 case OperationEnum.MergeHard:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         bool shouldOverwrite = Operation == OperationEnum.MergeHard;
                         VariableDictionary svdCopy;
-                        lock (svs.Dict)
+                        lock (srcStore.Dict)
                         {
-                            svdCopy = (VariableDictionary)svs.GetDictVariable(sourcename, false).Duplicate();
+                            svdCopy = (VariableDictionary)srcStore.GetDictVariable(srcName, false).Duplicate();
                         }
-                        lock (tvs.Dict)
+                        lock (tgtStore.Dict)
                         {
-                            VariableDictionary tvd = tvs.GetDictVariable(targetname, true);
+                            VariableDictionary tvd = tgtStore.GetDictVariable(tgtName, true);
                             tvd.Merge(svdCopy, overwriteExistingKeys: shouldOverwrite);
                             tvd.LastChanged = DateTime.Now;
                             tvd.LastChanger = changer;
@@ -496,15 +503,16 @@ namespace Triggernometry.Core.Actions
                         if (shouldOverwrite)
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictmergehard",
                                 "Merged {1}dict variable ({0}) into {3}dict variable ({2}) (overwrite repeated keys)",
-                                sourcename, sPersist, targetname, tPersist));
+                                srcName, sPersist, tgtName, tPersist));
                         else
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictmerge",
                                 "Merged {1}dict variable ({0}) into {3}dict variable ({2}) (keep repeated keys)",
-                                sourcename, sPersist, targetname, tPersist));
+                                srcName, sPersist, tgtName, tPersist));
                     }
                     break;
                 case OperationEnum.GetEntity:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string filterExpr = ParseValue();
                         var entity = XivEntityParser.GetEntityByCondition(filterExpr);
 
@@ -518,22 +526,23 @@ namespace Triggernometry.Core.Actions
                         ));
                         vd.LastChanger = changer;
 
-                        lock (svs.Dict)
+                        lock (srcStore.Dict)
                         {
-                            svs.Dict[sourcename] = vd;
+                            srcStore.Dict[srcName] = vd;
                         }
                         if (entity.Exist)
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictgetentity",
                                 "Saved the data of entity ({2}) into {1}dict variable ({0})",
-                                sourcename, sPersist, filterExpr));
+                                srcName, sPersist, filterExpr));
                         else
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/dictgetentityfail",
                                 "Entity ({2}) not found when trying to save into {1}dict variable ({0})",
-                                sourcename, sPersist, filterExpr));
+                                srcName, sPersist, filterExpr));
                     }
                     break;
                 case OperationEnum.Build:
                     {   // Using the first 2 characters in the expression as the separator to split the remaining part into a new dict
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         // e.g. expr = ":,aaa:1,bbb:2,ccc:3"
                         VariableDictionary vt = new VariableDictionary();
                         string expr = ParseValue();
@@ -547,28 +556,30 @@ namespace Triggernometry.Core.Actions
                             vt = VariableDictionary.Build(splitval, kvSeparator, pairSeparator, changer);
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictbuild",
                                 "{1}Dictionary ({0}) built from expression ({2}) splitted by ({3}) ({4})",
-                                targetname, tPersist, splitval, kvSeparator, pairSeparator));
+                                tgtName, tPersist, splitval, kvSeparator, pairSeparator));
                         }
                         else
                         {
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/dictbuildfail",
                                 "{1}Dictionary ({0}) cannot be built since expression ({2}) length < 2",
-                                targetname, tPersist, expr));
+                                tgtName, tPersist, expr));
                         }
-                        lock (tvs.Dict)
+                        lock (tgtStore.Dict)
                         {
-                            tvs.Dict[targetname] = vt;
+                            tgtStore.Dict[tgtName] = vt;
                         }
                     }
                     break;
                 case OperationEnum.Filter:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_this}", "${_idx}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
                         VariableDictionary vdResult = new VariableDictionary();
-                        lock (svs.Dict)
+                        lock (srcStore.Dict)
                         {
-                            VariableDictionary vd = svs.GetDictVariable(sourcename, false);
+                            VariableDictionary vd = srcStore.GetDictVariable(srcName, false);
                             foreach (var pair in vd.Values)
                             {
                                 ctx.dictKey = pair.Key;                 // for ${_key}
@@ -582,17 +593,18 @@ namespace Triggernometry.Core.Actions
                         }
                         vdResult.LastChanger = changer;
                         vdResult.LastChanged = DateTime.Now;
-                        lock (tvs.Dict)
+                        lock (tgtStore.Dict)
                         {
-                            tvs.Dict[targetname] = vdResult;
+                            tgtStore.Dict[tgtName] = vdResult;
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictfilter",
                                 "Filtered {4} key-value pairs from {1}dict ({0}) into {3}dict ({2})",
-                                sourcename, sPersist, targetname, tPersist, vdResult.Size));
+                                srcName, sPersist, tgtName, tPersist, vdResult.Size));
                         }
                     }
                     break;
                 case OperationEnum.SetAll:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         bool isLengthMode = !string.IsNullOrWhiteSpace(Count);
                         int length = isLengthMode ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Count) : 0;
                         // Only length-based generation establishes an index for each entry.
@@ -602,10 +614,10 @@ namespace Triggernometry.Core.Actions
                         CheckInvalidDymanicExpr(Key, invalidExprs);
                         CheckInvalidDymanicExpr(Value, invalidExprs);
                         VariableDictionary vdNew = new VariableDictionary();
-                        lock (svs.Dict)
+                        lock (srcStore.Dict)
                         {
-                            VariableDictionary vd = svs.GetDictVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "pdvar:" : "dvar:") + sourcename;
+                            VariableDictionary vd = srcStore.GetDictVariable(srcName, false);
+                            ctx.varName = (Persistent ? "pdvar:" : "dvar:") + srcName;
 
                             if (isLengthMode)
                             {   // should only use ${_idx} to generate each key/value
@@ -625,7 +637,7 @@ namespace Triggernometry.Core.Actions
                                 }
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictsetallbyindex",
                                     "{4} key value pairs in {1}dictionary ({0}) set to ({2}): ({3})",
-                                    sourcename, sPersist, Key, Value, length));
+                                    srcName, sPersist, Key, Value, length));
                             }
                             else
                             {   // should only use ${_key} and ${_val} to rewrite the list
@@ -639,9 +651,9 @@ namespace Triggernometry.Core.Actions
                                 }
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictsetall",
                                     "All key value pairs in {1}dictionary ({0}) set to ({2}): ({3})",
-                                    sourcename, sPersist, Key, Value));
+                                    srcName, sPersist, Key, Value));
                             }
-                            svs.Dict[sourcename] = vdNew;
+                            srcStore.Dict[srcName] = vdNew;
                         }
                     }
                     break;

@@ -162,10 +162,9 @@ namespace Triggernometry.Core.Actions
             RealPlugin plug = ctx.Plugin;
 
             string filename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Filename);
-            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
+            var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, Persistent);
             string persist = I18n.TrlVarPersist(Persistent);
             string cache = I18n.TrlCacheFile(UseCache);
-            VariableStore vs = plug.GetVariableStore(Persistent);
             if (Operation == OperationEnum.ReadCSVIntoTableVariable || 
                 Operation == OperationEnum.ReadIntoListVariable || 
                 Operation == OperationEnum.ReadIntoVariable)
@@ -226,24 +225,24 @@ namespace Triggernometry.Core.Actions
                         VariableTable vt = VariableTable.ActualBuild(data, datawidth, data.Count);
                         vt.LastChanged = DateTime.Now;
                         vt.LastChanger = vtchanger;
-                        lock (vs.Table)
+                        lock (tgtStore.Table)
                         {
-                            vs.Table[varname] = vt;
+                            tgtStore.Table[tgtName] = vt;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/filetableset",
-                            "{2}Table variable ({0}) value read from CSV file ({1})", varname, filename, persist));
+                            "{2}Table variable ({0}) value read from CSV file ({1})", tgtName, filename, persist));
                     }
                     break;
                 case OperationEnum.ReadIntoListVariable:
                     {
                         string[] data = File.ReadAllLines(filename);
-                        lock (vs.List) // verified
+                        lock (tgtStore.List)
                         {
-                            if (vs.List.ContainsKey(varname) == false)
+                            if (tgtStore.List.ContainsKey(tgtName) == false)
                             {
-                                vs.List[varname] = new VariableList();
+                                tgtStore.List[tgtName] = new VariableList();
                             }
-                            VariableList x = vs.List[varname];
+                            VariableList x = tgtStore.List[tgtName];
                             foreach (string dat in data)
                             {
                                 x.Values.Add(new VariableScalar() { Value = dat });
@@ -253,19 +252,19 @@ namespace Triggernometry.Core.Actions
                             x.LastChanged = DateTime.Now;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/filelistset",
-                            "{2}List variable ({0}) value read from file ({1})", varname, filename, persist));
+                            "{2}List variable ({0}) value read from file ({1})", tgtName, filename, persist));
                     }
                     break;
                 case OperationEnum.ReadIntoVariable:
                     {
                         string data = File.ReadAllText(filename);
-                        lock (vs.Scalar) // verified
+                        lock (tgtStore.Scalar)
                         {
-                            if (vs.Scalar.ContainsKey(varname) == false)
+                            if (tgtStore.Scalar.ContainsKey(tgtName) == false)
                             {
-                                vs.Scalar[varname] = new VariableScalar();
+                                tgtStore.Scalar[tgtName] = new VariableScalar();
                             }
-                            VariableScalar x = vs.Scalar[varname];
+                            VariableScalar x = tgtStore.Scalar[tgtName];
                             x.Value = data;
                             // #18：复用变量修改来源文本的生成逻辑。
                             x.LastChanger = DescribeVariableChanger(ctx);
@@ -273,7 +272,7 @@ namespace Triggernometry.Core.Actions
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/filescalarset",
                             "{2}Scalar variable ({0}) value read from file ({1})",
-                            varname, filename, persist));
+                            tgtName, filename, persist));
                     }
                     break;
                 default:

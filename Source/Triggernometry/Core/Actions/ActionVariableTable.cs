@@ -525,12 +525,6 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(Context ctx)
         {
-            RealPlugin plug = ctx.Plugin;
-
-            string sourcename = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
-            string targetname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
-            VariableStore svs = plug.GetVariableStore(Persistent);
-            VariableStore tvs = plug.GetVariableStore(TargetPersistent);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(TargetPersistent);
             string expr;
@@ -548,87 +542,95 @@ namespace Triggernometry.Core.Actions
             {
                 case OperationEnum.UnsetAll:
                     {
-                        svs.UnsetAllVariables(svs.Table);
+                        var srcStore = ctx.Plugin.GetVariableStore(Persistent);
+                        srcStore.UnsetAllVariables(srcStore.Table);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableunsetall",
                             "All {0}table variables unset", sPersist));
                         break;
                     }
                 case OperationEnum.UnsetRegex:
                     {
-                        svs.UnsetVariableRegex(svs.Table, sourcename);
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        srcStore.UnsetVariableRegex(srcStore.Table, srcName);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableunsetregex",
-                            "All {1}table variables matching ({0}) unset", sourcename, sPersist));
+                            "All {1}table variables matching ({0}) unset", srcName, sPersist));
                         break;
                     }
                 case OperationEnum.Resize:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         int w = string.IsNullOrWhiteSpace(X) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
                         int h = string.IsNullOrWhiteSpace(Y) ? int.MinValue : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
-                        lock (svs.Table) // verified
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, true);
+                            VariableTable vt = srcStore.GetTableVariable(srcName, true);
                             w = w == int.MinValue ? vt.Width : w;
                             h = h == int.MinValue ? vt.Height : h;
                             vt.Resize(w, h, vtchanger);
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableresize",
-                            "{3}Table variable ({0}) resized to ({1},{2})", sourcename, w, h, sPersist));
+                            "{3}Table variable ({0}) resized to ({1},{2})", srcName, w, h, sPersist));
                         break;
                     }
                 case OperationEnum.Unset:
                     {
-                        svs.UnsetVariable(svs.Table, sourcename);
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        srcStore.UnsetVariable(srcStore.Table, srcName);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableunset",
-                            "{1}Table variable ({0}) unset", sourcename, sPersist));
+                            "{1}Table variable ({0}) unset", srcName, sPersist));
                         break;
                     }
                 case OperationEnum.Copy:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         VariableTable vt = null;
-                        lock (svs.Table) // verified
+                        lock (srcStore.Table)
                         {
-                            if (svs.Table.ContainsKey(sourcename) == true)
+                            if (srcStore.Table.ContainsKey(srcName) == true)
                             {
-                                vt = (VariableTable)svs.Table[sourcename].Duplicate();
+                                vt = (VariableTable)srcStore.Table[srcName].Duplicate();
                                 vt.LastChanged = DateTime.Now;
                                 vt.LastChanger = vtchanger;
                             }
                         }
                         if (vt != null)
                         {
-                            lock (tvs.Table)
+                            lock (tgtStore.Table)
                             {
-                                tvs.Table[targetname] = vt;
+                                tgtStore.Table[tgtName] = vt;
                             }
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablecopy",
                                 "{2}Table ({0}) copied to {3}table ({1})",
-                                sourcename, targetname, sPersist, tPersist));
+                                srcName, tgtName, sPersist, tPersist));
                         }
                         else
                         {
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/tablecopynotexist",
                                 "{2}Table variable ({0}) couldn't be copied to {3}table ({1}) since it doesn't exist",
-                                sourcename, targetname, sPersist, tPersist));
+                                srcName, tgtName, sPersist, tPersist));
                         }
                         break;
                     }
                 case OperationEnum.Append:
                 case OperationEnum.AppendH:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         VariableTable tableToAppend;
-                        lock (svs.Table) // verified
+                        lock (srcStore.Table)
                         {
-                            tableToAppend = svs.Table.TryGetValue(sourcename, out VariableTable svt)
+                            tableToAppend = srcStore.Table.TryGetValue(srcName, out VariableTable svt)
                                 ? (VariableTable)svt.Duplicate()
                                 : new VariableTable();
                         }
-                        lock (tvs.Table)
+                        lock (tgtStore.Table)
                         {
-                            if (!tvs.Table.ContainsKey(targetname))
+                            if (!tgtStore.Table.ContainsKey(tgtName))
                             {
-                                tvs.Table.Add(targetname, new VariableTable());
+                                tgtStore.Table.Add(tgtName, new VariableTable());
                             }
-                            VariableTable tvt = tvs.Table[targetname];
+                            VariableTable tvt = tgtStore.Table[tgtName];
                             if (Operation == OperationEnum.Append)
                             {
                                 tvt.AppendVertical(tableToAppend, vtchanger);
@@ -640,27 +642,28 @@ namespace Triggernometry.Core.Actions
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableappend",
                             "{2}Table variable ({0}) appended to {3} table ({1})",
-                            sourcename, targetname, sPersist, tPersist));
+                            srcName, tgtName, sPersist, tPersist));
                         break;
                     }
                 case OperationEnum.Set:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
 
                         int x = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
                         int y = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
 
-                        lock (svs.Table) // verified
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, true);
+                            VariableTable vt = srcStore.GetTableVariable(srcName, true);
                             int mx = Math.Max(x, vt.Width);
                             int my = Math.Max(y, vt.Height);
                             if (mx != vt.Width || my != vt.Height)
                             {
                                 vt.Resize(mx, my);
                             }
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + srcName;
                             ctx.tableColIndex = x;          // for ${_col}
                             ctx.tableRowIndex = y;          // for ${_row}
                             expr = ParseExpr();
@@ -668,22 +671,23 @@ namespace Triggernometry.Core.Actions
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableset",
                             "{4}Table variable ({0}) column ({1}) row ({2}) set to ({3})",
-                            sourcename, x, y, expr, sPersist));
+                            srcName, x, y, expr, sPersist));
                         break;
                     }
                 case OperationEnum.SetAll:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
                         int newWidth = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
                         int newHeight = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y);
                         VariableTable vtNew = new VariableTable { LastChanger = vtchanger, LastChanged = DateTime.Now };
-                        lock (svs.Table)
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, false);
+                            VariableTable vt = srcStore.GetTableVariable(srcName, false);
                             newWidth = newWidth <= 0 ? vt.Width : newWidth;
                             newHeight = newHeight <= 0 ? vt.Height : newHeight;
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + srcName;
                             for (int y = 1; y <= newHeight; y++)     // x/y index starts from 1
                             {
                                 ctx.tableRowIndex = y;          // for ${_row}
@@ -695,28 +699,29 @@ namespace Triggernometry.Core.Actions
                                     vtNew.Rows[y - 1].Values.Add(new VariableScalar() { Value = expr, LastChanger = vtchanger, LastChanged = DateTime.Now });
                                 }
                             }
-                            svs.Table[sourcename] = vtNew;
+                            srcStore.Table[srcName] = vtNew;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablesetall",
                             "All values in {1}table variable ({0}) set to ({2})",
-                            sourcename, sPersist, Value));
+                            srcName, sPersist, Value));
                     }
                     break;
                 case OperationEnum.SlicesSetAll:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
                         string colSlicesStr = ctx.EvaluateStringExpression(ActionContextLogger, ctx, X);
                         string rowSlicesStr = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Y);
                         VariableTable vtNew;
-                        lock (svs.Table)
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, false);
+                            VariableTable vt = srcStore.GetTableVariable(srcName, false);
                             vtNew = (VariableTable)vt.Duplicate();
                             // index starts from 0
                             var colIndices = ArgHelper.ParseSlices(colSlicesStr, vt.Width, X, startIndex: 1);
                             var rowIndices = ArgHelper.ParseSlices(rowSlicesStr, vt.Height, Y, startIndex: 1);
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + srcName;
                             foreach (int rowIndex in rowIndices)
                             {
                                 ctx.tableRowIndex = rowIndex + 1;       // for ${_row}
@@ -727,15 +732,16 @@ namespace Triggernometry.Core.Actions
                                     vtNew.Rows[rowIndex].Values[colIndex] = new VariableScalar() { Value = expr, LastChanger = vtchanger, LastChanged = DateTime.Now };
                                 }
                             }
-                            svs.Table[sourcename] = vtNew;
+                            srcStore.Table[srcName] = vtNew;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableslicessetall",
                             "All values in column ({3}) row ({4}) of {1}table variable ({0}) set to ({2})",
-                            sourcename, sPersist, Value, colSlicesStr, rowSlicesStr));
+                            srcName, sPersist, Value, colSlicesStr, rowSlicesStr));
                     }
                     break;
                 case OperationEnum.Build:
                     {   // Using the first 2 characters in the expression as the separator to split the remaining part into a new table
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         // e.g. expr = ",|1,2,3|4,5,6|7,8,9"
                         VariableTable vt = new VariableTable();
                         expr = ParseExpr();
@@ -749,30 +755,32 @@ namespace Triggernometry.Core.Actions
                             vt = VariableTable.Build(splitval, colSeparator, rowSeparator, vtchanger);
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablebuild",
                                 "{1}Table variable ({0}) built from expression ({2}) splitted by ({3}) ({4})",
-                                targetname, tPersist, splitval, colSeparator, rowSeparator));
+                                tgtName, tPersist, splitval, colSeparator, rowSeparator));
                         }
                         else
                         {
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/tablebuildfail",
                                 "{1}Table variable ({0}) cannot be built since expression ({2}) length < 2",
-                                targetname, tPersist, expr));
+                                tgtName, tPersist, expr));
                         }
 
-                        lock (tvs.Table)
+                        lock (tgtStore.Table)
                         {
-                            tvs.Table[targetname] = vt;
+                            tgtStore.Table[tgtName] = vt;
                         }
                     }
                     break;
                 case OperationEnum.Filter:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         VariableList vlResult = new VariableList();
                         string[] invalidExprs = new[] { "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
-                        lock (svs.Table)
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;  // for ${_this}
+                            VariableTable vt = srcStore.GetTableVariable(srcName, false);
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + srcName;  // for ${_this}
 
                             for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
                             {
@@ -790,17 +798,19 @@ namespace Triggernometry.Core.Actions
                         }
                         vlResult.LastChanger = vtchanger;
                         vlResult.LastChanged = DateTime.Now;
-                        lock (tvs.List)
+                        lock (tgtStore.List)
                         {
-                            tvs.List[targetname] = vlResult;
+                            tgtStore.List[tgtName] = vlResult;
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablefilter",
                                 "Filtered {4} elements from {1}table ({0}) into {3}list ({2})",
-                                sourcename, sPersist, targetname, tPersist, vlResult.Size));
+                                srcName, sPersist, tgtName, tPersist, vlResult.Size));
                         }
                     }
                     break;
                 case OperationEnum.FilterLine:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         bool isCol = !string.IsNullOrWhiteSpace(X);
                         string rawExpr = isCol ? X : Y;
                         string[] invalidExprs = isCol
@@ -808,10 +818,10 @@ namespace Triggernometry.Core.Actions
                             : new[] { "${_this}", "${_col", "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(rawExpr, invalidExprs);
                         VariableTable vtResult = new VariableTable();
-                        lock (svs.Table)
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename;  // for ${_this}
+                            VariableTable vt = srcStore.GetTableVariable(srcName, false);
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + srcName;  // for ${_this}
                             if (isCol)
                             {
                                 for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
@@ -852,12 +862,12 @@ namespace Triggernometry.Core.Actions
                         }
                         vtResult.LastChanger = vtchanger;
                         vtResult.LastChanged = DateTime.Now;
-                        lock (tvs.Table)
+                        lock (tgtStore.Table)
                         {
-                            tvs.Table[targetname] = vtResult;
+                            tgtStore.Table[tgtName] = vtResult;
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablefilterline",
                                 "Filtered {4} {5}s from {1}table ({0}) into {3}table ({2})",
-                                sourcename, sPersist, targetname, tPersist,
+                                srcName, sPersist, tgtName, tPersist,
                                 isCol ? vtResult.Width : vtResult.Height, I18n.TrlTableColOrRow(isCol)));
                         }
                     }
@@ -865,6 +875,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.SetLine:
                 case OperationEnum.InsertLine:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         expr = ParseExpr();
                         string separator = expr.Length > 0 ? expr.Substring(0, 1) : "";
                         string splitval = expr.Length > 0 ? expr.Substring(1) : "";
@@ -873,9 +884,9 @@ namespace Triggernometry.Core.Actions
                         string lineType = I18n.TrlTableColOrRow(!isRow);
                         int rawIndex = (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, isRow ? Y : X);
 
-                        lock (svs.Table) // verified
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, true);
+                            VariableTable vt = srcStore.GetTableVariable(srcName, true);
                             int tableLength = isRow ? vt.Height : vt.Width;
 
                             // index start from 0
@@ -892,7 +903,7 @@ namespace Triggernometry.Core.Actions
 
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablesetline",
                                     "{1}Table ({0}) {3} #({2}) set to ({4})",
-                                    sourcename, sPersist, index, lineType, splitval));
+                                    srcName, sPersist, index, lineType, splitval));
                             }
                             else // InsertLine
                             {
@@ -903,19 +914,20 @@ namespace Triggernometry.Core.Actions
 
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableinsertline",
                                     "Inserted ({4}) to {1}Table ({0}) {3} #({2})",
-                                    sourcename, sPersist, index, lineType, splitval));
+                                    srcName, sPersist, index, lineType, splitval));
                             }
                         }
                     }
                     break;
                 case OperationEnum.RemoveLine:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         bool isRow = string.IsNullOrWhiteSpace(X);
                         string lineType = I18n.TrlTableColOrRow(!isRow);
 
-                        lock (svs.Table) // verified
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, true);
+                            VariableTable vt = srcStore.GetTableVariable(srcName, true);
                             int tableLength = isRow ? vt.Height : vt.Width;
                             int rawIndex = isRow ? (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Y)
                                                    : (int)ctx.EvaluateNumericExpression(ActionContextLogger, ctx, X);
@@ -927,12 +939,13 @@ namespace Triggernometry.Core.Actions
 
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tableremoveline",
                                 "Removed {3} #({2}) from {1}table ({0})",
-                                sourcename, sPersist, index, lineType));
+                                srcName, sPersist, index, lineType));
                         }
                     }
                     break;
                 case OperationEnum.SortLine:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         bool isCol = !string.IsNullOrWhiteSpace(X);
                         string lineType = I18n.TrlTableColOrRow(isCol);
                         string rawExpr = isCol ? X : Y;
@@ -946,10 +959,10 @@ namespace Triggernometry.Core.Actions
                             out List<string> keysExpr, out List<List<string>> values);
                         int keysCount = keysExpr.Count;
 
-                        lock (svs.Table)
+                        lock (srcStore.Table)
                         {
-                            VariableTable vt = svs.GetTableVariable(sourcename, false);
-                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + sourcename; // for ${_row[i]}
+                            VariableTable vt = srcStore.GetTableVariable(srcName, false);
+                            ctx.varName = (Persistent ? "ptvar:" : "tvar:") + srcName; // for ${_row[i]}
                             if (isCol)
                             {
                                 // Iterate through the columns and evaluate the key expression in the current context
@@ -1000,7 +1013,7 @@ namespace Triggernometry.Core.Actions
                         {   // logging each sorting keys
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablesortline",
                                 "Sorting {2}s of {1}table ({0}): function ({3}/{4}, {6}) = ({5}). Keys: ({7})",
-                                sourcename, sPersist, lineType, i + 1, keysCount, keysExpr[i],
+                                srcName, sPersist, lineType, i + 1, keysCount, keysExpr[i],
                                 (isNumeric[i] ? "n" : "s") + (isAscending[i] ? "+" : "-"),
                                 string.Join(", ", values[i])));
                         }
@@ -1008,6 +1021,7 @@ namespace Triggernometry.Core.Actions
                     break;
                 case OperationEnum.GetAllEntities:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         var entities = string.IsNullOrWhiteSpace(Y)
                             ? FFXIV.Entity.GetEntities()
                             : XivEntityParser.GetEntitiesByCondition(
@@ -1046,13 +1060,13 @@ namespace Triggernometry.Core.Actions
                             };
                             vt.Rows.Add(row);
                         }
-                        lock (svs.Table)
+                        lock (srcStore.Table)
                         {
-                            svs.Table[sourcename] = vt;
+                            srcStore.Table[srcName] = vt;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablegetallentities",
                             "Saved {2} entities into {1}table variable ({0})",
-                            sourcename, sPersist, vt.Rows.Count - 1));
+                            srcName, sPersist, vt.Rows.Count - 1));
                     }
                     break;
                 default:

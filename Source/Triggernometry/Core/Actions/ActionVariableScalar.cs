@@ -271,51 +271,52 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(Context ctx)
         {
-            RealPlugin plug = ctx.Plugin;
-
-            string varname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Name);
             string sPersist = I18n.TrlVarPersist(Persistent);
             string tPersist = I18n.TrlVarPersist(TargetPersistent);
             string changer = DescribeVariableChanger(ctx);
             string newval;
-            VariableStore vs = plug.GetVariableStore(Persistent);
             switch (Operation)
             {
                 case OperationEnum.UnsetAll:
                     {
-                        vs.UnsetAllVariables(vs.Scalar);
+                        var srcStore = ctx.Plugin.GetVariableStore(Persistent);
+                        srcStore.UnsetAllVariables(srcStore.Scalar);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarunsetall",
                             "All {0}scalar variables unset", sPersist));
                         break;
                     }
                 case OperationEnum.UnsetRegex:
                     {
-                        vs.UnsetVariableRegex(vs.Scalar, varname);
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        srcStore.UnsetVariableRegex(srcStore.Scalar, srcName);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarunsetregex",
-                            "All {1}scalar variables matching ({0}) unset", varname, sPersist));
+                            "All {1}scalar variables matching ({0}) unset", srcName, sPersist));
                         break;
                     }
                 case OperationEnum.UnsetRegexUniversal:
                     {
-                        Regex rx = new Regex(varname);
-                        vs.UnsetVariableRegex(vs.Scalar, rx);
-                        vs.UnsetVariableRegex(vs.List, rx);
-                        vs.UnsetVariableRegex(vs.Table, rx);
-                        vs.UnsetVariableRegex(vs.Dict, rx);
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        Regex rx = new Regex(srcName);
+                        srcStore.UnsetVariableRegex(srcStore.Scalar, rx);
+                        srcStore.UnsetVariableRegex(srcStore.List, rx);
+                        srcStore.UnsetVariableRegex(srcStore.Table, rx);
+                        srcStore.UnsetVariableRegex(srcStore.Dict, rx);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarunsetregexuniversal",
-                            "All {1}variables matching ({0}) unset", varname, sPersist));
+                            "All {1}variables matching ({0}) unset", srcName, sPersist));
                         break;
                     }
                 case OperationEnum.Unset:
                     {
-                        vs.UnsetVariable(vs.Scalar, varname);
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        srcStore.UnsetVariable(srcStore.Scalar, srcName);
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarunset",
-                            "{1}Scalar variable ({0}) unset", varname, sPersist));
+                            "{1}Scalar variable ({0}) unset", srcName, sPersist));
                         break;
                     }
                 case OperationEnum.SetString:
                 case OperationEnum.SetNumeric:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         if (Operation == OperationEnum.SetString)
                         {
                             newval = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
@@ -329,23 +330,24 @@ namespace Triggernometry.Core.Actions
                         x.Value = newval;
                         x.LastChanger = changer;
                         x.LastChanged = DateTime.Now;
-                        lock (vs.Scalar) // verified
+                        lock (srcStore.Scalar)
                         {
-                            vs.Scalar[varname] = x;
+                            srcStore.Scalar[srcName] = x;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarset",
-                            "{2}Scalar variable ({0}) value set to ({1})", varname, newval, sPersist));
+                            "{2}Scalar variable ({0}) value set to ({1})", srcName, newval, sPersist));
                         break;
                     }
                 case OperationEnum.Increment:
                     {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         double original = 0;
                         double increment = string.IsNullOrWhiteSpace(Value)
                             ? 1 : ctx.EvaluateNumericExpression(ActionContextLogger, ctx, Value);
                         VariableScalar x = new VariableScalar { LastChanger = changer, LastChanged = DateTime.Now };
-                        lock (vs.Scalar)
+                        lock (srcStore.Scalar)
                         {
-                            if (vs.Scalar.TryGetValue(varname, out VariableScalar originalVar))
+                            if (srcStore.Scalar.TryGetValue(srcName, out VariableScalar originalVar))
                             {
                                 if (!string.IsNullOrWhiteSpace(originalVar.Value))
                                 {
@@ -353,17 +355,17 @@ namespace Triggernometry.Core.Actions
                                 }
                             }
                             x.Value = I18n.ThingToString(original + increment);
-                            vs.Scalar[varname] = x;
+                            srcStore.Scalar[srcName] = x;
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarset",
-                                "{2}Scalar variable ({0}) value set to ({1})", varname, x.Value, sPersist));
+                                "{2}Scalar variable ({0}) value set to ({1})", srcName, x.Value, sPersist));
                         }
                         break;
                     }
                 case OperationEnum.QueryJsonPath:
                     {
-                        newval = vs.GetScalarVariable(varname, false).Value;
-                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
-                        VariableStore vs2 = plug.GetVariableStore(TargetPersistent);
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        newval = srcStore.GetScalarVariable(srcName, false).Value;
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         object p = new Utilities.JsonParser().Parse(newval);
@@ -379,19 +381,19 @@ namespace Triggernometry.Core.Actions
                         x.LastChanger = changer;
                         x.LastChanged = DateTime.Now;
 
-                        lock (vs2.Scalar) // verified
+                        lock (tgtStore.Scalar)
                         {
-                            vs2.Scalar[tgtname] = x;
+                            tgtStore.Scalar[tgtName] = x;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/scalarset",
-                            "{2}Scalar variable ({0}) value set to ({1})", tgtname, x.Value, tPersist));
+                            "{2}Scalar variable ({0}) value set to ({1})", tgtName, x.Value, tPersist));
                     }
                     break;
                 case OperationEnum.QueryJsonPathList:
                     {
-                        newval = vs.GetScalarVariable(varname, false).Value;
-                        string tgtname = ctx.EvaluateStringExpression(ActionContextLogger, ctx, TargetVar);
-                        VariableStore vs2 = plug.GetVariableStore(TargetPersistent);
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        newval = srcStore.GetScalarVariable(srcName, false).Value;
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         string query = ctx.EvaluateStringExpression(ActionContextLogger, ctx, Value);
                         JsonPath.JsonPathContext pc = new JsonPath.JsonPathContext();
                         object p = new Utilities.JsonParser().Parse(newval);
@@ -404,12 +406,12 @@ namespace Triggernometry.Core.Actions
                         {
                             x.Push(new VariableScalar { Value = Utilities.JsonParser.ToValueString(value), LastChanged = x.LastChanged, LastChanger = changer }, changer);
                         }
-                        lock (vs2.List) // verified
+                        lock (tgtStore.List)
                         {
-                            vs2.List[tgtname] = x;
+                            tgtStore.List[tgtName] = x;
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listset",
-                            "{2}List variable ({0}) value set with ({1}) items", tgtname, x.Size, tPersist));
+                            "{2}List variable ({0}) value set with ({1}) items", tgtName, x.Size, tPersist));
                     }
                     break;
                 default:
