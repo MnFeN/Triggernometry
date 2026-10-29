@@ -345,28 +345,23 @@ namespace Triggernometry.UI.Forms
         private void actionViewer1_ActionsUpdated(object sender, EventArgs e)
         {
             if (_isInitializing) return;
-            totalDelay = actionViewer1.GetActionTotalDelay();
             SetTriggerDescription();
         }
 
         private void cndCondition_ConditionsUpdated(object sender, EventArgs e)
         {
             if (_isInitializing) return;
-            rootConditionCount = cndCondition.CountRootConditions();
-            rootConditionType = cndCondition.RootConditionType();
             SetTriggerDescription();
         }
 
         private void interrupt_Changed(object sender, EventArgs e)
         {
             if (_isInitializing) return;
-            GetDescInterrupt();
             SetTriggerDescription();
         }
         private void cooldown_Changed(object sender, EventArgs e)
         {
             if (_isInitializing) return;
-            GetDescCooldown();
             SetTriggerDescription();
         }
 
