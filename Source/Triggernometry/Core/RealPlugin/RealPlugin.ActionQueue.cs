@@ -153,7 +153,7 @@ namespace Triggernometry.Core
                         action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig?.LogName ?? "(null)", action.Describe()));
                         return false;
                     }
-                }    
+                }
                 // already locked by ActionQueue
                 instance.QueueSequence = curOrdinal++;
                 action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig?.LogName ?? "(null)", action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
@@ -188,7 +188,9 @@ namespace Triggernometry.Core
         /// <summary>Runs startup triggers, then dispatches actions until the plugin exits.</summary>
         internal void ActionThreadProc()
         {
-            while (!ReadyForOperation()) Thread.Sleep(100);
+            // 初始化尚未完成时，也必须能响应插件退出。
+            while (!ReadyForOperation())
+                if (ExitEvent.WaitOne(100)) return;
             RunStartupTriggers();
 
             int timeout = Timeout.Infinite;
