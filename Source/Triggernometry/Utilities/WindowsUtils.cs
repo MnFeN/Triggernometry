@@ -169,7 +169,6 @@ namespace Triggernometry.Utilities
 
         public static void SendKeycode(int procid, string titleRegex, int keycode)
         {
-            List<IntPtr> wins = FindWindows(procid, titleRegex);
             Keys key = (Keys)keycode;
             List<int> keycodes = new List<int>();
 
