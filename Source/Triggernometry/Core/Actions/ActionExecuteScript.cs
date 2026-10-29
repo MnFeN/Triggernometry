@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Windows.Forms;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.Utilities;
@@ -63,11 +61,7 @@ namespace Triggernometry.Core.Actions
 
             string scp = EvalString(Script, ctx);
             string assy = EvalString(Assemblies, ctx);
-            while (plug.scriptingInited == false)
-            {
-                Thread.Sleep(10);
-            }
-            if (plug?.scripting.Ready == true)
+            if (plug?.WaitForScriptingInitialization() == true)
             {
                 plug.scripting.Evaluate(scp, assy, ctx);
             }

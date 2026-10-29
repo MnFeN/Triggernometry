@@ -45,21 +45,19 @@ namespace Triggernometry.Core
         }
 
         internal Dictionary<int, NamedCallback> callbacksById = new Dictionary<int, NamedCallback>();
-        internal Dictionary<string, List<NamedCallback>> callbacksByName = new Dictionary<string, List<NamedCallback>>(StringComparer.OrdinalIgnoreCase);
+        internal Dictionary<string, NamedCallback[]> callbacksByName = new Dictionary<string, NamedCallback[]>(StringComparer.OrdinalIgnoreCase);
 
         public void InvokeNamedCallback(string name, string val)
         {
-            List<NamedCallback> cbs = new List<NamedCallback>();
+            NamedCallback[] callbacks;
             lock (callbacksById)
             {
-                if (callbacksByName.ContainsKey(name) == true)
-                {
-                    cbs.AddRange(callbacksByName[name]);
-                }
+                if (!callbacksByName.TryGetValue(name, out callbacks)) return;
             }
-            foreach (NamedCallback nc in cbs)
+            // 注册和注销只替换数组；回调在锁外执行，并继续使用本次取得的快照。
+            foreach (NamedCallback callback in callbacks)
             {
-                nc.Invoke(val);
+                callback.Invoke(val);
             }
         }
 
@@ -82,11 +80,11 @@ namespace Triggernometry.Core
             lock (callbacksById)
             {
                 callbacksById[id] = nc;
-                if (callbacksByName.ContainsKey(name) == false)
-                {
-                    callbacksByName[name] = new List<NamedCallback>();
-                }
-                callbacksByName[name].Add(nc);
+                callbacksByName.TryGetValue(name, out NamedCallback[] callbacks);
+                int count = callbacks?.Length ?? 0;
+                Array.Resize(ref callbacks, count + 1);
+                callbacks[count] = nc;
+                callbacksByName[name] = callbacks;
             }
         }
 
@@ -97,13 +95,12 @@ namespace Triggernometry.Core
         /// </summary>
         public int RegisterNamedCallback(string name, Delegate callback, object o = null, bool allowDuplicatedName = false, string registrant = "Triggernometry Script")
         {
-            if (!allowDuplicatedName)
-            {
-                UnregisterNamedCallback(name);
-            }
-
             lock (callbacksById)
             {
+                // 替换同名注册、分配 ID 和写入必须在同一临界区，避免并发替换留下重复项。
+                if (!allowDuplicatedName)
+                    UnregisterNamedCallback(name);
+
                 // Find the first free positive integer ID
                 int id = Enumerable.Range(1, int.MaxValue).Where(n => !callbacksById.ContainsKey(n)).First();
                 RegisterNamedCallback(id, name, callback, o, registrant);
@@ -120,17 +117,21 @@ namespace Triggernometry.Core
         {
             lock (callbacksById)
             {
-                NamedCallback nc = null;
-                if (callbacksById.ContainsKey(id) == false)
-                {
-                    return;
-                }
-                nc = callbacksById[id];
+                if (!callbacksById.TryGetValue(id, out NamedCallback callback)) return;
                 callbacksById.Remove(id);
-                callbacksByName[nc.Name].Remove(nc);
-                if (callbacksByName[nc.Name].Count == 0)
+                NamedCallback[] callbacks = callbacksByName[callback.Name];
+                int index = Array.IndexOf(callbacks, callback);
+                if (index < 0) return;
+                if (callbacks.Length == 1)
                 {
-                    callbacksByName.Remove(nc.Name);
+                    callbacksByName.Remove(callback.Name);
+                }
+                else
+                {
+                    var remaining = new NamedCallback[callbacks.Length - 1];
+                    Array.Copy(callbacks, 0, remaining, 0, index);
+                    Array.Copy(callbacks, index + 1, remaining, index, remaining.Length - index);
+                    callbacksByName[callback.Name] = remaining;
                 }
             }
         }
@@ -142,11 +143,8 @@ namespace Triggernometry.Core
         {
             lock (callbacksById)
             {
-                if (!callbacksByName.ContainsKey(name))
-                {
-                    return;
-                }
-                foreach (NamedCallback nc in callbacksByName[name])
+                if (!callbacksByName.TryGetValue(name, out NamedCallback[] callbacks)) return;
+                foreach (NamedCallback nc in callbacks)
                 {
                     callbacksById.Remove(nc.Id);
                 }

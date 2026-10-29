@@ -45,7 +45,8 @@ namespace TriggernometryProxy
             {
                 if (Instance != null)
                 {
-                    return Instance.RegisterNamedCallback(name, callback, o, true, registrant);
+                    // 注册时适配为核心可直接调用的委托，保留对外的原有回调类型。
+                    return Instance.RegisterNamedCallback(name, (Action<object, string>)callback.Invoke, o, true, registrant);
                 }
                 else
                 {
@@ -142,7 +143,7 @@ namespace TriggernometryProxy
                     ) ?? throw new MissingMethodException("RealPlugin", "RegisterNamedCallback(int, string, Delegate, object, string)");
                     foreach (Tuple<int, string, CustomCallbackDelegate, object, string> t in queuedRegs)
                     {
-                        registerNamedCallbackMethod.Invoke(Instance, new object[] { t.Item1, t.Item2, t.Item3, t.Item4, t.Item5 });
+                        registerNamedCallbackMethod.Invoke(Instance, new object[] { t.Item1, t.Item2, (Action<object, string>)t.Item3.Invoke, t.Item4, t.Item5 });
                     }
                     queuedRegs.Clear();
                 }

@@ -16,6 +16,7 @@ namespace Triggernometry.Core.Scripting
         private readonly ScriptOptions _scriptOptions;
 
         internal bool Ready = false;
+        internal Task Initialization { get; }
         internal Interpreter()
         {
             _scriptOptions = ScriptOptions.Default.AddImports("System");
@@ -23,7 +24,7 @@ namespace Triggernometry.Core.Scripting
             {
                 _scriptOptions = _scriptOptions.AddMetadataReferenceFromAssembly(asm);
             }
-            Task.Run(() => Initialize()); // takes ~3 s, do it async
+            Initialization = Task.Run(Initialize); // takes ~3 s, do it async
         }
 
         private void Initialize()
@@ -41,7 +42,6 @@ namespace Triggernometry.Core.Scripting
                         "Error when initializing scripting - try changing plugin load order: {0}",
                         ex.Message));
             }
-            RealPlugin.Instance.scriptingInited = true;
         }
 
         public void Evaluate(string rawScript, string extraAssembliesInput, Context ctx)

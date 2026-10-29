@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Triggernometry.Core.Scripting;
 using Triggernometry.Expressions.String.Utils;
@@ -13,7 +14,6 @@ namespace Triggernometry.Core
     public partial class RealPlugin
     {
         internal Interpreter scripting;
-        internal bool scriptingInited = false;
         internal Dictionary<string, object> scriptingStorage = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         private List<Configuration.APIUsage> DefaultAPIUsages = ScriptSecurity.SecurityAPIs.Select(name => new Configuration.APIUsage
         {
@@ -34,6 +34,30 @@ namespace Triggernometry.Core
                 FilteredAddToLog(DebugLevelEnum.Error, I18n.Translate("internal/Plugin/iniscripterror", 
                     "Error when initializing scripting - try changing plugin load order: {0}", ex.FullMessage()));
             }
+        }
+
+        /// <summary>等待脚本初始化，等待期间响应插件退出；初始化失败时返回不可用。</summary>
+        internal bool WaitForScriptingInitialization()
+        {
+            var interpreter = scripting;
+            if (interpreter == null) return false;
+            Task initialization = interpreter.Initialization;
+            // 初始化完成后直接读取结果，避免每个动作都创建等待句柄。
+            if (initialization.IsCompleted) return interpreter.Ready;
+
+            WaitHandle exit = ExitEvent;
+            if (exit == null) return false;
+            try
+            {
+                if (WaitHandle.WaitAny(new[] { exit, ((IAsyncResult)initialization).AsyncWaitHandle }) != 1)
+                    return false;
+            }
+            catch (ObjectDisposedException)
+            {
+                // 退出过程可能已经释放通知句柄，此时也不再执行脚本。
+                return false;
+            }
+            return interpreter.Ready;
         }
 
         internal List<Configuration.APIUsage> GetDefaultAPIUsages()
