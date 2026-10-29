@@ -220,7 +220,7 @@ namespace Triggernometry.UI.CustomControls
             this.dgvActions.VirtualMode = true;
             this.dgvActions.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvActions_CellClick);
             this.dgvActions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvActions_CellDoubleClick);
-            this.dgvActions.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvActions_CellFormatting);
+            this.dgvActions.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvActions_RowPrePaint);
             this.dgvActions.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dgvActions_CellValueNeeded);
             this.dgvActions.SelectionChanged += new System.EventHandler(this.dgvActions_SelectionChanged);
             this.dgvActions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvActions_KeyDown);

@@ -143,21 +143,26 @@ namespace Triggernometry.UI.Forms
             var category = (ToolStripMenuItem)sender;
             foreach (ToolStripMenuItem sibling in actionTypeMenu.Items)
             {
-                if (sibling != category) sibling.HideDropDown();
+                if (sibling != category)
+                    sibling.HideDropDown();
             }
             category.Select();
-            if (category.HasDropDownItems) category.ShowDropDown();
+            if (category.HasDropDownItems)
+                category.ShowDropDown();
         }
 
         /// <summary>按动作列表顺序滚动切换类型，并累计不足一格的滚轮量。</summary>
         private void ActionType_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (e is HandledMouseEventArgs handled) handled.Handled = true;
-            if (isReadOnly || actionTypeMenu.Visible) return;
+            if (e is HandledMouseEventArgs handled)
+                handled.Handled = true;
+            if (isReadOnly || actionTypeMenu.Visible)
+                return;
             actionTypeWheelDelta += e.Delta;
             int steps = actionTypeWheelDelta / SystemInformation.MouseWheelScrollDelta;
             actionTypeWheelDelta %= SystemInformation.MouseWheelScrollDelta;
-            if (steps == 0) return;
+            if (steps == 0)
+                return;
             int current = Array.FindIndex(actionTypes, item => item.Type == draftAction.GetType());
             int next = Math.Max(0, Math.Min(actionTypes.Length - 1, current - steps));
             SelectActionType(actionTypes[next].Type);
@@ -199,7 +204,8 @@ namespace Triggernometry.UI.Forms
                 foreach (ToolStripMenuItem choice in category.DropDownItems)
                 {
                     choice.Checked = (Type)choice.Tag == selectedType;
-                    if (choice.Checked) category.Checked = true;
+                    if (choice.Checked)
+                        category.Checked = true;
                 }
             }
             var selected = actionTypes.First(item => item.Type == selectedType);
@@ -219,7 +225,8 @@ namespace Triggernometry.UI.Forms
         {
             var editor = new ActionEditor { Dock = DockStyle.Fill, UiContext = UiContext, TreeView = sourceTree, Images = images, ShowActionTools = page == tabActionSettings };
             page.Controls.Add(editor);
-            if (isReadOnly) editor.SetReadOnly();
+            if (isReadOnly)
+                editor.SetReadOnly();
             return editor;
         }
 
@@ -234,12 +241,14 @@ namespace Triggernometry.UI.Forms
         {
             // 仅暂停布局无法阻止原生子控件重绘，切换期间还需暂停窗口重绘。
             bool shouldSuspendRedraw = IsHandleCreated && Visible;
-            if (shouldSuspendRedraw) SendMessage(Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+            if (shouldSuspendRedraw)
+                SendMessage(Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
             SuspendLayout();
             tabs.SuspendLayout();
             try
             {
-                if (specificEditor == null) specificEditor = CreateEditor(tabActionSettings);
+                if (specificEditor == null)
+                    specificEditor = CreateEditor(tabActionSettings);
                 specificEditor.Bind(draftAction, field => field.Member.DeclaringType != typeof(ActionBase));
                 generalEditor?.Rebind(draftAction);
                 if (cndCondition != null)
@@ -281,20 +290,23 @@ namespace Triggernometry.UI.Forms
                 I18n.TranslateControl("", cndCondition);
                 tabActionCondition.Controls.Add(cndCondition);
                 cndCondition.ConditionToEdit = draftAction.Condition;
-                if (isReadOnly) cndCondition.SetReadOnly();
+                if (isReadOnly)
+                    cndCondition.SetReadOnly();
             }
         }
 
         /// <summary>切换标签页后确保对应编辑器已载入。</summary>
         private void Tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (draftAction != null) EnsureSelectedEditor();
+            if (draftAction != null)
+                EnsureSelectedEditor();
         }
 
         /// <summary>切换动作类型，并将通用设置复制到新动作。</summary>
         private void SelectActionType(Type type)
         {
-            if (isReadOnly || draftAction == null || type == draftAction.GetType() || !TryWriteValues()) return;
+            if (isReadOnly || draftAction == null || type == draftAction.GetType() || !TryWriteValues())
+                return;
             ActionBase replacement = type == typeof(ActionObsControl)
                 ? new ActionObsControl { Endpoint = "", Password = "" } : (ActionBase)Activator.CreateInstance(type);
             draftAction.CopyCommonPropertiesTo(replacement);
@@ -317,15 +329,16 @@ namespace Triggernometry.UI.Forms
         {
             specificEditor?.WriteValues();
             generalEditor?.WriteValues();
-            if (isReadOnly) return;
-            if (cndCondition != null) 
+            if (isReadOnly)
+                return;
+            if (cndCondition != null)
                 draftAction.Condition = cndCondition.ConditionToEdit;
-            if (txtDescription.Text != (draftAction.Desc ?? "")) 
+            if (txtDescription.Text != (draftAction.Desc ?? ""))
                 draftAction.Desc = txtDescription.Text;
             draftAction.DescOverride = chkOverrideDesc.Checked;
-            if (expDescBgColor.Expression != (draftAction.DescBackColor ?? "")) 
+            if (expDescBgColor.Expression != (draftAction.DescBackColor ?? ""))
                 draftAction.DescBackColor = expDescBgColor.Expression;
-            if (expDescTextColor.Expression != (draftAction.DescTextColor ?? "")) 
+            if (expDescTextColor.Expression != (draftAction.DescTextColor ?? ""))
                 draftAction.DescTextColor = expDescTextColor.Expression;
         }
 
@@ -362,8 +375,10 @@ namespace Triggernometry.UI.Forms
         /// <summary>关闭前校验保存内容，并登记表达式中的动态变量。</summary>
         private void ActionForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (DialogResult == DialogResult.OK && !TryWriteValues()) e.Cancel = true;
-            if (!e.Cancel) ExpressionTextBox.RegisterAllDynamicVarNamesOnForm(this);
+            if (DialogResult == DialogResult.OK && !TryWriteValues())
+                e.Cancel = true;
+            if (!e.Cancel)
+                ExpressionTextBox.RegisterAllDynamicVarNamesOnForm(this);
         }
 
         /// <summary>添加指定测试方式的下拉菜单项。</summary>
@@ -380,30 +395,23 @@ namespace Triggernometry.UI.Forms
         /// <summary>使用当前动作副本及指定的取值和条件选项进行测试。</summary>
         private void TestAction(bool useLiveValues, bool ignoreConditions)
         {
-            if (!TryWriteValues()) return;
-            ActionBase action = draftAction.Copy();
-            ActionBase.RebuildParentage(new[] { action }, ParentTrigger);
-            if (ignoreConditions) action.Condition = new Core.Conditions.ConditionGroup();
-            
-            void execute() => action.Execute(new Context(ParentTrigger)
-            {
-                testByPlaceholder = !useLiveValues,
-                soundhook = Plugin.SoundPlaybackSmart,
-                ttshook = Plugin.TtsPlaybackSmart
-            });
+            if (!TryWriteValues())
+                return;
+            Action execute = ActionViewer.CreateTestExecution(draftAction, UiContext, useLiveValues, ignoreConditions);
 
-            if (action is ActionKeypress keypress && keypress.Operation == ActionKeypress.OperationEnum.SendKeys)
+            if (draftAction is ActionKeypress keypress && keypress.Operation == ActionKeypress.OperationEnum.SendKeys)
             {
                 if (MessageBox.Show(this, I18n.Translate("internal/ActionForm/confirmkeypress",
                     "The keypresses you defined will be sent in two seconds after you hit OK, to allow you to change to the window you want to send the keypresses to."),
                     I18n.Translate("internal/ActionForm/confirmkeypressdelay", "Confirm"), MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Information) != DialogResult.OK) return;
+                    MessageBoxIcon.Information) != DialogResult.OK)
+                    return;
                 var timer = new Timer(components) { Interval = 2000 };
-                timer.Tick += (s, e) => 
-                { 
-                    timer.Stop(); 
-                    timer.Dispose(); 
-                    execute(); 
+                timer.Tick += (s, e) =>
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                    execute();
                 };
                 timer.Start();
             }
