@@ -254,7 +254,7 @@ namespace Triggernometry.Core.Actions
                             VariableList x = vs.List[varname];
                             foreach (string dat in data)
                             {
-                                x.Push(new VariableScalar() { Value = dat }, "");
+                                x.Values.Add(new VariableScalar() { Value = dat });
                             }
                             if (ctx.Trigger != null)
                             {

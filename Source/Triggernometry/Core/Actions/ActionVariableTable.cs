@@ -973,7 +973,7 @@ namespace Triggernometry.Core.Actions
                                     }
                                 }
 
-                                IOrderedEnumerable<int> sortedIndices = ApplySorting(vt.Width, isNumeric, isAscending, values);
+                                var sortedIndices = ApplySorting(vt.Width, isNumeric, isAscending, values).ToArray();
                                 foreach (var row in vt.Rows)
                                 {
                                     var sortedValue = sortedIndices.Select(i => row.Values[i]).ToList();

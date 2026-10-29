@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
 using Triggernometry.Expressions.String.Utils;
 using Triggernometry.Localization;
@@ -270,12 +271,31 @@ namespace Triggernometry.Core.Variables
 
         public string JoinAll(string kvJoiner, string pairJoiner)
         {
-            return string.Join(pairJoiner, Values.Select(pair => $"{pair.Key}{kvJoiner}{pair.Value}"));
+            // 直接追加键值，避免每对键值都先生成一份临时拼接字符串
+            var result = new StringBuilder();
+            bool isFirst = true;
+            foreach (var pair in Values)
+            {
+                if (!isFirst) result.Append(pairJoiner);
+                isFirst = false;
+                result.Append(pair.Key).Append(kvJoiner).Append(pair.Value);
+            }
+            return result.ToString();
         }
 
         public string JoinAll(string kvJoiner, string pairJoiner, IEnumerable<string> keys)
         {
-            return string.Join(pairJoiner, keys.Select(k => Values.TryGetValue(k, out Variable v) ? $"{k}{kvJoiner}{v}" : ""));
+            // 直接追加键值，避免每对键值都先生成一份临时拼接字符串
+            var result = new StringBuilder();
+            bool isFirst = true;
+            foreach (string key in keys)
+            {
+                if (!isFirst) result.Append(pairJoiner);
+                isFirst = false;
+                if (Values.TryGetValue(key, out Variable value))
+                    result.Append(key).Append(kvJoiner).Append(value);
+            }
+            return result.ToString();
         }
 
         public string JoinAll(string kvJoiner, string pairJoiner, params string[] keys) => JoinAll(kvJoiner, pairJoiner, (IEnumerable<string>)keys);

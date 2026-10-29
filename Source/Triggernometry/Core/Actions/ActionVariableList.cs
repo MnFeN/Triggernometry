@@ -760,10 +760,11 @@ namespace Triggernometry.Core.Actions
                         }
                         lock (tvs.List)
                         {
-                            VariableList newvl = new VariableList();
-                            foreach (Variable x in vl.Values)
+                            VariableList newvl = vl.Size == 0 ? new VariableList() : (VariableList)vl.Duplicate();
+                            if (newvl.Size > 0)
                             {
-                                newvl.Push(x.Duplicate(), changer);
+                                newvl.LastChanger = changer;
+                                newvl.LastChanged = DateTime.Now;
                             }
                             tvs.List[targetname] = newvl;
                         }

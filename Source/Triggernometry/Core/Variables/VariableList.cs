@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -84,15 +84,16 @@ namespace Triggernometry.Core.Variables
 
         public override Variable Duplicate()
         {
-            VariableList v = new VariableList();
-            foreach (Variable vx in Values)
+            VariableList list = new VariableList();
+            list.Values.Capacity = Values.Count;
+
+            foreach (Variable v in Values)
             {
-                // Copy values directly; restore the container metadata after cloning.
-                v.Values.Add(vx.Duplicate());
+                list.Values.Add(v.Duplicate());
             }
-            v.LastChanger = LastChanger;
-            v.LastChanged = LastChanged;
-            return v;
+            list.LastChanger = LastChanger;
+            list.LastChanged = LastChanged;
+            return list;
         }
 
         public void Push(Variable value, string changer)

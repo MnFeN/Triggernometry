@@ -611,14 +611,19 @@ namespace Triggernometry.Core.Actions
 
                             if (isLengthMode)
                             {   // should only use ${_idx} to generate each key/value
-                                for (int i = 0; i < length; i++)
+                                // 手动枚举 Values，超出原长度使用空值
+                                using (var entries = vd.Values.GetEnumerator())
                                 {
-                                    ctx.listIndex = i + 1;
-                                    ctx.dictKey = i < vd.Size ? vd.Values.ElementAt(i).Key : "";
-                                    ctx.dictValue = i < vd.Size ? vd.Values.ElementAt(i).Value.ToString() : "";
-                                    string k = ParseKey();
-                                    string v = ParseValue();
-                                    vdNew.SetValue(k, v, changer);
+                                    for (int i = 0; i < length; i++)
+                                    {
+                                        bool hasEntry = entries.MoveNext();
+                                        ctx.listIndex = i + 1;
+                                        ctx.dictKey = hasEntry ? entries.Current.Key : "";
+                                        ctx.dictValue = hasEntry ? entries.Current.Value.ToString() : "";
+                                        string k = ParseKey();
+                                        string v = ParseValue();
+                                        vdNew.SetValue(k, v, changer);
+                                    }
                                 }
                                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictsetallbyindex",
                                     "{4} key value pairs in {1}dictionary ({0}) set to ({2}): ({3})",

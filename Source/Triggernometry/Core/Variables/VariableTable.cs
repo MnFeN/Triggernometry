@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -101,9 +101,11 @@ namespace Triggernometry.Core.Variables
             // Build cloned rows directly instead of allocating and replacing empty cells.
             if (Width > 0)
             {
+                v.Rows.Capacity = Height;
                 for (int y = 1; y <= Height; y++)
                 {
                     var row = new VariableTableRow();
+                    row.Values.Capacity = Width;
                     for (int x = 1; x <= Width; x++)
                     {
                         row.Values.Add(Peek(x, y).Duplicate());
