@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Triggernometry.UI.Forms
@@ -37,6 +33,7 @@ namespace Triggernometry.UI.Forms
 
         public void NextAutocompleteItem()
         {
+            if (listBox1.Items.Count == 0) return;
             int i = listBox1.SelectedIndex + 1;
             if (i > listBox1.Items.Count - 1)
             {
@@ -47,6 +44,7 @@ namespace Triggernometry.UI.Forms
 
         public void PreviousAutocompleteItem()
         {
+            if (listBox1.Items.Count == 0) return;
             int i = listBox1.SelectedIndex - 1;
             if (i < 0)
             {
@@ -57,6 +55,7 @@ namespace Triggernometry.UI.Forms
 
         public void NextAutocompletePage()
         {
+            if (listBox1.Items.Count == 0) return;
             int i = listBox1.SelectedIndex + 5;
             if (i > listBox1.Items.Count - 1)
             {
@@ -67,6 +66,7 @@ namespace Triggernometry.UI.Forms
 
         public void PreviousAutocompletePage()
         {
+            if (listBox1.Items.Count == 0) return;
             int i = listBox1.SelectedIndex - 5;
             if (i < 0)
             {
@@ -75,58 +75,37 @@ namespace Triggernometry.UI.Forms
             listBox1.SelectedIndex = i;
         }
 
+        /// <summary>一次物化候选并批量替换列表，尽量保留原选中项。</summary>
         public void BuildList(IEnumerable<string> strs)
         {
+            var items = strs as string[] ?? strs.ToArray();
             SuspendLayout();
-            bool hadold = false;
-            string str = "";
-            int calcheight = 1 + Math.Min(10, strs.Count());
-            calcheight *= listBox1.ItemHeight;
-            float longeststr = 0.0f;
-            using (Graphics g = CreateGraphics())
+            listBox1.BeginUpdate();
+            try
             {
-                foreach (string st in strs)
-                {
-                    longeststr = Math.Max(longeststr, g.MeasureString(st, listBox1.Font).Width);
-                }
+                int height = (1 + Math.Min(10, items.Length)) * listBox1.ItemHeight;
+                float longest = 0;
+                using (Graphics graphics = CreateGraphics())
+                    foreach (string item in items)
+                        longest = Math.Max(longest, graphics.MeasureString(item, listBox1.Font).Width);
+                listBox1.Width = (int)Math.Ceiling(longest) + 20;
+                listBox1.Height = height;
+                listBox1.Items.Clear();
+                listBox1.Items.AddRange(items);
+                int index = !(listBox1.SelectedItem is string selected) ? -1 
+                    : Array.FindIndex(items, item => string.Equals(item, selected, StringComparison.OrdinalIgnoreCase));
+                listBox1.SelectedIndex = items.Length == 0 ? -1 : Math.Max(0, index);
             }
-            int strw = (int)Math.Ceiling(longeststr) + 20;
-            listBox1.Width = strw;
-            listBox1.Height = calcheight;
-            if (listBox1.Items.Count > 0 && listBox1.SelectedItem != null)
+            finally
             {
-                str = listBox1.SelectedItem.ToString();
-                hadold = true;
+                listBox1.EndUpdate();
+                ResumeLayout();
             }
-            listBox1.Items.Clear();
-            listBox1.Items.AddRange(strs.ToArray());
-            if (hadold == true)
-            {
-                int i = 0;
-                foreach (string s in strs)
-                {
-                    if (string.Compare(s, str, true) == 0)
-                    {                        
-                        break;
-                    }
-                    i++;
-                }
-                if (i > strs.Count() - 1)
-                {
-                    i = 0;
-                }
-                listBox1.SelectedIndex = i;
-            }
-            else
-            {
-                listBox1.SelectedIndex = 0;
-            }
-            ResumeLayout();
         }
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == (int)0x84)
+            if (m.Msg == 0x84)
             {
                 m.Result = (IntPtr)(-1);
             }
