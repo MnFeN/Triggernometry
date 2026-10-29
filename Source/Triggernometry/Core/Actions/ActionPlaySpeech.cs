@@ -96,7 +96,10 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(Context ctx)
         {
-            ctx.ttshook(ctx, this);
+            if (ctx.ttshook != null) 
+                ctx.ttshook(ctx, this);
+            else 
+                ctx.Plugin.TtsPlaybackSmart(ctx, this);
 
             /* to-do: cactbot-like 文本显示
             if (plug.cfg.GenerateTTSEventLog)

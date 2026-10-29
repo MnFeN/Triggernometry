@@ -135,7 +135,10 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(Context ctx)
         {
-            ctx.soundhook(ctx, this);
+            if (ctx.soundhook != null) 
+                ctx.soundhook(ctx, this);
+            else 
+                ctx.Plugin.SoundPlaybackSmart(ctx, this);
         }
 
         #endregion
