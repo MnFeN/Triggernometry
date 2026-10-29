@@ -177,8 +177,9 @@ namespace Scarborough
                             int delayn = (delay.Value[h * 4] + (delay.Value[(h * 4) + 1] * 256)) * 10;
                             FrameDelays.Add(delayn);
                             i.SelectActiveFrame(CurrentFd, h);
-                            System.Drawing.Image ifa = ((System.Drawing.Image)i.Clone());
-                            byte[] idata = ImageToByte(ifa);
+                            byte[] idata;
+                            using (var frame = (System.Drawing.Image)i.Clone())
+                                idata = ImageToByte(frame);
                             if (hastc == true)
                             {
                                 if (gif.TransparencyIndex != gif.BackgroundColor)

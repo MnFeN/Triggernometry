@@ -154,62 +154,76 @@ namespace Scarborough.Drawing
             if (WindowHandle == IntPtr.Zero) throw new ArgumentOutOfRangeException(I18n.Translate("internal/Graphics/nullwindowhandle", "WindowHandle is zero."));
             if (!User32.IsWindow(WindowHandle)) throw new ArgumentOutOfRangeException(I18n.Translate("internal/Graphics/invalidwindowhandle", "WindowHandle is not valid."));
 
-            _factory = new Factory(UseMultiThreadedFactories ? FactoryType.MultiThreaded : FactoryType.SingleThreaded);
-            _fontFactory = new FontFactory();
-
-            _deviceProperties = new HwndRenderTargetProperties()
-            {
-                Hwnd = WindowHandle,
-                PixelSize = new Size2(Width, Height),
-                PresentOptions = VSync ? PresentOptions.None : PresentOptions.Immediately
-            };
-
-            // documentation: https://docs.microsoft.com/en-us/windows/desktop/direct2d/supported-pixel-formats-and-alpha-modes
-            // those 3 PixelFormats are the only supported ones of a HwndRenderTarget (WindowRenderTarget)
-            var renderProperties = new RenderTargetProperties(
-                RenderTargetType.Default,
-                // msdn: B8G8R8A8_UNorm should be used for best performance
-                new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), // supports hardware rendering & software rendering
-                96.0f,
-                96.0f,
-                RenderTargetUsage.None,
-                FeatureLevel.Level_DEFAULT);
-
             try
             {
-                _device = new WindowRenderTarget(_factory, renderProperties, _deviceProperties);
-            }
-            catch (SharpDXException)
-            {
+                _factory = new Factory(UseMultiThreadedFactories ? FactoryType.MultiThreaded : FactoryType.SingleThreaded);
+                _fontFactory = new FontFactory();
+
+                _deviceProperties = new HwndRenderTargetProperties()
+                {
+                    Hwnd = WindowHandle,
+                    PixelSize = new Size2(Width, Height),
+                    PresentOptions = VSync ? PresentOptions.None : PresentOptions.Immediately
+                };
+
+                // documentation: https://docs.microsoft.com/en-us/windows/desktop/direct2d/supported-pixel-formats-and-alpha-modes
+                // those 3 PixelFormats are the only supported ones of a HwndRenderTarget (WindowRenderTarget)
+                var renderProperties = new RenderTargetProperties(
+                    RenderTargetType.Default,
+                    // msdn: B8G8R8A8_UNorm should be used for best performance
+                    new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), // supports hardware rendering & software rendering
+                    96.0f,
+                    96.0f,
+                    RenderTargetUsage.None,
+                    FeatureLevel.Level_DEFAULT);
+
                 try
                 {
-                    renderProperties.PixelFormat = new PixelFormat(Format.R8G8B8A8_UNorm, AlphaMode.Premultiplied); // supports hardware rendering
                     _device = new WindowRenderTarget(_factory, renderProperties, _deviceProperties);
                 }
                 catch (SharpDXException)
                 {
-                    renderProperties.PixelFormat = new PixelFormat(Format.Unknown, AlphaMode.Premultiplied); // supports hardware & software rendering
-                    _device = new WindowRenderTarget(_factory, renderProperties, _deviceProperties);
+                    try
+                    {
+                        renderProperties.PixelFormat = new PixelFormat(Format.R8G8B8A8_UNorm, AlphaMode.Premultiplied); // supports hardware rendering
+                        _device = new WindowRenderTarget(_factory, renderProperties, _deviceProperties);
+                    }
+                    catch (SharpDXException)
+                    {
+                        renderProperties.PixelFormat = new PixelFormat(Format.Unknown, AlphaMode.Premultiplied); // supports hardware & software rendering
+                        _device = new WindowRenderTarget(_factory, renderProperties, _deviceProperties);
 
-                    throw;
+                    }
                 }
+
+                _device.AntialiasMode = PerPrimitiveAntiAliasing ? AntialiasMode.PerPrimitive : AntialiasMode.Aliased; // anti aliasing does not preserve colors correctly
+                _device.TextAntialiasMode = TextAntiAliasing ? TextAntialiasMode.Grayscale : TextAntialiasMode.Aliased; // using ClearType makes text invisible on white background (white underlying windows)
+
+                _strokeStyle = new StrokeStyle(_factory, new StrokeStyleProperties
+                {
+                    DashCap = CapStyle.Flat,
+                    DashOffset = -1.0f,
+                    DashStyle = DashStyle.Dash,
+                    EndCap = CapStyle.Flat,
+                    LineJoin = LineJoin.MiterOrBevel,
+                    MiterLimit = 1.0f,
+                    StartCap = CapStyle.Flat
+                });
+
+                IsInitialized = true;
             }
-
-            _device.AntialiasMode = PerPrimitiveAntiAliasing ? AntialiasMode.PerPrimitive : AntialiasMode.Aliased; // anti aliasing does not preserve colors correctly
-            _device.TextAntialiasMode = TextAntiAliasing ? TextAntialiasMode.Grayscale : TextAntialiasMode.Aliased; // using ClearType makes text invisible on white background (white underlying windows)
-
-            _strokeStyle = new StrokeStyle(_factory, new StrokeStyleProperties
+            catch
             {
-                DashCap = CapStyle.Flat,
-                DashOffset = -1.0f,
-                DashStyle = DashStyle.Dash,
-                EndCap = CapStyle.Flat,
-                LineJoin = LineJoin.MiterOrBevel,
-                MiterLimit = 1.0f,
-                StartCap = CapStyle.Flat
-            });
-
-            IsInitialized = true;
+                _strokeStyle?.Dispose();
+                _device?.Dispose();
+                _fontFactory?.Dispose();
+                _factory?.Dispose();
+                _strokeStyle = null;
+                _device = null;
+                _fontFactory = null;
+                _factory = null;
+                throw;
+            }
         }
 
         /// <summary>
