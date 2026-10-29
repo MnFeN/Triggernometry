@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggernometry.Core;
@@ -126,7 +127,8 @@ namespace Triggernometry.UI.CustomControls
             treeView1.DragEnter += TreeView1_DragEnter;
             treeView1.DragOver += TreeView1_DragOver;
             statusStrip1.VisibleChanged += StatusStrip1_VisibleChanged;
-            ClearErrorCount();
+            HandleCreated += (sender, e) => UpdateErrorCount();
+            UpdateErrorCount();
             Disposed += UserInterface_Disposed;
         }
 
@@ -1606,71 +1608,66 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        private int _newErrorCount = 0;
-        /// <summary> Should only use this property on the main UI thread. </summary>
-        private int NewErrorCount {
-            get => _newErrorCount;
-            set 
-            {
-                _newErrorCount = value;
-                UpdateErrorCount();
-            }
-        }
+        private int newErrorCount;
+        private int displayedErrorCount = -1;
+        private int errorCountUpdatePending;
 
+        /// <summary>在 UI 线程显示最新计数，多条错误合并为一次刷新。</summary>
         private void UpdateErrorCount()
         {
-            if (NewErrorCount == 0)
-            {
+            // 先允许提交下一次通知，再取快照，避免刷新期间新增的错误丢失通知。
+            Interlocked.Exchange(ref errorCountUpdatePending, 0);
+            if (IsDisposed || Disposing) return;
+            int count = Math.Min(Volatile.Read(ref newErrorCount), 10000);
+            if (count == displayedErrorCount) return;
+
+            if (count == 0)
                 errThing1.Text = I18n.Translate("internal/UserInterface/errorCount0", "No new errors");
-                var resources = new ComponentResourceManager(typeof(UserInterface));
-                errThing1.Image = (Image)resources.GetObject("btnViewLog.Image");
-            }
-            else if (NewErrorCount == 1)
-            {
+            else if (count == 1)
                 errThing1.Text = I18n.Translate("internal/UserInterface/errorCount1", "1 error");
-                var resources = new ComponentResourceManager(typeof(UserInterface));
-                errThing1.Image = (Image)resources.GetObject("errThing1.Image");
-            }
-            else if (NewErrorCount > 10000)
-            {
-                return; // avoid a infinitely looped error continuously invoking this method and freezing the UI
-            }
-            else if (NewErrorCount == 10000)
-            {
-                errThing1.Text = I18n.Translate("internal/UserInterface/errorCountN", "{0} errors", "9999+");
-            }
             else
+                errThing1.Text = I18n.Translate("internal/UserInterface/errorCountN", "{0} errors", count == 10000 ? (object)"9999+" : count);
+
+            // 首次刷新可能直接收到多条错误，不能依赖计数恰好为 1 才切换图标。
+            if (count == 0 || displayedErrorCount <= 0)
             {
-                errThing1.Text = I18n.Translate("internal/UserInterface/errorCountN", "{0} errors", NewErrorCount);
-                return;
+                var resources = new ComponentResourceManager(typeof(UserInterface));
+                errThing1.Image = (Image)resources.GetObject(count == 0 ? "btnViewLog.Image" : "errThing1.Image");
+            }
+            displayedErrorCount = count;
+        }
+
+        /// <summary>只保留一个待处理的 UI 通知，后台线程不等待界面。</summary>
+        private void RequestErrorCountUpdate()
+        {
+            if (IsDisposed || Disposing || !IsHandleCreated) return;
+            if (Interlocked.Exchange(ref errorCountUpdatePending, 1) != 0) return;
+            try
+            {
+                BeginInvoke(new Action(UpdateErrorCount));
+            }
+            catch (InvalidOperationException)
+            {
+                // 通知提交前控件可能已销毁；计数保留，句柄重建时会重新刷新。
+                Interlocked.Exchange(ref errorCountUpdatePending, 0);
             }
         }
 
+        /// <summary>原子清零；在 UI 线程调用时立即刷新显示。</summary>
         internal void ClearErrorCount()
         {
-            if (this.IsDisposed) return;
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new Action(ClearErrorCount));
-            }
-            else
-            {
-                NewErrorCount = 0;
-            }
+            if (IsDisposed) return;
+            Interlocked.Exchange(ref newErrorCount, 0);
+            if (IsHandleCreated && !InvokeRequired) UpdateErrorCount();
+            else RequestErrorCountUpdate();
         }
 
+        /// <summary>后台只累加计数，翻译、图标和按钮文字由 UI 合并更新。</summary>
         internal void IncrementErrorCount()
         {
             if (IsDisposed) return;
-            if (InvokeRequired)
-            {
-                // BeginInvoke 避免后台线程等待 UI，而 UI 正在等待后台线程退出。
-                BeginInvoke(new Action(IncrementErrorCount));
-            }
-            else
-            {
-                NewErrorCount += 1;
-            }
+            Interlocked.Increment(ref newErrorCount);
+            RequestErrorCountUpdate();
         }
 
         internal void PasteSelected()
@@ -2142,7 +2139,7 @@ namespace Triggernometry.UI.CustomControls
         private void errThing1_Click(object sender, EventArgs e)
         {
             OpenLogForm(true);
-            NewErrorCount = 0;
+            ClearErrorCount();
         }
 
         private void ctxCollapse_Click(object sender, EventArgs e)

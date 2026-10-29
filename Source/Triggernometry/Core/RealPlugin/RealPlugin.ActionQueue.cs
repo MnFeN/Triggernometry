@@ -134,6 +134,9 @@ namespace Triggernometry.Core
             trig = trig ?? ctx.Trigger;
             lock (ActionQueue)
             {
+                var logLevel = action.GetDebugLevel(ctx);
+                bool shouldLogVerbose = logLevel >= DebugLevelEnum.Verbose;
+                bool shouldLogInfo = logLevel >= DebugLevelEnum.Info;
                 bool canReplaceQueued = action.ReplaceQueued && !action.Uninterruptible;
                 bool shouldCheckDuplicates = action.PreventDuplicateQueue || canReplaceQueued;
                 bool hasQueuedDuplicate = shouldCheckDuplicates && ActionQueue.Any(a => a.Action.Id == action.Id);
@@ -143,20 +146,22 @@ namespace Triggernometry.Core
                     if (canReplaceQueued)
                     {
                         int removedCount = CancelQueuedActions(a => a.Action.Id == action.Id);
-                        if (removedCount > 0)
+                        if (removedCount > 0 && shouldLogVerbose)
                         {
                             action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig?.LogName ?? "(null)", action.Describe()));
                         }
                     }
                     if (action.PreventDuplicateQueue)
                     {
-                        action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig?.LogName ?? "(null)", action.Describe()));
+                        if (shouldLogVerbose)
+                            action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig?.LogName ?? "(null)", action.Describe()));
                         return false;
                     }
                 }
                 // already locked by ActionQueue
                 instance.QueueSequence = curOrdinal++;
-                action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig?.LogName ?? "(null)", action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
+                if (shouldLogInfo)
+                    action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig?.LogName ?? "(null)", action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
                 Context tagContext = instance.LoopContext ?? ctx;
                 var actionTag = tagContext.EvaluateStringExpression(null, tagContext, action.Tag);
                 if (!string.IsNullOrWhiteSpace(actionTag))

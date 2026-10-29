@@ -83,7 +83,7 @@ namespace Triggernometry.Localization
             {
                 if (BuiltInLanguage.TranslationsLookup.ContainsKey(key) == false)
                 {
-                    BuiltInLanguage.TranslationsLookup[key] = text;
+                    BuiltInLanguage.TranslationsLookup.TryAdd(key, text);
                 }
             }
             if (CurrentLanguage != null)

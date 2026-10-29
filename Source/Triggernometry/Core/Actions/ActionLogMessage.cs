@@ -192,8 +192,8 @@ namespace Triggernometry.Core.Actions
 
             if (ProcessAsLogline)
             {
-                string zone = EvalString(plug.currentZone, ctx);
-                plug.LogLineQueuer(message, zone, LogSource);
+                // 当前区域已经是最终文本，不作为动作模板再次求值。
+                plug.LogLineQueuer(message, plug.currentZone ?? "", LogSource);
             }
             else
             {

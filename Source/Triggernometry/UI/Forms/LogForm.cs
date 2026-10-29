@@ -32,11 +32,8 @@ namespace Triggernometry.UI.Forms
             logData = new List<InternalLog>();
             Shown += LogForm_Shown;
             RestoredSavedDimensions();
-            if (dgvLog.VirtualMode == true)
-            {
-                dgvLog.CellValueNeeded += DgvLog_CellValueNeeded;
-                dgvLog.CellFormatting += DgvLog_CellFormatting;
-            }
+            dgvLog.CellValueNeeded += DgvLog_CellValueNeeded;
+            dgvLog.CellFormatting += DgvLog_CellFormatting;
             rexSearch.OnEnterKeyHit += RexSearch_OnEnter;
             dgvLog.CellMouseClick += DgvLog_CellMouseClick;
             dgvLog.CellMouseDoubleClick += DgvLog_CellMouseDoubleClick;
@@ -136,14 +133,7 @@ namespace Triggernometry.UI.Forms
                     logData.AddRange(queue);
                 }
             }
-            if (dgvLog.VirtualMode == true)
-            {
-                RefreshViewVirtual();
-            }
-            else
-            {
-                RefreshViewStatic(); 
-            }
+            RefreshViewVirtual();
         }
 
         private List<InternalLog> BuildDataset()
@@ -191,44 +181,6 @@ namespace Triggernometry.UI.Forms
             virtualData = p1;
             dgvLog.RowCount = p1.Count;
             dgvLog.Refresh();
-            lblStatus.Text = I18n.Translate("internal/LogForm/displaying", "Displaying {0} out of {1}", p1.Count, logData.Count);
-        }
-
-        // is this actually used?
-        private void RefreshViewStatic() 
-        {
-            List<DataGridViewRow> rows = new List<DataGridViewRow>();
-            List<InternalLog> p1 = BuildDataset();
-            foreach (InternalLog il in p1)
-            {
-                DataGridViewRow row = (DataGridViewRow)dgvLog.RowTemplate.Clone();
-                row.CreateCells(dgvLog, RealPlugin.FormatDateTime(il.Timestamp), I18n.Translate($"LogForm/chk{il.Level}", $"{il.Level}"));
-                switch (il.Level)
-                {
-                    case RealPlugin.DebugLevelEnum.Verbose:
-                        row.DefaultCellStyle.BackColor = BgGray;
-                        break;
-                    case RealPlugin.DebugLevelEnum.Info:
-                        row.DefaultCellStyle.BackColor = Color.White;
-                        break;
-                    case RealPlugin.DebugLevelEnum.Warning:
-                        row.DefaultCellStyle.BackColor = BgYellow;
-                        break;
-                    case RealPlugin.DebugLevelEnum.Error:
-                        row.DefaultCellStyle.BackColor = BgRed;
-                        break;
-                    case RealPlugin.DebugLevelEnum.Custom:
-                        row.DefaultCellStyle.BackColor = BgGreen;
-                        break;
-                    case RealPlugin.DebugLevelEnum.Custom2:
-                        row.DefaultCellStyle.BackColor = BgBlue;
-                        break;
-                }
-                rows.Add(row);
-            }
-            dgvLog.Rows.Clear();
-            dgvLog.Rows.AddRange(rows.ToArray());
-            dgvLog.ClearSelection();
             lblStatus.Text = I18n.Translate("internal/LogForm/displaying", "Displaying {0} out of {1}", p1.Count, logData.Count);
         }
 

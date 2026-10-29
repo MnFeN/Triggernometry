@@ -422,14 +422,19 @@ namespace Triggernometry.Core
                 {
                     var shouldCheckCondition = !ctx.forceType.HasFlag(ActionTriggerOperation.ForceEnum.SkipConditions) && !ctx.testByPlaceholder;
                     var conditionFailed = shouldCheckCondition && Condition?.Enabled == true && !Condition.Check(ctx, ExpressionLogger, ctx);
+
+                    var shouldLogVerbose = GetDebugLevel(ctx) >= DebugLevelEnum.Verbose;
                     if (conditionFailed)
                     {
                         ctx.PushActionResult(0);
-                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", IndexInTrigger, ctx.Trigger?.LogName ?? "(null)"));
+                        if (shouldLogVerbose)
+                            AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/actionnotfired", "Action #{0} on trigger '{1}' not fired, condition not met", IndexInTrigger, ctx.Trigger?.LogName ?? "(null)"));
                         return;
                     }
                     ctx.PushActionResult(1);
-                    AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
+                    // 过滤掉的日志无需生成动作描述和翻译文本。
+                    if (shouldLogVerbose)
+                        AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Action/executingaction", "Executing action '{0}' in thread {1}", Describe(), Thread.CurrentThread.ManagedThreadId));
 
                     if (executeOverride != null) 
                         executeOverride();
@@ -458,6 +463,7 @@ namespace Triggernometry.Core
         /// <summary>统一记录直接执行和队列执行中的异常，并保留回调的原始异常。</summary>
         internal void LogExecutionException(Context ctx, Exception ex)
         {
+            if (GetDebugLevel(ctx) < DebugLevelEnum.Error) return;
             if (this is ActionNamedCallback && ex is TargetInvocationException tiex && tiex.InnerException != null)
                 ex = tiex.InnerException;
             string triggerPath = ctx?.Trigger?.FullPath ?? "(null)";

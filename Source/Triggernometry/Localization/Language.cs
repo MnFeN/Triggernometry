@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Triggernometry.Localization
@@ -24,7 +22,8 @@ namespace Triggernometry.Localization
         [XmlAttribute]
         public MissingHandlingEnum MissingKeyHandling { get; set; }
 
-        internal Dictionary<string, string> TranslationsLookup { get; set; }
+        // 内建文本会在翻译调用中按需收集，需允许多个线程同时查询和记录。
+        internal ConcurrentDictionary<string, string> TranslationsLookup { get; } = new ConcurrentDictionary<string, string>();
 
         internal bool IsDefault { get; set; }
 
@@ -48,7 +47,6 @@ namespace Triggernometry.Localization
         {
             IsDefault = true;
             LanguageName = "(undefined)";
-            TranslationsLookup = new Dictionary<string, string>();
             MissingKeyHandling = MissingHandlingEnum.DefaultLanguage;
         }
 
@@ -64,7 +62,7 @@ namespace Triggernometry.Localization
         internal void BuildList()
         {
             Translations.Clear();
-            foreach (KeyValuePair<string, string> kp in TranslationsLookup)
+            foreach (KeyValuePair<string, string> kp in TranslationsLookup.ToArray())
             {
                 Translations.Add(new TranslationEntry() { Key = kp.Key, Translation = kp.Value });
             }
@@ -73,43 +71,31 @@ namespace Triggernometry.Localization
 
         public string Lookup(string key)
         {
-            if (TranslationsLookup.ContainsKey(key) == true)
-            {
-                return TranslationsLookup[key];
-            }
-            return null;
+            return TranslationsLookup.TryGetValue(key, out string text) ? text : null;
         }
 
-        private Dictionary<string, string> _missingTranslations = new Dictionary<string, string>();
+        private readonly ConcurrentDictionary<string, string> _missingTranslations = new ConcurrentDictionary<string, string>();
 
         public string Translate(string key, string text, params object[] args)
         {
-            if (IsDefault == true)
+            if (TranslationsLookup.TryGetValue(key, out string data))
             {
-                if (TranslationsLookup.ContainsKey(key) == false)
-                {
-                    TranslationsLookup[key] = text;
-                }
-            }
-            if (TranslationsLookup.ContainsKey(key) == true)
-            {
-                string data = TranslationsLookup[key];
                 return I18n.FormatTranslation(data, args);
             }
-            //start
-            if (!string.IsNullOrEmpty(text) && !_missingTranslations.ContainsKey(key))
+            if (IsDefault)
             {
-                _missingTranslations[key] = text;
-                //RealPlugin.plug.UnfilteredAddToLog(RealPlugin.DebugLevelEnum.Warning, $"Missing translation recorded: \"{key}\" => \"{text}\"");
+                data = TranslationsLookup.GetOrAdd(key, text);
+                return I18n.FormatTranslation(data, args);
             }
-            //end
+            if (!string.IsNullOrEmpty(text) && !_missingTranslations.ContainsKey(key))
+                _missingTranslations.TryAdd(key, text);
             switch (MissingKeyHandling)
             {
                 case MissingHandlingEnum.DefaultString:
                     {
-                        if (TranslationsLookup.ContainsKey("internal/default") == true)
+                        if (TranslationsLookup.TryGetValue("internal/default", out string fallback))
                         {
-                            return string.Format(TranslationsLookup["internal/default"], key);
+                            return string.Format(fallback, key);
                         }
                         else
                         {
@@ -124,12 +110,11 @@ namespace Triggernometry.Localization
 
         internal List<TranslationEntry> ExportMissingTranslations()
         {
-            var sortedKeys = _missingTranslations.Keys.ToList();
-            sortedKeys.Sort();
-
-            return sortedKeys.Select(key => new TranslationEntry {
-                Key = key,
-                Translation = _missingTranslations[key]
+            var entries = _missingTranslations.ToArray();
+            Array.Sort(entries, (a, b) => a.Key.CompareTo(b.Key));
+            return entries.Select(entry => new TranslationEntry {
+                Key = entry.Key,
+                Translation = entry.Value
             }).ToList();
         }
 
