@@ -107,11 +107,9 @@
     <TranslationEntry Key="ActionForm/███rtbHelperLvarRemove" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSet" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSetAll" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperLvarSortAlphaAsc" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperLvarSortAlphaDesc" Translation="" />
+    <TranslationEntry Key="ActionForm/rtbHelperLvarSortAsc" Translation="Sorts the list in ascending order. Select String or Numeric as the value type to choose the comparison mode. The value expression is not used.&#xD;&#xA;&#xD;&#xA;String: compare text using the current culture.&#xD;&#xA;Example: `1, 3, 10` → `1, 10, 3`.&#xD;&#xA;&#xD;&#xA;Numeric: compare decimal values. Elements used in the comparison must be valid numbers; otherwise the action fails.&#xD;&#xA;Example: `1, 3, 10` → `1, 3, 10`." />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSortByKeys" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperLvarSortNumericAsc" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperLvarSortNumericDesc" Translation="" />
+    <TranslationEntry Key="ActionForm/rtbHelperLvarSortDesc" Translation="Sorts the list in descending order. Select String or Numeric as the value type to choose the comparison mode. The value expression is not used.&#xD;&#xA;&#xD;&#xA;String: compare text using the current culture.&#xD;&#xA;Example: `1, 3, 10` → `3, 10, 1`.&#xD;&#xA;&#xD;&#xA;Numeric: compare decimal values. Elements used in the comparison must be valid numbers; otherwise the action fails.&#xD;&#xA;Example: `1, 3, 10` → `10, 3, 1`." />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSplit" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarUnset" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarUnsetAll" Translation="" />
@@ -1295,10 +1293,8 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set all values on the list variable to the expression]" Translation="Set all values on the list variable to the expression" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set value at the given index of the list variable]" Translation="Set value at the given index of the list variable" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list by the key functions]" Translation="Sort list by the key functions" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in a numerically ascending order]" Translation="Sort list in a numerically ascending order" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in a numerically descending order]" Translation="Sort list in a numerically descending order" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in an alphabetically ascending order]" Translation="Sort list in an alphabetically ascending order" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in an alphabetically descending order]" Translation="Sort list in an alphabetically descending order" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in ascending order]" Translation="Sort list in ascending order" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in descending order]" Translation="Sort list in descending order" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Split a scalar variable into a list variable (separator in expression)]" Translation="Split a scalar variable into a list variable (separator in expression)" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Unset all list variables]" Translation="Unset all list variables" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Unset list variable]" Translation="Unset list variable" />

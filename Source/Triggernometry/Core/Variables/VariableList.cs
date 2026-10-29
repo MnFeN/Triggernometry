@@ -280,41 +280,29 @@ namespace Triggernometry.Core.Variables
             return string.Join(joiner, Values);
         }
 
-        public void SortAlphaAsc(string changer)
+        public void Sort(bool isNumeric, bool isAscending, string changer)
         {
-            Values.Sort((a, b) => a.CompareTo(b));
-            LastChanged = DateTime.Now;
-            LastChanger = changer;
-        }
-
-        public void SortAlphaDesc(string changer)
-        {
-            Values.Sort((a, b) => a.CompareTo(b) * -1);
-            LastChanged = DateTime.Now;
-            LastChanger = changer;
-        }
-
-        private void SortNumeric(string changer, bool descending)
-        {
-            if (Values.Count > 1)
+            if (isNumeric)
             {
-                var values = Values.ToArray();
-                var keys = values.Select(value => decimal.Parse(value.ToString(), CultureInfo.InvariantCulture)).ToArray();
-                Array.Sort(keys, values, descending
-                    ? Comparer<decimal>.Create((a, b) => b.CompareTo(a))
-                    : Comparer<decimal>.Default);
-                Values.Clear();
-                Values.AddRange(values);
+                if (Values.Count > 1)
+                {
+                    var values = Values.ToArray();
+                    var keys = values.Select(value => decimal.Parse(value.ToString(), CultureInfo.InvariantCulture)).ToArray();
+                    Array.Sort(keys, values, isAscending
+                        ? Comparer<decimal>.Default
+                        : Comparer<decimal>.Create((a, b) => b.CompareTo(a)));
+                    Values.Clear();
+                    Values.AddRange(values);
+                }
             }
+            else if (isAscending)
+                Values.Sort((a, b) => a.CompareTo(b));
+            else
+                Values.Sort((a, b) => a.CompareTo(b) * -1);
+
             LastChanged = DateTime.Now;
             LastChanger = changer;
         }
-
-        public void SortNumericAsc(string changer) => SortNumeric(changer, false);
-
-        public void SortNumericDesc(string changer) => SortNumeric(changer, true);
-
-
 
         public static VariableList Build(string expression, char separator, string changer)
         {   // in actions

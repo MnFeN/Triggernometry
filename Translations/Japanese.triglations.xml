@@ -107,11 +107,9 @@
     <TranslationEntry Key="ActionForm/███rtbHelperLvarRemove" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSet" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSetAll" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperLvarSortAlphaAsc" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperLvarSortAlphaDesc" Translation="" />
+    <TranslationEntry Key="ActionForm/rtbHelperLvarSortAsc" Translation="リストを昇順に並べ替えます。式のタイプの「文字列／数値」で比較方法を選択します。値の式は使用しません。&#xD;&#xA;&#xD;&#xA;文字列：現在のカルチャの文字列比較規則で並べ替えます。&#xD;&#xA;例：`1, 3, 10` → `1, 10, 3`。&#xD;&#xA;&#xD;&#xA;数値：decimal 型の数値として比較します。比較する要素を数値に変換できない場合、アクションは失敗します。&#xD;&#xA;例：`1, 3, 10` → `1, 3, 10`。" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSortByKeys" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperLvarSortNumericAsc" Translation="" />
-    <TranslationEntry Key="ActionForm/███rtbHelperLvarSortNumericDesc" Translation="" />
+    <TranslationEntry Key="ActionForm/rtbHelperLvarSortDesc" Translation="リストを降順に並べ替えます。式のタイプの「文字列／数値」で比較方法を選択します。値の式は使用しません。&#xD;&#xA;&#xD;&#xA;文字列：現在のカルチャの文字列比較規則で並べ替えます。&#xD;&#xA;例：`1, 3, 10` → `3, 10, 1`。&#xD;&#xA;&#xD;&#xA;数値：decimal 型の数値として比較します。比較する要素を数値に変換できない場合、アクションは失敗します。&#xD;&#xA;例：`1, 3, 10` → `10, 3, 1`。" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSplit" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarUnset" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarUnsetAll" Translation="" />
@@ -1295,10 +1293,8 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set all values on the list variable to the expression]" Translation="Set all values on the list variable to the expression" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set value at the given index of the list variable]" Translation="リスト変数の指定インデックスに値をセット" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list by the key functions]" Translation="Sort list by the key functions" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in a numerically ascending order]" Translation="Sort list in a numerically ascending order" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in a numerically descending order]" Translation="Sort list in a numerically descending order" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in an alphabetically ascending order]" Translation="リスト並び替え：アルファベット順（昇順）" />
-    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in an alphabetically descending order]" Translation="リスト並び替え：アルファベット順（降順）" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in ascending order]" Translation="昇順に並べ替え" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list in descending order]" Translation="降順に並べ替え" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Split a scalar variable into a list variable (separator in expression)]" Translation="スカラ変数をリスト変数に分割（区切り文字を式に記述）" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Unset all list variables]" Translation="すべてのリスト変数を初期化" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Unset list variable]" Translation="指定したリスト変数を初期化" />

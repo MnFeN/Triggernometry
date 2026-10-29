@@ -46,10 +46,8 @@ namespace Triggernometry.Core.Actions
             Split,
             Copy,
             InsertList,
-            SortNumericAsc,
-            SortNumericDesc,
-            SortAlphaAsc,
-            SortAlphaDesc,
+            SortAsc,
+            SortDesc,
             SortByKeys,
             UnsetAll,
             UnsetRegex,
@@ -93,10 +91,8 @@ namespace Triggernometry.Core.Actions
             "Split a scalar variable into a list variable (separator in expression)",
             "Copy whole list variable to another list variable",
             "Insert list variable into another list variable at the given index",
-            "Sort list in a numerically ascending order",
-            "Sort list in a numerically descending order",
-            "Sort list in an alphabetically ascending order",
-            "Sort list in an alphabetically descending order",
+            "Sort list in ascending order",
+            "Sort list in descending order",
             "Sort list by the key functions",
             "Unset all list variables",
             "Unset list variables matching regular expression",
@@ -276,6 +272,9 @@ namespace Triggernometry.Core.Actions
                         editor.EnableOnly(operation, name, value, valueType, target); break;
                     case OperationEnum.Copy: 
                         editor.EnableOnly(operation, name, target); break;
+                    case OperationEnum.SortAsc:
+                    case OperationEnum.SortDesc:
+                        editor.EnableOnly(operation, name, valueType); break;
                     case OperationEnum.SortByKeys: 
                         editor.EnableOnly(operation, name, value); break;
                     default: 
@@ -373,22 +372,17 @@ namespace Triggernometry.Core.Actions
                         Name, sPersistL, Index,
                         TargetVar, tPersistL, Value
                     );
-                case OperationEnum.SortAlphaAsc:
-                case OperationEnum.SortAlphaDesc:
-                    string strOrder = I18n.TrlSortAscOrDesc(Operation == OperationEnum.SortAlphaAsc);
-                    return I18n.Translate(
-                        "internal/Action/desclistsortstring",
-                        "sort {1}list variable ({0}) in an alphabetically {2} order",
-                        Name, sPersistL, strOrder
-                    );
-                case OperationEnum.SortNumericAsc:
-                case OperationEnum.SortNumericDesc:
-                    string numOrder = I18n.TrlSortAscOrDesc(Operation == OperationEnum.SortNumericAsc);
-                    return I18n.Translate(
-                        "internal/Action/desclistsortnum",
-                        "sort {1}list variable ({0}) in a numerically {2} order",
-                        Name, sPersistL, numOrder
-                    );
+                case OperationEnum.SortAsc:
+                case OperationEnum.SortDesc:
+                    {
+                        bool isNumeric = ValueType == ExpressionType.Numeric;
+                        string order = I18n.TrlSortAscOrDesc(Operation == OperationEnum.SortAsc);
+                        return I18n.Translate(
+                            isNumeric ? "internal/Action/desclistsortnum" : "internal/Action/desclistsortstring",
+                            isNumeric ? "sort {1}list variable ({0}) in a numerically {2} order"
+                                : "sort {1}list variable ({0}) in an alphabetically {2} order",
+                            Name, sPersistL, order);
+                    }
                 case OperationEnum.SortByKeys:
                     return I18n.Translate(
                         "internal/Action/desclistsortbykeys",
@@ -650,52 +644,23 @@ namespace Triggernometry.Core.Actions
                         }
                     }
                     break;
-                case OperationEnum.SortAlphaAsc:
+                case OperationEnum.SortAsc:
+                case OperationEnum.SortDesc:
                     {
-                        string order = I18n.TrlSortAscOrDesc(true);
+                        // #38：普通排序统一按值类型和操作方向调用。
+                        bool isNumeric = ValueType == ExpressionType.Numeric;
+                        bool isAscending = Operation == OperationEnum.SortAsc;
+                        string order = I18n.TrlSortAscOrDesc(isAscending);
                         lock (svs.List)
                         {
                             VariableList vl = svs.GetListVariable(sourcename, false);
-                            vl.SortAlphaAsc(changer);
+                            vl.Sort(isNumeric, isAscending, changer);
                         }
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortstr",
-                            "{1}List variable ({0}) sorted in alphabetically {2} order", sourcename, sPersist, order));
-                    }
-                    break;
-                case OperationEnum.SortAlphaDesc:
-                    {
-                        string order = I18n.TrlSortAscOrDesc(false);
-                        lock (svs.List)
-                        {
-                            VariableList vl = svs.GetListVariable(sourcename, false);
-                            vl.SortAlphaDesc(changer);
-                        }
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortstr",
-                            "{1}List variable ({0}) sorted in alphabetically {2} order", sourcename, sPersist, order));
-                    }
-                    break;
-                case OperationEnum.SortNumericAsc:
-                    {
-                        string order = I18n.TrlSortAscOrDesc(true);
-                        lock (svs.List)
-                        {
-                            VariableList vl = svs.GetListVariable(sourcename, false);
-                            vl.SortNumericAsc(changer);
-                        }
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortnum",
-                            "{1}List variable ({0}) sorted in numerically {2} order", sourcename, sPersist, order));
-                    }
-                    break;
-                case OperationEnum.SortNumericDesc:
-                    {
-                        string order = I18n.TrlSortAscOrDesc(false);
-                        lock (svs.List)
-                        {
-                            VariableList vl = svs.GetListVariable(sourcename, false);
-                            vl.SortNumericDesc(changer);
-                        }
-                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortnum",
-                            "{1}List variable ({0}) sorted in numerically {2} order", sourcename, sPersist, order));
+                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate(
+                            isNumeric ? "internal/Action/listsortnum" : "internal/Action/listsortstr",
+                            isNumeric ? "{1}List variable ({0}) sorted in numerically {2} order"
+                                : "{1}List variable ({0}) sorted in alphabetically {2} order",
+                            sourcename, sPersist, order));
                     }
                     break;
                 case OperationEnum.SortByKeys:
@@ -939,8 +904,26 @@ namespace Triggernometry.Core.Actions
         {
             var action = new ActionVariableList();
             oldAction.CopyCommonPropertiesTo(action);
-            action.Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), oldAction._ListVariableOp.ToString());
             action.ValueType = (ExpressionType)(int)oldAction._ListVariableExpressionType;
+            // #38：旧排序类型决定比较方式，不能沿用旧配置中排序并未使用的表达式类型。
+            switch (oldAction._ListVariableOp)
+            {
+                case ActionOld.ListVariableOpEnum.SortNumericAsc:
+                case ActionOld.ListVariableOpEnum.SortAlphaAsc:
+                    action.Operation = OperationEnum.SortAsc;
+                    action.ValueType = oldAction._ListVariableOp == ActionOld.ListVariableOpEnum.SortNumericAsc
+                        ? ExpressionType.Numeric : ExpressionType.String;
+                    break;
+                case ActionOld.ListVariableOpEnum.SortNumericDesc:
+                case ActionOld.ListVariableOpEnum.SortAlphaDesc:
+                    action.Operation = OperationEnum.SortDesc;
+                    action.ValueType = oldAction._ListVariableOp == ActionOld.ListVariableOpEnum.SortNumericDesc
+                        ? ExpressionType.Numeric : ExpressionType.String;
+                    break;
+                default:
+                    action.Operation = (OperationEnum)Enum.Parse(typeof(OperationEnum), oldAction._ListVariableOp.ToString());
+                    break;
+            }
             action.Name = oldAction._ListVariableName;
             action.Value = oldAction._ListVariableExpression;
             action.Index = oldAction._ListVariableIndex;
