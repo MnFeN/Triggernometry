@@ -149,7 +149,7 @@ namespace Triggernometry.Core
         /// </summary>
         internal void RegisterVariable(string folderLogName, RegisteredVariable definition)
         {
-            if (!definition.Enabled || definition.IsComment) 
+            if (!definition.Enabled || definition.IsComment)
                 return;
             lock (RegisteredVariables)
             {
@@ -167,27 +167,15 @@ namespace Triggernometry.Core
             }
         }
 
-        internal static Font CreateFontFromDefinition(string name, float size, ActionOverlayText.EffectEnum effect)
+        /// <summary>从文字效果中提取字体样式，忽略描边等非字体标志。</summary>
+        internal static FontStyle GetFontStyle(ActionOverlayText.EffectEnum effect)
         {
-            FontStyle fs = FontStyle.Regular;
-            if ((effect & ActionOverlayText.EffectEnum.Bold) == ActionOverlayText.EffectEnum.Bold)
-            {
-                fs |= FontStyle.Bold;
-            }
-            if ((effect & ActionOverlayText.EffectEnum.Italic) == ActionOverlayText.EffectEnum.Italic)
-            {
-                fs |= FontStyle.Italic;
-            }
-            if ((effect & ActionOverlayText.EffectEnum.Underline) == ActionOverlayText.EffectEnum.Underline)
-            {
-                fs |= FontStyle.Underline;
-            }
-            if ((effect & ActionOverlayText.EffectEnum.Strikeout) == ActionOverlayText.EffectEnum.Strikeout)
-            {
-                fs |= FontStyle.Strikeout;
-            }
-            return new Font(name, size, fs);
+            var filter = FontStyle.Bold | FontStyle.Italic | FontStyle.Underline | FontStyle.Strikeout;
+            return (FontStyle)((int)effect & (int)filter);
         }
+
+        internal static Font CreateFontFromDefinition(string name, float size, ActionOverlayText.EffectEnum effect) =>
+            new Font(name, size, GetFontStyle(effect));
 
         internal static void ApplyFontOverrideToForm(Form f, Font fnt)
         {
@@ -315,7 +303,7 @@ namespace Triggernometry.Core
                 exwhere = I18n.Translate("internal/Plugin/inifilename", "determining filename");
                 pluginName = Path.GetFileNameWithoutExtension(pluginName);
                 FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/filenameis", "Plugin filename is '{0}' at '{1}'", pluginName, pluginPath));
-                
+
                 exwhere = I18n.Translate("internal/Plugin/inilanguages", "loading languages");
                 LoadLanguages();
 
@@ -336,7 +324,7 @@ namespace Triggernometry.Core
                 HandleVersionUpdate();
                 FixDuplicateFolderReferences(null, Config, null);
                 PluginBridges.BridgeFFXIV.cfg = Config;
-                
+
                 exwhere = I18n.Translate("internal/Plugin/iniactui", "setting up ACT ui");
                 mytp = pluginScreenSpace;
                 pluginScreenSpace.Text = "Triggernometry";

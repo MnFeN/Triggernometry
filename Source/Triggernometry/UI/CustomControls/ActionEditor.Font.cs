@@ -13,6 +13,8 @@ namespace Triggernometry.UI.CustomControls
     {
         private ColorSelector fontPreview;
         private Label fontSummary;
+        private (string Family, string Size, ActionOverlayText.EffectEnum Effect)? previewFontRequest;
+        private string previewTextColor, previewOutlineColor, previewBackColor;
 
         /// <summary>在字体选择器下方添加字体摘要和实时预览。</summary>
         private Control WithFontPreview(Control picker)
@@ -61,55 +63,57 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        /// <summary>计算预览颜色，表达式无效时使用后备颜色。</summary>
-        private Color EvaluatePreviewColor(string field, Color fallback)
+        /// <summary>仅重新计算改动的颜色表达式，输入未完成时使用后备颜色。</summary>
+        private Color UpdatePreviewColor(string field, Color fallback, Color current, ref string previous, ref bool changed, bool force)
         {
+            string expression = expressions[field].Expression;
+            if (!force && expression == previous)
+                return current;
+            previous = expression;
+            changed = true;
             var context = UiContext ?? Context.Unbound;
-            try 
-            { 
-                return ExpressionTextBox.ParseColor(context.EvaluateStringExpression(null, context, expressions[field].Expression), fallback); 
-            }
-            catch
-            { 
-                return fallback; 
-            }
+            try { return ExpressionTextBox.ParseColor(context.EvaluateStringExpression(null, context, expression), fallback); }
+            catch { return fallback; }
         }
 
-        /// <summary>读取当前编辑值并刷新字体和颜色预览。</summary>
-        private void UpdateOverlayFontPreview()
+        /// <summary>按改动字段刷新预览，不因编辑无关参数反复求值或创建字体。</summary>
+        private void UpdateOverlayFontPreview(bool force = false)
         {
-            // 只有文本悬浮窗的字体字段创建了预览控件，其他动作无需处理。
-            if (fontPreview == null) return;
-            // 使用当前编辑上下文计算预览表达式；没有上下文时使用未绑定上下文。
-            var context = UiContext ?? Context.Unbound;
-            // 从控件读取尚未保存的样式选择，使预览立即反映当前编辑值。
+            if (fontPreview == null)
+                return;
             var effect = (ActionOverlayText.EffectEnum)configurationEditor.GetEditor(nameof(ActionOverlayText.Effect)).GetValue();
-            try
+            var request = (
+                expressions[nameof(ActionOverlayText.Font)].Expression, 
+                expressions[nameof(ActionOverlayText.FontSize)].Expression, 
+                effect);
+            bool changed = force || previewFontRequest != request;
+            if (changed)
             {
-                // 字体名称直接读取输入文本，字号则按数值表达式求值，并限制为至少 1 磅。
-                string family = expressions[nameof(ActionOverlayText.Font)].Expression;
-                float size = Math.Max(1, (float)context.EvaluateNumericExpression(null, context, expressions[nameof(ActionOverlayText.FontSize)].Expression));
-                // Effect 还可能包含自定义描边等标记；这里只取 System.Drawing.Font 支持的四种样式位。
-                FontStyle style = (FontStyle)((int)effect & (int)(FontStyle.Bold | FontStyle.Italic | FontStyle.Underline | FontStyle.Strikeout));
-                // 仅在名称、字号或样式发生变化时创建新字体，避免每次刷新都分配 Font。
-                // SampleFont 由预览控件持有，替换时会释放旧字体，不改变编辑器本身的界面字体。
-                var current = fontPreview.SampleFont;
-                if (current.Name != family || current.SizeInPoints != size || current.Style != style)
-                    fontPreview.SampleFont = RealPlugin.CreateFontFromDefinition(family, size, effect);
-                // 摘要使用实际创建出的字体；预览高度随字号增大，但限制在 48～160 像素之间。
-                fontSummary.Text = DescribeFont(fontPreview.SampleFont);
-                fontPreview.Height = Math.Max(48, Math.Min(160, fontPreview.SampleFont.Height + 12));
+                // 缓存用户请求，而非系统后备字体的名称：不存在的字体也只尝试创建一次。
+                previewFontRequest = request;
+                var context = UiContext ?? Context.Unbound;
+                try
+                {
+                    float size = Math.Max(1, (float)context.EvaluateNumericExpression(null, context, request.Item2));
+                    var current = fontPreview.SampleFont;
+                    if (current.Name != request.Item1 || current.SizeInPoints != size || current.Style != RealPlugin.GetFontStyle(effect))
+                        fontPreview.SampleFont = RealPlugin.CreateFontFromDefinition(request.Item1, size, effect);
+                    fontSummary.Text = DescribeFont(fontPreview.SampleFont);
+                    fontPreview.Height = Math.Max(48, Math.Min(160, fontPreview.SampleFont.Height + 12));
+                }
+                catch
+                {
+                    // 保留上一次有效字体；下次相关输入变动或重新载入时再尝试。
+                }
             }
-            catch
-            {
-                // 输入未完成或表达式无效时，保留上一次有效的预览。
-            }
-            // 颜色单独求值，字体输入无效时仍可刷新颜色。求值失败时使用下面指定的后备颜色。
-            // 直接设置预览字段，不触发用户选色事件，也不将求值结果写回原始表达式。
-            fontPreview._textColor = EvaluatePreviewColor(nameof(ActionOverlayText.TextColor), Color.Black);
-            fontPreview._textOutlineColor = EvaluatePreviewColor(nameof(ActionOverlayText.OutlineColor), Color.Empty);
-            fontPreview._backgroundColor = EvaluatePreviewColor(nameof(ActionOverlayText.BackColor), Color.Transparent);
-            // 同步控件底色，再请求重绘示例文字、描边和背景。
+            fontPreview._textColor = UpdatePreviewColor(nameof(ActionOverlayText.TextColor), Color.Black,
+                fontPreview._textColor, ref previewTextColor, ref changed, force);
+            fontPreview._textOutlineColor = UpdatePreviewColor(nameof(ActionOverlayText.OutlineColor), Color.Empty,
+                fontPreview._textOutlineColor, ref previewOutlineColor, ref changed, force);
+            fontPreview._backgroundColor = UpdatePreviewColor(nameof(ActionOverlayText.BackColor), Color.Transparent,
+                fontPreview._backgroundColor, ref previewBackColor, ref changed, force);
+            if (!changed)
+                return;
             fontPreview.BackColor = fontPreview._backgroundColor;
             fontPreview.Invalidate();
         }
@@ -120,10 +124,14 @@ namespace Triggernometry.UI.CustomControls
             string description = font.Name + ", " + font.SizeInPoints.ToString(CultureInfo.InvariantCulture)
                 + I18n.Translate("internal/ActionForm/textptunit", "pt");
             var styles = new List<string>();
-            if (font.Bold) styles.Add(I18n.Translate("internal/ActionForm/textbold", "bold"));
-            if (font.Italic) styles.Add(I18n.Translate("internal/ActionForm/textitalic", "italic"));
-            if (font.Underline) styles.Add(I18n.Translate("internal/ActionForm/textunderline", "underline"));
-            if (font.Strikeout) styles.Add(I18n.Translate("internal/ActionForm/textstrikeout", "strikeout"));
+            if (font.Bold)
+                styles.Add(I18n.Translate("internal/ActionForm/textbold", "bold"));
+            if (font.Italic)
+                styles.Add(I18n.Translate("internal/ActionForm/textitalic", "italic"));
+            if (font.Underline)
+                styles.Add(I18n.Translate("internal/ActionForm/textunderline", "underline"));
+            if (font.Strikeout)
+                styles.Add(I18n.Translate("internal/ActionForm/textstrikeout", "strikeout"));
             return styles.Count == 0 ? description : description + " (" + string.Join(", ", styles) + ")";
         }
 
@@ -134,7 +142,7 @@ namespace Triggernometry.UI.CustomControls
             try { configurationEditor.ReloadValues(); }
             finally { isBinding = false; }
             UpdateOverlayTools();
-            UpdateOverlayFontPreview();
+            UpdateOverlayFontPreview(true);
         }
     }
 }

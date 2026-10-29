@@ -80,7 +80,7 @@ namespace Triggernometry.UI.CustomControls
                 }
                 tools.Visible = tools.Controls.Count > 0;
                 UpdateOverlayTools();
-                UpdateOverlayFontPreview();
+                UpdateOverlayFontPreview(true);
                 bool showHelp = ShowActionTools && GetHelpKey() != null;
                 if (ShowActionTools) AddActionInformation();
                 if (showHelp)
