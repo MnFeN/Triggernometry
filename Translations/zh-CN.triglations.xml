@@ -511,6 +511,7 @@
     <TranslationEntry Key="internal/Action/beeplengthlo" Translation="蜂鸣长度低于阈值 {0}" />
     <TranslationEntry Key="internal/Action/callbackinvoke" Translation="调用具名回调 {0}，参数：'{1}'" />
     <TranslationEntry Key="internal/Action/cancelfolder" Translation="取消队列中来自分组 ({0}) 内 {2} 个触发器的 {1} 个动作" />
+    <TranslationEntry Key="internal/Action/cancelfoldersregex" Translation="已取消名称匹配正则（{0}）的分组中 {2} 个触发器的 {1} 个排队动作" />
     <TranslationEntry Key="internal/Action/changetagtestmode" Translation="动作 '{0}' 测试模式" />
     <TranslationEntry Key="internal/Action/changetagtrigaction" Translation="触发器 '{0}' 动作 '{1}'" />
     <TranslationEntry Key="internal/Action/clipboardset" Translation="已将文本 ({0}) 复制到剪贴板" />
@@ -522,6 +523,7 @@
     <TranslationEntry Key="internal/Action/descassumingcondition" Translation="[条] " />
     <TranslationEntry Key="internal/Action/descbeep" Translation="蜂鸣 ({0}) Hz，持续 ({1}) 毫秒" />
     <TranslationEntry Key="internal/Action/desccancelfolder" Translation="中断分组 ({0}) 中的全部触发器动作" />
+    <TranslationEntry Key="internal/Action/desccancelfoldersregex" Translation="取消名称匹配正则（{0}）的分组内全部触发器动作" />
     <TranslationEntry Key="internal/Action/descclipboard" Translation="将 ({0}) 写入剪贴板" />
     <TranslationEntry Key="internal/Action/descdictbuild" Translation="将文本 ({2}) 以 ({3}) ({4}) 拆分，构筑为{1}字典 ({0})" />
     <TranslationEntry Key="internal/Action/descdictbuildraw" Translation="将 {3} 表达式 ({2}) 以开头两个字符拆分，构筑为{1}字典 ({0})" />
@@ -1034,7 +1036,9 @@
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Assemblies" Translation="引用程序集列表" />
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Script" Translation="脚本代码" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/FolderId" Translation="分组" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="分组名称正则（区分大小写）" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation" Translation="操作" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in folders matching a name regex]" Translation="取消名称匹配正则的分组内全部触发器动作" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in the specified folder]" Translation="取消分组内的全部触发器动作" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Disable the specified folder]" Translation="禁用指定分组" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Enable the specified folder]" Translation="启用指定分组" />

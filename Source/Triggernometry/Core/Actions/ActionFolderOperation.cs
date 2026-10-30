@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Localization;
 using Triggernometry.Utilities;
+using Triggernometry.UI.CustomControls;
 
 namespace Triggernometry.Core.Actions
 {
@@ -27,6 +29,7 @@ namespace Triggernometry.Core.Actions
             Enable,
             Disable,
             CancelTriggers,
+            CancelTriggersByNameRegex,
         }
 
         /// <summary>
@@ -40,6 +43,7 @@ namespace Triggernometry.Core.Actions
             "Enable the specified folder",
             "Disable the specified folder",
             "Cancel all actions in the specified folder",
+            "Cancel all actions in folders matching a name regex",
         })]
         public OperationEnum Operation { get; set; } = OperationEnum.Enable;
 
@@ -65,12 +69,41 @@ namespace Triggernometry.Core.Actions
             set => FolderId = XmlAttr.Guid(value);
         }
 
+        /// <summary>用于匹配分组名称的正则表达式；执行前展开文本表达式。</summary>
+        [XmlIgnore]
+        [ActionSpecificProperty]
+        [ExpressionEditor(3, EditorExpressionType.Regex, Label = "Folder name regex (case-sensitive)")]
+        public string NameRegex { get; set; } = "";
+
+        [XmlAttribute("NameRegex")]
+        public string Xml_NameRegex
+        {
+            get => XmlAttr.String(NameRegex, "", omitWhitespace: false);
+            set => NameRegex = value;
+        }
+
         #endregion
+
+        public override Action CreateEditorRules(ConfigEditor editor)
+        {
+            var operation = editor.GetEditor(nameof(Operation));
+            var folder = editor.GetEditor(nameof(FolderId));
+            var nameRegex = editor.GetEditor(nameof(NameRegex));
+            return () =>
+            {
+                bool isRegexOperation = (OperationEnum)operation.GetValue() == OperationEnum.CancelTriggersByNameRegex;
+                editor.SetEnabled(!isRegexOperation, folder);
+                editor.SetEnabled(isRegexOperation, nameRegex);
+            };
+        }
 
         #region Implementation
 
         internal override string DescribeImplementation()
         {
+            if (Operation == OperationEnum.CancelTriggersByNameRegex)
+                return I18n.Translate("internal/Action/desccancelfoldersregex",
+                    "cancel all actions from folders with names matching ({0})", NameRegex);
             Folder f = RealPlugin.Instance.GetFolderById(FolderId, ParentTrigger?.Repo);
             if (f != null)
             {
@@ -92,6 +125,28 @@ namespace Triggernometry.Core.Actions
         internal override void ExecuteImplementation(Context ctx)
         {
             RealPlugin plug = ctx.Plugin;
+
+            if (Operation == OperationEnum.CancelTriggersByNameRegex)
+            {
+                var pattern = EvalString(NameRegex, ctx);
+                var regex = new Regex(pattern);
+                var triggersInFolders = new HashSet<Trigger>();
+                void CollectTriggers(Folder folder)
+                {
+                    if (regex.IsMatch(folder.Name ?? ""))
+                        triggersInFolders.UnionWith(folder.RecursiveGetTriggers());
+                    else
+                        foreach (Folder child in folder.Folders)
+                            CollectTriggers(child);
+                }
+                CollectTriggers(ctx.Trigger?.Repo?.Root ?? plug.Config.Root);
+                int removed = plug.CancelQueuedActions(
+                    action => action.Context?.Trigger != null && triggersInFolders.Contains(action.Context.Trigger));
+                AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfoldersregex",
+                    "Cancelled {1} queued action(s) from {2} triggers in folders with names matching ({0})",
+                    pattern, removed, triggersInFolders.Count));
+                return;
+            }
 
             Folder f = plug.GetFolderById(FolderId, ctx.Trigger?.Repo);
             if (f == null)
@@ -122,7 +177,7 @@ namespace Triggernometry.Core.Actions
                 case OperationEnum.CancelTriggers:
                     {
                         var triggersInFolder = new HashSet<Trigger>(f.RecursiveGetTriggers());
-                        int removed = RealPlugin.Instance.CancelQueuedActions(
+                        int removed = plug.CancelQueuedActions(
                             _qa => _qa?.Context?.Trigger != null && triggersInFolder.Contains(_qa.Context.Trigger)
                         );
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfolder",

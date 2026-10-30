@@ -511,6 +511,7 @@
     <TranslationEntry Key="internal/Action/beeplengthlo" Translation="Beep length below limit, capping to {0}" />
     <TranslationEntry Key="internal/Action/callbackinvoke" Translation="Invoking named callback ({0}) with parameter ({1})" />
     <TranslationEntry Key="internal/Action/cancelfolder" Translation="Cancelled {1} queued action(s) from {2} triggers in folder ({0})" />
+    <TranslationEntry Key="internal/Action/cancelfoldersregex" Translation="名前が正規表現（{0}）に一致するフォルダ内の {2} 個のトリガーから {1} 個の待機中アクションをキャンセルしました" />
     <TranslationEntry Key="internal/Action/changetagtestmode" Translation="Action '{0}' test mode" />
     <TranslationEntry Key="internal/Action/changetagtrigaction" Translation="Trigger '{0}' action '{1}'" />
     <TranslationEntry Key="internal/Action/clipboardset" Translation="テキスト ({0}) をクリップボードにコピーしました" />
@@ -522,6 +523,7 @@
     <TranslationEntry Key="internal/Action/descassumingcondition" Translation="条件を満たしたとき、" />
     <TranslationEntry Key="internal/Action/descbeep" Translation="ビープ音を再生 ({0}hz, {1}ms)" />
     <TranslationEntry Key="internal/Action/desccancelfolder" Translation="cancel all actions from folder ({0})" />
+    <TranslationEntry Key="internal/Action/desccancelfoldersregex" Translation="名前が正規表現（{0}）に一致するフォルダ内の全アクションをキャンセル" />
     <TranslationEntry Key="internal/Action/descclipboard" Translation="({0}) をクリップボードにコピー" />
     <TranslationEntry Key="internal/Action/descdictbuild" Translation="build {1}dict variable ({0}) from string ({2}) separated by ({3}) ({4})" />
     <TranslationEntry Key="internal/Action/descdictbuildraw" Translation="build {1}dict variable ({0}) from {3} expression ({2}) separated by its first 2 characters" />
@@ -1034,7 +1036,9 @@
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Assemblies" Translation="参照するアセンブリのリスト" />
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Script" Translation="スクリプト" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/FolderId" Translation="フォルダ" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="フォルダ名の正規表現（大文字・小文字を区別）" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation" Translation="操作" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in folders matching a name regex]" Translation="名前が正規表現に一致するフォルダ内の全アクションをキャンセルする" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in the specified folder]" Translation="Cancel all actions in the specified folder" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Disable the specified folder]" Translation="指定したフォルダを無効化する" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Enable the specified folder]" Translation="指定したフォルダを有効化する" />

@@ -511,6 +511,7 @@
     <TranslationEntry Key="internal/Action/beeplengthlo" Translation="Beep length below limit, capping to {0}" />
     <TranslationEntry Key="internal/Action/callbackinvoke" Translation="Invoking named callback ({0}) with parameter ({1})" />
     <TranslationEntry Key="internal/Action/cancelfolder" Translation="Cancelled {1} queued action(s) from {2} triggers in folder ({0})" />
+    <TranslationEntry Key="internal/Action/cancelfoldersregex" Translation="Cancelled {1} queued action(s) from {2} triggers in folders with names matching ({0})" />
     <TranslationEntry Key="internal/Action/changetagtestmode" Translation="Action '{0}' test mode" />
     <TranslationEntry Key="internal/Action/changetagtrigaction" Translation="Trigger '{0}' action '{1}'" />
     <TranslationEntry Key="internal/Action/clipboardset" Translation="Set text ({0}) to clipboard" />
@@ -522,6 +523,7 @@
     <TranslationEntry Key="internal/Action/descassumingcondition" Translation="assuming condition is met, " />
     <TranslationEntry Key="internal/Action/descbeep" Translation="beep at ({0}) hz for ({1}) ms" />
     <TranslationEntry Key="internal/Action/desccancelfolder" Translation="cancel all actions from folder ({0})" />
+    <TranslationEntry Key="internal/Action/desccancelfoldersregex" Translation="cancel all actions from folders with names matching ({0})" />
     <TranslationEntry Key="internal/Action/descclipboard" Translation="Copy ({0}) to clipboard" />
     <TranslationEntry Key="internal/Action/descdictbuild" Translation="build {1}dict variable ({0}) from string ({2}) separated by ({3}) ({4})" />
     <TranslationEntry Key="internal/Action/descdictbuildraw" Translation="build {1}dict variable ({0}) from {3} expression ({2}) separated by its first 2 characters" />
@@ -1034,7 +1036,9 @@
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Assemblies" Translation="List of assemblies to reference" />
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Script" Translation="Script code" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/FolderId" Translation="Folder" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="Folder name regex (case-sensitive)" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation" Translation="Operation" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in folders matching a name regex]" Translation="Cancel all actions in folders matching a name regex" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in the specified folder]" Translation="Cancel all actions in the specified folder" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Disable the specified folder]" Translation="Disable the specified folder" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Enable the specified folder]" Translation="Enable the specified folder" />
