@@ -583,17 +583,23 @@ namespace Triggernometry.UI.CustomControls
             OnConditionsUpdated();
         }
 
-        /// <summary> Appends an item to the selected group or the selected leaf's parent. </summary>
+        /// <summary>在选中分组的开头，或选中条件、注释的下一项插入节点。</summary>
         private void AddComponent(ConditionComponent re)
         {
             TreeNode tn = new TreeNode();
             AttachConditionComponentToNode(tn, re);
             TreeNode tx = trvNodes.SelectedNode;
+            int index = 0;
             if (!(tx.Tag is ConditionGroup))
+            {
+                index = tx.Index + 1;
                 tx = tx.Parent;
+            }
             bool shouldEnableRoot = tx.Parent == null && tx.Nodes.Count == 0 && !(re is ConditionComment);
-            ((ConditionGroup)tx.Tag).AddChild(re);
-            tx.Nodes.Add(tn);
+            ConditionGroup group = (ConditionGroup)tx.Tag;
+            re.Parent = group;
+            group.Children.Insert(index, re);
+            tx.Nodes.Insert(index, tn);
             if (shouldEnableRoot)
                 tx.Checked = true;
             RecolorStartingFromNode(tx, tx.Checked);
@@ -832,12 +838,17 @@ namespace Triggernometry.UI.CustomControls
             OnConditionsUpdated();
         }
 
-        private void trvNodes_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void trvNodes_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            TreeViewHitTestInfo hit = trvNodes.HitTest(e.Location);
+            if (hit.Node == null || hit.Location == TreeViewHitTestLocations.RightOfLabel)
             {
-                trvNodes.SelectedNode = e.Node;
+                trvNodes.SelectedNode = null;
+                // 清空选择不会触发 AfterSelect，需同步隐藏属性编辑区。
+                UpdateEditorToConditionComponent(null);
             }
+            else if (e.Button == MouseButtons.Right)
+                trvNodes.SelectedNode = hit.Node;
         }
 
         private void trvNodes_AfterCheck(object sender, TreeViewEventArgs e)

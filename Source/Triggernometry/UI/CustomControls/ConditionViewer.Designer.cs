@@ -439,7 +439,7 @@
             this.trvNodes.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.trvNodes_AfterCheck);
             this.trvNodes.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.trvNodes_ItemDrag);
             this.trvNodes.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvNodes_AfterSelect);
-            this.trvNodes.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.trvNodes_NodeMouseClick);
+            this.trvNodes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.trvNodes_MouseDown);
             this.trvNodes.DragDrop += new System.Windows.Forms.DragEventHandler(this.trvNodes_DragDrop);
             this.trvNodes.DragEnter += new System.Windows.Forms.DragEventHandler(this.trvNodes_DragEnter);
             this.trvNodes.DragLeave += new System.EventHandler(this.trvNodes_DragLeave);
