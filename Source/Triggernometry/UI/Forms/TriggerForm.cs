@@ -72,7 +72,7 @@ namespace Triggernometry.UI.Forms
             cbxRefireOption2.SelectedIndexChanged += interrupt_Changed;
             cbxRefireWithinPeriod.SelectedIndexChanged += cooldown_Changed;
             expRefirePeriod.textBox1.TextChanged += cooldown_Changed;
-            cbxScheduleFrom.SelectedIndexChanged += UpdateTriggerDescription;
+            cbxScheduleFrom.SelectedIndexChanged += cooldown_Changed;
             expMutexName.textBox1.TextChanged += UpdateTriggerDescription;
             cbxSequential.CheckedChanged += UpdateTriggerDescription;
             cbxEditAutofire.CheckedChanged += cbxEditAutofire_CheckedChanged;
@@ -150,6 +150,7 @@ namespace Triggernometry.UI.Forms
             cbxScheduleFrom.Enabled = false;
             cbxRefireWithinPeriod.Enabled = false;
             expRefirePeriod.ReadOnly = true;
+            UpdateRefirePeriodEnabled();
             cbxEditAutofire.Enabled = false;
             cbxEditAutofireAllowCondition.Enabled = false;
             cbxSequential.Enabled = false;
@@ -190,6 +191,7 @@ namespace Triggernometry.UI.Forms
             };
             expMutexName.Expression = t.MutexToCapture;
             chkReadmeTrigger.Checked = t.IsReadme;
+            UpdateRefirePeriodEnabled();
         }
 
         internal void SettingsToTrigger(Trigger t)
@@ -371,7 +373,17 @@ namespace Triggernometry.UI.Forms
         {
             if (_isInitializing)
                 return;
+            UpdateRefirePeriodEnabled();
             SetTriggerDescription();
+        }
+
+        /// <summary>冷却时间可用于限制重触发，也可作为动作调度起点的时间间隔。</summary>
+        private void UpdateRefirePeriodEnabled()
+        {
+            bool usesRefirePeriod = cbxRefireWithinPeriod.SelectedIndex == (int)Trigger.RefireEnum.Deny
+                || cbxScheduleFrom.SelectedIndex == (int)Trigger.SchedulingEnum.FromRefirePeriod;
+            expRefirePeriod.Enabled = !expRefirePeriod.ReadOnly && usesRefirePeriod;
+            lblRefirePeriod.Enabled = expRefirePeriod.Enabled;
         }
 
         private void UpdateTriggerDescription(object sender, EventArgs e)
