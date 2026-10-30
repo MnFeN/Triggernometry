@@ -513,7 +513,7 @@ namespace Triggernometry.UI.CustomControls
             {
                 cfg.TemplateTrigger?.CopySettingsTo(newTrigger);
                 newTrigger.Id = Guid.NewGuid();
-                foreach (Core.ActionBase action in Core.ActionBase.RecursiveGetActions(newTrigger.Actions))
+                foreach (ActionBase action in ActionBase.RecursiveGetActions(newTrigger.Actions))
                 {
                     action.Id = Guid.NewGuid();
                 }
@@ -1058,12 +1058,20 @@ namespace Triggernometry.UI.CustomControls
             TreeNode tnx = (TreeNode)imf.treeView1.Nodes[0].Clone();
             ResetBackgrounds(tnx);
             TreeNode tmp = treeView1.SelectedNode;
-            treeView1.SelectedNode.Nodes.Add(tnx);
-            treeView1.Sort();
-            RecolorStartingFromNode(tmp, tmp.Checked, false);
-            treeView1.SelectedNode = tnx;
-            tnx.Collapse(false); 
-            tnx.Expand();           // collapse all subfolders and only expand the imported folder
+            treeView1.BeginUpdate();
+            try
+            {
+                // TreeView 已启用排序，插入时会排序新子树并确定其位置，无需重排已有节点。
+                tmp.Nodes.Add(tnx);
+                RecolorStartingFromNode(tnx, tmp.Checked, false);
+                treeView1.SelectedNode = tnx;
+                tnx.Collapse(false);
+                tnx.Expand();           // collapse all subfolders and only expand the imported folder
+            }
+            finally
+            {
+                treeView1.EndUpdate();
+            }
             List<Trigger> newTrigs = new List<Trigger>();
             Dictionary<Guid, Guid> renamedTriggers = new Dictionary<Guid, Guid>();
             if (f != null)
@@ -1090,7 +1098,7 @@ namespace Triggernometry.UI.CustomControls
             int fdjs = 0, tdjs = 0;
             foreach (Trigger newTrig in newTrigs)
             {
-                foreach (Core.ActionBase a in Core.ActionBase.RecursiveGetActions(newTrig.Actions))
+                foreach (ActionBase a in ActionBase.RecursiveGetActions(newTrig.Actions))
                 {
                     if (a is ActionTriggerOperation triggerAction && renamedTriggers.ContainsKey(triggerAction.TriggerId))
                     {
