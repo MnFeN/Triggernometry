@@ -874,13 +874,17 @@
     <TranslationEntry Key="internal/ConditionSingle/listmustcontain" Translation="contains" />
     <TranslationEntry Key="internal/ConditionSingle/listvar" Translation="List named by" />
     <TranslationEntry Key="internal/ConditionSingle/noregexmatch" Translation="does not match regex" />
+    <TranslationEntry Key="internal/ConditionSingle/numericapproxequal" Translation="numerically ≈" />
+    <TranslationEntry Key="internal/ConditionSingle/numericapproxnotequal" Translation="numerically ≄" />
     <TranslationEntry Key="internal/ConditionSingle/numericequal" Translation="numerically =" />
     <TranslationEntry Key="internal/ConditionSingle/numericexpression" Translation="number ({0})" />
+    <TranslationEntry Key="internal/ConditionSingle/numericfalse" Translation="({0}) is false" />
     <TranslationEntry Key="internal/ConditionSingle/numericgreater" Translation="numerically &gt;" />
     <TranslationEntry Key="internal/ConditionSingle/numericgreaterequal" Translation="numerically ≥" />
     <TranslationEntry Key="internal/ConditionSingle/numericless" Translation="numerically &lt;" />
     <TranslationEntry Key="internal/ConditionSingle/numericlessequal" Translation="numerically ≤" />
     <TranslationEntry Key="internal/ConditionSingle/numericnotequal" Translation="numerically ≠" />
+    <TranslationEntry Key="internal/ConditionSingle/numerictrue" Translation="({0}) is true" />
     <TranslationEntry Key="internal/ConditionSingle/regexmatch" Translation="matches regex" />
     <TranslationEntry Key="internal/ConditionSingle/stringequalcase" Translation="equals (case-sensitive)" />
     <TranslationEntry Key="internal/ConditionSingle/stringequalnocase" Translation="equals (ignore case)" />
@@ -899,12 +903,16 @@
     <TranslationEntry Key="internal/ConditionViewer/operationwillremove" Translation="This operation will remove:" />
     <TranslationEntry Key="internal/ConditionViewer/operatorListContains" Translation="List L contains R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorListDoesNotContain" Translation="List L does not contain R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxEqual" Translation="Approximately equal: |L − R| ≤ 0.5" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxNotEqual" Translation="Not approximately equal: |L − R| &gt; 0.5" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericEqual" Translation="L = R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericFalse" Translation="L is false (zero)" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreater" Translation="L &gt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreaterEqual" Translation="L ≥ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLess" Translation="L &lt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLessEqual" Translation="L ≤ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericNotEqual" Translation="L ≠ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericTrue" Translation="L is true (nonzero)" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="L matches regex R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="L does not match regex R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R (case-sensitive)" />

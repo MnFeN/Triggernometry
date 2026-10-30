@@ -874,13 +874,17 @@
     <TranslationEntry Key="internal/ConditionSingle/listmustcontain" Translation="次の結果を含む" />
     <TranslationEntry Key="internal/ConditionSingle/listvar" Translation="リスト変数" />
     <TranslationEntry Key="internal/ConditionSingle/noregexmatch" Translation="は、次の正規表現に一致しない" />
+    <TranslationEntry Key="internal/ConditionSingle/numericapproxequal" Translation="数値として ≈" />
+    <TranslationEntry Key="internal/ConditionSingle/numericapproxnotequal" Translation="数値として ≄" />
     <TranslationEntry Key="internal/ConditionSingle/numericequal" Translation="は、次と同じ数値である" />
     <TranslationEntry Key="internal/ConditionSingle/numericexpression" Translation="数値式 {0} " />
+    <TranslationEntry Key="internal/ConditionSingle/numericfalse" Translation="({0}) が偽" />
     <TranslationEntry Key="internal/ConditionSingle/numericgreater" Translation="は、次よりも大きい数値である" />
     <TranslationEntry Key="internal/ConditionSingle/numericgreaterequal" Translation="は、次と同じかより大きい数値である" />
     <TranslationEntry Key="internal/ConditionSingle/numericless" Translation="は、次よりも小さい数値である" />
     <TranslationEntry Key="internal/ConditionSingle/numericlessequal" Translation="は、次と同じかより小さい数値である" />
     <TranslationEntry Key="internal/ConditionSingle/numericnotequal" Translation="は、次と異なる数値である" />
+    <TranslationEntry Key="internal/ConditionSingle/numerictrue" Translation="({0}) が真" />
     <TranslationEntry Key="internal/ConditionSingle/regexmatch" Translation="は、次の正規表現に一致する" />
     <TranslationEntry Key="internal/ConditionSingle/stringequalcase" Translation="は、大文字と小文字を区別した文字列比較で、次の文字列と一致する" />
     <TranslationEntry Key="internal/ConditionSingle/stringequalnocase" Translation="は、大文字と小文字を区別しない文字列比較で、次の文字列と一致する" />
@@ -899,12 +903,16 @@
     <TranslationEntry Key="internal/ConditionViewer/operationwillremove" Translation="次の項目が削除されます:" />
     <TranslationEntry Key="internal/ConditionViewer/operatorListContains" Translation="リスト L が値 R を含む" />
     <TranslationEntry Key="internal/ConditionViewer/operatorListDoesNotContain" Translation="リスト L が値 R を含まない" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxEqual" Translation="ほぼ等しい: |L − R| ≤ 0.5" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxNotEqual" Translation="ほぼ等しくない: |L − R| &gt; 0.5" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericEqual" Translation="L = R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericFalse" Translation="L が偽（ゼロ）" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreater" Translation="L &gt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreaterEqual" Translation="L ≥ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLess" Translation="L &lt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLessEqual" Translation="L ≤ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericNotEqual" Translation="L ≠ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericTrue" Translation="L が真（非ゼロ）" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="文字列 L が正規表現 R に一致" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="文字列 L が正規表現 R に不一致" />
     <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R（大文字・小文字を区別）" />

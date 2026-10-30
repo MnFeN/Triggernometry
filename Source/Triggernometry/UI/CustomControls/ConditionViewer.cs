@@ -41,7 +41,11 @@ namespace Triggernometry.UI.CustomControls
                 (CndTypeEnum.NumericLess, "<", "L < R"), 
                 (CndTypeEnum.NumericGreaterEqual, "≥", "L ≥ R"),
                 (CndTypeEnum.NumericLessEqual, "≤", "L ≤ R"), 
-                (CndTypeEnum.NumericNotEqual, "≠", "L ≠ R") 
+                (CndTypeEnum.NumericNotEqual, "≠", "L ≠ R"),
+                (CndTypeEnum.NumericApproxEqual, "≈", "Approximately equal: |L − R| ≤ 0.5"),
+                (CndTypeEnum.NumericApproxNotEqual, "≄", "Not approximately equal: |L − R| > 0.5"),
+                (CndTypeEnum.NumericTrue, "✓", "L is true (nonzero)"),
+                (CndTypeEnum.NumericFalse, "✗", "L is false (zero)")
             },
             new[] { 
                 (CndTypeEnum.StringEqualCase, "=", "L = R (case-sensitive)"), 
@@ -771,14 +775,15 @@ namespace Triggernometry.UI.CustomControls
                 bool isRegex = cbxComparison.SelectedIndex == 2;
                 bool isList = cbxComparison.SelectedIndex == 3;
                 cbxExpLType.Enabled = cbxExpRType.Enabled = !isReadOnly && !isNumeric;
+                expRight.Enabled = lblRightExpression.Enabled = !condition.IsUnaryComparison;
                 cbxExpLType.SelectedIndex = (int)(isNumeric ? ExprTypeEnum.Numeric : condition.ExpressionTypeL);
                 cbxExpRType.SelectedIndex = (int)(isNumeric ? ExprTypeEnum.Numeric : condition.ExpressionTypeR);
-                expLeft.ExpressionType = cbxExpLType.SelectedIndex == 1
+                expLeft.ExpressionType = cbxExpLType.SelectedIndex == (int)ExprTypeEnum.Numeric
                     ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric : ExpressionTextBox.SupportedExpressionTypeEnum.String;
-                expRight.ExpressionType = cbxExpRType.SelectedIndex == 1
+                expRight.ExpressionType = cbxExpRType.SelectedIndex == (int)ExprTypeEnum.Numeric
                     ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric
                     : isRegex ? ExpressionTextBox.SupportedExpressionTypeEnum.Regex : ExpressionTextBox.SupportedExpressionTypeEnum.String;
-                expLeft.AutofillType = isList && cbxExpLType.SelectedIndex == 0
+                expLeft.AutofillType = isList && cbxExpLType.SelectedIndex == (int)ExprTypeEnum.String
                     ? ExpressionTextBox.AutofillTypeEnum.List : ExpressionTextBox.AutofillTypeEnum.None;
                 UpdateComparisonDescription();
             }
@@ -1061,7 +1066,7 @@ namespace Triggernometry.UI.CustomControls
             if (isLoadingCondition || cbxOpType.SelectedIndex < 0 || !(trvNodes.SelectedNode?.Tag is ConditionSingle condition))
                 return;
             condition.ConditionType = ComparisonOperators[cbxComparison.SelectedIndex][cbxOpType.SelectedIndex].Type;
-            UpdateComparisonDescription();
+            UpdateComparisonControls(condition);
             OnConditionsUpdated();
         }
 
@@ -1111,8 +1116,10 @@ namespace Triggernometry.UI.CustomControls
                     }
                 }
                 string left = "L = \"" + GetExprResult(() => condition.GetExpressionResultL(fakectx, null, null)) + "\"";
-                string right = "R = \"" + GetExprResult(() => condition.GetExpressionResultR(fakectx, null, null)) + "\"";
-                MessageBox.Show($"{result}\n{left}\n{right}", I18n.Translate("internal/ConditionViewer/testtitle", "Test"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                string message = $"{result}\n{left}";
+                if (!condition.IsUnaryComparison)
+                    message += "\nR = \"" + GetExprResult(() => condition.GetExpressionResultR(fakectx, null, null)) + "\"";
+                MessageBox.Show(message, I18n.Translate("internal/ConditionViewer/testtitle", "Test"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

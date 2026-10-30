@@ -29,6 +29,10 @@ namespace Triggernometry.Core.Conditions
             NumericGreaterEqual,
             NumericLess,
             NumericLessEqual,
+            NumericApproxEqual,
+            NumericApproxNotEqual,
+            NumericTrue,
+            NumericFalse,
             StringEqualCase,
             StringEqualNocase,
             StringNotEqualCase,
@@ -131,8 +135,11 @@ namespace Triggernometry.Core.Conditions
             }
         }
 
-        /// <summary>数值比较始终将两侧作为数值表达式，忽略旧配置中的表达式类型。</summary>
-        internal bool IsNumericComparison => ConditionType >= CndTypeEnum.NumericEqual && ConditionType <= CndTypeEnum.NumericLessEqual;
+        /// <summary>数值条件始终按数值表达式求值，忽略旧配置中的表达式类型。</summary>
+        internal bool IsNumericComparison => ConditionType >= CndTypeEnum.NumericEqual && ConditionType <= CndTypeEnum.NumericFalse;
+
+        /// <summary>真假判断仅使用左侧表达式，右侧保留供切换比较方式时使用。</summary>
+        internal bool IsUnaryComparison => ConditionType == CndTypeEnum.NumericTrue || ConditionType == CndTypeEnum.NumericFalse;
 
         private string Capitalize(string str)
         {
@@ -152,6 +159,10 @@ namespace Triggernometry.Core.Conditions
             string desc = "";
             string descL = ExpressionL != null && ExpressionL.Length > 256 ? ExpressionL.Substring(0, 256) + "..." : ExpressionL;
             string descR = ExpressionR != null && ExpressionR.Length > 256 ? ExpressionR.Substring(0, 256) + "..." : ExpressionR;
+            if (ConditionType == CndTypeEnum.NumericTrue)
+                return I18n.Translate("internal/ConditionSingle/numerictrue", "({0}) is true", descL);
+            if (ConditionType == CndTypeEnum.NumericFalse)
+                return I18n.Translate("internal/ConditionSingle/numericfalse", "({0}) is false", descL);
             if (ConditionType == CndTypeEnum.ListContains || ConditionType == CndTypeEnum.ListDoesNotContain)
             {
                 desc = I18n.Translate("internal/ConditionSingle/listvar", "List named by");
@@ -208,6 +219,12 @@ namespace Triggernometry.Core.Conditions
                         break;
                     case CndTypeEnum.NumericLessEqual:
                         desc += I18n.Translate("internal/ConditionSingle/numericlessequal", "numerically ≤");
+                        break;
+                    case CndTypeEnum.NumericApproxEqual:
+                        desc += I18n.Translate("internal/ConditionSingle/numericapproxequal", "numerically ≈");
+                        break;
+                    case CndTypeEnum.NumericApproxNotEqual:
+                        desc += I18n.Translate("internal/ConditionSingle/numericapproxnotequal", "numerically ≄");
                         break;
                     case CndTypeEnum.StringEqualCase:
                         desc += I18n.Translate("internal/ConditionSingle/stringequalcase", "equals (case-sensitive)");
@@ -283,6 +300,10 @@ namespace Triggernometry.Core.Conditions
                 if (IsNumericComparison)
                 {
                     double left = ctx.EvaluateNumericExpression(logger, o, ExpressionL ?? "");
+                    if (ConditionType == CndTypeEnum.NumericTrue)
+                        return !MathParser.IsZero(left);
+                    if (ConditionType == CndTypeEnum.NumericFalse)
+                        return MathParser.IsZero(left);
                     double right = ctx.EvaluateNumericExpression(logger, o, ExpressionR ?? "");
                     // 保留浮点容限，避免表达式的舍入误差影响相等及边界比较。
                     switch (ConditionType)
@@ -299,6 +320,10 @@ namespace Triggernometry.Core.Conditions
                             return left + MathParser.TOLERANCE < right;
                         case CndTypeEnum.NumericLessEqual:
                             return left <= right + MathParser.TOLERANCE;
+                        case CndTypeEnum.NumericApproxEqual:
+                            return Math.Abs(left - right) <= 0.5;
+                        case CndTypeEnum.NumericApproxNotEqual:
+                            return Math.Abs(left - right) > 0.5;
                     }
                 }
                 string lval = GetExpressionResultL(ctx, logger, o);

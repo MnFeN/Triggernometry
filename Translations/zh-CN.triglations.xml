@@ -874,13 +874,17 @@
     <TranslationEntry Key="internal/ConditionSingle/listmustcontain" Translation="为名的列表 必须包含" />
     <TranslationEntry Key="internal/ConditionSingle/listvar" Translation="以" />
     <TranslationEntry Key="internal/ConditionSingle/noregexmatch" Translation="不符合正则" />
+    <TranslationEntry Key="internal/ConditionSingle/numericapproxequal" Translation="数值上 ≈" />
+    <TranslationEntry Key="internal/ConditionSingle/numericapproxnotequal" Translation="数值上 ≄" />
     <TranslationEntry Key="internal/ConditionSingle/numericequal" Translation="数值上 =" />
     <TranslationEntry Key="internal/ConditionSingle/numericexpression" Translation="数值 ({0})" />
+    <TranslationEntry Key="internal/ConditionSingle/numericfalse" Translation="（{0}）为假" />
     <TranslationEntry Key="internal/ConditionSingle/numericgreater" Translation="数值上 &gt;" />
     <TranslationEntry Key="internal/ConditionSingle/numericgreaterequal" Translation="数值上 ≥" />
     <TranslationEntry Key="internal/ConditionSingle/numericless" Translation="数值上 &lt;" />
     <TranslationEntry Key="internal/ConditionSingle/numericlessequal" Translation="数值上 ≤" />
     <TranslationEntry Key="internal/ConditionSingle/numericnotequal" Translation="数值上 ≠" />
+    <TranslationEntry Key="internal/ConditionSingle/numerictrue" Translation="（{0}）为真" />
     <TranslationEntry Key="internal/ConditionSingle/regexmatch" Translation="符合正则" />
     <TranslationEntry Key="internal/ConditionSingle/stringequalcase" Translation="文本上 等同于" />
     <TranslationEntry Key="internal/ConditionSingle/stringequalnocase" Translation="文本上（不分大小写）等同于" />
@@ -899,12 +903,16 @@
     <TranslationEntry Key="internal/ConditionViewer/operationwillremove" Translation="此操作将移除：" />
     <TranslationEntry Key="internal/ConditionViewer/operatorListContains" Translation="列表 L 包含值 R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorListDoesNotContain" Translation="列表 L 不包含值 R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxEqual" Translation="近似相等：|L − R| ≤ 0.5" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxNotEqual" Translation="不近似相等：|L − R| &gt; 0.5" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericEqual" Translation="L = R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericFalse" Translation="L 为假（零）" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreater" Translation="L &gt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreaterEqual" Translation="L ≥ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLess" Translation="L &lt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLessEqual" Translation="L ≤ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericNotEqual" Translation="L ≠ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericTrue" Translation="L 为真（非零）" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="文本 L 匹配正则 R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="文本 L 不匹配正则 R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R（区分大小写）" />
