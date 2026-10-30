@@ -94,17 +94,9 @@ namespace Triggernometry.Utilities
 
             // backup old file
             if (backupPath != null && File.Exists(filePath))
-            {
-                if (File.Exists(backupPath))
-                    File.Delete(backupPath);
-                File.Move(filePath, backupPath);
-            }
-            else if (backupPath == null && File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
+                WindowsUtils.ReplaceFile(filePath, backupPath);
 
-            File.Move(tempPath, filePath);
+            WindowsUtils.ReplaceFile(tempPath, filePath);
         }
 
         /// <summary>

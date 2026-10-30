@@ -222,5 +222,24 @@ namespace Triggernometry.Utilities
             return true;
         }
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern bool MoveFileEx(string existingFilename, string newFilename, uint flags);
+
+        /// <summary>将同卷文件移动到目标路径并替换；短暂占用时有限重试，不负责备份。</summary>
+        internal static void ReplaceFile(string existingFileName, string newFileName)
+        {
+            const uint replaceExisting = 1;
+            for (int attempt = 0; ; attempt++)
+            {
+                if (MoveFileEx(existingFileName, newFileName, replaceExisting))
+                    return;
+                int error = Marshal.GetLastWin32Error();
+                // 读取者尚未关闭旧文件时，Windows 可能暂时拒绝替换；持续占用仍交给调用方报错。
+                if (attempt >= 5 || (error != 5 && error != 32))
+                    throw new System.ComponentModel.Win32Exception(error);
+                Thread.Sleep(10);
+            }
+        }
+
     }
 }

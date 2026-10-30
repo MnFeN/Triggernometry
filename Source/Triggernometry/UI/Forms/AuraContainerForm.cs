@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
-using System.Net;
 using Triggernometry.Localization;
 using Triggernometry.Core;
 using Triggernometry.Core.Actions;
@@ -177,35 +176,11 @@ namespace Triggernometry.UI.Forms
 
         internal static Image LoadImageData(RealPlugin plug, string ifn)
         {
-            Uri u = new Uri(ifn);
-            if (u.IsFile == true)
-            {
-                return LoadImage(u.LocalPath);
-            }
-            else
-            {
-                string fn = Path.Combine(plug.ConfigPath, "TriggernometryRemoteImages");
-                if (Directory.Exists(fn) == false)
-                {
-                    Directory.CreateDirectory(fn);
-                }
-                string ext = Path.GetExtension(u.LocalPath);
-                fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
-                if (File.Exists(fn) == false)
-                {
-                    using (WebClient wc = new WebClient())
-                    {
-                        wc.Headers["User-Agent"] = "Triggernometry Image Retriever";
-                        byte[] data = wc.DownloadData(u.AbsoluteUri);
-                        File.WriteAllBytes(fn, data);
-                    }
-                }
-                if (File.Exists(fn) == true)
-                {
-                    return LoadImage(fn);
-                }
-            }
-            return null;
+            Uri uri = new Uri(ifn);
+            // 旧悬浮窗沿用已有图片缓存，不按有效期刷新。
+            string filename = uri.IsFile ? uri.LocalPath : plug.GetCachedResource(uri,
+                "TriggernometryRemoteImages", null, "Triggernometry Image Retriever");
+            return LoadImage(filename);
         }
 
         internal void AuraActivate()

@@ -263,20 +263,10 @@ namespace Triggernometry.Core
         /// <summary>用临时文件替换正式配置，按需将旧配置保存为 .previous。</summary>
         private static void ReplaceConfigFile(string tempFilename, string filename, bool shouldBackup)
         {
-            if (shouldBackup)
-            {
-                string prevFilename = filename + ".previous";
-                if (File.Exists(prevFilename))
-                    File.Delete(prevFilename);
-                if (File.Exists(filename))
-                    File.Move(filename, prevFilename);
-                File.Move(tempFilename, filename);
-            }
-            else
-            {
-                File.Copy(tempFilename, filename, true);
-                File.Delete(tempFilename);
-            }
+            // 备份完成前保留正式文件，备份或替换失败时仍可使用当前配置。
+            if (shouldBackup && File.Exists(filename))
+                File.Copy(filename, filename + ".previous", true);
+            Utilities.WindowsUtils.ReplaceFile(tempFilename, filename);
         }
 
     }

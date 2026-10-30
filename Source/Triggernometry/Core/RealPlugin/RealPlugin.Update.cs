@@ -388,11 +388,9 @@ namespace Triggernometry.Core
                     if (File.Exists(filePath))
                     {
                         string backupPath = $"{filePath}.{localVersion}.backup";
-                        if (File.Exists(backupPath))
-                            File.Delete(backupPath);
-                        File.Move(filePath, backupPath);
+                        WindowsUtils.ReplaceFile(filePath, backupPath);
                     }
-                    File.Move(tmpPath, filePath);
+                    WindowsUtils.ReplaceFile(tmpPath, filePath);
                     ui.QueueToast(new Toast
                     {
                         ToastText = $"鲶鱼精邮差插件已从 {localVersion} 更新至 {remoteVersion}，重启后生效。",

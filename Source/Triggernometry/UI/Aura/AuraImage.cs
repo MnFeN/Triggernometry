@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -57,37 +55,9 @@ namespace Triggernometry.UI.Aura
 
         internal static string GetImageFilename(RealPlugin plug, string ifn)
         {
-            Uri u = new Uri(ifn);
-            if (u.IsFile == true)
-            {
-                return ifn;
-            }
-            else
-            {
-                string fn = Path.Combine(plug.ConfigPath, "TriggernometryRemoteImages");
-                if (Directory.Exists(fn) == false)
-                {
-                    Directory.CreateDirectory(fn);
-                }
-                string ext = Path.GetExtension(u.LocalPath);
-                fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
-                if (File.Exists(fn) == true)
-                {
-                    FileInfo fi = new FileInfo(fn);
-                    DateTime dt = DateTime.Now.AddMinutes(0 - plug.Config.CacheImageExpiry);
-                    if (fi.LastWriteTime > dt)
-                    {
-                        return fn;
-                    }
-                }
-                using (WebClient wc = new WebClient())
-                {
-                    wc.Headers["User-Agent"] = "Triggernometry Image Retriever";
-                    byte[] data = wc.DownloadData(u.AbsoluteUri);
-                    File.WriteAllBytes(fn, data);
-                    return fn;
-                }
-            }
+            Uri uri = new Uri(ifn);
+            return uri.IsFile ? ifn : plug.GetCachedResource(uri,
+                "TriggernometryRemoteImages", plug.Config.CacheImageExpiry, "Triggernometry Image Retriever");
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,24 +51,44 @@ namespace Triggernometry.Core
             }
         }
 
-        /// <summary>返回有效的本地缓存路径；缓存不可用时下载并保存远程资源。</summary>
-        internal string GetCachedResource(Uri uri, string cacheFolder, int expiryMinutes, string userAgent, bool useCache = true)
-        {
-            string directory = Path.Combine(ConfigPath, cacheFolder);
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            string filename = Path.Combine(directory, GenerateHash(uri.AbsoluteUri) + Path.GetExtension(uri.LocalPath));
-            if (useCache && File.Exists(filename) &&
-                new FileInfo(filename).LastWriteTime > DateTime.Now.AddMinutes(-expiryMinutes))
-                return filename;
+        // 按完整缓存路径协调，同一路径始终使用同一个锁，不同资源的下载互不阻塞。
+        private static readonly ConcurrentDictionary<string, object> resourceCacheLocks =
+            new ConcurrentDictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-            using (var client = new WebClient())
+        /// <summary>返回完整的本地缓存文件；有效期为空时沿用已有文件，禁用缓存时始终重新下载。</summary>
+        internal string GetCachedResource(Uri uri, string cacheFolder, int? expiryMinutes, string userAgent, bool useCache = true)
+        {
+            string directory = Path.GetFullPath(Path.Combine(ConfigPath, cacheFolder));
+            string filename = Path.Combine(directory, GenerateHash(uri.AbsoluteUri) + Path.GetExtension(uri.LocalPath));
+            lock (resourceCacheLocks.GetOrAdd(filename, _ => new object()))
             {
-                client.Headers["User-Agent"] = userAgent;
-                byte[] data = client.DownloadData(uri.AbsoluteUri);
-                File.WriteAllBytes(filename, data);
+                // 等待其他下载完成后再检查缓存，复用刚写入的文件。
+                if (useCache && File.Exists(filename) && (!expiryMinutes.HasValue ||
+                    new FileInfo(filename).LastWriteTime > DateTime.Now.AddMinutes(-expiryMinutes.Value)))
+                    return filename;
+
+                byte[] data;
+                using (var client = new WebClient())
+                {
+                    client.Headers["User-Agent"] = userAgent;
+                    data = client.DownloadData(uri.AbsoluteUri);
+                }
+
+                // 同卷临时文件写完后再发布；独立子目录避开只清理正式缓存的 GetFiles()。
+                string tempDirectory = Path.Combine(directory, ".downloads");
+                Directory.CreateDirectory(tempDirectory);
+                string tempFilename = Path.Combine(tempDirectory, Guid.NewGuid().ToString("N") + ".tmp");
+                try
+                {
+                    File.WriteAllBytes(tempFilename, data);
+                    Utilities.WindowsUtils.ReplaceFile(tempFilename, filename);
+                }
+                finally
+                {
+                    File.Delete(tempFilename);
+                }
+                return filename;
             }
-            return filename;
         }
 
         public bool CheckIfAdministrator(bool warnIfNotAdmin)

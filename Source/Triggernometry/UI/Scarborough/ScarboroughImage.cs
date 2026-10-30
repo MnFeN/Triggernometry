@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -217,42 +216,10 @@ namespace Scarborough
 
         internal void LoadImageData(Triggernometry.Core.RealPlugin plug, Graphics g, string ifn)
         {
-            Uri u = new Uri(ifn);
-            if (u.IsFile == true)
-            {
-                LoadImageDataFromFile(plug, g, ifn);
-            }
-            else
-            {
-                string fn = Path.Combine(plug.ConfigPath, "TriggernometryRemoteImages");
-                if (Directory.Exists(fn) == false)
-                {
-                    Directory.CreateDirectory(fn);
-                }
-                string ext = Path.GetExtension(u.LocalPath);
-                fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
-                bool fromcache = false;
-                if (File.Exists(fn) == true)
-                {
-                    FileInfo fi = new FileInfo(fn);
-                    DateTime dt = DateTime.Now.AddMinutes(0 - plug.Config.CacheImageExpiry);
-                    if (fi.LastWriteTime > dt)
-                    {
-                        LoadImageDataFromFile(plug, g, fn);
-                        fromcache = true;
-                    }
-                }
-                if (fromcache == false)
-                {
-                    using (WebClient wc = new WebClient())
-                    {
-                        wc.Headers["User-Agent"] = "Triggernometry Image Retriever";
-                        byte[] data = wc.DownloadData(u.AbsoluteUri);
-                        File.WriteAllBytes(fn, data);
-                        LoadImageDataFromByte(plug, g, data);
-                    }
-                }
-            }
+            Uri uri = new Uri(ifn);
+            string filename = uri.IsFile ? ifn : plug.GetCachedResource(uri,
+                "TriggernometryRemoteImages", plug.Config.CacheImageExpiry, "Triggernometry Image Retriever");
+            LoadImageDataFromFile(plug, g, filename);
         }
 
         private double TimeAccumulator = 0.0;
