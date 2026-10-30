@@ -1219,24 +1219,18 @@ namespace Triggernometry.UI.CustomControls
 
         internal void enabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            lock (plug.QueueProcessingLock) // verified
-            {
-                btnActionQueueEnabled.Checked = true;
-                btnActionQueueDisabled.Checked = false;
-                plug.QueueProcessing = true;
-                plug.ActionUpdateEvent.Set();
-            }
+            btnActionQueueEnabled.Checked = true;
+            btnActionQueueDisabled.Checked = false;
+            plug.QueueProcessing = true;
+            plug.ActionUpdateEvent.Set();
         }
 
         internal void disabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            lock (plug.QueueProcessingLock) // verified
-            {
-                btnActionQueueEnabled.Checked = false;
-                btnActionQueueDisabled.Checked = true;
-                plug.QueueProcessing = false;
-                plug.ActionUpdateEvent.Set();
-            }
+            btnActionQueueEnabled.Checked = false;
+            btnActionQueueDisabled.Checked = true;
+            plug.QueueProcessing = false;
+            plug.ActionUpdateEvent.Set();
         }
 
         private void CloseTree(TreeNode tn)

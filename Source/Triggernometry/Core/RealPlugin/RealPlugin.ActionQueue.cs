@@ -17,8 +17,8 @@ namespace Triggernometry.Core
         internal HashSet<ActionInstance> ExecutingActions = new HashSet<ActionInstance>();
         internal AutoResetEvent ActionUpdateEvent = null;
         private long curOrdinal = 0;
-        internal object QueueProcessingLock = new object();
-        internal bool QueueProcessing = true;
+        // UI 写入、队列线程读取；状态改变后通过 ActionUpdateEvent 唤醒等待。
+        internal volatile bool QueueProcessing = true;
 
 
         private void InitActionQueue()
@@ -240,11 +240,8 @@ namespace Triggernometry.Core
             lock (ActionQueue)
             {
                 if (ActionQueue.Count == 0) return;
-                lock (QueueProcessingLock)
-                {
-                    if (!QueueProcessing)
-                        return;
-                }
+                if (!QueueProcessing)
+                    return;
                 instance = ActionQueue[0];
                 // 唤醒可能来自队列更新或超长延迟的分段等待（等待时间超过 int 上限，~25 天）
                 // 出队前必须确认已到期
@@ -262,10 +259,8 @@ namespace Triggernometry.Core
         {
             lock (ActionQueue)
             {
-                lock (QueueProcessingLock)
-                {
-                    if (!QueueProcessing) return Timeout.Infinite;
-                }
+                if (!QueueProcessing)
+                    return Timeout.Infinite;
                 if (ActionQueue.Count == 0) return Timeout.Infinite;
                 double remainingMilliseconds = (ActionQueue[0].ExecuteAt - DateTime.Now).TotalMilliseconds;
                 return (int)Math.Min(int.MaxValue, Math.Max(0, Math.Ceiling(remainingMilliseconds)));
@@ -342,7 +337,7 @@ namespace Triggernometry.Core
                 {
                     if (OwnerContext == null)
                     {
-                        MutexTicket first = AcquireQueue.ElementAt(0);
+                        MutexTicket first = AcquireQueue[0];
                         if (first == m)
                         {
                             m.ResetEvent.Set();
@@ -356,9 +351,6 @@ namespace Triggernometry.Core
                         m.ResetEvent.Set();
                         RefCount++;
                         autoget = true;
-                    }
-                    else
-                    {
                     }
                     if (autoget == false)
                     {
@@ -431,7 +423,7 @@ namespace Triggernometry.Core
             {
                 if (AcquireQueue.Count > 0)
                 {
-                    MutexTicket m = AcquireQueue.ElementAt(0);
+                    MutexTicket m = AcquireQueue[0];
                     System.Diagnostics.Debug.WriteLine("### {0} - Waking up next context in queue : {1}", Name, m.Context.ToString());
                     m.ResetEvent.Set();
                 }
@@ -441,16 +433,15 @@ namespace Triggernometry.Core
 
         internal MutexInfo GetMutex(string name)
         {
-            MutexInfo mi = null;
             lock (mutexes)
             {
-                if (mutexes.ContainsKey(name) == false)
+                if (!mutexes.TryGetValue(name, out MutexInfo mutex))
                 {
-                    mutexes[name] = new MutexInfo(name);
+                    mutex = new MutexInfo(name);
+                    mutexes.Add(name, mutex);
                 }
-                mi = mutexes[name];
+                return mutex;
             }
-            return mi;
         }
 
         #endregion
