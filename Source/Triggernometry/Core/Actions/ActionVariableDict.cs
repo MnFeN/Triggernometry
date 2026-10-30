@@ -45,6 +45,7 @@ namespace Triggernometry.Core.Actions
             UnsetRegex,
             [Obsolete] GetEntityByName, // => GetEntity
             [Obsolete] GetEntityById, // => GetEntity
+            CopyRegisteredVariables,
         }
 
         /// <summary>
@@ -81,6 +82,13 @@ namespace Triggernometry.Core.Actions
             "Get specified properties of a specified FFXIV entity",
             "Unset all dictionary variables",
             "Unset dictionary variables matching regular expression",
+            "Copy all registered variables into a dictionary",
+        }, ChoiceValues = new[]
+        {
+            (int)OperationEnum.Unset, (int)OperationEnum.Set, (int)OperationEnum.Remove,
+            (int)OperationEnum.SetAll, (int)OperationEnum.Build, (int)OperationEnum.Filter,
+            (int)OperationEnum.Merge, (int)OperationEnum.MergeHard, (int)OperationEnum.GetEntity,
+            (int)OperationEnum.UnsetAll, (int)OperationEnum.UnsetRegex, (int)OperationEnum.CopyRegisteredVariables,
         })]
         public OperationEnum Operation { get; set; } = OperationEnum.Unset;
 
@@ -263,6 +271,8 @@ namespace Triggernometry.Core.Actions
                         editor.EnableOnly(operation, name, length, key, keyType, value, valueType); break;
                     case OperationEnum.Build: 
                         editor.EnableOnly(operation, value, valueType, target); break;
+                    case OperationEnum.CopyRegisteredVariables:
+                        editor.EnableOnly(operation, target); break;
                     case OperationEnum.Filter: 
                         editor.EnableOnly(operation, name, value, target); break;
                     case OperationEnum.Merge:
@@ -346,6 +356,10 @@ namespace Triggernometry.Core.Actions
                         "Use expression ({4}) to filter {1}dict ({0}) into {3}dict ({2})",
                         Name, sPersistD, TargetVar, tPersistD, Value
                     );
+                case OperationEnum.CopyRegisteredVariables:
+                    return I18n.Translate("internal/Action/descdictcopyregistered",
+                        "copy all registered variables into {1}dict variable ({0})",
+                        TargetVar, tPersistD);
                 case OperationEnum.SetAll:
                     if (string.IsNullOrWhiteSpace(Count))
                     {
@@ -538,6 +552,27 @@ namespace Triggernometry.Core.Actions
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/dictgetentityfail",
                                 "Entity ({2}) not found when trying to save into {1}dict variable ({0})",
                                 srcName, sPersist, filterExpr));
+                    }
+                    break;
+                case OperationEnum.CopyRegisteredVariables:
+                    {
+                        var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
+                        var dictionary = new VariableDictionary();
+                        lock (ctx.Plugin.RegisteredVariables)
+                        {
+                            // 复制独立值，避免目标字典与注册变量共享可变对象。
+                            foreach (var pair in ctx.Plugin.RegisteredVariables)
+                                dictionary.Values[pair.Key] = pair.Value.Duplicate();
+                        }
+                        dictionary.LastChanger = changer;
+                        dictionary.LastChanged = DateTime.Now;
+                        lock (tgtStore.Dict)
+                        {
+                            tgtStore.Dict[tgtName] = dictionary;
+                        }
+                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/dictcopyregistered",
+                            "Copied registered variables into {1}dict variable ({0}) ({2} entries)",
+                            tgtName, tPersist, dictionary.Size));
                     }
                     break;
                 case OperationEnum.Build:

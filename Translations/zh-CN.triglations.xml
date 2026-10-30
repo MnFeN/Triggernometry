@@ -77,6 +77,7 @@
     <TranslationEntry Key="ActionForm/rtbHelperCallback" Translation="发送具名回调，如调用鲶鱼精邮差等插件。&#xD;&#xA;&#xD;&#xA;鲶鱼精邮差使用简介：&#xD;&#xA;&#xD;&#xA;向游戏发送文本指令：&#xD;&#xA;回调名称：`command`&#xA;回调参数：`/e test &lt;se.1&gt;`&#xA;&#xA;向游戏发送本地标点（取消 `A`，场中标记 `1`，其他标点不改变）：&#xD;&#xA;回调名称：`place`&#xA;回调参数：`&#xD;&#xA;{{&#xD;&#xA;    &quot;A&quot;: {{}},&#xD;&#xA;    &quot;One&quot;: {{&quot;X&quot;: 100, &quot;Y&quot;: 100, &quot;Z&quot;: 0, &quot;Active&quot;: true}}&#xD;&#xA;}}`&#xD;&#xA;&#xD;&#xA;注：本地标点仅自己可见。若需全队可见，需要手动或自动将本地标点存入游戏预设并重新加载；&#xD;&#xA;字符串的换行和缩进无关紧要。&#xD;&#xA;更多用法详见 `Github`: `Natsukage/PostNamazu`" />
     <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="将值按文本表达式解析，并将结果写入剪贴板。&#10;结果为空时清空剪贴板。&#10;&#10;文本写入剪贴板后可以使用 `${{_clipboard}}` 读取。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictBuild" Translation="以表达式经过解析后的第一个字符作为键与值的分隔符，第二个字符作为键值对间的分隔符，将表达式剩余部分构筑为字典。&#xD;&#xA;&#xD;&#xA;例：输入表达式 `=,a=1,b=2,c=3` 可构筑字典：`a = 1, b = 2, c = 3`；&#xD;&#xA;输入表达式 `=,${{tvar:table.hjoin('=', ',')}}` 可将一个两列的表格变量 `table` 转化为字典，两列分别作为键与值。" />
+    <TranslationEntry Key="ActionForm/rtbHelperDictCopyRegisteredVariables" Translation="将当前已注册的全部变量名和值复制到目标字典，替换目标字典的原有内容。&#xD;&#xA;复制后的字典独立保存，后续注册变量的变化不会影响此字典。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictFilter" Translation="解析每个键值对所对应的动态表达式数值，并将结果为真（非零）的键值对过滤为目标字典。&#xD;&#xA;&#xD;&#xA;可使用的动态表达式：&#xD;&#xA;`${{_key}}`：当前键值对的键；&#xD;&#xA;`${{_val}}`：当前键值对的值。&#xD;&#xA;&#xD;&#xA;例：源字典为：`10A = 0, 10F = 3, 40C = 2, 402 = 0`；&#xD;&#xA;经表达式 `${{_val}}` 过滤可得：`10F = 3, 40C = 2`；&#xD;&#xA;经表达式 `${{func:startwith(1):${{_key}}}}` 过滤可得：`10A = 0, 10F = 3`。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictGetEntity" Translation="获取一个指定实体的指定属性，并存入字典变量。&#xD;&#xA;每个键是一个属性名，相应的值为属性值。&#xD;&#xA;与 `_ffxiventity` 相同，只会返回查找到的第一个名称符合的实体数据。&#xD;&#xA;&#xD;&#xA;键表达式：&#xD;&#xA;需要查询的全部属性，以逗号分隔。&#xD;&#xA;如：`ID, Name, X, Y, HasStatus(50), Heading`。&#xD;&#xA;可以使用的属性即为表达式 `${{_ffxiventity[name].property}}` 中可用的全部属性。&#xD;&#xA;如未提供键表达式，则会使用一系列默认属性（包含大多数可用属性）。&#xD;&#xA;&#xD;&#xA;值表达式：&#xD;&#xA;指定的实体。&#xD;&#xA;· 使用 ID：`103CDDB2`&#xD;&#xA;· 使用名称：`木人`&#xD;&#xA;· 使用数学表达式：&#xD;&#xA;以属性表达式为占位符，如：`IsT &amp;&amp; HasStatus(50) &amp;&amp; Distance &lt; 5`。&#xD;&#xA;&#xD;&#xA;未查找到实体时，返回空字典并生成警告日志。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictMerge" Translation="将源字典中的所有键值对添加到目标字典。&#xD;&#xA;若存在相同的的键，则会跳过该键。&#xD;&#xA;在目标字典不存在时，相当于深复制字典。" />
@@ -528,6 +529,7 @@
     <TranslationEntry Key="internal/Action/descclipboard" Translation="将 ({0}) 写入剪贴板" />
     <TranslationEntry Key="internal/Action/descdictbuild" Translation="将文本 ({2}) 以 ({3}) ({4}) 拆分，构筑为{1}字典 ({0})" />
     <TranslationEntry Key="internal/Action/descdictbuildraw" Translation="将 {3} 表达式 ({2}) 以开头两个字符拆分，构筑为{1}字典 ({0})" />
+    <TranslationEntry Key="internal/Action/descdictcopyregistered" Translation="将全部注册变量复制到{1}字典变量 ({0})" />
     <TranslationEntry Key="internal/Action/descdictfilter" Translation="根据表达式 ({4})，将{1}字典 ({0}) 过滤为{3}字典 ({2})" />
     <TranslationEntry Key="internal/Action/descdictgetentity" Translation="将实体 ({2}) 的全部属性存入{1}字典 ({0})" />
     <TranslationEntry Key="internal/Action/descdictgetentitygivenprops" Translation="将实体 ({2}) 的 ({3}) 属性存入{1}字典 ({0})" />
@@ -696,6 +698,7 @@
     <TranslationEntry Key="internal/Action/descwmsg" Translation="向{3}发送消息 ({0})，wparam = ({1})，lparam = ({2})" />
     <TranslationEntry Key="internal/Action/dictbuild" Translation="已将表达式 ({2}) 以 ({3}) ({4}) 拆分，构筑为{1}字典 ({0})" />
     <TranslationEntry Key="internal/Action/dictbuildfail" Translation="表达式 ({2}) 长度小于 2，无法构筑为{1}字典 ({0})" />
+    <TranslationEntry Key="internal/Action/dictcopyregistered" Translation="已将注册变量复制到{1}字典变量 ({0})，共 {2} 个键值对" />
     <TranslationEntry Key="internal/Action/dictfilter" Translation="从{1}字典 ({0}) 过滤了 {4} 个元素到{3}字典 ({2})" />
     <TranslationEntry Key="internal/Action/dictgetentity" Translation="已将实体 ({2}) 的属性写入{1}字典 ({0})" />
     <TranslationEntry Key="internal/Action/dictgetentityfail" Translation="未能找到实体 ({2}) ，无法写入{1}字典 ({0})" />
@@ -1272,6 +1275,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Name" Translation="源变量" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation" Translation="操作" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Build from the expression]" Translation="构筑字典" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Copy all registered variables into a dictionary]" Translation="复制全部注册变量为字典" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Filter into another dictionary]" Translation="过滤字典" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Get specified properties of a specified FFXIV entity]" Translation="获取单个指定实体的指定属性" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Merge two dictionaries (keep)]" Translation="合并字典（保留）" />

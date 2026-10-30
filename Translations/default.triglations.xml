@@ -82,6 +82,7 @@
     <!-- e.g. "ActionForm/███rtbHelperCallback" => "ActionForm/rtbHelperCallback".   -->
     <!-- Pay attention to the escape rules:  { } should be written as {{ }}    double quote: &quot;     less/greater than: &lt;/&gt;     line break: &#xD;&#xA;. -->
     <TranslationEntry Key="ActionForm/███rtbHelperCallback" Translation="" />
+    <TranslationEntry Key="ActionForm/rtbHelperDictCopyRegisteredVariables" Translation="Copies all currently registered variable names and values into the target dictionary.&#xD;&#xA;The target dictionary is replaced. Later changes to registered variables do not affect this copy." />
     <TranslationEntry Key="ActionForm/███rtbHelperDictBuild" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperDictFilter" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperDictGetEntity" Translation="" />
@@ -528,6 +529,7 @@
     <TranslationEntry Key="internal/Action/descclipboard" Translation="Copy ({0}) to clipboard" />
     <TranslationEntry Key="internal/Action/descdictbuild" Translation="build {1}dict variable ({0}) from string ({2}) separated by ({3}) ({4})" />
     <TranslationEntry Key="internal/Action/descdictbuildraw" Translation="build {1}dict variable ({0}) from {3} expression ({2}) separated by its first 2 characters" />
+    <TranslationEntry Key="internal/Action/descdictcopyregistered" Translation="copy all registered variables into {1}dict variable ({0})" />
     <TranslationEntry Key="internal/Action/descdictfilter" Translation="Use expression ({4}) to filter {1}dict ({0}) into {3}dict ({2})" />
     <TranslationEntry Key="internal/Action/descdictgetentity" Translation="Store all properties of the entity ({2}) in {1}dictionary ({0})" />
     <TranslationEntry Key="internal/Action/descdictgetentitygivenprops" Translation="Store ({3}) properties of the entity ({2}) in {1}dictionary ({0})" />
@@ -696,6 +698,7 @@
     <TranslationEntry Key="internal/Action/descwmsg" Translation="send message ({0}) wparam ({1}) lparam ({2}) to {3}" />
     <TranslationEntry Key="internal/Action/dictbuild" Translation="{1}Dictionary ({0}) built from expression ({2}) splitted by ({3}) ({4})" />
     <TranslationEntry Key="internal/Action/dictbuildfail" Translation="{1}Dictionary ({0}) cannot be built since expression ({2}) length &lt; 2" />
+    <TranslationEntry Key="internal/Action/dictcopyregistered" Translation="Copied registered variables into {1}dict variable ({0}) ({2} entries)" />
     <TranslationEntry Key="internal/Action/dictfilter" Translation="Filtered {4} key-value pairs from {1}dict ({0}) into {3}dict ({2})" />
     <TranslationEntry Key="internal/Action/dictgetentity" Translation="Saved the data of entity ({2}) into {1}dict variable ({0})" />
     <TranslationEntry Key="internal/Action/dictgetentityfail" Translation="Entity ({2}) not found when trying to save into {1}dict variable ({0})" />
@@ -1272,6 +1275,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Name" Translation="Source variable name" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation" Translation="Operation type" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Build from the expression]" Translation="Build from the expression" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Copy all registered variables into a dictionary]" Translation="Copy all registered variables into a dictionary" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Filter into another dictionary]" Translation="Filter into another dictionary" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Get specified properties of a specified FFXIV entity]" Translation="Get specified properties of a specified FFXIV entity" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableDict/Operation[Merge two dictionaries (keep)]" Translation="Merge two dictionaries (keep)" />

@@ -124,6 +124,10 @@
 Example: Input expression `=,a=1,b=2,c=3` builds a dictionary: `a = 1, b = 2, c = 3`;
 Input expression `=,${{tvar:table.hjoin('=', ',')}}` can transform a two-column table variable `table` into a dictionary, with each column serving as key and value respectively.</value>
   </data>
+  <data name="rtbHelperDictCopyRegisteredVariables.Text" xml:space="preserve">
+    <value>Copies all currently registered variable names and values into the target dictionary.
+The target dictionary is replaced. Later changes to registered variables do not affect this copy.</value>
+  </data>
   <data name="rtbHelperDictFilter.Text" xml:space="preserve">
     <value>Parses each key-value pair's dynamic expression value and filters out the key-value pairs whose results are true (non-zero) for the target dictionary.
 
