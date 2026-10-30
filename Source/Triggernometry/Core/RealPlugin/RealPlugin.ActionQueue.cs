@@ -45,13 +45,13 @@ namespace Triggernometry.Core
         /// <summary>取消允许打断且符合筛选条件的排队动作，并转交或释放互斥锁；空筛选表示全部可打断动作。</summary>
         internal int CancelQueuedActions(Func<ActionInstance, bool> filter = null)
         {
-            int removedCount = 0;
             lock (ActionQueue)
             {
                 var toRemove = ActionQueue.Where(qa => !qa.Action.Uninterruptible && (filter == null || filter(qa))).ToList();
-                removedCount = toRemove.Count;
-                foreach (var qa in toRemove)
-                    ActionQueue.Remove(qa);
+                if (toRemove.Count == 0)
+                    return 0;
+                var removedActions = new HashSet<ActionInstance>(toRemove);
+                ActionQueue.RemoveAll(removedActions.Contains);
 
                 foreach (var group in toRemove.Where(qa => qa.Mutex != null)
                     .GroupBy(qa => new { qa.Mutex, qa.Context.id }))
@@ -67,10 +67,9 @@ namespace Triggernometry.Core
                     else if (group.Any(action => action.ShouldReleaseMutex || action.Context.Trigger.Sequential))
                         group.Key.Mutex.Release(group.First().Context);
                 }
-                if (removedCount > 0)
-                    ActionUpdateEvent.Set();
+                ActionUpdateEvent.Set();
+                return toRemove.Count;
             }
-            return removedCount;
         }
 
         /// <summary>Builds execution-local continuations and queues the first action or parallel batch.</summary>
@@ -204,7 +203,7 @@ namespace Triggernometry.Core
                 int waitResult = WaitHandle.WaitAny(waitHandles, timeout);
                 if (waitResult == 0) return;
 
-                if (waitResult == WaitHandle.WaitTimeout) ExecuteNextQueuedAction();
+                ExecuteNextQueuedAction();
 
                 // Both queue changes and completed actions require a new wait deadline.
                 timeout = GetActionQueueTimeout();
@@ -241,7 +240,16 @@ namespace Triggernometry.Core
             lock (ActionQueue)
             {
                 if (ActionQueue.Count == 0) return;
+                lock (QueueProcessingLock)
+                {
+                    if (!QueueProcessing)
+                        return;
+                }
                 instance = ActionQueue[0];
+                // 唤醒可能来自队列更新或超长延迟的分段等待（等待时间超过 int 上限，~25 天）
+                // 出队前必须确认已到期
+                if (instance.ExecuteAt > DateTime.Now)
+                    return;
                 ActionQueue.RemoveAt(0);
                 ExecutingActions.Add(instance);
             }
@@ -259,7 +267,8 @@ namespace Triggernometry.Core
                     if (!QueueProcessing) return Timeout.Infinite;
                 }
                 if (ActionQueue.Count == 0) return Timeout.Infinite;
-                return Math.Max(0, (int)Math.Ceiling((ActionQueue[0].ExecuteAt - DateTime.Now).TotalMilliseconds));
+                double remainingMilliseconds = (ActionQueue[0].ExecuteAt - DateTime.Now).TotalMilliseconds;
+                return (int)Math.Min(int.MaxValue, Math.Max(0, Math.Ceiling(remainingMilliseconds)));
             }
         }
 
