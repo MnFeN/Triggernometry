@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
@@ -153,8 +153,6 @@ namespace Triggernometry.Core.Actions
 
         internal override void ExecuteImplementation(Context ctx) // todo: avoid Sleep
         {
-            RealPlugin plug = ctx.Plugin;
-
             int mousex = (int)EvalNumeric(X, ctx);
             int mousey = (int)EvalNumeric(Y, ctx);
             WindowsUtils.MouseEventFlags flags = 0;
@@ -168,44 +166,33 @@ namespace Triggernometry.Core.Actions
                 default:
                     throw NotImplementedEnumException(CoordMode);
             }
+            WindowsUtils.MouseEventFlags buttonDown;
+            WindowsUtils.MouseEventFlags buttonUp;
             switch (Operation)
             {
                 case OperationEnum.Move:
                     WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.MOVE, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                    break;
+                    return;
                 case OperationEnum.LeftClick:
-                    Task.Run(() =>
-                    {
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.MOVE, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                        System.Threading.Thread.Sleep(10);
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.LEFTDOWN, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                        System.Threading.Thread.Sleep(10);
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.LEFTUP, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                    });
+                    buttonDown = WindowsUtils.MouseEventFlags.LEFTDOWN;
+                    buttonUp = WindowsUtils.MouseEventFlags.LEFTUP;
                     break;
                 case OperationEnum.MiddleClick:
-                    Task.Run(() =>
-                    {
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.MOVE, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                        System.Threading.Thread.Sleep(10);
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.MIDDLEDOWN, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                        System.Threading.Thread.Sleep(10);
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.MIDDLEUP, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                    });
+                    buttonDown = WindowsUtils.MouseEventFlags.MIDDLEDOWN;
+                    buttonUp = WindowsUtils.MouseEventFlags.MIDDLEUP;
                     break;
                 case OperationEnum.RightClick:
-                    Task.Run(() =>
-                    {
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.MOVE, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                        System.Threading.Thread.Sleep(10);
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.RIGHTDOWN, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                        System.Threading.Thread.Sleep(10);
-                        WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.RIGHTUP, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
-                    });
+                    buttonDown = WindowsUtils.MouseEventFlags.RIGHTDOWN;
+                    buttonUp = WindowsUtils.MouseEventFlags.RIGHTUP;
                     break;
                 default:
                     throw NotImplementedEnumException(Operation);
             }
+            WindowsUtils.SendMouse(flags | WindowsUtils.MouseEventFlags.MOVE, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
+            Thread.Sleep(10);
+            WindowsUtils.SendMouse(flags | buttonDown, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
+            Thread.Sleep(10);
+            WindowsUtils.SendMouse(flags | buttonUp, WindowsUtils.MouseEventDataXButtons.NONE, mousex, mousey);
         }
 
         #endregion
