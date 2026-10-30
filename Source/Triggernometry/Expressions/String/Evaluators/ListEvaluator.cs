@@ -115,11 +115,15 @@ namespace Triggernometry.Expressions.String.Evaluators
                             {
                                 // Only random joins need a mutable list of individual indices.
                                 var shuffledIndices = indices.ToList();
-                                // Fisher–Yates
-                                for (int i = shuffledIndices.Count - 1; i > 0; i--)
+                                // 临时、永久及临时表达式列表共用此随机源
+                                lock (rng)
                                 {
-                                    int j = rng.Next(i + 1);
-                                    (shuffledIndices[j], shuffledIndices[i]) = (shuffledIndices[i], shuffledIndices[j]);
+                                    // Fisher–Yates
+                                    for (int i = shuffledIndices.Count - 1; i > 0; i--)
+                                    {
+                                        int j = rng.Next(i + 1);
+                                        (shuffledIndices[j], shuffledIndices[i]) = (shuffledIndices[i], shuffledIndices[j]);
+                                    }
                                 }
                                 return vl.Join(joiner, shuffledIndices);
                             }
