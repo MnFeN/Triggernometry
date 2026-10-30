@@ -65,6 +65,8 @@ namespace Triggernometry.Expressions.Maths
             AddOperator("=", false, 2, binaryOperation: (a, b) => IsZero(a - b) ? 1 : 0);
             AddOperator("≠", false, 2, binaryOperation: (a, b) => IsZero(a - b) ? 0 : 1);
             AddOperator("!=", false, 2, binaryOperation: (a, b) => IsZero(a - b) ? 0 : 1);
+            AddOperator("≈", false, 2, binaryOperation: (a, b) => Math.Abs(a - b) <= 0.5 ? 1 : 0);
+            AddOperator("!≈", false, 2, binaryOperation: (a, b) => Math.Abs(a - b) > 0.5 ? 1 : 0);
             AddOperator("&", false, 2, binaryOperation: (a, b) => Truncate(a) & Truncate(b));           // bitwise and
             AddOperator("⊕", false, 2, binaryOperation: (a, b) => Truncate(a) ^ Truncate(b));           // bitwise xor
             AddOperator("|", false, 2, binaryOperation: (a, b) => Truncate(a) | Truncate(b));           // bitwise or
