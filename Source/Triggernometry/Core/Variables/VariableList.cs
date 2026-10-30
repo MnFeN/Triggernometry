@@ -142,10 +142,19 @@ namespace Triggernometry.Core.Variables
 
         public void InsertList(int rawIndex, VariableList srcList, string changer)
         {
-            int idx = ProcessRawIndex(rawIndex);
-            if (idx < 0) { return; }
-            // Copy before modifying the target, since the source may be this list.
+            if (ProcessRawIndex(rawIndex) < 0)
+                return;
+            // 修改目标前完成复制，兼容把列表插入自身的情况。
             var values = srcList.Values.Select(value => value.Duplicate()).ToArray();
+            InsertCopiedValues(rawIndex, values, changer);
+        }
+
+        /// <summary>插入已独立复制的元素，调用方将元素所有权交给目标列表，不再重复深复制。</summary>
+        internal void InsertCopiedValues(int rawIndex, Variable[] values, string changer)
+        {
+            int idx = ProcessRawIndex(rawIndex);
+            if (idx < 0)
+                return;
             if (idx >= Values.Count)
             {
                 int needcre = idx - Values.Count;

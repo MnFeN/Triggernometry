@@ -221,20 +221,25 @@ namespace Triggernometry.Core.Variables
 
         public void AppendVertical(VariableTable vt, string changer)
         {
-            if (vt.Height == 0)
-            {
+            int sourceWidth = vt.Width;
+            int sourceHeight = vt.Height;
+            if (sourceHeight == 0)
                 return;
-            }
-            int mx = Math.Max(Width, vt.Width);
-            int my = Height;
-            Resize(mx, Height + vt.Height);
-            for (int y = 0; y < vt.Height; y++)
+            int newWidth = Math.Max(Width, sourceWidth);
+            // 只给已有行补齐宽度；新增行直接接收源单元格，调用方已完成所需的深复制。
+            Resize(newWidth, Height);
+            if (newWidth > 0)
             {
-                for (int x = 0; x < vt.Width; x++)
+                for (int y = 0; y < sourceHeight; y++)
                 {
-                    Rows[my].Values[x] = vt.Rows[y].Values[x];
+                    var row = new VariableTableRow();
+                    row.Values.Capacity = newWidth;
+                    for (int x = 0; x < sourceWidth; x++)
+                        row.Values.Add(vt.Rows[y].Values[x]);
+                    while (row.Values.Count < newWidth)
+                        row.Values.Add(new VariableScalar());
+                    Rows.Add(row);
                 }
-                my++;
             }
             LastChanger = changer;
             LastChanged = DateTime.Now;
@@ -242,20 +247,30 @@ namespace Triggernometry.Core.Variables
 
         public void AppendHorizontal(VariableTable vt, string changer)
         {
-            if (vt.Width == 0)
-            {
+            int sourceWidth = vt.Width;
+            int sourceHeight = vt.Height;
+            if (sourceWidth == 0)
                 return;
-            }
-            int newWidth = Width + vt.Width;
-            int maxHeight = Math.Max(Height, vt.Height);
-            Resize(newWidth, maxHeight);
-
-            for (int y = 0; y < vt.Height; y++)
+            int oldWidth = Width;
+            int newWidth = oldWidth + sourceWidth;
+            int maxHeight = Math.Max(Height, sourceHeight);
+            for (int y = 0; y < maxHeight; y++)
             {
-                for (int x = 0; x < vt.Width; x++)
+                if (y == Rows.Count)
+                    Rows.Add(new VariableTableRow());
+                var values = Rows[y].Values;
+                if (values.Capacity < newWidth)
+                    values.Capacity = newWidth;
+                // 高度不一致时只为缺失区域补空，源单元格直接追加，避免先创建空值再覆盖。
+                while (values.Count < oldWidth)
+                    values.Add(new VariableScalar());
+                if (y < sourceHeight)
                 {
-                    Rows[y].Values[Width - vt.Width + x] = vt.Rows[y].Values[x];
+                    for (int x = 0; x < sourceWidth; x++)
+                        values.Add(vt.Rows[y].Values[x]);
                 }
+                while (values.Count < newWidth)
+                    values.Add(new VariableScalar());
             }
             LastChanger = changer;
             LastChanged = DateTime.Now;

@@ -741,11 +741,10 @@ namespace Triggernometry.Core.Actions
                         var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
                         var (tgtName, tgtStore) = ResolveVariable(ctx, TargetVar, TargetPersistent);
                         int rawIndex = (int)EvalNumeric(Index, ctx);
-                        VariableList vl = null;
-                        VariableList vlcopy = null;
+                        Variable[] copiedValues = null;
                         lock (srcStore.List)
                         {
-                            vl = srcStore.GetListVariable(srcName, false);
+                            VariableList vl = srcStore.GetListVariable(srcName, false);
                             if (srcStore == tgtStore)
                             {
                                 VariableList newvl = tgtStore.GetListVariable(tgtName, true);
@@ -753,7 +752,7 @@ namespace Triggernometry.Core.Actions
                             }
                             else
                             {
-                                vlcopy = (VariableList)vl.Duplicate();
+                                copiedValues = vl.Values.Select(value => value.Duplicate()).ToArray();
                             }
                         }
                         if (srcStore != tgtStore)
@@ -761,7 +760,7 @@ namespace Triggernometry.Core.Actions
                             lock (tgtStore.List)
                             {
                                 VariableList newvl = tgtStore.GetListVariable(tgtName, true);
-                                newvl.InsertList(rawIndex, vlcopy, changer);
+                                newvl.InsertCopiedValues(rawIndex, copiedValues, changer);
                             }
                         }
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listinsertlist",
