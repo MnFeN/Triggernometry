@@ -87,6 +87,12 @@ namespace Triggernometry.UI.Forms
             trbSoundRepetition.Value = cfg.SoundRepCooldown;
             trbTtsRepetition.Value = cfg.TtsRepCooldown;
             cbxLoggingLevel.SelectedIndex = (int)cfg.DebugLevel;
+            nudLogLimitError.Value = Math.Max(1000, cfg.LogLimitError);
+            nudLogLimitWarning.Value = Math.Max(1000, cfg.LogLimitWarning);
+            nudLogLimitCustom.Value = Math.Max(1000, cfg.LogLimitCustom);
+            nudLogLimitCustom2.Value = Math.Max(1000, cfg.LogLimitCustom2);
+            nudLogLimitInfo.Value = Math.Max(1000, cfg.LogLimitInfo);
+            nudLogLimitVerbose.Value = Math.Max(1000, cfg.LogLimitVerbose);
             cbxSoundMethod.SelectedIndex = (int)cfg.SoundMethod;
             cbxTtsMethod.SelectedIndex = (int)cfg.TtsMethod;
             txtSoundPath.Text = cfg.SoundExternalApp;
@@ -182,6 +188,12 @@ namespace Triggernometry.UI.Forms
             cfg.SoundRepCooldown = trbSoundRepetition.Value;
             cfg.TtsRepCooldown = trbTtsRepetition.Value;
             cfg.DebugLevel = (RealPlugin.DebugLevelEnum)cbxLoggingLevel.SelectedIndex;
+            cfg.LogLimitError = (int)nudLogLimitError.Value;
+            cfg.LogLimitWarning = (int)nudLogLimitWarning.Value;
+            cfg.LogLimitCustom = (int)nudLogLimitCustom.Value;
+            cfg.LogLimitCustom2 = (int)nudLogLimitCustom2.Value;
+            cfg.LogLimitInfo = (int)nudLogLimitInfo.Value;
+            cfg.LogLimitVerbose = (int)nudLogLimitVerbose.Value;
             cfg.SoundMethod = (Configuration.AudioRoutingMethodEnum)cbxSoundMethod.SelectedIndex;
             cfg.TtsMethod = (Configuration.AudioRoutingMethodEnum)cbxTtsMethod.SelectedIndex;
             cfg.SoundExternalApp = txtSoundPath.Text;

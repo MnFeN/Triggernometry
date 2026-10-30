@@ -1300,6 +1300,7 @@ namespace Triggernometry.UI.CustomControls
                     {
                         cf.SettingsToConfiguration(plug.Config);
                     }
+                    plug.TrimLogs();
                     UpdateUiFont();
                 }
             }

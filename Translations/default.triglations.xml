@@ -322,6 +322,7 @@
     <TranslationEntry Key="ConfigurationForm2/capImageFiles/lblContent" Translation="Image files" />
     <TranslationEntry Key="ConfigurationForm2/capJason/lblContent" Translation="JSON responses" />
     <TranslationEntry Key="ConfigurationForm2/capLogging/lblContent" Translation="Logging settings" />
+    <TranslationEntry Key="ConfigurationForm2/capLogLimits/lblContent" Translation="Log record limits" />
     <TranslationEntry Key="ConfigurationForm2/capRepoBackups/lblContent" Translation="Repository backups" />
     <TranslationEntry Key="ConfigurationForm2/capScripting/lblContent" Translation="Scripting API access" />
     <TranslationEntry Key="ConfigurationForm2/capSoundFiles/lblContent" Translation="Sound files" />
@@ -396,6 +397,12 @@
     <TranslationEntry Key="ConfigurationForm2/lblFolderReminder" Translation="Selecting a folder will fire all triggers inside the folder" />
     <TranslationEntry Key="ConfigurationForm2/lblLoggingLevel" Translation="Logging filtering level" />
     <TranslationEntry Key="ConfigurationForm2/lblLogNormalEvents" Translation="Log normal log lines" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitError" Translation="Error" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitWarning" Translation="Warning" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitCustom" Translation="Custom" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitCustom2" Translation="Custom 2" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitInfo" Translation="Info" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitVerbose" Translation="Verbose" />
     <TranslationEntry Key="ConfigurationForm2/lblLogVariableExpansions" Translation="Log variable expansions" />
     <TranslationEntry Key="ConfigurationForm2/lblMonitorWindow" Translation="Monitor window for showing/hiding overlays" />
     <TranslationEntry Key="ConfigurationForm2/lblShortcutEnableTemplates" Translation="Enable shortcuts to input template expressions" />

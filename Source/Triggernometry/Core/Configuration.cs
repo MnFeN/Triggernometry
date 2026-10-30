@@ -53,6 +53,46 @@ namespace Triggernometry.Core
         [XmlAttribute]
         public bool LogVariableExpansions { get; set; } = false;
 
+        [XmlAttribute]
+        public int LogLimitError { get; set; } = 30000;
+
+        [XmlAttribute]
+        public int LogLimitWarning { get; set; } = 30000;
+
+        [XmlAttribute]
+        public int LogLimitCustom { get; set; } = 30000;
+
+        [XmlAttribute]
+        public int LogLimitCustom2 { get; set; } = 30000;
+
+        [XmlAttribute]
+        public int LogLimitInfo { get; set; } = 30000;
+
+        [XmlAttribute]
+        public int LogLimitVerbose { get; set; } = 30000;
+
+        /// <summary>取得指定级别的日志保留数量；无配置项的内部级别沿用原上限。</summary>
+        internal int GetLogLimit(RealPlugin.DebugLevelEnum level)
+        {
+            switch (level)
+            {
+                case RealPlugin.DebugLevelEnum.Error:
+                    return LogLimitError;
+                case RealPlugin.DebugLevelEnum.Warning:
+                    return LogLimitWarning;
+                case RealPlugin.DebugLevelEnum.Custom:
+                    return LogLimitCustom;
+                case RealPlugin.DebugLevelEnum.Custom2:
+                    return LogLimitCustom2;
+                case RealPlugin.DebugLevelEnum.Info:
+                    return LogLimitInfo;
+                case RealPlugin.DebugLevelEnum.Verbose:
+                    return LogLimitVerbose;
+                default:
+                    return 30000;
+            }
+        }
+
         // Startup
 
         internal bool _ShowWelcomeHasBeenSet = false;

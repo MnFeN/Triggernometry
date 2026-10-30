@@ -322,6 +322,7 @@
     <TranslationEntry Key="ConfigurationForm2/capImageFiles/lblContent" Translation="Image files" />
     <TranslationEntry Key="ConfigurationForm2/capJason/lblContent" Translation="JSON responses" />
     <TranslationEntry Key="ConfigurationForm2/capLogging/lblContent" Translation="Logging settings" />
+    <TranslationEntry Key="ConfigurationForm2/capLogLimits/lblContent" Translation="ログ記録数の上限" />
     <TranslationEntry Key="ConfigurationForm2/capRepoBackups/lblContent" Translation="Repository backups" />
     <TranslationEntry Key="ConfigurationForm2/capScripting/lblContent" Translation="Scripting API access" />
     <TranslationEntry Key="ConfigurationForm2/capSoundFiles/lblContent" Translation="Sound files" />
@@ -396,6 +397,12 @@
     <TranslationEntry Key="ConfigurationForm2/lblFolderReminder" Translation="フォルダを選択するとフォルダに含まれる全てのトリガーが実行されます" />
     <TranslationEntry Key="ConfigurationForm2/lblLoggingLevel" Translation="ログフィルタのレベル" />
     <TranslationEntry Key="ConfigurationForm2/lblLogNormalEvents" Translation="通常のログを記録する" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitError" Translation="Error" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitWarning" Translation="Warning" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitCustom" Translation="Custom" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitCustom2" Translation="Custom 2" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitInfo" Translation="Info" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitVerbose" Translation="Verbose" />
     <TranslationEntry Key="ConfigurationForm2/lblLogVariableExpansions" Translation="Log variable expansions" />
     <TranslationEntry Key="ConfigurationForm2/lblMonitorWindow" Translation="オーバーレイを描画するウィンドウ" />
     <TranslationEntry Key="ConfigurationForm2/lblShortcutEnableTemplates" Translation="Enable shortcuts to input template expressions" />

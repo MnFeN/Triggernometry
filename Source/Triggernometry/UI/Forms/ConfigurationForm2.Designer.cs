@@ -129,6 +129,21 @@
             this.lblLoggingLevel = new System.Windows.Forms.Label();
             this.cbxLoggingLevel = new System.Windows.Forms.ComboBox();
             this.capLogging = new Triggernometry.UI.CustomControls.PrettyCaption();
+            this.capLogLimits = new Triggernometry.UI.CustomControls.PrettyCaption();
+            this.panelLogLimits = new System.Windows.Forms.Panel();
+            this.tableLogLimits = new System.Windows.Forms.TableLayoutPanel();
+            this.lblLogLimitError = new System.Windows.Forms.Label();
+            this.nudLogLimitError = new System.Windows.Forms.NumericUpDown();
+            this.lblLogLimitWarning = new System.Windows.Forms.Label();
+            this.nudLogLimitWarning = new System.Windows.Forms.NumericUpDown();
+            this.lblLogLimitCustom = new System.Windows.Forms.Label();
+            this.nudLogLimitCustom = new System.Windows.Forms.NumericUpDown();
+            this.lblLogLimitCustom2 = new System.Windows.Forms.Label();
+            this.nudLogLimitCustom2 = new System.Windows.Forms.NumericUpDown();
+            this.lblLogLimitInfo = new System.Windows.Forms.Label();
+            this.nudLogLimitInfo = new System.Windows.Forms.NumericUpDown();
+            this.lblLogLimitVerbose = new System.Windows.Forms.Label();
+            this.nudLogLimitVerbose = new System.Windows.Forms.NumericUpDown();
             this.tabShortcuts = new System.Windows.Forms.TabPage();
             this.panel11 = new System.Windows.Forms.Panel();
             this.tableLayoutPanelShortCutExpression = new System.Windows.Forms.TableLayoutPanel();
@@ -346,6 +361,14 @@
             this.tabLogging.SuspendLayout();
             this.panel23.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
+            this.panelLogLimits.SuspendLayout();
+            this.tableLogLimits.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitError)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitWarning)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitCustom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitCustom2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitVerbose)).BeginInit();
             this.tabShortcuts.SuspendLayout();
             this.panel11.SuspendLayout();
             this.tableLayoutPanelShortCutExpression.SuspendLayout();
@@ -1731,6 +1754,8 @@
             // tabLogging
             // 
             this.tabLogging.AutoScroll = true;
+            this.tabLogging.Controls.Add(this.panelLogLimits);
+            this.tabLogging.Controls.Add(this.capLogLimits);
             this.tabLogging.Controls.Add(this.panel23);
             this.tabLogging.Controls.Add(this.capLogging);
             this.tabLogging.Location = new System.Drawing.Point(4, 28);
@@ -1881,6 +1906,299 @@
             this.capLogging.Name = "capLogging";
             this.capLogging.Size = new System.Drawing.Size(856, 35);
             this.capLogging.TabIndex = 9;
+            //
+            // capLogLimits
+            //
+            this.capLogLimits.Caption = "Log record limits";
+            this.capLogLimits.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.capLogLimits.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.capLogLimits.Collapsed = false;
+            this.capLogLimits.Collapsee = null;
+            this.capLogLimits.Collapsible = false;
+            this.capLogLimits.Dock = System.Windows.Forms.DockStyle.Top;
+            this.capLogLimits.Location = new System.Drawing.Point(0, 131);
+            this.capLogLimits.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            this.capLogLimits.Name = "capLogLimits";
+            this.capLogLimits.Size = new System.Drawing.Size(856, 35);
+            this.capLogLimits.TabIndex = 11;
+            //
+            // panelLogLimits
+            //
+            this.panelLogLimits.AutoSize = true;
+            this.panelLogLimits.Controls.Add(this.tableLogLimits);
+            this.panelLogLimits.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelLogLimits.Location = new System.Drawing.Point(0, 166);
+            this.panelLogLimits.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.panelLogLimits.Name = "panelLogLimits";
+            this.panelLogLimits.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
+            this.panelLogLimits.Size = new System.Drawing.Size(856, 195);
+            this.panelLogLimits.TabIndex = 12;
+            //
+            // tableLogLimits
+            //
+            this.tableLogLimits.AutoSize = true;
+            this.tableLogLimits.ColumnCount = 2;
+            this.tableLogLimits.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLogLimits.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLogLimits.Controls.Add(this.lblLogLimitError, 0, 0);
+            this.tableLogLimits.Controls.Add(this.nudLogLimitError, 1, 0);
+            this.tableLogLimits.Controls.Add(this.lblLogLimitWarning, 0, 1);
+            this.tableLogLimits.Controls.Add(this.nudLogLimitWarning, 1, 1);
+            this.tableLogLimits.Controls.Add(this.lblLogLimitCustom, 0, 2);
+            this.tableLogLimits.Controls.Add(this.nudLogLimitCustom, 1, 2);
+            this.tableLogLimits.Controls.Add(this.lblLogLimitCustom2, 0, 3);
+            this.tableLogLimits.Controls.Add(this.nudLogLimitCustom2, 1, 3);
+            this.tableLogLimits.Controls.Add(this.lblLogLimitInfo, 0, 4);
+            this.tableLogLimits.Controls.Add(this.nudLogLimitInfo, 1, 4);
+            this.tableLogLimits.Controls.Add(this.lblLogLimitVerbose, 0, 5);
+            this.tableLogLimits.Controls.Add(this.nudLogLimitVerbose, 1, 5);
+            this.tableLogLimits.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLogLimits.Location = new System.Drawing.Point(0, 9);
+            this.tableLogLimits.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableLogLimits.Name = "tableLogLimits";
+            this.tableLogLimits.RowCount = 6;
+            this.tableLogLimits.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLogLimits.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLogLimits.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLogLimits.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLogLimits.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLogLimits.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLogLimits.Size = new System.Drawing.Size(856, 186);
+            this.tableLogLimits.TabIndex = 0;
+            //
+            // lblLogLimitError
+            //
+            this.lblLogLimitError.AutoEllipsis = true;
+            this.lblLogLimitError.AutoSize = true;
+            this.lblLogLimitError.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLogLimitError.Location = new System.Drawing.Point(4, 0);
+            this.lblLogLimitError.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLogLimitError.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblLogLimitError.Name = "lblLogLimitError";
+            this.lblLogLimitError.Size = new System.Drawing.Size(200, 31);
+            this.lblLogLimitError.TabIndex = 0;
+            this.lblLogLimitError.Text = "Error";
+            this.lblLogLimitError.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // nudLogLimitError
+            //
+            this.nudLogLimitError.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudLogLimitError.Location = new System.Drawing.Point(212, 3);
+            this.nudLogLimitError.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.nudLogLimitError.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.nudLogLimitError.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nudLogLimitError.Name = "nudLogLimitError";
+            this.nudLogLimitError.Size = new System.Drawing.Size(640, 25);
+            this.nudLogLimitError.TabIndex = 1;
+            this.nudLogLimitError.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudLogLimitError.Value = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+            //
+            // lblLogLimitWarning
+            //
+            this.lblLogLimitWarning.AutoEllipsis = true;
+            this.lblLogLimitWarning.AutoSize = true;
+            this.lblLogLimitWarning.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLogLimitWarning.Location = new System.Drawing.Point(4, 31);
+            this.lblLogLimitWarning.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLogLimitWarning.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblLogLimitWarning.Name = "lblLogLimitWarning";
+            this.lblLogLimitWarning.Size = new System.Drawing.Size(200, 31);
+            this.lblLogLimitWarning.TabIndex = 2;
+            this.lblLogLimitWarning.Text = "Warning";
+            this.lblLogLimitWarning.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // nudLogLimitWarning
+            //
+            this.nudLogLimitWarning.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudLogLimitWarning.Location = new System.Drawing.Point(212, 34);
+            this.nudLogLimitWarning.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.nudLogLimitWarning.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.nudLogLimitWarning.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nudLogLimitWarning.Name = "nudLogLimitWarning";
+            this.nudLogLimitWarning.Size = new System.Drawing.Size(640, 25);
+            this.nudLogLimitWarning.TabIndex = 3;
+            this.nudLogLimitWarning.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudLogLimitWarning.Value = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+            //
+            // lblLogLimitCustom
+            //
+            this.lblLogLimitCustom.AutoEllipsis = true;
+            this.lblLogLimitCustom.AutoSize = true;
+            this.lblLogLimitCustom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLogLimitCustom.Location = new System.Drawing.Point(4, 62);
+            this.lblLogLimitCustom.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLogLimitCustom.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblLogLimitCustom.Name = "lblLogLimitCustom";
+            this.lblLogLimitCustom.Size = new System.Drawing.Size(200, 31);
+            this.lblLogLimitCustom.TabIndex = 4;
+            this.lblLogLimitCustom.Text = "Custom";
+            this.lblLogLimitCustom.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // nudLogLimitCustom
+            //
+            this.nudLogLimitCustom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudLogLimitCustom.Location = new System.Drawing.Point(212, 65);
+            this.nudLogLimitCustom.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.nudLogLimitCustom.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.nudLogLimitCustom.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nudLogLimitCustom.Name = "nudLogLimitCustom";
+            this.nudLogLimitCustom.Size = new System.Drawing.Size(640, 25);
+            this.nudLogLimitCustom.TabIndex = 5;
+            this.nudLogLimitCustom.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudLogLimitCustom.Value = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+            //
+            // lblLogLimitCustom2
+            //
+            this.lblLogLimitCustom2.AutoEllipsis = true;
+            this.lblLogLimitCustom2.AutoSize = true;
+            this.lblLogLimitCustom2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLogLimitCustom2.Location = new System.Drawing.Point(4, 93);
+            this.lblLogLimitCustom2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLogLimitCustom2.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblLogLimitCustom2.Name = "lblLogLimitCustom2";
+            this.lblLogLimitCustom2.Size = new System.Drawing.Size(200, 31);
+            this.lblLogLimitCustom2.TabIndex = 6;
+            this.lblLogLimitCustom2.Text = "Custom 2";
+            this.lblLogLimitCustom2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // nudLogLimitCustom2
+            //
+            this.nudLogLimitCustom2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudLogLimitCustom2.Location = new System.Drawing.Point(212, 96);
+            this.nudLogLimitCustom2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.nudLogLimitCustom2.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.nudLogLimitCustom2.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nudLogLimitCustom2.Name = "nudLogLimitCustom2";
+            this.nudLogLimitCustom2.Size = new System.Drawing.Size(640, 25);
+            this.nudLogLimitCustom2.TabIndex = 7;
+            this.nudLogLimitCustom2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudLogLimitCustom2.Value = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+            //
+            // lblLogLimitInfo
+            //
+            this.lblLogLimitInfo.AutoEllipsis = true;
+            this.lblLogLimitInfo.AutoSize = true;
+            this.lblLogLimitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLogLimitInfo.Location = new System.Drawing.Point(4, 124);
+            this.lblLogLimitInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLogLimitInfo.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblLogLimitInfo.Name = "lblLogLimitInfo";
+            this.lblLogLimitInfo.Size = new System.Drawing.Size(200, 31);
+            this.lblLogLimitInfo.TabIndex = 8;
+            this.lblLogLimitInfo.Text = "Info";
+            this.lblLogLimitInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // nudLogLimitInfo
+            //
+            this.nudLogLimitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudLogLimitInfo.Location = new System.Drawing.Point(212, 127);
+            this.nudLogLimitInfo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.nudLogLimitInfo.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.nudLogLimitInfo.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nudLogLimitInfo.Name = "nudLogLimitInfo";
+            this.nudLogLimitInfo.Size = new System.Drawing.Size(640, 25);
+            this.nudLogLimitInfo.TabIndex = 9;
+            this.nudLogLimitInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudLogLimitInfo.Value = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+            //
+            // lblLogLimitVerbose
+            //
+            this.lblLogLimitVerbose.AutoEllipsis = true;
+            this.lblLogLimitVerbose.AutoSize = true;
+            this.lblLogLimitVerbose.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLogLimitVerbose.Location = new System.Drawing.Point(4, 155);
+            this.lblLogLimitVerbose.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLogLimitVerbose.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblLogLimitVerbose.Name = "lblLogLimitVerbose";
+            this.lblLogLimitVerbose.Size = new System.Drawing.Size(200, 31);
+            this.lblLogLimitVerbose.TabIndex = 10;
+            this.lblLogLimitVerbose.Text = "Verbose";
+            this.lblLogLimitVerbose.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // nudLogLimitVerbose
+            //
+            this.nudLogLimitVerbose.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudLogLimitVerbose.Location = new System.Drawing.Point(212, 158);
+            this.nudLogLimitVerbose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.nudLogLimitVerbose.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.nudLogLimitVerbose.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nudLogLimitVerbose.Name = "nudLogLimitVerbose";
+            this.nudLogLimitVerbose.Size = new System.Drawing.Size(640, 25);
+            this.nudLogLimitVerbose.TabIndex = 11;
+            this.nudLogLimitVerbose.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudLogLimitVerbose.Value = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
             // 
             // tabShortcuts
             // 
@@ -4778,6 +5096,16 @@
             this.panel23.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
+            this.panelLogLimits.ResumeLayout(false);
+            this.panelLogLimits.PerformLayout();
+            this.tableLogLimits.ResumeLayout(false);
+            this.tableLogLimits.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitError)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitWarning)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitCustom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitCustom2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitVerbose)).EndInit();
             this.tabShortcuts.ResumeLayout(false);
             this.tabShortcuts.PerformLayout();
             this.panel11.ResumeLayout(false);
@@ -5046,6 +5374,21 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.CheckBox chkLogNormalEvents;
         private System.Windows.Forms.Label lblLoggingLevel;
+        private Triggernometry.UI.CustomControls.PrettyCaption capLogLimits;
+        private System.Windows.Forms.Panel panelLogLimits;
+        private System.Windows.Forms.TableLayoutPanel tableLogLimits;
+        private System.Windows.Forms.Label lblLogLimitError;
+        private System.Windows.Forms.NumericUpDown nudLogLimitError;
+        private System.Windows.Forms.Label lblLogLimitWarning;
+        private System.Windows.Forms.NumericUpDown nudLogLimitWarning;
+        private System.Windows.Forms.Label lblLogLimitCustom;
+        private System.Windows.Forms.NumericUpDown nudLogLimitCustom;
+        private System.Windows.Forms.Label lblLogLimitCustom2;
+        private System.Windows.Forms.NumericUpDown nudLogLimitCustom2;
+        private System.Windows.Forms.Label lblLogLimitInfo;
+        private System.Windows.Forms.NumericUpDown nudLogLimitInfo;
+        private System.Windows.Forms.Label lblLogLimitVerbose;
+        private System.Windows.Forms.NumericUpDown nudLogLimitVerbose;
         private System.Windows.Forms.ComboBox cbxLoggingLevel;
         private CustomControls.PrettyCaption capLogging;
         private System.Windows.Forms.TabControl tbcGames;

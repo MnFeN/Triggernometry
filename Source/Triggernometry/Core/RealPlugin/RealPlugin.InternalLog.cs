@@ -37,6 +37,24 @@ namespace Triggernometry.Core
             ui?.ClearLogCounts();
         }
 
+        /// <summary>应用调低后的记录上限，每个级别只保留最新的日志。</summary>
+        internal void TrimLogs()
+        {
+            foreach (var pair in log)
+            {
+                lock (pair.Value)
+                    TrimLogQueue(pair.Key, pair.Value);
+            }
+        }
+
+        /// <summary>在调用方持有队列锁时，按该级别上限移除最旧日志。</summary>
+        private void TrimLogQueue(DebugLevelEnum level, Queue<InternalLog> queue)
+        {
+            int limit = Math.Max(1000, Config?.GetLogLimit(level) ?? 30000);
+            while (queue.Count > limit)
+                queue.Dequeue();
+        }
+
         internal void UnfilteredAddToLog(DebugLevelEnum level, string msg, Trigger trig = null)
             => UnfilteredAddToLog(level, msg, trig, (ActionBase)null);
 
@@ -63,10 +81,7 @@ namespace Triggernometry.Core
                 // Preserve enqueue order across level queues when timestamps are equal.
                 il.Sequence = Interlocked.Increment(ref logSequence);
                 queue.Enqueue(il);
-                if (queue.Count > 30000)
-                {
-                    queue.Dequeue();
-                }
+                TrimLogQueue(level, queue);
             }
             // 记录入队后再通知 UI，确保点击计数时能够查询到对应日志。
             if (level == DebugLevelEnum.Error || level == DebugLevelEnum.Warning)

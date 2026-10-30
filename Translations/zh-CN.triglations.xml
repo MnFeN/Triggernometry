@@ -322,6 +322,7 @@
     <TranslationEntry Key="ConfigurationForm2/capImageFiles/lblContent" Translation="图片文件" />
     <TranslationEntry Key="ConfigurationForm2/capJason/lblContent" Translation="JSON 响应" />
     <TranslationEntry Key="ConfigurationForm2/capLogging/lblContent" Translation="日志记录选项" />
+    <TranslationEntry Key="ConfigurationForm2/capLogLimits/lblContent" Translation="日志记录上限" />
     <TranslationEntry Key="ConfigurationForm2/capRepoBackups/lblContent" Translation="远程触发器备份" />
     <TranslationEntry Key="ConfigurationForm2/capScripting/lblContent" Translation="脚本代码 API 权限" />
     <TranslationEntry Key="ConfigurationForm2/capSoundFiles/lblContent" Translation="声音文件" />
@@ -396,6 +397,12 @@
     <TranslationEntry Key="ConfigurationForm2/lblFolderReminder" Translation="选择这个分组会在插件启动时自动触发分组下的所有触发器" />
     <TranslationEntry Key="ConfigurationForm2/lblLoggingLevel" Translation="日志过滤级别" />
     <TranslationEntry Key="ConfigurationForm2/lblLogNormalEvents" Translation="记录 ACT 解析日志" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitError" Translation="错误" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitWarning" Translation="警告" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitCustom" Translation="用户" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitCustom2" Translation="用户 2" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitInfo" Translation="信息" />
+    <TranslationEntry Key="ConfigurationForm2/lblLogLimitVerbose" Translation="详细" />
     <TranslationEntry Key="ConfigurationForm2/lblLogVariableExpansions" Translation="记录 $... 表达式展开结果" />
     <TranslationEntry Key="ConfigurationForm2/lblMonitorWindow" Translation="以下标题的窗口激活时显示图片/文本悬浮窗（留空时永远显示）" />
     <TranslationEntry Key="ConfigurationForm2/lblShortcutEnableTemplates" Translation="允许使用快捷键输入模板表达式" />
