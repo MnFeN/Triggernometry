@@ -673,42 +673,34 @@ namespace Triggernometry.Core.Actions
                         string[] invalidExprs = new[] { "${_row", "${_col", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(Value, invalidExprs);
 
-                        // parsing expressions like "n+:key1, s-:key2, s+:key3, ..."
-                        ParseSortKeyFunctions(Value,
-                            out List<bool> isNumeric, out List<bool> isAscending,
-                            out List<string> keysExpr, out List<List<string>> values);
-                        int keysCount = keysExpr.Count;
+                        var keys = ParseSortKeyFunctions(Value);
 
                         lock (srcStore.List)
                         {
                             VariableList vl = srcStore.GetListVariable(srcName, false);
                             ctx.varName = (Persistent ? "plvar:" : "lvar:") + srcName;    // for ${_this}
-                                                                                                            // Iterate through the list and evaluate the key expression in the current context
                             for (int listIndex = 0; listIndex < vl.Size; listIndex++)
                             {
                                 ctx.listIndex = listIndex + 1;  // for ${_idx}
-                                for (int keyIndex = 0; keyIndex < keysCount; keyIndex++)
-                                {
-                                    string keyValue = isNumeric[keyIndex]
-                                        ? I18n.ThingToString(EvalNumeric(keysExpr[keyIndex], ctx))
-                                        : EvalString(keysExpr[keyIndex], ctx);
-                                    values[keyIndex].Add(keyValue);
-                                }
+                                EvaluateSortKeys(keys, ctx);
                             }
-                            IOrderedEnumerable<int> sortedIndices = ApplySorting(vl.Size, isNumeric, isAscending, values);
+                            IOrderedEnumerable<int> sortedIndices = ApplySorting(vl.Size, keys);
                             var sortedList = sortedIndices.Select(i => vl.Values[i]).ToList();
                             vl.Values = sortedList;
                             vl.LastChanger = changer;
                             vl.LastChanged = DateTime.Now;
                         }
 
-                        for (int i = 0; i < keysCount; i++)
-                        {   // logging each sorting keys
-                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortbykeys",
-                                "Sorting {1}list ({0}): function ({2}/{3}, {5}) = ({4}). Keys: ({6})",
-                                srcName, sPersist, i + 1, keysCount, keysExpr[i],
-                                (isNumeric[i] ? "n" : "s") + (isAscending[i] ? "+" : "-"),
-                                string.Join(", ", values[i])));
+                        if (GetDebugLevel(ctx) >= RealPlugin.DebugLevelEnum.Verbose)
+                        {
+                            for (int i = 0; i < keys.Count; i++)
+                            {
+                                var key = keys[i];
+                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listsortbykeys",
+                                    "Sorting {1}list ({0}): function ({2}/{3}, {5}) = ({4}). Keys: ({6})",
+                                    srcName, sPersist, i + 1, keys.Count, key.Expression,
+                                    (key.IsNumeric ? "n" : "s") + (key.IsAscending ? "+" : "-"), key.DescribeValues()));
+                            }
                         }
                     }
                     break;

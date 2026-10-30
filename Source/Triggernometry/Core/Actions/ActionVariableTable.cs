@@ -954,10 +954,7 @@ namespace Triggernometry.Core.Actions
                             : new[] { "${_this}", "${_col", "${_idx}", "${_key}", "${_val}" };
                         CheckInvalidDymanicExpr(rawExpr, invalidExprs);
 
-                        // parsing expressions like "n+:key1, s-:key2, s+:key3, ..."
-                        ParseSortKeyFunctions(rawExpr, out List<bool> isNumeric, out List<bool> isAscending,
-                            out List<string> keysExpr, out List<List<string>> values);
-                        int keysCount = keysExpr.Count;
+                        var keys = ParseSortKeyFunctions(rawExpr);
 
                         lock (srcStore.Table)
                         {
@@ -969,16 +966,10 @@ namespace Triggernometry.Core.Actions
                                 for (int colIndex = 0; colIndex < vt.Width; colIndex++)
                                 {
                                     ctx.tableColIndex = colIndex + 1;  // for ${_col}
-                                    for (int keyIndex = 0; keyIndex < keysCount; keyIndex++)
-                                    {
-                                        string keyValue = isNumeric[keyIndex]
-                                            ? I18n.ThingToString(EvalNumeric(keysExpr[keyIndex], ctx))
-                                            : EvalString(keysExpr[keyIndex], ctx);
-                                        values[keyIndex].Add(keyValue);
-                                    }
+                                    EvaluateSortKeys(keys, ctx);
                                 }
 
-                                var sortedIndices = ApplySorting(vt.Width, isNumeric, isAscending, values).ToArray();
+                                var sortedIndices = ApplySorting(vt.Width, keys).ToArray();
                                 foreach (var row in vt.Rows)
                                 {
                                     var sortedValue = sortedIndices.Select(i => row.Values[i]).ToList();
@@ -991,16 +982,10 @@ namespace Triggernometry.Core.Actions
                                 for (int rowIndex = 0; rowIndex < vt.Height; rowIndex++)
                                 {
                                     ctx.tableRowIndex = rowIndex + 1;  // for ${_row}
-                                    for (int keyIndex = 0; keyIndex < keysCount; keyIndex++)
-                                    {
-                                        string keyValue = isNumeric[keyIndex]
-                                            ? I18n.ThingToString(EvalNumeric(keysExpr[keyIndex], ctx))
-                                            : EvalString(keysExpr[keyIndex], ctx);
-                                        values[keyIndex].Add(keyValue);
-                                    }
+                                    EvaluateSortKeys(keys, ctx);
                                 }
 
-                                IOrderedEnumerable<int> sortedIndices = ApplySorting(vt.Height, isNumeric, isAscending, values);
+                                IOrderedEnumerable<int> sortedIndices = ApplySorting(vt.Height, keys);
                                 var sortedRows = sortedIndices.Select(i => vt.Rows[i]).ToList();
                                 vt.Rows = sortedRows;
                             }
@@ -1009,13 +994,16 @@ namespace Triggernometry.Core.Actions
                             vt.LastChanged = DateTime.Now;
                         }
 
-                        for (int i = 0; i < keysCount; i++)
-                        {   // logging each sorting keys
-                            AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablesortline",
-                                "Sorting {2}s of {1}table ({0}): function ({3}/{4}, {6}) = ({5}). Keys: ({7})",
-                                srcName, sPersist, lineType, i + 1, keysCount, keysExpr[i],
-                                (isNumeric[i] ? "n" : "s") + (isAscending[i] ? "+" : "-"),
-                                string.Join(", ", values[i])));
+                        if (GetDebugLevel(ctx) >= RealPlugin.DebugLevelEnum.Verbose)
+                        {
+                            for (int i = 0; i < keys.Count; i++)
+                            {
+                                var key = keys[i];
+                                AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/tablesortline",
+                                    "Sorting {2}s of {1}table ({0}): function ({3}/{4}, {6}) = ({5}). Keys: ({7})",
+                                    srcName, sPersist, lineType, i + 1, keys.Count, key.Expression,
+                                    (key.IsNumeric ? "n" : "s") + (key.IsAscending ? "+" : "-"), key.DescribeValues()));
+                            }
                         }
                     }
                     break;

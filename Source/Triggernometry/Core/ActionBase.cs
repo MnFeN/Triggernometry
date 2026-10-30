@@ -535,46 +535,61 @@ namespace Triggernometry.Core
             return (EvalString(expression, ctx), plug.GetVariableStore(persistent));
         }
 
-        protected IOrderedEnumerable<int> ApplySorting(int elementCount, List<bool> isNumeric, List<bool> isAscending, List<List<string>> values)
+        /// <summary>保存一个排序键的表达式、方向和计算结果，数值与文本分别存储。</summary>
+        protected sealed class SortKey
         {
-            // Create an enumeration of indices representing the initial order
+            public string Expression;
+            public bool IsNumeric;
+            public bool IsAscending;
+            public List<decimal> NumericValues;
+            public List<string> TextValues;
+
+            /// <summary>仅在需要记录日志时，将排序键值转换为文本。</summary>
+            public string DescribeValues()
+                => IsNumeric
+                    ? string.Join(", ", NumericValues.Select(value => value.ToString(CultureInfo.InvariantCulture)))
+                    : string.Join(", ", TextValues);
+        }
+
+        /// <summary>按声明顺序计算当前元素的排序键，保留原有 decimal 转换的精度和范围。</summary>
+        protected void EvaluateSortKeys(List<SortKey> keys, Context ctx)
+        {
+            foreach (var key in keys)
+            {
+                if (key.IsNumeric)
+                    key.NumericValues.Add((decimal)EvalNumeric(key.Expression, ctx));
+                else
+                    key.TextValues.Add(EvalString(key.Expression, ctx));
+            }
+        }
+
+        /// <summary>按多个键稳定排序索引；数值沿用 double 比较，文本使用 Ordinal。</summary>
+        protected IOrderedEnumerable<int> ApplySorting(int elementCount, List<SortKey> keys)
+        {
             IEnumerable<int> indices = Enumerable.Range(0, elementCount);
             IOrderedEnumerable<int> sortedIndices = null;
-
-            // Iterate through the sorting key functions
-            for (int keyIndex = 0; keyIndex < values.Count; keyIndex++)
+            foreach (var key in keys)
             {
-                int k = keyIndex; // local variable for lambda expression
-                // 4 sorting rules: numeric/string × ascending/descending
-                if (keyIndex == 0)
+                if (key.IsNumeric)
                 {
-                    if (isNumeric[k])
-                    {
-                        sortedIndices = isAscending[k]
-                            ? indices.OrderBy(i => Convert.ToDouble(values[k][i], CultureInfo.InvariantCulture))
-                            : indices.OrderByDescending(i => Convert.ToDouble(values[k][i], CultureInfo.InvariantCulture));
-                    }
+                    // 原路径先转 decimal 再经文本解析为 double，此处保留数值转换但省去文本往返。
+                    Func<int, double> selector = i => (double)key.NumericValues[i];
+                    if (sortedIndices == null)
+                        sortedIndices = key.IsAscending ? indices.OrderBy(selector) : indices.OrderByDescending(selector);
                     else
-                    {
-                        sortedIndices = isAscending[k]
-                            ? indices.OrderBy(i => values[k][i])
-                            : indices.OrderByDescending(i => values[k][i]);
-                    }
+                        sortedIndices = key.IsAscending ? sortedIndices.ThenBy(selector) : sortedIndices.ThenByDescending(selector);
                 }
                 else
                 {
-                    if (isNumeric[k])
-                    {
-                        sortedIndices = isAscending[k]
-                            ? sortedIndices.ThenBy(i => Convert.ToDouble(values[k][i], CultureInfo.InvariantCulture))
-                            : sortedIndices.ThenByDescending(i => Convert.ToDouble(values[k][i], CultureInfo.InvariantCulture));
-                    }
+                    Func<int, string> selector = i => key.TextValues[i];
+                    if (sortedIndices == null)
+                        sortedIndices = key.IsAscending
+                            ? indices.OrderBy(selector, StringComparer.Ordinal)
+                            : indices.OrderByDescending(selector, StringComparer.Ordinal);
                     else
-                    {
-                        sortedIndices = isAscending[k]
-                            ? sortedIndices.ThenBy(i => values[k][i])
-                            : sortedIndices.ThenByDescending(i => values[k][i]);
-                    }
+                        sortedIndices = key.IsAscending
+                            ? sortedIndices.ThenBy(selector, StringComparer.Ordinal)
+                            : sortedIndices.ThenByDescending(selector, StringComparer.Ordinal);
                 }
             }
             return sortedIndices;
@@ -591,34 +606,29 @@ namespace Triggernometry.Core
             }
         }
 
-        protected void ParseSortKeyFunctions(string rawExpr,
-            out List<bool> isNumeric, out List<bool> isAscending,
-            out List<string> keysExpr, out List<List<string>> values)
-        {   // parsing expressions like "n+:key1, s-:key2, s+:key3, ..."
+        /// <summary>解析 n+:表达式、s-:表达式等排序规则，每个键只创建对应类型的结果集合。</summary>
+        protected List<SortKey> ParseSortKeyFunctions(string rawExpr)
+        {
             string[] rawKeys = ArgHelper.SplitArguments(rawExpr, allowEmptyList: true);
-
-            isNumeric = new List<bool>();       // numeric / string options
-            isAscending = new List<bool>();     // ascending / descending options
-            keysExpr = new List<string>();      // expression of the keys
-            values = new List<List<string>>();  // each sublist contains the evaluated results of one key
-
+            var keys = new List<SortKey>(rawKeys.Length);
             Regex regexSortKeyExpr = new Regex("^ *(?<type>[NnSs]) *(?<order>[-+]?) *:(?<key>.+)$");
             foreach (string rawKey in rawKeys)
             {
                 Match keyMatch = regexSortKeyExpr.Match(rawKey);
-                if (keyMatch.Success)
-                {
-                    isNumeric.Add(keyMatch.Groups["type"].Value.ToLower() == "n");
-                    isAscending.Add(keyMatch.Groups["order"].Value != "-");
-                    keysExpr.Add(keyMatch.Groups["key"].Value);
-                    values.Add(new List<string>());
-                }
-                else
-                {
+                if (!keyMatch.Success)
                     throw new ArgumentException(I18n.Translate("internal/Action/sortkeyexprerror",
                         "The sorting key functions ({0}) could not be parsed.", rawKey));
-                }
+                bool isNumeric = string.Equals(keyMatch.Groups["type"].Value, "n", StringComparison.OrdinalIgnoreCase);
+                keys.Add(new SortKey
+                {
+                    Expression = keyMatch.Groups["key"].Value,
+                    IsNumeric = isNumeric,
+                    IsAscending = keyMatch.Groups["order"].Value != "-",
+                    NumericValues = isNumeric ? new List<decimal>() : null,
+                    TextValues = isNumeric ? null : new List<string>()
+                });
             }
+            return keys;
         }
 
         protected Tuple<int, string> SendJson(Context ctx, ActionJsonRequest.MethodEnum method, string url, string json, IEnumerable<string> headers, bool expectNoContent)
