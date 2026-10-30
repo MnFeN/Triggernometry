@@ -39,6 +39,7 @@
     <TranslationEntry Key="ActionForm/cbxActionType[Scalar variable operation]" Translation="标量变量" />
     <TranslationEntry Key="ActionForm/cbxActionType[Send keypresses to active window]" Translation="发送键盘操作" />
     <TranslationEntry Key="ActionForm/cbxActionType[Send window message]" Translation="发送窗口消息 (Window message)" />
+    <TranslationEntry Key="ActionForm/cbxActionType[Show TraySlider]" Translation="显示滑动弹窗" />
     <TranslationEntry Key="ActionForm/cbxActionType[Show message box]" Translation="显示消息框" />
     <TranslationEntry Key="ActionForm/cbxActionType[System beep]" Translation="系统蜂鸣音" />
     <TranslationEntry Key="ActionForm/cbxActionType[Table variable operation]" Translation="表格变量" />
@@ -75,6 +76,7 @@
     <!-- e.g. "ActionForm/███rtbHelperCallback" => "ActionForm/rtbHelperCallback".   -->
     <!-- 注意转义规则：{ } 应写为 {{ }}    半角双引号：&quot;      半角小于/大于：&lt; / &gt;     换行：&#xD;&#xA; -->
     <TranslationEntry Key="ActionForm/rtbHelperCallback" Translation="发送具名回调，如调用鲶鱼精邮差等插件。&#xD;&#xA;&#xD;&#xA;鲶鱼精邮差使用简介：&#xD;&#xA;&#xD;&#xA;向游戏发送文本指令：&#xD;&#xA;回调名称：`command`&#xA;回调参数：`/e test &lt;se.1&gt;`&#xA;&#xA;向游戏发送本地标点（取消 `A`，场中标记 `1`，其他标点不改变）：&#xD;&#xA;回调名称：`place`&#xA;回调参数：`&#xD;&#xA;{{&#xD;&#xA;    &quot;A&quot;: {{}},&#xD;&#xA;    &quot;One&quot;: {{&quot;X&quot;: 100, &quot;Y&quot;: 100, &quot;Z&quot;: 0, &quot;Active&quot;: true}}&#xD;&#xA;}}`&#xD;&#xA;&#xD;&#xA;注：本地标点仅自己可见。若需全队可见，需要手动或自动将本地标点存入游戏预设并重新加载；&#xD;&#xA;字符串的换行和缩进无关紧要。&#xD;&#xA;更多用法详见 `Github`: `Natsukage/PostNamazu`" />
+    <TranslationEntry Key="ActionForm/rtbHelperTraySlider" Translation="解析文本表达式并显示带确认按钮的滑动弹窗。&#xD;&#xA;多行结果的第一行作为标题，其余行作为正文；单行结果直接作为正文。" />
     <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="将值按文本表达式解析，并将结果写入剪贴板。&#10;结果为空时清空剪贴板。&#10;&#10;文本写入剪贴板后可以使用 `${{_clipboard}}` 读取。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictBuild" Translation="以表达式经过解析后的第一个字符作为键与值的分隔符，第二个字符作为键值对间的分隔符，将表达式剩余部分构筑为字典。&#xD;&#xA;&#xD;&#xA;例：输入表达式 `=,a=1,b=2,c=3` 可构筑字典：`a = 1, b = 2, c = 3`；&#xD;&#xA;输入表达式 `=,${{tvar:table.hjoin('=', ',')}}` 可将一个两列的表格变量 `table` 转化为字典，两列分别作为键与值。" />
     <TranslationEntry Key="ActionForm/rtbHelperDictCopyRegisteredVariables" Translation="将当前已注册的全部变量名和值复制到目标字典，替换目标字典的原有内容。&#xD;&#xA;复制后的字典独立保存，后续注册变量的变化不会影响此字典。" />
@@ -672,6 +674,9 @@
     <TranslationEntry Key="internal/Action/desctextauradeact" Translation="停用文本悬浮窗 ({0})" />
     <TranslationEntry Key="internal/Action/desctextauradeactall" Translation="停用所有的文本悬浮窗" />
     <TranslationEntry Key="internal/Action/desctextauradeactrex" Translation="停用符合正则表达式 ({0}) 的文本悬浮窗" />
+    <TranslationEntry Key="internal/Action/desctraysliderError" Translation="显示错误等级的滑动弹窗 ({0})" />
+    <TranslationEntry Key="internal/Action/desctraysliderInfo" Translation="显示信息等级的滑动弹窗 ({0})" />
+    <TranslationEntry Key="internal/Action/desctraysliderWarning" Translation="显示警告等级的滑动弹窗 ({0})" />
     <TranslationEntry Key="internal/Action/desctrigcancelall" Translation="取消队列中的所有动作" />
     <TranslationEntry Key="internal/Action/desctrigcanceltag" Translation="取消队列中所有标签匹配正则（{0}）的动作" />
     <TranslationEntry Key="internal/Action/desctrigcanceltrig" Translation="取消队列中来自触发器（{0}）的所有动作" />
@@ -1248,6 +1253,11 @@
     <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update containing repository]" Translation="更新所处于的远程仓库" />
     <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update selected repository]" Translation="更新选中的远程仓库" />
     <TranslationEntry Key="internal/EditorFields/ActionRepository/RepositoryId" Translation="远程仓库" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level" Translation="消息等级" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Error]" Translation="错误" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Information]" Translation="信息" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Warning]" Translation="警告" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Text" Translation="文本" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force" Translation="触发选项" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore conditions]" Translation="忽略条件" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore enabled/disabled status]" Translation="忽略 启用/禁用 状态" />
@@ -1715,6 +1725,7 @@
     <TranslationEntry Key="internal/SearchForm/hitlistname" Translation="操作 #{0} 列表名" />
     <TranslationEntry Key="internal/SearchForm/hitlisttarget" Translation="操作 #{0} 目标列表" />
     <TranslationEntry Key="internal/SearchForm/hitlogtext" Translation="操作 #{0} 日志文本" />
+    <TranslationEntry Key="internal/SearchForm/hittrayslidertext" Translation="动作 #{0} 滑动弹窗文本" />
     <TranslationEntry Key="internal/SearchForm/hitmsgboxtext" Translation="操作 #{0} 消息框文本" />
     <TranslationEntry Key="internal/SearchForm/hitobsendpoint" Translation="动作 #{0} OBS 端点" />
     <TranslationEntry Key="internal/SearchForm/hitobsscene" Translation="操作 #{0} OBS 场景名称" />

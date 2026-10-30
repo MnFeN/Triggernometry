@@ -278,6 +278,10 @@ namespace Triggernometry.UI.Forms
                         {
                             if (RegexMatches(rex, messageBox.Text) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitmsgboxtext", "Action #{0} message box text", i), Match = tn });
                         }
+                        if (a is ActionTraySlider traySlider)
+                        {
+                            if (RegexMatches(rex, traySlider.Text)) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittrayslidertext", "Action #{0} tray notification text", i), Match = tn });
+                        }
                         if (a is ActionObsControl obsControl)
                         {
                             if (RegexMatches(rex, obsControl.SceneName) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hitobsscene", "Action #{0} OBS scene name", i), Match = tn });

@@ -23,6 +23,7 @@ namespace Triggernometry.UI.Forms
             typeof(ActionPlaySpeech),
 
             typeof(ActionMessageBox),
+            typeof(ActionTraySlider),
             typeof(ActionOverlayText),
             typeof(ActionOverlayImage),
 

@@ -39,6 +39,7 @@
     <TranslationEntry Key="ActionForm/cbxActionType[Scalar variable operation]" Translation="スカラ変数の操作" />
     <TranslationEntry Key="ActionForm/cbxActionType[Send keypresses to active window]" Translation="キープレスの送信" />
     <TranslationEntry Key="ActionForm/cbxActionType[Send window message]" Translation="指定ウィンドウにメッセージを送信" />
+    <TranslationEntry Key="ActionForm/cbxActionType[Show TraySlider]" Translation="Show TraySlider" />
     <TranslationEntry Key="ActionForm/cbxActionType[Show message box]" Translation="メッセージボックスの表示" />
     <TranslationEntry Key="ActionForm/cbxActionType[System beep]" Translation="ビープ音の再生" />
     <TranslationEntry Key="ActionForm/cbxActionType[Table variable operation]" Translation="テーブル変数の操作" />
@@ -69,6 +70,7 @@
     <TranslationEntry Key="ActionForm/lblTextColor" Translation="Colors" />
     <TranslationEntry Key="ActionForm/lblWmsgWarning" Translation="このタイプのアクションには潜在的な危険性があります。トリガーが期待値の範囲外のパラメーターで起動された場合などに意図しない損害を引き起こす可能性があります。十分に注意を払い自己責任で使用してください。" />
     <TranslationEntry Key="ActionForm/rtbHelper" Translation="[Show Help]" />
+    <TranslationEntry Key="ActionForm/rtbHelperTraySlider" Translation="Evaluates the text expression and shows a sliding tray notification with a Confirm button.&#xD;&#xA;For multiline results, the first line is the title and the remaining lines are the message. A single-line result is shown as the message." />
     <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="値を文字列式として評価し、結果をクリップボードにコピーします。&#10;結果が空の場合はクリップボードを消去します。&#10;&#10;クリップボードに書き込んだテキストは `${{_clipboard}}` で読み取れます。" />
     <TranslationEntry Key="ActionForm/tabActionCondition" Translation="アクションの条件式" />
     <TranslationEntry Key="ActionForm/tabActionSettings" Translation="アクション固有の設定" />
@@ -672,6 +674,9 @@
     <TranslationEntry Key="internal/Action/desctextauradeact" Translation="テキストオーバーレイ ({0}) を無効化" />
     <TranslationEntry Key="internal/Action/desctextauradeactall" Translation="すべてのテキストオーバーレイを無効化" />
     <TranslationEntry Key="internal/Action/desctextauradeactrex" Translation="正規表現 ({0}) にマッチするテキストオーバーレイを無効化" />
+    <TranslationEntry Key="internal/Action/desctraysliderError" Translation="show a tray notification ({0}), level (Error)" />
+    <TranslationEntry Key="internal/Action/desctraysliderInfo" Translation="show a tray notification ({0}), level (Info)" />
+    <TranslationEntry Key="internal/Action/desctraysliderWarning" Translation="show a tray notification ({0}), level (Warning)" />
     <TranslationEntry Key="internal/Action/desctrigcancelall" Translation="すべてのトリガーのアクションを取消" />
     <TranslationEntry Key="internal/Action/desctrigcanceltag" Translation="タグが正規表現（{0}）に一致するアクションを取消" />
     <TranslationEntry Key="internal/Action/desctrigcanceltrig" Translation="トリガー（{0}）のアクションを取消" />
@@ -1248,6 +1253,11 @@
     <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update containing repository]" Translation="Update containing repository" />
     <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update selected repository]" Translation="Update selected repository" />
     <TranslationEntry Key="internal/EditorFields/ActionRepository/RepositoryId" Translation="Repository" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level" Translation="Message level" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Error]" Translation="Error" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Information]" Translation="Information" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Warning]" Translation="Warning" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Text" Translation="Text" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force" Translation="実行オプション" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore conditions]" Translation="条件を無視する" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore enabled/disabled status]" Translation="有効／無効のステータスを無視する" />
@@ -1715,6 +1725,7 @@
     <TranslationEntry Key="internal/SearchForm/hitlistname" Translation="Action #{0} list variable name" />
     <TranslationEntry Key="internal/SearchForm/hitlisttarget" Translation="Action #{0} list variable target" />
     <TranslationEntry Key="internal/SearchForm/hitlogtext" Translation="Action #{0} log text" />
+    <TranslationEntry Key="internal/SearchForm/hittrayslidertext" Translation="Action #{0} tray notification text" />
     <TranslationEntry Key="internal/SearchForm/hitmsgboxtext" Translation="Action #{0} message box text" />
     <TranslationEntry Key="internal/SearchForm/hitobsendpoint" Translation="アクション #{0} OBS エンドポイント" />
     <TranslationEntry Key="internal/SearchForm/hitobsscene" Translation="Action #{0} OBS scene name" />

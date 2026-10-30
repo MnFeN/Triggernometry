@@ -600,6 +600,10 @@ The window message sends one key at a time in this mode.</value>
 
 To add the response from the endpoint to this expression, special variable "_response" is available, as well as the variable you may have defined. The special variable will only be valid in the context of this action's execution. Special variable _responsecode is also available for retrieving the HTTP status code of the request.</value>
   </data>
+  <data name="rtbHelperTraySlider.Text" xml:space="preserve">
+    <value>Evaluates the text expression and shows a sliding tray notification with a Confirm button.
+For multiline results, the first line is the title and the remaining lines are the message. A single-line result is shown as the message.</value>
+  </data>
   <data name="rtbHelperWmsg.Text" xml:space="preserve">
     <value>If the process ID is left empty or is zero, the message will be sent to the first window with the given title. If it's set to -1, the message is sent to all found windows. For all other values, the message will be sent to the window with the matching process ID and title name.
 
@@ -1028,6 +1032,20 @@ The table can be further processed with filtering, sorting, and other table acti
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2fJ4qAAAACnRSTlMA////////////fokUVgAAAEdJ
         REFUeNptz0EOwCAIRFG0jMr9L1wwaju0b/kzIUEkK4mUeh2qNcLjE5wHJTMAoAA0Lz3s8Jrw4txofGMZ
         gYKZjd9Ffi67AXU8Awm3U2QQAAAAAElFTkSuQmCC
+    </value>
+  </data>
+  <data name="actionType.ActionTraySlider" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+        jwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGZSURBVFhHY2AYBQwMDPH18zmy6qdUZNZPbaAX
+        BtkHshfsgKz6KQmNk5b9XLvrxH964fKued+z66c7wB0wY9mOzx+//vpPL9w6bdX7UQcMXQfcefzq
+        /4UbD8nCIL0UOyCvaeb/6klryMIgvRQ7IKt+2v/Je56ShUF6h44DVp95Dsbo4nRxwN7rb/7b954G
+        YxAb3QFP3v0gCxPlgPMPP/536T/z37LzJBiD2CAxZAeQCwg64NbzL/8Dpp+HWw7DIDGQHM0dsP3y
+        6/9T9z/6n77kGtzy4tU3wGIgOXQHHDxx8X/LpMV48fuPn4l3AAyDLIQ5AD0hDioHkAqGnwOu3Xrw
+        f822gxgYF6C6A0CWReW2YGBcgGgHgCwF5QQQxlYQkQuIdgA+PCgccOv+U7IwdgfUTUltmkx8q7h9
+        xpr/jZOWk4VBesGt4u553zPrZ7iBHZBZPymrYdJSoh1ADVwGbpZP8yErCqiBKUoD1MAYDuiZs+Eb
+        egOSlrh2wpLPcAfk1E/SKG6fe7a0fd55euHitjlHs+qnSIAdMJAAAHT0lvnCdBwKAAAAAElFTkSu
+        QmCC
     </value>
   </data>
   <data name="actionType.ActionOverlayText" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

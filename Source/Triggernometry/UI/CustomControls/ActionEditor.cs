@@ -283,6 +283,8 @@ namespace Triggernometry.UI.CustomControls
                 prefix = "rtbHelperSendKeys";
             else if (action is ActionClipboard)
                 return "rtbHelperClipboard";
+            else if (action is ActionTraySlider)
+                return "rtbHelperTraySlider";
             else if (action is ActionNamedCallback)
                 return "rtbHelperCallback";
             else if (action is ActionWindowMessage)

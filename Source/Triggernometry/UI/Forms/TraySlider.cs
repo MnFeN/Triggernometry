@@ -439,7 +439,8 @@ namespace Triggernometry.UI.Forms
             Error(1, message, title).Show();
         }
 
-        private static (string, string) ParseTitleAndMessage(string s)
+        /// <summary>多行文本的第一行作为标题，其余作为正文；单行文本仅作为正文。</summary>
+        internal static (string, string) ParseTitleAndMessage(string s)
         {
             var parts = (s ?? "").Split(new[] { "\r\n", "\r", "\n" }, 2, StringSplitOptions.None);
             var title = parts.Length > 1 ? parts[0] : "";

@@ -39,6 +39,7 @@
     <TranslationEntry Key="ActionForm/cbxActionType[Scalar variable operation]" Translation="Scalar variable operation" />
     <TranslationEntry Key="ActionForm/cbxActionType[Send keypresses to active window]" Translation="Send keypresses to active window" />
     <TranslationEntry Key="ActionForm/cbxActionType[Send window message]" Translation="Send window message" />
+    <TranslationEntry Key="ActionForm/cbxActionType[Show TraySlider]" Translation="Show TraySlider" />
     <TranslationEntry Key="ActionForm/cbxActionType[Show message box]" Translation="Show message box" />
     <TranslationEntry Key="ActionForm/cbxActionType[System beep]" Translation="System beep" />
     <TranslationEntry Key="ActionForm/cbxActionType[Table variable operation]" Translation="Table variable operation" />
@@ -69,6 +70,7 @@
     <TranslationEntry Key="ActionForm/lblTextColor" Translation="Colors" />
     <TranslationEntry Key="ActionForm/lblWmsgWarning" Translation="Actions of this type may be potentially dangerous and cause damage if, for example, the trigger is fired with parameters that fall outside of the expected values. Please be aware of the risk." />
     <TranslationEntry Key="ActionForm/rtbHelper" Translation="[Show Help]" />
+    <TranslationEntry Key="ActionForm/rtbHelperTraySlider" Translation="Evaluates the text expression and shows a sliding tray notification with a Confirm button.&#xD;&#xA;For multiline results, the first line is the title and the remaining lines are the message. A single-line result is shown as the message." />
     <TranslationEntry Key="ActionForm/rtbHelperClipboard" Translation="Evaluates the value as a text expression and copies the result to the clipboard.&#10;An empty result clears the clipboard.&#10;&#10;After writing text to the clipboard, use `${{_clipboard}}` to read it." />
     <TranslationEntry Key="ActionForm/tabActionCondition" Translation="Action condition" />
     <TranslationEntry Key="ActionForm/tabActionSettings" Translation="Action-specific settings" />
@@ -672,6 +674,9 @@
     <TranslationEntry Key="internal/Action/desctextauradeact" Translation="deactivate text aura ({0})" />
     <TranslationEntry Key="internal/Action/desctextauradeactall" Translation="deactivate all text auras" />
     <TranslationEntry Key="internal/Action/desctextauradeactrex" Translation="deactivate text auras matching regular expression ({0})" />
+    <TranslationEntry Key="internal/Action/desctraysliderError" Translation="show a tray notification ({0}), level (Error)" />
+    <TranslationEntry Key="internal/Action/desctraysliderInfo" Translation="show a tray notification ({0}), level (Info)" />
+    <TranslationEntry Key="internal/Action/desctraysliderWarning" Translation="show a tray notification ({0}), level (Warning)" />
     <TranslationEntry Key="internal/Action/desctrigcancelall" Translation="cancel all actions queued from all triggers" />
     <TranslationEntry Key="internal/Action/desctrigcanceltag" Translation="cancel all actions queued from all triggers with tags matching regex ({0})" />
     <TranslationEntry Key="internal/Action/desctrigcanceltrig" Translation="cancel all actions queued from trigger ({0})" />
@@ -1248,6 +1253,11 @@
     <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update containing repository]" Translation="Update containing repository" />
     <TranslationEntry Key="internal/EditorFields/ActionRepository/Operation[Update selected repository]" Translation="Update selected repository" />
     <TranslationEntry Key="internal/EditorFields/ActionRepository/RepositoryId" Translation="Repository" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level" Translation="Message level" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Error]" Translation="Error" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Information]" Translation="Information" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Level[Warning]" Translation="Warning" />
+    <TranslationEntry Key="internal/EditorFields/ActionTraySlider/Text" Translation="Text" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force" Translation="Firing options" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore conditions]" Translation="Ignore conditions" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore enabled/disabled status]" Translation="Ignore enabled/disabled status" />
@@ -1715,6 +1725,7 @@
     <TranslationEntry Key="internal/SearchForm/hitlistname" Translation="Action #{0} list variable name" />
     <TranslationEntry Key="internal/SearchForm/hitlisttarget" Translation="Action #{0} list variable target" />
     <TranslationEntry Key="internal/SearchForm/hitlogtext" Translation="Action #{0} log text" />
+    <TranslationEntry Key="internal/SearchForm/hittrayslidertext" Translation="Action #{0} tray notification text" />
     <TranslationEntry Key="internal/SearchForm/hitmsgboxtext" Translation="Action #{0} message box text" />
     <TranslationEntry Key="internal/SearchForm/hitobsendpoint" Translation="Action #{0} OBS endpoint" />
     <TranslationEntry Key="internal/SearchForm/hitobsscene" Translation="Action #{0} OBS scene name" />

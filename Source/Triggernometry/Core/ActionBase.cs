@@ -28,6 +28,7 @@ namespace Triggernometry.Core
     [XmlInclude(typeof(ActionPlaySound))]
     [XmlInclude(typeof(ActionPlaySpeech))]
     [XmlInclude(typeof(ActionMessageBox))]
+    [XmlInclude(typeof(ActionTraySlider))]
     [XmlInclude(typeof(ActionOverlayText))]
     [XmlInclude(typeof(ActionOverlayImage))]
     [XmlInclude(typeof(ActionVariableScalar))]
