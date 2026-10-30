@@ -104,8 +104,8 @@
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnAddGroup,
             this.btnAddCondition,
+            this.btnAddGroup,
             this.btnAddComment,
             this.btnDelete});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -116,6 +116,7 @@
             // btnAddGroup
             // 
             this.btnAddGroup.Image = ((System.Drawing.Image)(resources.GetObject("btnAddGroup.Image")));
+            this.btnAddGroup.Margin = new System.Windows.Forms.Padding(0, 1, 8, 2);
             this.btnAddGroup.Name = "btnAddGroup";
             this.btnAddGroup.Size = new System.Drawing.Size(162, 22);
             this.btnAddGroup.Text = "Add group";
@@ -124,6 +125,7 @@
             // btnAddCondition
             // 
             this.btnAddCondition.Image = ((System.Drawing.Image)(resources.GetObject("btnAddCondition.Image")));
+            this.btnAddCondition.Margin = new System.Windows.Forms.Padding(0, 1, 8, 2);
             this.btnAddCondition.Name = "btnAddCondition";
             this.btnAddCondition.Size = new System.Drawing.Size(162, 22);
             this.btnAddCondition.Text = "Add condition";
@@ -132,6 +134,7 @@
             // btnAddComment
             //
             this.btnAddComment.Image = ((System.Drawing.Image)(resources.GetObject("btnAddComment.Image")));
+            this.btnAddComment.Margin = new System.Windows.Forms.Padding(0, 1, 8, 2);
             this.btnAddComment.Name = "btnAddComment";
             this.btnAddComment.Size = new System.Drawing.Size(162, 22);
             this.btnAddComment.Text = "Add comment";
@@ -141,6 +144,7 @@
             // 
             this.btnDelete.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.Image")));
             this.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(0, 1, 8, 2);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(70, 22);
             this.btnDelete.Text = "Remove";

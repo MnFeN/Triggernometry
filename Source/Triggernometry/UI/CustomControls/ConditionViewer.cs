@@ -591,8 +591,11 @@ namespace Triggernometry.UI.CustomControls
             TreeNode tx = trvNodes.SelectedNode;
             if (!(tx.Tag is ConditionGroup))
                 tx = tx.Parent;
+            bool shouldEnableRoot = tx.Parent == null && tx.Nodes.Count == 0 && !(re is ConditionComment);
             ((ConditionGroup)tx.Tag).AddChild(re);
             tx.Nodes.Add(tn);
+            if (shouldEnableRoot)
+                tx.Checked = true;
             RecolorStartingFromNode(tx, tx.Checked);
             trvNodes.SelectedNode = tn;
             if (tx.IsExpanded == false)
