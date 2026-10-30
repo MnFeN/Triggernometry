@@ -355,23 +355,6 @@ namespace Triggernometry.Core
 
         #region Scheduling and execution
 
-        /// <summary>
-        /// True = action was executed (enabled & conditions met), false = action was not executed (disabled or conditions not met)
-        /// </summary>
-        internal bool LastExecutionResult
-        {
-            get => _LastExecutionResult;
-            set
-            {
-                _LastExecutionResult = value;
-                LastExecutionTime = DateTime.Now;
-                ExecutionCount++;
-            }
-        }
-        private bool _LastExecutionResult { get; set; } = false;
-        internal DateTime LastExecutionTime { get; set; } = DateTime.MinValue;
-        internal int ExecutionCount { get; set; } = 0;
-
         /// <summary>在指定上下文中执行具体动作的业务逻辑。</summary>
         internal abstract void ExecuteImplementation(Context ctx);
 

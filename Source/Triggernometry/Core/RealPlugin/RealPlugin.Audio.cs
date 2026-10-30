@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
 using System.Speech.Synthesis;
 using Triggernometry.Core.Actions;
 using Triggernometry.Localization;
@@ -289,38 +287,10 @@ namespace Triggernometry.Core
         internal void SoundPlaybackSmart(Context ctx, ActionPlaySound a)
         {
             string filename = ctx.EvaluateStringExpression(a.ExpressionLogger, ctx, a.Filename);
-            Uri u = new Uri(filename);
-            if (u.IsFile == false)
-            {
-                string fn = Path.Combine(ConfigPath, "TriggernometryRemoteSounds");
-                if (Directory.Exists(fn) == false)
-                {
-                    Directory.CreateDirectory(fn);
-                }
-                string ext = Path.GetExtension(u.LocalPath);
-                fn = Path.Combine(fn, GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
-                bool fromcache = false;
-                if (File.Exists(fn) == true)
-                {
-                    FileInfo fi = new FileInfo(fn);
-                    DateTime dt = DateTime.Now.AddMinutes(0 - Config.CacheSoundExpiry);
-                    if (fi.LastWriteTime > dt)
-                    {
-                        filename = fn;
-                        fromcache = true;
-                    }
-                }
-                if (fromcache == false)
-                {
-                    using (WebClient wc = new WebClient())
-                    {
-                        wc.Headers["User-Agent"] = "Triggernometry Sound Retriever";
-                        byte[] data = wc.DownloadData(u.AbsoluteUri);
-                        File.WriteAllBytes(fn, data);
-                        filename = fn;
-                    }
-                }
-            }
+            Uri uri = new Uri(filename);
+            if (!uri.IsFile)
+                filename = GetCachedResource(uri, "TriggernometryRemoteSounds", Config.CacheSoundExpiry,
+                    "Triggernometry Sound Retriever");
             switch (a.AudioTarget)
             {
                 case Configuration.AudioRoutingMethodEnum.None:

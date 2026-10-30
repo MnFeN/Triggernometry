@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Net;
 using System.Xml.Serialization;
 using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
@@ -169,38 +168,10 @@ namespace Triggernometry.Core.Actions
                 Operation == OperationEnum.ReadIntoListVariable || 
                 Operation == OperationEnum.ReadIntoVariable)
             {
-                Uri u = new Uri(filename);
-                if (u.IsFile == false)
-                {
-                    string fn = Path.Combine(plug.ConfigPath, "TriggernometryFileCache");
-                    if (Directory.Exists(fn) == false)
-                    {
-                        Directory.CreateDirectory(fn);
-                    }
-                    string ext = Path.GetExtension(u.LocalPath);
-                    fn = Path.Combine(fn, RealPlugin.GenerateHash(u.AbsoluteUri) + Path.GetExtension(u.LocalPath));
-                    bool isFromCache = false;
-                    if (File.Exists(fn) == true && UseCache == true)
-                    {
-                        FileInfo fi = new FileInfo(fn);
-                        DateTime dt = DateTime.Now.AddMinutes(0 - plug.Config.CacheFileExpiry);
-                        if (fi.LastWriteTime > dt)
-                        {
-                            filename = fn;
-                            isFromCache = true;
-                        }
-                    }
-                    if (isFromCache == false)
-                    {
-                        using (WebClient wc = new WebClient())
-                        {
-                            wc.Headers["User-Agent"] = "Triggernometry File Retriever";
-                            byte[] data = wc.DownloadData(u.AbsoluteUri);
-                            File.WriteAllBytes(fn, data);
-                            filename = fn;
-                        }
-                    }
-                }
+                Uri uri = new Uri(filename);
+                if (!uri.IsFile)
+                    filename = plug.GetCachedResource(uri, "TriggernometryFileCache", plug.Config.CacheFileExpiry,
+                        "Triggernometry File Retriever", UseCache);
             }
             switch (Operation)
             {

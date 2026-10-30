@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Principal;
 using System.Text;
 using System.Windows.Forms;
@@ -46,6 +48,26 @@ namespace Triggernometry.Core
                 }
                 return sb.ToString().ToLower();
             }
+        }
+
+        /// <summary>返回有效的本地缓存路径；缓存不可用时下载并保存远程资源。</summary>
+        internal string GetCachedResource(Uri uri, string cacheFolder, int expiryMinutes, string userAgent, bool useCache = true)
+        {
+            string directory = Path.Combine(ConfigPath, cacheFolder);
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            string filename = Path.Combine(directory, GenerateHash(uri.AbsoluteUri) + Path.GetExtension(uri.LocalPath));
+            if (useCache && File.Exists(filename) &&
+                new FileInfo(filename).LastWriteTime > DateTime.Now.AddMinutes(-expiryMinutes))
+                return filename;
+
+            using (var client = new WebClient())
+            {
+                client.Headers["User-Agent"] = userAgent;
+                byte[] data = client.DownloadData(uri.AbsoluteUri);
+                File.WriteAllBytes(filename, data);
+            }
+            return filename;
         }
 
         public bool CheckIfAdministrator(bool warnIfNotAdmin)
