@@ -308,7 +308,8 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        private void dgvActions_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        /// <summary>按动作状态及颜色表达式设置单元格配色。</summary>
+        private void dgvActions_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.RowIndex >= Actions.Count)
             {
@@ -320,8 +321,8 @@ namespace Triggernometry.UI.CustomControls
             string delay = "0" + a.ExecDelay.Trim();
             if (a.Enabled && a.DescOverride && !( double.TryParse(delay, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double result) && result == 0 ))
             {
-                e.InheritedRowStyle.BackColor = Color.FromArgb(240, 224, 128); // light yellow
-                e.InheritedRowStyle.ForeColor = SystemColors.InactiveCaptionText;
+                e.CellStyle.BackColor = Color.FromArgb(240, 224, 128); // light yellow
+                e.CellStyle.ForeColor = SystemColors.InactiveCaptionText;
             }
             else
             {
@@ -344,14 +345,14 @@ namespace Triggernometry.UI.CustomControls
                 // placeholder / normal color
                 if (a is ActionPlaceholder)
                 {
-                    e.InheritedRowStyle.BackColor = (bgColor != Color.Empty) ? bgColor : SystemColors.InactiveCaption;
-                    e.InheritedRowStyle.ForeColor = (textColor != Color.Empty) ? textColor : SystemColors.InactiveCaptionText;
+                    e.CellStyle.BackColor = (bgColor != Color.Empty) ? bgColor : SystemColors.InactiveCaption;
+                    e.CellStyle.ForeColor = (textColor != Color.Empty) ? textColor : SystemColors.InactiveCaptionText;
                 }
                 else
                 {
-                    e.InheritedRowStyle.BackColor = (bgColor != Color.Empty)
+                    e.CellStyle.BackColor = (bgColor != Color.Empty)
                         ? bgColor : dgvActions.DefaultCellStyle.BackColor;
-                    e.InheritedRowStyle.ForeColor = (textColor != Color.Empty)
+                    e.CellStyle.ForeColor = (textColor != Color.Empty)
                         ? textColor : (a.Enabled)
                             ? dgvActions.DefaultCellStyle.ForeColor : Color.FromArgb(176, 192, 208);
                 }
