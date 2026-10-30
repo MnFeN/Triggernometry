@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -58,6 +59,33 @@ namespace Triggernometry.Core.Scripting
         {
             ctx = ctx ?? Context.Unbound;
             return ctx.EvaluateNumericExpression(null, ctx, expr);
+        }
+
+        /// <summary>
+        /// Returns a registered variable's raw text without evaluating expressions, or null if it is not loaded.
+        /// </summary>
+        public static string GetRegisteredVariable(string name)
+        {
+            var registered = RealPlugin.Instance.RegisteredVariables;
+            lock (registered)
+            {
+                return registered.TryGetValue(name, out var variable) ? variable.Value : null;
+            }
+        }
+
+        /// <summary>
+        /// Returns an independent, read-only snapshot of the currently loaded registered variables.
+        /// Values are raw text without expression evaluation; key comparison matches the registration store.
+        /// Later registration changes are reflected only in a new snapshot.
+        /// </summary>
+        public static IReadOnlyDictionary<string, string> GetRegisteredVariables()
+        {
+            var registered = RealPlugin.Instance.RegisteredVariables;
+            lock (registered)
+            {
+                return new ReadOnlyDictionary<string, string>(registered.ToDictionary(
+                    pair => pair.Key, pair => pair.Value.Value, registered.Comparer));
+            }
         }
 
         public static string GetScalarVariable(bool isPersistent, string varname)
