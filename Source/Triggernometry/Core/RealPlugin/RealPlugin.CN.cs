@@ -17,7 +17,6 @@ namespace Triggernometry.Core
         private void FixConfigurationOnStartCN()
         {
             Config.ShowWelcome = false;
-            Config.TestLiveByDefault = true;
             Config.TestIgnoreConditionsByDefault = true;
             Config.TtsMethod = Configuration.AudioRoutingMethodEnum.ACT;
             Config.AutosaveEnabled = true;

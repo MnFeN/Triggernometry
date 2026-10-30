@@ -217,7 +217,6 @@
             this.lblAutosaveInterval = new System.Windows.Forms.Label();
             this.cbxAutosaveConfig = new System.Windows.Forms.CheckBox();
             this.cbxDevMode = new System.Windows.Forms.CheckBox();
-            this.cbxTestLive = new System.Windows.Forms.CheckBox();
             this.cbxTestIgnoreConditions = new System.Windows.Forms.CheckBox();
             this.nudAutosaveMinutes = new System.Windows.Forms.NumericUpDown();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -2671,19 +2670,18 @@
             this.tableLayoutPanel10.ColumnCount = 2;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel10.Controls.Add(this.cbxAutoComplete, 0, 5);
-            this.tableLayoutPanel10.Controls.Add(this.cbxActionAsync, 0, 3);
+            this.tableLayoutPanel10.Controls.Add(this.cbxAutoComplete, 0, 4);
+            this.tableLayoutPanel10.Controls.Add(this.cbxActionAsync, 0, 2);
             this.tableLayoutPanel10.Controls.Add(this.chkClipboard, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.lblAutosaveInterval, 0, 7);
-            this.tableLayoutPanel10.Controls.Add(this.cbxAutosaveConfig, 0, 6);
-            this.tableLayoutPanel10.Controls.Add(this.cbxDevMode, 0, 4);
-            this.tableLayoutPanel10.Controls.Add(this.cbxTestLive, 0, 1);
-            this.tableLayoutPanel10.Controls.Add(this.cbxTestIgnoreConditions, 0, 2);
-            this.tableLayoutPanel10.Controls.Add(this.nudAutosaveMinutes, 1, 7);
+            this.tableLayoutPanel10.Controls.Add(this.lblAutosaveInterval, 0, 6);
+            this.tableLayoutPanel10.Controls.Add(this.cbxAutosaveConfig, 0, 5);
+            this.tableLayoutPanel10.Controls.Add(this.cbxDevMode, 0, 3);
+            this.tableLayoutPanel10.Controls.Add(this.cbxTestIgnoreConditions, 0, 1);
+            this.tableLayoutPanel10.Controls.Add(this.nudAutosaveMinutes, 1, 6);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel10.Location = new System.Drawing.Point(10, 23);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
-            this.tableLayoutPanel10.RowCount = 8;
+            this.tableLayoutPanel10.RowCount = 7;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -2691,8 +2689,7 @@
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(722, 187);
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(722, 164);
             this.tableLayoutPanel10.TabIndex = 0;
             // 
             // cbxAutoComplete
@@ -2701,7 +2698,7 @@
             this.cbxAutoComplete.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.tableLayoutPanel10.SetColumnSpan(this.cbxAutoComplete, 2);
             this.cbxAutoComplete.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxAutoComplete.Location = new System.Drawing.Point(3, 118);
+            this.cbxAutoComplete.Location = new System.Drawing.Point(3, 95);
             this.cbxAutoComplete.Name = "cbxAutoComplete";
             this.cbxAutoComplete.Size = new System.Drawing.Size(716, 17);
             this.cbxAutoComplete.TabIndex = 8;
@@ -2715,7 +2712,7 @@
             this.cbxActionAsync.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.tableLayoutPanel10.SetColumnSpan(this.cbxActionAsync, 2);
             this.cbxActionAsync.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxActionAsync.Location = new System.Drawing.Point(3, 72);
+            this.cbxActionAsync.Location = new System.Drawing.Point(3, 49);
             this.cbxActionAsync.Name = "cbxActionAsync";
             this.cbxActionAsync.Size = new System.Drawing.Size(716, 17);
             this.cbxActionAsync.TabIndex = 0;
@@ -2742,7 +2739,7 @@
             this.lblAutosaveInterval.AutoEllipsis = true;
             this.lblAutosaveInterval.AutoSize = true;
             this.lblAutosaveInterval.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAutosaveInterval.Location = new System.Drawing.Point(3, 161);
+            this.lblAutosaveInterval.Location = new System.Drawing.Point(3, 138);
             this.lblAutosaveInterval.Name = "lblAutosaveInterval";
             this.lblAutosaveInterval.Size = new System.Drawing.Size(616, 26);
             this.lblAutosaveInterval.TabIndex = 2;
@@ -2755,7 +2752,7 @@
             this.cbxAutosaveConfig.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.tableLayoutPanel10.SetColumnSpan(this.cbxAutosaveConfig, 2);
             this.cbxAutosaveConfig.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxAutosaveConfig.Location = new System.Drawing.Point(3, 141);
+            this.cbxAutosaveConfig.Location = new System.Drawing.Point(3, 118);
             this.cbxAutosaveConfig.Name = "cbxAutosaveConfig";
             this.cbxAutosaveConfig.Size = new System.Drawing.Size(716, 17);
             this.cbxAutosaveConfig.TabIndex = 3;
@@ -2770,7 +2767,7 @@
             this.cbxDevMode.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.tableLayoutPanel10.SetColumnSpan(this.cbxDevMode, 2);
             this.cbxDevMode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxDevMode.Location = new System.Drawing.Point(3, 95);
+            this.cbxDevMode.Location = new System.Drawing.Point(3, 72);
             this.cbxDevMode.Name = "cbxDevMode";
             this.cbxDevMode.Size = new System.Drawing.Size(716, 17);
             this.cbxDevMode.TabIndex = 4;
@@ -2778,27 +2775,13 @@
             this.cbxDevMode.Text = "Developer mode";
             this.cbxDevMode.UseVisualStyleBackColor = true;
             // 
-            // cbxTestLive
-            // 
-            this.cbxTestLive.AutoSize = true;
-            this.cbxTestLive.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel10.SetColumnSpan(this.cbxTestLive, 2);
-            this.cbxTestLive.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxTestLive.Location = new System.Drawing.Point(3, 26);
-            this.cbxTestLive.Name = "cbxTestLive";
-            this.cbxTestLive.Size = new System.Drawing.Size(716, 17);
-            this.cbxTestLive.TabIndex = 5;
-            this.cbxTestLive.TabStop = false;
-            this.cbxTestLive.Text = "Set testing with live values as the default action test method";
-            this.cbxTestLive.UseVisualStyleBackColor = true;
-            // 
             // cbxTestIgnoreConditions
             // 
             this.cbxTestIgnoreConditions.AutoSize = true;
             this.cbxTestIgnoreConditions.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.tableLayoutPanel10.SetColumnSpan(this.cbxTestIgnoreConditions, 2);
             this.cbxTestIgnoreConditions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxTestIgnoreConditions.Location = new System.Drawing.Point(3, 49);
+            this.cbxTestIgnoreConditions.Location = new System.Drawing.Point(3, 26);
             this.cbxTestIgnoreConditions.Name = "cbxTestIgnoreConditions";
             this.cbxTestIgnoreConditions.Size = new System.Drawing.Size(716, 17);
             this.cbxTestIgnoreConditions.TabIndex = 6;
@@ -2807,7 +2790,7 @@
             // 
             // nudAutosaveMinutes
             // 
-            this.nudAutosaveMinutes.Location = new System.Drawing.Point(625, 164);
+            this.nudAutosaveMinutes.Location = new System.Drawing.Point(625, 141);
             this.nudAutosaveMinutes.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -3133,7 +3116,6 @@
         private System.Windows.Forms.CheckBox chkWarnAdmin;
         private System.Windows.Forms.GroupBox grpUserInterface;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
-        private System.Windows.Forms.CheckBox cbxTestLive;
         private System.Windows.Forms.CheckBox cbxTestIgnoreConditions;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;

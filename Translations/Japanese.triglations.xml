@@ -414,7 +414,6 @@
     <TranslationEntry Key="ConfigurationForm2/lblSoundRepetition" Translation="Repetition cooldown" />
     <TranslationEntry Key="ConfigurationForm2/lblSoundVolume" Translation="音量" />
     <TranslationEntry Key="ConfigurationForm2/lblTestIgnoreConditions" Translation="Ignore conditions as default when testing actions" />
-    <TranslationEntry Key="ConfigurationForm2/lblTestLive" Translation="現在の変数値を用いてアクションのテスト時を行う" />
     <TranslationEntry Key="ConfigurationForm2/lblTriggerTemplate" Translation="Use template trigger for default values" />
     <TranslationEntry Key="ConfigurationForm2/lblTtsMethod" Translation="Playback method" />
     <TranslationEntry Key="ConfigurationForm2/lblTtsPath" Translation="Application path" />

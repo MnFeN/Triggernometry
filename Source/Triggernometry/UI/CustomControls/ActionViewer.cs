@@ -570,9 +570,10 @@ namespace Triggernometry.UI.CustomControls
             if (action == null)
                 return;
             var item = (ToolStripMenuItem)sender;
-            bool useDefaults = item.Name == "ctxTestAction";
-            bool useLiveValues = useDefaults ? Plugin.Config.TestLiveByDefault : item.Name != "ctxTestPlaceholder";
-            bool ignoreConditions = useDefaults ? Plugin.Config.TestIgnoreConditionsByDefault : item.Name == "ctxTestLiveIgnoreCnd";
+            // 直接点击父菜单沿用测试默认配置，与动作编辑窗口的测试按钮一致。
+            bool useDefaults = item == ctxTestAction;
+            bool useLiveValues = item != ctxTestPlaceholder;
+            bool ignoreConditions = useDefaults ? Plugin.Config.TestIgnoreConditionsByDefault : item == ctxTestLiveIgnoreCnd;
             if (useDefaults)
                 ctxAction.Close();
             CreateTestExecution(action, UiContext, useLiveValues, ignoreConditions)();

@@ -508,9 +508,6 @@ namespace Triggernometry.Core
         public ActionOverlayText.EffectEnum UiFontEffect { get; set; } = ActionOverlayText.EffectEnum.None;
 
         [XmlAttribute]
-        public bool TestLiveByDefault { get; set; } = true;
-
-        [XmlAttribute]
         public bool TestIgnoreConditionsByDefault { get; set; } = true;
 
         [XmlAttribute]

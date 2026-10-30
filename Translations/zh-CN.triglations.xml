@@ -414,7 +414,6 @@
     <TranslationEntry Key="ConfigurationForm2/lblSoundRepetition" Translation="同一文件冷却时间" />
     <TranslationEntry Key="ConfigurationForm2/lblSoundVolume" Translation="音量" />
     <TranslationEntry Key="ConfigurationForm2/lblTestIgnoreConditions" Translation="测试动作时默认忽略动作条件" />
-    <TranslationEntry Key="ConfigurationForm2/lblTestLive" Translation="测试动作时默认使用实时值" />
     <TranslationEntry Key="ConfigurationForm2/lblTriggerTemplate" Translation="新建触发器时使用模板" />
     <TranslationEntry Key="ConfigurationForm2/lblTtsMethod" Translation="播放方式" />
     <TranslationEntry Key="ConfigurationForm2/lblTtsPath" Translation="程序目录" />

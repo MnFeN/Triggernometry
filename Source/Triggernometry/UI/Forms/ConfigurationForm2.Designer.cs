@@ -57,12 +57,10 @@
             this.lblAutoComplete = new System.Windows.Forms.Label();
             this.lblActionAsync = new System.Windows.Forms.Label();
             this.lblTestIgnoreConditions = new System.Windows.Forms.Label();
-            this.lblTestLive = new System.Windows.Forms.Label();
             this.cbxAutoComplete = new System.Windows.Forms.CheckBox();
             this.cbxDevMode = new System.Windows.Forms.CheckBox();
             this.cbxActionAsync = new System.Windows.Forms.CheckBox();
             this.cbxTestIgnoreConditions = new System.Windows.Forms.CheckBox();
-            this.cbxTestLive = new System.Windows.Forms.CheckBox();
             this.capBehavior = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.panel31 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -734,7 +732,7 @@
             this.panel32.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.panel32.Name = "panel32";
             this.panel32.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel32.Size = new System.Drawing.Size(856, 154);
+            this.panel32.Size = new System.Drawing.Size(856, 125);
             this.panel32.TabIndex = 10;
             // 
             // tableLayoutPanel12
@@ -743,27 +741,24 @@
             this.tableLayoutPanel12.ColumnCount = 2;
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel12.Controls.Add(this.lblDevMode, 0, 4);
-            this.tableLayoutPanel12.Controls.Add(this.lblAutoComplete, 0, 3);
-            this.tableLayoutPanel12.Controls.Add(this.lblActionAsync, 0, 2);
+            this.tableLayoutPanel12.Controls.Add(this.lblDevMode, 0, 3);
+            this.tableLayoutPanel12.Controls.Add(this.lblAutoComplete, 0, 2);
+            this.tableLayoutPanel12.Controls.Add(this.lblActionAsync, 0, 1);
             this.tableLayoutPanel12.Controls.Add(this.lblTestIgnoreConditions, 0, 0);
-            this.tableLayoutPanel12.Controls.Add(this.lblTestLive, 0, 1);
-            this.tableLayoutPanel12.Controls.Add(this.cbxAutoComplete, 1, 3);
-            this.tableLayoutPanel12.Controls.Add(this.cbxDevMode, 1, 4);
-            this.tableLayoutPanel12.Controls.Add(this.cbxActionAsync, 1, 2);
+            this.tableLayoutPanel12.Controls.Add(this.cbxAutoComplete, 1, 2);
+            this.tableLayoutPanel12.Controls.Add(this.cbxDevMode, 1, 3);
+            this.tableLayoutPanel12.Controls.Add(this.cbxActionAsync, 1, 1);
             this.tableLayoutPanel12.Controls.Add(this.cbxTestIgnoreConditions, 1, 0);
-            this.tableLayoutPanel12.Controls.Add(this.cbxTestLive, 1, 1);
             this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel12.Location = new System.Drawing.Point(0, 9);
             this.tableLayoutPanel12.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tableLayoutPanel12.Name = "tableLayoutPanel12";
-            this.tableLayoutPanel12.RowCount = 5;
+            this.tableLayoutPanel12.RowCount = 4;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(856, 145);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(856, 116);
             this.tableLayoutPanel12.TabIndex = 2;
             // 
             // lblDevMode
@@ -771,7 +766,7 @@
             this.lblDevMode.AutoEllipsis = true;
             this.lblDevMode.AutoSize = true;
             this.lblDevMode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblDevMode.Location = new System.Drawing.Point(4, 116);
+            this.lblDevMode.Location = new System.Drawing.Point(4, 87);
             this.lblDevMode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDevMode.MinimumSize = new System.Drawing.Size(200, 0);
             this.lblDevMode.Name = "lblDevMode";
@@ -785,7 +780,7 @@
             this.lblAutoComplete.AutoEllipsis = true;
             this.lblAutoComplete.AutoSize = true;
             this.lblAutoComplete.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAutoComplete.Location = new System.Drawing.Point(4, 87);
+            this.lblAutoComplete.Location = new System.Drawing.Point(4, 58);
             this.lblAutoComplete.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAutoComplete.MinimumSize = new System.Drawing.Size(200, 0);
             this.lblAutoComplete.Name = "lblAutoComplete";
@@ -799,7 +794,7 @@
             this.lblActionAsync.AutoEllipsis = true;
             this.lblActionAsync.AutoSize = true;
             this.lblActionAsync.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblActionAsync.Location = new System.Drawing.Point(4, 58);
+            this.lblActionAsync.Location = new System.Drawing.Point(4, 29);
             this.lblActionAsync.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblActionAsync.MinimumSize = new System.Drawing.Size(200, 0);
             this.lblActionAsync.Name = "lblActionAsync";
@@ -822,26 +817,12 @@
             this.lblTestIgnoreConditions.Text = "Ignore conditions as default when testing actions";
             this.lblTestIgnoreConditions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lblTestLive
-            // 
-            this.lblTestLive.AutoEllipsis = true;
-            this.lblTestLive.AutoSize = true;
-            this.lblTestLive.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTestLive.Location = new System.Drawing.Point(4, 29);
-            this.lblTestLive.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblTestLive.MinimumSize = new System.Drawing.Size(200, 0);
-            this.lblTestLive.Name = "lblTestLive";
-            this.lblTestLive.Size = new System.Drawing.Size(503, 29);
-            this.lblTestLive.TabIndex = 11;
-            this.lblTestLive.Text = "Set testing with live values as the default action test method";
-            this.lblTestLive.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // cbxAutoComplete
             // 
             this.cbxAutoComplete.AutoSize = true;
             this.cbxAutoComplete.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.cbxAutoComplete.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxAutoComplete.Location = new System.Drawing.Point(515, 90);
+            this.cbxAutoComplete.Location = new System.Drawing.Point(515, 61);
             this.cbxAutoComplete.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cbxAutoComplete.Name = "cbxAutoComplete";
             this.cbxAutoComplete.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
@@ -855,7 +836,7 @@
             this.cbxDevMode.AutoSize = true;
             this.cbxDevMode.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.cbxDevMode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxDevMode.Location = new System.Drawing.Point(515, 119);
+            this.cbxDevMode.Location = new System.Drawing.Point(515, 90);
             this.cbxDevMode.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cbxDevMode.Name = "cbxDevMode";
             this.cbxDevMode.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
@@ -869,7 +850,7 @@
             this.cbxActionAsync.AutoSize = true;
             this.cbxActionAsync.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.cbxActionAsync.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxActionAsync.Location = new System.Drawing.Point(515, 61);
+            this.cbxActionAsync.Location = new System.Drawing.Point(515, 32);
             this.cbxActionAsync.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cbxActionAsync.Name = "cbxActionAsync";
             this.cbxActionAsync.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
@@ -890,20 +871,6 @@
             this.cbxTestIgnoreConditions.Size = new System.Drawing.Size(337, 23);
             this.cbxTestIgnoreConditions.TabIndex = 7;
             this.cbxTestIgnoreConditions.UseVisualStyleBackColor = true;
-            // 
-            // cbxTestLive
-            // 
-            this.cbxTestLive.AutoSize = true;
-            this.cbxTestLive.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.cbxTestLive.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbxTestLive.Location = new System.Drawing.Point(515, 32);
-            this.cbxTestLive.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.cbxTestLive.Name = "cbxTestLive";
-            this.cbxTestLive.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.cbxTestLive.Size = new System.Drawing.Size(337, 23);
-            this.cbxTestLive.TabIndex = 6;
-            this.cbxTestLive.TabStop = false;
-            this.cbxTestLive.UseVisualStyleBackColor = true;
             // 
             // capBehavior
             // 
@@ -5471,7 +5438,6 @@
         private System.Windows.Forms.CheckBox cbxDevMode;
         private System.Windows.Forms.CheckBox cbxActionAsync;
         private System.Windows.Forms.CheckBox cbxTestIgnoreConditions;
-        private System.Windows.Forms.CheckBox cbxTestLive;
         private System.Windows.Forms.Panel panel21;
         private System.Windows.Forms.Label lblExternalTtsWarn;
         private System.Windows.Forms.Label lblActTtsWarn;
@@ -5483,7 +5449,6 @@
         private System.Windows.Forms.Label lblAutoComplete;
         private System.Windows.Forms.Label lblActionAsync;
         private System.Windows.Forms.Label lblTestIgnoreConditions;
-        private System.Windows.Forms.Label lblTestLive;
         private System.Windows.Forms.Label lblWarnAdmin;
         private System.Windows.Forms.Label lblWelcome;
         private System.Windows.Forms.Label lblShortcutWrapTextWhenSelected;

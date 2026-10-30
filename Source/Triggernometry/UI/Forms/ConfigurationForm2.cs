@@ -106,7 +106,6 @@ namespace Triggernometry.UI.Forms
             cbxAutoComplete.Checked = cfg.AutoComplete;
             chkWelcome.Checked = cfg.ShowWelcome;
             chkWarnAdmin.Checked = cfg.WarnAdmin;
-            cbxTestLive.Checked = cfg.TestLiveByDefault;
             cbxTestIgnoreConditions.Checked = cfg.TestIgnoreConditionsByDefault;
             cbxActionAsync.Checked = cfg.ActionAsyncByDefault;
             chkUpdates.Checked = cfg.UpdateNotifications == Configuration.UpdateNotificationsEnum.Yes;
@@ -205,7 +204,6 @@ namespace Triggernometry.UI.Forms
             cfg.WrapTextWhenSelected = chkShortcutWrapTextWhenSelected.Checked;                        
             cfg.ShowWelcome = chkWelcome.Checked;
             cfg.WarnAdmin = chkWarnAdmin.Checked;
-            cfg.TestLiveByDefault = cbxTestLive.Checked;
             cfg.TestIgnoreConditionsByDefault = cbxTestIgnoreConditions.Checked;
             cfg.ActionAsyncByDefault = cbxActionAsync.Checked;
             cfg.LogNormalEvents = chkLogNormalEvents.Checked;
