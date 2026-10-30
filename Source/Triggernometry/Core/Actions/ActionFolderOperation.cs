@@ -72,7 +72,7 @@ namespace Triggernometry.Core.Actions
         /// <summary>用于匹配分组名称的正则表达式；执行前展开文本表达式。</summary>
         [XmlIgnore]
         [ActionSpecificProperty]
-        [ExpressionEditor(3, EditorExpressionType.Regex, Label = "Folder name regex (case-sensitive)")]
+        [ExpressionEditor(3, EditorExpressionType.Regex, Label = "Name regex")]
         public string NameRegex { get; set; } = "";
 
         [XmlAttribute("NameRegex")]

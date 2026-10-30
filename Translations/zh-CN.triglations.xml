@@ -233,10 +233,10 @@
     <TranslationEntry Key="ConditionViewer/cbxExpLType[String]" Translation="文本" />
     <TranslationEntry Key="ConditionViewer/cbxExpRType[Numeric]" Translation="数值" />
     <TranslationEntry Key="ConditionViewer/cbxExpRType[String]" Translation="文本" />
-    <TranslationEntry Key="ConditionViewer/cbxGroupingType[All conditions must be true (AND)]" Translation="全部条件为真（与）" />
-    <TranslationEntry Key="ConditionViewer/cbxGroupingType[At least one condition must be true (OR)]" Translation="至少一个条件为真（或）" />
-    <TranslationEntry Key="ConditionViewer/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="全部条件为假（非）" />
-    <TranslationEntry Key="ConditionViewer/cbxGroupingType[Only one condition must be true (XOR)]" Translation="仅一个条件为真（异或）" />
+    <TranslationEntry Key="ConditionViewer/cbxGroupingType[All conditions must be true (AND)]" Translation="全部条件为真 (与)" />
+    <TranslationEntry Key="ConditionViewer/cbxGroupingType[At least one condition must be true (OR)]" Translation="至少一个条件为真 (或)" />
+    <TranslationEntry Key="ConditionViewer/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="全部条件为假 (非)" />
+    <TranslationEntry Key="ConditionViewer/cbxGroupingType[Only one condition must be true (XOR)]" Translation="仅一个条件为真 (异或)" />
     <TranslationEntry Key="ConditionViewer/ctxAdd" Translation="添加" />
     <TranslationEntry Key="ConditionViewer/ctxAddComment" Translation="注释" />
     <TranslationEntry Key="ConditionViewer/ctxAddCondition" Translation="条件" />
@@ -248,6 +248,7 @@
     <TranslationEntry Key="ConditionViewer/ctxPaste" Translation="粘贴" />
     <TranslationEntry Key="ConditionViewer/ctxPasteOver" Translation="覆盖粘贴" />
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="移除" />
+    <TranslationEntry Key="ConditionViewer/ctxTest" Translation="测试条件" />
     <TranslationEntry Key="ConditionViewer/lblComment" Translation="注释内容" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="分组类型" />
     <TranslationEntry Key="ConfigurationForm2" Translation="配置" />
@@ -866,11 +867,11 @@
     <TranslationEntry Key="internal/ColonParser/variablenotfound" Translation="变量“{0}”不存在。" />
     <TranslationEntry Key="internal/ColorSelector/sample" Translation="示例" />
     <TranslationEntry Key="internal/ConditionComment/empty" Translation="注释" />
-    <TranslationEntry Key="internal/ConditionGroup/and" Translation="全部条件为真（与）" />
-    <TranslationEntry Key="internal/ConditionGroup/not" Translation="全部条件为假（非）" />
-    <TranslationEntry Key="internal/ConditionGroup/or" Translation="至少一个条件为真（或）" />
+    <TranslationEntry Key="internal/ConditionGroup/and" Translation="全部条件为真 (与)" />
+    <TranslationEntry Key="internal/ConditionGroup/not" Translation="全部条件为假 (非)" />
+    <TranslationEntry Key="internal/ConditionGroup/or" Translation="至少一个条件为真 (或)" />
     <TranslationEntry Key="internal/ConditionGroup/unknown" Translation="未知的组值 '{0}'" />
-    <TranslationEntry Key="internal/ConditionGroup/xor" Translation="仅一个条件为真（异或）" />
+    <TranslationEntry Key="internal/ConditionGroup/xor" Translation="仅一个条件为真 (异或)" />
     <TranslationEntry Key="internal/ConditionSingle/invalidexpressiontype" Translation="无效的表达式类型：{0}" />
     <TranslationEntry Key="internal/ConditionSingle/listcantcontain" Translation="为名的列表 不得包含" />
     <TranslationEntry Key="internal/ConditionSingle/listmustcontain" Translation="为名的列表 必须包含" />
@@ -880,19 +881,19 @@
     <TranslationEntry Key="internal/ConditionSingle/numericapproxnotequal" Translation="数值上 ≄" />
     <TranslationEntry Key="internal/ConditionSingle/numericequal" Translation="数值上 =" />
     <TranslationEntry Key="internal/ConditionSingle/numericexpression" Translation="数值 ({0})" />
-    <TranslationEntry Key="internal/ConditionSingle/numericfalse" Translation="（{0}）为假" />
+    <TranslationEntry Key="internal/ConditionSingle/numericfalse" Translation="({0}) 为假" />
     <TranslationEntry Key="internal/ConditionSingle/numericgreater" Translation="数值上 &gt;" />
     <TranslationEntry Key="internal/ConditionSingle/numericgreaterequal" Translation="数值上 ≥" />
     <TranslationEntry Key="internal/ConditionSingle/numericless" Translation="数值上 &lt;" />
     <TranslationEntry Key="internal/ConditionSingle/numericlessequal" Translation="数值上 ≤" />
     <TranslationEntry Key="internal/ConditionSingle/numericnotequal" Translation="数值上 ≠" />
-    <TranslationEntry Key="internal/ConditionSingle/numerictrue" Translation="（{0}）为真" />
+    <TranslationEntry Key="internal/ConditionSingle/numerictrue" Translation="({0}) 为真" />
     <TranslationEntry Key="internal/ConditionSingle/regexmatch" Translation="符合正则" />
     <TranslationEntry Key="internal/ConditionSingle/stringequalcase" Translation="文本上 等同于" />
-    <TranslationEntry Key="internal/ConditionSingle/stringequalnocase" Translation="文本上（不分大小写）等同于" />
+    <TranslationEntry Key="internal/ConditionSingle/stringequalnocase" Translation="文本上 (不分大小写) 等同于" />
     <TranslationEntry Key="internal/ConditionSingle/stringexpression" Translation="文本 ({0})" />
     <TranslationEntry Key="internal/ConditionSingle/stringnotequalcase" Translation="文本上 不同于" />
-    <TranslationEntry Key="internal/ConditionSingle/stringnotequalnocase" Translation="文本上（不分大小写）不同于" />
+    <TranslationEntry Key="internal/ConditionSingle/stringnotequalnocase" Translation="文本上 (不分大小写) 不同于" />
     <TranslationEntry Key="internal/ConditionViewer/areyousurecomment" Translation="确定要移除选中的注释吗？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuregroup" Translation="您确定要移除该条件组吗？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuresingle" Translation="您确定要移除该条件吗？" />
@@ -908,19 +909,19 @@
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxEqual" Translation="近似相等：|L − R| ≤ 0.5" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxNotEqual" Translation="不近似相等：|L − R| &gt; 0.5" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericEqual" Translation="L = R" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorNumericFalse" Translation="L 为假（零）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericFalse" Translation="L 为假 (零)" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreater" Translation="L &gt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreaterEqual" Translation="L ≥ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLess" Translation="L &lt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLessEqual" Translation="L ≤ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericNotEqual" Translation="L ≠ R" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorNumericTrue" Translation="L 为真（非零）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericTrue" Translation="L 为真 (非零)" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="文本 L 匹配正则 R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="文本 L 不匹配正则 R" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R（区分大小写）" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualNocase" Translation="L = R（不分大小写）" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R（区分大小写）" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualNocase" Translation="L ≠ R（不分大小写）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualNocase" Translation="L = R (不分大小写)" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualNocase" Translation="L ≠ R (不分大小写)" />
     <TranslationEntry Key="internal/ConditionViewer/pastefail" Translation="条件树粘贴失败：{0}" />
     <TranslationEntry Key="internal/ConditionViewer/testtitle" Translation="测试" />
     <TranslationEntry Key="internal/Configuration/configtitle" Translation="Triggernometry 配置" />
@@ -1036,7 +1037,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Assemblies" Translation="引用程序集列表" />
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Script" Translation="脚本代码" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/FolderId" Translation="分组" />
-    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="分组名称正则（区分大小写）" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="名称正则" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation" Translation="操作" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in folders matching a name regex]" Translation="取消名称匹配正则的分组内全部触发器动作" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in the specified folder]" Translation="取消分组内的全部触发器动作" />

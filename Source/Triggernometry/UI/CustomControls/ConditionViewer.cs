@@ -48,9 +48,9 @@ namespace Triggernometry.UI.CustomControls
                 (CndTypeEnum.NumericFalse, "✗", "L is false (zero)")
             },
             new[] { 
-                (CndTypeEnum.StringEqualCase, "=", "L = R (case-sensitive)"), 
+                (CndTypeEnum.StringEqualCase, "=", "L = R"),
                 (CndTypeEnum.StringEqualNocase, "≅", "L = R (ignore case)"),
-                (CndTypeEnum.StringNotEqualCase, "≠", "L ≠ R (case-sensitive)"), 
+                (CndTypeEnum.StringNotEqualCase, "≠", "L ≠ R"),
                 (CndTypeEnum.StringNotEqualNocase, "≇", "L ≠ R (ignore case)") 
             },
             new[] { 

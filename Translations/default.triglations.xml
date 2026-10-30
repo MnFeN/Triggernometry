@@ -248,6 +248,7 @@
     <TranslationEntry Key="ConditionViewer/ctxPaste" Translation="Paste" />
     <TranslationEntry Key="ConditionViewer/ctxPasteOver" Translation="Paste over" />
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="Remove" />
+    <TranslationEntry Key="ConditionViewer/ctxTest" Translation="Test Condition" />
     <TranslationEntry Key="ConditionViewer/lblComment" Translation="Comment text" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="Grouping type" />
     <TranslationEntry Key="ConfigurationForm2" Translation="Configuration" />
@@ -917,9 +918,9 @@
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericTrue" Translation="L is true (nonzero)" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="L matches regex R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="L does not match regex R" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R (case-sensitive)" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualNocase" Translation="L = R (ignore case)" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R (case-sensitive)" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualNocase" Translation="L ≠ R (ignore case)" />
     <TranslationEntry Key="internal/ConditionViewer/pastefail" Translation="Tree paste failed due to exception: {0}" />
     <TranslationEntry Key="internal/ConditionViewer/testtitle" Translation="Test" />
@@ -1036,7 +1037,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Assemblies" Translation="List of assemblies to reference" />
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Script" Translation="Script code" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/FolderId" Translation="Folder" />
-    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="Folder name regex (case-sensitive)" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="Name regex" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation" Translation="Operation" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in folders matching a name regex]" Translation="Cancel all actions in folders matching a name regex" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in the specified folder]" Translation="Cancel all actions in the specified folder" />

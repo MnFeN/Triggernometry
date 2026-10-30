@@ -248,6 +248,7 @@
     <TranslationEntry Key="ConditionViewer/ctxPaste" Translation="貼り付け" />
     <TranslationEntry Key="ConditionViewer/ctxPasteOver" Translation="貼り付けて上書き" />
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="削除" />
+    <TranslationEntry Key="ConditionViewer/ctxTest" Translation="条件をテスト" />
     <TranslationEntry Key="ConditionViewer/lblComment" Translation="コメント内容" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="グループ内の条件式の扱い" />
     <TranslationEntry Key="ConfigurationForm2" Translation="設定" />
@@ -908,19 +909,19 @@
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxEqual" Translation="ほぼ等しい: |L − R| ≤ 0.5" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericApproxNotEqual" Translation="ほぼ等しくない: |L − R| &gt; 0.5" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericEqual" Translation="L = R" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorNumericFalse" Translation="L が偽（ゼロ）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericFalse" Translation="L が偽 (ゼロ)" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreater" Translation="L &gt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreaterEqual" Translation="L ≥ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLess" Translation="L &lt; R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericLessEqual" Translation="L ≤ R" />
     <TranslationEntry Key="internal/ConditionViewer/operatorNumericNotEqual" Translation="L ≠ R" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorNumericTrue" Translation="L が真（非ゼロ）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericTrue" Translation="L が真 (非ゼロ)" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="文字列 L が正規表現 R に一致" />
     <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="文字列 L が正規表現 R に不一致" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R（大文字・小文字を区別）" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualNocase" Translation="L = R（大文字・小文字を無視）" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R（大文字・小文字を区別）" />
-    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualNocase" Translation="L ≠ R（大文字・小文字を無視）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualNocase" Translation="L = R (大文字・小文字を無視)" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualNocase" Translation="L ≠ R (大文字・小文字を無視)" />
     <TranslationEntry Key="internal/ConditionViewer/pastefail" Translation="Tree paste failed due to exception: {0}" />
     <TranslationEntry Key="internal/ConditionViewer/testtitle" Translation="テスト" />
     <TranslationEntry Key="internal/Configuration/configtitle" Translation="Triggernometry の設定" />
@@ -1036,7 +1037,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Assemblies" Translation="参照するアセンブリのリスト" />
     <TranslationEntry Key="internal/EditorFields/ActionExecuteScript/Script" Translation="スクリプト" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/FolderId" Translation="フォルダ" />
-    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="フォルダ名の正規表現（大文字・小文字を区別）" />
+    <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/NameRegex" Translation="名前の正規表現" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation" Translation="操作" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in folders matching a name regex]" Translation="名前が正規表現に一致するフォルダ内の全アクションをキャンセルする" />
     <TranslationEntry Key="internal/EditorFields/ActionFolderOperation/Operation[Cancel all actions in the specified folder]" Translation="Cancel all actions in the specified folder" />

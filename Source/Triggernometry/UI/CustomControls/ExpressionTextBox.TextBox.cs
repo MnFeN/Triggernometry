@@ -14,6 +14,14 @@ namespace Triggernometry.UI.CustomControls
         public class TextBox : System.Windows.Forms.TextBox
         {
 
+            /// <summary>将可编辑状态下的回车交给输入框处理，避免触发表单默认按钮。</summary>
+            protected override bool IsInputKey(Keys keyData)
+            {
+                if (!ReadOnly && (keyData & Keys.KeyCode) == Keys.Enter)
+                    return true;
+                return base.IsInputKey(keyData);
+            }
+
             protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
             {
                 if (ReadOnly && ShortcutsEnabled && keyData == (Keys.Control | Keys.A))
