@@ -221,13 +221,14 @@
     <TranslationEntry Key="ColorSelector/ctxSetBackgroundTransparent" Translation="背景カラーを透明にする" />
     <TranslationEntry Key="ColorSelector/ctxSetTextColor" Translation="テキストのカラーを設定" />
     <TranslationEntry Key="ColorSelector/ctxSetTextOutline" Translation="アウトラインのカラーを設定" />
-    <TranslationEntry Key="ConditionViewer/btnAdd" Translation="追加" />
-    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="コメント" />
-    <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="条件式" />
-    <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="条件式グループ" />
+    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="コメント追加" />
+    <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="条件追加" />
+    <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="グループ追加" />
     <TranslationEntry Key="ConditionViewer/btnDelete" Translation="削除" />
-    <TranslationEntry Key="ConditionViewer/btnProperties" Translation="プロパティの表示" />
-    <TranslationEntry Key="ConditionViewer/capProperties/lblContent" Translation="プロパティ" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[List]" Translation="リスト" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Numeric]" Translation="数値" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Regex]" Translation="正規表現" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Text]" Translation="文字列" />
     <TranslationEntry Key="ConditionViewer/cbxExpLType[Numeric]" Translation="数値" />
     <TranslationEntry Key="ConditionViewer/cbxExpLType[String]" Translation="文字列" />
     <TranslationEntry Key="ConditionViewer/cbxExpRType[Numeric]" Translation="数値" />
@@ -236,20 +237,6 @@
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[At least one condition must be true (OR)]" Translation="1つ以上の条件式がTRUE (OR)" />
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="いずれの条件式もTRUEではない (NOT)" />
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[Only one condition must be true (XOR)]" Translation="1つの条件式だけがTRUE (XOR)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Expressions must be numerically equal (X = Y)]" Translation="数値式：等しい (X = Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Expressions must not be numerically equal (X ≠ Y)]" Translation="数値式：等しくない (X ≠ Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically greater or equal to (X ≥ Y)]" Translation="数値式：左辺が大きい、または等しい (X ≥ Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically greater than (X &gt; Y)]" Translation="数値式：左辺が大きい (X &gt; Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically less or equal to (X ≤ Y)]" Translation="数値式：左辺が小さい、または等しい (X ≤ Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically less than (X &lt; Y)]" Translation="数値式：左辺が小さい (X &lt; Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must match the regular expression on the right side]" Translation="文字列比較：左辺の文字列が右辺の正規表現にマッチする" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not match the regular expression on the right side]" Translation="文字列比較：左辺の文字列が右辺の正規表現にマッチしない" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not pass case-insensitive string comparison with the right side]" Translation="文字列比較：左辺の文字列が右辺の文字列と一致しない（大文字・小文字を区別しない）" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not pass case-sensitive string comparison with the right side]" Translation="文字列比較：左辺の文字列が右辺の文字列と一致しない（大文字・小文字を区別する）" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must pass case-insensitive string comparison with the right side]" Translation="文字列比較：左辺の文字列が右辺の文字列と一致する（大文字・小文字を区別しない）" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must pass case-sensitive string comparison with the right side]" Translation="文字列比較：左辺の文字列が右辺の文字列と一致しする（大文字・小文字を区別する）" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="リスト検索：左辺のリスト変数に右辺の値が含まれる" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="リスト検索：左辺のリスト変数に右辺の値が含まれない" />
     <TranslationEntry Key="ConditionViewer/ctxAdd" Translation="新規作成" />
     <TranslationEntry Key="ConditionViewer/ctxAddComment" Translation="コメント" />
     <TranslationEntry Key="ConditionViewer/ctxAddCondition" Translation="条件式" />
@@ -263,9 +250,6 @@
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="削除" />
     <TranslationEntry Key="ConditionViewer/lblComment" Translation="コメント内容" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="グループ内の条件式の扱い" />
-    <TranslationEntry Key="ConditionViewer/lblLeftExpression" Translation="左辺の式" />
-    <TranslationEntry Key="ConditionViewer/lblOperator" Translation="演算子" />
-    <TranslationEntry Key="ConditionViewer/lblRightExpression" Translation="右辺の式" />
     <TranslationEntry Key="ConfigurationForm2" Translation="設定" />
     <TranslationEntry Key="ConfigurationForm2/btnAudio" Translation="音声" />
     <TranslationEntry Key="ConfigurationForm2/btnBeepTest" Translation="Test" />
@@ -906,16 +890,27 @@
     <TranslationEntry Key="internal/ConditionViewer/areyousurecomment" Translation="選択したコメントを削除してもよろしいですか？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuregroup" Translation="選択した条件式グループを削除してもよろしいですか？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuresingle" Translation="選択した条件式を削除してもよろしいですか？" />
-    <TranslationEntry Key="internal/ConditionViewer/commentprops" Translation="コメントのプロパティ" />
     <TranslationEntry Key="internal/ConditionViewer/conditionplural" Translation="{0} 個の条件式" />
     <TranslationEntry Key="internal/ConditionViewer/conditionsingular" Translation="{0} 個の条件式" />
-    <TranslationEntry Key="internal/ConditionViewer/condprops" Translation="条件式のプロパティ" />
     <TranslationEntry Key="internal/ConditionViewer/confirm" Translation="削除の確認" />
     <TranslationEntry Key="internal/ConditionViewer/copyfail" Translation="Tree copy failed due to exception: {0}" />
     <TranslationEntry Key="internal/ConditionViewer/groupplural" Translation="{0} グループ" />
-    <TranslationEntry Key="internal/ConditionViewer/groupprops" Translation="グループのプロパティ" />
     <TranslationEntry Key="internal/ConditionViewer/groupsingular" Translation="{0} グループ" />
     <TranslationEntry Key="internal/ConditionViewer/operationwillremove" Translation="次の項目が削除されます:" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorListContains" Translation="リスト L が値 R を含む" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorListDoesNotContain" Translation="リスト L が値 R を含まない" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericEqual" Translation="L = R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreater" Translation="L &gt; R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreaterEqual" Translation="L ≥ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericLess" Translation="L &lt; R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericLessEqual" Translation="L ≤ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericNotEqual" Translation="L ≠ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="文字列 L が正規表現 R に一致" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="文字列 L が正規表現 R に不一致" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R（大文字・小文字を区別）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualNocase" Translation="L = R（大文字・小文字を無視）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R（大文字・小文字を区別）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualNocase" Translation="L ≠ R（大文字・小文字を無視）" />
     <TranslationEntry Key="internal/ConditionViewer/pastefail" Translation="Tree paste failed due to exception: {0}" />
     <TranslationEntry Key="internal/ConditionViewer/testtitle" Translation="テスト" />
     <TranslationEntry Key="internal/Configuration/configtitle" Translation="Triggernometry の設定" />

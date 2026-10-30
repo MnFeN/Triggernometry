@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -132,6 +131,9 @@ namespace Triggernometry.Core.Conditions
             }
         }
 
+        /// <summary>数值比较始终将两侧作为数值表达式，忽略旧配置中的表达式类型。</summary>
+        internal bool IsNumericComparison => ConditionType >= CndTypeEnum.NumericEqual && ConditionType <= CndTypeEnum.NumericLessEqual;
+
         private string Capitalize(string str)
         {
             if (str == null)
@@ -152,87 +154,89 @@ namespace Triggernometry.Core.Conditions
             string descR = ExpressionR != null && ExpressionR.Length > 256 ? ExpressionR.Substring(0, 256) + "..." : ExpressionR;
             if (ConditionType == CndTypeEnum.ListContains || ConditionType == CndTypeEnum.ListDoesNotContain)
             {
-                desc = I18n.Translate("internal/ConditionSingle/listvar", "List variable specified by");
+                desc = I18n.Translate("internal/ConditionSingle/listvar", "List named by");
                 desc += " ";
                 switch (ExpressionTypeL)
                 {
                     case ExprTypeEnum.Numeric:
-                        desc += I18n.Translate("internal/ConditionSingle/numericexpression", "numeric expression ({0})", descL);
+                        desc += I18n.Translate("internal/ConditionSingle/numericexpression", "number ({0})", descL);
                         break;
                     case ExprTypeEnum.String:
-                        desc += I18n.Translate("internal/ConditionSingle/stringexpression", "string expression ({0})", descL);
+                        desc += I18n.Translate("internal/ConditionSingle/stringexpression", "text ({0})", descL);
                         break;
                 }
                 desc += " ";
                 switch (ConditionType)
                 {
                     case CndTypeEnum.ListContains:
-                        desc += I18n.Translate("internal/ConditionSingle/listmustcontain", "must contain the result from");
+                        desc += I18n.Translate("internal/ConditionSingle/listmustcontain", "contains");
                         break;
                     case CndTypeEnum.ListDoesNotContain:
-                        desc += I18n.Translate("internal/ConditionSingle/listcantcontain", "must not contain the result from");
+                        desc += I18n.Translate("internal/ConditionSingle/listcantcontain", "does not contain");
                         break;
                 }
             }
             else
             {
-                switch (ExpressionTypeL)
+                switch (IsNumericComparison ? ExprTypeEnum.Numeric : ExpressionTypeL)
                 {
                     case ExprTypeEnum.Numeric:
-                        desc = Capitalize(I18n.Translate("internal/ConditionSingle/numericexpression", "numeric expression ({0})", descL));
+                        desc = IsNumericComparison ? $"({descL})"
+                            : Capitalize(I18n.Translate("internal/ConditionSingle/numericexpression", "number ({0})", descL));
                         break;
                     case ExprTypeEnum.String:
-                        desc = Capitalize(I18n.Translate("internal/ConditionSingle/stringexpression", "string expression ({0})", descL));
+                        desc = Capitalize(I18n.Translate("internal/ConditionSingle/stringexpression", "text ({0})", descL));
                         break;
                 }
                 desc += " ";
                 switch (ConditionType)
                 {
                     case CndTypeEnum.NumericEqual:
-                        desc += I18n.Translate("internal/ConditionSingle/numericequal", "must be numerically equal to");
+                        desc += I18n.Translate("internal/ConditionSingle/numericequal", "numerically =");
                         break;
                     case CndTypeEnum.NumericNotEqual:
-                        desc += I18n.Translate("internal/ConditionSingle/numericnotequal", "must not be numerically equal to");
+                        desc += I18n.Translate("internal/ConditionSingle/numericnotequal", "numerically ≠");
                         break;
                     case CndTypeEnum.NumericGreater:
-                        desc += I18n.Translate("internal/ConditionSingle/numericgreater", "must be numerically greater than");
+                        desc += I18n.Translate("internal/ConditionSingle/numericgreater", "numerically >");
                         break;
                     case CndTypeEnum.NumericGreaterEqual:
-                        desc += I18n.Translate("internal/ConditionSingle/numericgreaterequal", "must be numerically greater or equal to");
+                        desc += I18n.Translate("internal/ConditionSingle/numericgreaterequal", "numerically ≥");
                         break;
                     case CndTypeEnum.NumericLess:
-                        desc += I18n.Translate("internal/ConditionSingle/numericless", "must be numerically less than");
+                        desc += I18n.Translate("internal/ConditionSingle/numericless", "numerically <");
                         break;
                     case CndTypeEnum.NumericLessEqual:
-                        desc += I18n.Translate("internal/ConditionSingle/numericlessequal", "must be numerically less or equal to");
+                        desc += I18n.Translate("internal/ConditionSingle/numericlessequal", "numerically ≤");
                         break;
                     case CndTypeEnum.StringEqualCase:
-                        desc += I18n.Translate("internal/ConditionSingle/stringequalcase", "must pass case-sensitive string comparison to the string from");
+                        desc += I18n.Translate("internal/ConditionSingle/stringequalcase", "equals (case-sensitive)");
                         break;
                     case CndTypeEnum.StringEqualNocase:
-                        desc += I18n.Translate("internal/ConditionSingle/stringequalnocase", "must pass case-insensitive string comparison to the string from");
+                        desc += I18n.Translate("internal/ConditionSingle/stringequalnocase", "equals (ignore case)");
                         break;
                     case CndTypeEnum.StringNotEqualCase:
-                        desc += I18n.Translate("internal/ConditionSingle/stringnotequalcase", "must not pass case-sensitive string comparison to the string from");
+                        desc += I18n.Translate("internal/ConditionSingle/stringnotequalcase", "differs from (case-sensitive)");
                         break;
                     case CndTypeEnum.StringNotEqualNocase:
-                        desc += I18n.Translate("internal/ConditionSingle/stringnotequalnocase", "must not pass case-insensitive string comparison to the string from");
+                        desc += I18n.Translate("internal/ConditionSingle/stringnotequalnocase", "differs from (ignore case)");
                         break;
                     case CndTypeEnum.RegexMatch:
-                        desc += I18n.Translate("internal/ConditionSingle/regexmatch", "must match the regular expression from");
+                        desc += I18n.Translate("internal/ConditionSingle/regexmatch", "matches regex");
                         break;
                     case CndTypeEnum.RegexNotMatch:
-                        desc += I18n.Translate("internal/ConditionSingle/noregexmatch", "must not match the regular expression from");
+                        desc += I18n.Translate("internal/ConditionSingle/noregexmatch", "does not match regex");
                         break;
                 }
             }            
-            switch (ExpressionTypeR)
+            switch (IsNumericComparison ? ExprTypeEnum.Numeric : ExpressionTypeR)
             {
                 case ExprTypeEnum.Numeric:
-                    desc += " " + I18n.Translate("internal/ConditionSingle/numericexpression", "numeric expression ({0})", descR);
+                    desc += " " + (IsNumericComparison ? $"({descR})"
+                        : I18n.Translate("internal/ConditionSingle/numericexpression", "number ({0})", descR));
                     break;
                 case ExprTypeEnum.String:
-                    desc += " " + I18n.Translate("internal/ConditionSingle/stringexpression", "string expression ({0})", descR);
+                    desc += " " + I18n.Translate("internal/ConditionSingle/stringexpression", "text ({0})", descR);
                     break;
             }            
             return Capitalize(desc);
@@ -251,9 +255,9 @@ namespace Triggernometry.Core.Conditions
         }
 
         internal string GetExpressionResultL(Context ctx, Context.LoggerDelegate logger, object o)
-            => GetExpressionResult(ExpressionL ?? "", ExpressionTypeL, ctx, logger, o);
+            => GetExpressionResult(ExpressionL ?? "", IsNumericComparison ? ExprTypeEnum.Numeric : ExpressionTypeL, ctx, logger, o);
         internal string GetExpressionResultR(Context ctx, Context.LoggerDelegate logger, object o)
-            => GetExpressionResult(ExpressionR ?? "", ExpressionTypeR, ctx, logger, o);
+            => GetExpressionResult(ExpressionR ?? "", IsNumericComparison ? ExprTypeEnum.Numeric : ExpressionTypeR, ctx, logger, o);
 
         private string GetExpressionResult(string expr, ExprTypeEnum exprType, Context ctx, Context.LoggerDelegate logger, object o)
         {
@@ -276,46 +280,31 @@ namespace Triggernometry.Core.Conditions
                 {
                     return false;
                 }
+                if (IsNumericComparison)
+                {
+                    double left = ctx.EvaluateNumericExpression(logger, o, ExpressionL ?? "");
+                    double right = ctx.EvaluateNumericExpression(logger, o, ExpressionR ?? "");
+                    // 保留浮点容限，避免表达式的舍入误差影响相等及边界比较。
+                    switch (ConditionType)
+                    {
+                        case CndTypeEnum.NumericEqual:
+                            return MathParser.IsZero(left - right);
+                        case CndTypeEnum.NumericNotEqual:
+                            return !MathParser.IsZero(left - right);
+                        case CndTypeEnum.NumericGreater:
+                            return left > right + MathParser.TOLERANCE;
+                        case CndTypeEnum.NumericGreaterEqual:
+                            return left + MathParser.TOLERANCE >= right;
+                        case CndTypeEnum.NumericLess:
+                            return left + MathParser.TOLERANCE < right;
+                        case CndTypeEnum.NumericLessEqual:
+                            return left <= right + MathParser.TOLERANCE;
+                    }
+                }
                 string lval = GetExpressionResultL(ctx, logger, o);
                 string rval = GetExpressionResultR(ctx, logger, o);
                 switch (ConditionType)
                 {
-                    case CndTypeEnum.NumericEqual:
-                        {
-                            double ld = double.Parse(lval, CultureInfo.InvariantCulture);
-                            double rd = double.Parse(rval, CultureInfo.InvariantCulture);
-                            return MathParser.IsZero(ld - rd) ? true : false;
-                        }
-                    case CndTypeEnum.NumericNotEqual:
-                        {
-                            double ld = double.Parse(lval, CultureInfo.InvariantCulture);
-                            double rd = double.Parse(rval, CultureInfo.InvariantCulture);
-                            return MathParser.IsZero(ld - rd) ? false : true;
-                        }
-                    case CndTypeEnum.NumericGreater:
-                        {
-                            double ld = double.Parse(lval, CultureInfo.InvariantCulture);
-                            double rd = double.Parse(rval, CultureInfo.InvariantCulture);
-                            return ld > rd + MathParser.TOLERANCE;
-                        }
-                    case CndTypeEnum.NumericGreaterEqual:
-                        {
-                            double ld = double.Parse(lval, CultureInfo.InvariantCulture);
-                            double rd = double.Parse(rval, CultureInfo.InvariantCulture);
-                            return ld + MathParser.TOLERANCE >= rd;
-                        }
-                    case CndTypeEnum.NumericLess:
-                        {
-                            double ld = double.Parse(lval, CultureInfo.InvariantCulture);
-                            double rd = double.Parse(rval, CultureInfo.InvariantCulture);
-                            return ld + MathParser.TOLERANCE < rd;
-                        }
-                    case CndTypeEnum.NumericLessEqual:
-                        {
-                            double ld = double.Parse(lval, CultureInfo.InvariantCulture);
-                            double rd = double.Parse(rval, CultureInfo.InvariantCulture);
-                            return ld <= rd + MathParser.TOLERANCE;
-                        }
                     case CndTypeEnum.StringEqualCase:
                         {
                             return string.Compare(lval, rval, false) == 0;

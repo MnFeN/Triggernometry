@@ -221,13 +221,14 @@
     <TranslationEntry Key="ColorSelector/ctxSetBackgroundTransparent" Translation="Set background as transparent" />
     <TranslationEntry Key="ColorSelector/ctxSetTextColor" Translation="Set text color" />
     <TranslationEntry Key="ColorSelector/ctxSetTextOutline" Translation="Set text outline color" />
-    <TranslationEntry Key="ConditionViewer/btnAdd" Translation="Add" />
-    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="Comment" />
-    <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="Condition" />
-    <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="Condition group" />
+    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="Add comment" />
+    <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="Add condition" />
+    <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="Add group" />
     <TranslationEntry Key="ConditionViewer/btnDelete" Translation="Remove" />
-    <TranslationEntry Key="ConditionViewer/btnProperties" Translation="Show properties" />
-    <TranslationEntry Key="ConditionViewer/capProperties/lblContent" Translation="Properties" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[List]" Translation="List" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Numeric]" Translation="Numeric" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Regex]" Translation="Regex" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Text]" Translation="Text" />
     <TranslationEntry Key="ConditionViewer/cbxExpLType[Numeric]" Translation="Numeric" />
     <TranslationEntry Key="ConditionViewer/cbxExpLType[String]" Translation="String" />
     <TranslationEntry Key="ConditionViewer/cbxExpRType[Numeric]" Translation="Numeric" />
@@ -236,20 +237,6 @@
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[At least one condition must be true (OR)]" Translation="At least one condition must be true (OR)" />
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="None of the conditions may be true (NOT)" />
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[Only one condition must be true (XOR)]" Translation="Only one condition must be true (XOR)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Expressions must be numerically equal (X = Y)]" Translation="Expressions must be numerically equal (X = Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Expressions must not be numerically equal (X ≠ Y)]" Translation="Expressions must not be numerically equal (X ≠ Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically greater or equal to (X ≥ Y)]" Translation="Left side must be numerically greater or equal to (X ≥ Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically greater than (X &gt; Y)]" Translation="Left side must be numerically greater than (X &gt; Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically less or equal to (X ≤ Y)]" Translation="Left side must be numerically less or equal to (X ≤ Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically less than (X &lt; Y)]" Translation="Left side must be numerically less than (X &lt; Y)" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must match the regular expression on the right side]" Translation="Left side must match the regular expression on the right side" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not match the regular expression on the right side]" Translation="Left side must not match the regular expression on the right side" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not pass case-insensitive string comparison with the right side]" Translation="Left side must not pass case-insensitive string comparison with the right side" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not pass case-sensitive string comparison with the right side]" Translation="Left side must not pass case-sensitive string comparison with the right side" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must pass case-insensitive string comparison with the right side]" Translation="Left side must pass case-insensitive string comparison with the right side" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must pass case-sensitive string comparison with the right side]" Translation="Left side must pass case-sensitive string comparison with the right side" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="List variable specified on the left side must contain the value on the right side" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="List variable specified on the left side must not contain the value on the right side" />
     <TranslationEntry Key="ConditionViewer/ctxAdd" Translation="Add" />
     <TranslationEntry Key="ConditionViewer/ctxAddComment" Translation="Comment" />
     <TranslationEntry Key="ConditionViewer/ctxAddCondition" Translation="Condition" />
@@ -263,9 +250,6 @@
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="Remove" />
     <TranslationEntry Key="ConditionViewer/lblComment" Translation="Comment text" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="Grouping type" />
-    <TranslationEntry Key="ConditionViewer/lblLeftExpression" Translation="Left expression" />
-    <TranslationEntry Key="ConditionViewer/lblOperator" Translation="Operator" />
-    <TranslationEntry Key="ConditionViewer/lblRightExpression" Translation="Right expression" />
     <TranslationEntry Key="ConfigurationForm2" Translation="Configuration" />
     <TranslationEntry Key="ConfigurationForm2/btnAudio" Translation="Audio" />
     <TranslationEntry Key="ConfigurationForm2/btnBeepTest" Translation="Test" />
@@ -886,36 +870,47 @@
     <TranslationEntry Key="internal/ConditionGroup/unknown" Translation="Unknown grouping value '{0}'" />
     <TranslationEntry Key="internal/ConditionGroup/xor" Translation="Only one condition must be true" />
     <TranslationEntry Key="internal/ConditionSingle/invalidexpressiontype" Translation="Invalid expression type: {0}" />
-    <TranslationEntry Key="internal/ConditionSingle/listcantcontain" Translation="must not contain the result from" />
-    <TranslationEntry Key="internal/ConditionSingle/listmustcontain" Translation="must contain the result from" />
-    <TranslationEntry Key="internal/ConditionSingle/listvar" Translation="List variable specified by" />
-    <TranslationEntry Key="internal/ConditionSingle/noregexmatch" Translation="must not match the regular expression from" />
-    <TranslationEntry Key="internal/ConditionSingle/numericequal" Translation="must be numerically equal to" />
-    <TranslationEntry Key="internal/ConditionSingle/numericexpression" Translation="numeric expression ({0})" />
-    <TranslationEntry Key="internal/ConditionSingle/numericgreater" Translation="must be numerically greater than" />
-    <TranslationEntry Key="internal/ConditionSingle/numericgreaterequal" Translation="must be numerically greater or equal to" />
-    <TranslationEntry Key="internal/ConditionSingle/numericless" Translation="must be numerically less than" />
-    <TranslationEntry Key="internal/ConditionSingle/numericlessequal" Translation="must be numerically less or equal to" />
-    <TranslationEntry Key="internal/ConditionSingle/numericnotequal" Translation="must not be numerically equal to" />
-    <TranslationEntry Key="internal/ConditionSingle/regexmatch" Translation="must match the regular expression from" />
-    <TranslationEntry Key="internal/ConditionSingle/stringequalcase" Translation="must pass case-sensitive string comparison to the string from" />
-    <TranslationEntry Key="internal/ConditionSingle/stringequalnocase" Translation="must pass case-insensitive string comparison to the string from" />
-    <TranslationEntry Key="internal/ConditionSingle/stringexpression" Translation="string expression ({0})" />
-    <TranslationEntry Key="internal/ConditionSingle/stringnotequalcase" Translation="must not pass case-sensitive string comparison to the string from" />
-    <TranslationEntry Key="internal/ConditionSingle/stringnotequalnocase" Translation="must not pass case-insensitive string comparison to the string from" />
+    <TranslationEntry Key="internal/ConditionSingle/listcantcontain" Translation="does not contain" />
+    <TranslationEntry Key="internal/ConditionSingle/listmustcontain" Translation="contains" />
+    <TranslationEntry Key="internal/ConditionSingle/listvar" Translation="List named by" />
+    <TranslationEntry Key="internal/ConditionSingle/noregexmatch" Translation="does not match regex" />
+    <TranslationEntry Key="internal/ConditionSingle/numericequal" Translation="numerically =" />
+    <TranslationEntry Key="internal/ConditionSingle/numericexpression" Translation="number ({0})" />
+    <TranslationEntry Key="internal/ConditionSingle/numericgreater" Translation="numerically &gt;" />
+    <TranslationEntry Key="internal/ConditionSingle/numericgreaterequal" Translation="numerically ≥" />
+    <TranslationEntry Key="internal/ConditionSingle/numericless" Translation="numerically &lt;" />
+    <TranslationEntry Key="internal/ConditionSingle/numericlessequal" Translation="numerically ≤" />
+    <TranslationEntry Key="internal/ConditionSingle/numericnotequal" Translation="numerically ≠" />
+    <TranslationEntry Key="internal/ConditionSingle/regexmatch" Translation="matches regex" />
+    <TranslationEntry Key="internal/ConditionSingle/stringequalcase" Translation="equals (case-sensitive)" />
+    <TranslationEntry Key="internal/ConditionSingle/stringequalnocase" Translation="equals (ignore case)" />
+    <TranslationEntry Key="internal/ConditionSingle/stringexpression" Translation="text ({0})" />
+    <TranslationEntry Key="internal/ConditionSingle/stringnotequalcase" Translation="differs from (case-sensitive)" />
+    <TranslationEntry Key="internal/ConditionSingle/stringnotequalnocase" Translation="differs from (ignore case)" />
     <TranslationEntry Key="internal/ConditionViewer/areyousurecomment" Translation="Are you sure you want to remove the selected comment?" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuregroup" Translation="Are you sure you want to remove the selected condition group?" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuresingle" Translation="Are you sure you want to remove the selected condition?" />
-    <TranslationEntry Key="internal/ConditionViewer/commentprops" Translation="Comment properties" />
     <TranslationEntry Key="internal/ConditionViewer/conditionplural" Translation="{0} conditions" />
     <TranslationEntry Key="internal/ConditionViewer/conditionsingular" Translation="{0} condition" />
-    <TranslationEntry Key="internal/ConditionViewer/condprops" Translation="Condition properties" />
     <TranslationEntry Key="internal/ConditionViewer/confirm" Translation="Confirm removal" />
     <TranslationEntry Key="internal/ConditionViewer/copyfail" Translation="Tree copy failed due to exception: {0}" />
     <TranslationEntry Key="internal/ConditionViewer/groupplural" Translation="{0} groups" />
-    <TranslationEntry Key="internal/ConditionViewer/groupprops" Translation="Group properties" />
     <TranslationEntry Key="internal/ConditionViewer/groupsingular" Translation="{0} group" />
     <TranslationEntry Key="internal/ConditionViewer/operationwillremove" Translation="This operation will remove:" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorListContains" Translation="List L contains R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorListDoesNotContain" Translation="List L does not contain R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericEqual" Translation="L = R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreater" Translation="L &gt; R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreaterEqual" Translation="L ≥ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericLess" Translation="L &lt; R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericLessEqual" Translation="L ≤ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericNotEqual" Translation="L ≠ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="L matches regex R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="L does not match regex R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R (case-sensitive)" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualNocase" Translation="L = R (ignore case)" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R (case-sensitive)" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualNocase" Translation="L ≠ R (ignore case)" />
     <TranslationEntry Key="internal/ConditionViewer/pastefail" Translation="Tree paste failed due to exception: {0}" />
     <TranslationEntry Key="internal/ConditionViewer/testtitle" Translation="Test" />
     <TranslationEntry Key="internal/Configuration/configtitle" Translation="Triggernometry configuration" />

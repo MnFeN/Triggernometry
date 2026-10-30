@@ -196,15 +196,6 @@
         sUF3cMIuVhIH6NbFtkq5/ZI4wHWqatBHVxikKhPvuqtPU/UfiuIOTHovlwCx5dgAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="btnAdd.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAAAKdJREFUOE9jGLzAJHXRGZPUJf8heNEZqDDxAKRx+7lnYAxiQ4WJB/Q3ANXPEIxs
-        ACrGEiYgiQOXX/zfffH5/z1ADNMMw9vOPvu/9QyQBmKQWqg2BAAJbjnz9P/U7bf/T9l2+/+kLbf+T9h8
-        63/b2pv/m1fd+F+/4vr/2mXX/8/f9wCXAZheAGkGYXRxoqIVpBDkdJgBUGHiAdUMAGEyDaAwKdMJMDAA
-        ADek1zP+1bjkAAAAAElFTkSuQmCC
-</value>
-  </data>
   <data name="btnDelete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -219,17 +210,6 @@
         zc0GEtQh6f07cHYbzltbDd7FxcWfBtzEBM6oyATxpiacNjT8hXhjo1E/a2kxDXw+X4G1UdjYwE/aPU5H
         PG1rQ4zMToh4QgIWYwS2HqfdU6urxhXYH7LQh/hIqLC+FotFXF5eolQqoVwuo1KpoFqtGpHN2Tqrs91D
         oRBId2jZ2dmx0ik+bW9vlyleXQder7dC8avH47H/BrVpzzO5oAJ6AAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="btnProperties.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAAARNJREFUOE+lkLtqhGAQhX3KRVuLgGJvrWAvamGjdcAVLGJj7a1IJWJlYe39DSbM
-        ZH+TDW5c2YEPcZhzzszPYbmue9U0Dc6g6/qFxFjYOFuoucl/DMZxhL7viWEYNrCPTNME67rS7K4BCtM0
-        hSzLiDzP7yiK4tiApUqStFFVFaXP8/y/AQpZchRFwPP8xlMbsGRMxJvx+73FG/0/tQFLZBvIskxU1eex
-        Aab8vp2JGU3THBv8vR0RBAFEUQRFUaBtW5p9aMBeG1mWBeq6BlVVwTAMME0TPM+j2V0DFLPXRsqyJOI4
-        BsuywPd9CIKAZh8asA0wHcGbka7rIAxDSJKEZncNztSdgW3bH9g4g+M47zf5K8VxXxPumhOpKSeFAAAA
-        AElFTkSuQmCC
 </value>
   </data>
   <data name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing">

@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using System.Windows.Forms;
 using System.IO;
 using static Triggernometry.Core.Conditions.ConditionGroup;
+using static Triggernometry.Core.Conditions.ConditionSingle;
 using Triggernometry.Localization;
 using Triggernometry.Core;
 using Triggernometry.Core.Conditions;
@@ -31,33 +32,31 @@ namespace Triggernometry.UI.CustomControls
         private Trigger Trigger => UiContext?.Trigger;
         private RealPlugin Plugin => UiContext?.Plugin;
 
-        private bool _PanelStateFromOption;
-        private bool PanelStateFromOption
+        // 分类及符号只控制显示顺序，XML 中的 ConditionType 仍沿用原有枚举。
+        private static readonly (CndTypeEnum Type, string Symbol, string Description)[][] ComparisonOperators =
         {
-            get
-            {
-                return _PanelStateFromOption;
+            new[] { 
+                (CndTypeEnum.NumericGreater, ">", "L > R"), 
+                (CndTypeEnum.NumericEqual, "=", "L = R"),
+                (CndTypeEnum.NumericLess, "<", "L < R"), 
+                (CndTypeEnum.NumericGreaterEqual, "≥", "L ≥ R"),
+                (CndTypeEnum.NumericLessEqual, "≤", "L ≤ R"), 
+                (CndTypeEnum.NumericNotEqual, "≠", "L ≠ R") 
+            },
+            new[] { 
+                (CndTypeEnum.StringEqualCase, "=", "L = R (case-sensitive)"), 
+                (CndTypeEnum.StringEqualNocase, "≅", "L = R (ignore case)"),
+                (CndTypeEnum.StringNotEqualCase, "≠", "L ≠ R (case-sensitive)"), 
+                (CndTypeEnum.StringNotEqualNocase, "≇", "L ≠ R (ignore case)") 
+            },
+            new[] { 
+                (CndTypeEnum.RegexMatch, "✓", "L matches regex R"), 
+                (CndTypeEnum.RegexNotMatch, "✗", "L does not match regex R") },
+            new[] { 
+                (CndTypeEnum.ListContains, "∋", "List L contains R"), 
+                (CndTypeEnum.ListDoesNotContain, "∌", "List L does not contain R") 
             }
-            set
-            {
-                _PanelStateFromOption = value;
-                splitContainer1.Panel2Collapsed = (_PanelStateFromSelection == false || _PanelStateFromOption == false);
-            }
-        }
-
-        private bool _PanelStateFromSelection;
-        private bool PanelStateFromSelection
-        {
-            get
-            {
-                return _PanelStateFromSelection;
-            }
-            set
-            {
-                _PanelStateFromSelection = value;
-                splitContainer1.Panel2Collapsed = (_PanelStateFromSelection == false || _PanelStateFromOption == false);
-            }
-        }
+        };
 
         private ConditionGroup _ConditionToEdit = null;
         public ConditionGroup ConditionToEdit
@@ -132,26 +131,56 @@ namespace Triggernometry.UI.CustomControls
                 toolStrip1.Font = Font;
             if (contextMenuStrip1 != null)
                 contextMenuStrip1.Font = Font;
+            if (cbxComparison != null)
+                UpdateSelectorWidths();
+        }
+
+        /// <summary>内容至少铺满可用高度，超过窗口时由外层滚动显示。</summary>
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            if (tableLayoutPanelMain != null)
+                tableLayoutPanelMain.MinimumSize = new Size(0, ClientSize.Height);
+            base.OnSizeChanged(e);
         }
 
         public ConditionViewer()
         {
             InitializeComponent();
-            // todo resize doesn't follow i18n when it's done here
-            ResizeCombobox(cbxExpLType);
-            ResizeCombobox(cbxExpRType);
-            ResizeCombobox(cbxGroupingType);
-            ResizeCombobox(cbxOpType);
             DoubleBuffered = true;
             disabledNodeColor = Color.Red;
             trvNodes.BeforeCheck += trvNodes_BeforeCheck;
             pnlEditorGroup.Visible = false;
             pnlEditorSingle.Visible = false;
             pnlEditorComment.Visible = false;
-            PanelStateFromSelection = false;
+            panel3.Visible = false;
             expLeft.textBox1.TextChanged += expLeft_TextChanged;
             expRight.textBox1.TextChanged += expRight_TextChanged;
-            _PanelStateFromOption = btnProperties.Checked;
+            // 动态标签自行翻译，运算符是与语言无关的符号。
+            cbxOpType.Tag = lblLeftExpression.Tag = lblRightExpression.Tag = lblComparisonDescription.Tag = I18n.DoNotTranslate;
+            cbxExpLType.DropDown += ExpressionType_DropDown;
+            cbxExpRType.DropDown += ExpressionType_DropDown;
+            cbxGroupingType.DropDown += ExpressionType_DropDown;
+            cbxComparison.DropDown += ExpressionType_DropDown;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            UpdateSelectorWidths();
+        }
+
+        /// <summary>按当前语言和字号容纳最长选项，其余宽度全部留给表达式。</summary>
+        private void UpdateSelectorWidths()
+        {
+            int RequiredWidth(ComboBox combo)
+            {
+                int textWidth = 0;
+                foreach (var item in combo.Items)
+                    textWidth = Math.Max(textWidth, TextRenderer.MeasureText(item.ToString(), combo.Font).Width);
+                return textWidth + SystemInformation.VerticalScrollBarWidth + 6 + combo.Margin.Horizontal;
+            }
+            tableLayoutPanel1.ColumnStyles[0].Width = RequiredWidth(cbxComparison);
+            tableLayoutPanel1.ColumnStyles[1].Width = RequiredWidth(cbxOpType);
         }
 
         internal event EventHandler ConditionsUpdated;
@@ -162,8 +191,8 @@ namespace Triggernometry.UI.CustomControls
             isReadOnly = true;
             expLeft.ReadOnly = expRight.ReadOnly = true;
             txtComment.ReadOnly = true;
-            cbxExpLType.Enabled = cbxExpRType.Enabled = cbxOpType.Enabled = cbxGroupingType.Enabled = false;
-            btnAdd.Enabled = btnAddGroup.Enabled = btnAddCondition.Enabled = btnAddComment.Enabled = btnDelete.Enabled = false;
+            cbxExpLType.Enabled = cbxExpRType.Enabled = cbxComparison.Enabled = cbxOpType.Enabled = cbxGroupingType.Enabled = false;
+            btnAddGroup.Enabled = btnAddCondition.Enabled = btnAddComment.Enabled = btnDelete.Enabled = false;
             trvNodes.AllowDrop = false;
         }
 
@@ -204,6 +233,11 @@ namespace Triggernometry.UI.CustomControls
         private void expRight_LostFocus(object sender, EventArgs e)
         {
             OnConditionsUpdated();
+        }
+
+        private void ExpressionType_DropDown(object sender, EventArgs e)
+        {
+            ResizeCombobox((ComboBox)sender);
         }
 
         private void ResizeCombobox(ComboBox cbx)
@@ -336,23 +370,23 @@ namespace Triggernometry.UI.CustomControls
                 tn.ImageKey = "function";
                 tn.SelectedImageKey = "function";
             }
-            if (re is ConditionGroup)
+            if (re is ConditionGroup group)
             {
-                switch (((ConditionGroup)re).Grouping)
+                switch (group.Grouping)
                 {
-                    case ConditionGroup.CndGroupingEnum.And:
+                    case CndGroupingEnum.And:
                         tn.ImageKey = "group_and";
                         tn.SelectedImageKey = "group_and";
                         break;
-                    case ConditionGroup.CndGroupingEnum.Or:
+                    case CndGroupingEnum.Or:
                         tn.ImageKey = "group_or";
                         tn.SelectedImageKey = "group_or";
                         break;
-                    case ConditionGroup.CndGroupingEnum.Xor:
+                    case CndGroupingEnum.Xor:
                         tn.ImageKey = "group_xor";
                         tn.SelectedImageKey = "group_xor";
                         break;
-                    case ConditionGroup.CndGroupingEnum.Not:
+                    case CndGroupingEnum.Not:
                         tn.ImageKey = "group_not";
                         tn.SelectedImageKey = "group_not";
                         break;
@@ -400,39 +434,20 @@ namespace Triggernometry.UI.CustomControls
                 if (re is ConditionSingle)
                 {
                     pnlEditorGroup.Visible = false;
-                    PanelStateFromSelection = true;
+                    panel3.Visible = true;
                     ConditionSingle r = (ConditionSingle)re;
                     expLeft.Expression = r.ExpressionL;
                     expRight.Expression = r.ExpressionR;
-                    switch (r.ExpressionTypeL)
-                    {
-                        case ConditionSingle.ExprTypeEnum.String:
-                            cbxExpLType.SelectedIndex = 0;
-                            break;
-                        case ConditionSingle.ExprTypeEnum.Numeric:
-                            cbxExpLType.SelectedIndex = 1;
-                            break;
-                    }
-                    switch (r.ExpressionTypeR)
-                    {
-                        case ConditionSingle.ExprTypeEnum.String:
-                            cbxExpRType.SelectedIndex = 0;
-                            break;
-                        case ConditionSingle.ExprTypeEnum.Numeric:
-                            cbxExpRType.SelectedIndex = 1;
-                            break;
-                    }
-                    cbxOpType.SelectedIndex = (int)r.ConditionType;
-                    expLeft.ExpressionType = r.ExpressionTypeL == ConditionSingle.ExprTypeEnum.Numeric
-                        ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric : ExpressionTextBox.SupportedExpressionTypeEnum.String;
-                    UpdateRightExpressionType();
-                    capProperties.Caption = I18n.Translate("internal/ConditionViewer/condprops", "Condition properties");
+                    cbxComparison.SelectedIndex = Array.FindIndex(ComparisonOperators,
+                        options => Array.Exists(options, option => option.Type == r.ConditionType));
+                    LoadComparisonOperators(r.ConditionType);
+                    UpdateComparisonControls(r);
                     pnlEditorSingle.Visible = true;
                 }
                 else if (re is ConditionGroup)
                 {
                     pnlEditorSingle.Visible = false;
-                    PanelStateFromSelection = true;
+                    panel3.Visible = true;
                     ConditionGroup r = (ConditionGroup)re;
                     switch (r.Grouping)
                     {
@@ -449,23 +464,21 @@ namespace Triggernometry.UI.CustomControls
                             cbxGroupingType.SelectedIndex = 3;
                             break;
                     }
-                    capProperties.Caption = I18n.Translate("internal/ConditionViewer/groupprops", "Group properties");
                     pnlEditorGroup.Visible = true;
                 }
                 else if (re is ConditionComment comment)
                 {
                     pnlEditorSingle.Visible = false;
                     pnlEditorGroup.Visible = false;
-                    PanelStateFromSelection = true;
+                    panel3.Visible = true;
                     txtComment.Text = comment.Text;
-                    capProperties.Caption = I18n.Translate("internal/ConditionViewer/commentprops", "Comment properties");
                     pnlEditorComment.Visible = true;
                 }
                 else
                 {
                     pnlEditorSingle.Visible = false;
                     pnlEditorGroup.Visible = false;
-                    PanelStateFromSelection = false;
+                    panel3.Visible = false;
                 }
                 btnAddGroup.Enabled = btnAddCondition.Enabled = btnAddComment.Enabled = !isReadOnly && re != null;
                 btnDelete.Enabled = !isReadOnly && re?.Parent != null;
@@ -715,51 +728,99 @@ namespace Triggernometry.UI.CustomControls
 
         private void cbxExpRType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (isLoadingCondition)
+            if (isLoadingCondition || !(trvNodes.SelectedNode?.Tag is ConditionSingle condition))
                 return;
-            TreeNode tn = trvNodes.SelectedNode;
-            ConditionSingle re = (ConditionSingle)tn.Tag;
-            switch (cbxExpRType.SelectedIndex)
-            {
-                case 0:
-                    re.ExpressionTypeR = ConditionSingle.ExprTypeEnum.String;
-                    break;
-                case 1:
-                    re.ExpressionTypeR = ConditionSingle.ExprTypeEnum.Numeric;
-                    break;
-            }
-            UpdateRightExpressionType();
+            condition.ExpressionTypeR = (ExprTypeEnum)cbxExpRType.SelectedIndex;
+            UpdateComparisonControls(condition);
             OnConditionsUpdated();
-        }
-
-        /// <summary> Validates the right-hand string as a regex when the comparison uses one. </summary>
-        private void UpdateRightExpressionType()
-        {
-            bool isRegex = cbxOpType.SelectedIndex == (int)ConditionSingle.CndTypeEnum.RegexMatch ||
-                cbxOpType.SelectedIndex == (int)ConditionSingle.CndTypeEnum.RegexNotMatch;
-            expRight.ExpressionType = cbxExpRType.SelectedIndex == 1
-                ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric
-                : isRegex ? ExpressionTextBox.SupportedExpressionTypeEnum.Regex
-                : ExpressionTextBox.SupportedExpressionTypeEnum.String;
         }
 
         private void cbxExpLType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (isLoadingCondition)
+            if (isLoadingCondition || !(trvNodes.SelectedNode?.Tag is ConditionSingle condition))
                 return;
-            TreeNode tn = trvNodes.SelectedNode;
-            ConditionSingle re = (ConditionSingle)tn.Tag;
-            switch (cbxExpLType.SelectedIndex)
+            condition.ExpressionTypeL = (ExprTypeEnum)cbxExpLType.SelectedIndex;
+            UpdateComparisonControls(condition);
+            OnConditionsUpdated();
+        }
+
+        /// <summary>显示当前分类的运算符，并通过枚举值定位已有条件。</summary>
+        private void LoadComparisonOperators(CndTypeEnum selectedType)
+        {
+            var options = ComparisonOperators[cbxComparison.SelectedIndex];
+            cbxOpType.BeginUpdate();
+            try
             {
-                case 0:
-                    expLeft.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.String;
-                    re.ExpressionTypeL = ConditionSingle.ExprTypeEnum.String;
-                    break;
-                case 1:
-                    expLeft.ExpressionType = ExpressionTextBox.SupportedExpressionTypeEnum.Numeric;
-                    re.ExpressionTypeL = ConditionSingle.ExprTypeEnum.Numeric;
-                    break;
+                cbxOpType.Items.Clear();
+                foreach (var option in options)
+                    cbxOpType.Items.Add(option.Symbol);
+                cbxOpType.SelectedIndex = Math.Max(0, Array.FindIndex(options, option => option.Type == selectedType));
             }
+            finally { cbxOpType.EndUpdate(); }
+            UpdateSelectorWidths();
+        }
+
+        /// <summary>同步类型锁定、表达式校验和运算说明；浏览旧条件不会改写其保存的类型。</summary>
+        private void UpdateComparisonControls(ConditionSingle condition)
+        {
+            bool wasLoading = isLoadingCondition;
+            isLoadingCondition = true;
+            try
+            {
+                bool isNumeric = condition.IsNumericComparison;
+                bool isRegex = cbxComparison.SelectedIndex == 2;
+                bool isList = cbxComparison.SelectedIndex == 3;
+                cbxExpLType.Enabled = cbxExpRType.Enabled = !isReadOnly && !isNumeric;
+                cbxExpLType.SelectedIndex = (int)(isNumeric ? ExprTypeEnum.Numeric : condition.ExpressionTypeL);
+                cbxExpRType.SelectedIndex = (int)(isNumeric ? ExprTypeEnum.Numeric : condition.ExpressionTypeR);
+                expLeft.ExpressionType = cbxExpLType.SelectedIndex == 1
+                    ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric : ExpressionTextBox.SupportedExpressionTypeEnum.String;
+                expRight.ExpressionType = cbxExpRType.SelectedIndex == 1
+                    ? ExpressionTextBox.SupportedExpressionTypeEnum.Numeric
+                    : isRegex ? ExpressionTextBox.SupportedExpressionTypeEnum.Regex : ExpressionTextBox.SupportedExpressionTypeEnum.String;
+                expLeft.AutofillType = isList && cbxExpLType.SelectedIndex == 0
+                    ? ExpressionTextBox.AutofillTypeEnum.List : ExpressionTextBox.AutofillTypeEnum.None;
+                UpdateComparisonDescription();
+            }
+            finally { isLoadingCondition = wasLoading; }
+        }
+
+        /// <summary>让符号旁的说明明确大小写规则及左右表达式的用途。</summary>
+        private void UpdateComparisonDescription()
+        {
+            var option = ComparisonOperators[cbxComparison.SelectedIndex][cbxOpType.SelectedIndex];
+            lblComparisonDescription.Text = I18n.Translate($"internal/ConditionViewer/operator{option.Type}", option.Description);
+            operatorToolTip.SetToolTip(cbxOpType, lblComparisonDescription.Text);
+        }
+
+        /// <summary>切换比较分类时保留表达式内容，并采用该分类的常用运算符。</summary>
+        private void cbxComparison_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (isLoadingCondition || cbxComparison.SelectedIndex < 0 || !(trvNodes.SelectedNode?.Tag is ConditionSingle condition))
+                return;
+            isLoadingCondition = true;
+            try
+            {
+                // 从数值比较离开时恢复文本输入，其他模式保留用户选择的解析类型。
+                if (condition.IsNumericComparison)
+                    condition.ExpressionTypeL = condition.ExpressionTypeR = ExprTypeEnum.String;
+                switch (cbxComparison.SelectedIndex)
+                {
+                    case 0:
+                        condition.ConditionType = CndTypeEnum.NumericEqual;
+                        condition.ExpressionTypeL = condition.ExpressionTypeR = ExprTypeEnum.Numeric;
+                        break;
+                    case 1:
+                        condition.ConditionType = CndTypeEnum.StringEqualNocase; break;
+                    case 2:
+                        condition.ConditionType = CndTypeEnum.RegexMatch; break;
+                    case 3:
+                        condition.ConditionType = CndTypeEnum.ListContains; break;
+                }
+                LoadComparisonOperators(condition.ConditionType);
+                UpdateComparisonControls(condition);
+            }
+            finally { isLoadingCondition = false; }
             OnConditionsUpdated();
         }
 
@@ -808,7 +869,7 @@ namespace Triggernometry.UI.CustomControls
             ctxAddComment.Enabled = btnAddComment.Enabled;
             ctxRemove.Enabled = btnDelete.Enabled;
             ctxCopy.Enabled = (trvNodes.SelectedNode != null);
-            ctxPaste.Enabled = (btnAddCondition.Enabled == true && System.Windows.Forms.Clipboard.ContainsText() == true);
+            ctxPaste.Enabled = (btnAddCondition.Enabled == true && Clipboard.ContainsText() == true);
             ctxPasteOver.Enabled = ctxPaste.Enabled;
             TreeNode selectedNode = trvNodes.SelectedNode;
             ctxTest.Enabled = selectedNode != null && !(selectedNode.Tag is ConditionComment);
@@ -846,7 +907,7 @@ namespace Triggernometry.UI.CustomControls
             try
             {
                 string data = ExportSelection();
-                System.Windows.Forms.Clipboard.SetText(data);
+                Clipboard.SetText(data);
             }
             catch (Exception ex)
             {
@@ -861,7 +922,7 @@ namespace Triggernometry.UI.CustomControls
             string data = null;
             try
             {
-                data = System.Windows.Forms.Clipboard.GetText(TextDataFormat.UnicodeText);
+                data = Clipboard.GetText(TextDataFormat.UnicodeText);
                 if (data != null && data.Length > 0)
                 {
                     XmlDocument doc = new XmlDocument();
@@ -895,23 +956,23 @@ namespace Triggernometry.UI.CustomControls
                         ConditionGroup.RebuildParentage(group);
                     }
                     TreeNode tn = trvNodes.SelectedNode;
-                    ConditionComponent target = (ConditionComponent)tn.Tag;
+                    ConditionComponent targetGroup = (ConditionComponent)tn.Tag;
                     if (
                         (
-                            (cx is ConditionGroup && target is ConditionGroup)
+                            (cx is ConditionGroup && targetGroup is ConditionGroup)
                             ||
-                            (cx is ConditionSingle && target is ConditionSingle)
+                            (cx is ConditionSingle && targetGroup is ConditionSingle)
                             ||
-                            (cx is ConditionComment && target is ConditionComment)
+                            (cx is ConditionComment && targetGroup is ConditionComment)
                         )
                         &&
                         overWrite == true
                     )
                     {
-                        if (cx is ConditionGroup && target is ConditionGroup)
+                        if (cx is ConditionGroup group1 && targetGroup is ConditionGroup)
                         {
-                            ConditionGroup sc = (ConditionGroup)cx;
-                            ConditionGroup tc = (ConditionGroup)target;
+                            ConditionGroup sc = group1;
+                            ConditionGroup tc = (ConditionGroup)targetGroup;
                             tc.Children.AddRange(sc.Children);
                             foreach (ConditionComponent cc in sc.Children)
                             {
@@ -922,13 +983,13 @@ namespace Triggernometry.UI.CustomControls
                             tn.Checked = tc.Enabled;
                             tc.Grouping = sc.Grouping;
                             RecolorStartingFromNode(tn, tn.Checked);
-                            UpdateEditorToConditionComponent(target);
+                            UpdateEditorToConditionComponent(targetGroup);
                             tn.Expand();
                         }
-                        else if (cx is ConditionSingle && target is ConditionSingle)
+                        else if (cx is ConditionSingle && targetGroup is ConditionSingle)
                         {
                             ConditionSingle sc = (ConditionSingle)cx;
-                            ConditionSingle tc = (ConditionSingle)target;
+                            ConditionSingle tc = (ConditionSingle)targetGroup;
                             tc.ConditionType = sc.ConditionType;
                             tc.Enabled = sc.Enabled;
                             tn.Checked = tc.Enabled;
@@ -937,23 +998,23 @@ namespace Triggernometry.UI.CustomControls
                             tc.ExpressionTypeL = sc.ExpressionTypeL;
                             tc.ExpressionTypeR = sc.ExpressionTypeR;
                             RecolorStartingFromNode(tn, tn.Checked);
-                            UpdateEditorToConditionComponent(target);
+                            UpdateEditorToConditionComponent(targetGroup);
                         }
-                        else if (cx is ConditionComment sc && target is ConditionComment tc)
+                        else if (cx is ConditionComment sc && targetGroup is ConditionComment tc)
                         {
                             tc.Enabled = sc.Enabled;
                             tc.Text = sc.Text;
-                            UpdateEditorToConditionComponent(target);
+                            UpdateEditorToConditionComponent(targetGroup);
                         }
                     }
                     else
                     {
-                        if (!(target is ConditionGroup))
+                        if (!(targetGroup is ConditionGroup))
                         {
-                            target = target.Parent;
+                            targetGroup = targetGroup.Parent;
                             tn = tn.Parent;
                         }
-                        ConditionGroup tg = (ConditionGroup)target;
+                        ConditionGroup tg = (ConditionGroup)targetGroup;
                         tg.Children.Add(cx);
                         cx.Parent = tg;
                         TreeNode ex = BuildTreeFromConditionItem(tn, cx);
@@ -997,12 +1058,10 @@ namespace Triggernometry.UI.CustomControls
 
         private void cbxOpType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (isLoadingCondition)
+            if (isLoadingCondition || cbxOpType.SelectedIndex < 0 || !(trvNodes.SelectedNode?.Tag is ConditionSingle condition))
                 return;
-            TreeNode tn = trvNodes.SelectedNode;
-            ConditionSingle re = (ConditionSingle)tn.Tag;
-            re.ConditionType = (ConditionSingle.CndTypeEnum)cbxOpType.SelectedIndex;
-            UpdateRightExpressionType();
+            condition.ConditionType = ComparisonOperators[cbxComparison.SelectedIndex][cbxOpType.SelectedIndex].Type;
+            UpdateComparisonDescription();
             OnConditionsUpdated();
         }
 
@@ -1029,11 +1088,6 @@ namespace Triggernometry.UI.CustomControls
         private void pasteOverToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PasteSelected(true);
-        }
-
-        private void btnProperties_CheckedChanged(object sender, EventArgs e)
-        {
-            PanelStateFromOption = btnProperties.Checked;
         }
 
         private void testStripMenuItem_Click(object sender, EventArgs e)
@@ -1065,19 +1119,13 @@ namespace Triggernometry.UI.CustomControls
         private void expandAllStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode selectedNode = trvNodes.SelectedNode;
-            if (selectedNode != null)
-            {
-                selectedNode.ExpandAll();
-            }
+            selectedNode?.ExpandAll();
         }
 
         private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode selectedNode = trvNodes.SelectedNode;
-            if (selectedNode != null)
-            {
-                selectedNode.Collapse(false);
-            }
+            selectedNode?.Collapse(false);
         }
 
     }

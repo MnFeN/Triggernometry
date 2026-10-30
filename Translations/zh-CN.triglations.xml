@@ -221,13 +221,14 @@
     <TranslationEntry Key="ColorSelector/ctxSetBackgroundTransparent" Translation="将背景设置为透明" />
     <TranslationEntry Key="ColorSelector/ctxSetTextColor" Translation="设置文本颜色" />
     <TranslationEntry Key="ColorSelector/ctxSetTextOutline" Translation="设置文本轮廓颜色" />
-    <TranslationEntry Key="ConditionViewer/btnAdd" Translation="添加" />
-    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="注释" />
-    <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="条件" />
-    <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="条件组" />
+    <TranslationEntry Key="ConditionViewer/btnAddComment" Translation="添加注释" />
+    <TranslationEntry Key="ConditionViewer/btnAddCondition" Translation="添加条件" />
+    <TranslationEntry Key="ConditionViewer/btnAddGroup" Translation="添加分组" />
     <TranslationEntry Key="ConditionViewer/btnDelete" Translation="移除" />
-    <TranslationEntry Key="ConditionViewer/btnProperties" Translation="显示属性" />
-    <TranslationEntry Key="ConditionViewer/capProperties/lblContent" Translation="属性" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[List]" Translation="列表" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Numeric]" Translation="数值" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Regex]" Translation="正则" />
+    <TranslationEntry Key="ConditionViewer/cbxComparison[Text]" Translation="文本" />
     <TranslationEntry Key="ConditionViewer/cbxExpLType[Numeric]" Translation="数值" />
     <TranslationEntry Key="ConditionViewer/cbxExpLType[String]" Translation="文本" />
     <TranslationEntry Key="ConditionViewer/cbxExpRType[Numeric]" Translation="数值" />
@@ -236,20 +237,6 @@
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[At least one condition must be true (OR)]" Translation="至少一个条件为真（或）" />
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[None of the conditions may be true (NOT)]" Translation="全部条件为假（非）" />
     <TranslationEntry Key="ConditionViewer/cbxGroupingType[Only one condition must be true (XOR)]" Translation="仅一个条件为真（异或）" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Expressions must be numerically equal (X = Y)]" Translation="数值：L = R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Expressions must not be numerically equal (X ≠ Y)]" Translation="数值：L ≠ R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically greater or equal to (X ≥ Y)]" Translation="数值：L ≥ R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically greater than (X &gt; Y)]" Translation="数值：L &gt; R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically less or equal to (X ≤ Y)]" Translation="数值：L ≤ R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must be numerically less than (X &lt; Y)]" Translation="数值：L &lt; R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 匹配" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not match the regular expression on the right side]" Translation="正则：文本 L 与表达式 R 不匹配" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not pass case-insensitive string comparison with the right side]" Translation="文本：L ≠ R（不分大小写）" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must not pass case-sensitive string comparison with the right side]" Translation="文本：L ≠ R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must pass case-insensitive string comparison with the right side]" Translation="文本：L = R（不分大小写）" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[Left side must pass case-sensitive string comparison with the right side]" Translation="文本：L = R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must contain the value on the right side]" Translation="列表：名为 L 的列表包含数据 R" />
-    <TranslationEntry Key="ConditionViewer/cbxOpType[List variable specified on the left side must not contain the value on the right side]" Translation="列表：名为 L 的列表不含数据 R" />
     <TranslationEntry Key="ConditionViewer/ctxAdd" Translation="添加" />
     <TranslationEntry Key="ConditionViewer/ctxAddComment" Translation="注释" />
     <TranslationEntry Key="ConditionViewer/ctxAddCondition" Translation="条件" />
@@ -263,9 +250,6 @@
     <TranslationEntry Key="ConditionViewer/ctxRemove" Translation="移除" />
     <TranslationEntry Key="ConditionViewer/lblComment" Translation="注释内容" />
     <TranslationEntry Key="ConditionViewer/lblGroupingType" Translation="分组类型" />
-    <TranslationEntry Key="ConditionViewer/lblLeftExpression" Translation="左侧表达式 L" />
-    <TranslationEntry Key="ConditionViewer/lblOperator" Translation="操作符" />
-    <TranslationEntry Key="ConditionViewer/lblRightExpression" Translation="右侧表达式 R" />
     <TranslationEntry Key="ConfigurationForm2" Translation="配置" />
     <TranslationEntry Key="ConfigurationForm2/btnAudio" Translation="声音" />
     <TranslationEntry Key="ConfigurationForm2/btnBeepTest" Translation="测试" />
@@ -906,16 +890,27 @@
     <TranslationEntry Key="internal/ConditionViewer/areyousurecomment" Translation="确定要移除选中的注释吗？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuregroup" Translation="您确定要移除该条件组吗？" />
     <TranslationEntry Key="internal/ConditionViewer/areyousuresingle" Translation="您确定要移除该条件吗？" />
-    <TranslationEntry Key="internal/ConditionViewer/commentprops" Translation="注释属性" />
     <TranslationEntry Key="internal/ConditionViewer/conditionplural" Translation="{0} 条件" />
     <TranslationEntry Key="internal/ConditionViewer/conditionsingular" Translation="{0} 条件" />
-    <TranslationEntry Key="internal/ConditionViewer/condprops" Translation="条件属性" />
     <TranslationEntry Key="internal/ConditionViewer/confirm" Translation="移除确认" />
     <TranslationEntry Key="internal/ConditionViewer/copyfail" Translation="条件树复制失败：{0}" />
     <TranslationEntry Key="internal/ConditionViewer/groupplural" Translation="{0} 组" />
-    <TranslationEntry Key="internal/ConditionViewer/groupprops" Translation="组属性" />
     <TranslationEntry Key="internal/ConditionViewer/groupsingular" Translation="{0} 组" />
     <TranslationEntry Key="internal/ConditionViewer/operationwillremove" Translation="此操作将移除：" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorListContains" Translation="列表 L 包含值 R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorListDoesNotContain" Translation="列表 L 不包含值 R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericEqual" Translation="L = R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreater" Translation="L &gt; R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericGreaterEqual" Translation="L ≥ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericLess" Translation="L &lt; R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericLessEqual" Translation="L ≤ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorNumericNotEqual" Translation="L ≠ R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorRegexMatch" Translation="文本 L 匹配正则 R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorRegexNotMatch" Translation="文本 L 不匹配正则 R" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualCase" Translation="L = R（区分大小写）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringEqualNocase" Translation="L = R（不分大小写）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualCase" Translation="L ≠ R（区分大小写）" />
+    <TranslationEntry Key="internal/ConditionViewer/operatorStringNotEqualNocase" Translation="L ≠ R（不分大小写）" />
     <TranslationEntry Key="internal/ConditionViewer/pastefail" Translation="条件树粘贴失败：{0}" />
     <TranslationEntry Key="internal/ConditionViewer/testtitle" Translation="测试" />
     <TranslationEntry Key="internal/Configuration/configtitle" Translation="Triggernometry 配置" />
