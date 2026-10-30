@@ -500,7 +500,8 @@ namespace Triggernometry.UI.CustomControls
             BuildTreeFromConditionItem(null, r);
         }
 
-        private TreeNode BuildTreeFromConditionItem(TreeNode parent, ConditionComponent r)
+        /// <summary>构建条件子树，未指定位置时追加到父节点末尾。</summary>
+        private TreeNode BuildTreeFromConditionItem(TreeNode parent, ConditionComponent r, int index = -1)
         {
             TreeNode tn = new TreeNode();
             if (parent == null)
@@ -509,7 +510,7 @@ namespace Triggernometry.UI.CustomControls
             }
             else
             {
-                parent.Nodes.Add(tn);
+                parent.Nodes.Insert(index < 0 ? parent.Nodes.Count : index, tn);
             }
             AttachConditionComponentToNode(tn, r);
             if (r is ConditionGroup)
@@ -586,8 +587,6 @@ namespace Triggernometry.UI.CustomControls
         /// <summary>在选中分组的开头，或选中条件、注释的下一项插入节点。</summary>
         private void AddComponent(ConditionComponent re)
         {
-            TreeNode tn = new TreeNode();
-            AttachConditionComponentToNode(tn, re);
             TreeNode tx = trvNodes.SelectedNode;
             int index = 0;
             if (!(tx.Tag is ConditionGroup))
@@ -599,7 +598,7 @@ namespace Triggernometry.UI.CustomControls
             ConditionGroup group = (ConditionGroup)tx.Tag;
             re.Parent = group;
             group.Children.Insert(index, re);
-            tx.Nodes.Insert(index, tn);
+            TreeNode tn = BuildTreeFromConditionItem(tx, re, index);
             if (shouldEnableRoot)
                 tx.Checked = true;
             RecolorStartingFromNode(tx, tx.Checked);
@@ -1028,18 +1027,9 @@ namespace Triggernometry.UI.CustomControls
                     }
                     else
                     {
-                        if (!(targetGroup is ConditionGroup))
-                        {
-                            targetGroup = targetGroup.Parent;
-                            tn = tn.Parent;
-                        }
-                        ConditionGroup tg = (ConditionGroup)targetGroup;
-                        tg.Children.Add(cx);
-                        cx.Parent = tg;
-                        TreeNode ex = BuildTreeFromConditionItem(tn, cx);
-                        RecolorStartingFromNode(tn, tn.Checked);
-                        trvNodes.SelectedNode = ex;
-                        ex.ExpandAll();
+                        AddComponent(cx);
+                        trvNodes.SelectedNode.ExpandAll();
+                        return;
                     }
                 }
                 OnConditionsUpdated();
