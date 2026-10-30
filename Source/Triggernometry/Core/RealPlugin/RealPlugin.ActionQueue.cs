@@ -138,25 +138,24 @@ namespace Triggernometry.Core
                 bool shouldLogVerbose = logLevel >= DebugLevelEnum.Verbose;
                 bool shouldLogInfo = logLevel >= DebugLevelEnum.Info;
                 bool canReplaceQueued = action.ReplaceQueued && !action.Uninterruptible;
-                bool shouldCheckDuplicates = action.PreventDuplicateQueue || canReplaceQueued;
-                bool hasQueuedDuplicate = shouldCheckDuplicates && ActionQueue.Any(a => a.Action.Id == action.Id);
-
-                if (hasQueuedDuplicate)
+                bool removedQueuedDuplicate = false;
+                if (canReplaceQueued)
                 {
-                    if (canReplaceQueued)
+                    int removedCount = CancelQueuedActions(a => a.Action.Id == action.Id);
+                    removedQueuedDuplicate = removedCount > 0;
+                    if (removedQueuedDuplicate && shouldLogVerbose)
                     {
-                        int removedCount = CancelQueuedActions(a => a.Action.Id == action.Id);
-                        if (removedCount > 0 && shouldLogVerbose)
-                        {
-                            action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig?.LogName ?? "(null)", action.Describe()));
-                        }
+                        action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuerem", "Removed {0} instance(s) of trigger '{1}' action '{2}' from queue", removedCount, trig?.LogName ?? "(null)", action.Describe()));
                     }
-                    if (action.PreventDuplicateQueue)
-                    {
-                        if (shouldLogVerbose)
-                            action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig?.LogName ?? "(null)", action.Describe()));
-                        return false;
-                    }
+                }
+                // 禁止重复排队同时考虑本次移除的实例与仍受保护的实例。
+                bool shouldRejectDuplicate = action.PreventDuplicateQueue &&
+                    (removedQueuedDuplicate || ActionQueue.Any(a => a.Action.Id == action.Id));
+                if (shouldRejectDuplicate)
+                {
+                    if (shouldLogVerbose)
+                        action.AddToLog(ctx, DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/actionqueuefail", "Trigger '{0}' action '{1}' not queued, refire requeue disabled", trig?.LogName ?? "(null)", action.Describe()));
+                    return false;
                 }
                 // already locked by ActionQueue
                 instance.QueueSequence = curOrdinal++;

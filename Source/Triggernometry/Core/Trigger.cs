@@ -709,6 +709,16 @@ namespace Triggernometry.Core
 
             if (PrevActionsRefire == RefireEnum.Deny)
             {
+                // fast path:
+                // if debug level is below Info, we don't need to log anything,
+                // so we can just check if any actions are queued without locking and enumerating the queue.
+                bool shouldLogInfo = GetDebugLevel(RealPlugin.Instance) >= RealPlugin.DebugLevelEnum.Info;
+                if (!shouldLogInfo)
+                {
+                    lock (ctx.Plugin.ActionQueue)
+                        return !GetSelfQueuedActions(ctx).Any();
+                }
+
                 int queuedCount = CountSelfQueuedActions(ctx);
                 if (queuedCount > 0)
                 {
