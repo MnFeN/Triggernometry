@@ -854,7 +854,7 @@ namespace Triggernometry.FFXIV
 
             XivDefaultOrder = new List<Job>
             {
-                PLD, GLA, _44, WAR, MRD, DRK, GNB,
+                WAR, MRD, DRK, GNB, PLD, GLA, _44, // 8.0 再改
                 WHM, CNJ, SCH, AST, SGE,
                 MNK, PGL, DRG, LNC, NIN, ROG, SAM, RPR, VPR, BST,
                 BRD, ARC, MCH, DNC, _45,

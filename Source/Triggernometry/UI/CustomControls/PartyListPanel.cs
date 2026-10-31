@@ -1,37 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Triggernometry.Core;
 using Triggernometry.Core.Variables;
-using Triggernometry.PluginBridges;
+using Triggernometry.Expressions.String.Utils;
+using Triggernometry.Localization;
 
 namespace Triggernometry.UI.CustomControls
 {
     public class PartyListPanel : TableLayoutPanel
     {
         List<PlayerLabel> _players = new List<PlayerLabel>();
+        private readonly VarNames varNames;
+        private static readonly string[] Role8 = { "MT", "ST", "H1", "H2", "D1", "D2", "D3", "D4" };
         public int PlayerCount;
         public string[] PlayerDescriptions;
 
-        public string PlayerNamesLvarName;
-        public string PlayerIdsLvarName;
-        public string PlayerIdxVarName;
+        public class VarNames
+        {
+            public string MyIndexVar = "myIdx";
 
-        public PartyListPanel(
-            string[] playerDescriptions, 
-            string playerNamesLvarName = "pname", 
-            string playerIdsLvarName = "party", 
-            string PplayerIdxVarName = "myIdx")
+            /// <summary>
+            /// 4 人小队：T H D D
+            /// 8 人小队：T T H H D D D D
+            /// </summary>
+            public string IsStandardVar = "partyIsStandard";
+
+            public string IdsList = "party";
+            public string NamesList = "partyName";
+            public string JobsList = "partyJob";
+
+            public string IdToNameDict = "partyIdToName";
+            public string IdToRole8Dict = "partyIdToRole8";
+            public string IdToRole8FullWidthDict = "partyIdToRole８";
+            public string IdToJobDict = "partyIdToJob";
+
+            public static VarNames Default = new VarNames();
+        }
+
+        public PartyListPanel(string[] playerDescriptions, VarNames varNamesOverride = null)
         {
             SuspendLayout();
 
-            PlayerNamesLvarName = playerNamesLvarName;
-            PlayerIdsLvarName = playerIdsLvarName;
-            PlayerIdxVarName = PplayerIdxVarName;
+            varNames = varNamesOverride ?? VarNames.Default;
 
             if ((playerDescriptions?.Length ?? 0) == 0)
                 playerDescriptions = new string[] { "[Undefined]" };
@@ -48,8 +61,10 @@ namespace Triggernometry.UI.CustomControls
             AllowDrop = true;
 
             // Deternime Row and Column count based on PlayerCount
-            int rowCount = PlayerCount <= 4 ? 1 : 2;
+            int rowCount = (PlayerCount + 3) / 4;
             int colCount = Math.Min(PlayerCount, 4);
+            RowCount = rowCount;
+            ColumnCount = colCount;
             for (int i = 0; i < rowCount; i++)
             {
                 RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowCount));
@@ -95,28 +110,19 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        private static readonly string[] jobOrder = {
-            "WAR", "MRD", "PLD", "GLA", "DRK", "GNB",
-            "WHM", "CNJ", "AST", "SGE", "SCH",
-            "SAM", "MNK", "PGL", "DRG", "LNC", "NIN", "ROG", "RPR", "VPR",
-            "BRD", "ARC", "MCH", "DNC", "BLM", "THM", "PCT", "RDM", "SMN", "ACN", "BLU"
-        };
-
         List<FFXIV.Entity> GetSortedPartyMembers()
         {
             List<FFXIV.Entity> entities = FFXIV.Entity.GetEntities()
                 .Where(e => e.HexID.StartsWith("10"))       // is player
                 .OrderByDescending(e => e.InParty)          // is party member
-                .ThenBy(e => e.Job.SubRole == FFXIV.Job.RoleType.None ? 99 : (int)e.Job.SubRole)  // sort by subrole id
-                .ThenBy(e => Array.IndexOf(jobOrder, e.Job.NameEN3))   // customized job order
-                .ThenBy(e => e.Job.JobID)                   // unknown jobs: sort by job id
-                .ThenBy(e => e.Name)
+                .ThenBy(e => e.Job.DefaultOrder)            // 与实体表达式使用相同的职业默认顺序
+                .ThenBy(e => e.Name, StringComparer.Ordinal)
                 .Take(PlayerCount)
                 .ToList();
 
             while (entities.Count < PlayerCount)
             {
-                entities.Add(new FFXIV.Entity());
+                entities.Add(FFXIV.Entity.NullEntity());
             }
 
             if (entities.Count == 8     // Double Caster => D2 / D4
@@ -125,7 +131,7 @@ namespace Triggernometry.UI.CustomControls
                 && entities[7].Job.SubRole == FFXIV.Job.RoleType.MagicalRanged)
             {
                 (entities[5], entities[6]) = (entities[6], entities[5]);
-                if (entities[7].Job.NameEN3 == "BLM") // with BLM: BLM D2
+                if (entities[7].Job.JobType == FFXIV.JobEnum.BLM) // with BLM: BLM D2
                 {
                     (entities[5], entities[7]) = (entities[7], entities[5]);
                 }
@@ -135,7 +141,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void PartyListPanel_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(PlayerLabel)))
+            if (e.Data.GetData(typeof(PlayerLabel)) is PlayerLabel label && label.ParentTable == this)
             {
                 e.Effect = DragDropEffects.Move;
             }
@@ -144,14 +150,22 @@ namespace Triggernometry.UI.CustomControls
         /// <summary> Get dragged label and target label, then update Order.</summary>
         private void PartyListPanel_DragDrop(object sender, DragEventArgs e)
         {
-            PlayerLabel draggedLabel = (PlayerLabel)e.Data.GetData(typeof(PlayerLabel));
+            var draggedLabel = e.Data.GetData(typeof(PlayerLabel)) as PlayerLabel;
+            if (draggedLabel?.ParentTable != this)
+                return;
             Point clientPoint = PointToClient(new Point(e.X, e.Y));
             Control control = GetChildAtPoint(clientPoint);
             if (control != null && control is PlayerLabel targetLabel && draggedLabel != targetLabel)
             {
-                Parent?.SuspendLayout();
-                SwapLabels(draggedLabel, targetLabel);
-                Parent?.ResumeLayout(false);
+                SuspendLayout();
+                try
+                {
+                    SwapLabels(draggedLabel, targetLabel);
+                }
+                finally
+                {
+                    ResumeLayout(true);
+                }
             }
         }
 
@@ -160,9 +174,11 @@ namespace Triggernometry.UI.CustomControls
             (draggedLabel.Order, targetLabel.Order) = (targetLabel.Order, draggedLabel.Order);
         }
 
+        /// <summary>仅在已保存 ID 与当前队员完整匹配时恢复顺序。</summary>
         public void LoadFromConfig()
         {
-            if (!RealPlugin.Instance.GetVariableStore(false).List.TryGetValue(PlayerIdsLvarName, out VariableList savedList) || savedList.Size != PlayerCount)
+            var savedList = RealPlugin.Instance.GetVariableStore(false).GetListVariable(varNames.IdsList);
+            if (savedList == null || savedList.Size != PlayerCount)
                 return;
 
             List<string> storedPlayerIDs = savedList.Values.Select(var => var.ToString()).ToList();
@@ -180,49 +196,94 @@ namespace Triggernometry.UI.CustomControls
             HashSet<int> expectedIndices = new HashSet<int>(Enumerable.Range(0, PlayerCount));
             if (new HashSet<int>(indices).SetEquals(expectedIndices))
             {
-                for (int i = 0; i < PlayerCount; i++)
+                SuspendLayout();
+                try
                 {
-                    _players[i].Order = indices[i];
+                    for (int i = 0; i < PlayerCount; i++)
+                    {
+                        _players[i].Order = indices[i];
+                    }
+                }
+                finally
+                {
+                    ResumeLayout(true);
                 }
             }
         }
 
+        /// <summary>按当前队员顺序生成临时变量；空位只保留列表位置，不加入 ID 字典。</summary>
         public void SaveToConfig()
         {
-            if (_players.Count <= 1) return;
+            if (_players.Count <= 1)
+                return;
 
-            _players = _players.OrderBy(p => p.Order).ToList();
+            var store = RealPlugin.Instance.GetVariableStore(false);
+            var players = _players.OrderBy(p => p.Order).ToArray();
+            var names = new VariableDictionary();
+            var jobs = new VariableDictionary();
+            var roles = new VariableDictionary();
+            var fullWidthRoles = new VariableDictionary();
+            const string changer = "PartyListPanel";
+            uint myId = FFXIV.Entity.GetMyself().ID;
+            int myIndex = 0;
 
-            VariableList hexIDList = new VariableList();
-            VariableList nameList = new VariableList();
-            VariableDictionary hexIDDict = new VariableDictionary();
-            VariableDictionary nameDict = new VariableDictionary();
-            string changer = "PartyList";
-
-            foreach (var label in _players)
+            foreach (var player in players)
             {
-                Variable hexID = new VariableScalar(label.HexID);
-                Variable name = new VariableScalar(label.PlayerName);
-                string description = PlayerDescriptions[label.Order];
+                if (player.ID == 0)
+                    continue;
 
-                hexIDList.Push(hexID, changer);
-                nameList.Push(name, changer);
-                hexIDDict.SetValue(description, hexID, changer);
-                nameDict.SetValue(description, name, changer);
-
-                if (BridgeFFXIV.PlayerHexId == label.HexID) // var:myIdx
+                names.SetValue(player.HexID, player.PlayerName, changer);
+                jobs.SetValue(player.HexID, player.JobName, changer);
+                if (PlayerCount == 8)
                 {
-                    var idx = label.Order + 1;
-                    RealPlugin.Instance.GetVariableStore(false).Scalar[PlayerIdxVarName] = new VariableScalar(idx);
+                    string role = Role8[player.Order];
+                    roles.SetValue(player.HexID, role, changer);
+                    fullWidthRoles.SetValue(player.HexID, role.ToFullWidth(), changer);
+                }
+                if (player.ID == myId)
+                    myIndex = player.Order + 1;
+            }
+
+            var mainRoles = players.Where(p => p.ID != 0).Select(p => p.SubRole & FFXIV.Job.RoleType.MainRole).ToArray();
+            int tankCount = mainRoles.Count(role => role == FFXIV.Job.RoleType.Tank);
+            int healerCount = mainRoles.Count(role => role == FFXIV.Job.RoleType.Healer);
+            int dpsCount = mainRoles.Count(role => role == FFXIV.Job.RoleType.DPS);
+            // 只判断实际职业构成，拖拽调整位置不会改变是否为标准小队。
+            bool isStandard = PlayerCount == 4 && tankCount == 1 && healerCount == 1 && dpsCount == 2
+                || PlayerCount == 8 && tankCount == 2 && healerCount == 2 && dpsCount == 4;
+
+            lock (store.Scalar)
+            {
+                store.Scalar[varNames.MyIndexVar] = new VariableScalar(myIndex);
+                store.Scalar[varNames.IsStandardVar] = new VariableScalar(isStandard ? 1 : 0);
+            }
+            lock (store.List)
+            {
+                store.List[varNames.IdsList] = new VariableList(players.Select(p => p.HexID)) { LastChanger = changer };
+                store.List[varNames.NamesList] = new VariableList(players.Select(p => p.PlayerName)) { LastChanger = changer };
+                store.List[varNames.JobsList] = new VariableList(players.Select(p => p.ID != 0 ? p.JobName : "")) { LastChanger = changer };
+            }
+            lock (store.Dict)
+            {
+                store.Dict[varNames.IdToNameDict] = names;
+                store.Dict[varNames.IdToJobDict] = jobs;
+                if (PlayerCount == 8)
+                {
+                    store.Dict[varNames.IdToRole8Dict] = roles;
+                    store.Dict[varNames.IdToRole8FullWidthDict] = fullWidthRoles;
+                }
+                else
+                {
+                    store.Dict.Remove(varNames.IdToRole8Dict);
+                    store.Dict.Remove(varNames.IdToRole8FullWidthDict);
                 }
             }
-            RealPlugin.Instance.GetVariableStore(false).List[PlayerIdsLvarName] = hexIDList;
-            RealPlugin.Instance.GetVariableStore(false).List[PlayerNamesLvarName] = nameList;
         }
 
         public class PlayerLabel : Label
         {
             public PartyListPanel ParentTable;
+            internal readonly uint ID;
             public string PlayerName;
             public FFXIV.Job.RoleType SubRole;
             public string JobName;
@@ -264,9 +325,10 @@ namespace Triggernometry.UI.CustomControls
             public PlayerLabel(PartyListPanel parent, FFXIV.Entity entity, int order)
             {
                 ParentTable = parent;
+                ID = entity.Exist ? entity.ID : 0;
                 PlayerName = entity.Name;
                 SubRole = entity.Job.SubRole;
-                JobName = CultureInfo.CurrentCulture.Name.StartsWith("zh-")
+                JobName = I18n.IsChineseEnvironment
                     ? entity.Job.NameCN2
                     : entity.Job.NameEN3;
                 HexID = entity.HexID;
@@ -288,7 +350,10 @@ namespace Triggernometry.UI.CustomControls
                 int colCount = Math.Min(ParentTable.PlayerCount, 4);
                 int row = Order / colCount;
                 int col = Order % colCount;
-                ParentTable.Controls.Add(this, col, row);
+                if (Parent == ParentTable)
+                    ParentTable.SetCellPosition(this, new TableLayoutPanelCellPosition(col, row));
+                else
+                    ParentTable.Controls.Add(this, col, row);
             }
 
             private void PlayerLabel_MouseDown(object sender, MouseEventArgs e)
