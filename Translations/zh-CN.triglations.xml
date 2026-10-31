@@ -1902,11 +1902,12 @@
     <TranslationEntry Key="LogForm" Translation="触发器日志" />
     <TranslationEntry Key="LogForm/btnClear" Translation="清除" />
     <TranslationEntry Key="LogForm/btnClose" Translation="关闭" />
-    <TranslationEntry Key="LogForm/btnCopy" Translation="复制" />
-    <TranslationEntry Key="LogForm/btnEverythingToClipboard" Translation="复制所有到剪贴板" />
+    <TranslationEntry Key="LogForm/btnCopyMessages" Translation="复制信息" />
+    <TranslationEntry Key="LogForm/btnCopyRows" Translation="复制整行" />
     <TranslationEntry Key="LogForm/btnSearch" Translation="搜索" />
     <TranslationEntry Key="LogForm/btnSearchOptions" Translation="显示搜索选项" />
-    <TranslationEntry Key="LogForm/btnSelectionToClipboard" Translation="复制选择到剪贴板" />
+    <TranslationEntry Key="LogForm/btnSortOrder" Translation="倒序" />
+    <TranslationEntry Key="LogForm/btnSortOrder[Ascending]" Translation="正序" />
     <TranslationEntry Key="LogForm/capSearch/lblContent" Translation="搜索选项（右键可单选）" />
     <TranslationEntry Key="LogForm/chkAll" Translation="全选" />
     <TranslationEntry Key="LogForm/chkCustom" Translation="用户" />
@@ -1916,11 +1917,10 @@
     <TranslationEntry Key="LogForm/chkVerbose" Translation="详细" />
     <TranslationEntry Key="LogForm/chkWarning" Translation="警告" />
     <TranslationEntry Key="LogForm/colLevel" Translation="级别" />
-    <TranslationEntry Key="LogForm/colMessage" Translation="信息（如果显示不完整，可以鼠标悬停或右键复制。反馈错误请带上完整信息）" />
+    <TranslationEntry Key="LogForm/colMessage" Translation="信息（反馈错误时务必截图并复制所有出错行）" />
     <TranslationEntry Key="LogForm/colTimestamp" Translation="时间" />
-    <TranslationEntry Key="LogForm/ctxCopy" Translation="复制" />
-    <TranslationEntry Key="LogForm/ctxEverythingToClipboard" Translation="复制所有到剪贴板" />
-    <TranslationEntry Key="LogForm/ctxSelectionToClipboard" Translation="复制选择到剪贴板" />
+    <TranslationEntry Key="LogForm/ctxCopyMessages" Translation="复制信息" />
+    <TranslationEntry Key="LogForm/ctxCopyRows" Translation="复制整行" />
     <TranslationEntry Key="LogForm/lblRegularExpression" Translation="正则表达式" />
     <TranslationEntry Key="LogForm/lblStatus" Translation="状态" />
     <TranslationEntry Key="RegisteredVariableViewer/btnAddComment" Translation="添加注释" />

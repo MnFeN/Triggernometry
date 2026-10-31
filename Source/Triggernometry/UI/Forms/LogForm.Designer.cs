@@ -31,21 +31,20 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogForm));
             this.panel2 = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.layoutMain = new System.Windows.Forms.TableLayoutPanel();
             this.dgvLog = new Triggernometry.UI.CustomControls.DataGridViewEx();
             this.colTimestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colLevel = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ctxCopy = new System.Windows.Forms.ToolStripMenuItem();
-            this.ctxSelectionToClipboard = new System.Windows.Forms.ToolStripMenuItem();
-            this.ctxEverythingToClipboard = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.ctxCopyRows = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxCopyMessages = new System.Windows.Forms.ToolStripMenuItem();
+            this.pnlSearchOptions = new System.Windows.Forms.Panel();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutRegex = new System.Windows.Forms.TableLayoutPanel();
             this.rexSearch = new Triggernometry.UI.CustomControls.ExpressionTextBox();
             this.lblRegularExpression = new System.Windows.Forms.Label();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutLevels = new System.Windows.Forms.TableLayoutPanel();
             this.chkAll = new System.Windows.Forms.CheckBox();
             this.chkError = new System.Windows.Forms.CheckBox();
             this.chkWarning = new System.Windows.Forms.CheckBox();
@@ -56,9 +55,9 @@
             this.panelBar = new System.Windows.Forms.Panel();
             this.capSearch = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tlsMain = new System.Windows.Forms.ToolStrip();
-            this.btnCopy = new System.Windows.Forms.ToolStripDropDownButton();
-            this.btnSelectionToClipboard = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnEverythingToClipboard = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnCopyRows = new System.Windows.Forms.ToolStripButton();
+            this.btnCopyMessages = new System.Windows.Forms.ToolStripButton();
+            this.btnSortOrder = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnClear = new System.Windows.Forms.ToolStripButton();
             this.btnSearchOptions = new System.Windows.Forms.ToolStripButton();
@@ -66,21 +65,18 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.layoutMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.pnlSearchOptions.SuspendLayout();
+            this.layoutRegex.SuspendLayout();
+            this.layoutLevels.SuspendLayout();
             this.tlsMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.splitContainer1);
+            this.panel2.Controls.Add(this.layoutMain);
             this.panel2.Controls.Add(this.tlsMain);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.btnClose);
@@ -91,33 +87,31 @@
             this.panel2.Size = new System.Drawing.Size(734, 461);
             this.panel2.TabIndex = 2;
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(10, 35);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.dgvLog);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
-            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel2);
-            this.splitContainer1.Panel2.Controls.Add(this.capSearch);
-            this.splitContainer1.Size = new System.Drawing.Size(714, 371);
-            this.splitContainer1.SplitterDistance = 510;
-            this.splitContainer1.TabIndex = 18;
-            // 
+            // layoutMain
+            //
+            this.layoutMain.ColumnCount = 2;
+            this.layoutMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.layoutMain.Controls.Add(this.dgvLog, 0, 0);
+            this.layoutMain.Controls.Add(this.pnlSearchOptions, 1, 0);
+            this.layoutMain.Controls.Add(this.layoutRegex, 0, 1);
+            this.layoutMain.Controls.Add(this.btnSearch, 1, 1);
+            this.layoutMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutMain.Location = new System.Drawing.Point(10, 35);
+            this.layoutMain.Margin = new System.Windows.Forms.Padding(0);
+            this.layoutMain.Name = "layoutMain";
+            this.layoutMain.RowCount = 2;
+            this.layoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutMain.Size = new System.Drawing.Size(714, 371);
+            this.layoutMain.TabIndex = 18;
+            //
             // dgvLog
             // 
             this.dgvLog.AllowUserToAddRows = false;
             this.dgvLog.AllowUserToDeleteRows = false;
             this.dgvLog.AllowUserToResizeRows = false;
-            this.dgvLog.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dgvLog.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dgvLog.ColumnHeadersDefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -128,6 +122,7 @@
             this.dgvLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvLog.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLog.Location = new System.Drawing.Point(0, 0);
+            this.dgvLog.Margin = new System.Windows.Forms.Padding(0);
             this.dgvLog.Name = "dgvLog";
             this.dgvLog.ReadOnly = true;
             this.dgvLog.RowHeadersVisible = false;
@@ -166,50 +161,49 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ctxCopy});
+            this.ctxCopyRows,
+            this.ctxCopyMessages});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(103, 26);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // ctxCopy
-            // 
-            this.ctxCopy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ctxSelectionToClipboard,
-            this.ctxEverythingToClipboard});
-            this.ctxCopy.Image = ((System.Drawing.Image)(resources.GetObject("ctxCopy.Image")));
-            this.ctxCopy.Name = "ctxCopy";
-            this.ctxCopy.Size = new System.Drawing.Size(102, 22);
-            this.ctxCopy.Text = "Copy";
-            // 
-            // ctxSelectionToClipboard
-            // 
-            this.ctxSelectionToClipboard.Enabled = false;
-            this.ctxSelectionToClipboard.Image = ((System.Drawing.Image)(resources.GetObject("ctxSelectionToClipboard.Image")));
-            this.ctxSelectionToClipboard.Name = "ctxSelectionToClipboard";
-            this.ctxSelectionToClipboard.Size = new System.Drawing.Size(197, 22);
-            this.ctxSelectionToClipboard.Text = "Selection to clipboard";
-            this.ctxSelectionToClipboard.Click += new System.EventHandler(this.copySelectionToClipboardToolStripMenuItem_Click);
-            // 
-            // ctxEverythingToClipboard
-            // 
-            this.ctxEverythingToClipboard.Image = ((System.Drawing.Image)(resources.GetObject("ctxEverythingToClipboard.Image")));
-            this.ctxEverythingToClipboard.Name = "ctxEverythingToClipboard";
-            this.ctxEverythingToClipboard.Size = new System.Drawing.Size(197, 22);
-            this.ctxEverythingToClipboard.Text = "Everything to clipboard";
-            this.ctxEverythingToClipboard.Click += new System.EventHandler(this.copyAllToClipboardToolStripMenuItem_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.btnSearch);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 168);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 61);
-            this.panel1.TabIndex = 8;
-            // 
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            //
+            // ctxCopyRows
+            //
+            this.ctxCopyRows.Enabled = false;
+            this.ctxCopyRows.Image = ((System.Drawing.Image)(resources.GetObject("ctxCopyRows.Image")));
+            this.ctxCopyRows.Name = "ctxCopyRows";
+            this.ctxCopyRows.Size = new System.Drawing.Size(180, 22);
+            this.ctxCopyRows.Text = "Copy rows";
+            this.ctxCopyRows.Click += new System.EventHandler(this.CopyRows_Click);
+            //
+            // ctxCopyMessages
+            //
+            this.ctxCopyMessages.Enabled = false;
+            this.ctxCopyMessages.Image = ((System.Drawing.Image)(resources.GetObject("ctxCopyMessages.Image")));
+            this.ctxCopyMessages.Name = "ctxCopyMessages";
+            this.ctxCopyMessages.ShortcutKeyDisplayString = "Ctrl+C";
+            this.ctxCopyMessages.Size = new System.Drawing.Size(180, 22);
+            this.ctxCopyMessages.Text = "Copy messages";
+            this.ctxCopyMessages.Click += new System.EventHandler(this.CopyMessages_Click);
+            //
+            // pnlSearchOptions
+            //
+            this.pnlSearchOptions.AutoScroll = true;
+            this.pnlSearchOptions.Controls.Add(this.layoutLevels);
+            this.pnlSearchOptions.Controls.Add(this.capSearch);
+            this.pnlSearchOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSearchOptions.Location = new System.Drawing.Point(514, 0);
+            this.pnlSearchOptions.Margin = new System.Windows.Forms.Padding(8, 0, 0, 0);
+            this.pnlSearchOptions.MinimumSize = new System.Drawing.Size(150, 0);
+            this.pnlSearchOptions.Name = "pnlSearchOptions";
+            this.pnlSearchOptions.Size = new System.Drawing.Size(150, 328);
+            this.pnlSearchOptions.TabIndex = 8;
+            //
             // btnSearch
             // 
-            this.btnSearch.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right));
+            this.btnSearch.AutoSize = true;
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(8, 8, 0, 0);
+            this.btnSearch.MinimumSize = new System.Drawing.Size(0, 35);
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
             this.btnSearch.Location = new System.Drawing.Point(0, 26);
             this.btnSearch.Name = "btnSearch";
@@ -221,33 +215,34 @@
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.rexSearch, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblRegularExpression, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 113);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 55);
-            this.tableLayoutPanel1.TabIndex = 7;
-            // 
+            // layoutRegex
+            //
+            this.layoutRegex.AutoSize = true;
+            this.layoutRegex.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.layoutRegex.ColumnCount = 2;
+            this.layoutRegex.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.layoutRegex.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutRegex.Controls.Add(this.lblRegularExpression, 0, 0);
+            this.layoutRegex.Controls.Add(this.rexSearch, 1, 0);
+            this.layoutRegex.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutRegex.Location = new System.Drawing.Point(0, 336);
+            this.layoutRegex.Margin = new System.Windows.Forms.Padding(0, 8, 0, 0);
+            this.layoutRegex.Name = "layoutRegex";
+            this.layoutRegex.RowCount = 1;
+            this.layoutRegex.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutRegex.Size = new System.Drawing.Size(506, 35);
+            this.layoutRegex.TabIndex = 7;
+            //
             // rexSearch
             // 
             this.rexSearch.AutoSize = true;
-            this.rexSearch.Dock = System.Windows.Forms.DockStyle.Top;
+            this.rexSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right));
             this.rexSearch.Expression = "";
             this.rexSearch.ExpressionType = Triggernometry.UI.CustomControls.ExpressionTextBox.SupportedExpressionTypeEnum.Regex;
-            this.rexSearch.Location = new System.Drawing.Point(3, 32);
+            this.rexSearch.Location = new System.Drawing.Point(110, 0);
+            this.rexSearch.Margin = new System.Windows.Forms.Padding(0);
             this.rexSearch.Name = "rexSearch";
-            this.rexSearch.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.rexSearch.Padding = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.rexSearch.ReadOnly = false;
             this.rexSearch.RegexSupportsExpressions = false;
             this.rexSearch.Size = new System.Drawing.Size(194, 20);
@@ -257,40 +252,41 @@
             // 
             this.lblRegularExpression.AutoSize = true;
             this.lblRegularExpression.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblRegularExpression.Location = new System.Drawing.Point(3, 0);
+            this.lblRegularExpression.Location = new System.Drawing.Point(0, 5);
+            this.lblRegularExpression.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
             this.lblRegularExpression.Name = "lblRegularExpression";
-            this.lblRegularExpression.Padding = new System.Windows.Forms.Padding(5, 15, 5, 8);
-            this.lblRegularExpression.Size = new System.Drawing.Size(194, 29);
+            this.lblRegularExpression.Size = new System.Drawing.Size(102, 13);
             this.lblRegularExpression.TabIndex = 0;
             this.lblRegularExpression.Text = "Regular expression";
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.chkError, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.chkWarning, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.chkCustom, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.chkCustom2, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.chkInfo, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.chkVerbose, 0, 5);
-            this.tableLayoutPanel2.Controls.Add(this.panelBar, 0, 6);
-            this.tableLayoutPanel2.Controls.Add(this.chkAll, 0, 7);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 30);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 8;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 4));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(200, 83);
-            this.tableLayoutPanel2.TabIndex = 6;
+            this.lblRegularExpression.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // layoutLevels
+            //
+            this.layoutLevels.AutoSize = true;
+            this.layoutLevels.ColumnCount = 1;
+            this.layoutLevels.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.layoutLevels.Controls.Add(this.chkError, 0, 0);
+            this.layoutLevels.Controls.Add(this.chkWarning, 0, 1);
+            this.layoutLevels.Controls.Add(this.chkCustom, 0, 2);
+            this.layoutLevels.Controls.Add(this.chkCustom2, 0, 3);
+            this.layoutLevels.Controls.Add(this.chkInfo, 0, 4);
+            this.layoutLevels.Controls.Add(this.chkVerbose, 0, 5);
+            this.layoutLevels.Controls.Add(this.panelBar, 0, 6);
+            this.layoutLevels.Controls.Add(this.chkAll, 0, 7);
+            this.layoutLevels.Dock = System.Windows.Forms.DockStyle.Top;
+            this.layoutLevels.Location = new System.Drawing.Point(0, 30);
+            this.layoutLevels.Name = "layoutLevels";
+            this.layoutLevels.RowCount = 8;
+            this.layoutLevels.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutLevels.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutLevels.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutLevels.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutLevels.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutLevels.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutLevels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 4));
+            this.layoutLevels.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.layoutLevels.Size = new System.Drawing.Size(200, 83);
+            this.layoutLevels.TabIndex = 6;
             // 
             // chkError
             // 
@@ -406,9 +402,11 @@
             // 
             this.tlsMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.tlsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnCopy,
+            this.btnCopyRows,
+            this.btnCopyMessages,
             this.toolStripSeparator3,
             this.btnClear,
+            this.btnSortOrder,
             this.btnSearchOptions,
             this.lblStatus});
             this.tlsMain.Location = new System.Drawing.Point(10, 10);
@@ -416,34 +414,37 @@
             this.tlsMain.Size = new System.Drawing.Size(714, 25);
             this.tlsMain.TabIndex = 3;
             // 
-            // btnCopy
-            // 
-            this.btnCopy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnSelectionToClipboard,
-            this.btnEverythingToClipboard});
-            this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
-            this.btnCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(64, 22);
-            this.btnCopy.Text = "Copy";
-            this.btnCopy.DropDownOpening += new System.EventHandler(this.toolStripDropDownButton1_DropDownOpening);
-            // 
-            // btnSelectionToClipboard
-            // 
-            this.btnSelectionToClipboard.Enabled = false;
-            this.btnSelectionToClipboard.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectionToClipboard.Image")));
-            this.btnSelectionToClipboard.Name = "btnSelectionToClipboard";
-            this.btnSelectionToClipboard.Size = new System.Drawing.Size(197, 22);
-            this.btnSelectionToClipboard.Text = "Selection to clipboard";
-            this.btnSelectionToClipboard.Click += new System.EventHandler(this.selectionToClipboardToolStripMenuItem_Click);
-            // 
-            // btnEverythingToClipboard
-            // 
-            this.btnEverythingToClipboard.Image = ((System.Drawing.Image)(resources.GetObject("btnEverythingToClipboard.Image")));
-            this.btnEverythingToClipboard.Name = "btnEverythingToClipboard";
-            this.btnEverythingToClipboard.Size = new System.Drawing.Size(197, 22);
-            this.btnEverythingToClipboard.Text = "Everything to clipboard";
-            this.btnEverythingToClipboard.Click += new System.EventHandler(this.everythingToClipboardToolStripMenuItem_Click);
+            // btnCopyRows
+            //
+            this.btnCopyRows.Enabled = false;
+            this.btnCopyRows.Image = ((System.Drawing.Image)(resources.GetObject("btnCopyRows.Image")));
+            this.btnCopyRows.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCopyRows.Margin = new System.Windows.Forms.Padding(4, 1, 4, 1);
+            this.btnCopyRows.Name = "btnCopyRows";
+            this.btnCopyRows.Size = new System.Drawing.Size(82, 22);
+            this.btnCopyRows.Text = "Copy rows";
+            this.btnCopyRows.Click += new System.EventHandler(this.CopyRows_Click);
+            //
+            // btnCopyMessages
+            //
+            this.btnCopyMessages.Enabled = false;
+            this.btnCopyMessages.Image = ((System.Drawing.Image)(resources.GetObject("btnCopyMessages.Image")));
+            this.btnCopyMessages.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCopyMessages.Margin = new System.Windows.Forms.Padding(4, 1, 4, 1);
+            this.btnCopyMessages.Name = "btnCopyMessages";
+            this.btnCopyMessages.Size = new System.Drawing.Size(110, 22);
+            this.btnCopyMessages.Text = "Copy messages";
+            this.btnCopyMessages.Click += new System.EventHandler(this.CopyMessages_Click);
+            //
+            // btnSortOrder
+            //
+            this.btnSortOrder.CheckOnClick = true;
+            this.btnSortOrder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSortOrder.Margin = new System.Windows.Forms.Padding(4, 1, 4, 1);
+            this.btnSortOrder.Name = "btnSortOrder";
+            this.btnSortOrder.Size = new System.Drawing.Size(76, 22);
+            this.btnSortOrder.Text = "Descending";
+            this.btnSortOrder.CheckedChanged += new System.EventHandler(this.SortOrder_CheckedChanged);
             // 
             // toolStripSeparator3
             // 
@@ -454,6 +455,7 @@
             // 
             this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
             this.btnClear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnClear.Margin = new System.Windows.Forms.Padding(4, 1, 4, 1);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(74, 22);
             this.btnClear.Text = "Clear log";
@@ -467,6 +469,7 @@
             this.btnSearchOptions.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnSearchOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchOptions.Image")));
             this.btnSearchOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSearchOptions.Margin = new System.Windows.Forms.Padding(4, 1, 4, 1);
             this.btnSearchOptions.Name = "btnSearchOptions";
             this.btnSearchOptions.Size = new System.Drawing.Size(105, 22);
             this.btnSearchOptions.Text = "Search options";
@@ -514,18 +517,15 @@
             this.Text = "Triggernometry log";
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.layoutMain.ResumeLayout(false);
+            this.layoutMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.pnlSearchOptions.ResumeLayout(false);
+            this.layoutRegex.ResumeLayout(false);
+            this.layoutRegex.PerformLayout();
+            this.layoutLevels.ResumeLayout(false);
+            this.layoutLevels.PerformLayout();
             this.tlsMain.ResumeLayout(false);
             this.tlsMain.PerformLayout();
             this.ResumeLayout(false);
@@ -536,22 +536,21 @@
 
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ToolStrip tlsMain;
-        private System.Windows.Forms.ToolStripDropDownButton btnCopy;
-        private System.Windows.Forms.ToolStripMenuItem btnSelectionToClipboard;
-        private System.Windows.Forms.ToolStripMenuItem btnEverythingToClipboard;
+        private System.Windows.Forms.ToolStripButton btnCopyRows;
+        private System.Windows.Forms.ToolStripButton btnCopyMessages;
+        private System.Windows.Forms.ToolStripButton btnSortOrder;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem ctxCopy;
-        private System.Windows.Forms.ToolStripMenuItem ctxSelectionToClipboard;
-        private System.Windows.Forms.ToolStripMenuItem ctxEverythingToClipboard;
+        private System.Windows.Forms.ToolStripMenuItem ctxCopyRows;
+        private System.Windows.Forms.ToolStripMenuItem ctxCopyMessages;
         private System.Windows.Forms.Panel panel3;
         internal System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton btnClear;
         private CustomControls.DataGridViewEx dgvLog;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.TableLayoutPanel layoutMain;
         private System.Windows.Forms.ToolStripButton btnSearchOptions;
         private CustomControls.PrettyCaption capSearch;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel layoutLevels;
         private System.Windows.Forms.CheckBox chkAll;
         private System.Windows.Forms.CheckBox chkError;
         private System.Windows.Forms.CheckBox chkWarning;
@@ -560,9 +559,9 @@
         private System.Windows.Forms.CheckBox chkCustom;
         private System.Windows.Forms.CheckBox chkCustom2;
         private System.Windows.Forms.Panel panelBar;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlSearchOptions;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel layoutRegex;
         private CustomControls.ExpressionTextBox rexSearch;
         private System.Windows.Forms.Label lblRegularExpression;
         private System.Windows.Forms.ToolStripLabel lblStatus;

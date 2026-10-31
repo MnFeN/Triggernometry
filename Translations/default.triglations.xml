@@ -1902,11 +1902,12 @@
     <TranslationEntry Key="LogForm" Translation="Triggernometry log" />
     <TranslationEntry Key="LogForm/btnClear" Translation="Clear log" />
     <TranslationEntry Key="LogForm/btnClose" Translation="Close" />
-    <TranslationEntry Key="LogForm/btnCopy" Translation="Copy" />
-    <TranslationEntry Key="LogForm/btnEverythingToClipboard" Translation="Everything to clipboard" />
+    <TranslationEntry Key="LogForm/btnCopyMessages" Translation="Copy messages" />
+    <TranslationEntry Key="LogForm/btnCopyRows" Translation="Copy rows" />
     <TranslationEntry Key="LogForm/btnSearch" Translation="Search" />
     <TranslationEntry Key="LogForm/btnSearchOptions" Translation="Search options" />
-    <TranslationEntry Key="LogForm/btnSelectionToClipboard" Translation="Selection to clipboard" />
+    <TranslationEntry Key="LogForm/btnSortOrder" Translation="Descending" />
+    <TranslationEntry Key="LogForm/btnSortOrder[Ascending]" Translation="Ascending" />
     <TranslationEntry Key="LogForm/capSearch/lblContent" Translation="Search options" />
     <TranslationEntry Key="LogForm/chkAll" Translation="All" />
     <TranslationEntry Key="LogForm/chkCustom" Translation="Custom" />
@@ -1918,9 +1919,8 @@
     <TranslationEntry Key="LogForm/colLevel" Translation="Level" />
     <TranslationEntry Key="LogForm/colMessage" Translation="Message" />
     <TranslationEntry Key="LogForm/colTimestamp" Translation="Timestamp" />
-    <TranslationEntry Key="LogForm/ctxCopy" Translation="Copy" />
-    <TranslationEntry Key="LogForm/ctxEverythingToClipboard" Translation="Everything to clipboard" />
-    <TranslationEntry Key="LogForm/ctxSelectionToClipboard" Translation="Selection to clipboard" />
+    <TranslationEntry Key="LogForm/ctxCopyMessages" Translation="Copy messages" />
+    <TranslationEntry Key="LogForm/ctxCopyRows" Translation="Copy rows" />
     <TranslationEntry Key="LogForm/lblRegularExpression" Translation="Regular expression" />
     <TranslationEntry Key="LogForm/lblStatus" Translation="Status" />
     <TranslationEntry Key="RegisteredVariableViewer/btnAddComment" Translation="Add comment" />

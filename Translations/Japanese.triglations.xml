@@ -1902,11 +1902,12 @@
     <TranslationEntry Key="LogForm" Translation="Triggernometry log" />
     <TranslationEntry Key="LogForm/btnClear" Translation="ログの消去" />
     <TranslationEntry Key="LogForm/btnClose" Translation="閉じる" />
-    <TranslationEntry Key="LogForm/btnCopy" Translation="コピー" />
-    <TranslationEntry Key="LogForm/btnEverythingToClipboard" Translation="すべてクリップボードにコピー" />
+    <TranslationEntry Key="LogForm/btnCopyMessages" Translation="メッセージをコピー" />
+    <TranslationEntry Key="LogForm/btnCopyRows" Translation="行全体をコピー" />
     <TranslationEntry Key="LogForm/btnSearch" Translation="検索" />
     <TranslationEntry Key="LogForm/btnSearchOptions" Translation="検索オプション" />
-    <TranslationEntry Key="LogForm/btnSelectionToClipboard" Translation="選択範囲をクリップボードにコピー" />
+    <TranslationEntry Key="LogForm/btnSortOrder" Translation="降順" />
+    <TranslationEntry Key="LogForm/btnSortOrder[Ascending]" Translation="昇順" />
     <TranslationEntry Key="LogForm/capSearch/lblContent" Translation="検索オプション" />
     <TranslationEntry Key="LogForm/chkAll" Translation="All" />
     <TranslationEntry Key="LogForm/chkCustom" Translation="Custom" />
@@ -1918,9 +1919,8 @@
     <TranslationEntry Key="LogForm/colLevel" Translation="ログレベル" />
     <TranslationEntry Key="LogForm/colMessage" Translation="メッセージ" />
     <TranslationEntry Key="LogForm/colTimestamp" Translation="時刻" />
-    <TranslationEntry Key="LogForm/ctxCopy" Translation="コピー" />
-    <TranslationEntry Key="LogForm/ctxEverythingToClipboard" Translation="すべてクリップボードにコピー" />
-    <TranslationEntry Key="LogForm/ctxSelectionToClipboard" Translation="選択範囲をクリップボードにコピー" />
+    <TranslationEntry Key="LogForm/ctxCopyMessages" Translation="メッセージをコピー" />
+    <TranslationEntry Key="LogForm/ctxCopyRows" Translation="行全体をコピー" />
     <TranslationEntry Key="LogForm/lblRegularExpression" Translation="正規表現" />
     <TranslationEntry Key="LogForm/lblStatus" Translation="状態" />
     <TranslationEntry Key="RegisteredVariableViewer/btnAddComment" Translation="コメントを追加" />

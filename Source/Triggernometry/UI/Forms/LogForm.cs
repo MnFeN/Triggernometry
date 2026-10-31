@@ -19,6 +19,8 @@ namespace Triggernometry.UI.Forms
     public partial class LogForm : MemoryForm<LogForm>
     {
 
+        private static readonly ComponentResourceManager actionViewerResources = new ComponentResourceManager(typeof(ActionViewer));
+
         internal RealPlugin plug = RealPlugin.Instance;
 
         internal List<InternalLog> logData;
@@ -28,7 +30,7 @@ namespace Triggernometry.UI.Forms
         public LogForm()
         {
             InitializeComponent();
-            splitContainer1.SplitterDistance = (int)(splitContainer1.Width * 0.75);
+            btnSortOrder.Image = (Image)actionViewerResources.GetObject("btnActionBottom.Image");
             logData = new List<InternalLog>();
             Shown += LogForm_Shown;
             RestoredSavedDimensions();
@@ -37,6 +39,8 @@ namespace Triggernometry.UI.Forms
             rexSearch.OnEnterKeyHit += RexSearch_OnEnter;
             dgvLog.CellMouseClick += DgvLog_CellMouseClick;
             dgvLog.CellMouseDoubleClick += DgvLog_CellMouseDoubleClick;
+            dgvLog.SelectionChanged += DgvLog_SelectionChanged;
+            dgvLog.KeyDown += DgvLog_KeyDown;
         }
 
         private void RexSearch_OnEnter()
@@ -163,10 +167,13 @@ namespace Triggernometry.UI.Forms
                     (chkCustom2.Checked && ix.Level == RealPlugin.DebugLevelEnum.Custom2) 
                 ) && (rex == null || rex.IsMatch(ix.Message))
             ).ToList();
+            bool ascending = btnSortOrder.Checked;
             filtered.Sort((a, b) =>
             {
-                int order = b.Timestamp.CompareTo(a.Timestamp);
-                return order != 0 ? order : b.Sequence.CompareTo(a.Sequence);
+                int order = a.Timestamp.CompareTo(b.Timestamp);
+                if (order == 0)
+                    order = a.Sequence.CompareTo(b.Sequence);
+                return ascending ? order : -order;
             });
             return filtered;
         }
@@ -229,11 +236,24 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void selectionToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>按当前行号输出所选日志，保留筛选和排序后的显示顺序。</summary>
+        private void CopySelectedLogs(bool messagesOnly)
         {
+            if (dgvLog.SelectedRows.Count == 0)
+                return;
             try
             {
-                Clipboard.SetText(dgvLog.GetClipboardContent().GetText());
+                var selectedLogs = dgvLog.SelectedRows.Cast<DataGridViewRow>()
+                    .OrderBy(row => row.Index)
+                    .Select(row => virtualData[row.Index]);
+                string text = string.Join(Environment.NewLine, selectedLogs.Select(log => messagesOnly
+                    ? log.Message
+                    : string.Join("\t", RealPlugin.FormatDateTime(log.Timestamp),
+                        I18n.Translate($"LogForm/chk{log.Level}", $"{log.Level}"), log.Message)));
+                if (text.Length == 0)
+                    Clipboard.Clear();
+                else
+                    Clipboard.SetText(text);
             }
             catch (Exception ex)
             {
@@ -241,39 +261,33 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void everythingToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyRows_Click(object sender, EventArgs e) => CopySelectedLogs(false);
+
+        private void CopyMessages_Click(object sender, EventArgs e) => CopySelectedLogs(true);
+
+        private void DgvLog_SelectionChanged(object sender, EventArgs e)
         {
-            try
+            bool hasSelection = dgvLog.SelectedRows.Count > 0;
+            btnCopyRows.Enabled = btnCopyMessages.Enabled = ctxCopyRows.Enabled = ctxCopyMessages.Enabled = hasSelection;
+        }
+
+        private void DgvLog_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == (Keys.Control | Keys.C))
             {
-                dgvLog.SelectAll();
-                Clipboard.SetText(dgvLog.GetClipboardContent().GetText());
-                dgvLog.ClearSelection();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, I18n.Translate("internal/LogForm/exception", "Exception"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.SuppressKeyPress = true;
+                CopySelectedLogs(true);
             }
         }
 
-        private void copySelectionToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SortOrder_CheckedChanged(object sender, EventArgs e)
         {
-            selectionToClipboardToolStripMenuItem_Click(sender, e);
-        }
-
-        private void copyAllToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            everythingToClipboardToolStripMenuItem_Click(sender, e);
-        }
-
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
-            ctxSelectionToClipboard.Enabled = (dgvLog.SelectedRows.Count > 0);
-            ctxEverythingToClipboard.Enabled = btnEverythingToClipboard.Enabled;
-        }
-
-        private void toolStripDropDownButton1_DropDownOpening(object sender, EventArgs e)
-        {
-            btnSelectionToClipboard.Enabled = (dgvLog.SelectedRows.Count > 0);
+            btnSortOrder.Image = (Image)actionViewerResources.GetObject(btnSortOrder.Checked
+                ? "btnActionUp.Image" : "btnActionBottom.Image");
+            btnSortOrder.Text = btnSortOrder.Checked
+                ? I18n.Translate("LogForm/btnSortOrder[Ascending]", "Ascending")
+                : I18n.Translate("LogForm/btnSortOrder", "Descending");
+            RefreshViewVirtual();
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -284,7 +298,18 @@ namespace Triggernometry.UI.Forms
 
         private void btnSearchOptions_CheckedChanged(object sender, EventArgs e)
         {
-            splitContainer1.Panel2Collapsed = (btnSearchOptions.Checked == false);
+            // 同一轮布局中更新显示和跨列，避免自动列宽受中间状态影响。
+            layoutMain.SuspendLayout();
+            try
+            {
+                bool showOptions = btnSearchOptions.Checked;
+                pnlSearchOptions.Visible = showOptions;
+                layoutMain.SetColumnSpan(dgvLog, showOptions ? 1 : 2);
+            }
+            finally
+            {
+                layoutMain.ResumeLayout(true);
+            }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
