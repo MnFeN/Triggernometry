@@ -65,11 +65,11 @@ namespace Triggernometry.UI.CustomControls
         {
             get
             {
-                return label13.Text;
+                return lblToastText.Text;
             }
             set
             {
-                label13.Text = value;
+                lblToastText.Text = value;
             }
         }
 

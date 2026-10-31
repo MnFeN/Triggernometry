@@ -361,7 +361,7 @@ namespace Triggernometry.UI.Forms
             isReadOnly = true;
             btnActionType.Enabled = false;
             btnOk.Visible = btnOk.Enabled = false;
-            panel6.Visible = false;
+            pnlTestAction.Visible = false;
             btnCancel.Dock = DockStyle.Fill;
             btnCancel.Text = I18n.Translate("internal/SimpleInputForm/close", "Close");
             btnCancel.Tag = I18n.DoNotTranslate;

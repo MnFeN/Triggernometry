@@ -30,13 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogForm));
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pnlContent = new System.Windows.Forms.Panel();
             this.layoutMain = new System.Windows.Forms.TableLayoutPanel();
             this.dgvLog = new Triggernometry.UI.CustomControls.DataGridViewEx();
             this.colTimestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colLevel = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxLog = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxCopyRows = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxCopyMessages = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlSearchOptions = new System.Windows.Forms.Panel();
@@ -58,34 +58,34 @@
             this.btnCopyRows = new System.Windows.Forms.ToolStripButton();
             this.btnCopyMessages = new System.Windows.Forms.ToolStripButton();
             this.btnSortOrder = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepToolbarClear = new System.Windows.Forms.ToolStripSeparator();
             this.btnClear = new System.Windows.Forms.ToolStripButton();
             this.btnSearchOptions = new System.Windows.Forms.ToolStripButton();
             this.lblStatus = new System.Windows.Forms.ToolStripLabel();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
-            this.panel2.SuspendLayout();
+            this.pnlContent.SuspendLayout();
             this.layoutMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
+            this.ctxLog.SuspendLayout();
             this.pnlSearchOptions.SuspendLayout();
             this.layoutRegex.SuspendLayout();
             this.layoutLevels.SuspendLayout();
             this.tlsMain.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel2
+            // pnlContent
             // 
-            this.panel2.Controls.Add(this.layoutMain);
-            this.panel2.Controls.Add(this.tlsMain);
-            this.panel2.Controls.Add(this.panel3);
-            this.panel2.Controls.Add(this.btnClose);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(10);
-            this.panel2.Size = new System.Drawing.Size(734, 461);
-            this.panel2.TabIndex = 2;
+            this.pnlContent.Controls.Add(this.layoutMain);
+            this.pnlContent.Controls.Add(this.tlsMain);
+            this.pnlContent.Controls.Add(this.pnlButtonsSpacing);
+            this.pnlContent.Controls.Add(this.btnClose);
+            this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContent.Location = new System.Drawing.Point(0, 0);
+            this.pnlContent.Name = "pnlContent";
+            this.pnlContent.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlContent.Size = new System.Drawing.Size(734, 461);
+            this.pnlContent.TabIndex = 2;
             // 
             // layoutMain
             //
@@ -118,7 +118,7 @@
             this.colTimestamp,
             this.colLevel,
             this.colMessage});
-            this.dgvLog.ContextMenuStrip = this.contextMenuStrip1;
+            this.dgvLog.ContextMenuStrip = this.ctxLog;
             this.dgvLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvLog.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLog.Location = new System.Drawing.Point(0, 0);
@@ -158,13 +158,13 @@
             this.colMessage.ReadOnly = true;
             this.colMessage.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // contextMenuStrip1
+            // ctxLog
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxLog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxCopyRows,
             this.ctxCopyMessages});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            this.ctxLog.Name = "ctxLog";
+            this.ctxLog.Size = new System.Drawing.Size(181, 48);
             //
             // ctxCopyRows
             //
@@ -404,7 +404,7 @@
             this.tlsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnCopyRows,
             this.btnCopyMessages,
-            this.toolStripSeparator3,
+            this.sepToolbarClear,
             this.btnClear,
             this.btnSortOrder,
             this.btnSearchOptions,
@@ -446,10 +446,10 @@
             this.btnSortOrder.Text = "Descending";
             this.btnSortOrder.CheckedChanged += new System.EventHandler(this.SortOrder_CheckedChanged);
             // 
-            // toolStripSeparator3
+            // sepToolbarClear
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            this.sepToolbarClear.Name = "sepToolbarClear";
+            this.sepToolbarClear.Size = new System.Drawing.Size(6, 25);
             // 
             // btnClear
             // 
@@ -482,13 +482,13 @@
             this.lblStatus.Size = new System.Drawing.Size(39, 22);
             this.lblStatus.Text = "Status";
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 406);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(714, 10);
-            this.panel3.TabIndex = 17;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 406);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(714, 10);
+            this.pnlButtonsSpacing.TabIndex = 17;
             // 
             // btnClose
             // 
@@ -508,19 +508,19 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(1300, 750);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.pnlContent);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "LogForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Triggernometry log";
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.pnlContent.ResumeLayout(false);
+            this.pnlContent.PerformLayout();
             this.layoutMain.ResumeLayout(false);
             this.layoutMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.ctxLog.ResumeLayout(false);
             this.pnlSearchOptions.ResumeLayout(false);
             this.layoutRegex.ResumeLayout(false);
             this.layoutRegex.PerformLayout();
@@ -534,17 +534,17 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlContent;
         private System.Windows.Forms.ToolStrip tlsMain;
         private System.Windows.Forms.ToolStripButton btnCopyRows;
         private System.Windows.Forms.ToolStripButton btnCopyMessages;
         private System.Windows.Forms.ToolStripButton btnSortOrder;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip ctxLog;
         private System.Windows.Forms.ToolStripMenuItem ctxCopyRows;
         private System.Windows.Forms.ToolStripMenuItem ctxCopyMessages;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
         internal System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator sepToolbarClear;
         private System.Windows.Forms.ToolStripButton btnClear;
         private CustomControls.DataGridViewEx dgvLog;
         private System.Windows.Forms.TableLayoutPanel layoutMain;

@@ -31,19 +31,19 @@ namespace Triggernometry.UI.CustomControls
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PersistenceSwitch));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.pnlPersistentIcon = new System.Windows.Forms.Panel();
+            this.toolTipPersistence = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
-            // panel1
+            // pnlPersistentIcon
             // 
-            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.panel1.Location = new System.Drawing.Point(18, 16);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(66, 38);
-            this.panel1.TabIndex = 0;
-            this.panel1.Visible = false;
+            this.pnlPersistentIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pnlPersistentIcon.BackgroundImage")));
+            this.pnlPersistentIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pnlPersistentIcon.Location = new System.Drawing.Point(18, 16);
+            this.pnlPersistentIcon.Name = "pnlPersistentIcon";
+            this.pnlPersistentIcon.Size = new System.Drawing.Size(66, 38);
+            this.pnlPersistentIcon.TabIndex = 0;
+            this.pnlPersistentIcon.Visible = false;
             // 
             // PersistenceSwitch
             // 
@@ -51,7 +51,7 @@ namespace Triggernometry.UI.CustomControls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlPersistentIcon);
             this.DoubleBuffered = true;
             this.Name = "PersistenceSwitch";
             this.Size = new System.Drawing.Size(225, 89);
@@ -61,7 +61,7 @@ namespace Triggernometry.UI.CustomControls
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Panel pnlPersistentIcon;
+        private System.Windows.Forms.ToolTip toolTipPersistence;
     }
 }

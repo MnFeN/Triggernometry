@@ -241,7 +241,7 @@
         BEF1IQgSx8fmvh/TRn4cVS++/gesXdsUkEx4VgAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <data name="dlgSaveCsv.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>17, 17</value>
   </data>
   <data name="btnKeyAdd.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

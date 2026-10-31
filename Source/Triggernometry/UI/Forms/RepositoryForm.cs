@@ -178,10 +178,10 @@ namespace Triggernometry.UI.Forms
 
         private void txtCacheFilename_TextChanged(object sender, EventArgs e)
         {
-            button3.Enabled = (txtCacheFilename.Text.Length > 0);
+            btnLocateCacheFile.Enabled = (txtCacheFilename.Text.Length > 0);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void btnLocateCacheFile_Click(object sender, EventArgs e)
         {
             if (File.Exists(txtCacheFilename.Text) == true)
             {
@@ -229,7 +229,7 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ctxUpdateLog_Opening(object sender, CancelEventArgs e)
         {
             ctxSelectionToClipboard.Enabled = (txtLog.SelectionLength > 0);
         }

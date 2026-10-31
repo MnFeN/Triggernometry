@@ -30,7 +30,7 @@ namespace Triggernometry.UI.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            bf.backgroundWorker1.CancelAsync();
+            bf.workerBenchmark.CancelAsync();
             DialogResult = DialogResult.Cancel;
         }
     }

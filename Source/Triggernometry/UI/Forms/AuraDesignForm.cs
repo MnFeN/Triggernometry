@@ -58,12 +58,12 @@ namespace Triggernometry.UI.Forms
 
         private void setWidthToImageWidthToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Width = clickthroughPictureBox1.Image.Width;
+            Width = picOverlayPreview.Image.Width;
         }
 
         private void setHeightToImageHeightToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Height = clickthroughPictureBox1.Image.Height;
+            Height = picOverlayPreview.Image.Height;
         }
 
         private void applyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -80,24 +80,24 @@ namespace Triggernometry.UI.Forms
 
         internal void SetImage(Bitmap i)
         {
-            clickthroughPictureBox1.Image = i;
+            picOverlayPreview.Image = i;
         }
 
         internal void SetImageMode(PictureBoxSizeMode i)
         {
-            clickthroughPictureBox1.SizeMode = i;
+            picOverlayPreview.SizeMode = i;
         }
 
         internal PictureBoxSizeMode GetImageDisplay()
         {
-            return clickthroughPictureBox1.SizeMode;
+            return picOverlayPreview.SizeMode;
         }
 
         private void onceToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             if (ctxDisplayNormal.Checked == true)
             {
-                clickthroughPictureBox1.SizeMode = PictureBoxSizeMode.Normal;
+                picOverlayPreview.SizeMode = PictureBoxSizeMode.Normal;
                 ctxDisplayCentered.Checked = false;                
                 ctxDisplayStretch.Checked = false;
                 ctxDisplayZoomed.Checked = false;
@@ -108,7 +108,7 @@ namespace Triggernometry.UI.Forms
         {
             if (ctxDisplayCentered.Checked == true)
             {
-                clickthroughPictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
+                picOverlayPreview.SizeMode = PictureBoxSizeMode.CenterImage;
                 ctxDisplayNormal.Checked = false;                
                 ctxDisplayStretch.Checked = false;
                 ctxDisplayZoomed.Checked = false;
@@ -119,7 +119,7 @@ namespace Triggernometry.UI.Forms
         {
             if (ctxDisplayStretch.Checked == true)
             {
-                clickthroughPictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                picOverlayPreview.SizeMode = PictureBoxSizeMode.StretchImage;
                 ctxDisplayNormal.Checked = false;                
                 ctxDisplayCentered.Checked = false;
                 ctxDisplayZoomed.Checked = false;
@@ -130,7 +130,7 @@ namespace Triggernometry.UI.Forms
         {
             if (ctxDisplayZoomed.Checked == true)
             {
-                clickthroughPictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                picOverlayPreview.SizeMode = PictureBoxSizeMode.Zoom;
                 ctxDisplayNormal.Checked = false;                
                 ctxDisplayStretch.Checked = false;
                 ctxDisplayCentered.Checked = false;
@@ -138,13 +138,13 @@ namespace Triggernometry.UI.Forms
         }
 
         /// <summary>根据当前设计模式与文本样式更新右键菜单。</summary>
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ctxOverlayDesign_Opening(object sender, CancelEventArgs e)
         {
             switch (AuraType)
             {
                 case AuraContainerForm.AuraTypeEnum.Image:
                     {
-                        switch (clickthroughPictureBox1.SizeMode)
+                        switch (picOverlayPreview.SizeMode)
                         {
                             case PictureBoxSizeMode.Normal:
                                 ctxDisplayNormal.Checked = true;
@@ -168,31 +168,31 @@ namespace Triggernometry.UI.Forms
                         switch (TextAlignment)
                         {
                             case Core.Actions.ActionOverlayText.TextAlignment.TopLeft:
-                                topLeftToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentTopLeft.Checked = true;
                                 break;
                             case Core.Actions.ActionOverlayText.TextAlignment.TopCenter:
-                                topCenterToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentTopCenter.Checked = true;
                                 break;
                             case Core.Actions.ActionOverlayText.TextAlignment.TopRight:
-                                topRightToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentTopRight.Checked = true;
                                 break;
                             case Core.Actions.ActionOverlayText.TextAlignment.MiddleLeft:
-                                middleLeftToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentMiddleLeft.Checked = true;
                                 break;
                             case Core.Actions.ActionOverlayText.TextAlignment.MiddleCenter:
-                                middleCenterToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentMiddleCenter.Checked = true;
                                 break;
                             case Core.Actions.ActionOverlayText.TextAlignment.MiddleRight:
-                                middleRightToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentMiddleRight.Checked = true;
                                 break;
                             case Core.Actions.ActionOverlayText.TextAlignment.BottomLeft:
-                                bottomLeftToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentBottomLeft.Checked = true;
                                 break;
                             case Core.Actions.ActionOverlayText.TextAlignment.BottomCenter:
-                                bottomCenterToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentBottomCenter.Checked = true;
                                 break;
                             case Core.Actions.ActionOverlayText.TextAlignment.BottomRight:
-                                bottomRightToolStripMenuItem.Checked = true;
+                                ctxTextAlignmentBottomRight.Checked = true;
                                 break;
                         }
                         ctxImage.Visible = false;
@@ -214,163 +214,163 @@ namespace Triggernometry.UI.Forms
         }
 
         /// <summary>将文本对齐方式切换为左上，并同步菜单勾选状态。</summary>
-        private void topLeftToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentTopLeft_Click(object sender, EventArgs e)
         {
-            if (topLeftToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentTopLeft.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.TopLeft;
-                topCenterToolStripMenuItem.Checked = false;
-                topRightToolStripMenuItem.Checked = false;
-                middleLeftToolStripMenuItem.Checked = false;
-                middleCenterToolStripMenuItem.Checked = false;
-                middleRightToolStripMenuItem.Checked = false;
-                bottomLeftToolStripMenuItem.Checked = false;
-                bottomCenterToolStripMenuItem.Checked = false;
-                bottomRightToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopCenter.Checked = false;
+                ctxTextAlignmentTopRight.Checked = false;
+                ctxTextAlignmentMiddleLeft.Checked = false;
+                ctxTextAlignmentMiddleCenter.Checked = false;
+                ctxTextAlignmentMiddleRight.Checked = false;
+                ctxTextAlignmentBottomLeft.Checked = false;
+                ctxTextAlignmentBottomCenter.Checked = false;
+                ctxTextAlignmentBottomRight.Checked = false;
                 Invalidate();
             }
         }
 
         /// <summary>将文本对齐方式切换为顶部居中，并同步菜单勾选状态。</summary>
-        private void topCenterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentTopCenter_Click(object sender, EventArgs e)
         {
-            if (topCenterToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentTopCenter.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.TopCenter;
-                topLeftToolStripMenuItem.Checked = false;
-                topRightToolStripMenuItem.Checked = false;
-                middleLeftToolStripMenuItem.Checked = false;
-                middleCenterToolStripMenuItem.Checked = false;
-                middleRightToolStripMenuItem.Checked = false;
-                bottomLeftToolStripMenuItem.Checked = false;
-                bottomCenterToolStripMenuItem.Checked = false;
-                bottomRightToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopLeft.Checked = false;
+                ctxTextAlignmentTopRight.Checked = false;
+                ctxTextAlignmentMiddleLeft.Checked = false;
+                ctxTextAlignmentMiddleCenter.Checked = false;
+                ctxTextAlignmentMiddleRight.Checked = false;
+                ctxTextAlignmentBottomLeft.Checked = false;
+                ctxTextAlignmentBottomCenter.Checked = false;
+                ctxTextAlignmentBottomRight.Checked = false;
                 Invalidate();
             }
         }
 
         /// <summary>将文本对齐方式切换为右上，并同步菜单勾选状态。</summary>
-        private void topRightToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentTopRight_Click(object sender, EventArgs e)
         {
-            if (topRightToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentTopRight.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.TopRight;
-                topLeftToolStripMenuItem.Checked = false;
-                topCenterToolStripMenuItem.Checked = false;
-                middleLeftToolStripMenuItem.Checked = false;
-                middleCenterToolStripMenuItem.Checked = false;
-                middleRightToolStripMenuItem.Checked = false;
-                bottomLeftToolStripMenuItem.Checked = false;
-                bottomCenterToolStripMenuItem.Checked = false;
-                bottomRightToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopLeft.Checked = false;
+                ctxTextAlignmentTopCenter.Checked = false;
+                ctxTextAlignmentMiddleLeft.Checked = false;
+                ctxTextAlignmentMiddleCenter.Checked = false;
+                ctxTextAlignmentMiddleRight.Checked = false;
+                ctxTextAlignmentBottomLeft.Checked = false;
+                ctxTextAlignmentBottomCenter.Checked = false;
+                ctxTextAlignmentBottomRight.Checked = false;
                 Invalidate();
             }
         }
 
         /// <summary>将文本对齐方式切换为左侧居中，并同步菜单勾选状态。</summary>
-        private void middleLeftToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentMiddleLeft_Click(object sender, EventArgs e)
         {
-            if (middleLeftToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentMiddleLeft.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.MiddleLeft;
-                topLeftToolStripMenuItem.Checked = false;
-                topCenterToolStripMenuItem.Checked = false;
-                topRightToolStripMenuItem.Checked = false;
-                middleCenterToolStripMenuItem.Checked = false;
-                middleRightToolStripMenuItem.Checked = false;
-                bottomLeftToolStripMenuItem.Checked = false;
-                bottomCenterToolStripMenuItem.Checked = false;
-                bottomRightToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopLeft.Checked = false;
+                ctxTextAlignmentTopCenter.Checked = false;
+                ctxTextAlignmentTopRight.Checked = false;
+                ctxTextAlignmentMiddleCenter.Checked = false;
+                ctxTextAlignmentMiddleRight.Checked = false;
+                ctxTextAlignmentBottomLeft.Checked = false;
+                ctxTextAlignmentBottomCenter.Checked = false;
+                ctxTextAlignmentBottomRight.Checked = false;
                 Invalidate();
             }
         }
 
         /// <summary>将文本对齐方式切换为居中，并同步菜单勾选状态。</summary>
-        private void middleCenterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentMiddleCenter_Click(object sender, EventArgs e)
         {
-            if (middleCenterToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentMiddleCenter.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.MiddleCenter;
-                topLeftToolStripMenuItem.Checked = false;
-                topCenterToolStripMenuItem.Checked = false;
-                topRightToolStripMenuItem.Checked = false;
-                middleLeftToolStripMenuItem.Checked = false;
-                middleRightToolStripMenuItem.Checked = false;
-                bottomLeftToolStripMenuItem.Checked = false;
-                bottomCenterToolStripMenuItem.Checked = false;
-                bottomRightToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopLeft.Checked = false;
+                ctxTextAlignmentTopCenter.Checked = false;
+                ctxTextAlignmentTopRight.Checked = false;
+                ctxTextAlignmentMiddleLeft.Checked = false;
+                ctxTextAlignmentMiddleRight.Checked = false;
+                ctxTextAlignmentBottomLeft.Checked = false;
+                ctxTextAlignmentBottomCenter.Checked = false;
+                ctxTextAlignmentBottomRight.Checked = false;
                 Invalidate();
             }
         }
 
         /// <summary>将文本对齐方式切换为右侧居中，并同步菜单勾选状态。</summary>
-        private void middleRightToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentMiddleRight_Click(object sender, EventArgs e)
         {
-            if (middleRightToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentMiddleRight.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.MiddleRight;
-                topLeftToolStripMenuItem.Checked = false;
-                topCenterToolStripMenuItem.Checked = false;
-                topRightToolStripMenuItem.Checked = false;
-                middleLeftToolStripMenuItem.Checked = false;
-                middleCenterToolStripMenuItem.Checked = false;
-                bottomLeftToolStripMenuItem.Checked = false;
-                bottomCenterToolStripMenuItem.Checked = false;
-                bottomRightToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopLeft.Checked = false;
+                ctxTextAlignmentTopCenter.Checked = false;
+                ctxTextAlignmentTopRight.Checked = false;
+                ctxTextAlignmentMiddleLeft.Checked = false;
+                ctxTextAlignmentMiddleCenter.Checked = false;
+                ctxTextAlignmentBottomLeft.Checked = false;
+                ctxTextAlignmentBottomCenter.Checked = false;
+                ctxTextAlignmentBottomRight.Checked = false;
                 Invalidate();
             }
         }
 
         /// <summary>将文本对齐方式切换为左下，并同步菜单勾选状态。</summary>
-        private void bottomLeftToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentBottomLeft_Click(object sender, EventArgs e)
         {
-            if (bottomLeftToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentBottomLeft.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.BottomLeft;
-                topLeftToolStripMenuItem.Checked = false;
-                topCenterToolStripMenuItem.Checked = false;
-                topRightToolStripMenuItem.Checked = false;
-                middleLeftToolStripMenuItem.Checked = false;
-                middleCenterToolStripMenuItem.Checked = false;
-                middleRightToolStripMenuItem.Checked = false;
-                bottomCenterToolStripMenuItem.Checked = false;
-                bottomRightToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopLeft.Checked = false;
+                ctxTextAlignmentTopCenter.Checked = false;
+                ctxTextAlignmentTopRight.Checked = false;
+                ctxTextAlignmentMiddleLeft.Checked = false;
+                ctxTextAlignmentMiddleCenter.Checked = false;
+                ctxTextAlignmentMiddleRight.Checked = false;
+                ctxTextAlignmentBottomCenter.Checked = false;
+                ctxTextAlignmentBottomRight.Checked = false;
                 Invalidate();
             }
         }
 
         /// <summary>将文本对齐方式切换为底部居中，并同步菜单勾选状态。</summary>
-        private void bottomCenterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentBottomCenter_Click(object sender, EventArgs e)
         {
-            if (bottomCenterToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentBottomCenter.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.BottomCenter;
-                topLeftToolStripMenuItem.Checked = false;
-                topCenterToolStripMenuItem.Checked = false;
-                topRightToolStripMenuItem.Checked = false;
-                middleLeftToolStripMenuItem.Checked = false;
-                middleCenterToolStripMenuItem.Checked = false;
-                middleRightToolStripMenuItem.Checked = false;
-                bottomLeftToolStripMenuItem.Checked = false;
-                bottomRightToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopLeft.Checked = false;
+                ctxTextAlignmentTopCenter.Checked = false;
+                ctxTextAlignmentTopRight.Checked = false;
+                ctxTextAlignmentMiddleLeft.Checked = false;
+                ctxTextAlignmentMiddleCenter.Checked = false;
+                ctxTextAlignmentMiddleRight.Checked = false;
+                ctxTextAlignmentBottomLeft.Checked = false;
+                ctxTextAlignmentBottomRight.Checked = false;
                 Invalidate();
             }
         }
 
         /// <summary>将文本对齐方式切换为右下，并同步菜单勾选状态。</summary>
-        private void bottomRightToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxTextAlignmentBottomRight_Click(object sender, EventArgs e)
         {
-            if (bottomRightToolStripMenuItem.Checked == true)
+            if (ctxTextAlignmentBottomRight.Checked == true)
             {
                 TextAlignment = Core.Actions.ActionOverlayText.TextAlignment.BottomRight;
-                topLeftToolStripMenuItem.Checked = false;
-                topCenterToolStripMenuItem.Checked = false;
-                topRightToolStripMenuItem.Checked = false;
-                middleLeftToolStripMenuItem.Checked = false;
-                middleCenterToolStripMenuItem.Checked = false;
-                middleRightToolStripMenuItem.Checked = false;
-                bottomLeftToolStripMenuItem.Checked = false;
-                bottomCenterToolStripMenuItem.Checked = false;
+                ctxTextAlignmentTopLeft.Checked = false;
+                ctxTextAlignmentTopCenter.Checked = false;
+                ctxTextAlignmentTopRight.Checked = false;
+                ctxTextAlignmentMiddleLeft.Checked = false;
+                ctxTextAlignmentMiddleCenter.Checked = false;
+                ctxTextAlignmentMiddleRight.Checked = false;
+                ctxTextAlignmentBottomLeft.Checked = false;
+                ctxTextAlignmentBottomCenter.Checked = false;
                 Invalidate();
             }
         }
@@ -382,10 +382,10 @@ namespace Triggernometry.UI.Forms
             switch (AuraType)
             {
                 case AuraContainerForm.AuraTypeEnum.Image:
-                    clickthroughPictureBox1.Visible = true;
+                    picOverlayPreview.Visible = true;
                     break;
                 case AuraContainerForm.AuraTypeEnum.Text:
-                    clickthroughPictureBox1.Visible = false;
+                    picOverlayPreview.Visible = false;
                     Brush = new SolidBrush(Color.Black);
                     break;
             }
@@ -493,7 +493,7 @@ namespace Triggernometry.UI.Forms
             g.FillRectangle(hb, ClientRectangle);
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void tmrSelectionBlink_Tick(object sender, EventArgs e)
         {
             blinky = (blinky == false);
             Invalidate();
@@ -512,7 +512,7 @@ namespace Triggernometry.UI.Forms
             }
             if (message.Msg == 164)
             {
-                contextMenuStrip1.Show(this, PointToClient(Cursor.Position));
+                ctxOverlayDesign.Show(this, PointToClient(Cursor.Position));
             }
             else if (message.Msg == 0x84) // WM_NCHITTEST
             {

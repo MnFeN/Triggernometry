@@ -30,69 +30,69 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImportForm));
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnBack = new System.Windows.Forms.Button();
             this.grpImportSource = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableImportSource = new System.Windows.Forms.TableLayoutPanel();
             this.radExistingActTriggers = new System.Windows.Forms.RadioButton();
             this.btnBrowseFile = new System.Windows.Forms.Button();
             this.radLoadFromFileURI = new System.Windows.Forms.RadioButton();
             this.radImportFromText = new System.Windows.Forms.RadioButton();
             this.txtImportFile = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pnlDirectImport = new System.Windows.Forms.Panel();
+            this.pnlImportSourceText = new System.Windows.Forms.Panel();
             this.txtImportSource = new System.Windows.Forms.RichTextBox();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxImportSource = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxPasteFromClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsDirectPaste = new System.Windows.Forms.ToolStrip();
             this.btnPaste = new System.Windows.Forms.ToolStripButton();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tbcImportSteps = new System.Windows.Forms.TabControl();
+            this.tabImportSource = new System.Windows.Forms.TabPage();
+            this.tabImportPreview = new System.Windows.Forms.TabPage();
+            this.trvImportPreview = new System.Windows.Forms.TreeView();
+            this.ctxImportPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepContextRemove = new System.Windows.Forms.ToolStripSeparator();
             this.ctxRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.lblWarning = new System.Windows.Forms.Label();
             this.tlsImport = new System.Windows.Forms.ToolStrip();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepToolbarRemove = new System.Windows.Forms.ToolStripSeparator();
             this.btnRemove = new System.Windows.Forms.ToolStripButton();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.panel4.SuspendLayout();
+            this.dlgImportFile = new System.Windows.Forms.OpenFileDialog();
+            this.pnlButtons.SuspendLayout();
             this.grpImportSource.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.contextMenuStrip2.SuspendLayout();
+            this.tableImportSource.SuspendLayout();
+            this.pnlDirectImport.SuspendLayout();
+            this.pnlImportSourceText.SuspendLayout();
+            this.ctxImportSource.SuspendLayout();
             this.tlsDirectPaste.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            this.tbcImportSteps.SuspendLayout();
+            this.tabImportSource.SuspendLayout();
+            this.tabImportPreview.SuspendLayout();
+            this.ctxImportPreview.SuspendLayout();
             this.tlsImport.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 306);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(564, 10);
-            this.panel3.TabIndex = 13;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 306);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlButtonsSpacing.TabIndex = 13;
             // 
-            // panel4
+            // pnlButtons
             // 
-            this.panel4.Controls.Add(this.btnNext);
-            this.panel4.Controls.Add(this.btnBack);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(10, 316);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(564, 35);
-            this.panel4.TabIndex = 14;
+            this.pnlButtons.Controls.Add(this.btnNext);
+            this.pnlButtons.Controls.Add(this.btnBack);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 316);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(564, 35);
+            this.pnlButtons.TabIndex = 14;
             // 
             // btnNext
             // 
@@ -121,7 +121,7 @@
             // grpImportSource
             // 
             this.grpImportSource.AutoSize = true;
-            this.grpImportSource.Controls.Add(this.tableLayoutPanel1);
+            this.grpImportSource.Controls.Add(this.tableImportSource);
             this.grpImportSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpImportSource.Location = new System.Drawing.Point(3, 3);
             this.grpImportSource.Name = "grpImportSource";
@@ -131,35 +131,35 @@
             this.grpImportSource.TabStop = false;
             this.grpImportSource.Text = " Specify import source ";
             // 
-            // tableLayoutPanel1
+            // tableImportSource
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel1.Controls.Add(this.radExistingActTriggers, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.btnBrowseFile, 2, 3);
-            this.tableLayoutPanel1.Controls.Add(this.radLoadFromFileURI, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.radImportFromText, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtImportFile, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 23);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 5;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(530, 228);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableImportSource.AutoSize = true;
+            this.tableImportSource.ColumnCount = 3;
+            this.tableImportSource.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableImportSource.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableImportSource.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableImportSource.Controls.Add(this.radExistingActTriggers, 0, 4);
+            this.tableImportSource.Controls.Add(this.btnBrowseFile, 2, 3);
+            this.tableImportSource.Controls.Add(this.radLoadFromFileURI, 0, 2);
+            this.tableImportSource.Controls.Add(this.radImportFromText, 0, 0);
+            this.tableImportSource.Controls.Add(this.txtImportFile, 1, 3);
+            this.tableImportSource.Controls.Add(this.pnlDirectImport, 1, 1);
+            this.tableImportSource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableImportSource.Location = new System.Drawing.Point(10, 23);
+            this.tableImportSource.Name = "tableImportSource";
+            this.tableImportSource.RowCount = 5;
+            this.tableImportSource.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableImportSource.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableImportSource.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableImportSource.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableImportSource.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableImportSource.Size = new System.Drawing.Size(530, 228);
+            this.tableImportSource.TabIndex = 0;
             // 
             // radExistingActTriggers
             // 
             this.radExistingActTriggers.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.radExistingActTriggers, 3);
+            this.tableImportSource.SetColumnSpan(this.radExistingActTriggers, 3);
             this.radExistingActTriggers.Dock = System.Windows.Forms.DockStyle.Top;
             this.radExistingActTriggers.Location = new System.Drawing.Point(3, 208);
             this.radExistingActTriggers.Name = "radExistingActTriggers";
@@ -186,7 +186,7 @@
             // radLoadFromFileURI
             // 
             this.radLoadFromFileURI.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.radLoadFromFileURI, 3);
+            this.tableImportSource.SetColumnSpan(this.radLoadFromFileURI, 3);
             this.radLoadFromFileURI.Dock = System.Windows.Forms.DockStyle.Top;
             this.radLoadFromFileURI.Location = new System.Drawing.Point(3, 159);
             this.radLoadFromFileURI.Name = "radLoadFromFileURI";
@@ -200,7 +200,7 @@
             // radImportFromText
             // 
             this.radImportFromText.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.radImportFromText, 3);
+            this.tableImportSource.SetColumnSpan(this.radImportFromText, 3);
             this.radImportFromText.Dock = System.Windows.Forms.DockStyle.Top;
             this.radImportFromText.Location = new System.Drawing.Point(3, 3);
             this.radImportFromText.Name = "radImportFromText";
@@ -221,33 +221,33 @@
             this.txtImportFile.TabIndex = 15;
             this.txtImportFile.TextChanged += new System.EventHandler(this.txtImportFile_TextChanged);
             // 
-            // panel1
+            // pnlDirectImport
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.panel1, 2);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.tlsDirectPaste);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Enabled = false;
-            this.panel1.Location = new System.Drawing.Point(33, 26);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(494, 127);
-            this.panel1.TabIndex = 16;
+            this.tableImportSource.SetColumnSpan(this.pnlDirectImport, 2);
+            this.pnlDirectImport.Controls.Add(this.pnlImportSourceText);
+            this.pnlDirectImport.Controls.Add(this.tlsDirectPaste);
+            this.pnlDirectImport.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlDirectImport.Enabled = false;
+            this.pnlDirectImport.Location = new System.Drawing.Point(33, 26);
+            this.pnlDirectImport.Name = "pnlDirectImport";
+            this.pnlDirectImport.Size = new System.Drawing.Size(494, 127);
+            this.pnlDirectImport.TabIndex = 16;
             // 
-            // panel2
+            // pnlImportSourceText
             // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.txtImportSource);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 25);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(494, 102);
-            this.panel2.TabIndex = 1;
+            this.pnlImportSourceText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlImportSourceText.Controls.Add(this.txtImportSource);
+            this.pnlImportSourceText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlImportSourceText.Location = new System.Drawing.Point(0, 25);
+            this.pnlImportSourceText.Name = "pnlImportSourceText";
+            this.pnlImportSourceText.Size = new System.Drawing.Size(494, 102);
+            this.pnlImportSourceText.TabIndex = 1;
             // 
             // txtImportSource
             // 
             this.txtImportSource.BackColor = System.Drawing.SystemColors.Window;
             this.txtImportSource.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtImportSource.ContextMenuStrip = this.contextMenuStrip2;
+            this.txtImportSource.ContextMenuStrip = this.ctxImportSource;
             this.txtImportSource.DetectUrls = false;
             this.txtImportSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtImportSource.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -259,13 +259,13 @@
             this.txtImportSource.WordWrap = false;
             this.txtImportSource.TextChanged += new System.EventHandler(this.txtImportSource_TextChanged);
             // 
-            // contextMenuStrip2
+            // ctxImportSource
             // 
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxImportSource.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxPasteFromClipboard});
-            this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(185, 26);
-            this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
+            this.ctxImportSource.Name = "ctxImportSource";
+            this.ctxImportSource.Size = new System.Drawing.Size(185, 26);
+            this.ctxImportSource.Opening += new System.ComponentModel.CancelEventHandler(this.ctxImportSource_Opening);
             // 
             // ctxPasteFromClipboard
             // 
@@ -294,70 +294,70 @@
             this.btnPaste.Text = "Paste from clipboard";
             this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
             // 
-            // tabControl1
+            // tbcImportSteps
             // 
-            this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(10, 10);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.Padding = new System.Drawing.Point(0, 0);
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(564, 296);
-            this.tabControl1.TabIndex = 16;
-            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
+            this.tbcImportSteps.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
+            this.tbcImportSteps.Controls.Add(this.tabImportSource);
+            this.tbcImportSteps.Controls.Add(this.tabImportPreview);
+            this.tbcImportSteps.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbcImportSteps.Location = new System.Drawing.Point(10, 10);
+            this.tbcImportSteps.Margin = new System.Windows.Forms.Padding(0);
+            this.tbcImportSteps.Name = "tbcImportSteps";
+            this.tbcImportSteps.Padding = new System.Drawing.Point(0, 0);
+            this.tbcImportSteps.SelectedIndex = 0;
+            this.tbcImportSteps.Size = new System.Drawing.Size(564, 296);
+            this.tbcImportSteps.TabIndex = 16;
+            this.tbcImportSteps.Selected += new System.Windows.Forms.TabControlEventHandler(this.tbcImportSteps_Selected);
             // 
-            // tabPage1
+            // tabImportSource
             // 
-            this.tabPage1.Controls.Add(this.grpImportSource);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(556, 267);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Source";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabImportSource.Controls.Add(this.grpImportSource);
+            this.tabImportSource.Location = new System.Drawing.Point(4, 25);
+            this.tabImportSource.Name = "tabImportSource";
+            this.tabImportSource.Padding = new System.Windows.Forms.Padding(3);
+            this.tabImportSource.Size = new System.Drawing.Size(556, 267);
+            this.tabImportSource.TabIndex = 0;
+            this.tabImportSource.Text = "Source";
+            this.tabImportSource.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // tabImportPreview
             // 
-            this.tabPage2.Controls.Add(this.treeView1);
-            this.tabPage2.Controls.Add(this.lblWarning);
-            this.tabPage2.Controls.Add(this.tlsImport);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(556, 267);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Import";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabImportPreview.Controls.Add(this.trvImportPreview);
+            this.tabImportPreview.Controls.Add(this.lblWarning);
+            this.tabImportPreview.Controls.Add(this.tlsImport);
+            this.tabImportPreview.Location = new System.Drawing.Point(4, 25);
+            this.tabImportPreview.Margin = new System.Windows.Forms.Padding(0);
+            this.tabImportPreview.Name = "tabImportPreview";
+            this.tabImportPreview.Size = new System.Drawing.Size(556, 267);
+            this.tabImportPreview.TabIndex = 1;
+            this.tabImportPreview.Text = "Import";
+            this.tabImportPreview.UseVisualStyleBackColor = true;
             // 
-            // treeView1
+            // trvImportPreview
             // 
-            this.treeView1.AllowDrop = true;
-            this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 88);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.ShowNodeToolTips = true;
-            this.treeView1.Size = new System.Drawing.Size(556, 179);
-            this.treeView1.TabIndex = 3;
-            this.treeView1.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeCollapse);
-            this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeExpand);
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
-            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
+            this.trvImportPreview.AllowDrop = true;
+            this.trvImportPreview.ContextMenuStrip = this.ctxImportPreview;
+            this.trvImportPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trvImportPreview.Location = new System.Drawing.Point(0, 88);
+            this.trvImportPreview.Name = "trvImportPreview";
+            this.trvImportPreview.ShowNodeToolTips = true;
+            this.trvImportPreview.Size = new System.Drawing.Size(556, 179);
+            this.trvImportPreview.TabIndex = 3;
+            this.trvImportPreview.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvImportPreview_BeforeCollapse);
+            this.trvImportPreview.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvImportPreview_BeforeExpand);
+            this.trvImportPreview.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvImportPreview_AfterSelect);
+            this.trvImportPreview.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.trvImportPreview_NodeMouseClick);
+            this.trvImportPreview.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.trvImportPreview_NodeMouseDoubleClick);
             // 
-            // contextMenuStrip1
+            // ctxImportPreview
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxImportPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxEdit,
-            this.toolStripSeparator2,
+            this.sepContextRemove,
             this.ctxRemove});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(118, 54);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.ctxImportPreview.Name = "ctxImportPreview";
+            this.ctxImportPreview.Size = new System.Drawing.Size(118, 54);
+            this.ctxImportPreview.Opening += new System.ComponentModel.CancelEventHandler(this.ctxImportPreview_Opening);
             // 
             // ctxEdit
             // 
@@ -367,10 +367,10 @@
             this.ctxEdit.Text = "Edit";
             this.ctxEdit.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
-            // toolStripSeparator2
+            // sepContextRemove
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(114, 6);
+            this.sepContextRemove.Name = "sepContextRemove";
+            this.sepContextRemove.Size = new System.Drawing.Size(114, 6);
             // 
             // ctxRemove
             // 
@@ -398,7 +398,7 @@
             this.tlsImport.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.tlsImport.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnEdit,
-            this.toolStripSeparator1,
+            this.sepToolbarRemove,
             this.btnRemove});
             this.tlsImport.Location = new System.Drawing.Point(0, 0);
             this.tlsImport.Name = "tlsImport";
@@ -415,10 +415,10 @@
             this.btnEdit.Text = "Edit";
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
-            // toolStripSeparator1
+            // sepToolbarRemove
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.sepToolbarRemove.Name = "sepToolbarRemove";
+            this.sepToolbarRemove.Size = new System.Drawing.Size(6, 25);
             // 
             // btnRemove
             // 
@@ -430,12 +430,12 @@
             this.btnRemove.Text = "Remove";
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
-            // openFileDialog1
+            // dlgImportFile
             // 
-            this.openFileDialog1.FileName = "TriggernometryExport.xml";
-            this.openFileDialog1.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-            this.openFileDialog1.RestoreDirectory = true;
-            this.openFileDialog1.Title = "Select file to import";
+            this.dlgImportFile.FileName = "TriggernometryExport.xml";
+            this.dlgImportFile.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+            this.dlgImportFile.RestoreDirectory = true;
+            this.dlgImportFile.Title = "Select file to import";
             // 
             // ImportForm
             // 
@@ -444,9 +444,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnBack;
             this.ClientSize = new System.Drawing.Size(984, 661);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.tbcImportSteps);
+            this.Controls.Add(this.pnlButtonsSpacing);
+            this.Controls.Add(this.pnlButtons);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(1000, 700);
             this.Name = "ImportForm";
@@ -454,23 +454,23 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import";
-            this.panel4.ResumeLayout(false);
+            this.pnlButtons.ResumeLayout(false);
             this.grpImportSource.ResumeLayout(false);
             this.grpImportSource.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.contextMenuStrip2.ResumeLayout(false);
+            this.tableImportSource.ResumeLayout(false);
+            this.tableImportSource.PerformLayout();
+            this.pnlDirectImport.ResumeLayout(false);
+            this.pnlDirectImport.PerformLayout();
+            this.pnlImportSourceText.ResumeLayout(false);
+            this.ctxImportSource.ResumeLayout(false);
             this.tlsDirectPaste.ResumeLayout(false);
             this.tlsDirectPaste.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.tbcImportSteps.ResumeLayout(false);
+            this.tabImportSource.ResumeLayout(false);
+            this.tabImportSource.PerformLayout();
+            this.tabImportPreview.ResumeLayout(false);
+            this.tabImportPreview.PerformLayout();
+            this.ctxImportPreview.ResumeLayout(false);
             this.tlsImport.ResumeLayout(false);
             this.tlsImport.PerformLayout();
             this.ResumeLayout(false);
@@ -479,37 +479,37 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnNext;
         internal System.Windows.Forms.Button btnBack;
         private System.Windows.Forms.GroupBox grpImportSource;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableImportSource;
         private System.Windows.Forms.RadioButton radLoadFromFileURI;
         private System.Windows.Forms.RadioButton radImportFromText;
         private System.Windows.Forms.Button btnBrowseFile;
         private System.Windows.Forms.TextBox txtImportFile;
         private System.Windows.Forms.RadioButton radExistingActTriggers;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlDirectImport;
+        private System.Windows.Forms.Panel pnlImportSourceText;
         private System.Windows.Forms.ToolStrip tlsDirectPaste;
         private System.Windows.Forms.RichTextBox txtImportSource;
         private System.Windows.Forms.ToolStripButton btnPaste;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        internal System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TabControl tbcImportSteps;
+        private System.Windows.Forms.TabPage tabImportSource;
+        private System.Windows.Forms.TabPage tabImportPreview;
+        private System.Windows.Forms.OpenFileDialog dlgImportFile;
+        internal System.Windows.Forms.TreeView trvImportPreview;
         private System.Windows.Forms.Label lblWarning;
         private System.Windows.Forms.ToolStrip tlsImport;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator sepToolbarRemove;
         private System.Windows.Forms.ToolStripButton btnRemove;
         private System.Windows.Forms.ToolStripButton btnEdit;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip ctxImportPreview;
         private System.Windows.Forms.ToolStripMenuItem ctxEdit;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator sepContextRemove;
         private System.Windows.Forms.ToolStripMenuItem ctxRemove;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ContextMenuStrip ctxImportSource;
         private System.Windows.Forms.ToolStripMenuItem ctxPasteFromClipboard;
     }
 }

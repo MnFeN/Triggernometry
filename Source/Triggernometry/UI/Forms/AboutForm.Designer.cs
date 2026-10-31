@@ -29,43 +29,43 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pnlLogo = new System.Windows.Forms.Panel();
+            this.pnlContent = new System.Windows.Forms.Panel();
             this.tbcMain = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
             this.txtGeneral = new System.Windows.Forms.TextBox();
             this.tabLicenses = new System.Windows.Forms.TabPage();
             this.txtLicenses = new System.Windows.Forms.TextBox();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
             this.btnOk = new System.Windows.Forms.Button();
-            this.panel2.SuspendLayout();
+            this.pnlContent.SuspendLayout();
             this.tbcMain.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             this.tabLicenses.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // pnlLogo
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(434, 70);
-            this.panel1.TabIndex = 0;
+            this.pnlLogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.pnlLogo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pnlLogo.BackgroundImage")));
+            this.pnlLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pnlLogo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlLogo.Location = new System.Drawing.Point(0, 0);
+            this.pnlLogo.Name = "pnlLogo";
+            this.pnlLogo.Size = new System.Drawing.Size(434, 70);
+            this.pnlLogo.TabIndex = 0;
             // 
-            // panel2
+            // pnlContent
             // 
-            this.panel2.Controls.Add(this.tbcMain);
-            this.panel2.Controls.Add(this.panel3);
-            this.panel2.Controls.Add(this.btnOk);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 70);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(10);
-            this.panel2.Size = new System.Drawing.Size(434, 241);
-            this.panel2.TabIndex = 1;
+            this.pnlContent.Controls.Add(this.tbcMain);
+            this.pnlContent.Controls.Add(this.pnlButtonsSpacing);
+            this.pnlContent.Controls.Add(this.btnOk);
+            this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContent.Location = new System.Drawing.Point(0, 70);
+            this.pnlContent.Name = "pnlContent";
+            this.pnlContent.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlContent.Size = new System.Drawing.Size(434, 241);
+            this.pnlContent.TabIndex = 1;
             // 
             // tbcMain
             // 
@@ -129,13 +129,13 @@
             this.txtLicenses.Text = resources.GetString("txtLicenses.Text");
             this.txtLicenses.WordWrap = false;
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 186);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(414, 10);
-            this.panel3.TabIndex = 6;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 186);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(414, 10);
+            this.pnlButtonsSpacing.TabIndex = 6;
             // 
             // btnOk
             // 
@@ -155,8 +155,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnOk;
             this.ClientSize = new System.Drawing.Size(434, 311);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlContent);
+            this.Controls.Add(this.pnlLogo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(450, 350);
             this.Name = "AboutForm";
@@ -164,7 +164,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = " About";
             this.Shown += new System.EventHandler(this.AboutForm_Shown);
-            this.panel2.ResumeLayout(false);
+            this.pnlContent.ResumeLayout(false);
             this.tbcMain.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
@@ -176,14 +176,14 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlLogo;
+        private System.Windows.Forms.Panel pnlContent;
         internal System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.TabControl tbcMain;
         private System.Windows.Forms.TabPage tabGeneral;
         private System.Windows.Forms.TextBox txtGeneral;
         private System.Windows.Forms.TabPage tabLicenses;
         private System.Windows.Forms.TextBox txtLicenses;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
     }
 }

@@ -28,8 +28,8 @@ namespace Triggernometry.UI.Forms
         {
             InitializeComponent();
             cancomplain = false;
-            label5.Tag = I18n.DoNotTranslate;
-            label6.Tag = I18n.DoNotTranslate;
+            lblSoundVolP.Tag = I18n.DoNotTranslate;
+            lblTtsVolP.Tag = I18n.DoNotTranslate;
             RestoredSavedDimensions();
             FormClosing += ConfigurationForm_FormClosing;
             SetToolTips();
@@ -269,12 +269,12 @@ namespace Triggernometry.UI.Forms
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            label5.Text = trbSoundVolume.Value + " %";
+            lblSoundVolP.Text = trbSoundVolume.Value + " %";
         }
 
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
-            label6.Text = trbTtsVolume.Value + " %";
+            lblTtsVolP.Text = trbTtsVolume.Value + " %";
         }
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
@@ -335,7 +335,7 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ctxStartupTrigger_Opening(object sender, CancelEventArgs e)
         {
             ctxClearSelection.Enabled = (trvTrigger.SelectedNode != null);
         }
@@ -708,7 +708,7 @@ namespace Triggernometry.UI.Forms
                     dgvAdditionalFeatures.Enabled = true;
                     dgvAdditionalFeatures.ReadOnly = false;
                     btnUnlockSecurity.Visible = false;
-                    panel18.Visible = false;
+                    pnlSecurityUnlockSpacing.Visible = false;
                     break;
             }
         }
@@ -740,7 +740,7 @@ namespace Triggernometry.UI.Forms
 
         private void btnTriggerTemplate_Click(object sender, EventArgs e)
         {
-            using (TriggerForm tf = new TriggerForm(template, plug.ui.treeView1, plug.ui.imageList1))
+            using (TriggerForm tf = new TriggerForm(template, plug.ui.treeView, plug.ui.imlTriggerTree))
             {
                 Trigger.TriggerSourceEnum oldSource = template.Source;
                 tf.Text = I18n.Translate("internal/UserInterface/edittemplatetrigger", "Edit template trigger");
@@ -989,7 +989,7 @@ namespace Triggernometry.UI.Forms
 
         private void SetToolTips()
         {
-            toolTip.SetToolTip(chkShortcutEnableTemplates, 
+            toolTipSettings.SetToolTip(chkShortcutEnableTemplates, 
                 I18n.Translate("internal/ConfigurationForm/tipShortcutEnableTemplates", "Allow to input ${{...}} expressions with shortcuts.") + "\n\n" + 
                 "Ctrl + Shift + 4: ${}\n" +
                 "Ctrl + Shift + V/L/T/D: ${v/l/t/d:}\n" +
@@ -1000,7 +1000,7 @@ namespace Triggernometry.UI.Forms
                 "Ctrl + Shift + E: ${_entity[].}\n" +
                 "Ctrl + Shift + M: ${_me.id}\n" +
                 "Ctrl + Shift + A: " + I18n.Translate("internal/ConfigurationForm/tipShortcutCtrlShiftA", "Select the next outer layer of brackets"));
-            toolTip.SetToolTip(chkShortcutUseAbbrevInTemplates, 
+            toolTipSettings.SetToolTip(chkShortcutUseAbbrevInTemplates, 
                 I18n.Translate("internal/ConfigurationForm/tipShortcutUseAbbrevInTemplates", "Use abbreviations in the template expressions instead of the full name:") + "\n\n" +
                 "${var/lvar/tvar/dvar:} => ${v/l/t/d:}\n" +
                 "${pvar/plvar/ptvar/pdvar:} => ${pv/pl/pt/pd:}\n" +
@@ -1008,7 +1008,7 @@ namespace Triggernometry.UI.Forms
                 "${func:} => ${f:}\n" +
                 "${_ffxiventity[].} => ${_entity[].}\n" +
                 "${_ffxiventity[${_ffxivplayer}].id} => ${_me.id}");
-            toolTip.SetToolTip(chkShortcutWrapTextWhenSelected, I18n.Translate("internal/ConfigurationForm/tipShortcutWrapTextWhenSelected",
+            toolTipSettings.SetToolTip(chkShortcutWrapTextWhenSelected, I18n.Translate("internal/ConfigurationForm/tipShortcutWrapTextWhenSelected",
                 "If any text is selected when using the shortcut, \nwrap the text in the template expression, \ninstead of replacing it with an empty template expression.\n\n" +
                 "For example, you can select the expression \"1 + 1\" and press Ctrl + Shift + N, \nthen you will get \"${{n: 1 + 1}}\"."));
         }

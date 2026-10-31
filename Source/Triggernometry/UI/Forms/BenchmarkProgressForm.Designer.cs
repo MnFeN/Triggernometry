@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.pnlBottomSpacing = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.prgBenchmark = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
-            // panel3
+            // pnlBottomSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 36);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(264, 10);
-            this.panel3.TabIndex = 8;
+            this.pnlBottomSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottomSpacing.Location = new System.Drawing.Point(10, 36);
+            this.pnlBottomSpacing.Name = "pnlBottomSpacing";
+            this.pnlBottomSpacing.Size = new System.Drawing.Size(264, 10);
+            this.pnlBottomSpacing.TabIndex = 8;
             // 
             // btnCancel
             // 
@@ -53,14 +53,14 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnOk_Click);
             // 
-            // progressBar1
+            // prgBenchmark
             // 
-            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar1.Location = new System.Drawing.Point(10, 10);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(264, 26);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBar1.TabIndex = 9;
+            this.prgBenchmark.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.prgBenchmark.Location = new System.Drawing.Point(10, 10);
+            this.prgBenchmark.Name = "prgBenchmark";
+            this.prgBenchmark.Size = new System.Drawing.Size(264, 26);
+            this.prgBenchmark.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.prgBenchmark.TabIndex = 9;
             // 
             // BenchmarkProgressForm
             // 
@@ -68,8 +68,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(284, 91);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.prgBenchmark);
+            this.Controls.Add(this.pnlBottomSpacing);
             this.Controls.Add(this.btnCancel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -87,8 +87,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel pnlBottomSpacing;
         internal System.Windows.Forms.Button btnCancel;
-        internal System.Windows.Forms.ProgressBar progressBar1;
+        internal System.Windows.Forms.ProgressBar prgBenchmark;
     }
 }

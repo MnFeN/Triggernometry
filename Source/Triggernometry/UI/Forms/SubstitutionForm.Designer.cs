@@ -28,40 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.grpSubstitution = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableSubstitution = new System.Windows.Forms.TableLayoutPanel();
             this.clbScope = new System.Windows.Forms.CheckedListBox();
             this.lblScope = new System.Windows.Forms.Label();
             this.txtReplaceWith = new System.Windows.Forms.TextBox();
             this.lblReplaceWith = new System.Windows.Forms.Label();
             this.lblSearchFor = new System.Windows.Forms.Label();
             this.txtSearchFor = new System.Windows.Forms.TextBox();
-            this.panel4.SuspendLayout();
+            this.pnlButtons.SuspendLayout();
             this.grpSubstitution.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tableSubstitution.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 206);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(564, 10);
-            this.panel3.TabIndex = 21;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 206);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlButtonsSpacing.TabIndex = 21;
             // 
-            // panel4
+            // pnlButtons
             // 
-            this.panel4.Controls.Add(this.btnCancel);
-            this.panel4.Controls.Add(this.btnOk);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(10, 216);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(564, 35);
-            this.panel4.TabIndex = 22;
+            this.pnlButtons.Controls.Add(this.btnCancel);
+            this.pnlButtons.Controls.Add(this.btnOk);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 216);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(564, 35);
+            this.pnlButtons.TabIndex = 22;
             // 
             // btnCancel
             // 
@@ -89,7 +89,7 @@
             // grpSubstitution
             // 
             this.grpSubstitution.AutoSize = true;
-            this.grpSubstitution.Controls.Add(this.tableLayoutPanel1);
+            this.grpSubstitution.Controls.Add(this.tableSubstitution);
             this.grpSubstitution.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpSubstitution.Location = new System.Drawing.Point(10, 10);
             this.grpSubstitution.Name = "grpSubstitution";
@@ -99,28 +99,28 @@
             this.grpSubstitution.TabStop = false;
             this.grpSubstitution.Text = " Substitution settings ";
             // 
-            // tableLayoutPanel1
+            // tableSubstitution
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.clbScope, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lblScope, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.txtReplaceWith, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblReplaceWith, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblSearchFor, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtSearchFor, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 23);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(544, 163);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableSubstitution.AutoSize = true;
+            this.tableSubstitution.ColumnCount = 2;
+            this.tableSubstitution.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableSubstitution.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableSubstitution.Controls.Add(this.clbScope, 1, 2);
+            this.tableSubstitution.Controls.Add(this.lblScope, 0, 2);
+            this.tableSubstitution.Controls.Add(this.txtReplaceWith, 1, 1);
+            this.tableSubstitution.Controls.Add(this.lblReplaceWith, 0, 1);
+            this.tableSubstitution.Controls.Add(this.lblSearchFor, 0, 0);
+            this.tableSubstitution.Controls.Add(this.txtSearchFor, 1, 0);
+            this.tableSubstitution.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableSubstitution.Location = new System.Drawing.Point(10, 23);
+            this.tableSubstitution.Name = "tableSubstitution";
+            this.tableSubstitution.RowCount = 4;
+            this.tableSubstitution.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSubstitution.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSubstitution.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSubstitution.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableSubstitution.Size = new System.Drawing.Size(544, 163);
+            this.tableSubstitution.TabIndex = 0;
             // 
             // clbScope
             // 
@@ -135,7 +135,7 @@
             "Text to speech messages"});
             this.clbScope.Location = new System.Drawing.Point(78, 55);
             this.clbScope.Name = "clbScope";
-            this.tableLayoutPanel1.SetRowSpan(this.clbScope, 2);
+            this.tableSubstitution.SetRowSpan(this.clbScope, 2);
             this.clbScope.Size = new System.Drawing.Size(463, 105);
             this.clbScope.TabIndex = 5;
             // 
@@ -201,19 +201,19 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(584, 261);
             this.Controls.Add(this.grpSubstitution);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.pnlButtonsSpacing);
+            this.Controls.Add(this.pnlButtons);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(600, 300);
             this.Name = "SubstitutionForm";
             this.Padding = new System.Windows.Forms.Padding(10);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SubstitutionForm";
-            this.panel4.ResumeLayout(false);
+            this.pnlButtons.ResumeLayout(false);
             this.grpSubstitution.ResumeLayout(false);
             this.grpSubstitution.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tableSubstitution.ResumeLayout(false);
+            this.tableSubstitution.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -221,12 +221,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.GroupBox grpSubstitution;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableSubstitution;
         private System.Windows.Forms.Label lblSearchFor;
         private System.Windows.Forms.TextBox txtSearchFor;
         private System.Windows.Forms.Label lblScope;

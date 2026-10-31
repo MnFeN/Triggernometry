@@ -137,23 +137,23 @@ namespace Triggernometry.UI.Forms
 
         #region Generic
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ctxState_Opening(object sender, CancelEventArgs e)
         {
-            var dgv = contextMenuStrip1.SourceControl as DataGridView;
+            var dgv = ctxState.SourceControl as DataGridView;
             bool hasSource = dgv != null && dgv != dgvMutexes && dgv != dgvCallback;
-            locateSourceToolStripMenuItem.Visible = hasSource;
-            locateSourceToolStripMenuItem.Enabled = hasSource && dgv.SelectedRows.Count == 1;
+            ctxLocateSource.Visible = hasSource;
+            ctxLocateSource.Enabled = hasSource && dgv.SelectedRows.Count == 1;
         }
 
-        private void locateSourceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ctxLocateSource_Click(object sender, EventArgs e)
         {
-            if (!(contextMenuStrip1.SourceControl is DataGridView dgv) || dgv.SelectedRows.Count != 1) return;
+            if (!(ctxState.SourceControl is DataGridView dgv) || dgv.SelectedRows.Count != 1) return;
             string source = dgv.SelectedRows[0].Cells[dgv.ColumnCount - 1].Value?.ToString() ?? "";
             // Log names parenthesize the source ID; aura contexts also contain a separate execution GUID.
             Match match = Regex.Match(source, @"\((?<remote>@)?(?<id>[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})\)");
             if (match.Success)
             {
-                TreeNode root = plug.ui.treeView1.Nodes[match.Groups["remote"].Success ? 1 : 0];
+                TreeNode root = plug.ui.treeView.Nodes[match.Groups["remote"].Success ? 1 : 0];
                 TreeNode node = FindSourceNode(root, new Guid(match.Groups["id"].Value));
                 if (node != null)
                 {

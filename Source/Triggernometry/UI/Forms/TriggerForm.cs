@@ -22,14 +22,14 @@ namespace Triggernometry.UI.Forms
             private set
             {
                 _uiContext = value;
-                actionViewer1.UiContext = value;
+                actionViewer.UiContext = value;
                 cndCondition.UiContext = value;
             }
         }
 
         internal Trigger Trigger => UiContext?.Trigger;
         private RealPlugin Plugin => UiContext?.Plugin;
-        private List<ActionBase> Actions => actionViewer1?.Actions;
+        private List<ActionBase> Actions => actionViewer?.Actions;
 
         private ImageList _images;
         internal ImageList Images
@@ -38,7 +38,7 @@ namespace Triggernometry.UI.Forms
             private set
             {
                 _images = value;
-                actionViewer1.Images = value;
+                actionViewer.Images = value;
             }
         }
 
@@ -49,7 +49,7 @@ namespace Triggernometry.UI.Forms
             private set
             {
                 _treeView = value;
-                actionViewer1.TreeView = value;
+                actionViewer.TreeView = value;
             }
         }
 
@@ -65,15 +65,15 @@ namespace Triggernometry.UI.Forms
             this.FormClosing += TriggerForm_FormClosing;
             CancelDgvSelectionAttachToAll(this);
             btnOk.Click += btnOk_Click;
-            actionViewer1.ActionsUpdated += actionViewer1_ActionsUpdated;
+            actionViewer.ActionsUpdated += actionViewer_ActionsUpdated;
             cndCondition.ConditionsUpdated += cndCondition_ConditionsUpdated;
             cbxTriggerSource.SelectedIndexChanged += UpdateTriggerDescription;
             cbxRefireOption1.SelectedIndexChanged += interrupt_Changed;
             cbxRefireOption2.SelectedIndexChanged += interrupt_Changed;
             cbxRefireWithinPeriod.SelectedIndexChanged += cooldown_Changed;
-            expRefirePeriod.textBox1.TextChanged += cooldown_Changed;
+            expRefirePeriod.txtExpression.TextChanged += cooldown_Changed;
             cbxScheduleFrom.SelectedIndexChanged += cooldown_Changed;
-            expMutexName.textBox1.TextChanged += UpdateTriggerDescription;
+            expMutexName.txtExpression.TextChanged += UpdateTriggerDescription;
             cbxSequential.CheckedChanged += UpdateTriggerDescription;
             cbxEditAutofire.CheckedChanged += cbxEditAutofire_CheckedChanged;
             cbxEditAutofireAllowCondition.CheckedChanged += cbxEditAutofireAllowCondition_CheckedChanged;
@@ -108,11 +108,11 @@ namespace Triggernometry.UI.Forms
                 if (this.Trigger != null && Trigger == InternalLog.RecordedAction?.ParentTrigger)
                 {
                     int idx = Trigger.Actions?.IndexOf(InternalLog.RecordedAction) ?? -1;
-                    if (idx >= 0 && idx < actionViewer1.dgvActions.Rows.Count)
+                    if (idx >= 0 && idx < actionViewer.dgvActions.Rows.Count)
                     {
-                        actionViewer1.dgvActions.ClearSelection();
-                        actionViewer1.dgvActions.Rows[idx].Selected = true;
-                        actionViewer1.dgvActions.FirstDisplayedScrollingRowIndex = idx;
+                        actionViewer.dgvActions.ClearSelection();
+                        actionViewer.dgvActions.Rows[idx].Selected = true;
+                        actionViewer.dgvActions.FirstDisplayedScrollingRowIndex = idx;
                     }
                 }
             };
@@ -155,10 +155,10 @@ namespace Triggernometry.UI.Forms
             cbxEditAutofireAllowCondition.Enabled = false;
             cbxSequential.Enabled = false;
             cndCondition.SetReadOnly();
-            panel5.Visible = true;
+            pnlReadOnlyHint.Visible = true;
             expMutexName.ReadOnly = true;
             chkReadmeTrigger.Enabled = false;
-            actionViewer1.SetReadOnly();
+            actionViewer.SetReadOnly();
         }
 
         internal void SettingsFromTrigger(Trigger t)
@@ -220,15 +220,15 @@ namespace Triggernometry.UI.Forms
 
         private void TriggerForm_Shown(object sender, EventArgs e)
         {
-            actionViewer1.RefreshDgv();
+            actionViewer.RefreshDgv();
         }
 
         internal void EnterReadmeMode()
         {
             grpGeneral.Visible = false;
             chkReadmeTrigger.Visible = false;
-            panel1.Visible = false;
-            panel5.Visible = false;
+            pnlTopSpacing.Visible = false;
+            pnlReadOnlyHint.Visible = false;
             tbcMain.TabPages.RemoveAt(0);
             tbcMain.TabPages.RemoveAt(0);
             tbcMain.TabPages.RemoveAt(0);
@@ -349,7 +349,7 @@ namespace Triggernometry.UI.Forms
             catch { cooldown = double.NaN; }
         }
 
-        private void actionViewer1_ActionsUpdated(object sender, EventArgs e)
+        private void actionViewer_ActionsUpdated(object sender, EventArgs e)
         {
             if (_isInitializing)
                 return;
@@ -395,7 +395,7 @@ namespace Triggernometry.UI.Forms
 
         internal void SetTriggerDescription()
         {
-            totalDelay = actionViewer1.GetActionTotalDelay();
+            totalDelay = actionViewer.GetActionTotalDelay();
             rootConditionCount = cndCondition.CountRootConditions();
             rootConditionType = cndCondition.RootConditionType();
             GetDescInterrupt();
@@ -406,9 +406,9 @@ namespace Triggernometry.UI.Forms
 
             // Line 1:
             // [Actions: 3]
-            if (actionViewer1.Actions.Count != 0)
+            if (actionViewer.Actions.Count != 0)
             {
-                desc += I18n.Translate("internal/TriggerForm/descActionCnt", "[Actions: {0}]  ", actionViewer1.Actions.Count);
+                desc += I18n.Translate("internal/TriggerForm/descActionCnt", "[Actions: {0}]  ", actionViewer.Actions.Count);
             }
 
             // [Delay 8.5 s]
@@ -493,7 +493,7 @@ namespace Triggernometry.UI.Forms
 
         private void CancelDgvSelection(object sender, MouseEventArgs e)
         {
-            actionViewer1.dgvActions.ClearSelection();
+            actionViewer.dgvActions.ClearSelection();
         }
     }
 

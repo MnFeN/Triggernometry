@@ -367,27 +367,27 @@ namespace Triggernometry.UI.Forms
             }
             using (Font fx = new Font(fic.Name, fic.Size, fs, GraphicsUnit.Point))
             {
-                fontDialog1.Font = fx;
-                switch (fontDialog1.ShowDialog())
+                dlgUiFont.Font = fx;
+                switch (dlgUiFont.ShowDialog())
                 {
                     case DialogResult.OK:
                         {
-                            fic.Name = fontDialog1.Font.Name;
-                            fic.Size = fontDialog1.Font.SizeInPoints;
+                            fic.Name = dlgUiFont.Font.Name;
+                            fic.Size = dlgUiFont.Font.SizeInPoints;
                             ActionOverlayText.EffectEnum ef = ActionOverlayText.EffectEnum.None;
-                            if (fontDialog1.Font.Bold == true)
+                            if (dlgUiFont.Font.Bold == true)
                             {
                                 ef |= ActionOverlayText.EffectEnum.Bold;
                             }
-                            if (fontDialog1.Font.Italic == true)
+                            if (dlgUiFont.Font.Italic == true)
                             {
                                 ef |= ActionOverlayText.EffectEnum.Italic;
                             }
-                            if (fontDialog1.Font.Strikeout == true)
+                            if (dlgUiFont.Font.Strikeout == true)
                             {
                                 ef |= ActionOverlayText.EffectEnum.Strikeout;
                             }
-                            if (fontDialog1.Font.Underline == true)
+                            if (dlgUiFont.Font.Underline == true)
                             {
                                 ef |= ActionOverlayText.EffectEnum.Underline;
                             }
@@ -779,8 +779,8 @@ namespace Triggernometry.UI.Forms
                 "Ctrl + Shift + E: ${_entity[].}\n" +
                 "Ctrl + Shift + M: ${_me.id}\n" +
                 "Ctrl + Shift + A: " + I18n.Translate("internal/ConfigurationForm/tipShortcutCtrlShiftA", "Select the next outer layer of brackets");
-            toolTip.SetToolTip(chkShortcutEnableTemplates, tip);
-            toolTip.SetToolTip(lblShortcutEnableTemplates, tip);
+            toolTipSettings.SetToolTip(chkShortcutEnableTemplates, tip);
+            toolTipSettings.SetToolTip(lblShortcutEnableTemplates, tip);
 
             tip = I18n.Translate("internal/ConfigurationForm/tipShortcutUseAbbrevInTemplates", "Use abbreviations in the template expressions instead of the full name:") + "\n\n" +
                 "${var/lvar/tvar/dvar:} => ${v/l/t/d:}\n" +
@@ -789,14 +789,14 @@ namespace Triggernometry.UI.Forms
                 "${func:} => ${f:}\n" +
                 "${_ffxiventity[].} => ${_entity[].}\n" +
                 "${_ffxiventity[${_ffxivplayer}].id} => ${_me.id}";
-            toolTip.SetToolTip(chkShortcutUseAbbrevInTemplates, tip);
-            toolTip.SetToolTip(lblShortcutUseAbbrevInTemplates, tip);
+            toolTipSettings.SetToolTip(chkShortcutUseAbbrevInTemplates, tip);
+            toolTipSettings.SetToolTip(lblShortcutUseAbbrevInTemplates, tip);
 
             tip = I18n.Translate("internal/ConfigurationForm/tipShortcutWrapTextWhenSelected",
                 "If any text is selected when using the shortcut, \nwrap the text in the template expression, \ninstead of replacing it with an empty template expression.\n\n" +
                 "For example, you can select the expression \"1 + 1\" and press Ctrl + Shift + N, \nthen you will get \"${{n: 1 + 1}}\".");
-            toolTip.SetToolTip(chkShortcutWrapTextWhenSelected, tip);
-            toolTip.SetToolTip(lblShortcutWrapTextWhenSelected, tip);
+            toolTipSettings.SetToolTip(chkShortcutWrapTextWhenSelected, tip);
+            toolTipSettings.SetToolTip(lblShortcutWrapTextWhenSelected, tip);
         }
 
         #endregion
@@ -1314,7 +1314,7 @@ namespace Triggernometry.UI.Forms
 
         private void btnTriggerTemplate_Click(object sender, EventArgs e)
         {
-            using (TriggerForm tf = new TriggerForm(template, plug.ui.treeView1, plug.ui.imageList1))
+            using (TriggerForm tf = new TriggerForm(template, plug.ui.treeView, plug.ui.imlTriggerTree))
             {
                 Trigger.TriggerSourceEnum oldSource = template.Source;
                 tf.Text = I18n.Translate("internal/UserInterface/edittemplatetrigger", "Edit template trigger");

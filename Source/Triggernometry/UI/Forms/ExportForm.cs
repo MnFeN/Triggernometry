@@ -45,7 +45,7 @@ namespace Triggernometry.UI.Forms
             btnSelectionToClipboard.Enabled = (rtbExportResults.SelectionLength > 0);            
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ctxExportResults_Opening(object sender, CancelEventArgs e)
         {
             ctxSelectionToClipboard.Enabled = btnSelectionToClipboard.Enabled;
             ctxEverythingToClipboard.Enabled = btnEverythingToClipboard.Enabled;
@@ -123,9 +123,9 @@ namespace Triggernometry.UI.Forms
 
         private void btnSaveToFile_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (dlgExportFile.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(saveFileDialog1.FileName, rtbExportResults.Text);
+                File.WriteAllText(dlgExportFile.FileName, rtbExportResults.Text);
             }
         }
 

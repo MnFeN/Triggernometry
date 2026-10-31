@@ -41,7 +41,7 @@ namespace Triggernometry.UI.CustomControls
             DoubleClick += PersistenceSwitch_Click;
             EnabledChanged += PersistenceSwitch_EnabledChanged;
             RefreshIcon();
-            toolTip1.SetToolTip(this, I18n.Translate("internal/PersistenceSwitch/string", "Determines if the variable to be modified is persistent, as in, will be saved to disk on exit and loaded back in when Triggernometry starts. Persistent variables live in a different namespace from regular variables."));            
+            toolTipPersistence.SetToolTip(this, I18n.Translate("internal/PersistenceSwitch/string", "Determines if the variable to be modified is persistent, as in, will be saved to disk on exit and loaded back in when Triggernometry starts. Persistent variables live in a different namespace from regular variables."));            
         }
 
         private void PersistenceSwitch_EnabledChanged(object sender, EventArgs e)
@@ -63,7 +63,7 @@ namespace Triggernometry.UI.CustomControls
         {
             if (_IsPersistent == true && Enabled == true)
             {
-                BackgroundImage = panel1.BackgroundImage;
+                BackgroundImage = pnlPersistentIcon.BackgroundImage;
             }
             else
             {

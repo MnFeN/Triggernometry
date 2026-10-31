@@ -46,8 +46,8 @@ namespace Triggernometry.UI.Forms
             tmrFade.Interval = durationMs;
             _forceShow = forceShow;
 
-            Button1.Text = I18n.Translate("internal/TraySlider/Button1", "Confirm");
-            Button2.Text = I18n.Translate("internal/TraySlider/Button2", "Cancel");
+            btnConfirm.Text = I18n.Translate("internal/TraySlider/Button1", "Confirm");
+            btnCancel.Text = I18n.Translate("internal/TraySlider/Button2", "Cancel");
 
             ApplyDefaultFont();
             ConfigureButtons(buttonCount);
@@ -74,9 +74,9 @@ namespace Triggernometry.UI.Forms
 
             lblTitle.Font = titleFont;
             rtbText.Font = textFont;
-            Button1.Font = btnfont;
-            Button2.Font = btnfont;
-            Button3.Font = btnfont;
+            btnConfirm.Font = btnfont;
+            btnCancel.Font = btnfont;
+            btnExtraAction.Font = btnfont;
         }
 
         private void ConfigureButtons(int buttonCount)
@@ -84,7 +84,7 @@ namespace Triggernometry.UI.Forms
             if (buttonCount > 3 || buttonCount < 0)
                 throw new ArgumentOutOfRangeException(nameof(buttonCount), I18n.Translate("internal/TraySlider/invalidbuttoncount", "Button count must be between 0 and 3."));
 
-            var buttons = new[] { Button1, Button2, Button3 };
+            var buttons = new[] { btnConfirm, btnCancel, btnExtraAction };
 
             tlpButtons.SuspendLayout();
 
@@ -164,9 +164,9 @@ namespace Triggernometry.UI.Forms
             _activated = false;
             _choiceClicked = false;
 
-            Button1.Enabled = true;
-            Button2.Enabled = true;
-            Button3.Enabled = true;
+            btnConfirm.Enabled = true;
+            btnCancel.Enabled = true;
+            btnExtraAction.Enabled = true;
 
             Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
 
@@ -218,9 +218,9 @@ namespace Triggernometry.UI.Forms
         private int _fadeOutStep;
         private void FadeOut()
         {
-            Button1.Enabled = false;
-            Button2.Enabled = false;
-            Button3.Enabled = false;
+            btnConfirm.Enabled = false;
+            btnCancel.Enabled = false;
+            btnExtraAction.Enabled = false;
 
             tmrFade.Stop();
             tmrSlideIn.Stop();
@@ -241,9 +241,9 @@ namespace Triggernometry.UI.Forms
             tmrFadeOut.Stop();
             Hide();
 
-            Button1.Enabled = true;
-            Button2.Enabled = true;
-            Button3.Enabled = true;
+            btnConfirm.Enabled = true;
+            btnCancel.Enabled = true;
+            btnExtraAction.Enabled = true;
 
             if (_choiceClicked)
                 Dispose();
@@ -256,11 +256,11 @@ namespace Triggernometry.UI.Forms
 
             try
             {
-                if (sender == Button1)
+                if (sender == btnConfirm)
                     OnClick1?.Invoke();
-                else if (sender == Button2)
+                else if (sender == btnCancel)
                     OnClick2?.Invoke();
-                else if (sender == Button3)
+                else if (sender == btnExtraAction)
                     OnClick3?.Invoke();
             }
             catch (Exception ex)
@@ -401,11 +401,11 @@ namespace Triggernometry.UI.Forms
                     form.SetLevel(Level);
 
                     if (Button1Text != null)
-                        form.Button1.Text = Button1Text;
+                        form.btnConfirm.Text = Button1Text;
                     if (Button2Text != null)
-                        form.Button2.Text = Button2Text;
+                        form.btnCancel.Text = Button2Text;
                     if (Button3Text != null)
-                        form.Button3.Text = Button3Text;
+                        form.btnExtraAction.Text = Button3Text;
 
                     form.ShowTraySlider(Message, Title);
                 }

@@ -35,7 +35,7 @@
             this.btnMisc = new Triggernometry.UI.CustomControls.MenuButton();
             this.tbcMain = new System.Windows.Forms.TabControl();
             this.tabStartup = new System.Windows.Forms.TabPage();
-            this.panel9 = new System.Windows.Forms.Panel();
+            this.pnlStartupTrigger = new System.Windows.Forms.Panel();
             this.trvTrigger = new System.Windows.Forms.TreeView();
             this.ctxStartupTrigger = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxClearSelection = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,16 +43,16 @@
             this.btnClearSelection = new System.Windows.Forms.ToolStripButton();
             this.lblFolderReminder = new System.Windows.Forms.ToolStripLabel();
             this.capStartupTrigger = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlStartup = new System.Windows.Forms.Panel();
+            this.tableStartup = new System.Windows.Forms.TableLayoutPanel();
             this.lblWarnAdmin = new System.Windows.Forms.Label();
             this.lblWelcome = new System.Windows.Forms.Label();
             this.chkWarnAdmin = new System.Windows.Forms.CheckBox();
             this.chkWelcome = new System.Windows.Forms.CheckBox();
             this.capStartupOptions = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabUserInterface = new System.Windows.Forms.TabPage();
-            this.panel32 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlUiOptions = new System.Windows.Forms.Panel();
+            this.tableUiOptions = new System.Windows.Forms.TableLayoutPanel();
             this.lblDevMode = new System.Windows.Forms.Label();
             this.lblAutoComplete = new System.Windows.Forms.Label();
             this.lblActionAsync = new System.Windows.Forms.Label();
@@ -62,8 +62,8 @@
             this.cbxActionAsync = new System.Windows.Forms.CheckBox();
             this.cbxTestIgnoreConditions = new System.Windows.Forms.CheckBox();
             this.capBehavior = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel31 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlUiFont = new System.Windows.Forms.Panel();
+            this.tableUiFont = new System.Windows.Forms.TableLayoutPanel();
             this.lblUiFontDefault = new System.Windows.Forms.Label();
             this.cbxUiFontDefault = new System.Windows.Forms.CheckBox();
             this.lblUiFont = new System.Windows.Forms.Label();
@@ -86,7 +86,7 @@
             this.lblTtsVolP = new System.Windows.Forms.Label();
             this.trbTtsVolume = new System.Windows.Forms.TrackBar();
             this.lblTtsVolume = new System.Windows.Forms.Label();
-            this.panel21 = new System.Windows.Forms.Panel();
+            this.pnlTtsWarnings = new System.Windows.Forms.Panel();
             this.lblExternalTtsWarn = new System.Windows.Forms.Label();
             this.lblActTtsWarn = new System.Windows.Forms.Label();
             this.capAudioTts = new Triggernometry.UI.CustomControls.PrettyCaption();
@@ -97,7 +97,7 @@
             this.lblSoundRepetition = new System.Windows.Forms.Label();
             this.txtSoundPathArgs = new System.Windows.Forms.TextBox();
             this.lblSoundPathArgs = new System.Windows.Forms.Label();
-            this.panel30 = new System.Windows.Forms.Panel();
+            this.pnlExternalSoundWarning = new System.Windows.Forms.Panel();
             this.lblExternalSoundWarn = new System.Windows.Forms.Label();
             this.btnSoundPath = new System.Windows.Forms.Button();
             this.lblSoundPath = new System.Windows.Forms.Label();
@@ -118,8 +118,8 @@
             this.btnBeepTest = new System.Windows.Forms.Button();
             this.capAudioBeep = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabLogging = new System.Windows.Forms.TabPage();
-            this.panel23 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlLoggingGeneral = new System.Windows.Forms.Panel();
+            this.tableLoggingGeneral = new System.Windows.Forms.TableLayoutPanel();
             this.lblLogNormalEvents = new System.Windows.Forms.Label();
             this.lblLogVariableExpansions = new System.Windows.Forms.Label();
             this.chkLogVariableExpansions = new System.Windows.Forms.CheckBox();
@@ -143,7 +143,7 @@
             this.lblLogLimitVerbose = new System.Windows.Forms.Label();
             this.nudLogLimitVerbose = new System.Windows.Forms.NumericUpDown();
             this.tabShortcuts = new System.Windows.Forms.TabPage();
-            this.panel11 = new System.Windows.Forms.Panel();
+            this.pnlShortcutTemplates = new System.Windows.Forms.Panel();
             this.tableLayoutPanelShortCutExpression = new System.Windows.Forms.TableLayoutPanel();
             this.lblShortcutWrapTextWhenSelected = new System.Windows.Forms.Label();
             this.lblShortcutUseAbbrevInTemplates = new System.Windows.Forms.Label();
@@ -153,7 +153,7 @@
             this.chkShortcutWrapTextWhenSelected = new System.Windows.Forms.CheckBox();
             this.capExpressions = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabCaching = new System.Windows.Forms.TabPage();
-            this.panel17 = new System.Windows.Forms.Panel();
+            this.pnlCacheFile = new System.Windows.Forms.Panel();
             this.tableLayoutPanelDownloads = new System.Windows.Forms.TableLayoutPanel();
             this.btnCacheFileBrowse = new System.Windows.Forms.Button();
             this.btnCacheFileClear = new System.Windows.Forms.Button();
@@ -164,7 +164,7 @@
             this.nudCacheFileExpiry = new System.Windows.Forms.NumericUpDown();
             this.txtCacheFileCount = new System.Windows.Forms.TextBox();
             this.capDownloads = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel15 = new System.Windows.Forms.Panel();
+            this.pnlCacheRepo = new System.Windows.Forms.Panel();
             this.tableLayoutPanelRepo = new System.Windows.Forms.TableLayoutPanel();
             this.btnCacheRepoBrowse = new System.Windows.Forms.Button();
             this.btnCacheRepoClear = new System.Windows.Forms.Button();
@@ -175,7 +175,7 @@
             this.nudCacheRepoExpiry = new System.Windows.Forms.NumericUpDown();
             this.txtCacheRepoCount = new System.Windows.Forms.TextBox();
             this.capRepoBackups = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel14 = new System.Windows.Forms.Panel();
+            this.pnlCacheJson = new System.Windows.Forms.Panel();
             this.tableLayoutPanelJason = new System.Windows.Forms.TableLayoutPanel();
             this.nudCacheJsonExpiry = new System.Windows.Forms.NumericUpDown();
             this.btnCacheJsonBrowse = new System.Windows.Forms.Button();
@@ -186,7 +186,7 @@
             this.lblCacheJsonExpiry = new System.Windows.Forms.Label();
             this.txtCacheJsonCount = new System.Windows.Forms.TextBox();
             this.capJason = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel13 = new System.Windows.Forms.Panel();
+            this.pnlCacheSound = new System.Windows.Forms.Panel();
             this.tableLayoutPanelSound = new System.Windows.Forms.TableLayoutPanel();
             this.btnCacheSoundBrowse = new System.Windows.Forms.Button();
             this.btnCacheSoundClear = new System.Windows.Forms.Button();
@@ -197,7 +197,7 @@
             this.nudCacheSoundExpiry = new System.Windows.Forms.NumericUpDown();
             this.txtCacheSoundCount = new System.Windows.Forms.TextBox();
             this.capSoundFiles = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel16 = new System.Windows.Forms.Panel();
+            this.pnlCacheImage = new System.Windows.Forms.Panel();
             this.tableLayoutPanelImages = new System.Windows.Forms.TableLayoutPanel();
             this.btnCacheImageBrowse = new System.Windows.Forms.Button();
             this.txtCacheImageSize = new System.Windows.Forms.TextBox();
@@ -209,8 +209,8 @@
             this.btnCacheImageClear = new System.Windows.Forms.Button();
             this.capImageFiles = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabUpdates = new System.Windows.Forms.TabPage();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlUpdateChannel = new System.Windows.Forms.Panel();
+            this.tableUpdateChannel = new System.Windows.Forms.TableLayoutPanel();
             this.chkUpdates = new System.Windows.Forms.CheckBox();
             this.lblUpdates = new System.Windows.Forms.Label();
             this.nudUpdateInterval = new System.Windows.Forms.NumericUpDown();
@@ -223,17 +223,17 @@
             this.btnUpdateCheck = new System.Windows.Forms.Button();
             this.capUpdateChannel = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabEndpoint = new System.Windows.Forms.TabPage();
-            this.panel7 = new System.Windows.Forms.Panel();
+            this.pnlEndpointHistory = new System.Windows.Forms.Panel();
             this.dgvEndpointHistory = new Triggernometry.UI.CustomControls.DataGridViewEx();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEndpointHistoryTimestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEndpointHistoryData = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tlsEndpointHistory = new System.Windows.Forms.ToolStrip();
             this.btnEndpointHistUpdate = new System.Windows.Forms.ToolStripButton();
             this.tlsEndpointHistoryRecv = new System.Windows.Forms.ToolStripLabel();
             this.tlsEndpointHistoryCount = new System.Windows.Forms.ToolStripLabel();
-            this.prettyCaption3 = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel28 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+            this.capEndpointHistory = new Triggernometry.UI.CustomControls.PrettyCaption();
+            this.pnlEndpointSettings = new System.Windows.Forms.Panel();
+            this.tableEndpointSettings = new System.Windows.Forms.TableLayoutPanel();
             this.lblEndpointLog = new System.Windows.Forms.Label();
             this.lblEndpointStartup = new System.Windows.Forms.Label();
             this.chkEndpointStartup = new System.Windows.Forms.CheckBox();
@@ -241,8 +241,8 @@
             this.txtEndpoint = new System.Windows.Forms.TextBox();
             this.lblEndpoint = new System.Windows.Forms.Label();
             this.capEndpointSettings = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel27 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlEndpointStatus = new System.Windows.Forms.Panel();
+            this.tableEndpointStatus = new System.Windows.Forms.TableLayoutPanel();
             this.btnEndpointStart = new System.Windows.Forms.Button();
             this.btnEndpointStop = new System.Windows.Forms.Button();
             this.txtEndpointStatus = new System.Windows.Forms.TextBox();
@@ -257,9 +257,9 @@
             this.btnConstRemove = new System.Windows.Forms.ToolStripButton();
             this.tabSubs = new System.Windows.Forms.TabPage();
             this.dgvSubstitutions = new Triggernometry.UI.CustomControls.DataGridViewEx();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSubSearchFor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSubReplaceWith = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSubScope = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tlsSubstitutions = new System.Windows.Forms.ToolStrip();
             this.btnSubAdd = new System.Windows.Forms.ToolStripButton();
             this.btnSubEdit = new System.Windows.Forms.ToolStripButton();
@@ -267,44 +267,44 @@
             this.tabGameSpecific = new System.Windows.Forms.TabPage();
             this.tbcGames = new System.Windows.Forms.TabControl();
             this.tabFFXIV = new System.Windows.Forms.TabPage();
-            this.panel24 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlFfxivLogging = new System.Windows.Forms.Panel();
+            this.tableFfxivLogging = new System.Windows.Forms.TableLayoutPanel();
             this.lblFfxivLogNetwork = new System.Windows.Forms.Label();
             this.chkFfxivLogNetwork = new System.Windows.Forms.CheckBox();
             this.capFfxivLogging = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabSecurity = new System.Windows.Forms.TabPage();
-            this.panel19 = new System.Windows.Forms.Panel();
+            this.pnlScriptingAccess = new System.Windows.Forms.Panel();
             this.dgvAdditionalFeatures = new Triggernometry.UI.CustomControls.DataGridViewEx();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewCheckBoxColumn2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewCheckBoxColumn3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.panel8 = new System.Windows.Forms.Panel();
+            this.colFeatureName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFeatureAllowLocal = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colFeatureAllowRemote = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colFeatureAllowAdmin = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.pnlSecurityFeaturesSpacing = new System.Windows.Forms.Panel();
             this.dgvApiAccess = new Triggernometry.UI.CustomControls.DataGridViewEx();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.panel18 = new System.Windows.Forms.Panel();
+            this.colApiNamespace = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colApiAllowLocal = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colApiAllowRemote = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colApiAllowAdmin = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.pnlSecurityUnlockSpacing = new System.Windows.Forms.Panel();
             this.btnUnlockSecurity = new System.Windows.Forms.Button();
             this.capScripting = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.tabMiscellaneous = new System.Windows.Forms.TabPage();
-            this.panel12 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlAuraManagement = new System.Windows.Forms.Panel();
+            this.tableAuraManagement = new System.Windows.Forms.TableLayoutPanel();
             this.lblEnableHwAccel = new System.Windows.Forms.Label();
             this.txtMonitorWindow = new System.Windows.Forms.TextBox();
             this.lblMonitorWindow = new System.Windows.Forms.Label();
             this.cbxEnableHwAccel = new System.Windows.Forms.CheckBox();
             this.capAuraManagement = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlAutosave = new System.Windows.Forms.Panel();
+            this.tableAutosave = new System.Windows.Forms.TableLayoutPanel();
             this.lblAutosaveConfig = new System.Windows.Forms.Label();
             this.lblAutosaveInterval = new System.Windows.Forms.Label();
             this.cbxAutosaveConfig = new System.Windows.Forms.CheckBox();
             this.nudAutosaveMinutes = new System.Windows.Forms.NumericUpDown();
             this.capAutosaving = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel20 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlTriggerTemplate = new System.Windows.Forms.Panel();
+            this.tableTriggerTemplate = new System.Windows.Forms.TableLayoutPanel();
             this.lblTriggerTemplate = new System.Windows.Forms.Label();
             this.cbxTriggerTemplate = new System.Windows.Forms.CheckBox();
             this.btnTriggerTemplate = new System.Windows.Forms.Button();
@@ -321,44 +321,44 @@
             this.btnAudio = new Triggernometry.UI.CustomControls.MenuButton();
             this.btnUserInterface = new Triggernometry.UI.CustomControls.MenuButton();
             this.btnStartup = new Triggernometry.UI.CustomControls.MenuButton();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pnlHeader = new System.Windows.Forms.Panel();
             this.lblHeader = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlContent = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.fontDialog1 = new System.Windows.Forms.FontDialog();
+            this.toolTipSettings = new System.Windows.Forms.ToolTip(this.components);
+            this.dlgUiFont = new System.Windows.Forms.FontDialog();
             this.pnlMenu.SuspendLayout();
             this.tbcMain.SuspendLayout();
             this.tabStartup.SuspendLayout();
-            this.panel9.SuspendLayout();
+            this.pnlStartupTrigger.SuspendLayout();
             this.ctxStartupTrigger.SuspendLayout();
             this.tlsStartupTrigger.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.tableLayoutPanel7.SuspendLayout();
+            this.pnlStartup.SuspendLayout();
+            this.tableStartup.SuspendLayout();
             this.tabUserInterface.SuspendLayout();
-            this.panel32.SuspendLayout();
-            this.tableLayoutPanel12.SuspendLayout();
-            this.panel31.SuspendLayout();
-            this.tableLayoutPanel6.SuspendLayout();
+            this.pnlUiOptions.SuspendLayout();
+            this.tableUiOptions.SuspendLayout();
+            this.pnlUiFont.SuspendLayout();
+            this.tableUiFont.SuspendLayout();
             this.tabAudio.SuspendLayout();
             this.panelAudioTts.SuspendLayout();
             this.tableAudioTts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbTtsRepetition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbTtsVolume)).BeginInit();
-            this.panel21.SuspendLayout();
+            this.pnlTtsWarnings.SuspendLayout();
             this.panelAudioSound.SuspendLayout();
             this.tableAudioSound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbSoundRepetition)).BeginInit();
-            this.panel30.SuspendLayout();
+            this.pnlExternalSoundWarning.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbSoundVolume)).BeginInit();
             this.panelAudioBeep.SuspendLayout();
             this.tableAudioBeep.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbBeepVolume)).BeginInit();
             this.tabLogging.SuspendLayout();
-            this.panel23.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
+            this.pnlLoggingGeneral.SuspendLayout();
+            this.tableLoggingGeneral.SuspendLayout();
             this.panelLogLimits.SuspendLayout();
             this.tableLogLimits.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitError)).BeginInit();
@@ -368,36 +368,36 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitInfo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitVerbose)).BeginInit();
             this.tabShortcuts.SuspendLayout();
-            this.panel11.SuspendLayout();
+            this.pnlShortcutTemplates.SuspendLayout();
             this.tableLayoutPanelShortCutExpression.SuspendLayout();
             this.tabCaching.SuspendLayout();
-            this.panel17.SuspendLayout();
+            this.pnlCacheFile.SuspendLayout();
             this.tableLayoutPanelDownloads.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheFileExpiry)).BeginInit();
-            this.panel15.SuspendLayout();
+            this.pnlCacheRepo.SuspendLayout();
             this.tableLayoutPanelRepo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheRepoExpiry)).BeginInit();
-            this.panel14.SuspendLayout();
+            this.pnlCacheJson.SuspendLayout();
             this.tableLayoutPanelJason.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheJsonExpiry)).BeginInit();
-            this.panel13.SuspendLayout();
+            this.pnlCacheSound.SuspendLayout();
             this.tableLayoutPanelSound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheSoundExpiry)).BeginInit();
-            this.panel16.SuspendLayout();
+            this.pnlCacheImage.SuspendLayout();
             this.tableLayoutPanelImages.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheImageExpiry)).BeginInit();
             this.tabUpdates.SuspendLayout();
-            this.panel10.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.pnlUpdateChannel.SuspendLayout();
+            this.tableUpdateChannel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudUpdateInterval)).BeginInit();
             this.tabEndpoint.SuspendLayout();
-            this.panel7.SuspendLayout();
+            this.pnlEndpointHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEndpointHistory)).BeginInit();
             this.tlsEndpointHistory.SuspendLayout();
-            this.panel28.SuspendLayout();
-            this.tableLayoutPanel8.SuspendLayout();
-            this.panel27.SuspendLayout();
-            this.tableLayoutPanel18.SuspendLayout();
+            this.pnlEndpointSettings.SuspendLayout();
+            this.tableEndpointSettings.SuspendLayout();
+            this.pnlEndpointStatus.SuspendLayout();
+            this.tableEndpointStatus.SuspendLayout();
             this.tabConstants.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConstVariables)).BeginInit();
             this.tlsConstant.SuspendLayout();
@@ -407,23 +407,23 @@
             this.tabGameSpecific.SuspendLayout();
             this.tbcGames.SuspendLayout();
             this.tabFFXIV.SuspendLayout();
-            this.panel24.SuspendLayout();
-            this.tableLayoutPanel9.SuspendLayout();
+            this.pnlFfxivLogging.SuspendLayout();
+            this.tableFfxivLogging.SuspendLayout();
             this.tabSecurity.SuspendLayout();
-            this.panel19.SuspendLayout();
+            this.pnlScriptingAccess.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAdditionalFeatures)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApiAccess)).BeginInit();
             this.tabMiscellaneous.SuspendLayout();
-            this.panel12.SuspendLayout();
-            this.tableLayoutPanel11.SuspendLayout();
-            this.panel5.SuspendLayout();
-            this.tableLayoutPanel10.SuspendLayout();
+            this.pnlAuraManagement.SuspendLayout();
+            this.tableAuraManagement.SuspendLayout();
+            this.pnlAutosave.SuspendLayout();
+            this.tableAutosave.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAutosaveMinutes)).BeginInit();
-            this.panel20.SuspendLayout();
-            this.tableLayoutPanel17.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnlTriggerTemplate.SuspendLayout();
+            this.tableTriggerTemplate.SuspendLayout();
+            this.pnlHeader.SuspendLayout();
+            this.pnlContent.SuspendLayout();
+            this.pnlButtons.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlMenu
@@ -498,9 +498,9 @@
             // tabStartup
             // 
             this.tabStartup.AutoScroll = true;
-            this.tabStartup.Controls.Add(this.panel9);
+            this.tabStartup.Controls.Add(this.pnlStartupTrigger);
             this.tabStartup.Controls.Add(this.capStartupTrigger);
-            this.tabStartup.Controls.Add(this.panel6);
+            this.tabStartup.Controls.Add(this.pnlStartup);
             this.tabStartup.Controls.Add(this.capStartupOptions);
             this.tabStartup.Location = new System.Drawing.Point(4, 28);
             this.tabStartup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -510,16 +510,16 @@
             this.tabStartup.Text = "Startup";
             this.tabStartup.UseVisualStyleBackColor = true;
             // 
-            // panel9
+            // pnlStartupTrigger
             // 
-            this.panel9.Controls.Add(this.trvTrigger);
-            this.panel9.Controls.Add(this.tlsStartupTrigger);
-            this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(0, 146);
-            this.panel9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(856, 451);
-            this.panel9.TabIndex = 10;
+            this.pnlStartupTrigger.Controls.Add(this.trvTrigger);
+            this.pnlStartupTrigger.Controls.Add(this.tlsStartupTrigger);
+            this.pnlStartupTrigger.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlStartupTrigger.Location = new System.Drawing.Point(0, 146);
+            this.pnlStartupTrigger.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlStartupTrigger.Name = "pnlStartupTrigger";
+            this.pnlStartupTrigger.Size = new System.Drawing.Size(856, 451);
+            this.pnlStartupTrigger.TabIndex = 10;
             // 
             // trvTrigger
             // 
@@ -605,38 +605,38 @@
             this.capStartupTrigger.Size = new System.Drawing.Size(856, 35);
             this.capStartupTrigger.TabIndex = 9;
             // 
-            // panel6
+            // pnlStartup
             // 
-            this.panel6.AutoSize = true;
-            this.panel6.Controls.Add(this.tableLayoutPanel7);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(0, 35);
-            this.panel6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel6.Name = "panel6";
-            this.panel6.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel6.Size = new System.Drawing.Size(856, 76);
-            this.panel6.TabIndex = 8;
+            this.pnlStartup.AutoSize = true;
+            this.pnlStartup.Controls.Add(this.tableStartup);
+            this.pnlStartup.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlStartup.Location = new System.Drawing.Point(0, 35);
+            this.pnlStartup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlStartup.Name = "pnlStartup";
+            this.pnlStartup.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlStartup.Size = new System.Drawing.Size(856, 76);
+            this.pnlStartup.TabIndex = 8;
             // 
-            // tableLayoutPanel7
+            // tableStartup
             // 
-            this.tableLayoutPanel7.AutoSize = true;
-            this.tableLayoutPanel7.ColumnCount = 2;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Controls.Add(this.lblWarnAdmin, 0, 1);
-            this.tableLayoutPanel7.Controls.Add(this.lblWelcome, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.chkWarnAdmin, 1, 1);
-            this.tableLayoutPanel7.Controls.Add(this.chkWelcome, 1, 0);
-            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-            this.tableLayoutPanel7.RowCount = 3;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(856, 58);
-            this.tableLayoutPanel7.TabIndex = 8;
+            this.tableStartup.AutoSize = true;
+            this.tableStartup.ColumnCount = 2;
+            this.tableStartup.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableStartup.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableStartup.Controls.Add(this.lblWarnAdmin, 0, 1);
+            this.tableStartup.Controls.Add(this.lblWelcome, 0, 0);
+            this.tableStartup.Controls.Add(this.chkWarnAdmin, 1, 1);
+            this.tableStartup.Controls.Add(this.chkWelcome, 1, 0);
+            this.tableStartup.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableStartup.Location = new System.Drawing.Point(0, 9);
+            this.tableStartup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableStartup.Name = "tableStartup";
+            this.tableStartup.RowCount = 3;
+            this.tableStartup.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableStartup.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableStartup.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableStartup.Size = new System.Drawing.Size(856, 58);
+            this.tableStartup.TabIndex = 8;
             // 
             // lblWarnAdmin
             // 
@@ -711,9 +711,9 @@
             // 
             // tabUserInterface
             // 
-            this.tabUserInterface.Controls.Add(this.panel32);
+            this.tabUserInterface.Controls.Add(this.pnlUiOptions);
             this.tabUserInterface.Controls.Add(this.capBehavior);
-            this.tabUserInterface.Controls.Add(this.panel31);
+            this.tabUserInterface.Controls.Add(this.pnlUiFont);
             this.tabUserInterface.Controls.Add(this.capAppearance);
             this.tabUserInterface.Location = new System.Drawing.Point(4, 28);
             this.tabUserInterface.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -723,43 +723,43 @@
             this.tabUserInterface.Text = "User interface";
             this.tabUserInterface.UseVisualStyleBackColor = true;
             // 
-            // panel32
+            // pnlUiOptions
             // 
-            this.panel32.AutoSize = true;
-            this.panel32.Controls.Add(this.tableLayoutPanel12);
-            this.panel32.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel32.Location = new System.Drawing.Point(0, 150);
-            this.panel32.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel32.Name = "panel32";
-            this.panel32.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel32.Size = new System.Drawing.Size(856, 125);
-            this.panel32.TabIndex = 10;
+            this.pnlUiOptions.AutoSize = true;
+            this.pnlUiOptions.Controls.Add(this.tableUiOptions);
+            this.pnlUiOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlUiOptions.Location = new System.Drawing.Point(0, 150);
+            this.pnlUiOptions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlUiOptions.Name = "pnlUiOptions";
+            this.pnlUiOptions.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
+            this.pnlUiOptions.Size = new System.Drawing.Size(856, 125);
+            this.pnlUiOptions.TabIndex = 10;
             // 
-            // tableLayoutPanel12
+            // tableUiOptions
             // 
-            this.tableLayoutPanel12.AutoSize = true;
-            this.tableLayoutPanel12.ColumnCount = 2;
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel12.Controls.Add(this.lblDevMode, 0, 3);
-            this.tableLayoutPanel12.Controls.Add(this.lblAutoComplete, 0, 2);
-            this.tableLayoutPanel12.Controls.Add(this.lblActionAsync, 0, 1);
-            this.tableLayoutPanel12.Controls.Add(this.lblTestIgnoreConditions, 0, 0);
-            this.tableLayoutPanel12.Controls.Add(this.cbxAutoComplete, 1, 2);
-            this.tableLayoutPanel12.Controls.Add(this.cbxDevMode, 1, 3);
-            this.tableLayoutPanel12.Controls.Add(this.cbxActionAsync, 1, 1);
-            this.tableLayoutPanel12.Controls.Add(this.cbxTestIgnoreConditions, 1, 0);
-            this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel12.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel12.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
-            this.tableLayoutPanel12.RowCount = 4;
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(856, 116);
-            this.tableLayoutPanel12.TabIndex = 2;
+            this.tableUiOptions.AutoSize = true;
+            this.tableUiOptions.ColumnCount = 2;
+            this.tableUiOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableUiOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableUiOptions.Controls.Add(this.lblDevMode, 0, 3);
+            this.tableUiOptions.Controls.Add(this.lblAutoComplete, 0, 2);
+            this.tableUiOptions.Controls.Add(this.lblActionAsync, 0, 1);
+            this.tableUiOptions.Controls.Add(this.lblTestIgnoreConditions, 0, 0);
+            this.tableUiOptions.Controls.Add(this.cbxAutoComplete, 1, 2);
+            this.tableUiOptions.Controls.Add(this.cbxDevMode, 1, 3);
+            this.tableUiOptions.Controls.Add(this.cbxActionAsync, 1, 1);
+            this.tableUiOptions.Controls.Add(this.cbxTestIgnoreConditions, 1, 0);
+            this.tableUiOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableUiOptions.Location = new System.Drawing.Point(0, 9);
+            this.tableUiOptions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableUiOptions.Name = "tableUiOptions";
+            this.tableUiOptions.RowCount = 4;
+            this.tableUiOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUiOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUiOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUiOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUiOptions.Size = new System.Drawing.Size(856, 116);
+            this.tableUiOptions.TabIndex = 2;
             // 
             // lblDevMode
             // 
@@ -887,40 +887,40 @@
             this.capBehavior.Size = new System.Drawing.Size(856, 35);
             this.capBehavior.TabIndex = 9;
             // 
-            // panel31
+            // pnlUiFont
             // 
-            this.panel31.AutoSize = true;
-            this.panel31.Controls.Add(this.tableLayoutPanel6);
-            this.panel31.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel31.Location = new System.Drawing.Point(0, 35);
-            this.panel31.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel31.Name = "panel31";
-            this.panel31.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel31.Size = new System.Drawing.Size(856, 80);
-            this.panel31.TabIndex = 8;
+            this.pnlUiFont.AutoSize = true;
+            this.pnlUiFont.Controls.Add(this.tableUiFont);
+            this.pnlUiFont.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlUiFont.Location = new System.Drawing.Point(0, 35);
+            this.pnlUiFont.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlUiFont.Name = "pnlUiFont";
+            this.pnlUiFont.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlUiFont.Size = new System.Drawing.Size(856, 80);
+            this.pnlUiFont.TabIndex = 8;
             // 
-            // tableLayoutPanel6
+            // tableUiFont
             // 
-            this.tableLayoutPanel6.AutoSize = true;
-            this.tableLayoutPanel6.ColumnCount = 3;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67F));
-            this.tableLayoutPanel6.Controls.Add(this.lblUiFontDefault, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.cbxUiFontDefault, 1, 0);
-            this.tableLayoutPanel6.Controls.Add(this.lblUiFont, 0, 1);
-            this.tableLayoutPanel6.Controls.Add(this.txtUiFontDesc, 1, 1);
-            this.tableLayoutPanel6.Controls.Add(this.btnUiFont, 2, 1);
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 2;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(856, 62);
-            this.tableLayoutPanel6.TabIndex = 2;
+            this.tableUiFont.AutoSize = true;
+            this.tableUiFont.ColumnCount = 3;
+            this.tableUiFont.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableUiFont.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableUiFont.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67F));
+            this.tableUiFont.Controls.Add(this.lblUiFontDefault, 0, 0);
+            this.tableUiFont.Controls.Add(this.cbxUiFontDefault, 1, 0);
+            this.tableUiFont.Controls.Add(this.lblUiFont, 0, 1);
+            this.tableUiFont.Controls.Add(this.txtUiFontDesc, 1, 1);
+            this.tableUiFont.Controls.Add(this.btnUiFont, 2, 1);
+            this.tableUiFont.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableUiFont.Location = new System.Drawing.Point(0, 9);
+            this.tableUiFont.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableUiFont.Name = "tableUiFont";
+            this.tableUiFont.RowCount = 2;
+            this.tableUiFont.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUiFont.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUiFont.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableUiFont.Size = new System.Drawing.Size(856, 62);
+            this.tableUiFont.TabIndex = 2;
             // 
             // lblUiFontDefault
             // 
@@ -940,7 +940,7 @@
             // 
             this.cbxUiFontDefault.AutoSize = true;
             this.cbxUiFontDefault.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel6.SetColumnSpan(this.cbxUiFontDefault, 2);
+            this.tableUiFont.SetColumnSpan(this.cbxUiFontDefault, 2);
             this.cbxUiFontDefault.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbxUiFontDefault.Location = new System.Drawing.Point(212, 3);
             this.cbxUiFontDefault.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -1052,7 +1052,7 @@
             this.tableAudioTts.Controls.Add(this.lblTtsVolP, 2, 1);
             this.tableAudioTts.Controls.Add(this.trbTtsVolume, 1, 1);
             this.tableAudioTts.Controls.Add(this.lblTtsVolume, 0, 1);
-            this.tableAudioTts.Controls.Add(this.panel21, 1, 3);
+            this.tableAudioTts.Controls.Add(this.pnlTtsWarnings, 1, 3);
             this.tableAudioTts.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableAudioTts.Location = new System.Drawing.Point(0, 9);
             this.tableAudioTts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -1247,18 +1247,18 @@
             this.lblTtsVolume.Text = "Volume";
             this.lblTtsVolume.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // panel21
+            // pnlTtsWarnings
             // 
-            this.panel21.AutoSize = true;
-            this.tableAudioTts.SetColumnSpan(this.panel21, 2);
-            this.panel21.Controls.Add(this.lblExternalTtsWarn);
-            this.panel21.Controls.Add(this.lblActTtsWarn);
-            this.panel21.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel21.Location = new System.Drawing.Point(212, 94);
-            this.panel21.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel21.Name = "panel21";
-            this.panel21.Size = new System.Drawing.Size(619, 138);
-            this.panel21.TabIndex = 30;
+            this.pnlTtsWarnings.AutoSize = true;
+            this.tableAudioTts.SetColumnSpan(this.pnlTtsWarnings, 2);
+            this.pnlTtsWarnings.Controls.Add(this.lblExternalTtsWarn);
+            this.pnlTtsWarnings.Controls.Add(this.lblActTtsWarn);
+            this.pnlTtsWarnings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTtsWarnings.Location = new System.Drawing.Point(212, 94);
+            this.pnlTtsWarnings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlTtsWarnings.Name = "pnlTtsWarnings";
+            this.pnlTtsWarnings.Size = new System.Drawing.Size(619, 138);
+            this.pnlTtsWarnings.TabIndex = 30;
             // 
             // lblExternalTtsWarn
             // 
@@ -1332,7 +1332,7 @@
             this.tableAudioSound.Controls.Add(this.lblSoundRepetition, 0, 2);
             this.tableAudioSound.Controls.Add(this.txtSoundPathArgs, 1, 5);
             this.tableAudioSound.Controls.Add(this.lblSoundPathArgs, 0, 5);
-            this.tableAudioSound.Controls.Add(this.panel30, 1, 3);
+            this.tableAudioSound.Controls.Add(this.pnlExternalSoundWarning, 1, 3);
             this.tableAudioSound.Controls.Add(this.btnSoundPath, 2, 4);
             this.tableAudioSound.Controls.Add(this.lblSoundPath, 0, 4);
             this.tableAudioSound.Controls.Add(this.lblSoundMethod, 0, 0);
@@ -1425,17 +1425,17 @@
             this.lblSoundPathArgs.Text = "Arguments";
             this.lblSoundPathArgs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // panel30
+            // pnlExternalSoundWarning
             // 
-            this.panel30.AutoSize = true;
-            this.tableAudioSound.SetColumnSpan(this.panel30, 2);
-            this.panel30.Controls.Add(this.lblExternalSoundWarn);
-            this.panel30.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel30.Location = new System.Drawing.Point(212, 94);
-            this.panel30.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel30.Name = "panel30";
-            this.panel30.Size = new System.Drawing.Size(619, 69);
-            this.panel30.TabIndex = 26;
+            this.pnlExternalSoundWarning.AutoSize = true;
+            this.tableAudioSound.SetColumnSpan(this.pnlExternalSoundWarning, 2);
+            this.pnlExternalSoundWarning.Controls.Add(this.lblExternalSoundWarn);
+            this.pnlExternalSoundWarning.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlExternalSoundWarning.Location = new System.Drawing.Point(212, 94);
+            this.pnlExternalSoundWarning.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlExternalSoundWarning.Name = "pnlExternalSoundWarning";
+            this.pnlExternalSoundWarning.Size = new System.Drawing.Size(619, 69);
+            this.pnlExternalSoundWarning.TabIndex = 26;
             // 
             // lblExternalSoundWarn
             // 
@@ -1726,7 +1726,7 @@
             this.tabLogging.AutoScroll = true;
             this.tabLogging.Controls.Add(this.panelLogLimits);
             this.tabLogging.Controls.Add(this.capLogLimits);
-            this.tabLogging.Controls.Add(this.panel23);
+            this.tabLogging.Controls.Add(this.pnlLoggingGeneral);
             this.tabLogging.Controls.Add(this.capLogging);
             this.tabLogging.Location = new System.Drawing.Point(4, 28);
             this.tabLogging.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -1736,41 +1736,41 @@
             this.tabLogging.Text = "Logging";
             this.tabLogging.UseVisualStyleBackColor = true;
             // 
-            // panel23
+            // pnlLoggingGeneral
             // 
-            this.panel23.AutoSize = true;
-            this.panel23.Controls.Add(this.tableLayoutPanel4);
-            this.panel23.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel23.Location = new System.Drawing.Point(0, 35);
-            this.panel23.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel23.Name = "panel23";
-            this.panel23.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel23.Size = new System.Drawing.Size(856, 96);
-            this.panel23.TabIndex = 10;
+            this.pnlLoggingGeneral.AutoSize = true;
+            this.pnlLoggingGeneral.Controls.Add(this.tableLoggingGeneral);
+            this.pnlLoggingGeneral.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlLoggingGeneral.Location = new System.Drawing.Point(0, 35);
+            this.pnlLoggingGeneral.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlLoggingGeneral.Name = "pnlLoggingGeneral";
+            this.pnlLoggingGeneral.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
+            this.pnlLoggingGeneral.Size = new System.Drawing.Size(856, 96);
+            this.pnlLoggingGeneral.TabIndex = 10;
             // 
-            // tableLayoutPanel4
+            // tableLoggingGeneral
             // 
-            this.tableLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel4.ColumnCount = 2;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.lblLogNormalEvents, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.lblLogVariableExpansions, 0, 3);
-            this.tableLayoutPanel4.Controls.Add(this.chkLogVariableExpansions, 1, 3);
-            this.tableLayoutPanel4.Controls.Add(this.chkLogNormalEvents, 1, 1);
-            this.tableLayoutPanel4.Controls.Add(this.lblLoggingLevel, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.cbxLoggingLevel, 1, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 4;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(856, 87);
-            this.tableLayoutPanel4.TabIndex = 1;
+            this.tableLoggingGeneral.AutoSize = true;
+            this.tableLoggingGeneral.ColumnCount = 2;
+            this.tableLoggingGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLoggingGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLoggingGeneral.Controls.Add(this.lblLogNormalEvents, 0, 1);
+            this.tableLoggingGeneral.Controls.Add(this.lblLogVariableExpansions, 0, 3);
+            this.tableLoggingGeneral.Controls.Add(this.chkLogVariableExpansions, 1, 3);
+            this.tableLoggingGeneral.Controls.Add(this.chkLogNormalEvents, 1, 1);
+            this.tableLoggingGeneral.Controls.Add(this.lblLoggingLevel, 0, 0);
+            this.tableLoggingGeneral.Controls.Add(this.cbxLoggingLevel, 1, 0);
+            this.tableLoggingGeneral.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLoggingGeneral.Location = new System.Drawing.Point(0, 9);
+            this.tableLoggingGeneral.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableLoggingGeneral.Name = "tableLoggingGeneral";
+            this.tableLoggingGeneral.RowCount = 4;
+            this.tableLoggingGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLoggingGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLoggingGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLoggingGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLoggingGeneral.Size = new System.Drawing.Size(856, 87);
+            this.tableLoggingGeneral.TabIndex = 1;
             // 
             // lblLogNormalEvents
             // 
@@ -2173,7 +2173,7 @@
             // tabShortcuts
             // 
             this.tabShortcuts.AutoScroll = true;
-            this.tabShortcuts.Controls.Add(this.panel11);
+            this.tabShortcuts.Controls.Add(this.pnlShortcutTemplates);
             this.tabShortcuts.Controls.Add(this.capExpressions);
             this.tabShortcuts.Location = new System.Drawing.Point(4, 28);
             this.tabShortcuts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -2183,17 +2183,17 @@
             this.tabShortcuts.Text = "Shortcuts";
             this.tabShortcuts.UseVisualStyleBackColor = true;
             // 
-            // panel11
+            // pnlShortcutTemplates
             // 
-            this.panel11.AutoSize = true;
-            this.panel11.Controls.Add(this.tableLayoutPanelShortCutExpression);
-            this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel11.Location = new System.Drawing.Point(0, 35);
-            this.panel11.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel11.Name = "panel11";
-            this.panel11.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel11.Size = new System.Drawing.Size(856, 96);
-            this.panel11.TabIndex = 9;
+            this.pnlShortcutTemplates.AutoSize = true;
+            this.pnlShortcutTemplates.Controls.Add(this.tableLayoutPanelShortCutExpression);
+            this.pnlShortcutTemplates.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlShortcutTemplates.Location = new System.Drawing.Point(0, 35);
+            this.pnlShortcutTemplates.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlShortcutTemplates.Name = "pnlShortcutTemplates";
+            this.pnlShortcutTemplates.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
+            this.pnlShortcutTemplates.Size = new System.Drawing.Size(856, 96);
+            this.pnlShortcutTemplates.TabIndex = 9;
             // 
             // tableLayoutPanelShortCutExpression
             // 
@@ -2320,15 +2320,15 @@
             // tabCaching
             // 
             this.tabCaching.AutoScroll = true;
-            this.tabCaching.Controls.Add(this.panel17);
+            this.tabCaching.Controls.Add(this.pnlCacheFile);
             this.tabCaching.Controls.Add(this.capDownloads);
-            this.tabCaching.Controls.Add(this.panel15);
+            this.tabCaching.Controls.Add(this.pnlCacheRepo);
             this.tabCaching.Controls.Add(this.capRepoBackups);
-            this.tabCaching.Controls.Add(this.panel14);
+            this.tabCaching.Controls.Add(this.pnlCacheJson);
             this.tabCaching.Controls.Add(this.capJason);
-            this.tabCaching.Controls.Add(this.panel13);
+            this.tabCaching.Controls.Add(this.pnlCacheSound);
             this.tabCaching.Controls.Add(this.capSoundFiles);
-            this.tabCaching.Controls.Add(this.panel16);
+            this.tabCaching.Controls.Add(this.pnlCacheImage);
             this.tabCaching.Controls.Add(this.capImageFiles);
             this.tabCaching.Location = new System.Drawing.Point(4, 28);
             this.tabCaching.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -2338,17 +2338,17 @@
             this.tabCaching.Text = "Caching";
             this.tabCaching.UseVisualStyleBackColor = true;
             // 
-            // panel17
+            // pnlCacheFile
             // 
-            this.panel17.AutoSize = true;
-            this.panel17.Controls.Add(this.tableLayoutPanelDownloads);
-            this.panel17.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel17.Location = new System.Drawing.Point(0, 783);
-            this.panel17.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel17.Name = "panel17";
-            this.panel17.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel17.Size = new System.Drawing.Size(835, 143);
-            this.panel17.TabIndex = 27;
+            this.pnlCacheFile.AutoSize = true;
+            this.pnlCacheFile.Controls.Add(this.tableLayoutPanelDownloads);
+            this.pnlCacheFile.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCacheFile.Location = new System.Drawing.Point(0, 783);
+            this.pnlCacheFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlCacheFile.Name = "pnlCacheFile";
+            this.pnlCacheFile.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
+            this.pnlCacheFile.Size = new System.Drawing.Size(835, 143);
+            this.pnlCacheFile.TabIndex = 27;
             // 
             // tableLayoutPanelDownloads
             // 
@@ -2516,17 +2516,17 @@
             this.capDownloads.Size = new System.Drawing.Size(835, 35);
             this.capDownloads.TabIndex = 26;
             // 
-            // panel15
+            // pnlCacheRepo
             // 
-            this.panel15.AutoSize = true;
-            this.panel15.Controls.Add(this.tableLayoutPanelRepo);
-            this.panel15.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel15.Location = new System.Drawing.Point(0, 596);
-            this.panel15.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel15.Name = "panel15";
-            this.panel15.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel15.Size = new System.Drawing.Size(835, 152);
-            this.panel15.TabIndex = 25;
+            this.pnlCacheRepo.AutoSize = true;
+            this.pnlCacheRepo.Controls.Add(this.tableLayoutPanelRepo);
+            this.pnlCacheRepo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCacheRepo.Location = new System.Drawing.Point(0, 596);
+            this.pnlCacheRepo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlCacheRepo.Name = "pnlCacheRepo";
+            this.pnlCacheRepo.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlCacheRepo.Size = new System.Drawing.Size(835, 152);
+            this.pnlCacheRepo.TabIndex = 25;
             // 
             // tableLayoutPanelRepo
             // 
@@ -2694,17 +2694,17 @@
             this.capRepoBackups.Size = new System.Drawing.Size(835, 35);
             this.capRepoBackups.TabIndex = 24;
             // 
-            // panel14
+            // pnlCacheJson
             // 
-            this.panel14.AutoSize = true;
-            this.panel14.Controls.Add(this.tableLayoutPanelJason);
-            this.panel14.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel14.Location = new System.Drawing.Point(0, 409);
-            this.panel14.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel14.Name = "panel14";
-            this.panel14.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel14.Size = new System.Drawing.Size(835, 152);
-            this.panel14.TabIndex = 23;
+            this.pnlCacheJson.AutoSize = true;
+            this.pnlCacheJson.Controls.Add(this.tableLayoutPanelJason);
+            this.pnlCacheJson.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCacheJson.Location = new System.Drawing.Point(0, 409);
+            this.pnlCacheJson.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlCacheJson.Name = "pnlCacheJson";
+            this.pnlCacheJson.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlCacheJson.Size = new System.Drawing.Size(835, 152);
+            this.pnlCacheJson.TabIndex = 23;
             // 
             // tableLayoutPanelJason
             // 
@@ -2873,17 +2873,17 @@
             this.capJason.Size = new System.Drawing.Size(835, 35);
             this.capJason.TabIndex = 22;
             // 
-            // panel13
+            // pnlCacheSound
             // 
-            this.panel13.AutoSize = true;
-            this.panel13.Controls.Add(this.tableLayoutPanelSound);
-            this.panel13.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel13.Location = new System.Drawing.Point(0, 222);
-            this.panel13.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel13.Name = "panel13";
-            this.panel13.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel13.Size = new System.Drawing.Size(835, 152);
-            this.panel13.TabIndex = 21;
+            this.pnlCacheSound.AutoSize = true;
+            this.pnlCacheSound.Controls.Add(this.tableLayoutPanelSound);
+            this.pnlCacheSound.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCacheSound.Location = new System.Drawing.Point(0, 222);
+            this.pnlCacheSound.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlCacheSound.Name = "pnlCacheSound";
+            this.pnlCacheSound.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlCacheSound.Size = new System.Drawing.Size(835, 152);
+            this.pnlCacheSound.TabIndex = 21;
             // 
             // tableLayoutPanelSound
             // 
@@ -3051,17 +3051,17 @@
             this.capSoundFiles.Size = new System.Drawing.Size(835, 35);
             this.capSoundFiles.TabIndex = 20;
             // 
-            // panel16
+            // pnlCacheImage
             // 
-            this.panel16.AutoSize = true;
-            this.panel16.Controls.Add(this.tableLayoutPanelImages);
-            this.panel16.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel16.Location = new System.Drawing.Point(0, 35);
-            this.panel16.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel16.Name = "panel16";
-            this.panel16.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel16.Size = new System.Drawing.Size(835, 152);
-            this.panel16.TabIndex = 19;
+            this.pnlCacheImage.AutoSize = true;
+            this.pnlCacheImage.Controls.Add(this.tableLayoutPanelImages);
+            this.pnlCacheImage.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCacheImage.Location = new System.Drawing.Point(0, 35);
+            this.pnlCacheImage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlCacheImage.Name = "pnlCacheImage";
+            this.pnlCacheImage.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlCacheImage.Size = new System.Drawing.Size(835, 152);
+            this.pnlCacheImage.TabIndex = 19;
             // 
             // tableLayoutPanelImages
             // 
@@ -3232,7 +3232,7 @@
             // tabUpdates
             // 
             this.tabUpdates.AutoScroll = true;
-            this.tabUpdates.Controls.Add(this.panel10);
+            this.tabUpdates.Controls.Add(this.pnlUpdateChannel);
             this.tabUpdates.Controls.Add(this.capUpdateChannel);
             this.tabUpdates.Location = new System.Drawing.Point(4, 28);
             this.tabUpdates.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -3242,47 +3242,47 @@
             this.tabUpdates.Text = "Updates";
             this.tabUpdates.UseVisualStyleBackColor = true;
             // 
-            // panel10
+            // pnlUpdateChannel
             // 
-            this.panel10.AutoSize = true;
-            this.panel10.Controls.Add(this.tableLayoutPanel2);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel10.Location = new System.Drawing.Point(0, 35);
-            this.panel10.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel10.Name = "panel10";
-            this.panel10.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel10.Size = new System.Drawing.Size(856, 526);
-            this.panel10.TabIndex = 20;
+            this.pnlUpdateChannel.AutoSize = true;
+            this.pnlUpdateChannel.Controls.Add(this.tableUpdateChannel);
+            this.pnlUpdateChannel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlUpdateChannel.Location = new System.Drawing.Point(0, 35);
+            this.pnlUpdateChannel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlUpdateChannel.Name = "pnlUpdateChannel";
+            this.pnlUpdateChannel.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
+            this.pnlUpdateChannel.Size = new System.Drawing.Size(856, 526);
+            this.pnlUpdateChannel.TabIndex = 20;
             // 
-            // tableLayoutPanel2
+            // tableUpdateChannel
             // 
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.chkUpdates, 1, 3);
-            this.tableLayoutPanel2.Controls.Add(this.lblUpdates, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.nudUpdateInterval, 1, 4);
-            this.tableLayoutPanel2.Controls.Add(this.lblUpdateInterval, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.lblExternalUpdateWarn, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.txtUpdateChannelUrl, 1, 2);
-            this.tableLayoutPanel2.Controls.Add(this.cbxUpdateMethod, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lblUpdateChannelUrl, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.lblUpdateMethod, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btnUpdateCheck, 1, 5);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 6;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(856, 517);
-            this.tableLayoutPanel2.TabIndex = 1;
+            this.tableUpdateChannel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableUpdateChannel.ColumnCount = 2;
+            this.tableUpdateChannel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableUpdateChannel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableUpdateChannel.Controls.Add(this.chkUpdates, 1, 3);
+            this.tableUpdateChannel.Controls.Add(this.lblUpdates, 0, 3);
+            this.tableUpdateChannel.Controls.Add(this.nudUpdateInterval, 1, 4);
+            this.tableUpdateChannel.Controls.Add(this.lblUpdateInterval, 0, 4);
+            this.tableUpdateChannel.Controls.Add(this.lblExternalUpdateWarn, 1, 1);
+            this.tableUpdateChannel.Controls.Add(this.txtUpdateChannelUrl, 1, 2);
+            this.tableUpdateChannel.Controls.Add(this.cbxUpdateMethod, 1, 0);
+            this.tableUpdateChannel.Controls.Add(this.lblUpdateChannelUrl, 0, 2);
+            this.tableUpdateChannel.Controls.Add(this.lblUpdateMethod, 0, 0);
+            this.tableUpdateChannel.Controls.Add(this.btnUpdateCheck, 1, 5);
+            this.tableUpdateChannel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableUpdateChannel.Location = new System.Drawing.Point(0, 9);
+            this.tableUpdateChannel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableUpdateChannel.Name = "tableUpdateChannel";
+            this.tableUpdateChannel.RowCount = 6;
+            this.tableUpdateChannel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUpdateChannel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUpdateChannel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUpdateChannel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUpdateChannel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUpdateChannel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableUpdateChannel.Size = new System.Drawing.Size(856, 517);
+            this.tableUpdateChannel.TabIndex = 1;
             // 
             // chkUpdates
             // 
@@ -3461,11 +3461,11 @@
             // tabEndpoint
             // 
             this.tabEndpoint.AutoScroll = true;
-            this.tabEndpoint.Controls.Add(this.panel7);
-            this.tabEndpoint.Controls.Add(this.prettyCaption3);
-            this.tabEndpoint.Controls.Add(this.panel28);
+            this.tabEndpoint.Controls.Add(this.pnlEndpointHistory);
+            this.tabEndpoint.Controls.Add(this.capEndpointHistory);
+            this.tabEndpoint.Controls.Add(this.pnlEndpointSettings);
             this.tabEndpoint.Controls.Add(this.capEndpointSettings);
-            this.tabEndpoint.Controls.Add(this.panel27);
+            this.tabEndpoint.Controls.Add(this.pnlEndpointStatus);
             this.tabEndpoint.Controls.Add(this.capEndpointStatus);
             this.tabEndpoint.Location = new System.Drawing.Point(4, 28);
             this.tabEndpoint.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -3475,18 +3475,18 @@
             this.tabEndpoint.Text = "Endpoint";
             this.tabEndpoint.UseVisualStyleBackColor = true;
             // 
-            // panel7
+            // pnlEndpointHistory
             // 
-            this.panel7.AutoSize = true;
-            this.panel7.Controls.Add(this.dgvEndpointHistory);
-            this.panel7.Controls.Add(this.tlsEndpointHistory);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel7.Location = new System.Drawing.Point(0, 318);
-            this.panel7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel7.MinimumSize = new System.Drawing.Size(0, 173);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(856, 279);
-            this.panel7.TabIndex = 26;
+            this.pnlEndpointHistory.AutoSize = true;
+            this.pnlEndpointHistory.Controls.Add(this.dgvEndpointHistory);
+            this.pnlEndpointHistory.Controls.Add(this.tlsEndpointHistory);
+            this.pnlEndpointHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlEndpointHistory.Location = new System.Drawing.Point(0, 318);
+            this.pnlEndpointHistory.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlEndpointHistory.MinimumSize = new System.Drawing.Size(0, 173);
+            this.pnlEndpointHistory.Name = "pnlEndpointHistory";
+            this.pnlEndpointHistory.Size = new System.Drawing.Size(856, 279);
+            this.pnlEndpointHistory.TabIndex = 26;
             // 
             // dgvEndpointHistory
             // 
@@ -3496,8 +3496,8 @@
             this.dgvEndpointHistory.AllowUserToResizeRows = false;
             this.dgvEndpointHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvEndpointHistory.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column8,
-            this.Column9});
+            this.colEndpointHistoryTimestamp,
+            this.colEndpointHistoryData});
             this.dgvEndpointHistory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvEndpointHistory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvEndpointHistory.Location = new System.Drawing.Point(0, 39);
@@ -3512,22 +3512,22 @@
             this.dgvEndpointHistory.VirtualMode = true;
             this.dgvEndpointHistory.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dgvEndpointHistory_CellValueNeeded);
             // 
-            // Column8
+            // colEndpointHistoryTimestamp
             // 
-            this.Column8.Frozen = true;
-            this.Column8.HeaderText = "Timestamp";
-            this.Column8.MinimumWidth = 6;
-            this.Column8.Name = "Column8";
-            this.Column8.ReadOnly = true;
-            this.Column8.Width = 150;
+            this.colEndpointHistoryTimestamp.Frozen = true;
+            this.colEndpointHistoryTimestamp.HeaderText = "Timestamp";
+            this.colEndpointHistoryTimestamp.MinimumWidth = 6;
+            this.colEndpointHistoryTimestamp.Name = "colEndpointHistoryTimestamp";
+            this.colEndpointHistoryTimestamp.ReadOnly = true;
+            this.colEndpointHistoryTimestamp.Width = 150;
             // 
-            // Column9
+            // colEndpointHistoryData
             // 
-            this.Column9.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column9.HeaderText = "Data";
-            this.Column9.MinimumWidth = 6;
-            this.Column9.Name = "Column9";
-            this.Column9.ReadOnly = true;
+            this.colEndpointHistoryData.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colEndpointHistoryData.HeaderText = "Data";
+            this.colEndpointHistoryData.MinimumWidth = 6;
+            this.colEndpointHistoryData.Name = "colEndpointHistoryData";
+            this.colEndpointHistoryData.ReadOnly = true;
             // 
             // tlsEndpointHistory
             // 
@@ -3567,57 +3567,57 @@
             this.tlsEndpointHistoryCount.Size = new System.Drawing.Size(18, 32);
             this.tlsEndpointHistoryCount.Text = "0";
             // 
-            // prettyCaption3
+            // capEndpointHistory
             // 
-            this.prettyCaption3.Caption = "History";
-            this.prettyCaption3.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.prettyCaption3.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.prettyCaption3.Collapsed = false;
-            this.prettyCaption3.Collapsee = null;
-            this.prettyCaption3.Collapsible = false;
-            this.prettyCaption3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.prettyCaption3.Location = new System.Drawing.Point(0, 283);
-            this.prettyCaption3.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            this.prettyCaption3.Name = "prettyCaption3";
-            this.prettyCaption3.Size = new System.Drawing.Size(856, 35);
-            this.prettyCaption3.TabIndex = 25;
+            this.capEndpointHistory.Caption = "History";
+            this.capEndpointHistory.CaptionHighlightColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.capEndpointHistory.CaptionShadowColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.capEndpointHistory.Collapsed = false;
+            this.capEndpointHistory.Collapsee = null;
+            this.capEndpointHistory.Collapsible = false;
+            this.capEndpointHistory.Dock = System.Windows.Forms.DockStyle.Top;
+            this.capEndpointHistory.Location = new System.Drawing.Point(0, 283);
+            this.capEndpointHistory.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            this.capEndpointHistory.Name = "capEndpointHistory";
+            this.capEndpointHistory.Size = new System.Drawing.Size(856, 35);
+            this.capEndpointHistory.TabIndex = 25;
             // 
-            // panel28
+            // pnlEndpointSettings
             // 
-            this.panel28.AutoScroll = true;
-            this.panel28.AutoSize = true;
-            this.panel28.Controls.Add(this.tableLayoutPanel8);
-            this.panel28.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel28.Location = new System.Drawing.Point(0, 176);
-            this.panel28.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel28.Name = "panel28";
-            this.panel28.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel28.Size = new System.Drawing.Size(856, 107);
-            this.panel28.TabIndex = 24;
+            this.pnlEndpointSettings.AutoScroll = true;
+            this.pnlEndpointSettings.AutoSize = true;
+            this.pnlEndpointSettings.Controls.Add(this.tableEndpointSettings);
+            this.pnlEndpointSettings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlEndpointSettings.Location = new System.Drawing.Point(0, 176);
+            this.pnlEndpointSettings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlEndpointSettings.Name = "pnlEndpointSettings";
+            this.pnlEndpointSettings.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlEndpointSettings.Size = new System.Drawing.Size(856, 107);
+            this.pnlEndpointSettings.TabIndex = 24;
             // 
-            // tableLayoutPanel8
+            // tableEndpointSettings
             // 
-            this.tableLayoutPanel8.AutoSize = true;
-            this.tableLayoutPanel8.ColumnCount = 2;
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel8.Controls.Add(this.lblEndpointLog, 0, 2);
-            this.tableLayoutPanel8.Controls.Add(this.lblEndpointStartup, 0, 1);
-            this.tableLayoutPanel8.Controls.Add(this.chkEndpointStartup, 1, 1);
-            this.tableLayoutPanel8.Controls.Add(this.chkEndpointLog, 1, 2);
-            this.tableLayoutPanel8.Controls.Add(this.txtEndpoint, 1, 0);
-            this.tableLayoutPanel8.Controls.Add(this.lblEndpoint, 0, 0);
-            this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel8.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-            this.tableLayoutPanel8.RowCount = 3;
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(856, 89);
-            this.tableLayoutPanel8.TabIndex = 2;
+            this.tableEndpointSettings.AutoSize = true;
+            this.tableEndpointSettings.ColumnCount = 2;
+            this.tableEndpointSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableEndpointSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableEndpointSettings.Controls.Add(this.lblEndpointLog, 0, 2);
+            this.tableEndpointSettings.Controls.Add(this.lblEndpointStartup, 0, 1);
+            this.tableEndpointSettings.Controls.Add(this.chkEndpointStartup, 1, 1);
+            this.tableEndpointSettings.Controls.Add(this.chkEndpointLog, 1, 2);
+            this.tableEndpointSettings.Controls.Add(this.txtEndpoint, 1, 0);
+            this.tableEndpointSettings.Controls.Add(this.lblEndpoint, 0, 0);
+            this.tableEndpointSettings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableEndpointSettings.Location = new System.Drawing.Point(0, 9);
+            this.tableEndpointSettings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableEndpointSettings.Name = "tableEndpointSettings";
+            this.tableEndpointSettings.RowCount = 3;
+            this.tableEndpointSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableEndpointSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableEndpointSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableEndpointSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableEndpointSettings.Size = new System.Drawing.Size(856, 89);
+            this.tableEndpointSettings.TabIndex = 2;
             // 
             // lblEndpointLog
             // 
@@ -3713,36 +3713,36 @@
             this.capEndpointSettings.Size = new System.Drawing.Size(856, 35);
             this.capEndpointSettings.TabIndex = 23;
             // 
-            // panel27
+            // pnlEndpointStatus
             // 
-            this.panel27.AutoSize = true;
-            this.panel27.Controls.Add(this.tableLayoutPanel18);
-            this.panel27.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel27.Location = new System.Drawing.Point(0, 35);
-            this.panel27.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel27.Name = "panel27";
-            this.panel27.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel27.Size = new System.Drawing.Size(856, 106);
-            this.panel27.TabIndex = 22;
+            this.pnlEndpointStatus.AutoSize = true;
+            this.pnlEndpointStatus.Controls.Add(this.tableEndpointStatus);
+            this.pnlEndpointStatus.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlEndpointStatus.Location = new System.Drawing.Point(0, 35);
+            this.pnlEndpointStatus.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlEndpointStatus.Name = "pnlEndpointStatus";
+            this.pnlEndpointStatus.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlEndpointStatus.Size = new System.Drawing.Size(856, 106);
+            this.pnlEndpointStatus.TabIndex = 22;
             // 
-            // tableLayoutPanel18
+            // tableEndpointStatus
             // 
-            this.tableLayoutPanel18.AutoSize = true;
-            this.tableLayoutPanel18.ColumnCount = 2;
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel18.Controls.Add(this.btnEndpointStart, 1, 0);
-            this.tableLayoutPanel18.Controls.Add(this.btnEndpointStop, 1, 1);
-            this.tableLayoutPanel18.Controls.Add(this.txtEndpointStatus, 0, 0);
-            this.tableLayoutPanel18.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel18.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel18.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel18.Name = "tableLayoutPanel18";
-            this.tableLayoutPanel18.RowCount = 2;
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(856, 88);
-            this.tableLayoutPanel18.TabIndex = 1;
+            this.tableEndpointStatus.AutoSize = true;
+            this.tableEndpointStatus.ColumnCount = 2;
+            this.tableEndpointStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableEndpointStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableEndpointStatus.Controls.Add(this.btnEndpointStart, 1, 0);
+            this.tableEndpointStatus.Controls.Add(this.btnEndpointStop, 1, 1);
+            this.tableEndpointStatus.Controls.Add(this.txtEndpointStatus, 0, 0);
+            this.tableEndpointStatus.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableEndpointStatus.Location = new System.Drawing.Point(0, 9);
+            this.tableEndpointStatus.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableEndpointStatus.Name = "tableEndpointStatus";
+            this.tableEndpointStatus.RowCount = 2;
+            this.tableEndpointStatus.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableEndpointStatus.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableEndpointStatus.Size = new System.Drawing.Size(856, 88);
+            this.tableEndpointStatus.TabIndex = 1;
             // 
             // btnEndpointStart
             // 
@@ -3784,7 +3784,7 @@
             this.txtEndpointStatus.Multiline = true;
             this.txtEndpointStatus.Name = "txtEndpointStatus";
             this.txtEndpointStatus.ReadOnly = true;
-            this.tableLayoutPanel18.SetRowSpan(this.txtEndpointStatus, 2);
+            this.tableEndpointStatus.SetRowSpan(this.txtEndpointStatus, 2);
             this.txtEndpointStatus.Size = new System.Drawing.Size(733, 82);
             this.txtEndpointStatus.TabIndex = 2;
             // 
@@ -3932,9 +3932,9 @@
             this.dgvSubstitutions.AllowUserToResizeRows = false;
             this.dgvSubstitutions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSubstitutions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3});
+            this.colSubSearchFor,
+            this.colSubReplaceWith,
+            this.colSubScope});
             this.dgvSubstitutions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvSubstitutions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvSubstitutions.Location = new System.Drawing.Point(0, 39);
@@ -3955,32 +3955,32 @@
             this.dgvSubstitutions.SelectionChanged += new System.EventHandler(this.dgvSubstitutions_SelectionChanged);
             this.dgvSubstitutions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvSubstitutions_KeyDown);
             // 
-            // Column1
+            // colSubSearchFor
             // 
-            this.Column1.HeaderText = "Search for";
-            this.Column1.MinimumWidth = 6;
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column1.Width = 150;
+            this.colSubSearchFor.HeaderText = "Search for";
+            this.colSubSearchFor.MinimumWidth = 6;
+            this.colSubSearchFor.Name = "colSubSearchFor";
+            this.colSubSearchFor.ReadOnly = true;
+            this.colSubSearchFor.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colSubSearchFor.Width = 150;
             // 
-            // Column2
+            // colSubReplaceWith
             // 
-            this.Column2.HeaderText = "Replace with";
-            this.Column2.MinimumWidth = 6;
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column2.Width = 150;
+            this.colSubReplaceWith.HeaderText = "Replace with";
+            this.colSubReplaceWith.MinimumWidth = 6;
+            this.colSubReplaceWith.Name = "colSubReplaceWith";
+            this.colSubReplaceWith.ReadOnly = true;
+            this.colSubReplaceWith.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colSubReplaceWith.Width = 150;
             // 
-            // Column3
+            // colSubScope
             // 
-            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column3.HeaderText = "Scope";
-            this.Column3.MinimumWidth = 6;
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colSubScope.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colSubScope.HeaderText = "Scope";
+            this.colSubScope.MinimumWidth = 6;
+            this.colSubScope.Name = "colSubScope";
+            this.colSubScope.ReadOnly = true;
+            this.colSubScope.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // tlsSubstitutions
             // 
@@ -4053,7 +4053,7 @@
             // 
             // tabFFXIV
             // 
-            this.tabFFXIV.Controls.Add(this.panel24);
+            this.tabFFXIV.Controls.Add(this.pnlFfxivLogging);
             this.tabFFXIV.Controls.Add(this.capFfxivLogging);
             this.tabFFXIV.Location = new System.Drawing.Point(4, 25);
             this.tabFFXIV.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -4064,35 +4064,35 @@
             this.tabFFXIV.Text = "Final Fantasy XIV";
             this.tabFFXIV.UseVisualStyleBackColor = true;
             // 
-            // panel24
+            // pnlFfxivLogging
             // 
-            this.panel24.AutoSize = true;
-            this.panel24.Controls.Add(this.tableLayoutPanel9);
-            this.panel24.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel24.Location = new System.Drawing.Point(11, 44);
-            this.panel24.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel24.Name = "panel24";
-            this.panel24.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel24.Size = new System.Drawing.Size(826, 47);
-            this.panel24.TabIndex = 21;
+            this.pnlFfxivLogging.AutoSize = true;
+            this.pnlFfxivLogging.Controls.Add(this.tableFfxivLogging);
+            this.pnlFfxivLogging.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlFfxivLogging.Location = new System.Drawing.Point(11, 44);
+            this.pnlFfxivLogging.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlFfxivLogging.Name = "pnlFfxivLogging";
+            this.pnlFfxivLogging.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlFfxivLogging.Size = new System.Drawing.Size(826, 47);
+            this.pnlFfxivLogging.TabIndex = 21;
             // 
-            // tableLayoutPanel9
+            // tableFfxivLogging
             // 
-            this.tableLayoutPanel9.AutoSize = true;
-            this.tableLayoutPanel9.ColumnCount = 2;
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel9.Controls.Add(this.lblFfxivLogNetwork, 0, 1);
-            this.tableLayoutPanel9.Controls.Add(this.chkFfxivLogNetwork, 1, 1);
-            this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-            this.tableLayoutPanel9.RowCount = 2;
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(826, 29);
-            this.tableLayoutPanel9.TabIndex = 1;
+            this.tableFfxivLogging.AutoSize = true;
+            this.tableFfxivLogging.ColumnCount = 2;
+            this.tableFfxivLogging.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableFfxivLogging.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableFfxivLogging.Controls.Add(this.lblFfxivLogNetwork, 0, 1);
+            this.tableFfxivLogging.Controls.Add(this.chkFfxivLogNetwork, 1, 1);
+            this.tableFfxivLogging.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableFfxivLogging.Location = new System.Drawing.Point(0, 9);
+            this.tableFfxivLogging.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableFfxivLogging.Name = "tableFfxivLogging";
+            this.tableFfxivLogging.RowCount = 2;
+            this.tableFfxivLogging.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableFfxivLogging.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableFfxivLogging.Size = new System.Drawing.Size(826, 29);
+            this.tableFfxivLogging.TabIndex = 1;
             // 
             // lblFfxivLogNetwork
             // 
@@ -4140,7 +4140,7 @@
             // tabSecurity
             // 
             this.tabSecurity.AutoScroll = true;
-            this.tabSecurity.Controls.Add(this.panel19);
+            this.tabSecurity.Controls.Add(this.pnlScriptingAccess);
             this.tabSecurity.Controls.Add(this.capScripting);
             this.tabSecurity.Location = new System.Drawing.Point(4, 28);
             this.tabSecurity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -4150,20 +4150,20 @@
             this.tabSecurity.Text = "Security";
             this.tabSecurity.UseVisualStyleBackColor = true;
             // 
-            // panel19
+            // pnlScriptingAccess
             // 
-            this.panel19.Controls.Add(this.dgvAdditionalFeatures);
-            this.panel19.Controls.Add(this.panel8);
-            this.panel19.Controls.Add(this.dgvApiAccess);
-            this.panel19.Controls.Add(this.panel18);
-            this.panel19.Controls.Add(this.btnUnlockSecurity);
-            this.panel19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel19.Location = new System.Drawing.Point(0, 35);
-            this.panel19.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel19.Name = "panel19";
-            this.panel19.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel19.Size = new System.Drawing.Size(856, 562);
-            this.panel19.TabIndex = 10;
+            this.pnlScriptingAccess.Controls.Add(this.dgvAdditionalFeatures);
+            this.pnlScriptingAccess.Controls.Add(this.pnlSecurityFeaturesSpacing);
+            this.pnlScriptingAccess.Controls.Add(this.dgvApiAccess);
+            this.pnlScriptingAccess.Controls.Add(this.pnlSecurityUnlockSpacing);
+            this.pnlScriptingAccess.Controls.Add(this.btnUnlockSecurity);
+            this.pnlScriptingAccess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlScriptingAccess.Location = new System.Drawing.Point(0, 35);
+            this.pnlScriptingAccess.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlScriptingAccess.Name = "pnlScriptingAccess";
+            this.pnlScriptingAccess.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
+            this.pnlScriptingAccess.Size = new System.Drawing.Size(856, 562);
+            this.pnlScriptingAccess.TabIndex = 10;
             // 
             // dgvAdditionalFeatures
             // 
@@ -4173,10 +4173,10 @@
             this.dgvAdditionalFeatures.AllowUserToResizeRows = false;
             this.dgvAdditionalFeatures.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAdditionalFeatures.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn4,
-            this.dataGridViewCheckBoxColumn1,
-            this.dataGridViewCheckBoxColumn2,
-            this.dataGridViewCheckBoxColumn3});
+            this.colFeatureName,
+            this.colFeatureAllowLocal,
+            this.colFeatureAllowRemote,
+            this.colFeatureAllowAdmin});
             this.dgvAdditionalFeatures.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvAdditionalFeatures.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvAdditionalFeatures.Enabled = false;
@@ -4197,51 +4197,51 @@
             this.dgvAdditionalFeatures.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAdditionalFeatures_CellContentDoubleClick);
             this.dgvAdditionalFeatures.SelectionChanged += new System.EventHandler(this.dgvAdditionalFeatures_SelectionChanged);
             // 
-            // dataGridViewTextBoxColumn4
+            // colFeatureName
             // 
-            this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn4.HeaderText = "Additional features";
-            this.dataGridViewTextBoxColumn4.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.ReadOnly = true;
-            this.dataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colFeatureName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colFeatureName.HeaderText = "Additional features";
+            this.colFeatureName.MinimumWidth = 6;
+            this.colFeatureName.Name = "colFeatureName";
+            this.colFeatureName.ReadOnly = true;
+            this.colFeatureName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colFeatureName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // dataGridViewCheckBoxColumn1
+            // colFeatureAllowLocal
             // 
-            this.dataGridViewCheckBoxColumn1.HeaderText = "Allow for local triggers";
-            this.dataGridViewCheckBoxColumn1.MinimumWidth = 6;
-            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
-            this.dataGridViewCheckBoxColumn1.ReadOnly = true;
-            this.dataGridViewCheckBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewCheckBoxColumn1.Width = 125;
+            this.colFeatureAllowLocal.HeaderText = "Allow for local triggers";
+            this.colFeatureAllowLocal.MinimumWidth = 6;
+            this.colFeatureAllowLocal.Name = "colFeatureAllowLocal";
+            this.colFeatureAllowLocal.ReadOnly = true;
+            this.colFeatureAllowLocal.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colFeatureAllowLocal.Width = 125;
             // 
-            // dataGridViewCheckBoxColumn2
+            // colFeatureAllowRemote
             // 
-            this.dataGridViewCheckBoxColumn2.HeaderText = "Allow for remote triggers";
-            this.dataGridViewCheckBoxColumn2.MinimumWidth = 6;
-            this.dataGridViewCheckBoxColumn2.Name = "dataGridViewCheckBoxColumn2";
-            this.dataGridViewCheckBoxColumn2.ReadOnly = true;
-            this.dataGridViewCheckBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewCheckBoxColumn2.Width = 125;
+            this.colFeatureAllowRemote.HeaderText = "Allow for remote triggers";
+            this.colFeatureAllowRemote.MinimumWidth = 6;
+            this.colFeatureAllowRemote.Name = "colFeatureAllowRemote";
+            this.colFeatureAllowRemote.ReadOnly = true;
+            this.colFeatureAllowRemote.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colFeatureAllowRemote.Width = 125;
             // 
-            // dataGridViewCheckBoxColumn3
+            // colFeatureAllowAdmin
             // 
-            this.dataGridViewCheckBoxColumn3.HeaderText = "Allow if running as admin";
-            this.dataGridViewCheckBoxColumn3.MinimumWidth = 6;
-            this.dataGridViewCheckBoxColumn3.Name = "dataGridViewCheckBoxColumn3";
-            this.dataGridViewCheckBoxColumn3.ReadOnly = true;
-            this.dataGridViewCheckBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewCheckBoxColumn3.Width = 125;
+            this.colFeatureAllowAdmin.HeaderText = "Allow if running as admin";
+            this.colFeatureAllowAdmin.MinimumWidth = 6;
+            this.colFeatureAllowAdmin.Name = "colFeatureAllowAdmin";
+            this.colFeatureAllowAdmin.ReadOnly = true;
+            this.colFeatureAllowAdmin.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colFeatureAllowAdmin.Width = 125;
             // 
-            // panel8
+            // pnlSecurityFeaturesSpacing
             // 
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel8.Location = new System.Drawing.Point(0, 284);
-            this.panel8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(856, 9);
-            this.panel8.TabIndex = 6;
+            this.pnlSecurityFeaturesSpacing.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSecurityFeaturesSpacing.Location = new System.Drawing.Point(0, 284);
+            this.pnlSecurityFeaturesSpacing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlSecurityFeaturesSpacing.Name = "pnlSecurityFeaturesSpacing";
+            this.pnlSecurityFeaturesSpacing.Size = new System.Drawing.Size(856, 9);
+            this.pnlSecurityFeaturesSpacing.TabIndex = 6;
             // 
             // dgvApiAccess
             // 
@@ -4251,10 +4251,10 @@
             this.dgvApiAccess.AllowUserToResizeRows = false;
             this.dgvApiAccess.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvApiAccess.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column4,
-            this.Column5,
-            this.Column6,
-            this.Column7});
+            this.colApiNamespace,
+            this.colApiAllowLocal,
+            this.colApiAllowRemote,
+            this.colApiAllowAdmin});
             this.dgvApiAccess.Dock = System.Windows.Forms.DockStyle.Top;
             this.dgvApiAccess.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvApiAccess.Enabled = false;
@@ -4275,51 +4275,51 @@
             this.dgvApiAccess.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApiAccess_CellContentDoubleClick);
             this.dgvApiAccess.SelectionChanged += new System.EventHandler(this.dgvApiAccess_SelectionChanged);
             // 
-            // Column4
+            // colApiNamespace
             // 
-            this.Column4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column4.HeaderText = "Namespace";
-            this.Column4.MinimumWidth = 6;
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colApiNamespace.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colApiNamespace.HeaderText = "Namespace";
+            this.colApiNamespace.MinimumWidth = 6;
+            this.colApiNamespace.Name = "colApiNamespace";
+            this.colApiNamespace.ReadOnly = true;
+            this.colApiNamespace.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colApiNamespace.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // Column5
+            // colApiAllowLocal
             // 
-            this.Column5.HeaderText = "Allow for local triggers";
-            this.Column5.MinimumWidth = 6;
-            this.Column5.Name = "Column5";
-            this.Column5.ReadOnly = true;
-            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column5.Width = 125;
+            this.colApiAllowLocal.HeaderText = "Allow for local triggers";
+            this.colApiAllowLocal.MinimumWidth = 6;
+            this.colApiAllowLocal.Name = "colApiAllowLocal";
+            this.colApiAllowLocal.ReadOnly = true;
+            this.colApiAllowLocal.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colApiAllowLocal.Width = 125;
             // 
-            // Column6
+            // colApiAllowRemote
             // 
-            this.Column6.HeaderText = "Allow for remote triggers";
-            this.Column6.MinimumWidth = 6;
-            this.Column6.Name = "Column6";
-            this.Column6.ReadOnly = true;
-            this.Column6.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column6.Width = 125;
+            this.colApiAllowRemote.HeaderText = "Allow for remote triggers";
+            this.colApiAllowRemote.MinimumWidth = 6;
+            this.colApiAllowRemote.Name = "colApiAllowRemote";
+            this.colApiAllowRemote.ReadOnly = true;
+            this.colApiAllowRemote.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colApiAllowRemote.Width = 125;
             // 
-            // Column7
+            // colApiAllowAdmin
             // 
-            this.Column7.HeaderText = "Allow if running as admin";
-            this.Column7.MinimumWidth = 6;
-            this.Column7.Name = "Column7";
-            this.Column7.ReadOnly = true;
-            this.Column7.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column7.Width = 125;
+            this.colApiAllowAdmin.HeaderText = "Allow if running as admin";
+            this.colApiAllowAdmin.MinimumWidth = 6;
+            this.colApiAllowAdmin.Name = "colApiAllowAdmin";
+            this.colApiAllowAdmin.ReadOnly = true;
+            this.colApiAllowAdmin.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colApiAllowAdmin.Width = 125;
             // 
-            // panel18
+            // pnlSecurityUnlockSpacing
             // 
-            this.panel18.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel18.Location = new System.Drawing.Point(0, 44);
-            this.panel18.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel18.Name = "panel18";
-            this.panel18.Size = new System.Drawing.Size(856, 9);
-            this.panel18.TabIndex = 8;
+            this.pnlSecurityUnlockSpacing.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSecurityUnlockSpacing.Location = new System.Drawing.Point(0, 44);
+            this.pnlSecurityUnlockSpacing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlSecurityUnlockSpacing.Name = "pnlSecurityUnlockSpacing";
+            this.pnlSecurityUnlockSpacing.Size = new System.Drawing.Size(856, 9);
+            this.pnlSecurityUnlockSpacing.TabIndex = 8;
             // 
             // btnUnlockSecurity
             // 
@@ -4355,11 +4355,11 @@
             // tabMiscellaneous
             // 
             this.tabMiscellaneous.AutoScroll = true;
-            this.tabMiscellaneous.Controls.Add(this.panel12);
+            this.tabMiscellaneous.Controls.Add(this.pnlAuraManagement);
             this.tabMiscellaneous.Controls.Add(this.capAuraManagement);
-            this.tabMiscellaneous.Controls.Add(this.panel5);
+            this.tabMiscellaneous.Controls.Add(this.pnlAutosave);
             this.tabMiscellaneous.Controls.Add(this.capAutosaving);
-            this.tabMiscellaneous.Controls.Add(this.panel20);
+            this.tabMiscellaneous.Controls.Add(this.pnlTriggerTemplate);
             this.tabMiscellaneous.Controls.Add(this.capTemplate);
             this.tabMiscellaneous.Location = new System.Drawing.Point(4, 28);
             this.tabMiscellaneous.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -4369,38 +4369,38 @@
             this.tabMiscellaneous.Text = "Miscellaneous";
             this.tabMiscellaneous.UseVisualStyleBackColor = true;
             // 
-            // panel12
+            // pnlAuraManagement
             // 
-            this.panel12.AutoSize = true;
-            this.panel12.Controls.Add(this.tableLayoutPanel11);
-            this.panel12.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel12.Location = new System.Drawing.Point(0, 234);
-            this.panel12.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel12.Name = "panel12";
-            this.panel12.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
-            this.panel12.Size = new System.Drawing.Size(856, 69);
-            this.panel12.TabIndex = 27;
+            this.pnlAuraManagement.AutoSize = true;
+            this.pnlAuraManagement.Controls.Add(this.tableAuraManagement);
+            this.pnlAuraManagement.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlAuraManagement.Location = new System.Drawing.Point(0, 234);
+            this.pnlAuraManagement.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlAuraManagement.Name = "pnlAuraManagement";
+            this.pnlAuraManagement.Padding = new System.Windows.Forms.Padding(0, 9, 0, 0);
+            this.pnlAuraManagement.Size = new System.Drawing.Size(856, 69);
+            this.pnlAuraManagement.TabIndex = 27;
             // 
-            // tableLayoutPanel11
+            // tableAuraManagement
             // 
-            this.tableLayoutPanel11.AutoSize = true;
-            this.tableLayoutPanel11.ColumnCount = 2;
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Controls.Add(this.lblEnableHwAccel, 0, 1);
-            this.tableLayoutPanel11.Controls.Add(this.txtMonitorWindow, 1, 0);
-            this.tableLayoutPanel11.Controls.Add(this.lblMonitorWindow, 0, 0);
-            this.tableLayoutPanel11.Controls.Add(this.cbxEnableHwAccel, 1, 1);
-            this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel11.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
-            this.tableLayoutPanel11.RowCount = 2;
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(856, 60);
-            this.tableLayoutPanel11.TabIndex = 1;
+            this.tableAuraManagement.AutoSize = true;
+            this.tableAuraManagement.ColumnCount = 2;
+            this.tableAuraManagement.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableAuraManagement.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableAuraManagement.Controls.Add(this.lblEnableHwAccel, 0, 1);
+            this.tableAuraManagement.Controls.Add(this.txtMonitorWindow, 1, 0);
+            this.tableAuraManagement.Controls.Add(this.lblMonitorWindow, 0, 0);
+            this.tableAuraManagement.Controls.Add(this.cbxEnableHwAccel, 1, 1);
+            this.tableAuraManagement.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableAuraManagement.Location = new System.Drawing.Point(0, 9);
+            this.tableAuraManagement.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableAuraManagement.Name = "tableAuraManagement";
+            this.tableAuraManagement.RowCount = 2;
+            this.tableAuraManagement.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAuraManagement.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAuraManagement.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableAuraManagement.Size = new System.Drawing.Size(856, 60);
+            this.tableAuraManagement.TabIndex = 1;
             // 
             // lblEnableHwAccel
             // 
@@ -4468,37 +4468,37 @@
             this.capAuraManagement.Size = new System.Drawing.Size(856, 35);
             this.capAuraManagement.TabIndex = 26;
             // 
-            // panel5
+            // pnlAutosave
             // 
-            this.panel5.AutoSize = true;
-            this.panel5.Controls.Add(this.tableLayoutPanel10);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(0, 121);
-            this.panel5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel5.Name = "panel5";
-            this.panel5.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel5.Size = new System.Drawing.Size(856, 78);
-            this.panel5.TabIndex = 25;
+            this.pnlAutosave.AutoSize = true;
+            this.pnlAutosave.Controls.Add(this.tableAutosave);
+            this.pnlAutosave.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlAutosave.Location = new System.Drawing.Point(0, 121);
+            this.pnlAutosave.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlAutosave.Name = "pnlAutosave";
+            this.pnlAutosave.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlAutosave.Size = new System.Drawing.Size(856, 78);
+            this.pnlAutosave.TabIndex = 25;
             // 
-            // tableLayoutPanel10
+            // tableAutosave
             // 
-            this.tableLayoutPanel10.AutoSize = true;
-            this.tableLayoutPanel10.ColumnCount = 2;
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel10.Controls.Add(this.lblAutosaveConfig, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.lblAutosaveInterval, 0, 1);
-            this.tableLayoutPanel10.Controls.Add(this.cbxAutosaveConfig, 1, 0);
-            this.tableLayoutPanel10.Controls.Add(this.nudAutosaveMinutes, 1, 1);
-            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
-            this.tableLayoutPanel10.RowCount = 2;
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(856, 60);
-            this.tableLayoutPanel10.TabIndex = 1;
+            this.tableAutosave.AutoSize = true;
+            this.tableAutosave.ColumnCount = 2;
+            this.tableAutosave.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableAutosave.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableAutosave.Controls.Add(this.lblAutosaveConfig, 0, 0);
+            this.tableAutosave.Controls.Add(this.lblAutosaveInterval, 0, 1);
+            this.tableAutosave.Controls.Add(this.cbxAutosaveConfig, 1, 0);
+            this.tableAutosave.Controls.Add(this.nudAutosaveMinutes, 1, 1);
+            this.tableAutosave.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableAutosave.Location = new System.Drawing.Point(0, 9);
+            this.tableAutosave.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableAutosave.Name = "tableAutosave";
+            this.tableAutosave.RowCount = 2;
+            this.tableAutosave.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAutosave.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableAutosave.Size = new System.Drawing.Size(856, 60);
+            this.tableAutosave.TabIndex = 1;
             // 
             // lblAutosaveConfig
             // 
@@ -4584,37 +4584,37 @@
             this.capAutosaving.Size = new System.Drawing.Size(856, 35);
             this.capAutosaving.TabIndex = 24;
             // 
-            // panel20
+            // pnlTriggerTemplate
             // 
-            this.panel20.AutoSize = true;
-            this.panel20.Controls.Add(this.tableLayoutPanel17);
-            this.panel20.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel20.Location = new System.Drawing.Point(0, 35);
-            this.panel20.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel20.Name = "panel20";
-            this.panel20.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
-            this.panel20.Size = new System.Drawing.Size(856, 51);
-            this.panel20.TabIndex = 23;
+            this.pnlTriggerTemplate.AutoSize = true;
+            this.pnlTriggerTemplate.Controls.Add(this.tableTriggerTemplate);
+            this.pnlTriggerTemplate.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTriggerTemplate.Location = new System.Drawing.Point(0, 35);
+            this.pnlTriggerTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlTriggerTemplate.Name = "pnlTriggerTemplate";
+            this.pnlTriggerTemplate.Padding = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.pnlTriggerTemplate.Size = new System.Drawing.Size(856, 51);
+            this.pnlTriggerTemplate.TabIndex = 23;
             // 
-            // tableLayoutPanel17
+            // tableTriggerTemplate
             // 
-            this.tableLayoutPanel17.AutoSize = true;
-            this.tableLayoutPanel17.ColumnCount = 3;
-            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 267F));
-            this.tableLayoutPanel17.Controls.Add(this.lblTriggerTemplate, 0, 0);
-            this.tableLayoutPanel17.Controls.Add(this.cbxTriggerTemplate, 1, 0);
-            this.tableLayoutPanel17.Controls.Add(this.btnTriggerTemplate, 2, 0);
-            this.tableLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel17.Location = new System.Drawing.Point(0, 9);
-            this.tableLayoutPanel17.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableLayoutPanel17.Name = "tableLayoutPanel17";
-            this.tableLayoutPanel17.RowCount = 2;
-            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(856, 33);
-            this.tableLayoutPanel17.TabIndex = 1;
+            this.tableTriggerTemplate.AutoSize = true;
+            this.tableTriggerTemplate.ColumnCount = 3;
+            this.tableTriggerTemplate.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableTriggerTemplate.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableTriggerTemplate.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 267F));
+            this.tableTriggerTemplate.Controls.Add(this.lblTriggerTemplate, 0, 0);
+            this.tableTriggerTemplate.Controls.Add(this.cbxTriggerTemplate, 1, 0);
+            this.tableTriggerTemplate.Controls.Add(this.btnTriggerTemplate, 2, 0);
+            this.tableTriggerTemplate.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableTriggerTemplate.Location = new System.Drawing.Point(0, 9);
+            this.tableTriggerTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tableTriggerTemplate.Name = "tableTriggerTemplate";
+            this.tableTriggerTemplate.RowCount = 2;
+            this.tableTriggerTemplate.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableTriggerTemplate.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableTriggerTemplate.Size = new System.Drawing.Size(856, 33);
+            this.tableTriggerTemplate.TabIndex = 1;
             // 
             // lblTriggerTemplate
             // 
@@ -4914,16 +4914,16 @@
             this.btnStartup.Text = "Startup";
             this.btnStartup.UseVisualStyleBackColor = false;
             // 
-            // panel2
+            // pnlHeader
             // 
-            this.panel2.BackColor = System.Drawing.SystemColors.Window;
-            this.panel2.Controls.Add(this.lblHeader);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(293, 0);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(886, 58);
-            this.panel2.TabIndex = 1;
+            this.pnlHeader.BackColor = System.Drawing.SystemColors.Window;
+            this.pnlHeader.Controls.Add(this.lblHeader);
+            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHeader.Location = new System.Drawing.Point(293, 0);
+            this.pnlHeader.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlHeader.Name = "pnlHeader";
+            this.pnlHeader.Size = new System.Drawing.Size(886, 58);
+            this.pnlHeader.TabIndex = 1;
             // 
             // lblHeader
             // 
@@ -4938,29 +4938,29 @@
             this.lblHeader.Text = "Configuration";
             this.lblHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // panel3
+            // pnlContent
             // 
-            this.panel3.AutoScroll = true;
-            this.panel3.Controls.Add(this.tbcMain);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(293, 58);
-            this.panel3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Padding = new System.Windows.Forms.Padding(11, 9, 11, 9);
-            this.panel3.Size = new System.Drawing.Size(886, 647);
-            this.panel3.TabIndex = 3;
+            this.pnlContent.AutoScroll = true;
+            this.pnlContent.Controls.Add(this.tbcMain);
+            this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContent.Location = new System.Drawing.Point(293, 58);
+            this.pnlContent.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlContent.Name = "pnlContent";
+            this.pnlContent.Padding = new System.Windows.Forms.Padding(11, 9, 11, 9);
+            this.pnlContent.Size = new System.Drawing.Size(886, 647);
+            this.pnlContent.TabIndex = 3;
             // 
-            // panel1
+            // pnlButtons
             // 
-            this.panel1.Controls.Add(this.btnOk);
-            this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(293, 705);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(11, 0, 11, 9);
-            this.panel1.Size = new System.Drawing.Size(886, 58);
-            this.panel1.TabIndex = 4;
+            this.pnlButtons.Controls.Add(this.btnOk);
+            this.pnlButtons.Controls.Add(this.btnCancel);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(293, 705);
+            this.pnlButtons.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Padding = new System.Windows.Forms.Padding(11, 0, 11, 9);
+            this.pnlButtons.Size = new System.Drawing.Size(886, 58);
+            this.pnlButtons.TabIndex = 4;
             // 
             // btnOk
             // 
@@ -4986,16 +4986,16 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // toolTip
+            // toolTipSettings
             // 
-            this.toolTip.AutoPopDelay = 60000;
-            this.toolTip.InitialDelay = 500;
-            this.toolTip.ReshowDelay = 500;
-            this.toolTip.ShowAlways = true;
+            this.toolTipSettings.AutoPopDelay = 60000;
+            this.toolTipSettings.InitialDelay = 500;
+            this.toolTipSettings.ReshowDelay = 500;
+            this.toolTipSettings.ShowAlways = true;
             // 
-            // fontDialog1
+            // dlgUiFont
             // 
-            this.fontDialog1.AllowScriptChange = false;
+            this.dlgUiFont.AllowScriptChange = false;
             // 
             // ConfigurationForm2
             // 
@@ -5004,9 +5004,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(1179, 763);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlContent);
+            this.Controls.Add(this.pnlHeader);
+            this.Controls.Add(this.pnlButtons);
             this.Controls.Add(this.pnlMenu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -5020,25 +5020,25 @@
             this.tbcMain.ResumeLayout(false);
             this.tabStartup.ResumeLayout(false);
             this.tabStartup.PerformLayout();
-            this.panel9.ResumeLayout(false);
-            this.panel9.PerformLayout();
+            this.pnlStartupTrigger.ResumeLayout(false);
+            this.pnlStartupTrigger.PerformLayout();
             this.ctxStartupTrigger.ResumeLayout(false);
             this.tlsStartupTrigger.ResumeLayout(false);
             this.tlsStartupTrigger.PerformLayout();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            this.tableLayoutPanel7.ResumeLayout(false);
-            this.tableLayoutPanel7.PerformLayout();
+            this.pnlStartup.ResumeLayout(false);
+            this.pnlStartup.PerformLayout();
+            this.tableStartup.ResumeLayout(false);
+            this.tableStartup.PerformLayout();
             this.tabUserInterface.ResumeLayout(false);
             this.tabUserInterface.PerformLayout();
-            this.panel32.ResumeLayout(false);
-            this.panel32.PerformLayout();
-            this.tableLayoutPanel12.ResumeLayout(false);
-            this.tableLayoutPanel12.PerformLayout();
-            this.panel31.ResumeLayout(false);
-            this.panel31.PerformLayout();
-            this.tableLayoutPanel6.ResumeLayout(false);
-            this.tableLayoutPanel6.PerformLayout();
+            this.pnlUiOptions.ResumeLayout(false);
+            this.pnlUiOptions.PerformLayout();
+            this.tableUiOptions.ResumeLayout(false);
+            this.tableUiOptions.PerformLayout();
+            this.pnlUiFont.ResumeLayout(false);
+            this.pnlUiFont.PerformLayout();
+            this.tableUiFont.ResumeLayout(false);
+            this.tableUiFont.PerformLayout();
             this.tabAudio.ResumeLayout(false);
             this.tabAudio.PerformLayout();
             this.panelAudioTts.ResumeLayout(false);
@@ -5047,13 +5047,13 @@
             this.tableAudioTts.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbTtsRepetition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbTtsVolume)).EndInit();
-            this.panel21.ResumeLayout(false);
+            this.pnlTtsWarnings.ResumeLayout(false);
             this.panelAudioSound.ResumeLayout(false);
             this.panelAudioSound.PerformLayout();
             this.tableAudioSound.ResumeLayout(false);
             this.tableAudioSound.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbSoundRepetition)).EndInit();
-            this.panel30.ResumeLayout(false);
+            this.pnlExternalSoundWarning.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trbSoundVolume)).EndInit();
             this.panelAudioBeep.ResumeLayout(false);
             this.panelAudioBeep.PerformLayout();
@@ -5062,10 +5062,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbBeepVolume)).EndInit();
             this.tabLogging.ResumeLayout(false);
             this.tabLogging.PerformLayout();
-            this.panel23.ResumeLayout(false);
-            this.panel23.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
+            this.pnlLoggingGeneral.ResumeLayout(false);
+            this.pnlLoggingGeneral.PerformLayout();
+            this.tableLoggingGeneral.ResumeLayout(false);
+            this.tableLoggingGeneral.PerformLayout();
             this.panelLogLimits.ResumeLayout(false);
             this.panelLogLimits.PerformLayout();
             this.tableLogLimits.ResumeLayout(false);
@@ -5078,58 +5078,58 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudLogLimitVerbose)).EndInit();
             this.tabShortcuts.ResumeLayout(false);
             this.tabShortcuts.PerformLayout();
-            this.panel11.ResumeLayout(false);
-            this.panel11.PerformLayout();
+            this.pnlShortcutTemplates.ResumeLayout(false);
+            this.pnlShortcutTemplates.PerformLayout();
             this.tableLayoutPanelShortCutExpression.ResumeLayout(false);
             this.tableLayoutPanelShortCutExpression.PerformLayout();
             this.tabCaching.ResumeLayout(false);
             this.tabCaching.PerformLayout();
-            this.panel17.ResumeLayout(false);
-            this.panel17.PerformLayout();
+            this.pnlCacheFile.ResumeLayout(false);
+            this.pnlCacheFile.PerformLayout();
             this.tableLayoutPanelDownloads.ResumeLayout(false);
             this.tableLayoutPanelDownloads.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheFileExpiry)).EndInit();
-            this.panel15.ResumeLayout(false);
-            this.panel15.PerformLayout();
+            this.pnlCacheRepo.ResumeLayout(false);
+            this.pnlCacheRepo.PerformLayout();
             this.tableLayoutPanelRepo.ResumeLayout(false);
             this.tableLayoutPanelRepo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheRepoExpiry)).EndInit();
-            this.panel14.ResumeLayout(false);
-            this.panel14.PerformLayout();
+            this.pnlCacheJson.ResumeLayout(false);
+            this.pnlCacheJson.PerformLayout();
             this.tableLayoutPanelJason.ResumeLayout(false);
             this.tableLayoutPanelJason.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheJsonExpiry)).EndInit();
-            this.panel13.ResumeLayout(false);
-            this.panel13.PerformLayout();
+            this.pnlCacheSound.ResumeLayout(false);
+            this.pnlCacheSound.PerformLayout();
             this.tableLayoutPanelSound.ResumeLayout(false);
             this.tableLayoutPanelSound.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheSoundExpiry)).EndInit();
-            this.panel16.ResumeLayout(false);
-            this.panel16.PerformLayout();
+            this.pnlCacheImage.ResumeLayout(false);
+            this.pnlCacheImage.PerformLayout();
             this.tableLayoutPanelImages.ResumeLayout(false);
             this.tableLayoutPanelImages.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCacheImageExpiry)).EndInit();
             this.tabUpdates.ResumeLayout(false);
             this.tabUpdates.PerformLayout();
-            this.panel10.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.pnlUpdateChannel.ResumeLayout(false);
+            this.tableUpdateChannel.ResumeLayout(false);
+            this.tableUpdateChannel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudUpdateInterval)).EndInit();
             this.tabEndpoint.ResumeLayout(false);
             this.tabEndpoint.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
+            this.pnlEndpointHistory.ResumeLayout(false);
+            this.pnlEndpointHistory.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEndpointHistory)).EndInit();
             this.tlsEndpointHistory.ResumeLayout(false);
             this.tlsEndpointHistory.PerformLayout();
-            this.panel28.ResumeLayout(false);
-            this.panel28.PerformLayout();
-            this.tableLayoutPanel8.ResumeLayout(false);
-            this.tableLayoutPanel8.PerformLayout();
-            this.panel27.ResumeLayout(false);
-            this.panel27.PerformLayout();
-            this.tableLayoutPanel18.ResumeLayout(false);
-            this.tableLayoutPanel18.PerformLayout();
+            this.pnlEndpointSettings.ResumeLayout(false);
+            this.pnlEndpointSettings.PerformLayout();
+            this.tableEndpointSettings.ResumeLayout(false);
+            this.tableEndpointSettings.PerformLayout();
+            this.pnlEndpointStatus.ResumeLayout(false);
+            this.pnlEndpointStatus.PerformLayout();
+            this.tableEndpointStatus.ResumeLayout(false);
+            this.tableEndpointStatus.PerformLayout();
             this.tabConstants.ResumeLayout(false);
             this.tabConstants.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConstVariables)).EndInit();
@@ -5144,32 +5144,32 @@
             this.tbcGames.ResumeLayout(false);
             this.tabFFXIV.ResumeLayout(false);
             this.tabFFXIV.PerformLayout();
-            this.panel24.ResumeLayout(false);
-            this.panel24.PerformLayout();
-            this.tableLayoutPanel9.ResumeLayout(false);
-            this.tableLayoutPanel9.PerformLayout();
+            this.pnlFfxivLogging.ResumeLayout(false);
+            this.pnlFfxivLogging.PerformLayout();
+            this.tableFfxivLogging.ResumeLayout(false);
+            this.tableFfxivLogging.PerformLayout();
             this.tabSecurity.ResumeLayout(false);
-            this.panel19.ResumeLayout(false);
+            this.pnlScriptingAccess.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAdditionalFeatures)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApiAccess)).EndInit();
             this.tabMiscellaneous.ResumeLayout(false);
             this.tabMiscellaneous.PerformLayout();
-            this.panel12.ResumeLayout(false);
-            this.panel12.PerformLayout();
-            this.tableLayoutPanel11.ResumeLayout(false);
-            this.tableLayoutPanel11.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            this.tableLayoutPanel10.ResumeLayout(false);
-            this.tableLayoutPanel10.PerformLayout();
+            this.pnlAuraManagement.ResumeLayout(false);
+            this.pnlAuraManagement.PerformLayout();
+            this.tableAuraManagement.ResumeLayout(false);
+            this.tableAuraManagement.PerformLayout();
+            this.pnlAutosave.ResumeLayout(false);
+            this.pnlAutosave.PerformLayout();
+            this.tableAutosave.ResumeLayout(false);
+            this.tableAutosave.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAutosaveMinutes)).EndInit();
-            this.panel20.ResumeLayout(false);
-            this.panel20.PerformLayout();
-            this.tableLayoutPanel17.ResumeLayout(false);
-            this.tableLayoutPanel17.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
+            this.pnlTriggerTemplate.ResumeLayout(false);
+            this.pnlTriggerTemplate.PerformLayout();
+            this.tableTriggerTemplate.ResumeLayout(false);
+            this.tableTriggerTemplate.PerformLayout();
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlContent.ResumeLayout(false);
+            this.pnlButtons.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -5177,12 +5177,12 @@
         #endregion
 
         private System.Windows.Forms.Panel pnlMenu;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlHeader;
         private System.Windows.Forms.Label lblHeader;
         private System.Windows.Forms.TabControl tbcMain;
         private System.Windows.Forms.TabPage tabStartup;
         private System.Windows.Forms.TabPage tabAudio;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel pnlContent;
         private CustomControls.MenuButton btnLogging;
         private CustomControls.MenuButton btnAudio;
         private CustomControls.MenuButton btnStartup;
@@ -5194,7 +5194,7 @@
         private CustomControls.MenuButton btnMisc;
         private CustomControls.MenuButton btnSecurity;
         private CustomControls.MenuButton btnGameSpecific;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.TabPage tabLogging;
@@ -5216,12 +5216,12 @@
         private System.Windows.Forms.ToolStripButton btnConstEdit;
         private System.Windows.Forms.ToolStripButton btnConstRemove;
         private CustomControls.PrettyCaption capStartupTrigger;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+        private System.Windows.Forms.Panel pnlStartup;
+        private System.Windows.Forms.TableLayoutPanel tableStartup;
         private System.Windows.Forms.CheckBox chkWarnAdmin;
         private System.Windows.Forms.CheckBox chkWelcome;
         private CustomControls.PrettyCaption capStartupOptions;
-        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Panel pnlStartupTrigger;
         internal System.Windows.Forms.TreeView trvTrigger;
         private System.Windows.Forms.ToolStrip tlsStartupTrigger;
         private System.Windows.Forms.ToolStripButton btnClearSelection;
@@ -5238,14 +5238,14 @@
         private System.Windows.Forms.CheckBox chkUseSimulatedBeep;
         private System.Windows.Forms.Label lblUseSimulatedBeep;
         private CustomControls.PrettyCaption capAudioBeep;
-        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.Panel pnlShortcutTemplates;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelShortCutExpression;
         private System.Windows.Forms.CheckBox chkShortcutEnableTemplates;
         private System.Windows.Forms.CheckBox chkShortcutUseAbbrevInTemplates;
         private System.Windows.Forms.CheckBox chkShortcutWrapTextWhenSelected;
         private CustomControls.PrettyCaption capExpressions;
         private CustomControls.PrettyCaption capImageFiles;
-        private System.Windows.Forms.Panel panel16;
+        private System.Windows.Forms.Panel pnlCacheImage;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelImages;
         private System.Windows.Forms.Button btnCacheImageBrowse;
         private System.Windows.Forms.TextBox txtCacheImageSize;
@@ -5256,7 +5256,7 @@
         private System.Windows.Forms.TextBox txtCacheImageCount;
         private System.Windows.Forms.Button btnCacheImageClear;
         private CustomControls.PrettyCaption capSoundFiles;
-        private System.Windows.Forms.Panel panel13;
+        private System.Windows.Forms.Panel pnlCacheSound;
         private CustomControls.PrettyCaption capJason;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelSound;
         private System.Windows.Forms.Button btnCacheSoundBrowse;
@@ -5267,9 +5267,9 @@
         private System.Windows.Forms.Label lblCacheSoundExpiry;
         private System.Windows.Forms.NumericUpDown nudCacheSoundExpiry;
         private System.Windows.Forms.TextBox txtCacheSoundCount;
-        private System.Windows.Forms.Panel panel15;
+        private System.Windows.Forms.Panel pnlCacheRepo;
         private CustomControls.PrettyCaption capRepoBackups;
-        private System.Windows.Forms.Panel panel14;
+        private System.Windows.Forms.Panel pnlCacheJson;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelJason;
         private System.Windows.Forms.NumericUpDown nudCacheJsonExpiry;
         private System.Windows.Forms.Button btnCacheJsonBrowse;
@@ -5288,7 +5288,7 @@
         private System.Windows.Forms.Label lblCacheRepoExpiry;
         private System.Windows.Forms.NumericUpDown nudCacheRepoExpiry;
         private System.Windows.Forms.TextBox txtCacheRepoCount;
-        private System.Windows.Forms.Panel panel17;
+        private System.Windows.Forms.Panel pnlCacheFile;
         private CustomControls.PrettyCaption capDownloads;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelDownloads;
         private System.Windows.Forms.Button btnCacheFileBrowse;
@@ -5299,19 +5299,19 @@
         private System.Windows.Forms.Label lblCacheFileExpiry;
         private System.Windows.Forms.NumericUpDown nudCacheFileExpiry;
         private System.Windows.Forms.TextBox txtCacheFileCount;
-        private System.Windows.Forms.Panel panel19;
+        private System.Windows.Forms.Panel pnlScriptingAccess;
         private CustomControls.DataGridViewEx dgvAdditionalFeatures;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn2;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn3;
-        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colFeatureName;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colFeatureAllowLocal;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colFeatureAllowRemote;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colFeatureAllowAdmin;
+        private System.Windows.Forms.Panel pnlSecurityFeaturesSpacing;
         private CustomControls.DataGridViewEx dgvApiAccess;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column5;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column6;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column7;
-        private System.Windows.Forms.Panel panel18;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colApiNamespace;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colApiAllowLocal;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colApiAllowRemote;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colApiAllowAdmin;
+        private System.Windows.Forms.Panel pnlSecurityUnlockSpacing;
         private System.Windows.Forms.Button btnUnlockSecurity;
         private CustomControls.PrettyCaption capScripting;
         private System.Windows.Forms.Panel panelAudioTts;
@@ -5333,15 +5333,15 @@
         private System.Windows.Forms.TextBox txtTtsPath;
         private System.Windows.Forms.ComboBox cbxTtsMethod;
         private System.Windows.Forms.Label lblTtsPath;
-        private System.Windows.Forms.Panel panel10;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Panel pnlUpdateChannel;
+        private System.Windows.Forms.TableLayoutPanel tableUpdateChannel;
         private System.Windows.Forms.TextBox txtUpdateChannelUrl;
         private System.Windows.Forms.ComboBox cbxUpdateMethod;
         private System.Windows.Forms.Label lblUpdateChannelUrl;
         private System.Windows.Forms.Label lblUpdateMethod;
         private CustomControls.PrettyCaption capUpdateChannel;
-        private System.Windows.Forms.Panel panel23;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.Panel pnlLoggingGeneral;
+        private System.Windows.Forms.TableLayoutPanel tableLoggingGeneral;
         private System.Windows.Forms.CheckBox chkLogNormalEvents;
         private System.Windows.Forms.Label lblLoggingLevel;
         private Triggernometry.UI.CustomControls.PrettyCaption capLogLimits;
@@ -5364,59 +5364,59 @@
         private System.Windows.Forms.TabControl tbcGames;
         private System.Windows.Forms.TabPage tabFFXIV;
         private CustomControls.PrettyCaption capFfxivLogging;
-        private System.Windows.Forms.Panel panel24;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
+        private System.Windows.Forms.Panel pnlFfxivLogging;
+        private System.Windows.Forms.TableLayoutPanel tableFfxivLogging;
         private System.Windows.Forms.CheckBox chkFfxivLogNetwork;
-        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel pnlEndpointHistory;
         private CustomControls.DataGridViewEx dgvEndpointHistory;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colEndpointHistoryTimestamp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colEndpointHistoryData;
         private System.Windows.Forms.ToolStrip tlsEndpointHistory;
         private System.Windows.Forms.ToolStripButton btnEndpointHistUpdate;
         private System.Windows.Forms.ToolStripLabel tlsEndpointHistoryRecv;
         private System.Windows.Forms.ToolStripLabel tlsEndpointHistoryCount;
-        private CustomControls.PrettyCaption prettyCaption3;
-        private System.Windows.Forms.Panel panel28;
+        private CustomControls.PrettyCaption capEndpointHistory;
+        private System.Windows.Forms.Panel pnlEndpointSettings;
         private CustomControls.PrettyCaption capEndpointSettings;
-        private System.Windows.Forms.Panel panel27;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel18;
+        private System.Windows.Forms.Panel pnlEndpointStatus;
+        private System.Windows.Forms.TableLayoutPanel tableEndpointStatus;
         private System.Windows.Forms.Button btnEndpointStart;
         private System.Windows.Forms.Button btnEndpointStop;
         private System.Windows.Forms.TextBox txtEndpointStatus;
         private CustomControls.PrettyCaption capEndpointStatus;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
+        private System.Windows.Forms.TableLayoutPanel tableEndpointSettings;
         private System.Windows.Forms.CheckBox chkEndpointStartup;
         private System.Windows.Forms.CheckBox chkEndpointLog;
         private System.Windows.Forms.TextBox txtEndpoint;
         private System.Windows.Forms.Label lblEndpoint;
-        private System.Windows.Forms.Panel panel20;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel17;
+        private System.Windows.Forms.Panel pnlTriggerTemplate;
+        private System.Windows.Forms.TableLayoutPanel tableTriggerTemplate;
         private System.Windows.Forms.CheckBox cbxTriggerTemplate;
         private System.Windows.Forms.Button btnTriggerTemplate;
         private CustomControls.PrettyCaption capTemplate;
-        private System.Windows.Forms.Panel panel12;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
+        private System.Windows.Forms.Panel pnlAuraManagement;
+        private System.Windows.Forms.TableLayoutPanel tableAuraManagement;
         private System.Windows.Forms.TextBox txtMonitorWindow;
         private System.Windows.Forms.Label lblMonitorWindow;
         private System.Windows.Forms.CheckBox cbxEnableHwAccel;
         private CustomControls.PrettyCaption capAuraManagement;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
+        private System.Windows.Forms.Panel pnlAutosave;
+        private System.Windows.Forms.TableLayoutPanel tableAutosave;
         private System.Windows.Forms.Label lblAutosaveInterval;
         private System.Windows.Forms.CheckBox cbxAutosaveConfig;
         private System.Windows.Forms.NumericUpDown nudAutosaveMinutes;
         private CustomControls.PrettyCaption capAutosaving;
-        private System.Windows.Forms.Panel panel30;
+        private System.Windows.Forms.Panel pnlExternalSoundWarning;
         private System.Windows.Forms.Label lblExternalSoundWarn;
         private CustomControls.DataGridViewEx dgvSubstitutions;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSubSearchFor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSubReplaceWith;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSubScope;
         private System.Windows.Forms.ToolStrip tlsSubstitutions;
         private System.Windows.Forms.ToolStripButton btnSubAdd;
         private System.Windows.Forms.ToolStripButton btnSubEdit;
         private System.Windows.Forms.ToolStripButton btnSubRemove;
-        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.ToolTip toolTipSettings;
         private System.Windows.Forms.ContextMenuStrip ctxStartupTrigger;
         private System.Windows.Forms.ToolStripMenuItem ctxClearSelection;
         private System.Windows.Forms.Label lblExternalUpdateWarn;
@@ -5426,22 +5426,22 @@
         private System.Windows.Forms.Label lblSoundPathArgs;
         private CustomControls.MenuButton btnUserInterface;
         private System.Windows.Forms.TabPage tabUserInterface;
-        private System.Windows.Forms.Panel panel31;
+        private System.Windows.Forms.Panel pnlUiFont;
         private CustomControls.PrettyCaption capAppearance;
-        private System.Windows.Forms.Panel panel32;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
+        private System.Windows.Forms.Panel pnlUiOptions;
+        private System.Windows.Forms.TableLayoutPanel tableUiOptions;
         private CustomControls.PrettyCaption capBehavior;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+        private System.Windows.Forms.TableLayoutPanel tableUiFont;
         private System.Windows.Forms.CheckBox cbxUiFontDefault;
         private System.Windows.Forms.Label lblUiFont;
         private System.Windows.Forms.TextBox txtUiFontDesc;
         private System.Windows.Forms.Button btnUiFont;
-        private System.Windows.Forms.FontDialog fontDialog1;
+        private System.Windows.Forms.FontDialog dlgUiFont;
         private System.Windows.Forms.CheckBox cbxAutoComplete;
         private System.Windows.Forms.CheckBox cbxDevMode;
         private System.Windows.Forms.CheckBox cbxActionAsync;
         private System.Windows.Forms.CheckBox cbxTestIgnoreConditions;
-        private System.Windows.Forms.Panel panel21;
+        private System.Windows.Forms.Panel pnlTtsWarnings;
         private System.Windows.Forms.Label lblExternalTtsWarn;
         private System.Windows.Forms.Label lblActTtsWarn;
         private System.Windows.Forms.Label lblLogNormalEvents;

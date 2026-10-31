@@ -52,8 +52,8 @@ namespace Triggernometry.UI.Forms
         {
             InitializeComponent();
             temp = new List<BenchmarkItem>();
-            backgroundWorker1.ProgressChanged += BackgroundWorker1_ProgressChanged;
-            backgroundWorker1.RunWorkerCompleted += BackgroundWorker1_RunWorkerCompleted;
+            workerBenchmark.ProgressChanged += workerBenchmark_ProgressChanged;
+            workerBenchmark.RunWorkerCompleted += workerBenchmark_RunWorkerCompleted;
             Disposed += BenchmarkForm_Disposed;
             RestoredSavedDimensions();
         }
@@ -68,7 +68,7 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void workerBenchmark_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             bpf.DialogResult = e.Cancelled || e.Error != null ? DialogResult.Cancel : DialogResult.OK;
             bpf.Close();
@@ -76,16 +76,16 @@ namespace Triggernometry.UI.Forms
             bpf = null;
         }
 
-        private void BackgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void workerBenchmark_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            bpf.progressBar1.Value = e.ProgressPercentage;
+            bpf.prgBenchmark.Value = e.ProgressPercentage;
         }
 
         internal void RunBenchmark()
         {
             temp.Clear();
             dgvResults.Rows.Clear();            
-            backgroundWorker1.RunWorkerAsync();
+            workerBenchmark.RunWorkerAsync();
         }
 
         internal string TimeFormat(double seconds)
@@ -143,7 +143,7 @@ namespace Triggernometry.UI.Forms
             while (i < 10000)
             {
                 long stTime = st.ElapsedTicks;
-                if (backgroundWorker1.CancellationPending == true)
+                if (workerBenchmark.CancellationPending == true)
                 {
                     return null;
                 }                
@@ -199,7 +199,7 @@ namespace Triggernometry.UI.Forms
             return f.Enabled;
         }
 
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        private void workerBenchmark_DoWork(object sender, DoWorkEventArgs e)
         {
             bool wasLoggingDisabled = plug.DisableLogging;
             try
@@ -214,7 +214,7 @@ namespace Triggernometry.UI.Forms
                 int j = trigs.Count;
                 foreach (Trigger t in trigs)
                 {
-                    if (backgroundWorker1.CancellationPending == true)
+                    if (workerBenchmark.CancellationPending == true)
                     {
                         e.Cancel = true;
                         return;
@@ -235,7 +235,7 @@ namespace Triggernometry.UI.Forms
                     }
                     temp.Add(result);
                     i++;
-                    backgroundWorker1.ReportProgress((int)Math.Ceiling(100.0f * (float)i / (float)j));
+                    workerBenchmark.ReportProgress((int)Math.Ceiling(100.0f * (float)i / (float)j));
                 }
             }
             catch (Exception)

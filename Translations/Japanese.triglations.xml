@@ -156,8 +156,8 @@
     <TranslationEntry Key="ActionViewer/btnEditAction" Translation="アクションを編集" />
     <TranslationEntry Key="ActionViewer/btnRemoveAction" Translation="アクションの削除" />
     <TranslationEntry Key="ActionViewer/btnUndo" Translation="Undo" />
+    <TranslationEntry Key="ActionViewer/colActionEnabled" Translation="  " />
     <TranslationEntry Key="ActionViewer/colDescription" Translation="Description" />
-    <TranslationEntry Key="ActionViewer/Column1" Translation="  " />
     <TranslationEntry Key="ActionViewer/ctxAddAction" Translation="アクションを追加" />
     <TranslationEntry Key="ActionViewer/ctxCopyAction" Translation="コピー" />
     <TranslationEntry Key="ActionViewer/ctxEditAction" Translation="アクションを編集" />
@@ -187,10 +187,6 @@
     <TranslationEntry Key="ActionViewer/ctxTestLiveIgnoreCnd" Translation="By Live Values (Ignore Conditions)" />
     <TranslationEntry Key="ActionViewer/ctxTestPlaceholder" Translation="By Placeholder Values" />
     <TranslationEntry Key="ActionViewer/ctxUndo" Translation="Undo" />
-    <TranslationEntry Key="AuraDesignForm/alignmentToolStripMenuItem" Translation="配置" />
-    <TranslationEntry Key="AuraDesignForm/bottomCenterToolStripMenuItem" Translation="下 中央" />
-    <TranslationEntry Key="AuraDesignForm/bottomLeftToolStripMenuItem" Translation="下 左" />
-    <TranslationEntry Key="AuraDesignForm/bottomRightToolStripMenuItem" Translation="下 右" />
     <TranslationEntry Key="AuraDesignForm/ctxDiscardChanges" Translation="変更を破棄" />
     <TranslationEntry Key="AuraDesignForm/ctxDisplayCentered" Translation="中央に表示" />
     <TranslationEntry Key="AuraDesignForm/ctxDisplayMethod" Translation="表示方法" />
@@ -201,13 +197,17 @@
     <TranslationEntry Key="AuraDesignForm/ctxImage" Translation="画像 " />
     <TranslationEntry Key="AuraDesignForm/ctxSaveChanges" Translation="変更を保存" />
     <TranslationEntry Key="AuraDesignForm/ctxText" Translation="テキスト" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignment" Translation="配置" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentBottomCenter" Translation="下 中央" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentBottomLeft" Translation="下 左" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentBottomRight" Translation="下 右" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentMiddleCenter" Translation="中央" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentMiddleLeft" Translation="中段 左" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentMiddleRight" Translation="中段 右" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentTopCenter" Translation="上 中央" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentTopLeft" Translation="上 左" />
+    <TranslationEntry Key="AuraDesignForm/ctxTextAlignmentTopRight" Translation="上 右" />
     <TranslationEntry Key="AuraDesignForm/ctxWidthToImageWidth" Translation="画像の幅に合わせる" />
-    <TranslationEntry Key="AuraDesignForm/middleCenterToolStripMenuItem" Translation="中央" />
-    <TranslationEntry Key="AuraDesignForm/middleLeftToolStripMenuItem" Translation="中段 左" />
-    <TranslationEntry Key="AuraDesignForm/middleRightToolStripMenuItem" Translation="中段 右" />
-    <TranslationEntry Key="AuraDesignForm/topCenterToolStripMenuItem" Translation="上 中央" />
-    <TranslationEntry Key="AuraDesignForm/topLeftToolStripMenuItem" Translation="上 左" />
-    <TranslationEntry Key="AuraDesignForm/topRightToolStripMenuItem" Translation="上 右" />
     <TranslationEntry Key="BenchmarkForm" Translation="Trigger benchmark" />
     <TranslationEntry Key="BenchmarkForm/btnClose" Translation="閉じる" />
     <TranslationEntry Key="BenchmarkForm/btnCopyToClipboard" Translation="クリップボードにコピー" />
@@ -303,6 +303,7 @@
     <TranslationEntry Key="ConfigurationForm2/capAutosaving/lblContent" Translation="Autosaving" />
     <TranslationEntry Key="ConfigurationForm2/capBehavior/lblContent" Translation="Behavior" />
     <TranslationEntry Key="ConfigurationForm2/capDownloads/lblContent" Translation="File downloads" />
+    <TranslationEntry Key="ConfigurationForm2/capEndpointHistory/lblContent" Translation="History" />
     <TranslationEntry Key="ConfigurationForm2/capEndpointSettings/lblContent" Translation="Settings" />
     <TranslationEntry Key="ConfigurationForm2/capEndpointStatus/lblContent" Translation="Status" />
     <TranslationEntry Key="ConfigurationForm2/capExpressions/lblContent" Translation="Expressions" />
@@ -336,22 +337,22 @@
     <TranslationEntry Key="ConfigurationForm2/cbxUpdateMethod[Built-in Github check (legacy)]" Translation="Built-in Github check (legacy)" />
     <TranslationEntry Key="ConfigurationForm2/cbxUpdateMethod[External third party]" Translation="External third party" />
     <TranslationEntry Key="ConfigurationForm2/cbxUpdateMethod[Official (recommended)]" Translation="Official (recommended)" />
+    <TranslationEntry Key="ConfigurationForm2/colApiAllowAdmin" Translation="Allow if running as admin" />
+    <TranslationEntry Key="ConfigurationForm2/colApiAllowLocal" Translation="Allow for local triggers" />
+    <TranslationEntry Key="ConfigurationForm2/colApiAllowRemote" Translation="Allow for remote triggers" />
+    <TranslationEntry Key="ConfigurationForm2/colApiNamespace" Translation="Namespace" />
+    <TranslationEntry Key="ConfigurationForm2/colEndpointHistoryData" Translation="Data" />
+    <TranslationEntry Key="ConfigurationForm2/colEndpointHistoryTimestamp" Translation="Timestamp" />
+    <TranslationEntry Key="ConfigurationForm2/colFeatureAllowAdmin" Translation="Allow if running as admin" />
+    <TranslationEntry Key="ConfigurationForm2/colFeatureAllowLocal" Translation="Allow for local triggers" />
+    <TranslationEntry Key="ConfigurationForm2/colFeatureAllowRemote" Translation="Allow for remote triggers" />
+    <TranslationEntry Key="ConfigurationForm2/colFeatureName" Translation="Additional features" />
     <TranslationEntry Key="ConfigurationForm2/colScalarName" Translation="Name" />
     <TranslationEntry Key="ConfigurationForm2/colScalarValue" Translation="Value" />
-    <TranslationEntry Key="ConfigurationForm2/Column1" Translation="検索文字列" />
-    <TranslationEntry Key="ConfigurationForm2/Column2" Translation="置換後の文字列" />
-    <TranslationEntry Key="ConfigurationForm2/Column3" Translation="スコープ" />
-    <TranslationEntry Key="ConfigurationForm2/Column4" Translation="Namespace" />
-    <TranslationEntry Key="ConfigurationForm2/Column5" Translation="Allow for local triggers" />
-    <TranslationEntry Key="ConfigurationForm2/Column6" Translation="Allow for remote triggers" />
-    <TranslationEntry Key="ConfigurationForm2/Column7" Translation="Allow if running as admin" />
-    <TranslationEntry Key="ConfigurationForm2/Column8" Translation="Timestamp" />
-    <TranslationEntry Key="ConfigurationForm2/Column9" Translation="Data" />
+    <TranslationEntry Key="ConfigurationForm2/colSubReplaceWith" Translation="置換後の文字列" />
+    <TranslationEntry Key="ConfigurationForm2/colSubScope" Translation="スコープ" />
+    <TranslationEntry Key="ConfigurationForm2/colSubSearchFor" Translation="検索文字列" />
     <TranslationEntry Key="ConfigurationForm2/ctxClearSelection" Translation="選択を解除" />
-    <TranslationEntry Key="ConfigurationForm2/dataGridViewCheckBoxColumn1" Translation="Allow for local triggers" />
-    <TranslationEntry Key="ConfigurationForm2/dataGridViewCheckBoxColumn2" Translation="Allow for remote triggers" />
-    <TranslationEntry Key="ConfigurationForm2/dataGridViewCheckBoxColumn3" Translation="Allow if running as admin" />
-    <TranslationEntry Key="ConfigurationForm2/dataGridViewTextBoxColumn4" Translation="Additional features" />
     <TranslationEntry Key="ConfigurationForm2/lblActionAsync" Translation="New actions asynchronous by default" />
     <TranslationEntry Key="ConfigurationForm2/lblActTtsWarn" Translation="Using ACT for text-to-speech will cause the rate and volume options on text-to-speech actions to be ignored." />
     <TranslationEntry Key="ConfigurationForm2/lblAutoComplete" Translation="Enable autocomplete on text fields" />
@@ -417,7 +418,6 @@
     <TranslationEntry Key="ConfigurationForm2/lblUseSimulatedBeep" Translation="Use Simulated Beep" />
     <TranslationEntry Key="ConfigurationForm2/lblWarnAdmin" Translation="管理者権限で起動していない場合に警告を表示" />
     <TranslationEntry Key="ConfigurationForm2/lblWelcome" Translation="起動時にようこそ画面を表示" />
-    <TranslationEntry Key="ConfigurationForm2/prettyCaption3/lblContent" Translation="History" />
     <TranslationEntry Key="ConfigurationForm2/tabFFXIV" Translation="Final Fantasy XIV" />
     <TranslationEntry Key="ConfigurationForm2/tlsEndpointHistoryRecv" Translation="telegram(s) received" />
     <TranslationEntry Key="ExportForm" Translation="結果をエクスポート" />
@@ -1973,10 +1973,10 @@
     <TranslationEntry Key="RepositoryForm/ctxSelectionToClipboard" Translation="選択範囲をクリップボードにコピー" />
     <TranslationEntry Key="RepositoryForm/grpGeneral" Translation=" 一般設定 " />
     <TranslationEntry Key="RepositoryForm/grpUpdateSettings" Translation=" 更新と権限 " />
-    <TranslationEntry Key="RepositoryForm/label2" Translation="コンテンツサイズ" />
     <TranslationEntry Key="RepositoryForm/lblAddress" Translation="アドレス" />
     <TranslationEntry Key="RepositoryForm/lblAudioOverride" Translation="音声出力設定の上書き" />
     <TranslationEntry Key="RepositoryForm/lblCacheFilename" Translation="キャッシュファイル名" />
+    <TranslationEntry Key="RepositoryForm/lblContentSize" Translation="コンテンツサイズ" />
     <TranslationEntry Key="RepositoryForm/lblDefaultBehavior" Translation="新しく追加したトリガーの挙動" />
     <TranslationEntry Key="RepositoryForm/lblLastChecked" Translation="Last updated" />
     <TranslationEntry Key="RepositoryForm/lblLastUpdated" Translation="最終更新" />
@@ -2090,16 +2090,36 @@
     <TranslationEntry Key="StateForm/colDictName" Translation="Name" />
     <TranslationEntry Key="StateForm/colDictSize" Translation="Size" />
     <TranslationEntry Key="StateForm/colDictValue" Translation="Value" />
+    <TranslationEntry Key="StateForm/colImageCreatedBy" Translation="更新元" />
+    <TranslationEntry Key="StateForm/colImageName" Translation="名前" />
     <TranslationEntry Key="StateForm/colListChangedBy" Translation="更新元" />
     <TranslationEntry Key="StateForm/colListLastChanged" Translation="最終更新" />
     <TranslationEntry Key="StateForm/colListName" Translation="名前" />
     <TranslationEntry Key="StateForm/colListSize" Translation="サイズ" />
     <TranslationEntry Key="StateForm/colListValue" Translation="値" />
+    <TranslationEntry Key="StateForm/colMutexName" Translation="名前" />
+    <TranslationEntry Key="StateForm/colMutexOwner" Translation="現在のオーナー" />
+    <TranslationEntry Key="StateForm/colMutexQueue" Translation="取得キュー" />
+    <TranslationEntry Key="StateForm/colMutexRefCount" Translation="参照数" />
     <TranslationEntry Key="StateForm/colPeDictChangedBy" Translation="Changed by" />
     <TranslationEntry Key="StateForm/colPeDictLastChanged" Translation="Last changed" />
     <TranslationEntry Key="StateForm/colPeDictName" Translation="Name" />
     <TranslationEntry Key="StateForm/colPeDictSize" Translation="Size" />
     <TranslationEntry Key="StateForm/colPeDictValue" Translation="Value" />
+    <TranslationEntry Key="StateForm/colPeListChangedBy" Translation="更新元" />
+    <TranslationEntry Key="StateForm/colPeListLastChanged" Translation="最終更新" />
+    <TranslationEntry Key="StateForm/colPeListName" Translation="名前" />
+    <TranslationEntry Key="StateForm/colPeListSize" Translation="サイズ" />
+    <TranslationEntry Key="StateForm/colPeListValue" Translation="値" />
+    <TranslationEntry Key="StateForm/colPeScalarChangedBy" Translation="更新元" />
+    <TranslationEntry Key="StateForm/colPeScalarLastChanged" Translation="最終更新" />
+    <TranslationEntry Key="StateForm/colPeScalarName" Translation="名前" />
+    <TranslationEntry Key="StateForm/colPeScalarValue" Translation="値" />
+    <TranslationEntry Key="StateForm/colPeTableChangedBy" Translation="更新元" />
+    <TranslationEntry Key="StateForm/colPeTableHeight" Translation="高さ" />
+    <TranslationEntry Key="StateForm/colPeTableLastChanged" Translation="最終更新" />
+    <TranslationEntry Key="StateForm/colPeTableName" Translation="名前" />
+    <TranslationEntry Key="StateForm/colPeTableWidth" Translation="幅" />
     <TranslationEntry Key="StateForm/colRegisteredChangedBy" Translation="更新元" />
     <TranslationEntry Key="StateForm/colRegisteredLastChanged" Translation="最終更新" />
     <TranslationEntry Key="StateForm/colRegisteredName" Translation="名前" />
@@ -2108,35 +2128,15 @@
     <TranslationEntry Key="StateForm/colScalarLastChanged" Translation="最終更新" />
     <TranslationEntry Key="StateForm/colScalarName" Translation="名前" />
     <TranslationEntry Key="StateForm/colScalarValue" Translation="値" />
-    <TranslationEntry Key="StateForm/Column1" Translation="高さ" />
-    <TranslationEntry Key="StateForm/Column2" Translation="現在のオーナー" />
-    <TranslationEntry Key="StateForm/Column3" Translation="取得キュー" />
-    <TranslationEntry Key="StateForm/Column4" Translation="参照数" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn1" Translation="名前" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn10" Translation="名前" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn11" Translation="値" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn12" Translation="最終更新" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn13" Translation="更新元" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn14" Translation="名前" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn15" Translation="サイズ" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn16" Translation="値" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn17" Translation="最終更新" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn18" Translation="更新元" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn19" Translation="名前" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn2" Translation="幅" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn20" Translation="幅" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn21" Translation="高さ" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn22" Translation="最終更新" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn23" Translation="更新元" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn3" Translation="名前" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn4" Translation="最終更新" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn5" Translation="更新元" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn6" Translation="名前" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn7" Translation="更新元" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn8" Translation="名前" />
-    <TranslationEntry Key="StateForm/dataGridViewTextBoxColumn9" Translation="更新元" />
-    <TranslationEntry Key="StateForm/locateSourceToolStripMenuItem" Translation="発生元へ移動" />
-    <TranslationEntry Key="StateForm/refreshToolStripMenuItem" Translation="更新" />
+    <TranslationEntry Key="StateForm/colTableChangedBy" Translation="更新元" />
+    <TranslationEntry Key="StateForm/colTableHeight" Translation="高さ" />
+    <TranslationEntry Key="StateForm/colTableLastChanged" Translation="最終更新" />
+    <TranslationEntry Key="StateForm/colTableName" Translation="名前" />
+    <TranslationEntry Key="StateForm/colTableWidth" Translation="幅" />
+    <TranslationEntry Key="StateForm/colTextCreatedBy" Translation="更新元" />
+    <TranslationEntry Key="StateForm/colTextName" Translation="名前" />
+    <TranslationEntry Key="StateForm/ctxLocateSource" Translation="発生元へ移動" />
+    <TranslationEntry Key="StateForm/ctxRefresh" Translation="更新" />
     <TranslationEntry Key="StateForm/tabDict" Translation="Dict variables" />
     <TranslationEntry Key="StateForm/tabDictPersistent" Translation="Persistent" />
     <TranslationEntry Key="StateForm/tabDictSession" Translation="Session" />

@@ -64,13 +64,13 @@ namespace Triggernometry.Core
                 return;
             }
 
-            RepositoryFolder rfo = (RepositoryFolder)ui.treeView1.Nodes[1].Tag;
+            RepositoryFolder rfo = (RepositoryFolder)ui.treeView.Nodes[1].Tag;
             TreeNode tn = rfo.Repositories
                 .Where(r => string.Equals(
                     r.Address?.Trim(),
                     item.Address?.Trim(),
                     StringComparison.OrdinalIgnoreCase))
-                .Select(r => ui.treeView1.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == r))
+                .Select(r => ui.treeView.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == r))
                 .FirstOrDefault();
 
             Repository repo;
@@ -105,8 +105,8 @@ namespace Triggernometry.Core
                 };
                 rfo.Repositories.Add(repo);
                 repo.Parent = rfo;
-                ui.treeView1.Nodes[1].Nodes.Add(tn);
-                ui.treeView1.Nodes[1].Expand();
+                ui.treeView.Nodes[1].Nodes.Add(tn);
+                ui.treeView.Nodes[1].Expand();
             }
             tn.Text = repo.Name;
             tn.Checked = repo.Enabled;
@@ -114,7 +114,7 @@ namespace Triggernometry.Core
             tn.SelectedImageIndex = tn.ImageIndex;
 
             ui.RecolorStartingFromNode(tn.Parent, tn.Parent.Checked, true);
-            ui.treeView1.Sort();
+            ui.treeView.Sort();
             if (shouldUpdate)
             {
                 ui.ForceUpdateRepository(tn);
@@ -135,12 +135,12 @@ namespace Triggernometry.Core
                 return;
             }
 
-            RepositoryFolder rfo = (RepositoryFolder)ui.treeView1.Nodes[1].Tag;
+            RepositoryFolder rfo = (RepositoryFolder)ui.treeView.Nodes[1].Tag;
             var nodes = rfo.Repositories
                 .Where(repo =>
                     !string.IsNullOrEmpty(repo?.Address) &&
                     repo.Address.IndexOf(partialUrl, StringComparison.OrdinalIgnoreCase) >= 0)
-                .Select(repo => ui.treeView1.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == repo))
+                .Select(repo => ui.treeView.Nodes[1].Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Tag == repo))
                 .ToList();
 
             for (int i = 0; i < nodes.Count; i++)
@@ -150,7 +150,7 @@ namespace Triggernometry.Core
                 Repository r = (Repository)tn.Tag;
                 r.Enabled = false;
                 rfo.Repositories.Remove(r);
-                ui.treeView1.Nodes[1].Nodes.Remove(tn);
+                ui.treeView.Nodes[1].Nodes.Remove(tn);
             }
         }
 
@@ -165,7 +165,7 @@ namespace Triggernometry.Core
             if (string.IsNullOrEmpty(from))
                 return;
 
-            RepositoryFolder rfo = (RepositoryFolder)ui.treeView1.Nodes[1].Tag;
+            RepositoryFolder rfo = (RepositoryFolder)ui.treeView.Nodes[1].Tag;
 
             foreach (var repo in rfo.Repositories)
             {
@@ -203,7 +203,7 @@ namespace Triggernometry.Core
                 return;
             }
 
-            RepositoryFolder rfo = (RepositoryFolder)ui.treeView1.Nodes[1].Tag;
+            RepositoryFolder rfo = (RepositoryFolder)ui.treeView.Nodes[1].Tag;
 
             var duplicates = rfo.Repositories
                 .Where(repo => !string.IsNullOrWhiteSpace(repo.Address))

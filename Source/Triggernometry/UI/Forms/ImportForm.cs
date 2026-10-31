@@ -66,7 +66,7 @@ namespace Triggernometry.UI.Forms
             set
             {
                 _ui = value;
-                treeView1.ImageList = _ui.imageList1;
+                trvImportPreview.ImageList = _ui.imlTriggerTree;
             }
         }
 
@@ -76,16 +76,16 @@ namespace Triggernometry.UI.Forms
             plug = p;
             if (DesignMode == false)
             {
-                tabControl1.ItemSize = new Size(0, 1);
-                tabControl1.SizeMode = TabSizeMode.Fixed;
+                tbcImportSteps.ItemSize = new Size(0, 1);
+                tbcImportSteps.SizeMode = TabSizeMode.Fixed;
             }
             radImportFromText.Select();
             radExistingActTriggers.Enabled = plug.CustomTriggerCheckHook();
-            treeView1.TreeViewNodeSorter = new NodeSorter();
-            treeView1.ItemDrag += TreeView1_ItemDrag;
-            treeView1.DragDrop += TreeView1_DragDrop;
-            treeView1.DragEnter += TreeView1_DragEnter;
-            treeView1.DragOver += TreeView1_DragOver;
+            trvImportPreview.TreeViewNodeSorter = new NodeSorter();
+            trvImportPreview.ItemDrag += trvImportPreview_ItemDrag;
+            trvImportPreview.DragDrop += trvImportPreview_DragDrop;
+            trvImportPreview.DragEnter += trvImportPreview_DragEnter;
+            trvImportPreview.DragOver += trvImportPreview_DragOver;
             RestoredSavedDimensions();
         }
 
@@ -99,7 +99,7 @@ namespace Triggernometry.UI.Forms
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            panel1.Enabled = radImportFromText.Checked;
+            pnlDirectImport.Enabled = radImportFromText.Checked;
             btnNext.Enabled = (txtImportSource.Text.Length > 0);
         }
 
@@ -110,7 +110,7 @@ namespace Triggernometry.UI.Forms
             btnNext.Enabled = (txtImportFile.Text.Length > 0);
         }
 
-        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        private void tbcImportSteps_Selected(object sender, TabControlEventArgs e)
         {
             if (e.TabPageIndex == 0)
             {
@@ -122,7 +122,7 @@ namespace Triggernometry.UI.Forms
                 btnBack.Text = I18n.Translate("internal/ImportForm/back", "< Back");
                 btnBack.DialogResult = DialogResult.None;
             }
-            if (e.TabPageIndex == tabControl1.TabCount - 1)
+            if (e.TabPageIndex == tbcImportSteps.TabCount - 1)
             {
                 btnNext.Text = I18n.Translate("internal/ImportForm/import", "Import");
                 btnNext.DialogResult = DialogResult.OK;
@@ -136,9 +136,9 @@ namespace Triggernometry.UI.Forms
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedIndex == 0)
+            if (tbcImportSteps.SelectedIndex == 0)
             {
-                treeView1.Nodes.Clear();
+                trvImportPreview.Nodes.Clear();
                 lblWarning.Visible = false;
                 importMethod = (radImportFromText.Checked == true ? 1 : (radLoadFromFileURI.Checked == true ? 2 : 3));
                 switch (importMethod)
@@ -183,26 +183,26 @@ namespace Triggernometry.UI.Forms
                     return;
                 }
             }
-            if (tabControl1.SelectedIndex < tabControl1.TabCount - 1)
+            if (tbcImportSteps.SelectedIndex < tbcImportSteps.TabCount - 1)
             {
-                tabControl1.SelectedIndex++;
+                tbcImportSteps.SelectedIndex++;
             }
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
             btnNext.Enabled = true;
-            if (tabControl1.SelectedIndex > 0)
+            if (tbcImportSteps.SelectedIndex > 0)
             {
-                tabControl1.SelectedIndex--;
+                tbcImportSteps.SelectedIndex--;
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (dlgImportFile.ShowDialog() == DialogResult.OK)
             {
-                txtImportFile.Text = openFileDialog1.FileName;
+                txtImportFile.Text = dlgImportFile.FileName;
             }
         }
 
@@ -352,7 +352,7 @@ namespace Triggernometry.UI.Forms
         private void TryImportExport(TriggernometryExport tex)
         {
             BuildTreeFromExport(tex, null, null, false);
-            treeView1.ExpandAll();
+            trvImportPreview.ExpandAll();
 
             lblWarning.Text = I18n.Translate("internal/ImportForm/version", 
                 "Source plugin version: {0}    Current plugin version: {1}",
@@ -387,7 +387,7 @@ namespace Triggernometry.UI.Forms
             if (parentfolder == null)
             {
                 TreeNode tn = new TreeNode();
-                treeView1.Nodes.Add(tn);
+                trvImportPreview.Nodes.Add(tn);
                 if (tex.ExportedFolder != null)
                 {
                     tn.ImageIndex = (int)CustomControls.UserInterface.GetImageIndexForClosedFolder(tex.ExportedFolder);
@@ -454,7 +454,7 @@ namespace Triggernometry.UI.Forms
             root.Checked = true;
             root.ImageIndex = (int)CustomControls.UserInterface.GetImageIndexForClosedFolder(rootf);
             root.SelectedImageIndex = root.ImageIndex;
-            treeView1.Nodes.Add(root);
+            trvImportPreview.Nodes.Add(root);
             var trigs = plug.CustomTriggerHook();
             foreach (var trig in trigs)
             {
@@ -497,7 +497,7 @@ namespace Triggernometry.UI.Forms
                     t.Parent = f;
                 }
             }
-            treeView1.ExpandAll();
+            trvImportPreview.ExpandAll();
             if (includesTabs == true || includesTimers == true)
             {
                 // todo 18n this
@@ -570,44 +570,44 @@ namespace Triggernometry.UI.Forms
             return t;
         }
 
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        private void trvImportPreview_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (treeView1.SelectedNode == null)
+            if (trvImportPreview.SelectedNode == null)
             {
                 btnEdit.Enabled = false;
                 btnRemove.Enabled = false;
             }
             else if (
-                (treeView1.SelectedNode.Tag is Trigger)
+                (trvImportPreview.SelectedNode.Tag is Trigger)
                 ||
-                (treeView1.SelectedNode.Tag is Folder)
+                (trvImportPreview.SelectedNode.Tag is Folder)
             )
             {
                 btnEdit.Enabled = true;
-                btnRemove.Enabled = (treeView1.SelectedNode.Parent != null);
+                btnRemove.Enabled = (trvImportPreview.SelectedNode.Parent != null);
             }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (treeView1.SelectedNode.Tag is Trigger)
+            if (trvImportPreview.SelectedNode.Tag is Trigger)
             {
-                Trigger t = (Trigger)treeView1.SelectedNode.Tag;
-                TreeNode tn = treeView1.SelectedNode;
+                Trigger t = (Trigger)trvImportPreview.SelectedNode.Tag;
+                TreeNode tn = trvImportPreview.SelectedNode;
                 tn.Parent.Nodes.Remove(tn);
                 t.Parent.Triggers.Remove(t);
             }
-            else if (treeView1.SelectedNode.Tag is Folder)
+            else if (trvImportPreview.SelectedNode.Tag is Folder)
             {
-                Folder f = (Folder)treeView1.SelectedNode.Tag;
-                TreeNode tn = treeView1.SelectedNode;
+                Folder f = (Folder)trvImportPreview.SelectedNode.Tag;
+                TreeNode tn = trvImportPreview.SelectedNode;
                 tn.Parent.Nodes.Remove(tn);
                 f.Parent.Folders.Remove(f);
             }
-            btnNext.Enabled = (treeView1.Nodes[0].Nodes.Count > 0);
+            btnNext.Enabled = (trvImportPreview.Nodes[0].Nodes.Count > 0);
         }
 
-        private void treeView1_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        private void trvImportPreview_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
             if (e.Node.Tag is Folder)
             {
@@ -616,7 +616,7 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        private void trvImportPreview_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             if (e.Node.Tag is Folder)
             {
@@ -625,17 +625,17 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void trvImportPreview_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                treeView1.SelectedNode = e.Node;
+                trvImportPreview.SelectedNode = e.Node;
             }
         }
 
-        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void trvImportPreview_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node == treeView1.SelectedNode && (treeView1.SelectedNode != null) && btnEdit.Enabled == true && (treeView1.SelectedNode.Tag is Trigger))
+            if (e.Node == trvImportPreview.SelectedNode && (trvImportPreview.SelectedNode != null) && btnEdit.Enabled == true && (trvImportPreview.SelectedNode.Tag is Trigger))
             {
                 btnEdit_Click(sender, null);
             }
@@ -643,7 +643,7 @@ namespace Triggernometry.UI.Forms
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (treeView1.SelectedNode.Tag is Trigger t)
+            if (trvImportPreview.SelectedNode.Tag is Trigger t)
             {
                 using (TriggerForm tf = new TriggerForm(t, trv, imgs))
                 {
@@ -654,29 +654,29 @@ namespace Triggernometry.UI.Forms
                         {
                             tf.SettingsToTrigger(t);
                         }
-                        TreeNode tn = treeView1.SelectedNode;
+                        TreeNode tn = trvImportPreview.SelectedNode;
                         tn.Text = t.Name;
-                        treeView1.Sort();
-                        treeView1.SelectedNode = tn;
+                        trvImportPreview.Sort();
+                        trvImportPreview.SelectedNode = tn;
                     }
                 }
             }
-            else if (treeView1.SelectedNode.Tag is Folder)
+            else if (trvImportPreview.SelectedNode.Tag is Folder)
             {
                 using (Forms.FolderForm ff = new Forms.FolderForm())
                 {
                     ff.plug = plug;
-                    Folder f = (Folder)treeView1.SelectedNode.Tag;
+                    Folder f = (Folder)trvImportPreview.SelectedNode.Tag;
                     ff.SettingsFromFolder(f);
                     ff.Text = I18n.Translate("internal/ImportForm/editimportedfolder", "Edit imported folder '{0}'", f.Name);
                     ff.btnOk.Text = I18n.Translate("internal/ImportForm/savechanges", "Save changes");
                     if (ff.ShowDialog() == DialogResult.OK)
                     {
                         ff.SettingsToFolder(f);
-                        TreeNode tn = treeView1.SelectedNode;
+                        TreeNode tn = trvImportPreview.SelectedNode;
                         tn.Text = f.Name;
-                        treeView1.Sort();
-                        treeView1.SelectedNode = tn;
+                        trvImportPreview.Sort();
+                        trvImportPreview.SelectedNode = tn;
                     }
                 }
             }
@@ -692,7 +692,7 @@ namespace Triggernometry.UI.Forms
             btnRemove_Click(sender, e);
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ctxImportPreview_Opening(object sender, CancelEventArgs e)
         {
             ctxEdit.Enabled = btnEdit.Enabled;
             ctxRemove.Enabled = btnRemove.Enabled;
@@ -746,7 +746,7 @@ namespace Triggernometry.UI.Forms
             root.ImageIndex = (int)CustomControls.UserInterface.GetImageIndexForClosedFolder(rootf);
             root.SelectedImageIndex = root.ImageIndex;
             root.Checked = true;
-            treeView1.Nodes.Add(root);
+            trvImportPreview.Nodes.Add(root);
             foreach (KeyValuePair<string, List<Tuple<bool, bool, string, Trigger>>> kp in trx)
             {
                 Folder f = new Folder();
@@ -785,7 +785,7 @@ namespace Triggernometry.UI.Forms
                     t.Parent = f;
                 }
             }
-            treeView1.ExpandAll();
+            trvImportPreview.ExpandAll();
             if (includesTabs == true || includesTimers == true)
             {
                 if (includesTabs == true)
@@ -811,7 +811,7 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void contextMenuStrip2_Opening(object sender, CancelEventArgs e)
+        private void ctxImportSource_Opening(object sender, CancelEventArgs e)
         {
             ctxPasteFromClipboard.Enabled = btnPaste.Enabled;
         }
@@ -828,11 +828,11 @@ namespace Triggernometry.UI.Forms
             return ContainsNode(node1, node2.Parent);
         }
 
-        private void TreeView1_DragOver(object sender, DragEventArgs e)
+        private void trvImportPreview_DragOver(object sender, DragEventArgs e)
         {
-            Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
-            treeView1.SelectedNode = treeView1.GetNodeAt(targetPoint);
-            if (treeView1.SelectedNode == null || treeView1.SelectedNode.Tag is Trigger)
+            Point targetPoint = trvImportPreview.PointToClient(new Point(e.X, e.Y));
+            trvImportPreview.SelectedNode = trvImportPreview.GetNodeAt(targetPoint);
+            if (trvImportPreview.SelectedNode == null || trvImportPreview.SelectedNode.Tag is Trigger)
             {
                 e.Effect = DragDropEffects.None;
             }
@@ -842,15 +842,15 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void TreeView1_DragEnter(object sender, DragEventArgs e)
+        private void trvImportPreview_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
         }
 
-        private void TreeView1_DragDrop(object sender, DragEventArgs e)
+        private void trvImportPreview_DragDrop(object sender, DragEventArgs e)
         {
-            Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
-            TreeNode targetNode = treeView1.GetNodeAt(targetPoint);
+            Point targetPoint = trvImportPreview.PointToClient(new Point(e.X, e.Y));
+            TreeNode targetNode = trvImportPreview.GetNodeAt(targetPoint);
             if (targetNode == null) return;
             TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
             if (!draggedNode.Equals(targetNode) && !ContainsNode(draggedNode, targetNode) && !(targetNode.Tag is Trigger))
@@ -879,11 +879,11 @@ namespace Triggernometry.UI.Forms
             }
         }
 
-        private void TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
+        private void trvImportPreview_ItemDrag(object sender, ItemDragEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (e.Item != treeView1.Nodes[0])
+                if (e.Item != trvImportPreview.Nodes[0])
                 {
                     DoDragDrop(e.Item, DragDropEffects.Move);
                 }

@@ -508,13 +508,13 @@ namespace Triggernometry.UI.Forms
 
         private void btnSaveAsCsv_Click(object sender, EventArgs e) 
         {
-            saveFileDialog1.FileName = txtVariableName.Text + ".csv";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK) 
+            dlgSaveCsv.FileName = txtVariableName.Text + ".csv";
+            if (dlgSaveCsv.ShowDialog() == DialogResult.OK) 
             {
                 VariableTable v = (VariableTable)VariableToEdit;
                 try
                 {
-                    File.WriteAllText(saveFileDialog1.FileName, v.ToCSVString());
+                    File.WriteAllText(dlgSaveCsv.FileName, v.ToCSVString());
                 }
                 catch (IOException ex)
                 {

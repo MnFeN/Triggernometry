@@ -31,35 +31,35 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExportForm));
             this.rtbExportResults = new System.Windows.Forms.RichTextBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxExportResults = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxSaveToFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepContextClipboard = new System.Windows.Forms.ToolStripSeparator();
             this.ctxCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxSelectionToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxEverythingToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsMain = new System.Windows.Forms.ToolStrip();
             this.tslFormat = new System.Windows.Forms.ToolStripLabel();
             this.cbxFormat = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepToolbarSave = new System.Windows.Forms.ToolStripSeparator();
             this.btnSaveToFile = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepToolbarClipboard = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopy = new System.Windows.Forms.ToolStripDropDownButton();
             this.btnSelectionToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.btnEverythingToClipboard = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.dlgExportFile = new System.Windows.Forms.SaveFileDialog();
+            this.pnlExportResults = new System.Windows.Forms.Panel();
+            this.pnlBottomSpacing = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
-            this.contextMenuStrip1.SuspendLayout();
+            this.ctxExportResults.SuspendLayout();
             this.tlsMain.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnlExportResults.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtbExportResults
             // 
             this.rtbExportResults.BackColor = System.Drawing.SystemColors.Window;
             this.rtbExportResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rtbExportResults.ContextMenuStrip = this.contextMenuStrip1;
+            this.rtbExportResults.ContextMenuStrip = this.ctxExportResults;
             this.rtbExportResults.DetectUrls = false;
             this.rtbExportResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtbExportResults.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -72,15 +72,15 @@
             this.rtbExportResults.WordWrap = false;
             this.rtbExportResults.SelectionChanged += new System.EventHandler(this.richTextBox1_SelectionChanged);
             // 
-            // contextMenuStrip1
+            // ctxExportResults
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxExportResults.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxSaveToFile,
-            this.toolStripSeparator3,
+            this.sepContextClipboard,
             this.ctxCopy});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(132, 54);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.ctxExportResults.Name = "ctxExportResults";
+            this.ctxExportResults.Size = new System.Drawing.Size(132, 54);
+            this.ctxExportResults.Opening += new System.ComponentModel.CancelEventHandler(this.ctxExportResults_Opening);
             // 
             // ctxSaveToFile
             // 
@@ -90,10 +90,10 @@
             this.ctxSaveToFile.Text = "Save to file";
             this.ctxSaveToFile.Click += new System.EventHandler(this.saveToFileToolStripMenuItem_Click);
             // 
-            // toolStripSeparator3
+            // sepContextClipboard
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(128, 6);
+            this.sepContextClipboard.Name = "sepContextClipboard";
+            this.sepContextClipboard.Size = new System.Drawing.Size(128, 6);
             // 
             // ctxCopy
             // 
@@ -126,9 +126,9 @@
             this.tlsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tslFormat,
             this.cbxFormat,
-            this.toolStripSeparator1,
+            this.sepToolbarSave,
             this.btnSaveToFile,
-            this.toolStripSeparator2,
+            this.sepToolbarClipboard,
             this.btnCopy});
             this.tlsMain.Location = new System.Drawing.Point(10, 10);
             this.tlsMain.Name = "tlsMain";
@@ -152,10 +152,10 @@
             this.cbxFormat.Size = new System.Drawing.Size(200, 25);
             this.cbxFormat.SelectedIndexChanged += new System.EventHandler(this.cbxFormat_SelectedIndexChanged);
             // 
-            // toolStripSeparator1
+            // sepToolbarSave
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.sepToolbarSave.Name = "sepToolbarSave";
+            this.sepToolbarSave.Size = new System.Drawing.Size(6, 25);
             // 
             // btnSaveToFile
             // 
@@ -166,10 +166,10 @@
             this.btnSaveToFile.Text = "Save to file";
             this.btnSaveToFile.Click += new System.EventHandler(this.btnSaveToFile_Click);
             // 
-            // toolStripSeparator2
+            // sepToolbarClipboard
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.sepToolbarClipboard.Name = "sepToolbarClipboard";
+            this.sepToolbarClipboard.Size = new System.Drawing.Size(6, 25);
             // 
             // btnCopy
             // 
@@ -199,30 +199,30 @@
             this.btnEverythingToClipboard.Text = "Everything to clipboard";
             this.btnEverythingToClipboard.Click += new System.EventHandler(this.everythingToClipboardToolStripMenuItem_Click);
             // 
-            // saveFileDialog1
+            // dlgExportFile
             // 
-            this.saveFileDialog1.FileName = "TriggernometryExport.xml";
-            this.saveFileDialog1.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-            this.saveFileDialog1.RestoreDirectory = true;
-            this.saveFileDialog1.Title = "Save export results";
+            this.dlgExportFile.FileName = "TriggernometryExport.xml";
+            this.dlgExportFile.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+            this.dlgExportFile.RestoreDirectory = true;
+            this.dlgExportFile.Title = "Save export results";
             // 
-            // panel1
+            // pnlExportResults
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.rtbExportResults);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(10, 35);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(564, 321);
-            this.panel1.TabIndex = 2;
+            this.pnlExportResults.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlExportResults.Controls.Add(this.rtbExportResults);
+            this.pnlExportResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlExportResults.Location = new System.Drawing.Point(10, 35);
+            this.pnlExportResults.Name = "pnlExportResults";
+            this.pnlExportResults.Size = new System.Drawing.Size(564, 321);
+            this.pnlExportResults.TabIndex = 2;
             // 
-            // panel3
+            // pnlBottomSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 356);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(564, 10);
-            this.panel3.TabIndex = 19;
+            this.pnlBottomSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottomSpacing.Location = new System.Drawing.Point(10, 356);
+            this.pnlBottomSpacing.Name = "pnlBottomSpacing";
+            this.pnlBottomSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlBottomSpacing.TabIndex = 19;
             // 
             // btnClose
             // 
@@ -241,9 +241,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(584, 411);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlExportResults);
             this.Controls.Add(this.tlsMain);
-            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.pnlBottomSpacing);
             this.Controls.Add(this.btnClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(600, 450);
@@ -252,10 +252,10 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Export results";
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.ctxExportResults.ResumeLayout(false);
             this.tlsMain.ResumeLayout(false);
             this.tlsMain.PerformLayout();
-            this.panel1.ResumeLayout(false);
+            this.pnlExportResults.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -263,24 +263,24 @@
 
         #endregion
         private System.Windows.Forms.ToolStrip tlsMain;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip ctxExportResults;
         private System.Windows.Forms.ToolStripLabel tslFormat;
         private System.Windows.Forms.ToolStripComboBox cbxFormat;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator sepToolbarSave;
         private System.Windows.Forms.RichTextBox rtbExportResults;
         private System.Windows.Forms.ToolStripDropDownButton btnCopy;
         private System.Windows.Forms.ToolStripMenuItem btnSelectionToClipboard;
         private System.Windows.Forms.ToolStripMenuItem btnEverythingToClipboard;
         private System.Windows.Forms.ToolStripMenuItem ctxSaveToFile;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator sepContextClipboard;
         private System.Windows.Forms.ToolStripMenuItem ctxCopy;
         private System.Windows.Forms.ToolStripMenuItem ctxSelectionToClipboard;
         private System.Windows.Forms.ToolStripMenuItem ctxEverythingToClipboard;
         private System.Windows.Forms.ToolStripButton btnSaveToFile;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.ToolStripSeparator sepToolbarClipboard;
+        private System.Windows.Forms.SaveFileDialog dlgExportFile;
+        private System.Windows.Forms.Panel pnlExportResults;
+        private System.Windows.Forms.Panel pnlBottomSpacing;
         internal System.Windows.Forms.Button btnClose;
     }
 }

@@ -31,14 +31,14 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConditionViewer));
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.imlConditionNodes = new System.Windows.Forms.ImageList(this.components);
+            this.tlsConditions = new System.Windows.Forms.ToolStrip();
             this.btnAddGroup = new System.Windows.Forms.ToolStripButton();
             this.btnAddCondition = new System.Windows.Forms.ToolStripButton();
             this.btnAddComment = new System.Windows.Forms.ToolStripButton();
             this.btnDelete = new System.Windows.Forms.ToolStripButton();
             this.pnlEditorSingle = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableConditionSingle = new System.Windows.Forms.TableLayoutPanel();
             this.expRight = new Triggernometry.UI.CustomControls.ExpressionTextBox();
             this.cbxExpRType = new System.Windows.Forms.ComboBox();
             this.lblLeftExpression = new System.Windows.Forms.Label();
@@ -50,68 +50,68 @@
             this.lblRightExpression = new System.Windows.Forms.Label();
             this.lblComparisonDescription = new System.Windows.Forms.Label();
             this.pnlEditorGroup = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableConditionGroup = new System.Windows.Forms.TableLayoutPanel();
             this.cbxGroupingType = new System.Windows.Forms.ComboBox();
             this.lblGroupingType = new System.Windows.Forms.Label();
             this.pnlEditorComment = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableConditionComment = new System.Windows.Forms.TableLayoutPanel();
             this.lblComment = new System.Windows.Forms.Label();
             this.txtComment = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.tableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
             this.pnlTree = new System.Windows.Forms.Panel();
             this.trvNodes = new Triggernometry.UI.CustomControls.TreeViewEx();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxConditions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxAddGroup = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxAddCondition = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxAddComment = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepContextClipboard = new System.Windows.Forms.ToolStripSeparator();
             this.ctxCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxPaste = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxPasteOver = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepContextTest = new System.Windows.Forms.ToolStripSeparator();
             this.ctxTest = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepContextRemove = new System.Windows.Forms.ToolStripSeparator();
             this.ctxRemove = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.pnlConditionEditors = new System.Windows.Forms.Panel();
             this.tableLayoutPanelMain.SuspendLayout();
             this.pnlTree.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.tlsConditions.SuspendLayout();
             this.pnlEditorSingle.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tableConditionSingle.SuspendLayout();
             this.pnlEditorGroup.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.tableConditionGroup.SuspendLayout();
             this.pnlEditorComment.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
-            this.panel3.SuspendLayout();
+            this.tableConditionComment.SuspendLayout();
+            this.ctxConditions.SuspendLayout();
+            this.pnlConditionEditors.SuspendLayout();
             this.SuspendLayout();
             // 
-            // imageList1
+            // imlConditionNodes
             // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "function");
-            this.imageList1.Images.SetKeyName(1, "group_and");
-            this.imageList1.Images.SetKeyName(2, "group_or");
-            this.imageList1.Images.SetKeyName(3, "group_not");
-            this.imageList1.Images.SetKeyName(4, "group_xor");
-            this.imageList1.Images.SetKeyName(5, "comment");
+            this.imlConditionNodes.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlConditionNodes.ImageStream")));
+            this.imlConditionNodes.TransparentColor = System.Drawing.Color.Transparent;
+            this.imlConditionNodes.Images.SetKeyName(0, "function");
+            this.imlConditionNodes.Images.SetKeyName(1, "group_and");
+            this.imlConditionNodes.Images.SetKeyName(2, "group_or");
+            this.imlConditionNodes.Images.SetKeyName(3, "group_not");
+            this.imlConditionNodes.Images.SetKeyName(4, "group_xor");
+            this.imlConditionNodes.Images.SetKeyName(5, "comment");
             // 
-            // toolStrip1
+            // tlsConditions
             // 
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlsConditions.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tlsConditions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddCondition,
             this.btnAddGroup,
             this.btnAddComment,
             this.btnDelete});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(839, 25);
-            this.toolStrip1.TabStop = false;
+            this.tlsConditions.Location = new System.Drawing.Point(0, 0);
+            this.tlsConditions.Name = "tlsConditions";
+            this.tlsConditions.Size = new System.Drawing.Size(839, 25);
+            this.tlsConditions.TabStop = false;
             // 
             // btnAddGroup
             // 
@@ -154,42 +154,42 @@
             // 
             this.pnlEditorSingle.AutoSize = true;
             this.pnlEditorSingle.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pnlEditorSingle.Controls.Add(this.tableLayoutPanel1);
+            this.pnlEditorSingle.Controls.Add(this.tableConditionSingle);
             this.pnlEditorSingle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlEditorSingle.Location = new System.Drawing.Point(0, 56);
             this.pnlEditorSingle.Name = "pnlEditorSingle";
             this.pnlEditorSingle.Size = new System.Drawing.Size(200, 220);
             this.pnlEditorSingle.TabStop = false;
             //
-            // tableLayoutPanel1
+            // tableConditionSingle
             //
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 4;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.cbxExpLType, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lblLeftExpression, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.expLeft, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.cbxComparison, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.cbxOpType, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblComparisonDescription, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.cbxExpRType, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lblRightExpression, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.expRight, 3, 2);
-            this.tableLayoutPanel1.SetColumnSpan(this.cbxExpLType, 2);
-            this.tableLayoutPanel1.SetColumnSpan(this.cbxExpRType, 2);
-            this.tableLayoutPanel1.SetColumnSpan(this.lblComparisonDescription, 2);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(831, 81);
-            this.tableLayoutPanel1.TabStop = false;
+            this.tableConditionSingle.AutoSize = true;
+            this.tableConditionSingle.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableConditionSingle.ColumnCount = 4;
+            this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+            this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableConditionSingle.Controls.Add(this.cbxExpLType, 0, 0);
+            this.tableConditionSingle.Controls.Add(this.lblLeftExpression, 2, 0);
+            this.tableConditionSingle.Controls.Add(this.expLeft, 3, 0);
+            this.tableConditionSingle.Controls.Add(this.cbxComparison, 0, 1);
+            this.tableConditionSingle.Controls.Add(this.cbxOpType, 1, 1);
+            this.tableConditionSingle.Controls.Add(this.lblComparisonDescription, 2, 1);
+            this.tableConditionSingle.Controls.Add(this.cbxExpRType, 0, 2);
+            this.tableConditionSingle.Controls.Add(this.lblRightExpression, 2, 2);
+            this.tableConditionSingle.Controls.Add(this.expRight, 3, 2);
+            this.tableConditionSingle.SetColumnSpan(this.cbxExpLType, 2);
+            this.tableConditionSingle.SetColumnSpan(this.cbxExpRType, 2);
+            this.tableConditionSingle.SetColumnSpan(this.lblComparisonDescription, 2);
+            this.tableConditionSingle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableConditionSingle.Name = "tableConditionSingle";
+            this.tableConditionSingle.RowCount = 3;
+            this.tableConditionSingle.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableConditionSingle.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableConditionSingle.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableConditionSingle.Size = new System.Drawing.Size(831, 81);
+            this.tableConditionSingle.TabStop = false;
             // 
             // expRight
             // 
@@ -289,29 +289,29 @@
             // 
             this.pnlEditorGroup.AutoSize = true;
             this.pnlEditorGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pnlEditorGroup.Controls.Add(this.tableLayoutPanel2);
+            this.pnlEditorGroup.Controls.Add(this.tableConditionGroup);
             this.pnlEditorGroup.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlEditorGroup.Location = new System.Drawing.Point(0, 0);
             this.pnlEditorGroup.Name = "pnlEditorGroup";
             this.pnlEditorGroup.Size = new System.Drawing.Size(200, 56);
             this.pnlEditorGroup.TabStop = false;
             // 
-            // tableLayoutPanel2
+            // tableConditionGroup
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.cbxGroupingType, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.lblGroupingType, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(200, 56);
-            this.tableLayoutPanel2.TabStop = false;
+            this.tableConditionGroup.AutoSize = true;
+            this.tableConditionGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableConditionGroup.ColumnCount = 1;
+            this.tableConditionGroup.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableConditionGroup.Controls.Add(this.cbxGroupingType, 0, 1);
+            this.tableConditionGroup.Controls.Add(this.lblGroupingType, 0, 0);
+            this.tableConditionGroup.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableConditionGroup.Location = new System.Drawing.Point(0, 0);
+            this.tableConditionGroup.Name = "tableConditionGroup";
+            this.tableConditionGroup.RowCount = 2;
+            this.tableConditionGroup.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableConditionGroup.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableConditionGroup.Size = new System.Drawing.Size(200, 56);
+            this.tableConditionGroup.TabStop = false;
             // 
             // cbxGroupingType
             // 
@@ -342,7 +342,7 @@
             // 
             // pnlEditorComment
             //
-            this.pnlEditorComment.Controls.Add(this.tableLayoutPanel3);
+            this.pnlEditorComment.Controls.Add(this.tableConditionComment);
             this.pnlEditorComment.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlEditorComment.AutoSize = true;
             this.pnlEditorComment.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -351,22 +351,22 @@
             this.pnlEditorComment.Size = new System.Drawing.Size(200, 546);
             this.pnlEditorComment.TabStop = false;
             //
-            // tableLayoutPanel3
+            // tableConditionComment
             //
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.lblComment, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.txtComment, 0, 1);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(200, 546);
-            this.tableLayoutPanel3.TabStop = false;
+            this.tableConditionComment.ColumnCount = 1;
+            this.tableConditionComment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableConditionComment.Controls.Add(this.lblComment, 0, 0);
+            this.tableConditionComment.Controls.Add(this.txtComment, 0, 1);
+            this.tableConditionComment.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableConditionComment.AutoSize = true;
+            this.tableConditionComment.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableConditionComment.Location = new System.Drawing.Point(0, 0);
+            this.tableConditionComment.Name = "tableConditionComment";
+            this.tableConditionComment.RowCount = 2;
+            this.tableConditionComment.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableConditionComment.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableConditionComment.Size = new System.Drawing.Size(200, 546);
+            this.tableConditionComment.TabStop = false;
             //
             // lblComment
             //
@@ -399,9 +399,9 @@
             this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelMain.Controls.Add(this.toolStrip1, 0, 0);
+            this.tableLayoutPanelMain.Controls.Add(this.tlsConditions, 0, 0);
             this.tableLayoutPanelMain.Controls.Add(this.pnlTree, 0, 1);
-            this.tableLayoutPanelMain.Controls.Add(this.panel3, 0, 2);
+            this.tableLayoutPanelMain.Controls.Add(this.pnlConditionEditors, 0, 2);
             this.tableLayoutPanelMain.AutoSize = true;
             this.tableLayoutPanelMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Top;
@@ -425,12 +425,12 @@
             // 
             this.trvNodes.AllowDrop = true;
             this.trvNodes.CheckBoxes = true;
-            this.trvNodes.ContextMenuStrip = this.contextMenuStrip1;
+            this.trvNodes.ContextMenuStrip = this.ctxConditions;
             this.trvNodes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.trvNodes.Margin = new System.Windows.Forms.Padding(0);
             this.trvNodes.HideSelection = false;
             this.trvNodes.ImageIndex = 0;
-            this.trvNodes.ImageList = this.imageList1;
+            this.trvNodes.ImageList = this.imlConditionNodes;
             this.trvNodes.Location = new System.Drawing.Point(0, 0);
             this.trvNodes.Name = "trvNodes";
             this.trvNodes.SelectedImageIndex = 0;
@@ -446,23 +446,23 @@
             this.trvNodes.DragOver += new System.Windows.Forms.DragEventHandler(this.trvNodes_DragOver);
             this.trvNodes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.trvNodes_KeyDown);
             // 
-            // contextMenuStrip1
+            // ctxConditions
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxConditions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxAdd,
-            this.toolStripSeparator7,
+            this.sepContextClipboard,
             this.ctxCopy,
             this.ctxPaste,
             this.ctxPasteOver,
-            this.toolStripSeparator2,
+            this.sepContextTest,
             this.ctxTest,
             this.ctxExpandAll,
             this.ctxCollapseAll,
-            this.toolStripSeparator3,
+            this.sepContextRemove,
             this.ctxRemove});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(202, 126);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.ctxConditions.Name = "ctxConditions";
+            this.ctxConditions.Size = new System.Drawing.Size(202, 126);
+            this.ctxConditions.Opening += new System.ComponentModel.CancelEventHandler(this.ctxConditions_Opening);
             // 
             // ctxAdd
             // 
@@ -499,10 +499,10 @@
             this.ctxAddComment.Text = "Comment";
             this.ctxAddComment.Click += new System.EventHandler(this.btnAddComment_Click);
             // 
-            // toolStripSeparator7
+            // sepContextClipboard
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(198, 6);
+            this.sepContextClipboard.Name = "sepContextClipboard";
+            this.sepContextClipboard.Size = new System.Drawing.Size(198, 6);
             // 
             // ctxCopy
             // 
@@ -532,10 +532,10 @@
             this.ctxPasteOver.Text = "Paste over";
             this.ctxPasteOver.Click += new System.EventHandler(this.pasteOverToolStripMenuItem_Click);
             // 
-            // toolStripSeparator2
+            // sepContextTest
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(198, 6);
+            this.sepContextTest.Name = "sepContextTest";
+            this.sepContextTest.Size = new System.Drawing.Size(198, 6);
             // 
             // ctxTest
             // 
@@ -560,10 +560,10 @@
             this.ctxCollapseAll.Text = "Collapse All";
             this.ctxCollapseAll.Click += new System.EventHandler(this.collapseAllToolStripMenuItem_Click);
             // 
-            // toolStripSeparator3
+            // sepContextRemove
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(198, 6);
+            this.sepContextRemove.Name = "sepContextRemove";
+            this.sepContextRemove.Size = new System.Drawing.Size(198, 6);
             // 
             // ctxRemove
             // 
@@ -573,20 +573,20 @@
             this.ctxRemove.Text = "Remove";
             this.ctxRemove.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
-            // panel3
+            // pnlConditionEditors
             // 
-            this.panel3.AutoSize = true;
-            this.panel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel3.Margin = new System.Windows.Forms.Padding(0);
-            this.panel3.Controls.Add(this.pnlEditorComment);
-            this.panel3.Controls.Add(this.pnlEditorSingle);
-            this.panel3.Controls.Add(this.pnlEditorGroup);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Padding = new System.Windows.Forms.Padding(4);
-            this.panel3.Location = new System.Drawing.Point(0, 30);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(200, 546);
-            this.panel3.TabStop = false;
+            this.pnlConditionEditors.AutoSize = true;
+            this.pnlConditionEditors.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pnlConditionEditors.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlConditionEditors.Controls.Add(this.pnlEditorComment);
+            this.pnlConditionEditors.Controls.Add(this.pnlEditorSingle);
+            this.pnlConditionEditors.Controls.Add(this.pnlEditorGroup);
+            this.pnlConditionEditors.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlConditionEditors.Padding = new System.Windows.Forms.Padding(4);
+            this.pnlConditionEditors.Location = new System.Drawing.Point(0, 30);
+            this.pnlConditionEditors.Name = "pnlConditionEditors";
+            this.pnlConditionEditors.Size = new System.Drawing.Size(200, 546);
+            this.pnlConditionEditors.TabStop = false;
             // 
             // ConditionViewer
             // 
@@ -599,22 +599,22 @@
             this.pnlTree.ResumeLayout(false);
             this.tableLayoutPanelMain.ResumeLayout(false);
             this.tableLayoutPanelMain.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.tlsConditions.ResumeLayout(false);
+            this.tlsConditions.PerformLayout();
             this.pnlEditorSingle.ResumeLayout(false);
             this.pnlEditorSingle.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tableConditionSingle.ResumeLayout(false);
+            this.tableConditionSingle.PerformLayout();
             this.pnlEditorGroup.ResumeLayout(false);
             this.pnlEditorGroup.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.tableConditionGroup.ResumeLayout(false);
+            this.tableConditionGroup.PerformLayout();
             this.pnlEditorComment.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.tableConditionComment.ResumeLayout(false);
+            this.tableConditionComment.PerformLayout();
+            this.ctxConditions.ResumeLayout(false);
+            this.pnlConditionEditors.ResumeLayout(false);
+            this.pnlConditionEditors.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -624,13 +624,13 @@
 
         private System.Windows.Forms.Panel pnlTree;
         private TreeViewEx trvNodes;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip tlsConditions;
         private System.Windows.Forms.ToolStripButton btnAddCondition;
         private System.Windows.Forms.ToolStripButton btnAddGroup;
         private System.Windows.Forms.ToolStripButton btnAddComment;
         private System.Windows.Forms.ToolStripButton btnDelete;
         private System.Windows.Forms.Panel pnlEditorSingle;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableConditionSingle;
         private System.Windows.Forms.Label lblRightExpression;
         private System.Windows.Forms.Label lblComparisonDescription;
         private System.Windows.Forms.Label lblLeftExpression;
@@ -642,30 +642,30 @@
         private ExpressionTextBox expRight;
         private System.Windows.Forms.ComboBox cbxExpRType;
         private System.Windows.Forms.Panel pnlEditorGroup;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableConditionGroup;
         private System.Windows.Forms.ComboBox cbxGroupingType;
         private System.Windows.Forms.Label lblGroupingType;
         private System.Windows.Forms.Panel pnlEditorComment;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel tableConditionComment;
         private System.Windows.Forms.Label lblComment;
         private Triggernometry.UI.CustomControls.EnhancedTextBox txtComment;
-        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ImageList imlConditionNodes;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip ctxConditions;
         private System.Windows.Forms.ToolStripMenuItem ctxAdd;
         private System.Windows.Forms.ToolStripMenuItem ctxAddGroup;
         private System.Windows.Forms.ToolStripMenuItem ctxAddCondition;
         private System.Windows.Forms.ToolStripMenuItem ctxAddComment;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripSeparator sepContextClipboard;
         private System.Windows.Forms.ToolStripMenuItem ctxCopy;
         private System.Windows.Forms.ToolStripMenuItem ctxPaste;
         private System.Windows.Forms.ToolStripMenuItem ctxPasteOver;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator sepContextTest;
         private System.Windows.Forms.ToolStripMenuItem ctxTest;
         private System.Windows.Forms.ToolStripMenuItem ctxExpandAll;
         private System.Windows.Forms.ToolStripMenuItem ctxCollapseAll;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator sepContextRemove;
         private System.Windows.Forms.ToolStripMenuItem ctxRemove;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel pnlConditionEditors;
     }
 }

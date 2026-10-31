@@ -43,14 +43,14 @@ namespace Triggernometry.UI.Forms
             }
             expEditedValue.ExpressionType = exprType;
             expEditedValue.Text = defaultValue;
-            expEditedValue.textBox1.MinimumSize = new Size(200, 0);
+            expEditedValue.txtExpression.MinimumSize = new Size(200, 0);
             if (multiline)
             {
-                expEditedValue.textBox1.Dock = DockStyle.Fill;
-                expEditedValue.textBox1.AcceptsReturn = true;
-                expEditedValue.textBox1.AcceptsTab = true;
-                expEditedValue.textBox1.MaxLength = 0;
-                expEditedValue.textBox1.WordWrap = false;
+                expEditedValue.txtExpression.Dock = DockStyle.Fill;
+                expEditedValue.txtExpression.AcceptsReturn = true;
+                expEditedValue.txtExpression.AcceptsTab = true;
+                expEditedValue.txtExpression.MaxLength = 0;
+                expEditedValue.txtExpression.WordWrap = false;
                 expEditedValue.ToggleExpand();
             }
 
@@ -60,7 +60,7 @@ namespace Triggernometry.UI.Forms
 
         private void SimpleInputForm_Shown(object sender, EventArgs e)
         {
-            expEditedValue.textBox1.Focus();
+            expEditedValue.txtExpression.Focus();
             Activate();
         }
 

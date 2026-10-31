@@ -165,7 +165,7 @@ namespace Triggernometry.Core.Actions
                         plug.ui.Invoke((System.Action)(() =>
                         {
                             bool isLocal = ctx.Trigger?.Repo == null;
-                            TreeNode tn = plug.LocateNodeHostingFolder(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], f);
+                            TreeNode tn = plug.LocateNodeHostingFolder(plug.ui.treeView.Nodes[isLocal ? 0 : 1], f);
                             if (tn != null) tn.Checked = isEnable;
                             else AddToLog(ctx, RealPlugin.DebugLevelEnum.Warning, I18n.Translate("internal/Action/notreenodefolderwithid", "Didn't find a tree node for folder ({0}) with id ({1})", f.Name, f.Id));
                             AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, isEnable

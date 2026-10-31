@@ -29,20 +29,20 @@
         private void InitializeComponent()
         {
             this.trvRepositories = new Triggernometry.UI.CustomControls.TreeViewEx();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.grpAvailRepos = new System.Windows.Forms.GroupBox();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.stsRepositoryLoading = new System.Windows.Forms.StatusStrip();
             this.prgProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.grpRepoDetails = new System.Windows.Forms.GroupBox();
             this.txtRepoDetails = new System.Windows.Forms.TextBox();
-            this.panel11 = new System.Windows.Forms.Panel();
-            this.panel4.SuspendLayout();
+            this.pnlRepositoryDetailsSpacing = new System.Windows.Forms.Panel();
+            this.pnlButtons.SuspendLayout();
             this.grpAvailRepos.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.stsRepositoryLoading.SuspendLayout();
             this.grpRepoDetails.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,23 +58,23 @@
             this.trvRepositories.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.trvRepositories_AfterCheck);
             this.trvRepositories.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvRepositories_BeforeSelect);
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 406);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(564, 10);
-            this.panel3.TabIndex = 18;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 406);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlButtonsSpacing.TabIndex = 18;
             // 
-            // panel4
+            // pnlButtons
             // 
-            this.panel4.Controls.Add(this.btnCancel);
-            this.panel4.Controls.Add(this.btnOk);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(10, 416);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(564, 35);
-            this.panel4.TabIndex = 19;
+            this.pnlButtons.Controls.Add(this.btnCancel);
+            this.pnlButtons.Controls.Add(this.btnOk);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 416);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(564, 35);
+            this.pnlButtons.TabIndex = 19;
             // 
             // btnCancel
             // 
@@ -102,7 +102,7 @@
             // grpAvailRepos
             // 
             this.grpAvailRepos.Controls.Add(this.trvRepositories);
-            this.grpAvailRepos.Controls.Add(this.statusStrip1);
+            this.grpAvailRepos.Controls.Add(this.stsRepositoryLoading);
             this.grpAvailRepos.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpAvailRepos.Location = new System.Drawing.Point(10, 10);
             this.grpAvailRepos.Name = "grpAvailRepos";
@@ -112,18 +112,18 @@
             this.grpAvailRepos.TabStop = false;
             this.grpAvailRepos.Text = " Available repositories ";
             // 
-            // statusStrip1
+            // stsRepositoryLoading
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stsRepositoryLoading.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.prgProgress,
             this.lblStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(10, 259);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(544, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 1;
-            this.statusStrip1.Text = "statusStrip1";
-            this.statusStrip1.Visible = false;
+            this.stsRepositoryLoading.Location = new System.Drawing.Point(10, 259);
+            this.stsRepositoryLoading.Name = "stsRepositoryLoading";
+            this.stsRepositoryLoading.Size = new System.Drawing.Size(544, 22);
+            this.stsRepositoryLoading.SizingGrip = false;
+            this.stsRepositoryLoading.TabIndex = 1;
+            this.stsRepositoryLoading.Text = "stsRepositoryLoading";
+            this.stsRepositoryLoading.Visible = false;
             // 
             // prgProgress
             // 
@@ -160,13 +160,13 @@
             this.txtRepoDetails.Size = new System.Drawing.Size(544, 62);
             this.txtRepoDetails.TabIndex = 0;
             // 
-            // panel11
+            // pnlRepositoryDetailsSpacing
             // 
-            this.panel11.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel11.Location = new System.Drawing.Point(10, 301);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(564, 10);
-            this.panel11.TabIndex = 29;
+            this.pnlRepositoryDetailsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlRepositoryDetailsSpacing.Location = new System.Drawing.Point(10, 301);
+            this.pnlRepositoryDetailsSpacing.Name = "pnlRepositoryDetailsSpacing";
+            this.pnlRepositoryDetailsSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlRepositoryDetailsSpacing.TabIndex = 29;
             // 
             // RepositoryListForm
             // 
@@ -176,21 +176,21 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(584, 461);
             this.Controls.Add(this.grpAvailRepos);
-            this.Controls.Add(this.panel11);
+            this.Controls.Add(this.pnlRepositoryDetailsSpacing);
             this.Controls.Add(this.grpRepoDetails);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.pnlButtonsSpacing);
+            this.Controls.Add(this.pnlButtons);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "RepositoryListForm";
             this.Padding = new System.Windows.Forms.Padding(10);
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.panel4.ResumeLayout(false);
+            this.pnlButtons.ResumeLayout(false);
             this.grpAvailRepos.ResumeLayout(false);
             this.grpAvailRepos.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.stsRepositoryLoading.ResumeLayout(false);
+            this.stsRepositoryLoading.PerformLayout();
             this.grpRepoDetails.ResumeLayout(false);
             this.grpRepoDetails.PerformLayout();
             this.ResumeLayout(false);
@@ -200,15 +200,15 @@
         #endregion
 
         private Triggernometry.UI.CustomControls.TreeViewEx trvRepositories;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.GroupBox grpAvailRepos;
         private System.Windows.Forms.GroupBox grpRepoDetails;
-        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.Panel pnlRepositoryDetailsSpacing;
         private System.Windows.Forms.TextBox txtRepoDetails;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip stsRepositoryLoading;
         private System.Windows.Forms.ToolStripProgressBar prgProgress;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
     }

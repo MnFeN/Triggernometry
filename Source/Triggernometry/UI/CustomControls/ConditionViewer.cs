@@ -131,10 +131,10 @@ namespace Triggernometry.UI.CustomControls
         {
             base.OnFontChanged(e);
             // ToolStrip uses its own default font instead of inheriting the viewer font.
-            if (toolStrip1 != null)
-                toolStrip1.Font = Font;
-            if (contextMenuStrip1 != null)
-                contextMenuStrip1.Font = Font;
+            if (tlsConditions != null)
+                tlsConditions.Font = Font;
+            if (ctxConditions != null)
+                ctxConditions.Font = Font;
             if (cbxComparison != null)
                 UpdateSelectorWidths();
         }
@@ -156,9 +156,9 @@ namespace Triggernometry.UI.CustomControls
             pnlEditorGroup.Visible = false;
             pnlEditorSingle.Visible = false;
             pnlEditorComment.Visible = false;
-            panel3.Visible = false;
-            expLeft.textBox1.TextChanged += expLeft_TextChanged;
-            expRight.textBox1.TextChanged += expRight_TextChanged;
+            pnlConditionEditors.Visible = false;
+            expLeft.txtExpression.TextChanged += expLeft_TextChanged;
+            expRight.txtExpression.TextChanged += expRight_TextChanged;
             // 动态标签自行翻译，运算符是与语言无关的符号。
             cbxOpType.Tag = lblLeftExpression.Tag = lblRightExpression.Tag = lblComparisonDescription.Tag = I18n.DoNotTranslate;
             cbxExpLType.DropDown += ExpressionType_DropDown;
@@ -183,8 +183,8 @@ namespace Triggernometry.UI.CustomControls
                     textWidth = Math.Max(textWidth, TextRenderer.MeasureText(item.ToString(), combo.Font).Width);
                 return textWidth + SystemInformation.VerticalScrollBarWidth + 6 + combo.Margin.Horizontal;
             }
-            tableLayoutPanel1.ColumnStyles[0].Width = RequiredWidth(cbxComparison);
-            tableLayoutPanel1.ColumnStyles[1].Width = RequiredWidth(cbxOpType);
+            tableConditionSingle.ColumnStyles[0].Width = RequiredWidth(cbxComparison);
+            tableConditionSingle.ColumnStyles[1].Width = RequiredWidth(cbxOpType);
         }
 
         internal event EventHandler ConditionsUpdated;
@@ -247,7 +247,7 @@ namespace Triggernometry.UI.CustomControls
         private void ResizeCombobox(ComboBox cbx)
         {
             int mw = cbx.DropDownWidth;
-            using (Graphics gr = toolStrip1.CreateGraphics())
+            using (Graphics gr = tlsConditions.CreateGraphics())
             {
                 foreach (string s in cbx.Items)
                 {
@@ -438,7 +438,7 @@ namespace Triggernometry.UI.CustomControls
                 if (re is ConditionSingle)
                 {
                     pnlEditorGroup.Visible = false;
-                    panel3.Visible = true;
+                    pnlConditionEditors.Visible = true;
                     ConditionSingle r = (ConditionSingle)re;
                     expLeft.Expression = r.ExpressionL;
                     expRight.Expression = r.ExpressionR;
@@ -451,7 +451,7 @@ namespace Triggernometry.UI.CustomControls
                 else if (re is ConditionGroup)
                 {
                     pnlEditorSingle.Visible = false;
-                    panel3.Visible = true;
+                    pnlConditionEditors.Visible = true;
                     ConditionGroup r = (ConditionGroup)re;
                     switch (r.Grouping)
                     {
@@ -474,7 +474,7 @@ namespace Triggernometry.UI.CustomControls
                 {
                     pnlEditorSingle.Visible = false;
                     pnlEditorGroup.Visible = false;
-                    panel3.Visible = true;
+                    pnlConditionEditors.Visible = true;
                     txtComment.Text = comment.Text;
                     pnlEditorComment.Visible = true;
                 }
@@ -482,7 +482,7 @@ namespace Triggernometry.UI.CustomControls
                 {
                     pnlEditorSingle.Visible = false;
                     pnlEditorGroup.Visible = false;
-                    panel3.Visible = false;
+                    pnlConditionEditors.Visible = false;
                 }
                 btnAddGroup.Enabled = btnAddCondition.Enabled = btnAddComment.Enabled = !isReadOnly && re != null;
                 btnDelete.Enabled = !isReadOnly && re?.Parent != null;
@@ -880,7 +880,7 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ctxConditions_Opening(object sender, CancelEventArgs e)
         {
             ctxAddCondition.Enabled = btnAddCondition.Enabled;
             ctxAddGroup.Enabled = btnAddGroup.Enabled;

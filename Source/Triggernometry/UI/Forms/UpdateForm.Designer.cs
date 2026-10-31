@@ -30,33 +30,33 @@
         {
             this.grpPatchDetails = new System.Windows.Forms.GroupBox();
             this.txtPatchDetails = new System.Windows.Forms.TextBox();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableVersions = new System.Windows.Forms.TableLayoutPanel();
             this.capYourVersion = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.capLatestVersion = new Triggernometry.UI.CustomControls.PrettyCaption();
             this.txtYourVersion = new System.Windows.Forms.TextBox();
             this.txtLatestVersion = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.pnlVersionDetailsSpacing = new System.Windows.Forms.Panel();
+            this.grpUpdateDetails = new System.Windows.Forms.GroupBox();
+            this.txtUpdateDetails = new System.Windows.Forms.TextBox();
+            this.pnlPatchDetailsSpacing = new System.Windows.Forms.Panel();
+            this.stsUpdateProgress = new System.Windows.Forms.StatusStrip();
             this.prgProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.grpPatchDetails.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.pnlButtons.SuspendLayout();
+            this.tableVersions.SuspendLayout();
+            this.grpUpdateDetails.SuspendLayout();
+            this.stsUpdateProgress.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpPatchDetails
             // 
             this.grpPatchDetails.Controls.Add(this.txtPatchDetails);
-            this.grpPatchDetails.Controls.Add(this.statusStrip1);
+            this.grpPatchDetails.Controls.Add(this.stsUpdateProgress);
             this.grpPatchDetails.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpPatchDetails.Location = new System.Drawing.Point(10, 253);
             this.grpPatchDetails.Name = "grpPatchDetails";
@@ -77,23 +77,23 @@
             this.txtPatchDetails.Size = new System.Drawing.Size(721, 138);
             this.txtPatchDetails.TabIndex = 0;
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 446);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(741, 10);
-            this.panel3.TabIndex = 22;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 446);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(741, 10);
+            this.pnlButtonsSpacing.TabIndex = 22;
             // 
-            // panel4
+            // pnlButtons
             // 
-            this.panel4.Controls.Add(this.btnCancel);
-            this.panel4.Controls.Add(this.btnUpdate);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(10, 456);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(741, 35);
-            this.panel4.TabIndex = 23;
+            this.pnlButtons.Controls.Add(this.btnCancel);
+            this.pnlButtons.Controls.Add(this.btnUpdate);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 456);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(741, 35);
+            this.pnlButtons.TabIndex = 23;
             // 
             // btnCancel
             // 
@@ -117,24 +117,24 @@
             this.btnUpdate.Text = "Update";
             this.btnUpdate.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel1
+            // tableVersions
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.txtLatestVersion, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.capLatestVersion, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.capYourVersion, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtYourVersion, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 10);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(741, 73);
-            this.tableLayoutPanel1.TabIndex = 25;
+            this.tableVersions.AutoSize = true;
+            this.tableVersions.ColumnCount = 2;
+            this.tableVersions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableVersions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableVersions.Controls.Add(this.txtLatestVersion, 1, 1);
+            this.tableVersions.Controls.Add(this.capLatestVersion, 1, 0);
+            this.tableVersions.Controls.Add(this.capYourVersion, 0, 0);
+            this.tableVersions.Controls.Add(this.txtYourVersion, 0, 1);
+            this.tableVersions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableVersions.Location = new System.Drawing.Point(10, 10);
+            this.tableVersions.Name = "tableVersions";
+            this.tableVersions.RowCount = 2;
+            this.tableVersions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableVersions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableVersions.Size = new System.Drawing.Size(741, 73);
+            this.tableVersions.TabIndex = 25;
             // 
             // capYourVersion
             // 
@@ -176,56 +176,56 @@
             this.txtLatestVersion.Size = new System.Drawing.Size(365, 31);
             this.txtLatestVersion.TabIndex = 3;
             // 
-            // panel1
+            // pnlVersionDetailsSpacing
             // 
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(10, 83);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(741, 10);
-            this.panel1.TabIndex = 26;
+            this.pnlVersionDetailsSpacing.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlVersionDetailsSpacing.Location = new System.Drawing.Point(10, 83);
+            this.pnlVersionDetailsSpacing.Name = "pnlVersionDetailsSpacing";
+            this.pnlVersionDetailsSpacing.Size = new System.Drawing.Size(741, 10);
+            this.pnlVersionDetailsSpacing.TabIndex = 26;
             // 
-            // groupBox1
+            // grpUpdateDetails
             // 
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(10, 93);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(10);
-            this.groupBox1.Size = new System.Drawing.Size(741, 150);
-            this.groupBox1.TabIndex = 27;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = " Update details ";
+            this.grpUpdateDetails.Controls.Add(this.txtUpdateDetails);
+            this.grpUpdateDetails.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpUpdateDetails.Location = new System.Drawing.Point(10, 93);
+            this.grpUpdateDetails.Name = "grpUpdateDetails";
+            this.grpUpdateDetails.Padding = new System.Windows.Forms.Padding(10);
+            this.grpUpdateDetails.Size = new System.Drawing.Size(741, 150);
+            this.grpUpdateDetails.TabIndex = 27;
+            this.grpUpdateDetails.TabStop = false;
+            this.grpUpdateDetails.Text = " Update details ";
             // 
-            // textBox1
+            // txtUpdateDetails
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(10, 23);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(721, 117);
-            this.textBox1.TabIndex = 0;
+            this.txtUpdateDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtUpdateDetails.Location = new System.Drawing.Point(10, 23);
+            this.txtUpdateDetails.Multiline = true;
+            this.txtUpdateDetails.Name = "txtUpdateDetails";
+            this.txtUpdateDetails.ReadOnly = true;
+            this.txtUpdateDetails.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtUpdateDetails.Size = new System.Drawing.Size(721, 117);
+            this.txtUpdateDetails.TabIndex = 0;
             // 
-            // panel2
+            // pnlPatchDetailsSpacing
             // 
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(10, 243);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(741, 10);
-            this.panel2.TabIndex = 28;
+            this.pnlPatchDetailsSpacing.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlPatchDetailsSpacing.Location = new System.Drawing.Point(10, 243);
+            this.pnlPatchDetailsSpacing.Name = "pnlPatchDetailsSpacing";
+            this.pnlPatchDetailsSpacing.Size = new System.Drawing.Size(741, 10);
+            this.pnlPatchDetailsSpacing.TabIndex = 28;
             // 
-            // statusStrip1
+            // stsUpdateProgress
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stsUpdateProgress.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.prgProgress,
             this.lblStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(10, 161);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(721, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 1;
-            this.statusStrip1.Text = "statusStrip1";
+            this.stsUpdateProgress.Location = new System.Drawing.Point(10, 161);
+            this.stsUpdateProgress.Name = "stsUpdateProgress";
+            this.stsUpdateProgress.Size = new System.Drawing.Size(721, 22);
+            this.stsUpdateProgress.SizingGrip = false;
+            this.stsUpdateProgress.TabIndex = 1;
+            this.stsUpdateProgress.Text = "stsUpdateProgress";
             // 
             // prgProgress
             // 
@@ -245,12 +245,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 501);
             this.Controls.Add(this.grpPatchDetails);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.pnlPatchDetailsSpacing);
+            this.Controls.Add(this.grpUpdateDetails);
+            this.Controls.Add(this.pnlVersionDetailsSpacing);
+            this.Controls.Add(this.tableVersions);
+            this.Controls.Add(this.pnlButtonsSpacing);
+            this.Controls.Add(this.pnlButtons);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "UpdateForm";
             this.Padding = new System.Windows.Forms.Padding(10);
@@ -261,13 +261,13 @@
             this.TopMost = true;
             this.grpPatchDetails.ResumeLayout(false);
             this.grpPatchDetails.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.pnlButtons.ResumeLayout(false);
+            this.tableVersions.ResumeLayout(false);
+            this.tableVersions.PerformLayout();
+            this.grpUpdateDetails.ResumeLayout(false);
+            this.grpUpdateDetails.PerformLayout();
+            this.stsUpdateProgress.ResumeLayout(false);
+            this.stsUpdateProgress.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -277,20 +277,20 @@
 
         private System.Windows.Forms.GroupBox grpPatchDetails;
         private System.Windows.Forms.TextBox txtPatchDetails;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnUpdate;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableVersions;
         private CustomControls.PrettyCaption capYourVersion;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip stsUpdateProgress;
         private System.Windows.Forms.TextBox txtLatestVersion;
         private CustomControls.PrettyCaption capLatestVersion;
         private System.Windows.Forms.TextBox txtYourVersion;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlVersionDetailsSpacing;
+        private System.Windows.Forms.GroupBox grpUpdateDetails;
+        private System.Windows.Forms.TextBox txtUpdateDetails;
+        private System.Windows.Forms.Panel pnlPatchDetailsSpacing;
         private System.Windows.Forms.ToolStripProgressBar prgProgress;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
     }

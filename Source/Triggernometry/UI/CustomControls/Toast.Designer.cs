@@ -29,20 +29,20 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Toast));
-            this.label13 = new System.Windows.Forms.Label();
+            this.lblToastText = new System.Windows.Forms.Label();
             this.btnToastYes = new System.Windows.Forms.Button();
             this.btnToastNo = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlToastIcon = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // label13
+            // lblToastText
             // 
-            this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label13.Location = new System.Drawing.Point(30, 5);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(299, 28);
-            this.label13.TabIndex = 5;
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblToastText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblToastText.Location = new System.Drawing.Point(30, 5);
+            this.lblToastText.Name = "lblToastText";
+            this.lblToastText.Size = new System.Drawing.Size(299, 28);
+            this.lblToastText.TabIndex = 5;
+            this.lblToastText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnToastYes
             // 
@@ -66,25 +66,25 @@
             this.btnToastNo.UseVisualStyleBackColor = true;
             this.btnToastNo.Click += new System.EventHandler(this.button1_Click);
             // 
-            // panel1
+            // pnlToastIcon
             // 
-            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(5, 5);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(25, 28);
-            this.panel1.TabIndex = 6;
+            this.pnlToastIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pnlToastIcon.BackgroundImage")));
+            this.pnlToastIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pnlToastIcon.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlToastIcon.Location = new System.Drawing.Point(5, 5);
+            this.pnlToastIcon.Name = "pnlToastIcon";
+            this.pnlToastIcon.Size = new System.Drawing.Size(25, 28);
+            this.pnlToastIcon.TabIndex = 6;
             // 
             // Toast
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Info;
-            this.Controls.Add(this.label13);
+            this.Controls.Add(this.lblToastText);
             this.Controls.Add(this.btnToastYes);
             this.Controls.Add(this.btnToastNo);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlToastIcon);
             this.Name = "Toast";
             this.Padding = new System.Windows.Forms.Padding(5);
             this.Size = new System.Drawing.Size(484, 38);
@@ -94,9 +94,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lblToastText;
         private System.Windows.Forms.Button btnToastYes;
         private System.Windows.Forms.Button btnToastNo;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlToastIcon;
     }
 }

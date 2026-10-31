@@ -387,7 +387,7 @@ namespace Triggernometry.Core
                 exp.ExportedFolder.Parent = Root;
                 Instance.RegisterFolderVariables(exp.ExportedFolder);
                 Instance.UpdateActiveFolderVariables(Instance.currentZone);
-                RegisterFolder(exp.ExportedFolder, Enabled && Instance.ui.treeView1.Nodes[1].Checked);
+                RegisterFolder(exp.ExportedFolder, Enabled && Instance.ui.treeView.Nodes[1].Checked);
             }
 
             if (exp.ExportedTrigger != null)

@@ -32,19 +32,19 @@ namespace Triggernometry.UI.CustomControls
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ActionViewer));
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.tlsActions = new System.Windows.Forms.ToolStrip();
             this.btnAddAction = new System.Windows.Forms.ToolStripButton();
             this.btnEditAction = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepToolbarOrder = new System.Windows.Forms.ToolStripSeparator();
             this.btnActionUp = new System.Windows.Forms.ToolStripButton();
             this.btnActionDown = new System.Windows.Forms.ToolStripButton();
             this.btnActionTop = new System.Windows.Forms.ToolStripButton();
             this.btnActionBottom = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepToolbarHistory = new System.Windows.Forms.ToolStripSeparator();
             this.btnRemoveAction = new System.Windows.Forms.ToolStripButton();
             this.btnUndo = new System.Windows.Forms.ToolStripButton();
             this.dgvActions = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colActionEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ctxAction = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxTestAction = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,40 +70,40 @@ namespace Triggernometry.UI.CustomControls
             this.ctxEditPropBgColor = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxEditPropTextColor = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxEditPropRemoveDesc = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepContextClipboard = new System.Windows.Forms.ToolStripSeparator();
             this.ctxCopyAction = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxPasteAction = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepContextOrder = new System.Windows.Forms.ToolStripSeparator();
             this.ctxMoveUp = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMoveTop = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMoveBottom = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepContextHistory = new System.Windows.Forms.ToolStripSeparator();
             this.ctxUndo = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxRemoveAction = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip2.SuspendLayout();
+            this.tlsActions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvActions)).BeginInit();
             this.ctxAction.SuspendLayout();
             this.SuspendLayout();
             // 
-            // toolStrip2
+            // tlsActions
             // 
-            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlsActions.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tlsActions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddAction,
             this.btnEditAction,
-            this.toolStripSeparator2,
+            this.sepToolbarOrder,
             this.btnActionUp,
             this.btnActionDown,
             this.btnActionTop,
             this.btnActionBottom,
-            this.toolStripSeparator1,
+            this.sepToolbarHistory,
             this.btnUndo,
             this.btnRemoveAction});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(814, 25);
-            this.toolStrip2.TabIndex = 2;
+            this.tlsActions.Location = new System.Drawing.Point(0, 0);
+            this.tlsActions.Name = "tlsActions";
+            this.tlsActions.Size = new System.Drawing.Size(814, 25);
+            this.tlsActions.TabIndex = 2;
             // 
             // btnAddAction
             // 
@@ -124,10 +124,10 @@ namespace Triggernometry.UI.CustomControls
             this.btnEditAction.Text = "Edit";
             this.btnEditAction.Click += new System.EventHandler(this.btnEditAction_Click);
             // 
-            // toolStripSeparator2
+            // sepToolbarOrder
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.sepToolbarOrder.Name = "sepToolbarOrder";
+            this.sepToolbarOrder.Size = new System.Drawing.Size(6, 25);
             // 
             // btnActionUp
             // 
@@ -169,10 +169,10 @@ namespace Triggernometry.UI.CustomControls
             this.btnActionBottom.Text = "Bottom";
             this.btnActionBottom.Click += new System.EventHandler(this.btnActionBottom_Click);
             // 
-            // toolStripSeparator1
+            // sepToolbarHistory
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.sepToolbarHistory.Name = "sepToolbarHistory";
+            this.sepToolbarHistory.Size = new System.Drawing.Size(6, 25);
             // 
             // btnUndo
             // 
@@ -203,7 +203,7 @@ namespace Triggernometry.UI.CustomControls
             this.dgvActions.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dgvActions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvActions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
+            this.colActionEnabled,
             this.colDescription});
             this.dgvActions.ContextMenuStrip = this.ctxAction;
             this.dgvActions.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -228,15 +228,15 @@ namespace Triggernometry.UI.CustomControls
             this.dgvActions.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dgvActions_MouseDown);
             this.dgvActions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dgvActions_MouseClick);
             // 
-            // Column1
+            // colActionEnabled
             // 
-            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Column1.Frozen = true;
-            this.Column1.HeaderText = "　";
-            this.Column1.MinimumWidth = 12;
-            this.Column1.Name = "Column1";
-            this.Column1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column1.Width = 30;
+            this.colActionEnabled.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.colActionEnabled.Frozen = true;
+            this.colActionEnabled.HeaderText = "　";
+            this.colActionEnabled.MinimumWidth = 12;
+            this.colActionEnabled.Name = "colActionEnabled";
+            this.colActionEnabled.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colActionEnabled.Width = 30;
             // 
             // colDescription
             // 
@@ -254,15 +254,15 @@ namespace Triggernometry.UI.CustomControls
             this.ctxAddAction,
             this.ctxEditAction,
             this.ctxEditProp,
-            this.toolStripSeparator3,
+            this.sepContextClipboard,
             this.ctxCopyAction,
             this.ctxPasteAction,
-            this.toolStripSeparator10,
+            this.sepContextOrder,
             this.ctxMoveUp,
             this.ctxMoveDown,
             this.ctxMoveTop,
             this.ctxMoveBottom,
-            this.toolStripSeparator4,
+            this.sepContextHistory,
             this.ctxUndo,
             this.ctxRemoveAction});
             this.ctxAction.Name = "contextMenuStrip1";
@@ -456,10 +456,10 @@ namespace Triggernometry.UI.CustomControls
             this.ctxEditPropRemoveDesc.Text = "Remove Descriptions";
             this.ctxEditPropRemoveDesc.Click += new System.EventHandler(this.ctxEditPropRemoveDesc_Click);
             // 
-            // toolStripSeparator3
+            // sepContextClipboard
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(150, 6);
+            this.sepContextClipboard.Name = "sepContextClipboard";
+            this.sepContextClipboard.Size = new System.Drawing.Size(150, 6);
             // 
             // ctxCopyAction
             // 
@@ -479,10 +479,10 @@ namespace Triggernometry.UI.CustomControls
             this.ctxPasteAction.Text = "Paste";
             this.ctxPasteAction.Click += new System.EventHandler(this.ctxPasteAction_Click);
             // 
-            // toolStripSeparator10
+            // sepContextOrder
             // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(150, 6);
+            this.sepContextOrder.Name = "sepContextOrder";
+            this.sepContextOrder.Size = new System.Drawing.Size(150, 6);
             // 
             // ctxMoveUp
             // 
@@ -516,10 +516,10 @@ namespace Triggernometry.UI.CustomControls
             this.ctxMoveBottom.Text = "Move to bottom";
             this.ctxMoveBottom.Click += new System.EventHandler(this.ctxMoveBottom_Click);
             // 
-            // toolStripSeparator4
+            // sepContextHistory
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(150, 6);
+            this.sepContextHistory.Name = "sepContextHistory";
+            this.sepContextHistory.Size = new System.Drawing.Size(150, 6);
             // 
             // ctxUndo
             // 
@@ -543,11 +543,11 @@ namespace Triggernometry.UI.CustomControls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.dgvActions);
-            this.Controls.Add(this.toolStrip2);
+            this.Controls.Add(this.tlsActions);
             this.Name = "ActionViewer";
             this.Size = new System.Drawing.Size(814, 419);
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
+            this.tlsActions.ResumeLayout(false);
+            this.tlsActions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvActions)).EndInit();
             this.ctxAction.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -557,19 +557,19 @@ namespace Triggernometry.UI.CustomControls
 
         #endregion
 
-        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStrip tlsActions;
         private System.Windows.Forms.ToolStripButton btnAddAction;
         private System.Windows.Forms.ToolStripButton btnEditAction;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator sepToolbarOrder;
         private System.Windows.Forms.ToolStripButton btnActionUp;
         private System.Windows.Forms.ToolStripButton btnActionDown;
         private System.Windows.Forms.ToolStripButton btnActionTop;
         private System.Windows.Forms.ToolStripButton btnActionBottom;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator sepToolbarHistory;
         private System.Windows.Forms.ToolStripButton btnUndo;
         private System.Windows.Forms.ToolStripButton btnRemoveAction;
         internal System.Windows.Forms.DataGridView dgvActions;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colActionEnabled;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDescription;
         private System.Windows.Forms.ContextMenuStrip ctxAction;
         private System.Windows.Forms.ToolStripMenuItem ctxTestAction;
@@ -595,15 +595,15 @@ namespace Triggernometry.UI.CustomControls
         private System.Windows.Forms.ToolStripMenuItem ctxEditPropBgColor;
         private System.Windows.Forms.ToolStripMenuItem ctxEditPropTextColor;
         private System.Windows.Forms.ToolStripMenuItem ctxEditPropRemoveDesc;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator sepContextClipboard;
         private System.Windows.Forms.ToolStripMenuItem ctxCopyAction;
         private System.Windows.Forms.ToolStripMenuItem ctxPasteAction;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripSeparator sepContextOrder;
         private System.Windows.Forms.ToolStripMenuItem ctxMoveUp;
         private System.Windows.Forms.ToolStripMenuItem ctxMoveDown;
         private System.Windows.Forms.ToolStripMenuItem ctxMoveTop;
         private System.Windows.Forms.ToolStripMenuItem ctxMoveBottom;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator sepContextHistory;
         private System.Windows.Forms.ToolStripMenuItem ctxUndo;
         private System.Windows.Forms.ToolStripMenuItem ctxRemoveAction;
     }

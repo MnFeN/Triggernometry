@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox1 = new Triggernometry.UI.CustomControls.ClickthroughPictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.picOverlay = new Triggernometry.UI.CustomControls.ClickthroughPictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.picOverlay)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // picOverlay
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(173, 133);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.picOverlay.BackColor = System.Drawing.Color.Transparent;
+            this.picOverlay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picOverlay.Location = new System.Drawing.Point(0, 0);
+            this.picOverlay.Name = "picOverlay";
+            this.picOverlay.Size = new System.Drawing.Size(173, 133);
+            this.picOverlay.TabIndex = 0;
+            this.picOverlay.TabStop = false;
             // 
             // AuraContainerForm
             // 
@@ -49,7 +49,7 @@
             this.BackColor = System.Drawing.Color.Fuchsia;
             this.ClientSize = new System.Drawing.Size(173, 133);
             this.ControlBox = false;
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.picOverlay);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -59,13 +59,13 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Triggernometry Aura";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picOverlay)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private CustomControls.ClickthroughPictureBox pictureBox1;
+        private CustomControls.ClickthroughPictureBox picOverlay;
     }
 
 }

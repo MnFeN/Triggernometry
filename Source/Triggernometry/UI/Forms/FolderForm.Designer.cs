@@ -32,11 +32,11 @@
             this.tableLayoutPanelGeneral = new System.Windows.Forms.TableLayoutPanel();
             this.lblFolderName = new System.Windows.Forms.Label();
             this.txtFolderName = new Triggernometry.UI.CustomControls.EnhancedTextBox();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
             this.panelBottom = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlTopSpacing = new System.Windows.Forms.Panel();
             this.grpSetting = new System.Windows.Forms.GroupBox();
             this.tbcMain = new System.Windows.Forms.TabControl();
             this.tabFilter = new System.Windows.Forms.TabPage();
@@ -62,7 +62,7 @@
             this.expFfxivZoneFilterRegex = new Triggernometry.UI.CustomControls.ExpressionTextBox();
             this.txtEnvironment = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.tabRegisteredVariables = new System.Windows.Forms.TabPage();
-            this.registeredVariableViewer = new Triggernometry.UI.CustomControls.RegisteredVariableViewer();
+            this.registeredVariables = new Triggernometry.UI.CustomControls.RegisteredVariableViewer();
             this.grpGeneral.SuspendLayout();
             this.tableLayoutPanelGeneral.SuspendLayout();
             this.panelBottom.SuspendLayout();
@@ -132,13 +132,13 @@
             this.txtFolderName.TabIndex = 1;
             this.txtFolderName.TextChanged += new System.EventHandler(this.txtFolderName_TextChanged);
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 506);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(564, 10);
-            this.panel3.TabIndex = 14;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 506);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlButtonsSpacing.TabIndex = 14;
             // 
             // panelBottom
             // 
@@ -173,13 +173,13 @@
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             // 
-            // panel1
+            // pnlTopSpacing
             // 
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(10, 69);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(564, 10);
-            this.panel1.TabIndex = 16;
+            this.pnlTopSpacing.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTopSpacing.Location = new System.Drawing.Point(10, 69);
+            this.pnlTopSpacing.Name = "pnlTopSpacing";
+            this.pnlTopSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlTopSpacing.TabIndex = 16;
             // 
             // grpSetting
             // 
@@ -491,7 +491,7 @@
             // 
             // tabRegisteredVariables
             //
-            this.tabRegisteredVariables.Controls.Add(this.registeredVariableViewer);
+            this.tabRegisteredVariables.Controls.Add(this.registeredVariables);
             this.tabRegisteredVariables.Location = new System.Drawing.Point(4, 22);
             this.tabRegisteredVariables.Name = "tabRegisteredVariables";
             this.tabRegisteredVariables.Padding = new System.Windows.Forms.Padding(3);
@@ -500,13 +500,13 @@
             this.tabRegisteredVariables.Text = "Registered variables";
             this.tabRegisteredVariables.UseVisualStyleBackColor = true;
             //
-            // registeredVariableViewer
+            // registeredVariables
             //
-            this.registeredVariableViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.registeredVariableViewer.Location = new System.Drawing.Point(3, 3);
-            this.registeredVariableViewer.Name = "registeredVariableViewer";
-            this.registeredVariableViewer.Size = new System.Drawing.Size(530, 311);
-            this.registeredVariableViewer.TabIndex = 0;
+            this.registeredVariables.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.registeredVariables.Location = new System.Drawing.Point(3, 3);
+            this.registeredVariables.Name = "registeredVariables";
+            this.registeredVariables.Size = new System.Drawing.Size(530, 311);
+            this.registeredVariables.TabIndex = 0;
             //
             // panelReadOnly
             // 
@@ -544,9 +544,9 @@
             this.ClientSize = new System.Drawing.Size(584, 561);
             this.Controls.Add(this.grpSetting);
             this.Controls.Add(this.panelReadOnly);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlTopSpacing);
             this.Controls.Add(this.grpGeneral);
-            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.pnlButtonsSpacing);
             this.Controls.Add(this.panelBottom);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(650, 700);
@@ -584,11 +584,11 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGeneral;
         private System.Windows.Forms.Label lblFolderName;
         private Triggernometry.UI.CustomControls.EnhancedTextBox txtFolderName;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
         private System.Windows.Forms.Panel panelBottom;
         private System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnOk;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlTopSpacing;
         private System.Windows.Forms.GroupBox grpSetting;
         private System.Windows.Forms.TabControl tbcMain;
         private System.Windows.Forms.TabPage tabFilter;
@@ -614,6 +614,6 @@
         private CustomControls.ExpressionTextBox expFfxivZoneFilterRegex;
         private Triggernometry.UI.CustomControls.EnhancedTextBox txtEnvironment;
         private System.Windows.Forms.TabPage tabRegisteredVariables;
-        private CustomControls.RegisteredVariableViewer registeredVariableViewer;
+        private CustomControls.RegisteredVariableViewer registeredVariables;
     }
 }

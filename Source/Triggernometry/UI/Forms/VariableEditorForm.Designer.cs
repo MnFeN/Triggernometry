@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VariableEditorForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.tlsOptionsList = new System.Windows.Forms.ToolStrip();
@@ -40,10 +40,10 @@
             this.btnItemRemove = new System.Windows.Forms.ToolStripButton();
             this.dgvVariableData = new Triggernometry.UI.CustomControls.DataGridViewEx();
             this.grpGeneral = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableVariableName = new System.Windows.Forms.TableLayoutPanel();
             this.lblVariableName = new System.Windows.Forms.Label();
             this.txtVariableName = new System.Windows.Forms.TextBox();
-            this.panel10 = new System.Windows.Forms.Panel();
+            this.pnlVariableContentSpacing = new System.Windows.Forms.Panel();
             this.tlsOptionsTable = new System.Windows.Forms.ToolStrip();
             this.btnColumnAdd = new System.Windows.Forms.ToolStripButton();
             this.btnColumnInsert = new System.Windows.Forms.ToolStripButton();
@@ -51,40 +51,40 @@
             this.tlsOptionsDict = new System.Windows.Forms.ToolStrip();
             this.btnKeyAdd = new System.Windows.Forms.ToolStripButton();
             this.btnKeyRemove = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepTableRows = new System.Windows.Forms.ToolStripSeparator();
             this.btnRowAdd = new System.Windows.Forms.ToolStripButton();
             this.btnRowInsert = new System.Windows.Forms.ToolStripButton();
             this.btnRowRemove = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepTableExport = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyAsCsv = new System.Windows.Forms.ToolStripButton();
             this.btnSaveAsCsv = new System.Windows.Forms.ToolStripButton();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.panel4.SuspendLayout();
+            this.dlgSaveCsv = new System.Windows.Forms.SaveFileDialog();
+            this.pnlButtons.SuspendLayout();
             this.tlsOptionsList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVariableData)).BeginInit();
             this.grpGeneral.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tableVariableName.SuspendLayout();
             this.tlsOptionsTable.SuspendLayout();
             this.tlsOptionsDict.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 406);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(669, 10);
-            this.panel3.TabIndex = 16;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 406);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(669, 10);
+            this.pnlButtonsSpacing.TabIndex = 16;
             // 
-            // panel4
+            // pnlButtons
             // 
-            this.panel4.Controls.Add(this.btnCancel);
-            this.panel4.Controls.Add(this.btnOk);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(10, 416);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(669, 35);
-            this.panel4.TabIndex = 17;
+            this.pnlButtons.Controls.Add(this.btnCancel);
+            this.pnlButtons.Controls.Add(this.btnOk);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 416);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(669, 35);
+            this.pnlButtons.TabIndex = 17;
             // 
             // btnCancel
             // 
@@ -174,7 +174,7 @@
             // grpGeneral
             // 
             this.grpGeneral.AutoSize = true;
-            this.grpGeneral.Controls.Add(this.tableLayoutPanel1);
+            this.grpGeneral.Controls.Add(this.tableVariableName);
             this.grpGeneral.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpGeneral.Location = new System.Drawing.Point(10, 10);
             this.grpGeneral.Name = "grpGeneral";
@@ -184,25 +184,25 @@
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = " General settings ";
             // 
-            // tableLayoutPanel1
+            // tableVariableName
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.lblVariableName, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtVariableName, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 23);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(649, 26);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableVariableName.AutoSize = true;
+            this.tableVariableName.ColumnCount = 2;
+            this.tableVariableName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableVariableName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableVariableName.Controls.Add(this.lblVariableName, 0, 0);
+            this.tableVariableName.Controls.Add(this.txtVariableName, 1, 0);
+            this.tableVariableName.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableVariableName.Location = new System.Drawing.Point(10, 23);
+            this.tableVariableName.Name = "tableVariableName";
+            this.tableVariableName.RowCount = 1;
+            this.tableVariableName.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableVariableName.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.tableVariableName.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.tableVariableName.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.tableVariableName.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.tableVariableName.Size = new System.Drawing.Size(649, 26);
+            this.tableVariableName.TabIndex = 0;
             // 
             // lblVariableName
             // 
@@ -224,13 +224,13 @@
             this.txtVariableName.Size = new System.Drawing.Size(563, 20);
             this.txtVariableName.TabIndex = 1;
             // 
-            // panel10
+            // pnlVariableContentSpacing
             // 
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel10.Location = new System.Drawing.Point(10, 69);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(669, 10);
-            this.panel10.TabIndex = 27;
+            this.pnlVariableContentSpacing.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlVariableContentSpacing.Location = new System.Drawing.Point(10, 69);
+            this.pnlVariableContentSpacing.Name = "pnlVariableContentSpacing";
+            this.pnlVariableContentSpacing.Size = new System.Drawing.Size(669, 10);
+            this.pnlVariableContentSpacing.TabIndex = 27;
             // 
             // tlsOptionsTable
             // 
@@ -239,11 +239,11 @@
             this.btnColumnAdd,
             this.btnColumnInsert,
             this.btnColumnRemove,
-            this.toolStripSeparator1,
+            this.sepTableRows,
             this.btnRowAdd,
             this.btnRowInsert,
             this.btnRowRemove,
-            this.toolStripSeparator2,
+            this.sepTableExport,
             this.btnCopyAsCsv,
             this.btnSaveAsCsv});
             this.tlsOptionsTable.Location = new System.Drawing.Point(10, 79);
@@ -278,10 +278,10 @@
             this.btnColumnRemove.Text = "Remove column";
             this.btnColumnRemove.Click += new System.EventHandler(this.btnColumnRemove_Click);
             // 
-            // toolStripSeparator1
+            // sepTableRows
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.sepTableRows.Name = "sepTableRows";
+            this.sepTableRows.Size = new System.Drawing.Size(6, 25);
             // 
             // btnRowAdd
             // 
@@ -310,10 +310,10 @@
             this.btnRowRemove.Text = "Remove row";
             this.btnRowRemove.Click += new System.EventHandler(this.btnRowRemove_Click);
             // 
-            // toolStripSeparator2
+            // sepTableExport
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.sepTableExport.Name = "sepTableExport";
+            this.sepTableExport.Size = new System.Drawing.Size(6, 25);
             // 
             // btnCopyAsCsv
             // 
@@ -361,11 +361,11 @@
             this.btnKeyRemove.Text = "Remove key";
             this.btnKeyRemove.Click += new System.EventHandler(this.btnKeyRemove_Click);
             // 
-            // saveFileDialog1
+            // dlgSaveCsv
             // 
-            this.saveFileDialog1.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
-            this.saveFileDialog1.RestoreDirectory = true;
-            this.saveFileDialog1.Title = "Save table variable";
+            this.dlgSaveCsv.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+            this.dlgSaveCsv.RestoreDirectory = true;
+            this.dlgSaveCsv.Title = "Save table variable";
             // 
             // VariableEditorForm
             // 
@@ -376,10 +376,10 @@
             this.ClientSize = new System.Drawing.Size(689, 461);
             this.Controls.Add(this.dgvVariableData);
             this.Controls.Add(this.tlsOptionsList);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.pnlButtonsSpacing);
+            this.Controls.Add(this.pnlButtons);
             this.Controls.Add(this.tlsOptionsTable);
-            this.Controls.Add(this.panel10);
+            this.Controls.Add(this.pnlVariableContentSpacing);
             this.Controls.Add(this.tlsOptionsDict);
             this.Controls.Add(this.grpGeneral);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
@@ -389,14 +389,14 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Variable editor";
-            this.panel4.ResumeLayout(false);
+            this.pnlButtons.ResumeLayout(false);
             this.tlsOptionsList.ResumeLayout(false);
             this.tlsOptionsList.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVariableData)).EndInit();
             this.grpGeneral.ResumeLayout(false);
             this.grpGeneral.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tableVariableName.ResumeLayout(false);
+            this.tableVariableName.PerformLayout();
             this.tlsOptionsTable.ResumeLayout(false);
             this.tlsOptionsTable.PerformLayout();
             this.tlsOptionsDict.ResumeLayout(false);
@@ -408,17 +408,17 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.ToolStrip tlsOptionsList;
         private CustomControls.DataGridViewEx dgvVariableData;
         private System.Windows.Forms.GroupBox grpGeneral;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableVariableName;
         private System.Windows.Forms.Label lblVariableName;
         private System.Windows.Forms.TextBox txtVariableName;
-        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Panel pnlVariableContentSpacing;
         private System.Windows.Forms.ToolStripButton btnItemRemove;
         private System.Windows.Forms.ToolStripButton btnItemAdd;
         private System.Windows.Forms.ToolStripButton btnItemInsert;
@@ -426,16 +426,16 @@
         private System.Windows.Forms.ToolStripButton btnColumnAdd;
         private System.Windows.Forms.ToolStripButton btnColumnInsert;
         private System.Windows.Forms.ToolStripButton btnColumnRemove;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator sepTableRows;
         private System.Windows.Forms.ToolStripButton btnRowAdd;
         private System.Windows.Forms.ToolStripButton btnRowInsert;
         private System.Windows.Forms.ToolStripButton btnRowRemove;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator sepTableExport;
         private System.Windows.Forms.ToolStripButton btnCopyAsCsv;
         private System.Windows.Forms.ToolStripButton btnSaveAsCsv;
         private System.Windows.Forms.ToolStrip tlsOptionsDict;
         private System.Windows.Forms.ToolStripButton btnKeyAdd;
         private System.Windows.Forms.ToolStripButton btnKeyRemove;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.SaveFileDialog dlgSaveCsv;
     }
 }

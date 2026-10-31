@@ -409,10 +409,10 @@ namespace Triggernometry.UI.CustomControls
 
                 // show acf beneath the start of the matched string
                 GetCaretPos(out POINT cursorPoint);
-                Size size = TextRenderer.MeasureText(CurrentMatch, textBox1.Font);
+                Size size = TextRenderer.MeasureText(CurrentMatch, txtExpression.Font);
                 Point parent = Parent.PointToScreen(Location);
-                double lineHeight = textBox1.Font.Height * 4 / 3;
-                acf.Left = parent.X + panel1.Width + cursorPoint.X - size.Width + 4;
+                double lineHeight = txtExpression.Font.Height * 4 / 3;
+                acf.Left = parent.X + pnlExpandToggle.Width + cursorPoint.X - size.Width + 4;
                 acf.Top = parent.Y + cursorPoint.Y + (int)lineHeight;
 
                 if (refresh)
@@ -422,8 +422,8 @@ namespace Triggernometry.UI.CustomControls
                 }
 
                 acf.GotFocus += Acf_GotFocus;
-                acf.listBox1.MouseDown += ListBox1_MouseDown;
-                acf.listBox1.DoubleClick += ListBox1_DoubleClick;
+                acf.lstSuggestions.MouseDown += ListBox1_MouseDown;
+                acf.lstSuggestions.DoubleClick += ListBox1_DoubleClick;
                 RefreshAutocomplete(strs);
                 acf.Show(this);
                 AcceptButton = ParentForm.AcceptButton;
@@ -443,12 +443,12 @@ namespace Triggernometry.UI.CustomControls
 
         private void ListBox1_MouseDown(object sender, EventArgs e)
         {
-            textBox1.Focus();
+            txtExpression.Focus();
         }
 
         private void Acf_GotFocus(object sender, EventArgs e)
         {
-            textBox1.Focus();
+            txtExpression.Focus();
         }
 
         private void HideAutocomplete()
@@ -487,7 +487,7 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        private void TextBox1_KeyDown(object sender, KeyEventArgs e)
+        private void txtExpression_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Up || e.KeyData == Keys.Down || e.KeyData == Keys.PageDown || e.KeyData == Keys.PageUp)
             {
@@ -548,38 +548,38 @@ namespace Triggernometry.UI.CustomControls
         private void ApplyAutoComplete()
         {
             string ac = GetChosenAutocomplete();
-            int cursorPos = textBox1.SelectionStart;
+            int cursorPos = txtExpression.SelectionStart;
 
             // remove the existing part to fix the capitalization typos
             if (CurrentMatch.Length > 0 && cursorPos >= CurrentMatch.Length)
             {
-                textBox1.Text = textBox1.Text.Remove(cursorPos - CurrentMatch.Length, CurrentMatch.Length);
-                textBox1.SelectionStart = cursorPos - CurrentMatch.Length;
+                txtExpression.Text = txtExpression.Text.Remove(cursorPos - CurrentMatch.Length, CurrentMatch.Length);
+                txtExpression.SelectionStart = cursorPos - CurrentMatch.Length;
             }
 
             // when the autofilled string contains '(' or '[', e.g. method(arg1, arg2)
             // remove the parameters, and trigger the TextChanged event with the correct cursor position
             if (isNameAutocomplete)
             {
-                textBox1.Paste(ac);
+                txtExpression.Paste(ac);
                 return;
             }
             int pIndex = ac.IndexOf('(');
             int bIndex = ac.IndexOf("[");
             if (pIndex >= 0)
             {
-                textBox1.Paste(ac.Substring(0, pIndex) + ")");
-                textBox1.SelectionStart--;
-                textBox1.Paste("(");
+                txtExpression.Paste(ac.Substring(0, pIndex) + ")");
+                txtExpression.SelectionStart--;
+                txtExpression.Paste("(");
             }
             else if (bIndex >= 0)
             {
-                textBox1.Paste(ac.Substring(0, bIndex) + "]");
-                textBox1.SelectionStart--;
-                textBox1.Paste("[");
+                txtExpression.Paste(ac.Substring(0, bIndex) + "]");
+                txtExpression.SelectionStart--;
+                txtExpression.Paste("[");
             }
             else
-                textBox1.Paste(ac);
+                txtExpression.Paste(ac);
         }
 
 
@@ -587,14 +587,14 @@ namespace Triggernometry.UI.CustomControls
         private void ProcessAutocomplete()
         {
             acfDebounceTimer.Stop();
-            if (textBox1.ReadOnly || !AutocompleteAvailable)
+            if (txtExpression.ReadOnly || !AutocompleteAvailable)
             {
                 HideAutocomplete();
                 return;
             }
-            if (!textBox1.Focused) 
+            if (!txtExpression.Focused) 
                 return;
-            var candidates = GetAutocompleteCandidates(textBox1.Text.Substring(0, textBox1.SelectionStart));
+            var candidates = GetAutocompleteCandidates(txtExpression.Text.Substring(0, txtExpression.SelectionStart));
             if (candidates.Length == 0) 
                 HideAutocomplete();
             else 

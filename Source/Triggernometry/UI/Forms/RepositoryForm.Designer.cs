@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RepositoryForm));
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.grpGeneral = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableRepositoryGeneral = new System.Windows.Forms.TableLayoutPanel();
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.lblAddress = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
@@ -43,7 +43,7 @@
             this.grpUpdateSettings = new System.Windows.Forms.GroupBox();
             this.tbcGeneral = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableRepositoryPermissions = new System.Windows.Forms.TableLayoutPanel();
             this.chkAllowDisk = new System.Windows.Forms.CheckBox();
             this.cbxAudioOverride = new System.Windows.Forms.ComboBox();
             this.lblAudioOverride = new System.Windows.Forms.Label();
@@ -53,7 +53,7 @@
             this.chkAllowScript = new System.Windows.Forms.CheckBox();
             this.chkAllowProcess = new System.Windows.Forms.CheckBox();
             this.tabUpdates = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableRepositoryUpdates = new System.Windows.Forms.TableLayoutPanel();
             this.nudUpdateMinutes = new System.Windows.Forms.NumericUpDown();
             this.lblUpdateInterval = new System.Windows.Forms.Label();
             this.cbxUpdateAuto = new System.Windows.Forms.CheckBox();
@@ -62,72 +62,72 @@
             this.cbxUpdatePolicy = new System.Windows.Forms.ComboBox();
             this.lblUpdatePolicy = new System.Windows.Forms.Label();
             this.tabUpdateLog = new System.Windows.Forms.TabPage();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.splitUpdateLog = new System.Windows.Forms.SplitContainer();
+            this.pnlUpdateLog = new System.Windows.Forms.Panel();
             this.txtLog = new System.Windows.Forms.TextBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxUpdateLog = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxSelectionToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxEverythingToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsMain = new System.Windows.Forms.ToolStrip();
             this.btnCopy = new System.Windows.Forms.ToolStripDropDownButton();
             this.btnSelectionToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.btnEverythingToClipboard = new System.Windows.Forms.ToolStripMenuItem();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.button3 = new System.Windows.Forms.Button();
+            this.tableCacheFile = new System.Windows.Forms.TableLayoutPanel();
+            this.btnLocateCacheFile = new System.Windows.Forms.Button();
             this.lblCacheFilename = new System.Windows.Forms.Label();
             this.txtCacheFilename = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.tableContentSize = new System.Windows.Forms.TableLayoutPanel();
+            this.lblContentSize = new System.Windows.Forms.Label();
             this.txtContentSize = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLastUpdated = new System.Windows.Forms.TableLayoutPanel();
             this.lblLastUpdated = new System.Windows.Forms.Label();
             this.txtLastUpdated = new System.Windows.Forms.TextBox();
             this.capDetails = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlTopSpacing = new System.Windows.Forms.Panel();
+            this.tableLastChecked = new System.Windows.Forms.TableLayoutPanel();
             this.lblLastChecked = new System.Windows.Forms.Label();
             this.txtLastChecked = new System.Windows.Forms.TextBox();
-            this.panel4.SuspendLayout();
+            this.pnlButtons.SuspendLayout();
             this.grpGeneral.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tableRepositoryGeneral.SuspendLayout();
             this.grpUpdateSettings.SuspendLayout();
             this.tbcGeneral.SuspendLayout();
             this.tabGeneral.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.tableRepositoryPermissions.SuspendLayout();
             this.tabUpdates.SuspendLayout();
-            this.tableLayoutPanel6.SuspendLayout();
+            this.tableRepositoryUpdates.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudUpdateMinutes)).BeginInit();
             this.tabUpdateLog.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitUpdateLog)).BeginInit();
+            this.splitUpdateLog.Panel1.SuspendLayout();
+            this.splitUpdateLog.Panel2.SuspendLayout();
+            this.splitUpdateLog.SuspendLayout();
+            this.pnlUpdateLog.SuspendLayout();
+            this.ctxUpdateLog.SuspendLayout();
             this.tlsMain.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            this.tableLayoutPanel7.SuspendLayout();
+            this.tableCacheFile.SuspendLayout();
+            this.tableContentSize.SuspendLayout();
+            this.tableLastUpdated.SuspendLayout();
+            this.tableLastChecked.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 456);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(564, 10);
-            this.panel3.TabIndex = 16;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 456);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlButtonsSpacing.TabIndex = 16;
             // 
-            // panel4
+            // pnlButtons
             // 
-            this.panel4.Controls.Add(this.btnCancel);
-            this.panel4.Controls.Add(this.btnOk);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(10, 466);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(564, 35);
-            this.panel4.TabIndex = 17;
+            this.pnlButtons.Controls.Add(this.btnCancel);
+            this.pnlButtons.Controls.Add(this.btnOk);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 466);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(564, 35);
+            this.pnlButtons.TabIndex = 17;
             // 
             // btnCancel
             // 
@@ -155,7 +155,7 @@
             // grpGeneral
             // 
             this.grpGeneral.AutoSize = true;
-            this.grpGeneral.Controls.Add(this.tableLayoutPanel1);
+            this.grpGeneral.Controls.Add(this.tableRepositoryGeneral);
             this.grpGeneral.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpGeneral.Location = new System.Drawing.Point(10, 10);
             this.grpGeneral.Name = "grpGeneral";
@@ -165,25 +165,25 @@
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = " General settings ";
             // 
-            // tableLayoutPanel1
+            // tableRepositoryGeneral
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.txtAddress, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblAddress, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblName, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtName, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 23);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(544, 52);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableRepositoryGeneral.AutoSize = true;
+            this.tableRepositoryGeneral.ColumnCount = 2;
+            this.tableRepositoryGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableRepositoryGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableRepositoryGeneral.Controls.Add(this.txtAddress, 1, 1);
+            this.tableRepositoryGeneral.Controls.Add(this.lblAddress, 0, 1);
+            this.tableRepositoryGeneral.Controls.Add(this.lblName, 0, 0);
+            this.tableRepositoryGeneral.Controls.Add(this.txtName, 1, 0);
+            this.tableRepositoryGeneral.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableRepositoryGeneral.Location = new System.Drawing.Point(10, 23);
+            this.tableRepositoryGeneral.Name = "tableRepositoryGeneral";
+            this.tableRepositoryGeneral.RowCount = 2;
+            this.tableRepositoryGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableRepositoryGeneral.Size = new System.Drawing.Size(544, 52);
+            this.tableRepositoryGeneral.TabIndex = 0;
             // 
             // txtAddress
             // 
@@ -254,7 +254,7 @@
             // 
             // tabGeneral
             // 
-            this.tabGeneral.Controls.Add(this.tableLayoutPanel2);
+            this.tabGeneral.Controls.Add(this.tableRepositoryPermissions);
             this.tabGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabGeneral.Name = "tabGeneral";
             this.tabGeneral.Padding = new System.Windows.Forms.Padding(3);
@@ -263,41 +263,41 @@
             this.tabGeneral.Text = "Settings";
             this.tabGeneral.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel2
+            // tableRepositoryPermissions
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.chkAllowDisk, 0, 5);
-            this.tableLayoutPanel2.Controls.Add(this.cbxAudioOverride, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lblAudioOverride, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.chkAllowObs, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.chkAllowWmsg, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.chkKeepLocal, 0, 6);
-            this.tableLayoutPanel2.Controls.Add(this.chkAllowScript, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.chkAllowProcess, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 9;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(530, 286);
-            this.tableLayoutPanel2.TabIndex = 0;
+            this.tableRepositoryPermissions.AutoSize = true;
+            this.tableRepositoryPermissions.ColumnCount = 2;
+            this.tableRepositoryPermissions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableRepositoryPermissions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableRepositoryPermissions.Controls.Add(this.chkAllowDisk, 0, 5);
+            this.tableRepositoryPermissions.Controls.Add(this.cbxAudioOverride, 1, 0);
+            this.tableRepositoryPermissions.Controls.Add(this.lblAudioOverride, 0, 0);
+            this.tableRepositoryPermissions.Controls.Add(this.chkAllowObs, 0, 4);
+            this.tableRepositoryPermissions.Controls.Add(this.chkAllowWmsg, 0, 3);
+            this.tableRepositoryPermissions.Controls.Add(this.chkKeepLocal, 0, 6);
+            this.tableRepositoryPermissions.Controls.Add(this.chkAllowScript, 0, 2);
+            this.tableRepositoryPermissions.Controls.Add(this.chkAllowProcess, 0, 1);
+            this.tableRepositoryPermissions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableRepositoryPermissions.Location = new System.Drawing.Point(3, 3);
+            this.tableRepositoryPermissions.Name = "tableRepositoryPermissions";
+            this.tableRepositoryPermissions.RowCount = 9;
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryPermissions.Size = new System.Drawing.Size(530, 286);
+            this.tableRepositoryPermissions.TabIndex = 0;
             // 
             // chkAllowDisk
             // 
             this.chkAllowDisk.AutoSize = true;
             this.chkAllowDisk.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel2.SetColumnSpan(this.chkAllowDisk, 2);
+            this.tableRepositoryPermissions.SetColumnSpan(this.chkAllowDisk, 2);
             this.chkAllowDisk.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkAllowDisk.Location = new System.Drawing.Point(3, 140);
             this.chkAllowDisk.Margin = new System.Windows.Forms.Padding(3, 5, 2, 5);
@@ -338,7 +338,7 @@
             // 
             this.chkAllowObs.AutoSize = true;
             this.chkAllowObs.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel2.SetColumnSpan(this.chkAllowObs, 2);
+            this.tableRepositoryPermissions.SetColumnSpan(this.chkAllowObs, 2);
             this.chkAllowObs.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkAllowObs.Location = new System.Drawing.Point(3, 113);
             this.chkAllowObs.Margin = new System.Windows.Forms.Padding(3, 5, 2, 5);
@@ -353,7 +353,7 @@
             // 
             this.chkAllowWmsg.AutoSize = true;
             this.chkAllowWmsg.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel2.SetColumnSpan(this.chkAllowWmsg, 2);
+            this.tableRepositoryPermissions.SetColumnSpan(this.chkAllowWmsg, 2);
             this.chkAllowWmsg.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkAllowWmsg.Location = new System.Drawing.Point(3, 86);
             this.chkAllowWmsg.Margin = new System.Windows.Forms.Padding(3, 5, 2, 5);
@@ -368,7 +368,7 @@
             // 
             this.chkKeepLocal.AutoSize = true;
             this.chkKeepLocal.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel2.SetColumnSpan(this.chkKeepLocal, 2);
+            this.tableRepositoryPermissions.SetColumnSpan(this.chkKeepLocal, 2);
             this.chkKeepLocal.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkKeepLocal.Location = new System.Drawing.Point(3, 167);
             this.chkKeepLocal.Margin = new System.Windows.Forms.Padding(3, 5, 2, 5);
@@ -382,7 +382,7 @@
             // 
             this.chkAllowScript.AutoSize = true;
             this.chkAllowScript.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel2.SetColumnSpan(this.chkAllowScript, 2);
+            this.tableRepositoryPermissions.SetColumnSpan(this.chkAllowScript, 2);
             this.chkAllowScript.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkAllowScript.Location = new System.Drawing.Point(3, 59);
             this.chkAllowScript.Margin = new System.Windows.Forms.Padding(3, 5, 2, 5);
@@ -397,7 +397,7 @@
             // 
             this.chkAllowProcess.AutoSize = true;
             this.chkAllowProcess.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel2.SetColumnSpan(this.chkAllowProcess, 2);
+            this.tableRepositoryPermissions.SetColumnSpan(this.chkAllowProcess, 2);
             this.chkAllowProcess.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkAllowProcess.Location = new System.Drawing.Point(3, 32);
             this.chkAllowProcess.Margin = new System.Windows.Forms.Padding(3, 5, 2, 5);
@@ -410,7 +410,7 @@
             // 
             // tabUpdates
             // 
-            this.tabUpdates.Controls.Add(this.tableLayoutPanel6);
+            this.tabUpdates.Controls.Add(this.tableRepositoryUpdates);
             this.tabUpdates.Location = new System.Drawing.Point(4, 22);
             this.tabUpdates.Name = "tabUpdates";
             this.tabUpdates.Padding = new System.Windows.Forms.Padding(3);
@@ -419,29 +419,29 @@
             this.tabUpdates.Text = "Updates";
             this.tabUpdates.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel6
+            // tableRepositoryUpdates
             // 
-            this.tableLayoutPanel6.ColumnCount = 2;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.Controls.Add(this.nudUpdateMinutes, 1, 3);
-            this.tableLayoutPanel6.Controls.Add(this.lblUpdateInterval, 0, 3);
-            this.tableLayoutPanel6.Controls.Add(this.cbxUpdateAuto, 0, 2);
-            this.tableLayoutPanel6.Controls.Add(this.lblDefaultBehavior, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.cbxNewBehavior, 1, 0);
-            this.tableLayoutPanel6.Controls.Add(this.cbxUpdatePolicy, 1, 1);
-            this.tableLayoutPanel6.Controls.Add(this.lblUpdatePolicy, 0, 1);
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 5;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(530, 286);
-            this.tableLayoutPanel6.TabIndex = 0;
+            this.tableRepositoryUpdates.ColumnCount = 2;
+            this.tableRepositoryUpdates.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableRepositoryUpdates.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableRepositoryUpdates.Controls.Add(this.nudUpdateMinutes, 1, 3);
+            this.tableRepositoryUpdates.Controls.Add(this.lblUpdateInterval, 0, 3);
+            this.tableRepositoryUpdates.Controls.Add(this.cbxUpdateAuto, 0, 2);
+            this.tableRepositoryUpdates.Controls.Add(this.lblDefaultBehavior, 0, 0);
+            this.tableRepositoryUpdates.Controls.Add(this.cbxNewBehavior, 1, 0);
+            this.tableRepositoryUpdates.Controls.Add(this.cbxUpdatePolicy, 1, 1);
+            this.tableRepositoryUpdates.Controls.Add(this.lblUpdatePolicy, 0, 1);
+            this.tableRepositoryUpdates.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableRepositoryUpdates.Location = new System.Drawing.Point(3, 3);
+            this.tableRepositoryUpdates.Name = "tableRepositoryUpdates";
+            this.tableRepositoryUpdates.RowCount = 5;
+            this.tableRepositoryUpdates.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryUpdates.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryUpdates.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryUpdates.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableRepositoryUpdates.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableRepositoryUpdates.Size = new System.Drawing.Size(530, 286);
+            this.tableRepositoryUpdates.TabIndex = 0;
             // 
             // nudUpdateMinutes
             // 
@@ -483,7 +483,7 @@
             // 
             this.cbxUpdateAuto.AutoSize = true;
             this.cbxUpdateAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel6.SetColumnSpan(this.cbxUpdateAuto, 2);
+            this.tableRepositoryUpdates.SetColumnSpan(this.cbxUpdateAuto, 2);
             this.cbxUpdateAuto.Dock = System.Windows.Forms.DockStyle.Top;
             this.cbxUpdateAuto.Location = new System.Drawing.Point(3, 59);
             this.cbxUpdateAuto.Margin = new System.Windows.Forms.Padding(3, 5, 2, 5);
@@ -545,7 +545,7 @@
             // 
             // tabUpdateLog
             // 
-            this.tabUpdateLog.Controls.Add(this.splitContainer1);
+            this.tabUpdateLog.Controls.Add(this.splitUpdateLog);
             this.tabUpdateLog.Location = new System.Drawing.Point(4, 22);
             this.tabUpdateLog.Name = "tabUpdateLog";
             this.tabUpdateLog.Padding = new System.Windows.Forms.Padding(6);
@@ -554,43 +554,43 @@
             this.tabUpdateLog.Text = "Update log";
             this.tabUpdateLog.UseVisualStyleBackColor = true;
             // 
-            // splitContainer1
+            // splitUpdateLog
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(6, 6);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitUpdateLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitUpdateLog.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitUpdateLog.Location = new System.Drawing.Point(6, 6);
+            this.splitUpdateLog.Name = "splitUpdateLog";
             // 
-            // splitContainer1.Panel1
+            // splitUpdateLog.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel2);
+            this.splitUpdateLog.Panel1.Controls.Add(this.pnlUpdateLog);
             // 
-            // splitContainer1.Panel2
+            // splitUpdateLog.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel5);
-            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel4);
-            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel3);
-            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel7);
-            this.splitContainer1.Panel2.Controls.Add(this.capDetails);
-            this.splitContainer1.Size = new System.Drawing.Size(524, 280);
-            this.splitContainer1.SplitterDistance = 327;
-            this.splitContainer1.TabIndex = 7;
+            this.splitUpdateLog.Panel2.Controls.Add(this.tableCacheFile);
+            this.splitUpdateLog.Panel2.Controls.Add(this.tableContentSize);
+            this.splitUpdateLog.Panel2.Controls.Add(this.tableLastUpdated);
+            this.splitUpdateLog.Panel2.Controls.Add(this.tableLastChecked);
+            this.splitUpdateLog.Panel2.Controls.Add(this.capDetails);
+            this.splitUpdateLog.Size = new System.Drawing.Size(524, 280);
+            this.splitUpdateLog.SplitterDistance = 327;
+            this.splitUpdateLog.TabIndex = 7;
             // 
-            // panel2
+            // pnlUpdateLog
             // 
-            this.panel2.Controls.Add(this.txtLog);
-            this.panel2.Controls.Add(this.tlsMain);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(327, 280);
-            this.panel2.TabIndex = 6;
+            this.pnlUpdateLog.Controls.Add(this.txtLog);
+            this.pnlUpdateLog.Controls.Add(this.tlsMain);
+            this.pnlUpdateLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlUpdateLog.Location = new System.Drawing.Point(0, 0);
+            this.pnlUpdateLog.Name = "pnlUpdateLog";
+            this.pnlUpdateLog.Size = new System.Drawing.Size(327, 280);
+            this.pnlUpdateLog.TabIndex = 6;
             // 
             // txtLog
             // 
             this.txtLog.BackColor = System.Drawing.SystemColors.Window;
             this.txtLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtLog.ContextMenuStrip = this.contextMenuStrip1;
+            this.txtLog.ContextMenuStrip = this.ctxUpdateLog;
             this.txtLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtLog.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLog.Location = new System.Drawing.Point(0, 25);
@@ -603,14 +603,14 @@
             this.txtLog.TabIndex = 4;
             this.txtLog.WordWrap = false;
             // 
-            // contextMenuStrip1
+            // ctxUpdateLog
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxUpdateLog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxSelectionToClipboard,
             this.ctxEverythingToClipboard});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 48);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.ctxUpdateLog.Name = "ctxUpdateLog";
+            this.ctxUpdateLog.Size = new System.Drawing.Size(198, 48);
+            this.ctxUpdateLog.Opening += new System.ComponentModel.CancelEventHandler(this.ctxUpdateLog_Opening);
             // 
             // ctxSelectionToClipboard
             // 
@@ -665,41 +665,41 @@
             this.btnEverythingToClipboard.Text = "Everything to clipboard";
             this.btnEverythingToClipboard.Click += new System.EventHandler(this.btnEverythingToClipboard_Click);
             // 
-            // tableLayoutPanel5
+            // tableCacheFile
             // 
-            this.tableLayoutPanel5.AutoSize = true;
-            this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel5.Controls.Add(this.button3, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.lblCacheFilename, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.txtCacheFilename, 0, 1);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 195);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(193, 55);
-            this.tableLayoutPanel5.TabIndex = 9;
+            this.tableCacheFile.AutoSize = true;
+            this.tableCacheFile.ColumnCount = 2;
+            this.tableCacheFile.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableCacheFile.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableCacheFile.Controls.Add(this.btnLocateCacheFile, 0, 1);
+            this.tableCacheFile.Controls.Add(this.lblCacheFilename, 0, 0);
+            this.tableCacheFile.Controls.Add(this.txtCacheFilename, 0, 1);
+            this.tableCacheFile.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableCacheFile.Location = new System.Drawing.Point(0, 195);
+            this.tableCacheFile.Name = "tableCacheFile";
+            this.tableCacheFile.RowCount = 2;
+            this.tableCacheFile.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableCacheFile.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableCacheFile.Size = new System.Drawing.Size(193, 55);
+            this.tableCacheFile.TabIndex = 9;
             // 
-            // button3
+            // btnLocateCacheFile
             // 
-            this.button3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button3.Enabled = false;
-            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
-            this.button3.Location = new System.Drawing.Point(153, 29);
-            this.button3.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(37, 26);
-            this.button3.TabIndex = 14;
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btnLocateCacheFile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnLocateCacheFile.Enabled = false;
+            this.btnLocateCacheFile.Image = ((System.Drawing.Image)(resources.GetObject("btnLocateCacheFile.Image")));
+            this.btnLocateCacheFile.Location = new System.Drawing.Point(153, 29);
+            this.btnLocateCacheFile.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.btnLocateCacheFile.Name = "btnLocateCacheFile";
+            this.btnLocateCacheFile.Size = new System.Drawing.Size(37, 26);
+            this.btnLocateCacheFile.TabIndex = 14;
+            this.btnLocateCacheFile.UseVisualStyleBackColor = true;
+            this.btnLocateCacheFile.Click += new System.EventHandler(this.btnLocateCacheFile_Click);
             // 
             // lblCacheFilename
             // 
             this.lblCacheFilename.AutoSize = true;
-            this.tableLayoutPanel5.SetColumnSpan(this.lblCacheFilename, 2);
+            this.tableCacheFile.SetColumnSpan(this.lblCacheFilename, 2);
             this.lblCacheFilename.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblCacheFilename.Location = new System.Drawing.Point(3, 0);
             this.lblCacheFilename.Name = "lblCacheFilename";
@@ -718,32 +718,32 @@
             this.txtCacheFilename.TabIndex = 2;
             this.txtCacheFilename.TextChanged += new System.EventHandler(this.txtCacheFilename_TextChanged);
             // 
-            // tableLayoutPanel4
+            // tableContentSize
             // 
-            this.tableLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.label2, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.txtContentSize, 0, 1);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 140);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 2;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(193, 55);
-            this.tableLayoutPanel4.TabIndex = 8;
+            this.tableContentSize.AutoSize = true;
+            this.tableContentSize.ColumnCount = 1;
+            this.tableContentSize.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableContentSize.Controls.Add(this.lblContentSize, 0, 0);
+            this.tableContentSize.Controls.Add(this.txtContentSize, 0, 1);
+            this.tableContentSize.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableContentSize.Location = new System.Drawing.Point(0, 140);
+            this.tableContentSize.Name = "tableContentSize";
+            this.tableContentSize.RowCount = 2;
+            this.tableContentSize.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableContentSize.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableContentSize.Size = new System.Drawing.Size(193, 55);
+            this.tableContentSize.TabIndex = 8;
             // 
-            // label2
+            // lblContentSize
             // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(3, 0);
-            this.label2.Name = "label2";
-            this.label2.Padding = new System.Windows.Forms.Padding(0, 15, 0, 1);
-            this.label2.Size = new System.Drawing.Size(187, 29);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Content size";
+            this.lblContentSize.AutoSize = true;
+            this.lblContentSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblContentSize.Location = new System.Drawing.Point(3, 0);
+            this.lblContentSize.Name = "lblContentSize";
+            this.lblContentSize.Padding = new System.Windows.Forms.Padding(0, 15, 0, 1);
+            this.lblContentSize.Size = new System.Drawing.Size(187, 29);
+            this.lblContentSize.TabIndex = 1;
+            this.lblContentSize.Text = "Content size";
             // 
             // txtContentSize
             // 
@@ -754,22 +754,22 @@
             this.txtContentSize.Size = new System.Drawing.Size(187, 20);
             this.txtContentSize.TabIndex = 2;
             // 
-            // tableLayoutPanel3
+            // tableLastUpdated
             // 
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.lblLastUpdated, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.txtLastUpdated, 0, 1);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 85);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(193, 55);
-            this.tableLayoutPanel3.TabIndex = 7;
+            this.tableLastUpdated.AutoSize = true;
+            this.tableLastUpdated.ColumnCount = 1;
+            this.tableLastUpdated.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLastUpdated.Controls.Add(this.lblLastUpdated, 0, 0);
+            this.tableLastUpdated.Controls.Add(this.txtLastUpdated, 0, 1);
+            this.tableLastUpdated.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLastUpdated.Location = new System.Drawing.Point(0, 85);
+            this.tableLastUpdated.Name = "tableLastUpdated";
+            this.tableLastUpdated.RowCount = 2;
+            this.tableLastUpdated.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLastUpdated.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLastUpdated.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLastUpdated.Size = new System.Drawing.Size(193, 55);
+            this.tableLastUpdated.TabIndex = 7;
             // 
             // lblLastUpdated
             // 
@@ -802,29 +802,29 @@
             this.capDetails.Size = new System.Drawing.Size(193, 30);
             this.capDetails.TabIndex = 6;
             // 
-            // panel1
+            // pnlTopSpacing
             // 
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(10, 95);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(564, 10);
-            this.panel1.TabIndex = 20;
+            this.pnlTopSpacing.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTopSpacing.Location = new System.Drawing.Point(10, 95);
+            this.pnlTopSpacing.Name = "pnlTopSpacing";
+            this.pnlTopSpacing.Size = new System.Drawing.Size(564, 10);
+            this.pnlTopSpacing.TabIndex = 20;
             // 
-            // tableLayoutPanel7
+            // tableLastChecked
             // 
-            this.tableLayoutPanel7.AutoSize = true;
-            this.tableLayoutPanel7.ColumnCount = 1;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Controls.Add(this.lblLastChecked, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.txtLastChecked, 0, 1);
-            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 30);
-            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-            this.tableLayoutPanel7.RowCount = 2;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(193, 55);
-            this.tableLayoutPanel7.TabIndex = 10;
+            this.tableLastChecked.AutoSize = true;
+            this.tableLastChecked.ColumnCount = 1;
+            this.tableLastChecked.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLastChecked.Controls.Add(this.lblLastChecked, 0, 0);
+            this.tableLastChecked.Controls.Add(this.txtLastChecked, 0, 1);
+            this.tableLastChecked.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLastChecked.Location = new System.Drawing.Point(0, 30);
+            this.tableLastChecked.Name = "tableLastChecked";
+            this.tableLastChecked.RowCount = 2;
+            this.tableLastChecked.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLastChecked.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLastChecked.Size = new System.Drawing.Size(193, 55);
+            this.tableLastChecked.TabIndex = 10;
             // 
             // lblLastChecked
             // 
@@ -854,10 +854,10 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(584, 511);
             this.Controls.Add(this.grpUpdateSettings);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlTopSpacing);
             this.Controls.Add(this.grpGeneral);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.pnlButtonsSpacing);
+            this.Controls.Add(this.pnlButtons);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(600, 550);
             this.Name = "RepositoryForm";
@@ -865,40 +865,40 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Shown += new System.EventHandler(this.RepositoryForm_Shown);
-            this.panel4.ResumeLayout(false);
+            this.pnlButtons.ResumeLayout(false);
             this.grpGeneral.ResumeLayout(false);
             this.grpGeneral.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tableRepositoryGeneral.ResumeLayout(false);
+            this.tableRepositoryGeneral.PerformLayout();
             this.grpUpdateSettings.ResumeLayout(false);
             this.tbcGeneral.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.tableRepositoryPermissions.ResumeLayout(false);
+            this.tableRepositoryPermissions.PerformLayout();
             this.tabUpdates.ResumeLayout(false);
-            this.tableLayoutPanel6.ResumeLayout(false);
-            this.tableLayoutPanel6.PerformLayout();
+            this.tableRepositoryUpdates.ResumeLayout(false);
+            this.tableRepositoryUpdates.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudUpdateMinutes)).EndInit();
             this.tabUpdateLog.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.splitUpdateLog.Panel1.ResumeLayout(false);
+            this.splitUpdateLog.Panel2.ResumeLayout(false);
+            this.splitUpdateLog.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitUpdateLog)).EndInit();
+            this.splitUpdateLog.ResumeLayout(false);
+            this.pnlUpdateLog.ResumeLayout(false);
+            this.pnlUpdateLog.PerformLayout();
+            this.ctxUpdateLog.ResumeLayout(false);
             this.tlsMain.ResumeLayout(false);
             this.tlsMain.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
-            this.tableLayoutPanel7.ResumeLayout(false);
-            this.tableLayoutPanel7.PerformLayout();
+            this.tableCacheFile.ResumeLayout(false);
+            this.tableCacheFile.PerformLayout();
+            this.tableContentSize.ResumeLayout(false);
+            this.tableContentSize.PerformLayout();
+            this.tableLastUpdated.ResumeLayout(false);
+            this.tableLastUpdated.PerformLayout();
+            this.tableLastChecked.ResumeLayout(false);
+            this.tableLastChecked.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -906,23 +906,23 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.GroupBox grpGeneral;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableRepositoryGeneral;
         private System.Windows.Forms.TextBox txtAddress;
         private System.Windows.Forms.Label lblAddress;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.GroupBox grpUpdateSettings;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableRepositoryPermissions;
         private System.Windows.Forms.Label lblDefaultBehavior;
         private System.Windows.Forms.ComboBox cbxNewBehavior;
         private System.Windows.Forms.CheckBox chkAllowScript;
         private System.Windows.Forms.CheckBox chkAllowProcess;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlTopSpacing;
         private System.Windows.Forms.ComboBox cbxUpdatePolicy;
         private System.Windows.Forms.Label lblUpdatePolicy;
         private System.Windows.Forms.CheckBox chkKeepLocal;
@@ -934,20 +934,20 @@
         private System.Windows.Forms.ToolStripDropDownButton btnCopy;
         private System.Windows.Forms.ToolStripMenuItem btnSelectionToClipboard;
         private System.Windows.Forms.ToolStripMenuItem btnEverythingToClipboard;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.SplitContainer splitUpdateLog;
+        private System.Windows.Forms.Panel pnlUpdateLog;
         private CustomControls.PrettyCaption capDetails;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel tableLastUpdated;
         private System.Windows.Forms.Label lblLastUpdated;
         private System.Windows.Forms.TextBox txtLastUpdated;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TableLayoutPanel tableContentSize;
+        private System.Windows.Forms.Label lblContentSize;
         private System.Windows.Forms.TextBox txtContentSize;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.TableLayoutPanel tableCacheFile;
         private System.Windows.Forms.Label lblCacheFilename;
         private System.Windows.Forms.TextBox txtCacheFilename;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Button btnLocateCacheFile;
+        private System.Windows.Forms.ContextMenuStrip ctxUpdateLog;
         private System.Windows.Forms.ToolStripMenuItem ctxSelectionToClipboard;
         private System.Windows.Forms.ToolStripMenuItem ctxEverythingToClipboard;
         private System.Windows.Forms.CheckBox chkAllowWmsg;
@@ -956,11 +956,11 @@
         private System.Windows.Forms.ComboBox cbxAudioOverride;
         private System.Windows.Forms.CheckBox chkAllowDisk;
         private System.Windows.Forms.TabPage tabUpdates;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+        private System.Windows.Forms.TableLayoutPanel tableRepositoryUpdates;
         private System.Windows.Forms.CheckBox cbxUpdateAuto;
         private System.Windows.Forms.Label lblUpdateInterval;
         private System.Windows.Forms.NumericUpDown nudUpdateMinutes;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+        private System.Windows.Forms.TableLayoutPanel tableLastChecked;
         private System.Windows.Forms.Label lblLastChecked;
         private System.Windows.Forms.TextBox txtLastChecked;
     }

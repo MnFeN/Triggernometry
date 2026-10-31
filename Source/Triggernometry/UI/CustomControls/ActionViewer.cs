@@ -32,8 +32,8 @@ namespace Triggernometry.UI.CustomControls
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);
-            if (toolStrip2 != null)
-                toolStrip2.Font = Font;
+            if (tlsActions != null)
+                tlsActions.Font = Font;
             if (ctxAction != null)
                 ctxAction.Font = Font;
         }

@@ -98,7 +98,7 @@ namespace Triggernometry.UI.Forms
 
         internal void SetReadOnly(bool showRemoteBanner = true)
         {
-            registeredVariableViewer.SetReadOnly();
+            registeredVariables.SetReadOnly();
             btnOk.Enabled = false;
             btnOk.Visible = false;
             btnCancel.Dock = DockStyle.Fill;
@@ -169,9 +169,9 @@ namespace Triggernometry.UI.Forms
             isNewFolder = f == null;
             editedFolder = f ?? new Folder();
             f = editedFolder;
-            registeredVariableViewer.Folder = editedFolder;
-            registeredVariableViewer.Plugin = plug;
-            registeredVariableViewer.SetVariables(f.RegisteredVariables);
+            registeredVariables.Folder = editedFolder;
+            registeredVariables.Plugin = plug;
+            registeredVariables.SetVariables(f.RegisteredVariables);
             txtFolderName.Text = f.Name ?? "";
             chkZoneFilter.Checked = f.ZoneFilterEnabled;
             chkEventFilter.Checked = f.EventFilterEnabled;
@@ -187,7 +187,7 @@ namespace Triggernometry.UI.Forms
 
         internal void SettingsToFolder(Folder f)
         {
-            if (!registeredVariableViewer.TryGetVariables(out List<RegisteredVariable> variables)) return;
+            if (!registeredVariables.TryGetVariables(out List<RegisteredVariable> variables)) return;
             if (isNewFolder) f.Id = editedFolder.Id;
             f.Name = txtFolderName.Text;
 			f.ZoneFilterEnabled = chkZoneFilter.Checked;
@@ -211,8 +211,8 @@ namespace Triggernometry.UI.Forms
         {
             if (DialogResult == DialogResult.OK)
             {
-                if (!registeredVariableViewer.TryGetVariables(out _)) e.Cancel = true;
-                else registeredVariableViewer.ConfirmRenamedVariables();
+                if (!registeredVariables.TryGetVariables(out _)) e.Cancel = true;
+                else registeredVariables.ConfirmRenamedVariables();
             }
             base.OnFormClosing(e);
         }

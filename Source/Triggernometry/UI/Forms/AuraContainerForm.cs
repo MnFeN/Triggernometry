@@ -192,8 +192,8 @@ namespace Triggernometry.UI.Forms
                 case AuraTypeEnum.Image:
                 default:
                     string img = ctx.EvaluateStringExpression(ctx.Trigger != null ? ctx.Trigger.TriggerContextLogger : (Context.LoggerDelegate)null, ctx.Plugin, PreprocessExpression(ImageExpression));
-                    pictureBox1.Image = LoadImageData(plug, img);
-                    pictureBox1.SizeMode = Display;
+                    picOverlay.Image = LoadImageData(plug, img);
+                    picOverlay.SizeMode = Display;
                     wx = Width;
                     hx = Height;
                     break;

@@ -30,60 +30,60 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AuraDesignForm));
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tmrSelectionBlink = new System.Windows.Forms.Timer(this.components);
+            this.ctxOverlayDesign = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxImage = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxWidthToImageWidth = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxHeightToImageHeight = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.sepImageDisplay = new System.Windows.Forms.ToolStripSeparator();
             this.ctxDisplayMethod = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxDisplayNormal = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxDisplayStretch = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxDisplayCentered = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxDisplayZoomed = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxText = new System.Windows.Forms.ToolStripMenuItem();
-            this.alignmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.topLeftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.topCenterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.topRightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.middleLeftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.middleCenterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.middleRightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bottomLeftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bottomCenterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bottomRightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ctxTextAlignment = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentTopLeft = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentTopCenter = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentTopRight = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentMiddleLeft = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentMiddleCenter = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentMiddleRight = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentBottomLeft = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentBottomCenter = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxTextAlignmentBottomRight = new System.Windows.Forms.ToolStripMenuItem();
+            this.sepContextSave = new System.Windows.Forms.ToolStripSeparator();
             this.ctxSaveChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxDiscardChanges = new System.Windows.Forms.ToolStripMenuItem();
-            this.clickthroughPictureBox1 = new Triggernometry.UI.CustomControls.ClickthroughPictureBox();
-            this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.clickthroughPictureBox1)).BeginInit();
+            this.picOverlayPreview = new Triggernometry.UI.CustomControls.ClickthroughPictureBox();
+            this.ctxOverlayDesign.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picOverlayPreview)).BeginInit();
             this.SuspendLayout();
             // 
-            // timer1
+            // tmrSelectionBlink
             // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 500;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.tmrSelectionBlink.Enabled = true;
+            this.tmrSelectionBlink.Interval = 500;
+            this.tmrSelectionBlink.Tick += new System.EventHandler(this.tmrSelectionBlink_Tick);
             // 
-            // contextMenuStrip1
+            // ctxOverlayDesign
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxOverlayDesign.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxImage,
             this.ctxText,
-            this.toolStripSeparator1,
+            this.sepContextSave,
             this.ctxSaveChanges,
             this.ctxDiscardChanges});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(161, 98);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.ctxOverlayDesign.Name = "ctxOverlayDesign";
+            this.ctxOverlayDesign.Size = new System.Drawing.Size(161, 98);
+            this.ctxOverlayDesign.Opening += new System.ComponentModel.CancelEventHandler(this.ctxOverlayDesign_Opening);
             // 
             // ctxImage
             // 
             this.ctxImage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxWidthToImageWidth,
             this.ctxHeightToImageHeight,
-            this.toolStripSeparator2,
+            this.sepImageDisplay,
             this.ctxDisplayMethod});
             this.ctxImage.Image = ((System.Drawing.Image)(resources.GetObject("ctxImage.Image")));
             this.ctxImage.Name = "ctxImage";
@@ -104,10 +104,10 @@
             this.ctxHeightToImageHeight.Text = "Set height to image height";
             this.ctxHeightToImageHeight.Click += new System.EventHandler(this.setHeightToImageHeightToolStripMenuItem_Click);
             // 
-            // toolStripSeparator2
+            // sepImageDisplay
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(211, 6);
+            this.sepImageDisplay.Name = "sepImageDisplay";
+            this.sepImageDisplay.Size = new System.Drawing.Size(211, 6);
             // 
             // ctxDisplayMethod
             // 
@@ -156,105 +156,105 @@
             // ctxText
             // 
             this.ctxText.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.alignmentToolStripMenuItem});
+            this.ctxTextAlignment});
             this.ctxText.Image = ((System.Drawing.Image)(resources.GetObject("ctxText.Image")));
             this.ctxText.Name = "ctxText";
             this.ctxText.Size = new System.Drawing.Size(160, 22);
             this.ctxText.Text = "Text";
             this.ctxText.DropDownOpening += new System.EventHandler(this.textToolStripMenuItem_DropDownOpening);
             // 
-            // alignmentToolStripMenuItem
+            // ctxTextAlignment
             // 
-            this.alignmentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.topLeftToolStripMenuItem,
-            this.topCenterToolStripMenuItem,
-            this.topRightToolStripMenuItem,
-            this.middleLeftToolStripMenuItem,
-            this.middleCenterToolStripMenuItem,
-            this.middleRightToolStripMenuItem,
-            this.bottomLeftToolStripMenuItem,
-            this.bottomCenterToolStripMenuItem,
-            this.bottomRightToolStripMenuItem});
-            this.alignmentToolStripMenuItem.Name = "alignmentToolStripMenuItem";
-            this.alignmentToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
-            this.alignmentToolStripMenuItem.Text = "Alignment";
+            this.ctxTextAlignment.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxTextAlignmentTopLeft,
+            this.ctxTextAlignmentTopCenter,
+            this.ctxTextAlignmentTopRight,
+            this.ctxTextAlignmentMiddleLeft,
+            this.ctxTextAlignmentMiddleCenter,
+            this.ctxTextAlignmentMiddleRight,
+            this.ctxTextAlignmentBottomLeft,
+            this.ctxTextAlignmentBottomCenter,
+            this.ctxTextAlignmentBottomRight});
+            this.ctxTextAlignment.Name = "ctxTextAlignment";
+            this.ctxTextAlignment.Size = new System.Drawing.Size(130, 22);
+            this.ctxTextAlignment.Text = "Alignment";
             // 
-            // topLeftToolStripMenuItem
+            // ctxTextAlignmentTopLeft
             // 
-            this.topLeftToolStripMenuItem.CheckOnClick = true;
-            this.topLeftToolStripMenuItem.Name = "topLeftToolStripMenuItem";
-            this.topLeftToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.topLeftToolStripMenuItem.Text = "Top left";
-            this.topLeftToolStripMenuItem.Click += new System.EventHandler(this.topLeftToolStripMenuItem_Click);
+            this.ctxTextAlignmentTopLeft.CheckOnClick = true;
+            this.ctxTextAlignmentTopLeft.Name = "ctxTextAlignmentTopLeft";
+            this.ctxTextAlignmentTopLeft.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentTopLeft.Text = "Top left";
+            this.ctxTextAlignmentTopLeft.Click += new System.EventHandler(this.ctxTextAlignmentTopLeft_Click);
             // 
-            // topCenterToolStripMenuItem
+            // ctxTextAlignmentTopCenter
             // 
-            this.topCenterToolStripMenuItem.CheckOnClick = true;
-            this.topCenterToolStripMenuItem.Name = "topCenterToolStripMenuItem";
-            this.topCenterToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.topCenterToolStripMenuItem.Text = "Top center";
-            this.topCenterToolStripMenuItem.Click += new System.EventHandler(this.topCenterToolStripMenuItem_Click);
+            this.ctxTextAlignmentTopCenter.CheckOnClick = true;
+            this.ctxTextAlignmentTopCenter.Name = "ctxTextAlignmentTopCenter";
+            this.ctxTextAlignmentTopCenter.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentTopCenter.Text = "Top center";
+            this.ctxTextAlignmentTopCenter.Click += new System.EventHandler(this.ctxTextAlignmentTopCenter_Click);
             // 
-            // topRightToolStripMenuItem
+            // ctxTextAlignmentTopRight
             // 
-            this.topRightToolStripMenuItem.CheckOnClick = true;
-            this.topRightToolStripMenuItem.Name = "topRightToolStripMenuItem";
-            this.topRightToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.topRightToolStripMenuItem.Text = "Top right";
-            this.topRightToolStripMenuItem.Click += new System.EventHandler(this.topRightToolStripMenuItem_Click);
+            this.ctxTextAlignmentTopRight.CheckOnClick = true;
+            this.ctxTextAlignmentTopRight.Name = "ctxTextAlignmentTopRight";
+            this.ctxTextAlignmentTopRight.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentTopRight.Text = "Top right";
+            this.ctxTextAlignmentTopRight.Click += new System.EventHandler(this.ctxTextAlignmentTopRight_Click);
             // 
-            // middleLeftToolStripMenuItem
+            // ctxTextAlignmentMiddleLeft
             // 
-            this.middleLeftToolStripMenuItem.CheckOnClick = true;
-            this.middleLeftToolStripMenuItem.Name = "middleLeftToolStripMenuItem";
-            this.middleLeftToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.middleLeftToolStripMenuItem.Text = "Middle left";
-            this.middleLeftToolStripMenuItem.Click += new System.EventHandler(this.middleLeftToolStripMenuItem_Click);
+            this.ctxTextAlignmentMiddleLeft.CheckOnClick = true;
+            this.ctxTextAlignmentMiddleLeft.Name = "ctxTextAlignmentMiddleLeft";
+            this.ctxTextAlignmentMiddleLeft.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentMiddleLeft.Text = "Middle left";
+            this.ctxTextAlignmentMiddleLeft.Click += new System.EventHandler(this.ctxTextAlignmentMiddleLeft_Click);
             // 
-            // middleCenterToolStripMenuItem
+            // ctxTextAlignmentMiddleCenter
             // 
-            this.middleCenterToolStripMenuItem.CheckOnClick = true;
-            this.middleCenterToolStripMenuItem.Name = "middleCenterToolStripMenuItem";
-            this.middleCenterToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.middleCenterToolStripMenuItem.Text = "Middle center";
-            this.middleCenterToolStripMenuItem.Click += new System.EventHandler(this.middleCenterToolStripMenuItem_Click);
+            this.ctxTextAlignmentMiddleCenter.CheckOnClick = true;
+            this.ctxTextAlignmentMiddleCenter.Name = "ctxTextAlignmentMiddleCenter";
+            this.ctxTextAlignmentMiddleCenter.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentMiddleCenter.Text = "Middle center";
+            this.ctxTextAlignmentMiddleCenter.Click += new System.EventHandler(this.ctxTextAlignmentMiddleCenter_Click);
             // 
-            // middleRightToolStripMenuItem
+            // ctxTextAlignmentMiddleRight
             // 
-            this.middleRightToolStripMenuItem.CheckOnClick = true;
-            this.middleRightToolStripMenuItem.Name = "middleRightToolStripMenuItem";
-            this.middleRightToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.middleRightToolStripMenuItem.Text = "Middle right";
-            this.middleRightToolStripMenuItem.Click += new System.EventHandler(this.middleRightToolStripMenuItem_Click);
+            this.ctxTextAlignmentMiddleRight.CheckOnClick = true;
+            this.ctxTextAlignmentMiddleRight.Name = "ctxTextAlignmentMiddleRight";
+            this.ctxTextAlignmentMiddleRight.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentMiddleRight.Text = "Middle right";
+            this.ctxTextAlignmentMiddleRight.Click += new System.EventHandler(this.ctxTextAlignmentMiddleRight_Click);
             // 
-            // bottomLeftToolStripMenuItem
+            // ctxTextAlignmentBottomLeft
             // 
-            this.bottomLeftToolStripMenuItem.CheckOnClick = true;
-            this.bottomLeftToolStripMenuItem.Name = "bottomLeftToolStripMenuItem";
-            this.bottomLeftToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.bottomLeftToolStripMenuItem.Text = "Bottom left";
-            this.bottomLeftToolStripMenuItem.Click += new System.EventHandler(this.bottomLeftToolStripMenuItem_Click);
+            this.ctxTextAlignmentBottomLeft.CheckOnClick = true;
+            this.ctxTextAlignmentBottomLeft.Name = "ctxTextAlignmentBottomLeft";
+            this.ctxTextAlignmentBottomLeft.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentBottomLeft.Text = "Bottom left";
+            this.ctxTextAlignmentBottomLeft.Click += new System.EventHandler(this.ctxTextAlignmentBottomLeft_Click);
             // 
-            // bottomCenterToolStripMenuItem
+            // ctxTextAlignmentBottomCenter
             // 
-            this.bottomCenterToolStripMenuItem.CheckOnClick = true;
-            this.bottomCenterToolStripMenuItem.Name = "bottomCenterToolStripMenuItem";
-            this.bottomCenterToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.bottomCenterToolStripMenuItem.Text = "Bottom center";
-            this.bottomCenterToolStripMenuItem.Click += new System.EventHandler(this.bottomCenterToolStripMenuItem_Click);
+            this.ctxTextAlignmentBottomCenter.CheckOnClick = true;
+            this.ctxTextAlignmentBottomCenter.Name = "ctxTextAlignmentBottomCenter";
+            this.ctxTextAlignmentBottomCenter.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentBottomCenter.Text = "Bottom center";
+            this.ctxTextAlignmentBottomCenter.Click += new System.EventHandler(this.ctxTextAlignmentBottomCenter_Click);
             // 
-            // bottomRightToolStripMenuItem
+            // ctxTextAlignmentBottomRight
             // 
-            this.bottomRightToolStripMenuItem.CheckOnClick = true;
-            this.bottomRightToolStripMenuItem.Name = "bottomRightToolStripMenuItem";
-            this.bottomRightToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.bottomRightToolStripMenuItem.Text = "Bottom right";
-            this.bottomRightToolStripMenuItem.Click += new System.EventHandler(this.bottomRightToolStripMenuItem_Click);
+            this.ctxTextAlignmentBottomRight.CheckOnClick = true;
+            this.ctxTextAlignmentBottomRight.Name = "ctxTextAlignmentBottomRight";
+            this.ctxTextAlignmentBottomRight.Size = new System.Drawing.Size(150, 22);
+            this.ctxTextAlignmentBottomRight.Text = "Bottom right";
+            this.ctxTextAlignmentBottomRight.Click += new System.EventHandler(this.ctxTextAlignmentBottomRight_Click);
             // 
-            // toolStripSeparator1
+            // sepContextSave
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(157, 6);
+            this.sepContextSave.Name = "sepContextSave";
+            this.sepContextSave.Size = new System.Drawing.Size(157, 6);
             // 
             // ctxSaveChanges
             // 
@@ -272,17 +272,17 @@
             this.ctxDiscardChanges.Text = "Discard changes";
             this.ctxDiscardChanges.Click += new System.EventHandler(this.discardChangesToolStripMenuItem_Click);
             // 
-            // clickthroughPictureBox1
+            // picOverlayPreview
             // 
-            this.clickthroughPictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.clickthroughPictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.clickthroughPictureBox1.ContextMenuStrip = this.contextMenuStrip1;
-            this.clickthroughPictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clickthroughPictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.clickthroughPictureBox1.Name = "clickthroughPictureBox1";
-            this.clickthroughPictureBox1.Size = new System.Drawing.Size(270, 91);
-            this.clickthroughPictureBox1.TabIndex = 0;
-            this.clickthroughPictureBox1.TabStop = false;
+            this.picOverlayPreview.BackColor = System.Drawing.Color.Transparent;
+            this.picOverlayPreview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.picOverlayPreview.ContextMenuStrip = this.ctxOverlayDesign;
+            this.picOverlayPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picOverlayPreview.Location = new System.Drawing.Point(0, 0);
+            this.picOverlayPreview.Name = "picOverlayPreview";
+            this.picOverlayPreview.Size = new System.Drawing.Size(270, 91);
+            this.picOverlayPreview.TabIndex = 0;
+            this.picOverlayPreview.TabStop = false;
             // 
             // AuraDesignForm
             // 
@@ -290,9 +290,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Fuchsia;
             this.ClientSize = new System.Drawing.Size(270, 91);
-            this.ContextMenuStrip = this.contextMenuStrip1;
+            this.ContextMenuStrip = this.ctxOverlayDesign;
             this.ControlBox = false;
-            this.Controls.Add(this.clickthroughPictureBox1);
+            this.Controls.Add(this.picOverlayPreview);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -302,22 +302,22 @@
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.TopMost = true;
-            this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.clickthroughPictureBox1)).EndInit();
+            this.ctxOverlayDesign.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picOverlayPreview)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Timer timer1;
-        private CustomControls.ClickthroughPictureBox clickthroughPictureBox1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Timer tmrSelectionBlink;
+        private CustomControls.ClickthroughPictureBox picOverlayPreview;
+        private System.Windows.Forms.ContextMenuStrip ctxOverlayDesign;
         private System.Windows.Forms.ToolStripMenuItem ctxImage;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator sepContextSave;
         private System.Windows.Forms.ToolStripMenuItem ctxSaveChanges;
         private System.Windows.Forms.ToolStripMenuItem ctxWidthToImageWidth;
         private System.Windows.Forms.ToolStripMenuItem ctxHeightToImageHeight;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator sepImageDisplay;
         private System.Windows.Forms.ToolStripMenuItem ctxDiscardChanges;
         private System.Windows.Forms.ToolStripMenuItem ctxDisplayMethod;
         private System.Windows.Forms.ToolStripMenuItem ctxDisplayNormal;
@@ -325,15 +325,15 @@
         private System.Windows.Forms.ToolStripMenuItem ctxDisplayStretch;
         private System.Windows.Forms.ToolStripMenuItem ctxDisplayZoomed;
         private System.Windows.Forms.ToolStripMenuItem ctxText;
-        private System.Windows.Forms.ToolStripMenuItem alignmentToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem topLeftToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem topCenterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem topRightToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem middleLeftToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem middleCenterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem middleRightToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bottomLeftToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bottomCenterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bottomRightToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignment;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentTopLeft;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentTopCenter;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentTopRight;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentMiddleLeft;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentMiddleCenter;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentMiddleRight;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentBottomLeft;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentBottomCenter;
+        private System.Windows.Forms.ToolStripMenuItem ctxTextAlignmentBottomRight;
     }
 }

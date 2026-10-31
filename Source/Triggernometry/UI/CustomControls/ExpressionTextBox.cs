@@ -22,14 +22,14 @@ namespace Triggernometry.UI.CustomControls
 
         public bool ReadOnly
         {
-            get => textBox1.ReadOnly;
-            set => textBox1.ReadOnly = value;
+            get => txtExpression.ReadOnly;
+            set => txtExpression.ReadOnly = value;
         }
 
         public string Expression
         {
-            get => textBox1.Text;
-            set => textBox1.Text = value;
+            get => txtExpression.Text;
+            set => txtExpression.Text = value;
         }
 
         public override string Text
@@ -86,13 +86,13 @@ namespace Triggernometry.UI.CustomControls
                     string temp = I18n.Translate("internal/ExpressionTextBox/numeric1", "This field supports numeric expressions; references to named regular expression groups will be expanded, after which the result will be evaluated as a mathematic expression.");
                     temp += Environment.NewLine;
                     temp += I18n.Translate("internal/ExpressionTextBox/numeric2", "The color of the field will also change depending on whether the numeric expression appears to be valid (green) or not (red).");
-                    toolTip1.SetToolTip(panel1, temp);
+                    toolTipExpression.SetToolTip(pnlExpandToggle, temp);
                     break;
                 case SupportedExpressionTypeEnum.String:
-                    toolTip1.SetToolTip(panel1, I18n.Translate("internal/ExpressionTextBox/string", "This field supports string expressions; references to named regular expression groups will be expanded."));
+                    toolTipExpression.SetToolTip(pnlExpandToggle, I18n.Translate("internal/ExpressionTextBox/string", "This field supports string expressions; references to named regular expression groups will be expanded."));
                     break;
                 case SupportedExpressionTypeEnum.Regex:
-                    toolTip1.SetToolTip(panel1, I18n.Translate("internal/RegexTextBox", "This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)."));
+                    toolTipExpression.SetToolTip(pnlExpandToggle, I18n.Translate("internal/RegexTextBox", "This field supports regular expressions; the color of the field will change depending on whether the regular expression is valid (green) or not (red)."));
                     break;
             }
             UpdateBackground();
@@ -160,11 +160,11 @@ namespace Triggernometry.UI.CustomControls
         {
             InitializeComponent();
             ResetTooltip();
-            textBox1.TextChanged += TextBox1_TextChanged;
-            textBox1.KeyPress += TextBox1_KeyPress;
-            textBox1.KeyDown += TextBox1_KeyDown;
-            textBox1.MaxLength = 10000000; // for scripts
-            textBox1.GotFocus += ReplaceIncompleteLineBreaksInClipboard;
+            txtExpression.TextChanged += txtExpression_TextChanged;
+            txtExpression.KeyPress += txtExpression_KeyPress;
+            txtExpression.KeyDown += txtExpression_KeyDown;
+            txtExpression.MaxLength = 10000000; // for scripts
+            txtExpression.GotFocus += ReplaceIncompleteLineBreaksInClipboard;
             Disposed += ExpressionTextBox_Disposed;
             Leave += ExpressionTextBox_Leave;
             LostFocus += ExpressionTextBox_LostFocus;
@@ -177,9 +177,9 @@ namespace Triggernometry.UI.CustomControls
             UiContext = uiContext;
         }
 
-        private void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void txtExpression_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (textBox1.ReadOnly) return;
+            if (txtExpression.ReadOnly) return;
             if (e.KeyChar == Convert.ToChar(Keys.Enter))
             {
                 e.Handled = true;
@@ -193,27 +193,27 @@ namespace Triggernometry.UI.CustomControls
                 }
                 else
                 {
-                    if (!textBox1.Multiline) // switch to multiline mode
+                    if (!txtExpression.Multiline) // switch to multiline mode
                     {
                         ToggleExpand();
                     }
                     else // input linebreaks (+ indent), instead of closing the form
                     {
                         // Delete selected text, if any
-                        if (textBox1.SelectionLength > 0)
-                            textBox1.Paste("");
+                        if (txtExpression.SelectionLength > 0)
+                            txtExpression.Paste("");
 
                         // Get the start index of the current line
-                        int currentPosition = textBox1.SelectionStart;
-                        int currentLineIndex = textBox1.GetLineFromCharIndex(currentPosition);
-                        int lineStartIndex = textBox1.GetFirstCharIndexFromLine(currentLineIndex);
+                        int currentPosition = txtExpression.SelectionStart;
+                        int currentLineIndex = txtExpression.GetLineFromCharIndex(currentPosition);
+                        int lineStartIndex = txtExpression.GetFirstCharIndexFromLine(currentLineIndex);
                         if (lineStartIndex < 0) lineStartIndex = 0;
 
                         // Get indentation (leading spaces or full-width spaces) and add to the new line
                         int length = Math.Max(0, currentPosition - lineStartIndex);
-                        string currentLineText = textBox1.Text.Substring(lineStartIndex, length);
+                        string currentLineText = txtExpression.Text.Substring(lineStartIndex, length);
                         string indent = new string(currentLineText.TakeWhile(c => char.IsWhiteSpace(c)).ToArray());
-                        textBox1.Paste(Environment.NewLine + indent);
+                        txtExpression.Paste(Environment.NewLine + indent);
                     }
                 }
             }
@@ -246,105 +246,105 @@ namespace Triggernometry.UI.CustomControls
         {
             if (!Enabled && !IsPersistent)
             {
-                textBox1.BackColor = SystemColors.Window;
-                textBox1.ForeColor = SystemColors.WindowText;
+                txtExpression.BackColor = SystemColors.Window;
+                txtExpression.ForeColor = SystemColors.WindowText;
                 return;
             }
             if (ExpressionType == SupportedExpressionTypeEnum.Numeric)
             {
-                if (textBox1.Text.Length == 0)
+                if (txtExpression.Text.Length == 0)
                 {
-                    textBox1.BackColor = SystemColors.Window;
+                    txtExpression.BackColor = SystemColors.Window;
                     return;
                 }
                 try
                 {
-                    contextForValidation.EvaluateNumericExpression(null, null, textBox1.Text);
-                    textBox1.BackColor = BgGreen;
+                    contextForValidation.EvaluateNumericExpression(null, null, txtExpression.Text);
+                    txtExpression.BackColor = BgGreen;
                     if (!CheckValidBasicExpression(Expression))
                     {
-                        textBox1.BackColor = BgYellow;
+                        txtExpression.BackColor = BgYellow;
                     }
                 }
                 catch (Exception)
                 {
-                    textBox1.BackColor = BgRed;
+                    txtExpression.BackColor = BgRed;
                 }
             }
             else if (ExpressionType == SupportedExpressionTypeEnum.String)
             {
                 if (!CheckValidBasicExpression(Expression))
                 {
-                    textBox1.BackColor = BgYellow;
+                    txtExpression.BackColor = BgYellow;
                 }
                 else if (IsPersistent)
                 {
-                    textBox1.BackColor = BgBlue;
+                    txtExpression.BackColor = BgBlue;
                 }
-                else if (textBox1.BackColor != SystemColors.Window)
+                else if (txtExpression.BackColor != SystemColors.Window)
                 {
-                    textBox1.BackColor = SystemColors.Window;
+                    txtExpression.BackColor = SystemColors.Window;
                 }
             }
             else if (ExpressionType == SupportedExpressionTypeEnum.Regex)
             {
-                if (textBox1.Text.Length == 0)
+                if (txtExpression.Text.Length == 0)
                 {
-                    textBox1.BackColor = IsPersistent ? BgBlue : SystemColors.Window;
+                    txtExpression.BackColor = IsPersistent ? BgBlue : SystemColors.Window;
                     return;
                 }
                 try
                 {
                     string pattern = RegexSupportsExpressions
-                        ? contextForValidation.ExpandVariables(null, null, false, textBox1.Text)
-                        : textBox1.Text;
+                        ? contextForValidation.ExpandVariables(null, null, false, txtExpression.Text)
+                        : txtExpression.Text;
                     Regex rex = new Regex(pattern);
-                    textBox1.BackColor = IsPersistent ? BgBlue : BgGreen;
+                    txtExpression.BackColor = IsPersistent ? BgBlue : BgGreen;
                 }
                 catch (Exception)
                 {
-                    textBox1.BackColor = BgRed;
+                    txtExpression.BackColor = BgRed;
                 }
             }
             else if (ExpressionType == SupportedExpressionTypeEnum.Color)
             {
-                if (string.IsNullOrWhiteSpace(textBox1.Text))
+                if (string.IsNullOrWhiteSpace(txtExpression.Text))
                 {
-                    textBox1.BackColor = SystemColors.Window;
-                    textBox1.ForeColor = SystemColors.WindowText;
+                    txtExpression.BackColor = SystemColors.Window;
+                    txtExpression.ForeColor = SystemColors.WindowText;
                 }
                 else
                 {
                     Color color = Color.Empty;
                     try
                     {
-                        string rawColor = contextForValidation.ExpandVariables(null, null, false, textBox1.Text);
+                        string rawColor = contextForValidation.ExpandVariables(null, null, false, txtExpression.Text);
                         color = ParseColor(rawColor, Color.Empty);
                     }
                     catch { color = Color.Empty; }
 
                     if (color == Color.Empty)
                     {
-                        textBox1.BackColor = SystemColors.Window;
-                        textBox1.ForeColor = SystemColors.WindowText;
+                        txtExpression.BackColor = SystemColors.Window;
+                        txtExpression.ForeColor = SystemColors.WindowText;
                     }
                     else
                     {
-                        textBox1.BackColor = color != Color.Transparent ? color : SystemColors.Window;
+                        txtExpression.BackColor = color != Color.Transparent ? color : SystemColors.Window;
                         double brightness = 0.299 * color.R + 0.587 * color.G + 0.114 * color.B;
-                        textBox1.ForeColor = (brightness > 128) ? Color.FromArgb(0, 0, 0) : Color.FromArgb(255, 255, 255);
+                        txtExpression.ForeColor = (brightness > 128) ? Color.FromArgb(0, 0, 0) : Color.FromArgb(255, 255, 255);
                     }
                 }
             }
         }
 
-        private void TextBox1_TextChanged(object sender, EventArgs e)
+        private void txtExpression_TextChanged(object sender, EventArgs e)
         {
             UpdateBackground();
-            if (textBox1.Multiline) { MultiLineAdjustHeight(); }
+            if (txtExpression.Multiline) { MultiLineAdjustHeight(); }
             if (RealPlugin.Instance.Config.AutoComplete == true)
             {
-                if (ExpressionType != SupportedExpressionTypeEnum.Regex && textBox1.Focused)
+                if (ExpressionType != SupportedExpressionTypeEnum.Regex && txtExpression.Focused)
                 {
                     acfDebounceTimer.Stop();
                     acfDebounceTimer.Start();
@@ -353,44 +353,44 @@ namespace Triggernometry.UI.CustomControls
             _TextChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void panel1_Click(object sender, EventArgs e)
+        private void pnlExpandToggle_Click(object sender, EventArgs e)
         {
             ToggleExpand();
         }
 
-        private void panel1_DoubleClick(object sender, EventArgs e)
+        private void pnlExpandToggle_DoubleClick(object sender, EventArgs e)
         {
             ToggleExpand();
         }
 
         internal void ToggleExpand()
         {
-            if (textBox1.Multiline == true)
+            if (txtExpression.Multiline == true)
             {
-                textBox1.Multiline = false;
-                textBox1.MinimumSize = new Size(textBox1.MinimumSize.Width, 0);
-                textBox1.ScrollBars = ScrollBars.None;
-                (panel2.BackgroundImage, panel1.BackgroundImage) = (panel1.BackgroundImage, panel2.BackgroundImage);
+                txtExpression.Multiline = false;
+                txtExpression.MinimumSize = new Size(txtExpression.MinimumSize.Width, 0);
+                txtExpression.ScrollBars = ScrollBars.None;
+                (pnlExpandAlternateIcon.BackgroundImage, pnlExpandToggle.BackgroundImage) = (pnlExpandToggle.BackgroundImage, pnlExpandAlternateIcon.BackgroundImage);
             }
             else
             {
-                textBox1.Multiline = true;
-                textBox1.MinimumSize = new Size(textBox1.MinimumSize.Width, 80);
-                textBox1.MaximumSize = new Size(textBox1.MaximumSize.Width, textBox1.Dock == DockStyle.Fill ? 0 : 400);
-                textBox1.ScrollBars = ScrollBars.Both;
+                txtExpression.Multiline = true;
+                txtExpression.MinimumSize = new Size(txtExpression.MinimumSize.Width, 80);
+                txtExpression.MaximumSize = new Size(txtExpression.MaximumSize.Width, txtExpression.Dock == DockStyle.Fill ? 0 : 400);
+                txtExpression.ScrollBars = ScrollBars.Both;
                 MultiLineAdjustHeight();
-                (panel2.BackgroundImage, panel1.BackgroundImage) = (panel1.BackgroundImage, panel2.BackgroundImage);
+                (pnlExpandAlternateIcon.BackgroundImage, pnlExpandToggle.BackgroundImage) = (pnlExpandToggle.BackgroundImage, pnlExpandAlternateIcon.BackgroundImage);
             }
         }
 
         private void MultiLineAdjustHeight()
         {
             // A docked editor follows its window size rather than its text height.
-            if (textBox1.Dock == DockStyle.Fill) return;
-            using (Graphics g = textBox1.CreateGraphics())
+            if (txtExpression.Dock == DockStyle.Fill) return;
+            using (Graphics g = txtExpression.CreateGraphics())
             {
-                SizeF size = g.MeasureString(textBox1.Text + "\n\n1", textBox1.Font); // add 2 more lines
-                textBox1.Height = (int)size.Height;
+                SizeF size = g.MeasureString(txtExpression.Text + "\n\n1", txtExpression.Font); // add 2 more lines
+                txtExpression.Height = (int)size.Height;
             }
         }
 

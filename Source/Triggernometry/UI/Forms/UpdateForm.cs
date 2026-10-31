@@ -29,14 +29,14 @@ namespace Triggernometry.UI.Forms
 
         internal void ShowProgress(int progress, string state)
         {
-            if (statusStrip1.InvokeRequired == true)
+            if (stsUpdateProgress.InvokeRequired == true)
             {
-                statusStrip1.Invoke(new ProgressDelegate(ShowProgress), progress, state);
+                stsUpdateProgress.Invoke(new ProgressDelegate(ShowProgress), progress, state);
                 return;
             }
-            if (progress == 0 && state == "" && statusStrip1.Visible == true)
+            if (progress == 0 && state == "" && stsUpdateProgress.Visible == true)
             {
-                statusStrip1.Visible = false;
+                stsUpdateProgress.Visible = false;
                 return;
             }
             if (progress == -1)
@@ -57,9 +57,9 @@ namespace Triggernometry.UI.Forms
                 prgProgress.Value = progress;
             }
             lblStatus.Text = state;
-            if (progress != 0 && statusStrip1.Visible == false)
+            if (progress != 0 && stsUpdateProgress.Visible == false)
             {
-                statusStrip1.Visible = true;
+                stsUpdateProgress.Visible = true;
             }
         }
 

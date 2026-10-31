@@ -35,11 +35,11 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnRun = new System.Windows.Forms.Button();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.workerBenchmark = new System.ComponentModel.BackgroundWorker();
             this.tlsMain = new System.Windows.Forms.ToolStrip();
             this.btnCopyToClipboard = new System.Windows.Forms.ToolStripButton();
             this.dgvResults = new Triggernometry.UI.CustomControls.DataGridViewEx();
@@ -49,28 +49,28 @@
             this.colPercOnRegexp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPercOnFolder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPercOnConditions = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel1.SuspendLayout();
+            this.pnlButtons.SuspendLayout();
             this.tlsMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.SuspendLayout();
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 306);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(588, 10);
-            this.panel3.TabIndex = 22;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 306);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(588, 10);
+            this.pnlButtonsSpacing.TabIndex = 22;
             // 
-            // panel1
+            // pnlButtons
             // 
-            this.panel1.Controls.Add(this.btnClose);
-            this.panel1.Controls.Add(this.btnRun);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(10, 316);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(588, 35);
-            this.panel1.TabIndex = 24;
+            this.pnlButtons.Controls.Add(this.btnClose);
+            this.pnlButtons.Controls.Add(this.btnRun);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 316);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(588, 35);
+            this.pnlButtons.TabIndex = 24;
             // 
             // btnClose
             // 
@@ -97,11 +97,11 @@
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
-            // backgroundWorker1
+            // workerBenchmark
             // 
-            this.backgroundWorker1.WorkerReportsProgress = true;
-            this.backgroundWorker1.WorkerSupportsCancellation = true;
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.workerBenchmark.WorkerReportsProgress = true;
+            this.workerBenchmark.WorkerSupportsCancellation = true;
+            this.workerBenchmark.DoWork += new System.ComponentModel.DoWorkEventHandler(this.workerBenchmark_DoWork);
             // 
             // tlsMain
             // 
@@ -222,8 +222,8 @@
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(608, 361);
             this.Controls.Add(this.dgvResults);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlButtonsSpacing);
+            this.Controls.Add(this.pnlButtons);
             this.Controls.Add(this.tlsMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(400, 200);
@@ -232,7 +232,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Trigger benchmark";
-            this.panel1.ResumeLayout(false);
+            this.pnlButtons.ResumeLayout(false);
             this.tlsMain.ResumeLayout(false);
             this.tlsMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
@@ -244,11 +244,11 @@
         #endregion
 
         private CustomControls.DataGridViewEx dgvResults;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnClose;
         internal System.Windows.Forms.Button btnRun;
-        internal System.ComponentModel.BackgroundWorker backgroundWorker1;
+        internal System.ComponentModel.BackgroundWorker workerBenchmark;
         private System.Windows.Forms.ToolStrip tlsMain;
         private System.Windows.Forms.ToolStripButton btnCopyToClipboard;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;

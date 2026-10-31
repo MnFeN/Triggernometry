@@ -24,7 +24,7 @@ namespace Triggernometry.UI.Forms
 
         private void AboutForm_Shown(object sender, EventArgs e)
         {
-            panel1.BackColor = Color.FromArgb(53, 70, 92);
+            pnlLogo.BackColor = Color.FromArgb(53, 70, 92);
             txtGeneral.Text = txtGeneral.Text.Replace("[VERSIONNUMBER]", Assembly.GetExecutingAssembly().GetName().Version.ToString());
         }
 

@@ -207,7 +207,7 @@ namespace Triggernometry.UI.Forms
             }
             if (log.SourceTrigger != null)
             {
-                var root = log.SourceTrigger.Repo == null ? plug.ui.treeView1.Nodes[0] : plug.ui.treeView1.Nodes[1];
+                var root = log.SourceTrigger.Repo == null ? plug.ui.treeView.Nodes[0] : plug.ui.treeView.Nodes[1];
                 TreeNode node = RealPlugin.Instance.LocateNodeHostingTrigger(root, log.SourceTrigger);
                 if (node != null)
                 {

@@ -30,7 +30,7 @@ namespace Triggernometry.UI.CustomControls
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegisteredVariableViewer));
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.tlsVariables = new System.Windows.Forms.ToolStrip();
             this.btnAddVariable = new System.Windows.Forms.ToolStripButton();
             this.btnAddComment = new System.Windows.Forms.ToolStripButton();
             this.btnExpandEdit = new System.Windows.Forms.ToolStripButton();
@@ -64,15 +64,15 @@ namespace Triggernometry.UI.CustomControls
             this.sepContext1 = new System.Windows.Forms.ToolStripSeparator();
             this.sepContext2 = new System.Windows.Forms.ToolStripSeparator();
             this.sepContext3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStrip.SuspendLayout();
+            this.tlsVariables.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVariables)).BeginInit();
             this.ctxVariables.SuspendLayout();
             this.SuspendLayout();
             // 
-            // toolStrip
+            // tlsVariables
             // 
-            this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlsVariables.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tlsVariables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddVariable,
             this.btnAddComment,
             this.btnExpandEdit,
@@ -85,10 +85,10 @@ namespace Triggernometry.UI.CustomControls
             this.sepToolbar2,
             this.btnRemove,
             this.btnApplyAll});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(700, 25);
-            this.toolStrip.TabIndex = 0;
+            this.tlsVariables.Location = new System.Drawing.Point(0, 0);
+            this.tlsVariables.Name = "tlsVariables";
+            this.tlsVariables.Size = new System.Drawing.Size(700, 25);
+            this.tlsVariables.TabIndex = 0;
             // 
             // btnAddVariable
             // 
@@ -386,11 +386,11 @@ namespace Triggernometry.UI.CustomControls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.dgvVariables);
-            this.Controls.Add(this.toolStrip);
+            this.Controls.Add(this.tlsVariables);
             this.Name = "RegisteredVariableViewer";
             this.Size = new System.Drawing.Size(700, 340);
-            this.toolStrip.ResumeLayout(false);
-            this.toolStrip.PerformLayout();
+            this.tlsVariables.ResumeLayout(false);
+            this.tlsVariables.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVariables)).EndInit();
             this.ctxVariables.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -399,7 +399,7 @@ namespace Triggernometry.UI.CustomControls
 
         #endregion
 
-        private System.Windows.Forms.ToolStrip toolStrip;
+        private System.Windows.Forms.ToolStrip tlsVariables;
         private System.Windows.Forms.ToolStripButton btnAddVariable;
         private System.Windows.Forms.ToolStripButton btnAddComment;
         private System.Windows.Forms.ToolStripButton btnExpandEdit;

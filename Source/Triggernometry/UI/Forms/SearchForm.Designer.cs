@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchForm));
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.pnlBottomSpacing = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableSearch = new System.Windows.Forms.TableLayoutPanel();
             this.btnSearch = new System.Windows.Forms.Button();
             this.lblRegExp = new System.Windows.Forms.Label();
             this.expSearchTerm = new Triggernometry.UI.CustomControls.ExpressionTextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlSearchResults = new System.Windows.Forms.Panel();
             this.dgvResults = new Triggernometry.UI.CustomControls.DataGridViewEx();
             this.hdrMatchedTrigger = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hdrMatchType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.stsSearchResults = new System.Windows.Forms.StatusStrip();
             this.lblResultInfo = new System.Windows.Forms.ToolStripStatusLabel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.splitSearch = new System.Windows.Forms.SplitContainer();
+            this.pnlSearchOptions = new System.Windows.Forms.Panel();
+            this.tableSearchOptions = new System.Windows.Forms.TableLayoutPanel();
             this.clbMisc = new System.Windows.Forms.CheckedListBox();
             this.lblMisc = new System.Windows.Forms.Label();
             this.clbScope = new System.Windows.Forms.CheckedListBox();
@@ -59,26 +59,26 @@
             this.btnCheckAll = new System.Windows.Forms.ToolStripMenuItem();
             this.btnUncheckAll = new System.Windows.Forms.ToolStripMenuItem();
             this.capSearchScope = new Triggernometry.UI.CustomControls.PrettyCaption();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.tableSearch.SuspendLayout();
+            this.pnlSearchResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
-            this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.stsSearchResults.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitSearch)).BeginInit();
+            this.splitSearch.Panel1.SuspendLayout();
+            this.splitSearch.Panel2.SuspendLayout();
+            this.splitSearch.SuspendLayout();
+            this.pnlSearchOptions.SuspendLayout();
+            this.tableSearchOptions.SuspendLayout();
             this.tlsModify.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel3
+            // pnlBottomSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 556);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(764, 10);
-            this.panel3.TabIndex = 21;
+            this.pnlBottomSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottomSpacing.Location = new System.Drawing.Point(10, 556);
+            this.pnlBottomSpacing.Name = "pnlBottomSpacing";
+            this.pnlBottomSpacing.Size = new System.Drawing.Size(764, 10);
+            this.pnlBottomSpacing.TabIndex = 21;
             // 
             // btnClose
             // 
@@ -92,23 +92,23 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // tableLayoutPanel1
+            // tableSearch
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.btnSearch, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lblRegExp, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.expSearchTerm, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(551, 26);
-            this.tableLayoutPanel1.TabIndex = 22;
+            this.tableSearch.AutoSize = true;
+            this.tableSearch.ColumnCount = 3;
+            this.tableSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableSearch.Controls.Add(this.btnSearch, 2, 0);
+            this.tableSearch.Controls.Add(this.lblRegExp, 0, 0);
+            this.tableSearch.Controls.Add(this.expSearchTerm, 1, 0);
+            this.tableSearch.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableSearch.Location = new System.Drawing.Point(0, 0);
+            this.tableSearch.Name = "tableSearch";
+            this.tableSearch.RowCount = 1;
+            this.tableSearch.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearch.Size = new System.Drawing.Size(551, 26);
+            this.tableSearch.TabIndex = 22;
             // 
             // btnSearch
             // 
@@ -146,15 +146,15 @@
             this.expSearchTerm.Size = new System.Drawing.Size(336, 20);
             this.expSearchTerm.TabIndex = 1;
             // 
-            // panel1
+            // pnlSearchResults
             // 
-            this.panel1.Controls.Add(this.dgvResults);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 26);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.panel1.Size = new System.Drawing.Size(551, 498);
-            this.panel1.TabIndex = 24;
+            this.pnlSearchResults.Controls.Add(this.dgvResults);
+            this.pnlSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSearchResults.Location = new System.Drawing.Point(0, 26);
+            this.pnlSearchResults.Name = "pnlSearchResults";
+            this.pnlSearchResults.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.pnlSearchResults.Size = new System.Drawing.Size(551, 498);
+            this.pnlSearchResults.TabIndex = 24;
             // 
             // dgvResults
             // 
@@ -193,16 +193,16 @@
             this.hdrMatchType.ReadOnly = true;
             this.hdrMatchType.Width = 200;
             // 
-            // statusStrip1
+            // stsSearchResults
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stsSearchResults.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblResultInfo});
-            this.statusStrip1.Location = new System.Drawing.Point(10, 534);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(764, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 26;
-            this.statusStrip1.Text = "statusStrip1";
+            this.stsSearchResults.Location = new System.Drawing.Point(10, 534);
+            this.stsSearchResults.Name = "stsSearchResults";
+            this.stsSearchResults.Size = new System.Drawing.Size(764, 22);
+            this.stsSearchResults.SizingGrip = false;
+            this.stsSearchResults.TabIndex = 26;
+            this.stsSearchResults.Text = "stsSearchResults";
             // 
             // lblResultInfo
             // 
@@ -210,72 +210,72 @@
             this.lblResultInfo.Size = new System.Drawing.Size(60, 17);
             this.lblResultInfo.Text = "No results";
             // 
-            // splitContainer1
+            // splitSearch
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(10, 10);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitSearch.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitSearch.Location = new System.Drawing.Point(10, 10);
+            this.splitSearch.Name = "splitSearch";
             // 
-            // splitContainer1.Panel1
+            // splitSearch.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel1);
+            this.splitSearch.Panel1.Controls.Add(this.pnlSearchResults);
+            this.splitSearch.Panel1.Controls.Add(this.tableSearch);
             // 
-            // splitContainer1.Panel2
+            // splitSearch.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.panel2);
-            this.splitContainer1.Panel2.Controls.Add(this.tlsModify);
-            this.splitContainer1.Panel2.Controls.Add(this.capSearchScope);
-            this.splitContainer1.Panel2MinSize = 200;
-            this.splitContainer1.Size = new System.Drawing.Size(764, 524);
-            this.splitContainer1.SplitterDistance = 551;
-            this.splitContainer1.TabIndex = 27;
+            this.splitSearch.Panel2.Controls.Add(this.pnlSearchOptions);
+            this.splitSearch.Panel2.Controls.Add(this.tlsModify);
+            this.splitSearch.Panel2.Controls.Add(this.capSearchScope);
+            this.splitSearch.Panel2MinSize = 200;
+            this.splitSearch.Size = new System.Drawing.Size(764, 524);
+            this.splitSearch.SplitterDistance = 551;
+            this.splitSearch.TabIndex = 27;
             // 
-            // panel2
+            // pnlSearchOptions
             // 
-            this.panel2.AutoScroll = true;
-            this.panel2.Controls.Add(this.tableLayoutPanel2);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 55);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(209, 469);
-            this.panel2.TabIndex = 8;
+            this.pnlSearchOptions.AutoScroll = true;
+            this.pnlSearchOptions.Controls.Add(this.tableSearchOptions);
+            this.pnlSearchOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSearchOptions.Location = new System.Drawing.Point(0, 55);
+            this.pnlSearchOptions.Name = "pnlSearchOptions";
+            this.pnlSearchOptions.Size = new System.Drawing.Size(209, 469);
+            this.pnlSearchOptions.TabIndex = 8;
             // 
-            // tableLayoutPanel2
+            // tableSearchOptions
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.clbMisc, 0, 9);
-            this.tableLayoutPanel2.Controls.Add(this.lblMisc, 0, 8);
-            this.tableLayoutPanel2.Controls.Add(this.clbScope, 0, 7);
-            this.tableLayoutPanel2.Controls.Add(this.lblScope, 0, 6);
-            this.tableLayoutPanel2.Controls.Add(this.clbRepos, 0, 5);
-            this.tableLayoutPanel2.Controls.Add(this.lblRepos, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.clbActions, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.lblActions, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.lblTriggers, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.clbTriggers, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 10;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(209, 420);
-            this.tableLayoutPanel2.TabIndex = 7;
+            this.tableSearchOptions.AutoSize = true;
+            this.tableSearchOptions.ColumnCount = 1;
+            this.tableSearchOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableSearchOptions.Controls.Add(this.clbMisc, 0, 9);
+            this.tableSearchOptions.Controls.Add(this.lblMisc, 0, 8);
+            this.tableSearchOptions.Controls.Add(this.clbScope, 0, 7);
+            this.tableSearchOptions.Controls.Add(this.lblScope, 0, 6);
+            this.tableSearchOptions.Controls.Add(this.clbRepos, 0, 5);
+            this.tableSearchOptions.Controls.Add(this.lblRepos, 0, 4);
+            this.tableSearchOptions.Controls.Add(this.clbActions, 0, 3);
+            this.tableSearchOptions.Controls.Add(this.lblActions, 0, 2);
+            this.tableSearchOptions.Controls.Add(this.lblTriggers, 0, 0);
+            this.tableSearchOptions.Controls.Add(this.clbTriggers, 0, 1);
+            this.tableSearchOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableSearchOptions.Location = new System.Drawing.Point(0, 0);
+            this.tableSearchOptions.Name = "tableSearchOptions";
+            this.tableSearchOptions.RowCount = 10;
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableSearchOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableSearchOptions.Size = new System.Drawing.Size(209, 420);
+            this.tableSearchOptions.TabIndex = 7;
             // 
             // clbMisc
             // 
@@ -460,9 +460,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(784, 611);
-            this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.splitSearch);
+            this.Controls.Add(this.stsSearchResults);
+            this.Controls.Add(this.pnlBottomSpacing);
             this.Controls.Add(this.btnClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(800, 500);
@@ -471,22 +471,22 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Search";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.panel1.ResumeLayout(false);
+            this.tableSearch.ResumeLayout(false);
+            this.tableSearch.PerformLayout();
+            this.pnlSearchResults.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.stsSearchResults.ResumeLayout(false);
+            this.stsSearchResults.PerformLayout();
+            this.splitSearch.Panel1.ResumeLayout(false);
+            this.splitSearch.Panel1.PerformLayout();
+            this.splitSearch.Panel2.ResumeLayout(false);
+            this.splitSearch.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitSearch)).EndInit();
+            this.splitSearch.ResumeLayout(false);
+            this.pnlSearchOptions.ResumeLayout(false);
+            this.pnlSearchOptions.PerformLayout();
+            this.tableSearchOptions.ResumeLayout(false);
+            this.tableSearchOptions.PerformLayout();
             this.tlsModify.ResumeLayout(false);
             this.tlsModify.PerformLayout();
             this.ResumeLayout(false);
@@ -496,21 +496,21 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel pnlBottomSpacing;
         internal System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableSearch;
         private System.Windows.Forms.Label lblRegExp;
         private CustomControls.ExpressionTextBox expSearchTerm;
         private System.Windows.Forms.Button btnSearch;
         private CustomControls.DataGridViewEx dgvResults;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlSearchResults;
         private System.Windows.Forms.DataGridViewTextBoxColumn hdrMatchedTrigger;
         private System.Windows.Forms.DataGridViewTextBoxColumn hdrMatchType;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip stsSearchResults;
         private System.Windows.Forms.ToolStripStatusLabel lblResultInfo;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitSearch;
         private CustomControls.PrettyCaption capSearchScope;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableSearchOptions;
         private System.Windows.Forms.Label lblTriggers;
         private System.Windows.Forms.CheckedListBox clbRepos;
         private System.Windows.Forms.Label lblRepos;
@@ -524,7 +524,7 @@
         private System.Windows.Forms.ToolStripDropDownButton btnModifySelection;
         private System.Windows.Forms.ToolStripMenuItem btnCheckAll;
         private System.Windows.Forms.ToolStripMenuItem btnUncheckAll;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlSearchOptions;
         private System.Windows.Forms.CheckedListBox clbMisc;
     }
 }

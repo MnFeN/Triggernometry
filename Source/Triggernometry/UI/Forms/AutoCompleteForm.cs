@@ -24,55 +24,55 @@ namespace Triggernometry.UI.Forms
 
         public string GetChosenAutocomplete()
         {
-            if (listBox1.SelectedItems.Count == 1)
+            if (lstSuggestions.SelectedItems.Count == 1)
             {
-                return listBox1.SelectedItem.ToString();
+                return lstSuggestions.SelectedItem.ToString();
             }
             return "";
         }
 
         public void NextAutocompleteItem()
         {
-            if (listBox1.Items.Count == 0) return;
-            int i = listBox1.SelectedIndex + 1;
-            if (i > listBox1.Items.Count - 1)
+            if (lstSuggestions.Items.Count == 0) return;
+            int i = lstSuggestions.SelectedIndex + 1;
+            if (i > lstSuggestions.Items.Count - 1)
             {
                 i = 0;
             }
-            listBox1.SelectedIndex = i;
+            lstSuggestions.SelectedIndex = i;
         }
 
         public void PreviousAutocompleteItem()
         {
-            if (listBox1.Items.Count == 0) return;
-            int i = listBox1.SelectedIndex - 1;
+            if (lstSuggestions.Items.Count == 0) return;
+            int i = lstSuggestions.SelectedIndex - 1;
             if (i < 0)
             {
-                i = listBox1.Items.Count - 1;
+                i = lstSuggestions.Items.Count - 1;
             }
-            listBox1.SelectedIndex = i;
+            lstSuggestions.SelectedIndex = i;
         }
 
         public void NextAutocompletePage()
         {
-            if (listBox1.Items.Count == 0) return;
-            int i = listBox1.SelectedIndex + 5;
-            if (i > listBox1.Items.Count - 1)
+            if (lstSuggestions.Items.Count == 0) return;
+            int i = lstSuggestions.SelectedIndex + 5;
+            if (i > lstSuggestions.Items.Count - 1)
             {
-                i = listBox1.Items.Count - 1;
+                i = lstSuggestions.Items.Count - 1;
             }
-            listBox1.SelectedIndex = i;
+            lstSuggestions.SelectedIndex = i;
         }
 
         public void PreviousAutocompletePage()
         {
-            if (listBox1.Items.Count == 0) return;
-            int i = listBox1.SelectedIndex - 5;
+            if (lstSuggestions.Items.Count == 0) return;
+            int i = lstSuggestions.SelectedIndex - 5;
             if (i < 0)
             {
                 i = 0;
             }
-            listBox1.SelectedIndex = i;
+            lstSuggestions.SelectedIndex = i;
         }
 
         /// <summary>一次物化候选并批量替换列表，尽量保留原选中项。</summary>
@@ -80,25 +80,25 @@ namespace Triggernometry.UI.Forms
         {
             var items = strs as string[] ?? strs.ToArray();
             SuspendLayout();
-            listBox1.BeginUpdate();
+            lstSuggestions.BeginUpdate();
             try
             {
-                int height = (1 + Math.Min(10, items.Length)) * listBox1.ItemHeight;
+                int height = (1 + Math.Min(10, items.Length)) * lstSuggestions.ItemHeight;
                 float longest = 0;
                 using (Graphics graphics = CreateGraphics())
                     foreach (string item in items)
-                        longest = Math.Max(longest, graphics.MeasureString(item, listBox1.Font).Width);
-                listBox1.Width = (int)Math.Ceiling(longest) + 20;
-                listBox1.Height = height;
-                listBox1.Items.Clear();
-                listBox1.Items.AddRange(items);
-                int index = !(listBox1.SelectedItem is string selected) ? -1 
+                        longest = Math.Max(longest, graphics.MeasureString(item, lstSuggestions.Font).Width);
+                lstSuggestions.Width = (int)Math.Ceiling(longest) + 20;
+                lstSuggestions.Height = height;
+                lstSuggestions.Items.Clear();
+                lstSuggestions.Items.AddRange(items);
+                int index = !(lstSuggestions.SelectedItem is string selected) ? -1 
                     : Array.FindIndex(items, item => string.Equals(item, selected, StringComparison.OrdinalIgnoreCase));
-                listBox1.SelectedIndex = items.Length == 0 ? -1 : Math.Max(0, index);
+                lstSuggestions.SelectedIndex = items.Length == 0 ? -1 : Math.Max(0, index);
             }
             finally
             {
-                listBox1.EndUpdate();
+                lstSuggestions.EndUpdate();
                 ResumeLayout();
             }
         }

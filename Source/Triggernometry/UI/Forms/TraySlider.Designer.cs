@@ -32,9 +32,9 @@
             this.rtbText = new System.Windows.Forms.RichTextBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.tlpButtons = new System.Windows.Forms.TableLayoutPanel();
-            this.Button3 = new System.Windows.Forms.Button();
-            this.Button2 = new System.Windows.Forms.Button();
-            this.Button1 = new System.Windows.Forms.Button();
+            this.btnExtraAction = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnConfirm = new System.Windows.Forms.Button();
             this.tlpMain.SuspendLayout();
             this.tlpButtons.SuspendLayout();
             this.SuspendLayout();
@@ -126,9 +126,9 @@
             this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tlpButtons.Controls.Add(this.Button3, 2, 0);
-            this.tlpButtons.Controls.Add(this.Button2, 1, 0);
-            this.tlpButtons.Controls.Add(this.Button1, 0, 0);
+            this.tlpButtons.Controls.Add(this.btnExtraAction, 2, 0);
+            this.tlpButtons.Controls.Add(this.btnCancel, 1, 0);
+            this.tlpButtons.Controls.Add(this.btnConfirm, 0, 0);
             this.tlpButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpButtons.Location = new System.Drawing.Point(3, 242);
             this.tlpButtons.Name = "tlpButtons";
@@ -137,59 +137,59 @@
             this.tlpButtons.Size = new System.Drawing.Size(314, 35);
             this.tlpButtons.TabIndex = 2;
             // 
-            // Button3
+            // btnExtraAction
             // 
-            this.Button3.AutoSize = true;
-            this.Button3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Button3.BackColor = System.Drawing.Color.Gainsboro;
-            this.Button3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Button3.ForeColor = System.Drawing.Color.Black;
-            this.Button3.Location = new System.Drawing.Point(211, 3);
-            this.Button3.Name = "Button3";
-            this.Button3.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Button3.Size = new System.Drawing.Size(100, 29);
-            this.Button3.TabIndex = 0;
-            this.Button3.TabStop = false;
-            this.Button3.Text = "Button3";
-            this.Button3.UseVisualStyleBackColor = false;
-            this.Button3.Click += new System.EventHandler(this.Button_Click);
+            this.btnExtraAction.AutoSize = true;
+            this.btnExtraAction.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnExtraAction.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnExtraAction.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnExtraAction.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExtraAction.ForeColor = System.Drawing.Color.Black;
+            this.btnExtraAction.Location = new System.Drawing.Point(211, 3);
+            this.btnExtraAction.Name = "btnExtraAction";
+            this.btnExtraAction.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.btnExtraAction.Size = new System.Drawing.Size(100, 29);
+            this.btnExtraAction.TabIndex = 0;
+            this.btnExtraAction.TabStop = false;
+            this.btnExtraAction.Text = "btnExtraAction";
+            this.btnExtraAction.UseVisualStyleBackColor = false;
+            this.btnExtraAction.Click += new System.EventHandler(this.Button_Click);
             // 
-            // Button2
+            // btnCancel
             // 
-            this.Button2.AutoSize = true;
-            this.Button2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Button2.BackColor = System.Drawing.Color.MistyRose;
-            this.Button2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Button2.ForeColor = System.Drawing.Color.Black;
-            this.Button2.Location = new System.Drawing.Point(107, 3);
-            this.Button2.Name = "Button2";
-            this.Button2.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Button2.Size = new System.Drawing.Size(98, 29);
-            this.Button2.TabIndex = 1;
-            this.Button2.TabStop = false;
-            this.Button2.Text = "Button2";
-            this.Button2.UseVisualStyleBackColor = false;
-            this.Button2.Click += new System.EventHandler(this.Button_Click);
+            this.btnCancel.AutoSize = true;
+            this.btnCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnCancel.BackColor = System.Drawing.Color.MistyRose;
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.ForeColor = System.Drawing.Color.Black;
+            this.btnCancel.Location = new System.Drawing.Point(107, 3);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.btnCancel.Size = new System.Drawing.Size(98, 29);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.TabStop = false;
+            this.btnCancel.Text = "btnCancel";
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.Button_Click);
             // 
-            // Button1
+            // btnConfirm
             // 
-            this.Button1.AutoSize = true;
-            this.Button1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Button1.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.Button1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Button1.ForeColor = System.Drawing.Color.Black;
-            this.Button1.Location = new System.Drawing.Point(3, 3);
-            this.Button1.Name = "Button1";
-            this.Button1.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Button1.Size = new System.Drawing.Size(98, 29);
-            this.Button1.TabIndex = 2;
-            this.Button1.TabStop = false;
-            this.Button1.Text = "Button1";
-            this.Button1.UseVisualStyleBackColor = false;
-            this.Button1.Click += new System.EventHandler(this.Button_Click);
+            this.btnConfirm.AutoSize = true;
+            this.btnConfirm.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnConfirm.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnConfirm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnConfirm.ForeColor = System.Drawing.Color.Black;
+            this.btnConfirm.Location = new System.Drawing.Point(3, 3);
+            this.btnConfirm.Name = "btnConfirm";
+            this.btnConfirm.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.btnConfirm.Size = new System.Drawing.Size(98, 29);
+            this.btnConfirm.TabIndex = 2;
+            this.btnConfirm.TabStop = false;
+            this.btnConfirm.Text = "btnConfirm";
+            this.btnConfirm.UseVisualStyleBackColor = false;
+            this.btnConfirm.Click += new System.EventHandler(this.Button_Click);
             // 
             // TraySliderForm
             // 
@@ -225,9 +225,9 @@
 
         private System.Windows.Forms.TableLayoutPanel tlpMain;
         private System.Windows.Forms.TableLayoutPanel tlpButtons;
-        public System.Windows.Forms.Button Button1;
-        public System.Windows.Forms.Button Button3;
-        public System.Windows.Forms.Button Button2;
+        public System.Windows.Forms.Button btnConfirm;
+        public System.Windows.Forms.Button btnExtraAction;
+        public System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.RichTextBox rtbText;
         public System.Windows.Forms.Label lblTitle;
     }

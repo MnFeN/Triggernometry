@@ -24,10 +24,10 @@ namespace Triggernometry.UI.Forms
             this.tabActionSettings = new System.Windows.Forms.TabPage();
             this.tabGeneral = new System.Windows.Forms.TabPage();
             this.tabActionCondition = new System.Windows.Forms.TabPage();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel6 = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
+            this.pnlTestAction = new System.Windows.Forms.Panel();
             this.tabDescription = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel23 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableDescription = new System.Windows.Forms.TableLayoutPanel();
             this.txtDescription = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.chkOverrideDesc = new System.Windows.Forms.CheckBox();
             this.lblDescBgColor = new System.Windows.Forms.Label();
@@ -41,10 +41,10 @@ namespace Triggernometry.UI.Forms
             this.actionTypeMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.layout.SuspendLayout();
             this.tabs.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel6.SuspendLayout();
+            this.pnlButtons.SuspendLayout();
+            this.pnlTestAction.SuspendLayout();
             this.tabDescription.SuspendLayout();
-            this.tableLayoutPanel23.SuspendLayout();
+            this.tableDescription.SuspendLayout();
             this.SuspendLayout();
             //
             // layout
@@ -55,7 +55,7 @@ namespace Triggernometry.UI.Forms
             this.layout.Controls.Add(this.lblActionType, 0, 0);
             this.layout.Controls.Add(this.btnActionType, 1, 0);
             this.layout.Controls.Add(this.tabs, 0, 1);
-            this.layout.Controls.Add(this.panel3, 0, 2);
+            this.layout.Controls.Add(this.pnlButtons, 0, 2);
             this.layout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layout.Name = "layout";
             this.layout.Padding = new System.Windows.Forms.Padding(8);
@@ -116,7 +116,7 @@ namespace Triggernometry.UI.Forms
             //
             // tabDescription
             // 
-            this.tabDescription.Controls.Add(this.tableLayoutPanel23);
+            this.tabDescription.Controls.Add(this.tableDescription);
             this.tabDescription.Location = new System.Drawing.Point(4, 22);
             this.tabDescription.Name = "tabDescription";
             this.tabDescription.Padding = new System.Windows.Forms.Padding(7);
@@ -125,35 +125,35 @@ namespace Triggernometry.UI.Forms
             this.tabDescription.Text = "Description";
             this.tabDescription.UseVisualStyleBackColor = true;
             //
-            // tableLayoutPanel23
+            // tableDescription
             // 
-            this.tableLayoutPanel23.AutoSize = true;
-            this.tableLayoutPanel23.ColumnCount = 4;
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel23.Controls.Add(this.chkOverrideDesc, 0, 2);
-            this.tableLayoutPanel23.Controls.Add(this.txtDescription, 0, 0);
-            this.tableLayoutPanel23.Controls.Add(this.lblDescBgColor, 0, 1);
-            this.tableLayoutPanel23.Controls.Add(this.expDescBgColor, 1, 1);
-            this.tableLayoutPanel23.Controls.Add(this.lblDescTextColor, 2, 1);
-            this.tableLayoutPanel23.Controls.Add(this.expDescTextColor, 3, 1);
-            this.tableLayoutPanel23.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel23.Location = new System.Drawing.Point(7, 7);
-            this.tableLayoutPanel23.Name = "tableLayoutPanel23";
-            this.tableLayoutPanel23.RowCount = 3;
-            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel23.Size = new System.Drawing.Size(742, 435);
-            this.tableLayoutPanel23.TabIndex = 0;
+            this.tableDescription.AutoSize = true;
+            this.tableDescription.ColumnCount = 4;
+            this.tableDescription.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableDescription.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tableDescription.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableDescription.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tableDescription.Controls.Add(this.chkOverrideDesc, 0, 2);
+            this.tableDescription.Controls.Add(this.txtDescription, 0, 0);
+            this.tableDescription.Controls.Add(this.lblDescBgColor, 0, 1);
+            this.tableDescription.Controls.Add(this.expDescBgColor, 1, 1);
+            this.tableDescription.Controls.Add(this.lblDescTextColor, 2, 1);
+            this.tableDescription.Controls.Add(this.expDescTextColor, 3, 1);
+            this.tableDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableDescription.Location = new System.Drawing.Point(7, 7);
+            this.tableDescription.Name = "tableDescription";
+            this.tableDescription.RowCount = 3;
+            this.tableDescription.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableDescription.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableDescription.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableDescription.Size = new System.Drawing.Size(742, 435);
+            this.tableDescription.TabIndex = 0;
             //
             // txtDescription
             // 
             this.txtDescription.AcceptsReturn = true;
             this.txtDescription.AcceptsTab = true;
-            this.tableLayoutPanel23.SetColumnSpan(this.txtDescription, 4);
+            this.tableDescription.SetColumnSpan(this.txtDescription, 4);
             this.txtDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtDescription.Location = new System.Drawing.Point(3, 3);
             this.txtDescription.Multiline = true;
@@ -167,7 +167,7 @@ namespace Triggernometry.UI.Forms
             // 
             this.chkOverrideDesc.AutoSize = true;
             this.chkOverrideDesc.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tableLayoutPanel23.SetColumnSpan(this.chkOverrideDesc, 4);
+            this.tableDescription.SetColumnSpan(this.chkOverrideDesc, 4);
             this.chkOverrideDesc.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkOverrideDesc.Location = new System.Drawing.Point(3, 413);
             this.chkOverrideDesc.Margin = new System.Windows.Forms.Padding(3, 5, 2, 5);
@@ -230,26 +230,26 @@ namespace Triggernometry.UI.Forms
             this.expDescTextColor.Size = new System.Drawing.Size(218, 20);
             this.expDescTextColor.TabIndex = 6;
             //
-            // panel3
+            // pnlButtons
             // 
-            this.panel3.Controls.Add(this.panel6);
-            this.panel3.Controls.Add(this.btnCancel);
-            this.panel3.Controls.Add(this.btnOk);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 616);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(764, 35);
-            this.panel3.TabIndex = 6;
+            this.pnlButtons.Controls.Add(this.pnlTestAction);
+            this.pnlButtons.Controls.Add(this.btnCancel);
+            this.pnlButtons.Controls.Add(this.btnOk);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 616);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(764, 35);
+            this.pnlButtons.TabIndex = 6;
             //
-            // panel6
+            // pnlTestAction
             // 
-            this.panel6.Controls.Add(this.btnTest);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(150, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            this.panel6.Size = new System.Drawing.Size(464, 35);
-            this.panel6.TabIndex = 2;
+            this.pnlTestAction.Controls.Add(this.btnTest);
+            this.pnlTestAction.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTestAction.Location = new System.Drawing.Point(150, 0);
+            this.pnlTestAction.Name = "pnlTestAction";
+            this.pnlTestAction.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.pnlTestAction.Size = new System.Drawing.Size(464, 35);
+            this.pnlTestAction.TabIndex = 2;
             //
             // btnCancel
             // 
@@ -289,7 +289,7 @@ namespace Triggernometry.UI.Forms
             this.btnTest.UseVisualStyleBackColor = true;
             this.btnTest.Click += new System.EventHandler(this.BtnTest_Click);
             this.btnTest.ContextMenuStrip = this.testMenu;
-            this.layout.SetColumnSpan(this.panel3, 2);
+            this.layout.SetColumnSpan(this.pnlButtons, 2);
             //
             // ActionForm
             //
@@ -307,13 +307,13 @@ namespace Triggernometry.UI.Forms
             this.layout.ResumeLayout(false);
             this.layout.PerformLayout();
             this.tabs.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
+            this.pnlButtons.ResumeLayout(false);
+            this.pnlTestAction.ResumeLayout(false);
+            this.pnlTestAction.PerformLayout();
             this.tabDescription.ResumeLayout(false);
             this.tabDescription.PerformLayout();
-            this.tableLayoutPanel23.ResumeLayout(false);
-            this.tableLayoutPanel23.PerformLayout();
+            this.tableDescription.ResumeLayout(false);
+            this.tableDescription.PerformLayout();
             this.ResumeLayout(false);
         }
 
@@ -326,10 +326,10 @@ namespace Triggernometry.UI.Forms
         private System.Windows.Forms.TabPage tabActionSettings;
         private System.Windows.Forms.TabPage tabGeneral;
         private System.Windows.Forms.TabPage tabActionCondition;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel pnlButtons;
+        private System.Windows.Forms.Panel pnlTestAction;
         private System.Windows.Forms.TabPage tabDescription;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel23;
+        private System.Windows.Forms.TableLayoutPanel tableDescription;
         private Triggernometry.UI.CustomControls.EnhancedTextBox txtDescription;
         private System.Windows.Forms.CheckBox chkOverrideDesc;
         private System.Windows.Forms.Label lblDescBgColor;

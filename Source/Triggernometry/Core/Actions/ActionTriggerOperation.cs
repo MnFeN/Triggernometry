@@ -506,7 +506,7 @@ namespace Triggernometry.Core.Actions
                         plug.ui.Invoke((Action)(() =>
                         {
                             bool isLocal = ctx.Trigger?.Repo == null;
-                            TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView1.Nodes[isLocal ? 0 : 1], t);
+                            TreeNode tn = plug.LocateNodeHostingTrigger(plug.ui.treeView.Nodes[isLocal ? 0 : 1], t);
                             if (tn != null)
                             {
                                 AddToLog(ctx, DebugLevelEnum.Verbose, isEnable

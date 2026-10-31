@@ -70,7 +70,7 @@ namespace Triggernometry.UI.Forms
         {
             InitializeComponent();
             expSearchTerm.OnEnterKeyHit += ExpSearchTerm_OnEnter;
-            expSearchTerm.textBox1.TextChanged += TextBox1_TextChanged;
+            expSearchTerm.txtExpression.TextChanged += TextBox1_TextChanged;
             Shown += SearchForm_Shown;
             RestoredSavedDimensions();
             ChangeAll(true);
@@ -85,7 +85,7 @@ namespace Triggernometry.UI.Forms
 
         private void SearchForm_Shown(object sender, EventArgs e)
         {
-            statusStrip1.Visible = false;
+            stsSearchResults.Visible = false;
             lblResultInfo.Visible = false;
             expSearchTerm.Focus();
         }
@@ -166,7 +166,7 @@ namespace Triggernometry.UI.Forms
             }
             if ((filter & SearchFilterEnum.FolderName) != 0)
             {                
-                if (RegexMatches(rex, f.Name.ToString()) == true) results.Add(new SearchResult(f) { MatchType = I18n.Translate("internal/SearchForm/hitfoldername", "Folder name"), Match = plug.LocateNodeHostingFolder(f.Repo == null ? plug.ui.treeView1.Nodes[0] : plug.ui.treeView1.Nodes[1], f) });
+                if (RegexMatches(rex, f.Name.ToString()) == true) results.Add(new SearchResult(f) { MatchType = I18n.Translate("internal/SearchForm/hitfoldername", "Folder name"), Match = plug.LocateNodeHostingFolder(f.Repo == null ? plug.ui.treeView.Nodes[0] : plug.ui.treeView.Nodes[1], f) });
             }
             foreach (Trigger t in f.Triggers)
             {                
@@ -174,7 +174,7 @@ namespace Triggernometry.UI.Forms
                 {
                     continue;
                 }
-                TreeNode tn = plug.LocateNodeHostingTrigger(t.Repo == null ? plug.ui.treeView1.Nodes[0] : plug.ui.treeView1.Nodes[1], t);
+                TreeNode tn = plug.LocateNodeHostingTrigger(t.Repo == null ? plug.ui.treeView.Nodes[0] : plug.ui.treeView.Nodes[1], t);
                 if ((filter & SearchFilterEnum.TriggerId) != 0)
                 {
                     if (RegexMatches(rex, t.Id.ToString()) == true) results.Add(new SearchResult(t) { MatchType = I18n.Translate("internal/SearchForm/hittriggerid", "Trigger ID"), Match = tn });
@@ -424,7 +424,7 @@ namespace Triggernometry.UI.Forms
             SearchFilterEnum filter = GetFilter();
             List<SearchResult> res = Search(expSearchTerm.Expression, filter);
             List<DataGridViewRow> rrs = new List<DataGridViewRow>();
-            statusStrip1.Visible = false;
+            stsSearchResults.Visible = false;
             lblResultInfo.Visible = false;
             dgvResults.Rows.Clear();
             foreach (SearchResult sr in res)
@@ -448,7 +448,7 @@ namespace Triggernometry.UI.Forms
                     break;
             }
             lblResultInfo.Visible = true;
-            statusStrip1.Visible = true;
+            stsSearchResults.Visible = true;
         }
 
         private void btnClose_Click(object sender, EventArgs e)

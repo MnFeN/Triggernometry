@@ -118,7 +118,7 @@ namespace Triggernometry.UI.CustomControls
             // 使用 ClearType 呈现小字号字体的平滑笔画。
             gr.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             Rectangle r = new Rectangle(ClientRectangle.Location, ClientRectangle.Size);
-            r.Width -= button1.Width;
+            r.Width -= btnColorMenu.Width;
             string smpl = I18n.Translate("internal/ColorSelector/sample", "Sample");
             if (ChangeTextOutlineColor == true)
             {
@@ -143,42 +143,42 @@ namespace Triggernometry.UI.CustomControls
 
         private void setTextColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = TextColor;
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            dlgColor.Color = TextColor;
+            if (dlgColor.ShowDialog() == DialogResult.OK)
             {
-                TextColor = colorDialog1.Color;
+                TextColor = dlgColor.Color;
             }
         }
 
         private void setTextOutlineColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = TextOutlineColor;
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            dlgColor.Color = TextOutlineColor;
+            if (dlgColor.ShowDialog() == DialogResult.OK)
             {
-                TextOutlineColor = colorDialog1.Color;
+                TextOutlineColor = dlgColor.Color;
             }
         }
 
         private void setBackgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = BackgroundColor;
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            dlgColor.Color = BackgroundColor;
+            if (dlgColor.ShowDialog() == DialogResult.OK)
             {
-                BackgroundColor = colorDialog1.Color;
+                BackgroundColor = dlgColor.Color;
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnColorMenu_Click(object sender, EventArgs e)
         {
-            contextMenuStrip1.Show(button1, new Point(0, 0));
+            ctxColors.Show(btnColorMenu, new Point(0, 0));
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ctxColors_Opening(object sender, CancelEventArgs e)
         {
             ctxSetTextColor.Visible = ChangeTextColor;
             ctxSetTextOutline.Visible = ChangeTextOutlineColor;
             ctxSetBackground.Visible = ChangeBackgroundColor;
-            toolStripSeparator1.Visible = ChangeBackgroundColor;
+            sepTransparentBackground.Visible = ChangeBackgroundColor;
             ctxSetBackgroundTransparent.Visible = ChangeBackgroundColor;
         }
 

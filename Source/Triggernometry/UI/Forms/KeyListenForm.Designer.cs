@@ -28,26 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pnlButtons = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
+            this.pnlButtonsSpacing = new System.Windows.Forms.Panel();
+            this.pnlKeypressHint = new System.Windows.Forms.Panel();
             this.lblKeypressInfo = new System.Windows.Forms.Label();
             this.lblKeypress = new System.Windows.Forms.Label();
-            this.panel4.SuspendLayout();
-            this.panel8.SuspendLayout();
+            this.pnlButtons.SuspendLayout();
+            this.pnlKeypressHint.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel4
+            // pnlButtons
             // 
-            this.panel4.Controls.Add(this.btnCancel);
-            this.panel4.Controls.Add(this.btnOk);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(10, 175);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(464, 35);
-            this.panel4.TabIndex = 13;
+            this.pnlButtons.Controls.Add(this.btnCancel);
+            this.pnlButtons.Controls.Add(this.btnOk);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtons.Location = new System.Drawing.Point(10, 175);
+            this.pnlButtons.Name = "pnlButtons";
+            this.pnlButtons.Size = new System.Drawing.Size(464, 35);
+            this.pnlButtons.TabIndex = 13;
             // 
             // btnCancel
             // 
@@ -71,24 +71,24 @@
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             // 
-            // panel3
+            // pnlButtonsSpacing
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 165);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(464, 10);
-            this.panel3.TabIndex = 14;
+            this.pnlButtonsSpacing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlButtonsSpacing.Location = new System.Drawing.Point(10, 165);
+            this.pnlButtonsSpacing.Name = "pnlButtonsSpacing";
+            this.pnlButtonsSpacing.Size = new System.Drawing.Size(464, 10);
+            this.pnlButtonsSpacing.TabIndex = 14;
             // 
-            // panel8
+            // pnlKeypressHint
             // 
-            this.panel8.BackColor = System.Drawing.SystemColors.Control;
-            this.panel8.Controls.Add(this.lblKeypressInfo);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel8.Location = new System.Drawing.Point(10, 10);
-            this.panel8.Name = "panel8";
-            this.panel8.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
-            this.panel8.Size = new System.Drawing.Size(464, 51);
-            this.panel8.TabIndex = 18;
+            this.pnlKeypressHint.BackColor = System.Drawing.SystemColors.Control;
+            this.pnlKeypressHint.Controls.Add(this.lblKeypressInfo);
+            this.pnlKeypressHint.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlKeypressHint.Location = new System.Drawing.Point(10, 10);
+            this.pnlKeypressHint.Name = "pnlKeypressHint";
+            this.pnlKeypressHint.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
+            this.pnlKeypressHint.Size = new System.Drawing.Size(464, 51);
+            this.pnlKeypressHint.TabIndex = 18;
             // 
             // lblKeypressInfo
             // 
@@ -124,27 +124,27 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(484, 220);
             this.Controls.Add(this.lblKeypress);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
-            this.Controls.Add(this.panel8);
+            this.Controls.Add(this.pnlButtonsSpacing);
+            this.Controls.Add(this.pnlButtons);
+            this.Controls.Add(this.pnlKeypressHint);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "KeyListenForm";
             this.Padding = new System.Windows.Forms.Padding(10);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Listening to keypresses";
-            this.panel4.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
+            this.pnlButtons.ResumeLayout(false);
+            this.pnlKeypressHint.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel pnlButtons;
         private System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnOk;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Panel pnlButtonsSpacing;
+        private System.Windows.Forms.Panel pnlKeypressHint;
         private System.Windows.Forms.Label lblKeypressInfo;
         private System.Windows.Forms.Label lblKeypress;
     }
