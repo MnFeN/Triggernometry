@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -36,25 +37,43 @@ namespace Triggernometry.UI.Forms
 
         protected void RestoredSavedDimensions()
         {
-            I18n.TranslateForm(this);
-            Configuration cfg = RealPlugin.Instance.Config;
-            if (cfg.UiFontDefault == false)
+            // 翻译、字体和窗口尺寸会连续改变子控件，批量处理可避免每次都重新布局。
+            var layoutControls = new List<Control> { this };
+            for (int i = 0; i < layoutControls.Count; i++)
             {
-                try
+                Control control = layoutControls[i];
+                control.SuspendLayout();
+                foreach (Control child in control.Controls)
+                    layoutControls.Add(child);
+            }
+            try
+            {
+                I18n.TranslateForm(this);
+                Configuration cfg = RealPlugin.Instance.Config;
+                if (cfg.UiFontDefault == false)
                 {
-                    _FontOverride = RealPlugin.CreateFontFromDefinition(cfg.UiFontName, cfg.UiFontSize, cfg.UiFontEffect);
-                    RealPlugin.ApplyFontOverrideToForm(this, _FontOverride);
+                    try
+                    {
+                        _FontOverride = RealPlugin.CreateFontFromDefinition(cfg.UiFontName, cfg.UiFontSize, cfg.UiFontEffect);
+                        RealPlugin.ApplyFontOverrideToForm(this, _FontOverride);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
-                catch (Exception)
+                MaximizeBox = false;
+                MinimizeBox = false;
+                if (SavedSet == true)
                 {
+                    Width = SavedWidth;
+                    Height = SavedHeight;
                 }
             }
-            MaximizeBox = false;
-            MinimizeBox = false;
-            if (SavedSet == true)
+            finally
             {
-                Width = SavedWidth;
-                Height = SavedHeight;
+                // 从子控件开始恢复，父容器最后统一布局。
+                for (int i = layoutControls.Count - 1; i >= 0; i--)
+                    layoutControls[i].ResumeLayout(true);
             }
         }
 
