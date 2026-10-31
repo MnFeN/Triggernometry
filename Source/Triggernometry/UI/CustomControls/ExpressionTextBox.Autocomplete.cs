@@ -89,7 +89,7 @@ namespace Triggernometry.UI.CustomControls
             "_screenwidth", "_screenheight", "_textaura[x]", "_imageaura[x]",
             "_x", "_y", "_w", "_width", "_h", "_height", "_opacity",
             "_ffxivparty[x]", "_party[x]", "_ffxiventity[x]", "_entity[x]", "_ffxivplayer", "_me", "_me.id",
-            "_role8[1-8]", "_role８[1-8]",
+            "_role8[index/role]", "_role８[index/role]",
             "_job[jobid/jobName/jobAbbrev]", "_tm2id[markType]", "_targetmarker2id[markType]", "_wm[markType]", "_waymark[markType]",
             "_ffxivtime", "_ET", "_ETprecise", "_ffxivprocid", "_ffxivprocname", "_ffxivzoneid",
             "_ffxivversion", "_ffxivincombat", "_ffxivisglobal", "_ffxivlanguage", "_ffxivlanguageid",

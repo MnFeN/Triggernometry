@@ -232,19 +232,12 @@ namespace Triggernometry.UI.Forms
                 option.SaveToConfig(Config);
             }
 
-            Config.SetValue(
-                "env",
-                "${_env[COMPUTERNAME]} ${_env[USERNAME]}"); // 储存系统环境变量以保证用户不是 copy 了别人的配置
+            // Config.SetValue("env", "${_env[COMPUTERNAME]} ${_env[USERNAME]}"); // 储存系统环境变量以保证用户不是 copy 了别人的配置
 
             Config.SetValue("version", Info.Version);
 
             RealPlugin.Instance.GetVariableStore(true).Dict[Info.ConfigName] = Config;
-            RealPlugin.Instance.InvokeNamedCallback("command", "/e <se.10>");
-
-            // ↓ 应该修改
-            RealPlugin.Instance.InvokeNamedCallback(
-                "command",
-                $"/{Config.GetValue("cnlPrivate")} 已保存配置。");
+            RealPlugin.Instance.InvokeNamedCallback("command", $"/e 已保存配置 <se.10>");
 
             this.Close();
         }

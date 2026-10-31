@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Triggernometry.Core;
+using Triggernometry.Expressions.Maths;
 using Triggernometry.Expressions.String.Evaluators;
 using Triggernometry.Expressions.String.Models;
 using Triggernometry.Expressions.String.Utils;
@@ -61,9 +62,18 @@ namespace Triggernometry.Expressions.String.Parsers
                     }
 
                 case "_role8":
-                    return Role8[expr.Index.ParseInt() - 1];
                 case "_role８":
-                    return Role8FullWidth[expr.Index.ParseInt() - 1];
+                    {
+                        // 两种入口都接受半角或全角简称，反查序号统一返回半角数字。
+                        int index = Array.IndexOf(Role8, expr.Index);
+                        if (index < 0)
+                            index = Array.IndexOf(Role8FullWidth, expr.Index);
+                        if (index >= 0)
+                            return (index + 1).ToStringInvariant();
+
+                        index = (int)MathParser.Parse(expr.Index) - 1;
+                        return (expr.Name == "_role8" ? Role8 : Role8FullWidth)[index];
+                    }
 
                 case "_job": // ${_job[jobid].prop} or ${_job[Name].prop}
                     return Job.GetJob(expr.Index).QueryProperty(expr.Member.Name);
