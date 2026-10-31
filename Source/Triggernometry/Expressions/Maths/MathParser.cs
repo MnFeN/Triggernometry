@@ -149,6 +149,8 @@ namespace Triggernometry.Expressions.Maths
             LocalFunctions.Add("or", x => OrFunction(x));
             LocalFunctions.Add("and", x => AndFunction(x));
             LocalFunctions.Add("if", x => IfFunction(x[0], x[1], x[2]));
+            LocalFunctions.Add("between", BetweenFunction);
+            LocalFunctions.Add("in", InFunction);
 
             // Numeric String Functions:
             // Mathparser string function parameters should not contain '('  ')'  ','  ' ' as part of the string.
@@ -215,6 +217,23 @@ namespace Triggernometry.Expressions.Maths
         public static double IfFunction(double a, double b, double c)
         {
             return IsZero(a) ? c : b;
+        }
+
+        /// <summary>判断数值是否位于闭区间内，边界沿用数值比较的容差。</summary>
+        public static double BetweenFunction(double[] input)
+        {
+            return input[1] <= input[0] + TOLERANCE && input[0] <= input[2] + TOLERANCE ? 1 : 0;
+        }
+
+        /// <summary>判断首个数值是否与后续任一数值相等，沿用数值相等的容差。</summary>
+        public static double InFunction(double[] input)
+        {
+            for (int i = 1; i < input.Length; i++)
+            {
+                if (IsZero(input[0] - input[i]))
+                    return 1;
+            }
+            return 0;
         }
 
         public static double OrFunction(double[] x)

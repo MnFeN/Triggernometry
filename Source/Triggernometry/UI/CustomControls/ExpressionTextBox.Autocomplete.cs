@@ -28,6 +28,7 @@ namespace Triggernometry.UI.CustomControls
             "abs(x)", "sign(x)", "rem(x, y)", "mod(x, y)", "mod(x, y, min)", "random(start, end)",
             "truncate(x)", "floor(x)", "ceiling(x)", "round(x, digits=0)",
             "max(...)", "min(...)", "or(...)", "and(...)", "if(condition, trueVal, falseVal)",
+            "between(x, min, max)", "in(x, a, b, ...)",
 
             // numeric func: trigonometric 
             "sin(x)", "cos(x)", "tan(x)", "cot(x)", "cotan(x)", "sec(x)", "csc(x)", "cosec(x)",
