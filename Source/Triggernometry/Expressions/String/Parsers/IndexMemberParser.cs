@@ -17,6 +17,9 @@ namespace Triggernometry.Expressions.String.Parsers
 {
     internal static class IndexMemberParser
     {
+        private static readonly string[] Role8 = { "MT", "ST", "H1", "H2", "D1", "D2", "D3", "D4" };
+        private static readonly string[] Role8FullWidth = { "ＭＴ", "ＳＴ", "Ｈ１", "Ｈ２", "Ｄ１", "Ｄ２", "Ｄ３", "Ｄ４" };
+
         internal static string TryParse(string template, Context ctx)
         {
             ctx = ctx ?? Context.Unbound;
@@ -56,6 +59,11 @@ namespace Triggernometry.Expressions.String.Parsers
                         var evaluator = XivEntityEvaluator.BuildEvaluator(expr);
                         return string.Join(", ", evaluator(entity));
                     }
+
+                case "_role8":
+                    return Role8[expr.Index.ParseInt() - 1];
+                case "_role８":
+                    return Role8FullWidth[expr.Index.ParseInt() - 1];
 
                 case "_job": // ${_job[jobid].prop} or ${_job[Name].prop}
                     return Job.GetJob(expr.Index).QueryProperty(expr.Member.Name);

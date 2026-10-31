@@ -180,6 +180,7 @@ namespace Triggernometry.FFXIV
             { "Name",           e => e.Name },
             { "ID",             e => e.HexID },
             { "IsSelf",         e => e.ID == Entity.GetMyself().ID },
+            { "JobCN2OrSelf",   e => e.ID != 0 && e.ID == GetMyself().ID ? "自己" : e.Job.NameCN2 },
             { "IsPlayer",       e => e.Type == EntityType.Pc },
             { "BNpcID",         e => e.BNpcID },
             { "OwnerID",        e => e.OwnerHexID },
