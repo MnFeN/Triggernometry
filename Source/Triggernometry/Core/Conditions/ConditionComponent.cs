@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace Triggernometry.Core.Conditions
 {
@@ -13,6 +14,7 @@ namespace Triggernometry.Core.Conditions
         public event ChangeDelegate OnPropertyChange;
 
         [XmlAttribute]
+        [DefaultValue(true)]
         public bool Enabled { get; set; } = true;
 
         internal ConditionGroup Parent { get; set; } = null;

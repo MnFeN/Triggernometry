@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using System.Linq.Expressions;
-using Triggernometry.Localization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Expressions.Maths;
+using Triggernometry.Localization;
 
 namespace Triggernometry.Core.Conditions
 {
@@ -50,13 +46,10 @@ namespace Triggernometry.Core.Conditions
         private CndTypeEnum _ConditionType;
 
 
-        [XmlAttribute]
+        [XmlAttribute("L")]
         public string ExpressionL
         {
-            get
-            {
-                return _ExpressionL;
-            }
+            get => _ExpressionL;
             set
             {
                 if (value != _ExpressionL)
@@ -70,10 +63,7 @@ namespace Triggernometry.Core.Conditions
         [XmlAttribute]
         public ExprTypeEnum ExpressionTypeL
         {
-            get
-            {
-                return _ExpressionTypeL;
-            }
+            get => _ExpressionTypeL;
             set
             {
                 if (value != _ExpressionTypeL)
@@ -84,13 +74,10 @@ namespace Triggernometry.Core.Conditions
             }
         }
 
-        [XmlAttribute]
+        [XmlAttribute("R")]
         public string ExpressionR
         {
-            get
-            {
-                return _ExpressionR;
-            }
+            get => _ExpressionR;
             set
             {
                 if (value != _ExpressionR)
@@ -104,10 +91,7 @@ namespace Triggernometry.Core.Conditions
         [XmlAttribute]
         public ExprTypeEnum ExpressionTypeR
         {
-            get
-            {
-                return _ExpressionTypeR;
-            }
+            get => _ExpressionTypeR;
             set
             {
                 if (value != _ExpressionTypeR)
@@ -118,13 +102,10 @@ namespace Triggernometry.Core.Conditions
             }
         }
 
-        [XmlAttribute]
+        [XmlAttribute("Op")]
         public CndTypeEnum ConditionType
         {
-            get
-            {
-                return _ConditionType;
-            }
+            get => _ConditionType;
             set
             {
                 if (value != _ConditionType)
@@ -133,6 +114,37 @@ namespace Triggernometry.Core.Conditions
                     TriggerOnPropertyChange();
                 }
             }
+        }
+
+        /// <summary>数值条件的操作符已确定表达式类型，无需重复写入。</summary>
+        public bool ShouldSerializeExpressionTypeL() => !IsNumericComparison;
+
+        /// <summary>仅保存参与当前比较的右侧表达式。</summary>
+        public bool ShouldSerializeExpressionR() => !IsUnaryComparison;
+
+        /// <summary>仅非数值、双侧比较需要保存右侧表达式类型。</summary>
+        public bool ShouldSerializeExpressionTypeR() => !IsNumericComparison && !IsUnaryComparison;
+
+        // 旧属性只参与读取，保存时统一使用 L、R 和 Op。
+        [XmlAttribute("ExpressionL")]
+        public string Xml_ExpressionL
+        {
+            get => null;
+            set => ExpressionL = value;
+        }
+
+        [XmlAttribute("ExpressionR")]
+        public string Xml_ExpressionR
+        {
+            get => null;
+            set => ExpressionR = value;
+        }
+
+        [XmlAttribute("ConditionType")]
+        public string Xml_ConditionType
+        {
+            get => null;
+            set => ConditionType = XmlAttr.Enum<CndTypeEnum>(value);
         }
 
         /// <summary>数值条件始终按数值表达式求值，忽略旧配置中的表达式类型。</summary>
