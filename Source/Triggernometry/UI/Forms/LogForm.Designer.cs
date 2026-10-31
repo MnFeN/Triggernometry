@@ -118,6 +118,7 @@
             this.dgvLog.AllowUserToDeleteRows = false;
             this.dgvLog.AllowUserToResizeRows = false;
             this.dgvLog.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dgvLog.ColumnHeadersDefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colTimestamp,
@@ -140,19 +141,19 @@
             // 
             // colTimestamp
             // 
+            this.colTimestamp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.colTimestamp.HeaderText = "Timestamp";
             this.colTimestamp.Name = "colTimestamp";
             this.colTimestamp.ReadOnly = true;
             this.colTimestamp.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colTimestamp.Width = 140;
             // 
             // colLevel
             // 
+            this.colLevel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.colLevel.HeaderText = "Level";
             this.colLevel.Name = "colLevel";
             this.colLevel.ReadOnly = true;
             this.colLevel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colLevel.Width = 60;
             // 
             // colMessage
             // 
