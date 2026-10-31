@@ -2286,7 +2286,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(734, 511);
+            this.ClientSize = new System.Drawing.Size(1101, 767);
             this.Controls.Add(this.tbcMain);
             this.Controls.Add(this.pnlButtonsSpacing);
             this.Controls.Add(this.btnClose);
