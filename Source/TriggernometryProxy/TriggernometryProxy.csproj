@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Configuration>Release</Configuration>
 		<Platform>AnyCPU</Platform>
@@ -28,6 +28,9 @@
 		<ReleasePublishDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\publish\'))</ReleasePublishDirectory>
 		<PublishDir>$(ReleasePublishDirectory)</PublishDir>
 	</PropertyGroup>
+	<ItemGroup>
+		<Compile Include="..\BuildVersion.cs" Link="Properties\BuildVersion.cs" />
+	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="Advanced Combat Tracker">
 			<HintPath>..\..\lib\Advanced Combat Tracker.dll</HintPath>
@@ -72,9 +75,26 @@
 			Properties="Configuration=$(Configuration);Platform=$(Platform)">
 			<Output TaskParameter="TargetOutputs" ItemName="_PluginPublishAssembly" />
 		</MSBuild>
+		<!-- 清单版本取自本次编译的 DLL，避免上传时遗漏更新版本号。 -->
+		<GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+			<Output TaskParameter="Assemblies" ItemName="_ReleaseAssemblyIdentity" />
+		</GetAssemblyIdentity>
+		<!-- 清空发布目录前保留手动调整的最低允许版本。 -->
+		<XmlPeek XmlInputPath="$(ReleasePublishDirectory)UpdateManifest.xml"
+			Query="/UpdateManifest/@LowestAllowedVersion" Condition="Exists('$(ReleasePublishDirectory)UpdateManifest.xml')">
+			<Output TaskParameter="Result" PropertyName="_LowestAllowedVersion" />
+		</XmlPeek>
+		<PropertyGroup>
+			<_UpdateManifest>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\UpdateManifest.template.xml'))</_UpdateManifest>
+			<_UpdateManifest>$(_UpdateManifest.Replace('Version=&quot;&quot;', 'Version=&quot;%(_ReleaseAssemblyIdentity.Version)&quot;'))</_UpdateManifest>
+			<_UpdateManifest Condition="'$(_LowestAllowedVersion)' != ''">$([System.Text.RegularExpressions.Regex]::Replace($(_UpdateManifest), 'LowestAllowedVersion=&quot;[^&quot;]*&quot;', 'LowestAllowedVersion=&quot;$(_LowestAllowedVersion)&quot;'))</_UpdateManifest>
+		</PropertyGroup>
+		<WriteLinesToFile File="$(IntermediateOutputPath)UpdateManifest.xml"
+			Lines="$([MSBuild]::Escape($(_UpdateManifest)))" Overwrite="true" Encoding="UTF-8" />
 		<ItemGroup>
 			<_ReleaseFiles Include="$(TargetPath);@(_PluginPublishAssembly)" />
 			<_ReleaseFiles Include="$(MSBuildProjectDirectory)\..\..\Translations\zh-CN.triglations.xml" />
+			<_ReleaseFiles Include="$(IntermediateOutputPath)UpdateManifest.xml" />
 			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" />
 			<ResolvedFileToPublish Include="@(_ReleaseFiles)">
 				<RelativePath>%(Filename)%(Extension)</RelativePath>
