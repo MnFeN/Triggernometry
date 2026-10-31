@@ -10,9 +10,8 @@ using Triggernometry.Localization;
 
 namespace Triggernometry.UI.CustomControls
 {
-    public class PartyListPanel : TableLayoutPanel
+    public class PartyListPanel : ReorderableTableLayoutPanel
     {
-        List<PlayerLabel> _players = new List<PlayerLabel>();
         private readonly VarNames varNames;
         private static readonly string[] Role8 = { "MT", "ST", "H1", "H2", "D1", "D2", "D3", "D4" };
         public int PlayerCount;
@@ -51,63 +50,18 @@ namespace Triggernometry.UI.CustomControls
             PlayerCount = playerDescriptions.Length;
             PlayerDescriptions = playerDescriptions;
 
-            Dock = DockStyle.Fill;
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
-            // Set DragDrop Events
-            DragEnter += new DragEventHandler(PartyListPanel_DragEnter);
-            DragDrop += new DragEventHandler(PartyListPanel_DragDrop);
-            AllowDrop = true;
-
-            // Deternime Row and Column count based on PlayerCount
-            int rowCount = (PlayerCount + 3) / 4;
-            int colCount = Math.Min(PlayerCount, 4);
-            RowCount = rowCount;
-            ColumnCount = colCount;
-            for (int i = 0; i < rowCount; i++)
-            {
-                RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowCount));
-            }
-            for (int i = 0; i < colCount; i++)
-            {
-                ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / colCount));
-            }
+            // 队员面板默认每行最多显示四人。
+            SetGridSize((PlayerCount + 3) / 4, Math.Min(PlayerCount, 4));
 
             // Read Current Entities and Create PlayerLabels
             var entities = GetSortedPartyMembers();
             for (int i = 0; i < PlayerCount; i++)
             {
                 PlayerLabel player = new PlayerLabel(this, entities[i], i);
-                _players.Add(player);
+                AddLabel(player);
             }
 
-            // Adjust Label Size after the correct font is applied
-            _players[0].HandleCreated += (sender, e) => AdjustLabelSizes();
             ResumeLayout(true);
-        }
-
-        private void AdjustLabelSizes()
-        {
-            double lblWidth = 50;
-            double lblHeight = 30;
-            using (Graphics g = CreateGraphics())
-            {
-                var font = _players[0].Font;
-                foreach (var label in _players)
-                {
-                    SizeF size = g.MeasureString(label.Text, font);
-                    lblWidth = Math.Max(lblWidth, size.Width);
-                    lblHeight = Math.Max(lblHeight, size.Height);
-                }
-            }
-            lblWidth += 20;
-            lblHeight += 20;
-            foreach (var label in _players)
-            {
-                label.Width = (int)lblWidth;
-                label.Height = (int)lblHeight;
-            }
         }
 
         List<FFXIV.Entity> GetSortedPartyMembers()
@@ -139,39 +93,12 @@ namespace Triggernometry.UI.CustomControls
             return entities;
         }
 
-        private void PartyListPanel_DragEnter(object sender, DragEventArgs e)
+        /// <summary>位置变化后刷新职能描述，序号直接从网格读取。</summary>
+        protected override void OnOrderChanged(EventArgs e)
         {
-            if (e.Data.GetData(typeof(PlayerLabel)) is PlayerLabel label && label.ParentTable == this)
-            {
-                e.Effect = DragDropEffects.Move;
-            }
-        }
-
-        /// <summary> Get dragged label and target label, then update Order.</summary>
-        private void PartyListPanel_DragDrop(object sender, DragEventArgs e)
-        {
-            var draggedLabel = e.Data.GetData(typeof(PlayerLabel)) as PlayerLabel;
-            if (draggedLabel?.ParentTable != this)
-                return;
-            Point clientPoint = PointToClient(new Point(e.X, e.Y));
-            Control control = GetChildAtPoint(clientPoint);
-            if (control != null && control is PlayerLabel targetLabel && draggedLabel != targetLabel)
-            {
-                SuspendLayout();
-                try
-                {
-                    SwapLabels(draggedLabel, targetLabel);
-                }
-                finally
-                {
-                    ResumeLayout(true);
-                }
-            }
-        }
-
-        private void SwapLabels(PlayerLabel draggedLabel, PlayerLabel targetLabel)
-        {
-            (draggedLabel.Order, targetLabel.Order) = (targetLabel.Order, draggedLabel.Order);
+            foreach (PlayerLabel player in GetLabels())
+                player.UpdateText(GetOrder(player));
+            base.OnOrderChanged(e);
         }
 
         /// <summary>仅在已保存 ID 与当前队员完整匹配时恢复顺序。</summary>
@@ -183,42 +110,25 @@ namespace Triggernometry.UI.CustomControls
 
             List<string> storedPlayerIDs = savedList.Values.Select(var => var.ToString()).ToList();
 
-            List<int> indices = new List<int>();
-            foreach (var playerLabel in _players)
+            var ordered = new PlayerLabel[PlayerCount];
+            foreach (PlayerLabel player in GetLabels())
             {
-                int index = storedPlayerIDs.IndexOf(playerLabel.HexID);
-                if (index >= 0 && index < PlayerCount)
-                {
-                    indices.Add(index);
-                }
-                else return;
+                int index = storedPlayerIDs.IndexOf(player.HexID);
+                if (index < 0 || ordered[index] != null)
+                    return;
+                ordered[index] = player;
             }
-            HashSet<int> expectedIndices = new HashSet<int>(Enumerable.Range(0, PlayerCount));
-            if (new HashSet<int>(indices).SetEquals(expectedIndices))
-            {
-                SuspendLayout();
-                try
-                {
-                    for (int i = 0; i < PlayerCount; i++)
-                    {
-                        _players[i].Order = indices[i];
-                    }
-                }
-                finally
-                {
-                    ResumeLayout(true);
-                }
-            }
+            SetOrder(ordered);
         }
 
         /// <summary>按当前队员顺序生成临时变量；空位只保留列表位置，不加入 ID 字典。</summary>
         public void SaveToConfig()
         {
-            if (_players.Count <= 1)
+            var players = GetLabels().Cast<PlayerLabel>().ToArray();
+            if (players.Length <= 1)
                 return;
 
             var store = RealPlugin.Instance.GetVariableStore(false);
-            var players = _players.OrderBy(p => p.Order).ToArray();
             var names = new VariableDictionary();
             var jobs = new VariableDictionary();
             var roles = new VariableDictionary();
@@ -244,13 +154,13 @@ namespace Triggernometry.UI.CustomControls
                     myIndex = player.Order + 1;
             }
 
-            var mainRoles = players.Where(p => p.ID != 0).Select(p => p.SubRole & FFXIV.Job.RoleType.MainRole).ToArray();
-            int tankCount = mainRoles.Count(role => role == FFXIV.Job.RoleType.Tank);
-            int healerCount = mainRoles.Count(role => role == FFXIV.Job.RoleType.Healer);
-            int dpsCount = mainRoles.Count(role => role == FFXIV.Job.RoleType.DPS);
-            // 只判断实际职业构成，拖拽调整位置不会改变是否为标准小队。
-            bool isStandard = PlayerCount == 4 && tankCount == 1 && healerCount == 1 && dpsCount == 2
-                || PlayerCount == 8 && tankCount == 2 && healerCount == 2 && dpsCount == 4;
+            // 按当前位置逐位匹配 4 人 THDD 或 8 人 TTHHDDDD，空位也参与校验。
+            var mainRoles = players.Select(p => p.ID != 0 ? p.SubRole & FFXIV.Job.RoleType.MainRole : FFXIV.Job.RoleType.None);
+            int roleCount = PlayerCount / 4;
+            var expectedRoles = Enumerable.Repeat(FFXIV.Job.RoleType.Tank, roleCount)
+                .Concat(Enumerable.Repeat(FFXIV.Job.RoleType.Healer, roleCount))
+                .Concat(Enumerable.Repeat(FFXIV.Job.RoleType.DPS, roleCount * 2));
+            bool isStandard = (PlayerCount == 4 || PlayerCount == 8) && mainRoles.SequenceEqual(expectedRoles);
 
             lock (store.Scalar)
             {
@@ -288,20 +198,13 @@ namespace Triggernometry.UI.CustomControls
             public FFXIV.Job.RoleType SubRole;
             public string JobName;
             public string HexID;
-            private Label _draggingClone;
 
-            private int _order;
-            /// <summary> Start from 0. </summary>
-            public int Order
-            {
-                get => _order;
-                set
-                {
-                    _order = value;
-                    Text = $"[{ParentTable.PlayerDescriptions[_order]}] {JobName}\n" + PlayerName.Replace(" ", "\n");
-                    RefreshLocation();
-                }
-            }
+            /// <summary>当前网格中的序号，不再另存一份位置状态。</summary>
+            public int Order => ParentTable.GetOrder(this);
+
+            /// <summary>职能描述属于固定位置，交换队员后随新位置刷新。</summary>
+            internal void UpdateText(int order)
+                => Text = $"[{ParentTable.PlayerDescriptions[order]}] {JobName}\n" + PlayerName.Replace(" ", "\n");
 
             private Color GetForeColorByRole()
             {
@@ -332,70 +235,9 @@ namespace Triggernometry.UI.CustomControls
                     ? entity.Job.NameCN2
                     : entity.Job.NameEN3;
                 HexID = entity.HexID;
-                Order = order;
+                UpdateText(order);
                 ForeColor = GetForeColorByRole();
-                Margin = new Padding(10);
-                AutoSize = false;
-                Anchor = AnchorStyles.None;
-                TextAlign = ContentAlignment.MiddleCenter;
-                Cursor = Cursors.SizeAll;
-                MouseDown += new MouseEventHandler(PlayerLabel_MouseDown);
-                MouseMove += new MouseEventHandler(PlayerLabel_MouseMove);
-                MouseUp += new MouseEventHandler(PlayerLabel_MouseUp);
-            }
-
-            /// <summary> Set the label to the correct position in the parent table according to Order.  </summary>
-            public void RefreshLocation()
-            {
-                int colCount = Math.Min(ParentTable.PlayerCount, 4);
-                int row = Order / colCount;
-                int col = Order % colCount;
-                if (Parent == ParentTable)
-                    ParentTable.SetCellPosition(this, new TableLayoutPanelCellPosition(col, row));
-                else
-                    ParentTable.Controls.Add(this, col, row);
-            }
-
-            private void PlayerLabel_MouseDown(object sender, MouseEventArgs e)
-            {
-                if (e.Button == MouseButtons.Left)
-                {
-                    /*  To-Do
-                    _draggingClone = new Label
-                    {
-                        Text = this.Text,
-                        Size = this.Size,
-                        BackColor = Color.FromArgb(128, this.BackColor),
-                        ForeColor = Color.FromArgb(128, this.ForeColor),
-                        Font = this.Font,
-                        TextAlign = this.TextAlign,
-                    };
-                    ParentTable.Parent.Controls.Add(_draggingClone);
-                    _draggingClone.BringToFront();
-                    _draggingClone.Location = this.Location;
-                    */
-                    DoDragDrop(this, DragDropEffects.Move);
-                }
-            }
-
-            private void PlayerLabel_MouseMove(object sender, MouseEventArgs e)
-            {
-                if (e.Button == MouseButtons.Left && _draggingClone != null)
-                {
-                    Point newLocation = ParentTable.PointToClient(Cursor.Position);
-                    newLocation.Offset(-_draggingClone.Width / 2, -_draggingClone.Height / 2);
-                    _draggingClone.Location = newLocation;
-                }
-            }
-
-            private void PlayerLabel_MouseUp(object sender, MouseEventArgs e)
-            {
-                if (_draggingClone != null)
-                {
-                    ParentTable.Controls.Remove(_draggingClone);
-                    _draggingClone.Dispose();
-                    _draggingClone = null;
-                }
+                MinimumSize = new Size(70, 50);
             }
         }
 
