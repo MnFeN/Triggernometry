@@ -60,7 +60,7 @@ namespace Triggernometry.Core.Conditions
             }
         }
 
-        [XmlAttribute]
+        [XmlAttribute("TypeL")]
         public ExprTypeEnum ExpressionTypeL
         {
             get => _ExpressionTypeL;
@@ -88,7 +88,7 @@ namespace Triggernometry.Core.Conditions
             }
         }
 
-        [XmlAttribute]
+        [XmlAttribute("TypeR")]
         public ExprTypeEnum ExpressionTypeR
         {
             get => _ExpressionTypeR;
@@ -125,7 +125,7 @@ namespace Triggernometry.Core.Conditions
         /// <summary>仅非数值、双侧比较需要保存右侧表达式类型。</summary>
         public bool ShouldSerializeExpressionTypeR() => !IsNumericComparison && !IsUnaryComparison;
 
-        // 旧属性只参与读取，保存时统一使用 L、R 和 Op。
+        // 旧属性只参与读取，保存时统一使用简化后的名称。
         [XmlAttribute("ExpressionL")]
         public string Xml_ExpressionL
         {
@@ -145,6 +145,20 @@ namespace Triggernometry.Core.Conditions
         {
             get => null;
             set => ConditionType = XmlAttr.Enum<CndTypeEnum>(value);
+        }
+
+        [XmlAttribute("ExpressionTypeL")]
+        public string Xml_ExpressionTypeL
+        {
+            get => null;
+            set => ExpressionTypeL = XmlAttr.Enum<ExprTypeEnum>(value);
+        }
+
+        [XmlAttribute("ExpressionTypeR")]
+        public string Xml_ExpressionTypeR
+        {
+            get => null;
+            set => ExpressionTypeR = XmlAttr.Enum<ExprTypeEnum>(value);
         }
 
         /// <summary>数值条件始终按数值表达式求值，忽略旧配置中的表达式类型。</summary>

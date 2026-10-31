@@ -128,8 +128,6 @@ namespace Triggernometry.UI.CustomControls
             treeView1.DragOver += TreeView1_DragOver;
             statusStrip1.VisibleChanged += StatusStrip1_VisibleChanged;
             btnErrorCount.Tag = btnWarningCount.Tag = I18n.DoNotTranslate;
-            errorCountIcon = btnErrorCount.Image;
-            blankErrorCountIcon = new Bitmap(errorCountIcon.Width, errorCountIcon.Height);
             HandleCreated += (sender, e) => UpdateLogCounts();
             UpdateLogCounts();
             Disposed += UserInterface_Disposed;
@@ -137,7 +135,6 @@ namespace Triggernometry.UI.CustomControls
 
         private void UserInterface_Disposed(object sender, EventArgs e)
         {
-            blankErrorCountIcon.Dispose();
             if (_FontOverride != null)
             {
                 _FontOverride.Dispose();
@@ -1623,8 +1620,7 @@ namespace Triggernometry.UI.CustomControls
         private int displayedErrorCount = -1;
         private int displayedWarningCount = -1;
         private int logCountUpdatePending;
-        private readonly Image errorCountIcon;
-        private readonly Bitmap blankErrorCountIcon;
+        private static readonly Color errorBlinkBackColor = Color.FromArgb(250, 210, 210);
 
         /// <summary>在 UI 线程合并刷新错误和警告计数，只改动发生变化的文字。</summary>
         private void UpdateLogCounts()
@@ -1640,7 +1636,8 @@ namespace Triggernometry.UI.CustomControls
                 displayedErrorCount = errors;
                 // 只在启停状态改变时更新计时器，连续新增错误不重置闪烁相位。
                 errorBlinkTimer.Enabled = errors > 0;
-                if (errors == 0) btnErrorCount.Image = errorCountIcon;
+                if (errors == 0)
+                    btnErrorCount.BackColor = Color.Empty;
             }
             if (warnings != displayedWarningCount)
             {
@@ -1649,10 +1646,11 @@ namespace Triggernometry.UI.CustomControls
             }
         }
 
-        /// <summary>每半秒切换图标；透明图保持占位，文字和按钮宽度不变。</summary>
+        /// <summary>每半秒在继承底色与淡粉色之间切换背景，图标和文字始终显示。</summary>
         private void ErrorBlinkTimer_Tick(object sender, EventArgs e)
         {
-            btnErrorCount.Image = btnErrorCount.Image == errorCountIcon ? blankErrorCountIcon : errorCountIcon;
+            btnErrorCount.BackColor = btnErrorCount.BackColor == errorBlinkBackColor
+                ? Color.Empty : errorBlinkBackColor;
         }
 
         /// <summary>只保留一个待处理的 UI 通知，后台线程不等待界面。</summary>
@@ -1681,7 +1679,7 @@ namespace Triggernometry.UI.CustomControls
             else RequestLogCountUpdate();
         }
 
-        /// <summary>后台只累加计数，翻译、图标和按钮文字由 UI 合并更新。</summary>
+        /// <summary>后台只累加计数，翻译和按钮显示由 UI 合并更新。</summary>
         internal void IncrementLogCount(DebugLevelEnum level)
         {
             if (IsDisposed) return;
