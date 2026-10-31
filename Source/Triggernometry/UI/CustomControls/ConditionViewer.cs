@@ -1119,10 +1119,11 @@ namespace Triggernometry.UI.CustomControls
                         return "[Error] " + ex.Message;
                     }
                 }
-                string left = "L = \"" + GetExprResult(() => condition.GetExpressionResultL(fakectx, null, null)) + "\"";
+                string quote = condition.IsNumericComparison ? "" : "\"";
+                string left = "L = " + quote + GetExprResult(() => condition.GetExpressionResultL(fakectx, null, null)) + quote;
                 string message = $"{result}\n{left}";
                 if (!condition.IsUnaryComparison)
-                    message += "\nR = \"" + GetExprResult(() => condition.GetExpressionResultR(fakectx, null, null)) + "\"";
+                    message += "\nR = " + quote + GetExprResult(() => condition.GetExpressionResultR(fakectx, null, null)) + quote;
                 MessageBox.Show(message, I18n.Translate("internal/ConditionViewer/testtitle", "Test"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }

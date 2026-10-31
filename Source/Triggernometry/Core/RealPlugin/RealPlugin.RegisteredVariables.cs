@@ -21,6 +21,18 @@ namespace Triggernometry.Core
             }
         }
 
+        /// <summary>按已更新的分组激活状态，重新应用本分组的常驻及有效条件变量，不递归子分组。</summary>
+        internal void ApplyFolderVariables(Folder folder)
+        {
+            lock (RegisteredVariables)
+            {
+                foreach (RegisteredVariable variable in folder.RegisteredVariables.Where(value => !value.LoadWhenActive || folder.isRegisteredVariableScopeActive))
+                {
+                    RegisterVariable(folder.LogName, variable);
+                }
+            }
+        }
+
         /// <summary>
         /// Removes the keys currently declared by a folder subtree when the subtree is removed.
         /// </summary>

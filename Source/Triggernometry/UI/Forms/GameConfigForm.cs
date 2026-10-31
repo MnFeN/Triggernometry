@@ -90,6 +90,7 @@ namespace Triggernometry.UI.Forms
                 BringToFront();
                 Activate();
                 TopMost = false;
+                System.Media.SystemSounds.Asterisk.Play();
             };
 
             btnSave.Click += btnSave_Click;

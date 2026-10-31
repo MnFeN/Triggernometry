@@ -725,6 +725,8 @@ namespace Triggernometry.UI.CustomControls
                         ApplyNodeNameAndResort(tn, f.Name);
                     }
                     plug.ZoneChanged(plug.currentZone);
+                    if (ff.DialogResult == DialogResult.OK)
+                        plug.ApplyFolderVariables(f);
                 }
             }
         }
