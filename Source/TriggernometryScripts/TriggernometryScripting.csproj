@@ -80,21 +80,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="UserScript\ActorControlModule.cs" />
+    <Compile Include="UserScript\Class2.cs" />
+    <Compile Include="UserScript\ForayLevel.cs" />
+    <Compile Include="UserScript\LogFilter.cs" />
+    <Compile Include="UserScript\MineSweeper.cs" />
+    <Compile Include="UserScript\MountModule.cs" />
+    <Compile Include="UserScript\PacketLogger.cs" />
+    <Compile Include="UserScript\TpFlag.cs" />
+    <Compile Include="UserScript\ZoneServerModule.cs" />
     <Compile Include="UserScript\_Draft - 复制%282%29.cs" />
     <Compile Include="UserScript\_Draft - 复制.cs" />
     <Compile Include="UserScript\_Draft.cs" />
-    <Compile Include="UserScript\TpFlag.cs" />
-    <Compile Include="UserScript\ZoneServerModule.cs" />
     <Compile Include="UserScript\技能检索.cs" />
-    <Compile Include="UserScript\PacketLogger.cs" />
-    <Compile Include="UserScript\MountModule.cs" />
+    <Compile Include="UserScript\补正检查.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserScript\距离衰减.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="UserScript\.keep" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
