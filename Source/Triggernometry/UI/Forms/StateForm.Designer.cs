@@ -1808,31 +1808,33 @@
             //
             // colRegisteredName
             //
+            this.colRegisteredName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.colRegisteredName.Frozen = true;
             this.colRegisteredName.HeaderText = "Name";
             this.colRegisteredName.Name = "colRegisteredName";
             this.colRegisteredName.ReadOnly = true;
             this.colRegisteredName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.colRegisteredName.Width = 160;
             //
             // colRegisteredValue
             //
+            this.colRegisteredValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colRegisteredValue.FillWeight = 65F;
             this.colRegisteredValue.HeaderText = "Value";
             this.colRegisteredValue.Name = "colRegisteredValue";
             this.colRegisteredValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.colRegisteredValue.Width = 160;
             //
             // colRegisteredLastChanged
             //
+            this.colRegisteredLastChanged.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.colRegisteredLastChanged.HeaderText = "Last changed";
             this.colRegisteredLastChanged.Name = "colRegisteredLastChanged";
             this.colRegisteredLastChanged.ReadOnly = true;
             this.colRegisteredLastChanged.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.colRegisteredLastChanged.Width = 125;
             //
             // colRegisteredChangedBy
             //
             this.colRegisteredChangedBy.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colRegisteredChangedBy.FillWeight = 35F;
             this.colRegisteredChangedBy.HeaderText = "Changed by";
             this.colRegisteredChangedBy.Name = "colRegisteredChangedBy";
             this.colRegisteredChangedBy.ReadOnly = true;

@@ -1582,6 +1582,7 @@
             // panelAudioBeep
             // 
             this.panelAudioBeep.AutoSize = true;
+            this.panelAudioBeep.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panelAudioBeep.Controls.Add(this.tableAudioBeep);
             this.panelAudioBeep.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelAudioBeep.Location = new System.Drawing.Point(0, 35);
@@ -1594,6 +1595,7 @@
             // tableAudioBeep
             // 
             this.tableAudioBeep.AutoSize = true;
+            this.tableAudioBeep.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableAudioBeep.ColumnCount = 3;
             this.tableAudioBeep.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableAudioBeep.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -1691,6 +1693,7 @@
             // btnBeepTest
             // 
             this.btnBeepTest.AutoSize = true;
+            this.btnBeepTest.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnBeepTest.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnBeepTest.Location = new System.Drawing.Point(732, 63);
             this.btnBeepTest.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
