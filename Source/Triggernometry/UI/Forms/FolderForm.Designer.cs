@@ -31,7 +31,7 @@
             this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelGeneral = new System.Windows.Forms.TableLayoutPanel();
             this.lblFolderName = new System.Windows.Forms.Label();
-            this.txtFolderName = new System.Windows.Forms.TextBox();
+            this.txtFolderName = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panelBottom = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -60,7 +60,7 @@
             this.panelReadOnly = new System.Windows.Forms.Panel();
             this.lblReadOnly = new System.Windows.Forms.Label();
             this.expFfxivZoneFilterRegex = new Triggernometry.UI.CustomControls.ExpressionTextBox();
-            this.txtEnvironment = new Triggernometry.UI.CustomControls.ExpressionTextBox.TextBox();
+            this.txtEnvironment = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.tabRegisteredVariables = new System.Windows.Forms.TabPage();
             this.registeredVariableViewer = new Triggernometry.UI.CustomControls.RegisteredVariableViewer();
             this.grpGeneral.SuspendLayout();
@@ -482,6 +482,7 @@
             // 
             // txtEnvironment
             // 
+            this.txtEnvironment.AcceptsReturn = true;
             this.txtEnvironment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtEnvironment.Multiline = true;
             this.txtEnvironment.Name = "txtEnvironment";
@@ -582,7 +583,7 @@
         private System.Windows.Forms.GroupBox grpGeneral;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGeneral;
         private System.Windows.Forms.Label lblFolderName;
-        private System.Windows.Forms.TextBox txtFolderName;
+        private Triggernometry.UI.CustomControls.EnhancedTextBox txtFolderName;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panelBottom;
         private System.Windows.Forms.Button btnCancel;
@@ -611,7 +612,7 @@
         private System.Windows.Forms.Label lblFfxivZoneId;
         private System.Windows.Forms.CheckBox chkFfxivZoneFilter;
         private CustomControls.ExpressionTextBox expFfxivZoneFilterRegex;
-        private Triggernometry.UI.CustomControls.ExpressionTextBox.TextBox txtEnvironment;
+        private Triggernometry.UI.CustomControls.EnhancedTextBox txtEnvironment;
         private System.Windows.Forms.TabPage tabRegisteredVariables;
         private CustomControls.RegisteredVariableViewer registeredVariableViewer;
     }

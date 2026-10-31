@@ -56,7 +56,7 @@
             this.pnlEditorComment = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.lblComment = new System.Windows.Forms.Label();
-            this.txtComment = new System.Windows.Forms.TextBox();
+            this.txtComment = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.tableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
             this.pnlTree = new System.Windows.Forms.Panel();
             this.trvNodes = new Triggernometry.UI.CustomControls.TreeViewEx();
@@ -648,7 +648,7 @@
         private System.Windows.Forms.Panel pnlEditorComment;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Label lblComment;
-        private System.Windows.Forms.TextBox txtComment;
+        private Triggernometry.UI.CustomControls.EnhancedTextBox txtComment;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;

@@ -41,7 +41,7 @@
             this.cbxEventDestination = new System.Windows.Forms.ComboBox();
             this.lblEventDestination = new System.Windows.Forms.Label();
             this.btnGetCurZone = new System.Windows.Forms.Button();
-            this.txtEvent = new System.Windows.Forms.TextBox();
+            this.txtEvent = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.lblEvent = new System.Windows.Forms.Label();
             this.lblZoneName = new System.Windows.Forms.Label();
             this.txtZoneName = new System.Windows.Forms.TextBox();
@@ -315,7 +315,7 @@
         private System.Windows.Forms.Label lblEvent;
         private System.Windows.Forms.Label lblZoneName;
         private System.Windows.Forms.Button btnGetCurZone;
-        internal System.Windows.Forms.TextBox txtEvent;
+        internal Triggernometry.UI.CustomControls.EnhancedTextBox txtEvent;
         internal System.Windows.Forms.TextBox txtZoneName;
         private System.Windows.Forms.Label lblEventDestination;
         internal System.Windows.Forms.ComboBox cbxEventDestination;

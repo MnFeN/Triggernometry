@@ -28,7 +28,7 @@ namespace Triggernometry.UI.Forms
             this.panel6 = new System.Windows.Forms.Panel();
             this.tabDescription = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel23 = new System.Windows.Forms.TableLayoutPanel();
-            this.txtDescription = new System.Windows.Forms.TextBox();
+            this.txtDescription = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.chkOverrideDesc = new System.Windows.Forms.CheckBox();
             this.lblDescBgColor = new System.Windows.Forms.Label();
             this.lblDescTextColor = new System.Windows.Forms.Label();
@@ -330,7 +330,7 @@ namespace Triggernometry.UI.Forms
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.TabPage tabDescription;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel23;
-        private System.Windows.Forms.TextBox txtDescription;
+        private Triggernometry.UI.CustomControls.EnhancedTextBox txtDescription;
         private System.Windows.Forms.CheckBox chkOverrideDesc;
         private System.Windows.Forms.Label lblDescBgColor;
         private System.Windows.Forms.Label lblDescTextColor;

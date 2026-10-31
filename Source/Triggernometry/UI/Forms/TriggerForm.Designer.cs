@@ -33,7 +33,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lblRegexp = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
+            this.txtName = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.txtRegexp = new Triggernometry.UI.CustomControls.ExpressionTextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -70,13 +70,13 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.cbxLoggingLevel = new System.Windows.Forms.ComboBox();
             this.lblLoggingLevel = new System.Windows.Forms.Label();
-            this.txtEvent = new System.Windows.Forms.TextBox();
+            this.txtEvent = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.lblEvent = new System.Windows.Forms.Label();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.tabDescription = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel23 = new System.Windows.Forms.TableLayoutPanel();
             this.chkReadmeTrigger = new System.Windows.Forms.CheckBox();
-            this.txtDescription = new System.Windows.Forms.TextBox();
+            this.txtDescription = new Triggernometry.UI.CustomControls.EnhancedTextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblReadOnly = new System.Windows.Forms.Label();
             this.grpGeneral.SuspendLayout();
@@ -833,7 +833,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label lblRegexp;
         private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.TextBox txtName;
+        private Triggernometry.UI.CustomControls.EnhancedTextBox txtName;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelButtons;
@@ -859,7 +859,7 @@
         private System.Windows.Forms.ComboBox cbxLoggingLevel;
         private System.Windows.Forms.Label lblLoggingLevel;
         private System.Windows.Forms.TabPage tabDescription;
-        private System.Windows.Forms.TextBox txtDescription;
+        private Triggernometry.UI.CustomControls.EnhancedTextBox txtDescription;
         private System.Windows.Forms.TabPage tabTriggerCondition;
         private CustomControls.ConditionViewer cndCondition;
         private System.Windows.Forms.ComboBox cbxTriggerSource;
@@ -877,7 +877,7 @@
         private System.Windows.Forms.CheckBox chkReadmeTrigger;
         private CustomControls.ActionViewer actionViewer1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        internal System.Windows.Forms.TextBox txtEvent;
+        internal Triggernometry.UI.CustomControls.EnhancedTextBox txtEvent;
         private System.Windows.Forms.Label lblEvent;
     }
 }
