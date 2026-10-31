@@ -25,8 +25,10 @@ namespace Triggernometry.UI.Forms
                 get
                 {
                     var value = Name;
-                    if (Version != null) value += $"  v{Version}";
-                    if (Author != null) value += $"  by {Author}";
+                    if (!string.IsNullOrWhiteSpace(Version))
+                        value += $"  v{Version}";
+                    if (!string.IsNullOrWhiteSpace(Author))
+                        value += $"  by {Author}";
                     return value;
                 }
             }
