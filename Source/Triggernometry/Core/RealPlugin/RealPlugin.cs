@@ -144,16 +144,15 @@ namespace Triggernometry.Core
             _ep.OnStatusChange += _ep_OnStatusChange;
         }
 
-        /// <summary>
-        /// Registers a folder variable and warns when replacing a different value.
-        /// </summary>
+        /// <summary>注册分组变量，仅在覆盖其他分组的不同值时警告。</summary>
         internal void RegisterVariable(string folderLogName, RegisteredVariable definition)
         {
             if (!definition.Enabled || definition.IsComment)
                 return;
             lock (RegisteredVariables)
             {
-                if (RegisteredVariables.TryGetValue(definition.Name, out VariableScalar previous) && previous.Value != definition.Value)
+                if (RegisteredVariables.TryGetValue(definition.Name, out VariableScalar previous)
+                    && previous.Value != definition.Value && previous.LastChanger != folderLogName)
                 {
                     UnfilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/RealPlugin/registeredvariableoverwrite",
                         "Registered variable key conflict '{0}':\nnew value: '{1}'\nfrom: Folder {2}\nold value: '{3}'\nfrom: Folder {4}",
