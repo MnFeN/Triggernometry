@@ -295,7 +295,7 @@ namespace Triggernometry.Core
         [XmlAttribute("Tag")]
         public string Xml_Tag
         {
-            get => XmlAttr.String(Tag, null, omitWhitespace: false);
+            get => XmlAttr.String(Tag, "", omitWhitespace: false);
             set => Tag = value;
         }
 
