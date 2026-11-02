@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core;
+using Triggernometry.Core.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
 using Triggernometry.UI.Forms;
@@ -314,11 +315,7 @@ namespace Triggernometry.UI.CustomControls
             if (variables.Count == 0) return;
             try
             {
-                using (var writer = new StringWriter())
-                {
-                    clipboardSerializer.Serialize(writer, variables);
-                    Clipboard.SetText(writer.ToString());
-                }
+                Clipboard.SetText(XmlSerialization.Serialize(clipboardSerializer, variables));
             }
             catch (Exception ex) { ShowClipboardError(ex); }
         }

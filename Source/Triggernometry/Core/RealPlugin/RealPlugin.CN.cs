@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Localization;
+using Triggernometry.Core.Serialization;
 using static Triggernometry.UI.CustomControls.UserInterface;
 
 namespace Triggernometry.Core
@@ -53,13 +54,9 @@ namespace Triggernometry.Core
         {
             var entries = I18n.CurrentLanguage.ExportMissingTranslations();
 
-            using (StringWriter writer = new StringWriter())
-            {
-                missingTranslationsSerializer.Value.Serialize(writer, entries);
-                string serializedEntries = writer.ToString();
-                RealPlugin.ClipboardSetText(serializedEntries);
-                MessageBox.Show(I18n.Translate("internal/Plugin/missingtranslationscopied", "Missing translations copied to clipboard."));
-            }
+            string serializedEntries = XmlSerialization.Serialize(missingTranslationsSerializer.Value, entries);
+            RealPlugin.ClipboardSetText(serializedEntries);
+            MessageBox.Show(I18n.Translate("internal/Plugin/missingtranslationscopied", "Missing translations copied to clipboard."));
         }
 
 

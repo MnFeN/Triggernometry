@@ -15,6 +15,7 @@ using static Triggernometry.Core.Conditions.ConditionSingle;
 using Triggernometry.Localization;
 using Triggernometry.Core;
 using Triggernometry.Core.Conditions;
+using Triggernometry.Core.Serialization;
 
 namespace Triggernometry.UI.CustomControls
 {
@@ -1078,20 +1079,8 @@ namespace Triggernometry.UI.CustomControls
         {
             TreeNode tn = trvNodes.SelectedNode;
             ConditionComponent cc = (ConditionComponent)tn.Tag;
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            string test = "";
-            ns.Add("", "");
             XmlSerializer xs = new XmlSerializer(cc.GetType());
-            using (MemoryStream ms = new MemoryStream())
-            {
-                xs.Serialize(ms, cc, ns);
-                ms.Position = 0;
-                using (StreamReader sr = new StreamReader(ms))
-                {
-                    test = sr.ReadToEnd();
-                }
-            }
-            return test;
+            return XmlSerialization.Serialize(xs, cc);
         }
 
         private void pasteOverToolStripMenuItem_Click(object sender, EventArgs e)

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using Triggernometry.Localization;
+using Triggernometry.Core.Serialization;
 
 namespace Triggernometry.UI.Forms
 {
@@ -125,7 +126,7 @@ namespace Triggernometry.UI.Forms
         {
             if (dlgExportFile.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(dlgExportFile.FileName, rtbExportResults.Text);
+                File.WriteAllText(dlgExportFile.FileName, rtbExportResults.Text, XmlSerialization.Utf8);
             }
         }
 

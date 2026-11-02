@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Serialization;
 using System.Text.RegularExpressions;
+using Triggernometry.Core.Serialization;
 
 namespace Triggernometry.Core
 {
@@ -40,18 +41,8 @@ namespace Triggernometry.Core
 
         public string Serialize()
         {
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
             XmlSerializer xs = new XmlSerializer(typeof(TriggernometryExport));
-            byte[] buf;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                xs.Serialize(ms, this, ns);
-                ms.Seek(0, SeekOrigin.Begin);
-                buf = new byte[ms.Length];
-                ms.Read(buf, 0, (int)ms.Length);                
-            }
-            return Encoding.UTF8.GetString(buf);            
+            return XmlSerialization.Serialize(xs, this);
         }
 
         public static TriggernometryExport Unserialize(string src)

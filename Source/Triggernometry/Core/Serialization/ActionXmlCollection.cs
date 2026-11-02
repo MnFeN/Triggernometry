@@ -57,10 +57,8 @@ namespace Triggernometry.Core.Serialization
         /// <summary>Writes each concrete action with its declared element name.</summary>
         public void WriteXml(XmlWriter writer)
         {
-            var ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
             foreach (ActionBase action in Actions)
-                serializers[action.GetType()].Value.Serialize(writer, action, ns);
+                XmlSerialization.Serialize(writer, serializers[action.GetType()].Value, action);
         }
 
         private static ActionBase ReadAction(XmlReader reader, out int order)
@@ -79,10 +77,9 @@ namespace Triggernometry.Core.Serialization
         {
             if (actions == null || actions.Count == 0) return string.Empty;
             using (var text = new StringWriter())
-            using (var writer = XmlWriter.Create(text, new XmlWriterSettings { Indent = true }))
+            using (var writer = XmlSerialization.CreateWriter(text))
             {
                 var collection = new ActionXmlCollection(actions);
-                writer.WriteStartDocument();
                 if (actions.Count > 1)
                 {
                     writer.WriteStartElement("ActionBundle");

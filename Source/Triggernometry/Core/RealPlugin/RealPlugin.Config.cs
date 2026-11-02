@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Triggernometry.Core.Variables;
 using Triggernometry.Localization;
+using Triggernometry.Core.Serialization;
 using Triggernometry.UI.Forms;
 
 namespace Triggernometry.Core
@@ -222,23 +223,15 @@ namespace Triggernometry.Core
         /// <summary>序列化完整配置，并转换 XML 不支持的控制字符。</summary>
         private static string SerializeConfigXml(Configuration config, XmlSerializer serializer)
         {
-            var namespaces = new XmlSerializerNamespaces();
-            namespaces.Add("", "");
-            using (var stream = new MemoryStream())
+            configSecurityLockProperty.SetValue(config, false);
+            try
             {
-                configSecurityLockProperty.SetValue(config, false);
-                try
-                {
-                    serializer.Serialize(stream, config, namespaces);
-                }
-                finally
-                {
-                    // 序列化失败时也重新锁定，避免临时解锁状态残留。
-                    configSecurityLockProperty.SetValue(config, true);
-                }
-                stream.Position = 0;
-                using (var reader = new StreamReader(stream))
-                    return SerializeInvalidXmlCharacters(reader.ReadToEnd());
+                return SerializeInvalidXmlCharacters(XmlSerialization.Serialize(serializer, config));
+            }
+            finally
+            {
+                // 序列化失败时也重新锁定，避免临时解锁状态残留。
+                configSecurityLockProperty.SetValue(config, true);
             }
         }
 
@@ -253,7 +246,7 @@ namespace Triggernometry.Core
         private static void WriteConfigTempFile(string tempFilename, string xml)
         {
             using (var stream = File.Open(tempFilename, FileMode.Create, FileAccess.Write))
-            using (var writer = new StreamWriter(stream))
+            using (var writer = new StreamWriter(stream, XmlSerialization.Utf8))
                 writer.Write(xml);
 
             if (!HasConfigurationEndTag(tempFilename))

@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UserScript\ActorControlModule.cs" />
+    <Compile Include="UserScript\Class1.cs" />
     <Compile Include="UserScript\ForayLevel.cs" />
     <Compile Include="UserScript\LogFilter.cs" />
     <Compile Include="UserScript\MineSweeper.cs" />

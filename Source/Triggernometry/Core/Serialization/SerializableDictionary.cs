@@ -45,16 +45,14 @@ namespace Triggernometry.Core.Serialization
         {
             XmlSerializer xsk = new XmlSerializer(typeof(TKey));
             XmlSerializer xsv = new XmlSerializer(typeof(TValue));
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
             foreach (TKey k in Keys)
             {
                 x.WriteStartElement("Item");
                 x.WriteStartElement("Key");
-                xsk.Serialize(x, k, ns);
+                XmlSerialization.Serialize(x, xsk, k);
                 x.WriteEndElement();
                 x.WriteStartElement("Value");
-                xsv.Serialize(x, this[k], ns);
+                XmlSerialization.Serialize(x, xsv, this[k]);
                 x.WriteEndElement();
                 x.WriteEndElement();
             }

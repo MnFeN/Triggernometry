@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Triggernometry.Core.Serialization;
 using System.Xml.Serialization;
 using Triggernometry.Localization;
 
@@ -83,28 +84,9 @@ namespace Triggernometry.Core
         {
             Language l = I18n.DefaultLanguage;
             l.BuildList();
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
             XmlSerializer xs = new XmlSerializer(typeof(Language));
-            string test = "";
-            using (MemoryStream ms = new MemoryStream())
-            {
-                xs.Serialize(ms, l, ns);
-                ms.Position = 0;
-                using (StreamReader sr = new StreamReader(ms))
-                {
-                    test = sr.ReadToEnd();
-                    test = SerializeInvalidXmlCharacters(test);
-                }
-            }
-            using (FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    sw.Write(test);
-                    sw.Flush();
-                }
-            }
+            string text = SerializeInvalidXmlCharacters(XmlSerialization.Serialize(xs, l));
+            File.WriteAllText(filename, text, XmlSerialization.Utf8);
         }
 
         private void LoadLanguages()
