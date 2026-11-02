@@ -37,6 +37,7 @@ namespace Triggernometry.Core.Actions
             Set,
             SetAll,
             Remove,
+            RemoveValue,
             PopFirst, // should be "Pop"
             PopToListInsert,
             PopToListSet,
@@ -82,6 +83,7 @@ namespace Triggernometry.Core.Actions
             "Set value at the given index of the list variable",
             "Set all values on the list variable to the expression",
             "Remove value at the given index of the list variable",
+            "Remove all occurrences of the specified value from the list variable",
             "Pop the given index from list variable into a scalar variable",
             "Pop and insert a value from a list into another list",
             "Pop and set a value from a list into another list",
@@ -249,7 +251,8 @@ namespace Triggernometry.Core.Actions
                 {
                     case OperationEnum.UnsetAll: 
                         editor.EnableOnly(operation); break;
-                    case OperationEnum.Push: 
+                    case OperationEnum.Push:
+                    case OperationEnum.RemoveValue:
                         editor.EnableOnly(operation, name, value, valueType); break;
                     case OperationEnum.Insert:
                     case OperationEnum.Set:
@@ -342,6 +345,12 @@ namespace Triggernometry.Core.Actions
                         "internal/Action/desclistremove",
                         "remove the value at index ({0}) on {2}list variable ({1})",
                         Index, Name, sPersistL
+                    );
+                case OperationEnum.RemoveValue:
+                    return I18n.Translate(
+                        "internal/Action/desclistremovevalue",
+                        "remove all occurrences of {3} expression ({2}) from {1}list variable ({0})",
+                        Name, sPersistL, Value, exprTypeL
                     );
                 case OperationEnum.PopFirst: // the action was updated to "Pop" but the name was unchanged
                     string index = string.IsNullOrWhiteSpace(Index) ? "1" : Index;
@@ -567,6 +576,21 @@ namespace Triggernometry.Core.Actions
                         AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listindexunset",
                             "Value removed from index ({0}) of {2}list variable ({1})",
                             index, srcName, sPersist));
+                    }
+                    break;
+                case OperationEnum.RemoveValue:
+                    {
+                        var (srcName, srcStore) = ResolveVariable(ctx, Name, Persistent);
+                        string value = GetListExpressionValue(ctx, ValueType, Value);
+                        int removedCount;
+                        lock (srcStore.List)
+                        {
+                            VariableList vl = srcStore.GetListVariable(srcName, false);
+                            removedCount = vl.RemoveValue(value, changer);
+                        }
+                        AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/listvalueremove",
+                            "Removed {3} occurrence(s) of value ({0}) from {2}list variable ({1})",
+                            value, srcName, sPersist, removedCount));
                     }
                     break;
                 case OperationEnum.PopFirst:

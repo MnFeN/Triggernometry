@@ -102,6 +102,7 @@
     <TranslationEntry Key="ActionForm/rtbHelperLvarPopToListSet" Translation="将列表指定索引处的值弹出，并设置在另一列表的指定索引。&#xD;&#xA;相当于“移除索引”和“设置到索引”的结合动作。&#xD;&#xA;&#xD;&#xA;两个索引均从 `1` 开始。支持负索引，如 −1 代表最后一位。&#xD;&#xA;若源索引超出列表范围，则源列表无变化，以空白值设置到目标列表。&#xD;&#xA;。&#xD;&#xA;&#xD;&#xA;例：源列表 `src = a, b, c`；目标列表 `tgt = 1, 2, 3, 4`；&#xD;&#xA;源索引 `2`、目标索引 `−2` 可得：`src = a, c`；`tgt = 1, 2, b, 4`；&#xD;&#xA;源索引 `−1`、目标索引 `6` 可得：`src = a, b`；`tgt = 1, 2, 3, 4, , c`。" />
     <TranslationEntry Key="ActionForm/rtbHelperLvarPush" Translation="将表达式解析后推送添加到列表末尾。&#xD;&#xA;若列表不存在，则会先创建空列表。&#xD;&#xA;相当于将值设置/插入到索引 `${{lvar:name.size}} + 1`。&#xD;&#xA;&#xD;&#xA;例：将 `a` 推送到 `1, 2, 3, 4` 可得：`1, 2, 3, 4, a`。" />
     <TranslationEntry Key="ActionForm/rtbHelperLvarRemove" Translation="移除列表指定索引处的值。&#xD;&#xA;&#xD;&#xA;索引从 `1` 开始。支持负索引，如 `−1` 代表最后一位。&#xD;&#xA;若索引超出列表范围，则列表无变化。&#xD;&#xA;&#xD;&#xA;例：移除列表 `1, 2, 3, 4` 的索引 `2` 可得：`1, 3, 4`。" />
+    <TranslationEntry Key="ActionForm/rtbHelperLvarRemoveValue" Translation="移除列表中全部与指定值完全相同的元素，保留其余元素的顺序。&#xD;&#xA;&#xD;&#xA;表达式按选择的文本／数值类型解析一次；按完整文本匹配，区分大小写。未找到匹配值时，列表无变化。&#xD;&#xA;&#xD;&#xA;例：列表 `1, 2, 3, 2, 1`，移除 `1` 后为 `2, 3, 2`。" />
     <TranslationEntry Key="ActionForm/rtbHelperLvarSet" Translation="解析表达式，并设置到列表的指定索引处。&#xD;&#xA;该索引处的值会被覆盖，其他索引不会改变。&#xD;&#xA;索引从 `1` 开始。支持负索引，如 `−1` 代表最后一位。&#xD;&#xA;若索引超出列表范围，则会补充空白元素后设置到该索引。&#xD;&#xA;&#xD;&#xA;可使用的动态表达式：&#xD;&#xA;`${{_this}}`：当前元素的值；&#xD;&#xA;`${{_idx}}`：当前元素的索引（从 `1` 开始）。" />
     <TranslationEntry Key="ActionForm/rtbHelperLvarSetAll" Translation="遍历列表，动态解析每个元素对应的表达式值，以新的值覆盖原列表。&#xD;&#xA;索引号为可选参数，若提供索引号则会先调整列表到该长度。&#xD;&#xA;&#xD;&#xA;可使用的动态表达式：&#xD;&#xA;${{_this}}：当前元素的值；&#xD;&#xA;${{_idx}}：当前元素的索引（从 `1` 开始）。&#xD;&#xA;&#xD;&#xA;例：初始列表不存在；&#xD;&#xA;输入索引（长度）`3`，数值表达式 `${{_idx}} * 2` 可得列表：`2, 4, 6`；&#xD;&#xA;继续使用文本表达式 `${{tvar:table[1][${{_this}}]}}` 可将表格 `table` 第 `1` 列、第 `2, 4, 6` 行的元素写入列表。" />
     <TranslationEntry Key="ActionForm/rtbHelperLvarSortAsc" Translation="将列表升序排列。通过表达类型的“文本／数值”选项选择排序方式，表达式输入框不参与排序。&#xD;&#xA;&#xD;&#xA;文本：按当前区域性的文本比较规则排列。&#xD;&#xA;例如：`1, 3, 10` → `1, 10, 3`。&#xD;&#xA;&#xD;&#xA;数值：按 decimal 数值排列，参与比较的元素必须能解析为数值，否则动作失败。&#xD;&#xA;例如：`1, 3, 10` → `1, 3, 10`。" />
@@ -576,6 +577,7 @@
     <TranslationEntry Key="internal/Action/desclistpoptolistset" Translation="将{1}列表 ({0}) 的索引 ({2}) 弹出并设置在{4}列表 ({3}) 的索引 ({5})" />
     <TranslationEntry Key="internal/Action/desclistpush" Translation="在{1}列表 ({0}) 末尾推送{3}表达式 ({2})" />
     <TranslationEntry Key="internal/Action/desclistremove" Translation="从{2}列表 ({1}) 删除索引 ({0})" />
+    <TranslationEntry Key="internal/Action/desclistremovevalue" Translation="从{1}列表变量 ({0}) 中移除全部{3}表达式 ({2}) 对应的值" />
     <TranslationEntry Key="internal/Action/desclistset" Translation="将{1}列表 ({0}) 的索引 ({4}) 赋值为{3}表达式 ({2})" />
     <TranslationEntry Key="internal/Action/desclistsetall" Translation="将{1}列表 ({0}) 整表赋值为{3}表达式 ({2})" />
     <TranslationEntry Key="internal/Action/desclistsetallresize" Translation="将{1}列表 ({0}) 整表赋值为{3}表达式 ({2})，调整至长度 ({4})" />
@@ -735,6 +737,7 @@
     <TranslationEntry Key="internal/Action/listindexinsert" Translation="在{3}列表 ({2}) 的索引 ({1}) 处插入 ({0})" />
     <TranslationEntry Key="internal/Action/listindexset" Translation="将{3}列表 ({2}) 的索引 ({1}) 赋值为 ({0})" />
     <TranslationEntry Key="internal/Action/listindexunset" Translation="已删除{2}列表 ({1}) 的索引 ({0})" />
+    <TranslationEntry Key="internal/Action/listvalueremove" Translation="已从{2}列表变量 ({1}) 中移除 {3} 个值为 ({0}) 的元素" />
     <TranslationEntry Key="internal/Action/listinsertlist" Translation="在{4}列表 ({1}) 的索引 ({2}) 处插入{3}列表 ({0})" />
     <TranslationEntry Key="internal/Action/listpop" Translation="{1}列表 ({0}) 索引 ({5}) 的值 ({4}) 已弹出为{3}标量 ({2})" />
     <TranslationEntry Key="internal/Action/listpoptolist" Translation="已弹出{1}列表 ({0}) 索引 ({2}) 的值 ({3})" />
@@ -1317,6 +1320,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Pop the given index from list variable into a scalar variable]" Translation="弹出值到标量" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Push value to the end of the list variable]" Translation="推送值到末尾" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Remove value at the given index of the list variable]" Translation="移除索引" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Remove all occurrences of the specified value from the list variable]" Translation="移除全部指定值" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set all values on the list variable to the expression]" Translation="整表重新赋值" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set value at the given index of the list variable]" Translation="设置到索引" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list by the key functions]" Translation="排序（自定义）" />

@@ -108,6 +108,7 @@
     <TranslationEntry Key="ActionForm/███rtbHelperLvarPopToListSet" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarPush" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarRemove" Translation="" />
+    <TranslationEntry Key="ActionForm/rtbHelperLvarRemoveValue" Translation="指定した値と完全に一致する要素をすべて削除し、残りの要素の順序を保持します。&#xD;&#xA;&#xD;&#xA;式は選択した文字列／数値の型で一度だけ評価します。文字列全体を比較し、大文字と小文字を区別します。一致する値がなければ、リストは変更されません。&#xD;&#xA;&#xD;&#xA;例：`1, 2, 3, 2, 1` から `1` を削除すると、`2, 3, 2` になります。" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSet" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSetAll" Translation="" />
     <TranslationEntry Key="ActionForm/rtbHelperLvarSortAsc" Translation="リストを昇順に並べ替えます。式のタイプの「文字列／数値」で比較方法を選択します。値の式は使用しません。&#xD;&#xA;&#xD;&#xA;文字列：現在のカルチャの文字列比較規則で並べ替えます。&#xD;&#xA;例：`1, 3, 10` → `1, 10, 3`。&#xD;&#xA;&#xD;&#xA;数値：decimal 型の数値として比較します。比較する要素を数値に変換できない場合、アクションは失敗します。&#xD;&#xA;例：`1, 3, 10` → `1, 3, 10`。" />
@@ -576,6 +577,7 @@
     <TranslationEntry Key="internal/Action/desclistpoptolistset" Translation="pop index ({2}) of {1}list variable ({0}) and set to index ({5}) of {4}list variable ({3})" />
     <TranslationEntry Key="internal/Action/desclistpush" Translation="push the value from {3} expression ({2}) to the end of {1}list variable ({0})" />
     <TranslationEntry Key="internal/Action/desclistremove" Translation="{2}リスト変数 ({1}) からインデックス ({0}) の値を削除" />
+    <TranslationEntry Key="internal/Action/desclistremovevalue" Translation="{1}リスト変数 ({0}) から{3}式 ({2}) の値に一致する要素をすべて削除" />
     <TranslationEntry Key="internal/Action/desclistset" Translation="set the value from {3} expression ({2}) to index ({4}) on {1}list variable ({0})" />
     <TranslationEntry Key="internal/Action/desclistsetall" Translation="set all values on {1}list ({0}) to {3} expr ({2})" />
     <TranslationEntry Key="internal/Action/desclistsetallresize" Translation="set all values on {1}list ({0}) to {3} expr ({2}) (resized to length ({4}))" />
@@ -735,6 +737,7 @@
     <TranslationEntry Key="internal/Action/listindexinsert" Translation="{3}リスト変数 ({2}) のインデックス({1}) に値 ({0}) を挿入しました" />
     <TranslationEntry Key="internal/Action/listindexset" Translation="{3}リスト変数 ({2}) のインデックス({1}) に値 ({0}) を代入しました" />
     <TranslationEntry Key="internal/Action/listindexunset" Translation="{2}リスト変数 ({1}) のインデックス({0}) の値を削除しました" />
+    <TranslationEntry Key="internal/Action/listvalueremove" Translation="{2}リスト変数 ({1}) から値 ({0}) の要素を {3} 個削除しました" />
     <TranslationEntry Key="internal/Action/listinsertlist" Translation="{3}リスト変数 ({0}) を{4}リスト変数 ({1}) のインデックス({2}) に挿入しました" />
     <TranslationEntry Key="internal/Action/listpop" Translation="Value ({4}) popped from index ({5}) of {1}list ({0}) into {3}scalar variable ({2})" />
     <TranslationEntry Key="internal/Action/listpoptolist" Translation="pop value ({3}) from {1}list variable ({0}) index ({2})" />
@@ -1317,6 +1320,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Pop the given index from list variable into a scalar variable]" Translation="Pop the given index from list variable into a scalar variable" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Push value to the end of the list variable]" Translation="リスト変数の最後に値を追加" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Remove value at the given index of the list variable]" Translation="リスト変数から指定インデックスの値を削除" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Remove all occurrences of the specified value from the list variable]" Translation="指定した値をすべて削除" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set all values on the list variable to the expression]" Translation="Set all values on the list variable to the expression" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set value at the given index of the list variable]" Translation="リスト変数の指定インデックスに値をセット" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list by the key functions]" Translation="Sort list by the key functions" />

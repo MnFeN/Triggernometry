@@ -108,6 +108,7 @@
     <TranslationEntry Key="ActionForm/███rtbHelperLvarPopToListSet" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarPush" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarRemove" Translation="" />
+    <TranslationEntry Key="ActionForm/rtbHelperLvarRemoveValue" Translation="Remove every element that exactly matches the specified value, preserving the order of the remaining elements.&#xD;&#xA;&#xD;&#xA;The expression is evaluated once using the selected string or numeric type. Matching compares the complete text and is case-sensitive. If no value matches, the list is unchanged.&#xD;&#xA;&#xD;&#xA;Example: removing `1` from `1, 2, 3, 2, 1` produces `2, 3, 2`." />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSet" Translation="" />
     <TranslationEntry Key="ActionForm/███rtbHelperLvarSetAll" Translation="" />
     <TranslationEntry Key="ActionForm/rtbHelperLvarSortAsc" Translation="Sorts the list in ascending order. Select String or Numeric as the value type to choose the comparison mode. The value expression is not used.&#xD;&#xA;&#xD;&#xA;String: compare text using the current culture.&#xD;&#xA;Example: `1, 3, 10` → `1, 10, 3`.&#xD;&#xA;&#xD;&#xA;Numeric: compare decimal values. Elements used in the comparison must be valid numbers; otherwise the action fails.&#xD;&#xA;Example: `1, 3, 10` → `1, 3, 10`." />
@@ -576,6 +577,7 @@
     <TranslationEntry Key="internal/Action/desclistpoptolistset" Translation="pop index ({2}) of {1}list variable ({0}) and set to index ({5}) of {4}list variable ({3})" />
     <TranslationEntry Key="internal/Action/desclistpush" Translation="push the value from {3} expression ({2}) to the end of {1}list variable ({0})" />
     <TranslationEntry Key="internal/Action/desclistremove" Translation="remove the value at index ({0}) on {2}list variable ({1})" />
+    <TranslationEntry Key="internal/Action/desclistremovevalue" Translation="remove all occurrences of {3} expression ({2}) from {1}list variable ({0})" />
     <TranslationEntry Key="internal/Action/desclistset" Translation="set the value from {3} expression ({2}) to index ({4}) on {1}list variable ({0})" />
     <TranslationEntry Key="internal/Action/desclistsetall" Translation="set all values on {1}list ({0}) to {3} expr ({2})" />
     <TranslationEntry Key="internal/Action/desclistsetallresize" Translation="set all values on {1}list ({0}) to {3} expr ({2}) (resized to length ({4}))" />
@@ -735,6 +737,7 @@
     <TranslationEntry Key="internal/Action/listindexinsert" Translation="Value ({0}) inserted to index ({1}) of {3}list variable ({2})" />
     <TranslationEntry Key="internal/Action/listindexset" Translation="Value ({0}) set to index ({1}) of {3}list variable ({2})" />
     <TranslationEntry Key="internal/Action/listindexunset" Translation="Value removed from index ({0}) of {2}list variable ({1})" />
+    <TranslationEntry Key="internal/Action/listvalueremove" Translation="Removed {3} occurrence(s) of value ({0}) from {2}list variable ({1})" />
     <TranslationEntry Key="internal/Action/listinsertlist" Translation="{3}List variable ({0}) inserted to {4}list variable ({1}) at index ({2})" />
     <TranslationEntry Key="internal/Action/listpop" Translation="Value ({4}) popped from index ({5}) of {1}list ({0}) into {3}scalar variable ({2})" />
     <TranslationEntry Key="internal/Action/listpoptolist" Translation="pop value ({3}) from {1}list variable ({0}) index ({2})" />
@@ -1317,6 +1320,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Pop the given index from list variable into a scalar variable]" Translation="Pop the given index from list variable into a scalar variable" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Push value to the end of the list variable]" Translation="Push value to the end of the list variable" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Remove value at the given index of the list variable]" Translation="Remove value at the given index of the list variable" />
+    <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Remove all occurrences of the specified value from the list variable]" Translation="Remove all occurrences of the specified value from the list variable" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set all values on the list variable to the expression]" Translation="Set all values on the list variable to the expression" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Set value at the given index of the list variable]" Translation="Set value at the given index of the list variable" />
     <TranslationEntry Key="internal/EditorFields/ActionVariableList/Operation[Sort list by the key functions]" Translation="Sort list by the key functions" />

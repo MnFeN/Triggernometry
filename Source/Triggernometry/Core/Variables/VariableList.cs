@@ -206,6 +206,18 @@ namespace Triggernometry.Core.Variables
             }
         }
 
+        /// <summary>移除全部完整匹配指定值的元素，保留其余元素的顺序。</summary>
+        public int RemoveValue(string value, string changer)
+        {
+            int removedCount = Values.RemoveAll(item => item.ToString() == value);
+            if (removedCount > 0)
+            {
+                LastChanged = DateTime.Now;
+                LastChanger = changer;
+            }
+            return removedCount;
+        }
+
         public Variable Peek(int rawIndex, string defaultValue = "")
         {
             int idx = ProcessRawIndex(rawIndex);
