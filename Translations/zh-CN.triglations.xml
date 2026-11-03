@@ -680,6 +680,7 @@
     <TranslationEntry Key="internal/Action/desctraysliderInfo" Translation="显示信息等级的滑动弹窗 ({0})" />
     <TranslationEntry Key="internal/Action/desctraysliderWarning" Translation="显示警告等级的滑动弹窗 ({0})" />
     <TranslationEntry Key="internal/Action/desctrigcancelall" Translation="取消队列中的所有动作" />
+    <TranslationEntry Key="internal/Action/desctrigcancelinvocation" Translation="终止本次触发中的全部动作" />
     <TranslationEntry Key="internal/Action/desctrigcanceltag" Translation="取消队列中所有标签匹配正则（{0}）的动作" />
     <TranslationEntry Key="internal/Action/desctrigcanceltrig" Translation="取消队列中来自触发器（{0}）的所有动作" />
     <TranslationEntry Key="internal/Action/desctrigcanceltrigtag" Translation="取消队列中来自触发器（{0}）、标签匹配正则（{1}）的动作" />
@@ -809,6 +810,7 @@
     <TranslationEntry Key="internal/Action/tableunsetall" Translation="销毁所有{0}表格" />
     <TranslationEntry Key="internal/Action/tableunsetregex" Translation="销毁名称符合正则表达式 ({0}) 的{1}表格" />
     <TranslationEntry Key="internal/Action/trigcancelall" Translation="已取消所有 {0} 个排队的动作" />
+    <TranslationEntry Key="internal/Action/trigcancelinvocation" Translation="已终止本次触发中的 {0} 个动作" />
     <TranslationEntry Key="internal/Action/trigcanceltag" Translation="已取消 {0} 个标签匹配 ({1}) 的排队动作" />
     <TranslationEntry Key="internal/Action/trigcanceltrig" Translation="已取消触发器 ({1}) 的 {0} 个排队动作" />
     <TranslationEntry Key="internal/Action/trigcanceltrigtag" Translation="已取消触发器 ({1}) 中标签匹配 ({2}) 的 {0} 个排队动作" />
@@ -1269,6 +1271,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore regular expression]" Translation="忽略正则表达式" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation" Translation="操作" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Cancel all actions from all triggers]" Translation="取消队列中所有触发器动作" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Cancel all actions from the current trigger invocation]" Translation="终止本次触发中的全部动作" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Cancel all actions queued from the specified trigger]" Translation="取消队列中指定触发器的动作" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Disable the specified trigger]" Translation="禁用指定的触发器" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Enable the specified trigger]" Translation="启用指定的触发器" />

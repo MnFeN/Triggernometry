@@ -46,7 +46,11 @@ namespace Triggernometry.Core.Actions
             /// <summary>
             /// Cancel all queued actions from all triggers
             /// </summary>
-            CancelAllTrigger
+            CancelAllTrigger,
+            /// <summary>
+            /// Cancel all interruptible actions belonging to the current trigger invocation.
+            /// </summary>
+            Return
         }
 
         /// <summary>
@@ -137,6 +141,7 @@ namespace Triggernometry.Core.Actions
             "Enable the specified trigger",
             "Disable the specified trigger",
             "Cancel all actions from all triggers",
+            "Cancel all actions from the current trigger invocation",
         })]
         public OperationEnum Operation { get; set; } = OperationEnum.FireTrigger;
 
@@ -320,7 +325,7 @@ namespace Triggernometry.Core.Actions
                 editor.SetEnabled(isFireOperation, force);
                 editor.SetEnabled(isFireOperation && !skipRegex, text, zone, zoneType);
                 editor.SetEnabled(op == OperationEnum.CancelTrigger || op == OperationEnum.CancelAllTrigger, tag);
-                editor.SetEnabled(op != OperationEnum.CancelAllTrigger, trigger);
+                editor.SetEnabled(op != OperationEnum.CancelAllTrigger && op != OperationEnum.Return, trigger);
                 zone.Label.Text = (ZoneTypeEnum)zoneType.GetValue() == ZoneTypeEnum.ZoneName
                     ? I18n.Translate("TestInputForm/lblZoneName", "Zone name") : I18n.Translate("TestInputForm/ffxivzoneid", "Zone ID");
             };
@@ -330,13 +335,17 @@ namespace Triggernometry.Core.Actions
 
         internal override string DescribeImplementation()
         {
-            Trigger t = RealPlugin.Instance.GetTriggerById(TriggerId, ParentTrigger?.Repo);
-            if (t == null && Operation != OperationEnum.CancelAllTrigger)
+            bool requiresTrigger = Operation != OperationEnum.CancelAllTrigger && Operation != OperationEnum.Return;
+            Trigger t = requiresTrigger ? RealPlugin.Instance.GetTriggerById(TriggerId, ParentTrigger?.Repo) : null;
+            if (t == null && requiresTrigger)
             {
                 return I18n.Translate("internal/Action/desctriginvalidref", "trigger action with an invalid trigger reference ({0})", TriggerId);
             }
             switch (Operation)
             {
+                case OperationEnum.Return:
+                    return I18n.Translate("internal/Action/desctrigcancelinvocation",
+                        "cancel all actions from the current trigger invocation");
                 case OperationEnum.CancelTrigger:
                     if (string.IsNullOrWhiteSpace(TagRegex))
                     {
@@ -418,8 +427,9 @@ namespace Triggernometry.Core.Actions
         {
             RealPlugin plug = ctx.Plugin;
 
-            Trigger t = plug.GetTriggerById(TriggerId, ctx.Trigger?.Repo);
-            if (t == null && Operation != OperationEnum.CancelAllTrigger)
+            bool requiresTrigger = Operation != OperationEnum.CancelAllTrigger && Operation != OperationEnum.Return;
+            Trigger t = requiresTrigger ? plug.GetTriggerById(TriggerId, ctx.Trigger?.Repo) : null;
+            if (t == null && requiresTrigger)
             {
                 AddToLog(ctx, DebugLevelEnum.Error, I18n.Translate("internal/Action/notriggerwithid",
                     "Trigger operation failed: In trigger ({1}), the specified trigger id ({0}) does not exist.", TriggerId, ParentTrigger?.FullPath ?? "null"));
@@ -427,6 +437,16 @@ namespace Triggernometry.Core.Actions
             }
             switch (Operation)
             {
+                case OperationEnum.Return:
+                    {
+                        var invocationId = ctx.id;
+                        var removedCount = plug.CancelQueuedActions(instance => instance.Context.id == invocationId);
+                        plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
+                            "internal/Action/trigcancelinvocation",
+                            "{0} action(s) from the current trigger invocation cancelled",
+                            removedCount));
+                    }
+                    break;
                 case OperationEnum.CancelAllTrigger:
                     {
                         // Specified Tag Regex

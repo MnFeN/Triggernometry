@@ -680,6 +680,7 @@
     <TranslationEntry Key="internal/Action/desctraysliderInfo" Translation="show a tray notification ({0}), level (Info)" />
     <TranslationEntry Key="internal/Action/desctraysliderWarning" Translation="show a tray notification ({0}), level (Warning)" />
     <TranslationEntry Key="internal/Action/desctrigcancelall" Translation="cancel all actions queued from all triggers" />
+    <TranslationEntry Key="internal/Action/desctrigcancelinvocation" Translation="cancel all actions from the current trigger invocation" />
     <TranslationEntry Key="internal/Action/desctrigcanceltag" Translation="cancel all actions queued from all triggers with tags matching regex ({0})" />
     <TranslationEntry Key="internal/Action/desctrigcanceltrig" Translation="cancel all actions queued from trigger ({0})" />
     <TranslationEntry Key="internal/Action/desctrigcanceltrigtag" Translation="cancel all actions queued from trigger ({0}) with tags matching regex ({1})" />
@@ -809,6 +810,7 @@
     <TranslationEntry Key="internal/Action/tableunsetall" Translation="{0}All table variables unset" />
     <TranslationEntry Key="internal/Action/tableunsetregex" Translation="{1}All table variables matching ({0}) unset" />
     <TranslationEntry Key="internal/Action/trigcancelall" Translation="All {0} queued action(s) cancelled" />
+    <TranslationEntry Key="internal/Action/trigcancelinvocation" Translation="{0} action(s) from the current trigger invocation cancelled" />
     <TranslationEntry Key="internal/Action/trigcanceltag" Translation="{0} queued action(s) with tags matching '{1}' cancelled" />
     <TranslationEntry Key="internal/Action/trigcanceltrig" Translation="{0} queued action(s) from trigger '{1}' cancelled" />
     <TranslationEntry Key="internal/Action/trigcanceltrigtag" Translation="{0} queued action(s) from trigger '{1}' with tags matching '{2}' cancelled" />
@@ -1269,6 +1271,7 @@
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Force[Ignore regular expression]" Translation="Ignore regular expression" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation" Translation="Operation" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Cancel all actions from all triggers]" Translation="Cancel all actions from all triggers" />
+    <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Cancel all actions from the current trigger invocation]" Translation="Cancel all actions from the current trigger invocation" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Cancel all actions queued from the specified trigger]" Translation="Cancel all actions queued from the specified trigger" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Disable the specified trigger]" Translation="Disable the specified trigger" />
     <TranslationEntry Key="internal/EditorFields/ActionTriggerOperation/Operation[Enable the specified trigger]" Translation="Enable the specified trigger" />
