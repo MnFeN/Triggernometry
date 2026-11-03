@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
@@ -10,6 +11,7 @@ namespace Triggernometry.UI.CustomControls
     {
         private ContextMenuStrip dropDown;
         private bool skipNextOpen;
+        private int wheelDelta;
 
         /// <summary>点击选择器时展开的分级菜单。</summary>
         public ContextMenuStrip DropDown
@@ -32,6 +34,20 @@ namespace Triggernometry.UI.CustomControls
             DoubleBuffered = true;
         }
 
+        /// <summary>展开鼠标所指分类，并收起同级分类的次级菜单。</summary>
+        internal static void Category_MouseEnter(object sender, EventArgs e)
+        {
+            var category = (ToolStripMenuItem)sender;
+            foreach (ToolStripMenuItem sibling in category.Owner.Items)
+            {
+                if (sibling != category)
+                    sibling.HideDropDown();
+            }
+            category.Select();
+            if (category.HasDropDownItems)
+                category.ShowDropDown();
+        }
+
         /// <summary>按当前字体和下拉箭头宽度计算首选尺寸。</summary>
         public override Size GetPreferredSize(Size proposedSize)
             => new Size(base.GetPreferredSize(proposedSize).Width + SystemInformation.VerticalScrollBarWidth, Font.Height + 8);
@@ -42,6 +58,43 @@ namespace Triggernometry.UI.CustomControls
             base.OnClick(e);
             if (skipNextOpen) { skipNextOpen = false; return; }
             ShowDropDown();
+        }
+
+        /// <summary>按菜单顺序用滚轮切换可用叶子选项，保留不足一格的滚动量；到达首尾时停止。</summary>
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            if (e is HandledMouseEventArgs handled)
+                handled.Handled = true;
+            base.OnMouseWheel(e);
+            if (!Enabled || dropDown == null || dropDown.Visible)
+                return;
+
+            wheelDelta += e.Delta;
+            int steps = wheelDelta / SystemInformation.MouseWheelScrollDelta;
+            wheelDelta %= SystemInformation.MouseWheelScrollDelta;
+            if (steps == 0)
+                return;
+
+            var choices = new List<ToolStripMenuItem>();
+            void CollectChoices(ToolStripItemCollection items)
+            {
+                foreach (ToolStripItem item in items)
+                {
+                    if (!(item is ToolStripMenuItem choice) || !choice.Available || !choice.Enabled)
+                        continue;
+                    if (choice.HasDropDownItems)
+                        CollectChoices(choice.DropDownItems);
+                    else
+                        choices.Add(choice);
+                }
+            }
+            CollectChoices(dropDown.Items);
+            int current = choices.FindIndex(choice => choice.Checked);
+            if (current < 0)
+                return;
+            int next = Math.Max(0, Math.Min(choices.Count - 1, current - steps));
+            if (next != current)
+                choices[next].PerformClick();
         }
 
         /// <summary>在按钮下方显示菜单，已展开时将其关闭。</summary>

@@ -27,6 +27,8 @@ namespace Triggernometry.UI.CustomControls
         private bool isReadOnly;
         private bool isLoadingCondition;
         private Color disabledNodeColor;
+        private int comparisonCategory;
+        private int comparisonIndex;
 
         /// <summary> Set by parent form. </summary>
         internal Context UiContext { get; set; }
@@ -37,6 +39,8 @@ namespace Triggernometry.UI.CustomControls
         private static readonly (CndTypeEnum Type, string Symbol, string Description)[][] ComparisonOperators =
         {
             new[] { 
+                (CndTypeEnum.NumericTrue, "✓", "L is true (nonzero)"),
+                (CndTypeEnum.NumericFalse, "✗", "L is false (zero)"),
                 (CndTypeEnum.NumericGreater, ">", "L > R"), 
                 (CndTypeEnum.NumericEqual, "=", "L = R"),
                 (CndTypeEnum.NumericLess, "<", "L < R"), 
@@ -44,9 +48,7 @@ namespace Triggernometry.UI.CustomControls
                 (CndTypeEnum.NumericLessEqual, "≤", "L ≤ R"), 
                 (CndTypeEnum.NumericNotEqual, "≠", "L ≠ R"),
                 (CndTypeEnum.NumericApproxEqual, "≈", "Approximately equal: |L − R| ≤ 0.5"),
-                (CndTypeEnum.NumericApproxNotEqual, "≄", "Not approximately equal: |L − R| > 0.5"),
-                (CndTypeEnum.NumericTrue, "✓", "L is true (nonzero)"),
-                (CndTypeEnum.NumericFalse, "✗", "L is false (zero)")
+                (CndTypeEnum.NumericApproxNotEqual, "≄", "Not approximately equal: |L − R| > 0.5")
             },
             new[] { 
                 (CndTypeEnum.StringEqualCase, "=", "L = R"),
@@ -136,7 +138,13 @@ namespace Triggernometry.UI.CustomControls
                 tlsConditions.Font = Font;
             if (ctxConditions != null)
                 ctxConditions.Font = Font;
-            if (cbxComparison != null)
+            if (comparisonMenu != null)
+            {
+                comparisonMenu.Font = Font;
+                foreach (ToolStripMenuItem category in comparisonMenu.Items)
+                    category.DropDown.Font = Font;
+            }
+            if (btnComparison != null)
                 UpdateSelectorWidths();
         }
 
@@ -161,11 +169,11 @@ namespace Triggernometry.UI.CustomControls
             expLeft.txtExpression.TextChanged += expLeft_TextChanged;
             expRight.txtExpression.TextChanged += expRight_TextChanged;
             // 动态标签自行翻译，运算符是与语言无关的符号。
-            cbxOpType.Tag = lblLeftExpression.Tag = lblRightExpression.Tag = lblComparisonDescription.Tag = I18n.DoNotTranslate;
+            btnComparison.Tag = lblLeftExpression.Tag = lblRightExpression.Tag = lblComparisonDescription.Tag = I18n.DoNotTranslate;
+            BuildComparisonMenu();
             cbxExpLType.DropDown += ExpressionType_DropDown;
             cbxExpRType.DropDown += ExpressionType_DropDown;
             cbxGroupingType.DropDown += ExpressionType_DropDown;
-            cbxComparison.DropDown += ExpressionType_DropDown;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -177,15 +185,15 @@ namespace Triggernometry.UI.CustomControls
         /// <summary>按当前语言和字号容纳最长选项，其余宽度全部留给表达式。</summary>
         private void UpdateSelectorWidths()
         {
-            int RequiredWidth(ComboBox combo)
+            int textWidth = 0;
+            foreach (ToolStripMenuItem category in comparisonMenu.Items)
             {
-                int textWidth = 0;
-                foreach (var item in combo.Items)
-                    textWidth = Math.Max(textWidth, TextRenderer.MeasureText(item.ToString(), combo.Font).Width);
-                return textWidth + SystemInformation.VerticalScrollBarWidth + 6 + combo.Margin.Horizontal;
+                foreach (ToolStripMenuItem option in category.DropDownItems)
+                    textWidth = Math.Max(textWidth, TextRenderer.MeasureText(category.Text + " " + option.Text, btnComparison.Font).Width);
             }
-            tableConditionSingle.ColumnStyles[0].Width = RequiredWidth(cbxComparison);
-            tableConditionSingle.ColumnStyles[1].Width = RequiredWidth(cbxOpType);
+            foreach (var item in cbxExpLType.Items)
+                textWidth = Math.Max(textWidth, TextRenderer.MeasureText(item.ToString(), cbxExpLType.Font).Width);
+            tableConditionSingle.ColumnStyles[0].Width = textWidth + SystemInformation.VerticalScrollBarWidth + 8 + btnComparison.Margin.Horizontal;
         }
 
         internal event EventHandler ConditionsUpdated;
@@ -196,7 +204,7 @@ namespace Triggernometry.UI.CustomControls
             isReadOnly = true;
             expLeft.ReadOnly = expRight.ReadOnly = true;
             txtComment.ReadOnly = true;
-            cbxExpLType.Enabled = cbxExpRType.Enabled = cbxComparison.Enabled = cbxOpType.Enabled = cbxGroupingType.Enabled = false;
+            cbxExpLType.Enabled = cbxExpRType.Enabled = btnComparison.Enabled = cbxGroupingType.Enabled = false;
             btnAddGroup.Enabled = btnAddCondition.Enabled = btnAddComment.Enabled = btnDelete.Enabled = false;
             trvNodes.AllowDrop = false;
         }
@@ -443,9 +451,7 @@ namespace Triggernometry.UI.CustomControls
                     ConditionSingle r = (ConditionSingle)re;
                     expLeft.Expression = r.ExpressionL;
                     expRight.Expression = r.ExpressionR;
-                    cbxComparison.SelectedIndex = Array.FindIndex(ComparisonOperators,
-                        options => Array.Exists(options, option => option.Type == r.ConditionType));
-                    LoadComparisonOperators(r.ConditionType);
+                    UpdateComparisonSelection(r.ConditionType);
                     UpdateComparisonControls(r);
                     pnlEditorSingle.Visible = true;
                 }
@@ -564,7 +570,7 @@ namespace Triggernometry.UI.CustomControls
 
         private void btnAddCondition_Click(object sender, EventArgs e)
         {
-            AddComponent(new ConditionSingle { ConditionType = ConditionSingle.CndTypeEnum.StringEqualNocase });
+            AddComponent(new ConditionSingle { ConditionType = CndTypeEnum.NumericTrue });
             expLeft.Focus();
         }
 
@@ -757,19 +763,45 @@ namespace Triggernometry.UI.CustomControls
             OnConditionsUpdated();
         }
 
-        /// <summary>显示当前分类的运算符，并通过枚举值定位已有条件。</summary>
-        private void LoadComparisonOperators(CndTypeEnum selectedType)
+        /// <summary>按原有分类和符号构建两级菜单，说明仍显示在选择器右侧。</summary>
+        private void BuildComparisonMenu()
         {
-            var options = ComparisonOperators[cbxComparison.SelectedIndex];
-            cbxOpType.BeginUpdate();
-            try
+            string[] names = { "Numeric", "Text", "Regex", "List" };
+            comparisonMenu.Font = Font;
+            for (int i = 0; i < names.Length; i++)
             {
-                cbxOpType.Items.Clear();
-                foreach (var option in options)
-                    cbxOpType.Items.Add(option.Symbol);
-                cbxOpType.SelectedIndex = Math.Max(0, Array.FindIndex(options, option => option.Type == selectedType));
+                var category = new ToolStripMenuItem(I18n.Translate($"ConditionViewer/cbxComparison[{names[i]}]", names[i])) { Tag = i };
+                category.DropDown.Font = Font;
+                category.MouseEnter += MenuComboBox.Category_MouseEnter;
+                foreach (var option in ComparisonOperators[i])
+                {
+                    var choice = new ToolStripMenuItem(option.Symbol) { Tag = option.Type };
+                    choice.Click += ComparisonMenuItem_Click;
+                    category.DropDownItems.Add(choice);
+                }
+                comparisonMenu.Items.Add(category);
             }
-            finally { cbxOpType.EndUpdate(); }
+        }
+
+        /// <summary>按条件枚举同步选中标记及按钮文本，不改写已有条件。</summary>
+        private void UpdateComparisonSelection(CndTypeEnum selectedType)
+        {
+            foreach (ToolStripMenuItem category in comparisonMenu.Items)
+            {
+                category.Checked = false;
+                for (int i = 0; i < category.DropDownItems.Count; i++)
+                {
+                    var choice = (ToolStripMenuItem)category.DropDownItems[i];
+                    choice.Checked = (CndTypeEnum)choice.Tag == selectedType;
+                    if (choice.Checked)
+                    {
+                        category.Checked = true;
+                        comparisonCategory = (int)category.Tag;
+                        comparisonIndex = i;
+                        btnComparison.Text = category.Text + " " + choice.Text;
+                    }
+                }
+            }
             UpdateSelectorWidths();
         }
 
@@ -781,8 +813,8 @@ namespace Triggernometry.UI.CustomControls
             try
             {
                 bool isNumeric = condition.IsNumericComparison;
-                bool isRegex = cbxComparison.SelectedIndex == 2;
-                bool isList = cbxComparison.SelectedIndex == 3;
+                bool isRegex = comparisonCategory == 2;
+                bool isList = comparisonCategory == 3;
                 cbxExpLType.Enabled = cbxExpRType.Enabled = !isReadOnly && !isNumeric;
                 expRight.Enabled = lblRightExpression.Enabled = !condition.IsUnaryComparison;
                 cbxExpLType.SelectedIndex = (int)(isNumeric ? ExprTypeEnum.Numeric : condition.ExpressionTypeL);
@@ -802,36 +834,32 @@ namespace Triggernometry.UI.CustomControls
         /// <summary>让符号旁的说明明确大小写规则及左右表达式的用途。</summary>
         private void UpdateComparisonDescription()
         {
-            var option = ComparisonOperators[cbxComparison.SelectedIndex][cbxOpType.SelectedIndex];
+            var option = ComparisonOperators[comparisonCategory][comparisonIndex];
             lblComparisonDescription.Text = I18n.Translate($"internal/ConditionViewer/operator{option.Type}", option.Description);
-            operatorToolTip.SetToolTip(cbxOpType, lblComparisonDescription.Text);
+            operatorToolTip.SetToolTip(btnComparison, lblComparisonDescription.Text);
         }
 
-        /// <summary>切换比较分类时保留表达式内容，并采用该分类的常用运算符。</summary>
-        private void cbxComparison_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>选择具体运算符，并在跨分类时沿用原有的表达式类型切换规则。</summary>
+        private void ComparisonMenuItem_Click(object sender, EventArgs e)
         {
-            if (isLoadingCondition || cbxComparison.SelectedIndex < 0 || !(trvNodes.SelectedNode?.Tag is ConditionSingle condition))
+            if (isReadOnly || isLoadingCondition || !(trvNodes.SelectedNode?.Tag is ConditionSingle condition))
                 return;
+            var choice = (ToolStripMenuItem)sender;
+            var category = (ToolStripMenuItem)((ToolStripDropDown)choice.Owner).OwnerItem;
+            int categoryIndex = (int)category.Tag;
             isLoadingCondition = true;
             try
             {
-                // 从数值比较离开时恢复文本输入，其他模式保留用户选择的解析类型。
-                if (condition.IsNumericComparison)
-                    condition.ExpressionTypeL = condition.ExpressionTypeR = ExprTypeEnum.String;
-                switch (cbxComparison.SelectedIndex)
+                if (categoryIndex != comparisonCategory)
                 {
-                    case 0:
-                        condition.ConditionType = CndTypeEnum.NumericEqual;
+                    // 从数值比较离开时恢复文本输入，其他非数值模式保留用户选择的解析类型。
+                    if (condition.IsNumericComparison)
+                        condition.ExpressionTypeL = condition.ExpressionTypeR = ExprTypeEnum.String;
+                    if (categoryIndex == 0)
                         condition.ExpressionTypeL = condition.ExpressionTypeR = ExprTypeEnum.Numeric;
-                        break;
-                    case 1:
-                        condition.ConditionType = CndTypeEnum.StringEqualNocase; break;
-                    case 2:
-                        condition.ConditionType = CndTypeEnum.RegexMatch; break;
-                    case 3:
-                        condition.ConditionType = CndTypeEnum.ListContains; break;
                 }
-                LoadComparisonOperators(condition.ConditionType);
+                condition.ConditionType = (CndTypeEnum)choice.Tag;
+                UpdateComparisonSelection(condition.ConditionType);
                 UpdateComparisonControls(condition);
             }
             finally { isLoadingCondition = false; }
@@ -1063,15 +1091,6 @@ namespace Triggernometry.UI.CustomControls
                     break;
             }
             UpdateNodeIcon(tn);
-            OnConditionsUpdated();
-        }
-
-        private void cbxOpType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (isLoadingCondition || cbxOpType.SelectedIndex < 0 || !(trvNodes.SelectedNode?.Tag is ConditionSingle condition))
-                return;
-            condition.ConditionType = ComparisonOperators[cbxComparison.SelectedIndex][cbxOpType.SelectedIndex].Type;
-            UpdateComparisonControls(condition);
             OnConditionsUpdated();
         }
 

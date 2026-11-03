@@ -44,8 +44,8 @@
             this.lblLeftExpression = new System.Windows.Forms.Label();
             this.cbxExpLType = new System.Windows.Forms.ComboBox();
             this.expLeft = new Triggernometry.UI.CustomControls.ExpressionTextBox();
-            this.cbxOpType = new System.Windows.Forms.ComboBox();
-            this.cbxComparison = new System.Windows.Forms.ComboBox();
+            this.btnComparison = new Triggernometry.UI.CustomControls.MenuComboBox();
+            this.comparisonMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.operatorToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblRightExpression = new System.Windows.Forms.Label();
             this.lblComparisonDescription = new System.Windows.Forms.Label();
@@ -167,20 +167,20 @@
             this.tableConditionSingle.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableConditionSingle.ColumnCount = 4;
             this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-            this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+            this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 0F));
             this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableConditionSingle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableConditionSingle.Controls.Add(this.cbxExpLType, 0, 0);
             this.tableConditionSingle.Controls.Add(this.lblLeftExpression, 2, 0);
             this.tableConditionSingle.Controls.Add(this.expLeft, 3, 0);
-            this.tableConditionSingle.Controls.Add(this.cbxComparison, 0, 1);
-            this.tableConditionSingle.Controls.Add(this.cbxOpType, 1, 1);
+            this.tableConditionSingle.Controls.Add(this.btnComparison, 0, 1);
             this.tableConditionSingle.Controls.Add(this.lblComparisonDescription, 2, 1);
             this.tableConditionSingle.Controls.Add(this.cbxExpRType, 0, 2);
             this.tableConditionSingle.Controls.Add(this.lblRightExpression, 2, 2);
             this.tableConditionSingle.Controls.Add(this.expRight, 3, 2);
             this.tableConditionSingle.SetColumnSpan(this.cbxExpLType, 2);
             this.tableConditionSingle.SetColumnSpan(this.cbxExpRType, 2);
+            this.tableConditionSingle.SetColumnSpan(this.btnComparison, 2);
             this.tableConditionSingle.SetColumnSpan(this.lblComparisonDescription, 2);
             this.tableConditionSingle.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableConditionSingle.Name = "tableConditionSingle";
@@ -249,26 +249,13 @@
             this.expLeft.Size = new System.Drawing.Size(194, 20);
             this.expLeft.TabIndex = 1;
             //
-            // cbxComparison
+            // btnComparison
             //
-            this.cbxComparison.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cbxComparison.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbxComparison.FormattingEnabled = true;
-            this.cbxComparison.Name = "cbxComparison";
-            this.cbxComparison.Size = new System.Drawing.Size(160, 21);
-            this.cbxComparison.TabIndex = 2;
-            this.cbxComparison.Items.AddRange(new object[] { "Numeric", "Text", "Regex", "List" });
-            this.cbxComparison.SelectedIndexChanged += new System.EventHandler(this.cbxComparison_SelectedIndexChanged);
-            //
-            // cbxOpType
-            //
-            this.cbxOpType.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cbxOpType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbxOpType.FormattingEnabled = true;
-            this.cbxOpType.Name = "cbxOpType";
-            this.cbxOpType.Size = new System.Drawing.Size(160, 21);
-            this.cbxOpType.TabIndex = 3;
-            this.cbxOpType.SelectedIndexChanged += new System.EventHandler(this.cbxOpType_SelectedIndexChanged);
+            this.btnComparison.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnComparison.DropDown = this.comparisonMenu;
+            this.btnComparison.Name = "btnComparison";
+            this.btnComparison.Size = new System.Drawing.Size(160, 21);
+            this.btnComparison.TabIndex = 2;
             //
             // lblRightExpression
             //
@@ -636,8 +623,8 @@
         private System.Windows.Forms.Label lblLeftExpression;
         private System.Windows.Forms.ComboBox cbxExpLType;
         private ExpressionTextBox expLeft;
-        private System.Windows.Forms.ComboBox cbxOpType;
-        private System.Windows.Forms.ComboBox cbxComparison;
+        private MenuComboBox btnComparison;
+        private System.Windows.Forms.ContextMenuStrip comparisonMenu;
         private System.Windows.Forms.ToolTip operatorToolTip;
         private ExpressionTextBox expRight;
         private System.Windows.Forms.ComboBox cbxExpRType;

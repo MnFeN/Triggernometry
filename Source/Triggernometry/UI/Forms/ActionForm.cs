@@ -70,7 +70,6 @@ namespace Triggernometry.UI.Forms
 
         private ActionBase draftAction;
         private bool isReadOnly;
-        private int actionTypeWheelDelta;
         private ActionEditor specificEditor;
         private ActionEditor generalEditor;
         private ConditionViewer cndCondition;
@@ -93,7 +92,6 @@ namespace Triggernometry.UI.Forms
             txtDescription.GotFocus += ExpressionTextBox.ReplaceIncompleteLineBreaksInClipboard;
             btnActionType.Tag = I18n.DoNotTranslate;
             BuildActionTypeMenu();
-            btnActionType.MouseWheel += ActionType_MouseWheel;
             btnTest.Tag = I18n.DoNotTranslate;
             btnTest.Text = I18n.Translate("ActionViewer/ctxTestAction", "Test Action");
             AddTestOption("ActionViewer/ctxTestPlaceholder", "Test action with placeholder values", false, false);
@@ -112,7 +110,7 @@ namespace Triggernometry.UI.Forms
                 {
                     Image = (Image)resources.GetObject("actionCategory." + group.Key)
                 };
-                category.MouseEnter += ActionTypeCategory_MouseEnter;
+                category.MouseEnter += MenuComboBox.Category_MouseEnter;
                 // 只有一个动作的分类可直接点击选择。
                 if (group.Count() == 1)
                 {
@@ -136,37 +134,6 @@ namespace Triggernometry.UI.Forms
                 }
                 actionTypeMenu.Items.Add(category);
             }
-        }
-
-        /// <summary>鼠标移入分类时立即展开其子菜单。</summary>
-        private void ActionTypeCategory_MouseEnter(object sender, EventArgs e)
-        {
-            var category = (ToolStripMenuItem)sender;
-            foreach (ToolStripMenuItem sibling in actionTypeMenu.Items)
-            {
-                if (sibling != category)
-                    sibling.HideDropDown();
-            }
-            category.Select();
-            if (category.HasDropDownItems)
-                category.ShowDropDown();
-        }
-
-        /// <summary>按动作列表顺序滚动切换类型，并累计不足一格的滚轮量。</summary>
-        private void ActionType_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (e is HandledMouseEventArgs handled)
-                handled.Handled = true;
-            if (isReadOnly || actionTypeMenu.Visible)
-                return;
-            actionTypeWheelDelta += e.Delta;
-            int steps = actionTypeWheelDelta / SystemInformation.MouseWheelScrollDelta;
-            actionTypeWheelDelta %= SystemInformation.MouseWheelScrollDelta;
-            if (steps == 0)
-                return;
-            int current = Array.FindIndex(actionTypes, item => item.Type == draftAction.GetType());
-            int next = Math.Max(0, Math.Min(actionTypes.Length - 1, current - steps));
-            SelectActionType(actionTypes[next].Type);
         }
 
         /// <summary>取得动作分类的本地化名称。</summary>
