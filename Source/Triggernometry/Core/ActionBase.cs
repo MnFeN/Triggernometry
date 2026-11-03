@@ -69,7 +69,8 @@ namespace Triggernometry.Core
             return () =>
             {
                 bool isUninterruptible = (bool)uninterruptible.GetValue();
-                if (isUninterruptible) replaceQueued.SetValue(false);
+                if (isUninterruptible)
+                    replaceQueued.SetValue(false);
                 editor.SetEnabled(!isUninterruptible, replaceQueued);
             };
         }
@@ -398,10 +399,13 @@ namespace Triggernometry.Core
         /// 统一处理条件、日志、异常和异步调度。<br />
         /// <paramref name="executeOverride"/> ：用于循环等特殊动作，替代默认业务逻辑。
         /// </summary>
-        internal Task InternalExecute(Context ctx, Action executeOverride = null)
+        internal Task InternalExecute(Context ctx, Action executeOverride = null, ActionInstance instance = null)
         {
             void ExecuteCore()
             {
+                // 在线程池真正开始执行时检查，覆盖已经出队但尚未运行的异步动作。
+                if (instance?.IsCancelled == true)
+                    return;
                 try
                 {
                     var shouldCheckCondition = !ctx.forceType.HasFlag(ActionTriggerOperation.ForceEnum.SkipConditions) && !ctx.testByPlaceholder;
@@ -440,14 +444,16 @@ namespace Triggernometry.Core
                 var cancelToken = Uninterruptible ? CancellationToken.None : ctx.Plugin?.GetCancellationToken() ?? CancellationToken.None;
                 return Task.Run(ExecuteCore, cancelToken);
             }
-            else ExecuteCore();
+            else
+                ExecuteCore();
             return Task.CompletedTask;
         }
 
         /// <summary>统一记录直接执行和队列执行中的异常，并保留回调的原始异常。</summary>
         internal void LogExecutionException(Context ctx, Exception ex)
         {
-            if (GetDebugLevel(ctx) < DebugLevelEnum.Error) return;
+            if (GetDebugLevel(ctx) < DebugLevelEnum.Error)
+                return;
             if (this is ActionNamedCallback && ex is TargetInvocationException tiex && tiex.InnerException != null)
                 ex = tiex.InnerException;
             string triggerPath = ctx?.Trigger?.FullPath ?? "(null)";
@@ -748,10 +754,12 @@ namespace Triggernometry.Core
                     action.IndexInTrigger = parentPosition.Length == 0 ? index : parentPosition + "-" + index;
                 }
                 action.ParentTrigger = trigger;
-                if (action.Condition != null) ConditionGroup.RebuildParentage(action.Condition);
+                if (action.Condition != null)
+                    ConditionGroup.RebuildParentage(action.Condition);
                 if (action is ActionLoop loop)
                 {
-                    if (loop.LoopCondition != null) ConditionGroup.RebuildParentage(loop.LoopCondition);
+                    if (loop.LoopCondition != null)
+                        ConditionGroup.RebuildParentage(loop.LoopCondition);
                     RebuildParentage(loop.LoopActions, trigger, parentPosition == null ? null : action.IndexInTrigger);
                 }
             }

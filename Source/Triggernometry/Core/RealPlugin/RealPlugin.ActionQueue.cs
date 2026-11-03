@@ -23,8 +23,10 @@ namespace Triggernometry.Core
 
         private void InitActionQueue()
         {
-            ActionQueueThread = new Thread(new ThreadStart(ActionThreadProc));
-            ActionQueueThread.Name = "ActionQueueThread";
+            ActionQueueThread = new Thread(new ThreadStart(ActionThreadProc))
+            {
+                Name = "ActionQueueThread"
+            };
             ActionQueueThread.Start();
         }
 
@@ -42,33 +44,103 @@ namespace Triggernometry.Core
             ActionUpdateEvent = null;
         }
 
-        /// <summary>取消允许打断且符合筛选条件的排队动作，并转交或释放互斥锁；空筛选表示全部可打断动作。</summary>
-        internal int CancelQueuedActions(Func<ActionInstance, bool> filter = null)
+        /// <summary>取消符合筛选条件的执行实例及其后续动作；空筛选表示全部可打断动作。</summary>
+        internal int CancelQueuedActions(Func<ActionInstance, bool> filter = null, bool queuedOnly = false, bool requiresTag = false)
         {
             lock (ActionQueue)
             {
-                var toRemove = ActionQueue.Where(qa => !qa.Action.Uninterruptible && (filter == null || filter(qa))).ToList();
-                if (toRemove.Count == 0)
-                    return 0;
-                var removedActions = new HashSet<ActionInstance>(toRemove);
-                ActionQueue.RemoveAll(removedActions.Contains);
-
-                foreach (var group in toRemove.Where(qa => qa.Mutex != null)
-                    .GroupBy(qa => new { qa.Mutex, qa.Context.id }))
+                List<ActionInstance> toRemove;
+                int cancelledCount;
+                if (queuedOnly)
                 {
-                    // Transfer the release to a surviving action, or finish the canceled chain.
-                    var last = ExecutingActions.Concat(ActionQueue)
-                        .LastOrDefault(action => action.Mutex == group.Key.Mutex && action.Context.id == group.Key.id);
-                    if (last != null)
-                    {
-                        if (group.Any(action => action.ShouldReleaseMutex))
-                            last.ShouldReleaseMutex = true;
-                    }
-                    else if (group.Any(action => action.ShouldReleaseMutex || action.Context.Trigger.Sequential))
-                        group.Key.Mutex.Release(group.First().Context);
+                    toRemove = RemoveQueuedActions(filter);
+                    cancelledCount = toRemove.Count;
+                    if (cancelledCount == 0)
+                        return 0;
                 }
+                else
+                {
+                    cancelledCount = CancelActionChains(filter, requiresTag);
+                    if (cancelledCount == 0)
+                        return 0;
+                    toRemove = RemoveCancelledActionsAndQueueNext();
+                }
+
+                TransferOrReleaseCancelledActionMutexes(toRemove);
                 ActionUpdateEvent.Set();
-                return toRemove.Count;
+                return cancelledCount;
+            }
+        }
+
+        /// <summary>仅移除匹配的可打断排队项，返回已移除的实例；不检查执行中或后续动作。调用方须持有队列锁。</summary>
+        private List<ActionInstance> RemoveQueuedActions(Func<ActionInstance, bool> filter)
+        {
+            var toRemove = ActionQueue.Where(action => !action.Action.Uninterruptible && (filter == null || filter(action))).ToList();
+            if (toRemove.Count == 0)
+                return toRemove;
+            var removedActions = new HashSet<ActionInstance>(toRemove);
+            ActionQueue.RemoveAll(removedActions.Contains);
+            return toRemove;
+        }
+
+        /// <summary>遍历排队、执行中及其后续动作，记录取消请求并返回新标记为取消的实例数。调用方须持有队列锁。</summary>
+        private int CancelActionChains(Func<ActionInstance, bool> filter, bool requiresTag)
+        {
+            int cancelledCount = 0;
+            var pending = new Stack<ActionInstance>();
+            var requests = new List<(Func<ActionInstance, bool> Filter, bool RequiresTag)> { (filter, requiresTag) };
+            void CancelInstance(ActionInstance action)
+            {
+                if (action.Cancel(filter, requiresTag, requests))
+                    cancelledCount++;
+                if (action.NextAction != null)
+                    pending.Push(action.NextAction);
+                if (action.LoopParent != null)
+                    pending.Push(action.LoopParent);
+            }
+            // 队列与执行集合本身没有重复项，仅为后续动作图去重。
+            foreach (var action in ActionQueue)
+                CancelInstance(action);
+            foreach (var action in ExecutingActions)
+                CancelInstance(action);
+            if (pending.Count > 0)
+            {
+                var visited = new HashSet<ActionInstance>();
+                while (pending.Count > 0)
+                {
+                    var action = pending.Pop();
+                    if (visited.Add(action))
+                        CancelInstance(action);
+                }
+            }
+            return cancelledCount;
+        }
+
+        /// <summary>移除已取消的排队项，续排未取消或不可打断的后续动作，并返回已移除的实例。调用方须持有队列锁。</summary>
+        private List<ActionInstance> RemoveCancelledActionsAndQueueNext()
+        {
+            var toRemove = ActionQueue.Where(action => action.IsCancelled).ToList();
+            ActionQueue.RemoveAll(action => action.IsCancelled);
+            foreach (var action in toRemove)
+                action.QueueNext(action.Context);
+            return toRemove;
+        }
+
+        /// <summary>将已移除动作的互斥锁释放责任移交给剩余动作，或在动作链结束时释放。调用方须持有队列锁。</summary>
+        private void TransferOrReleaseCancelledActionMutexes(List<ActionInstance> toRemove)
+        {
+            foreach (var group in toRemove.Where(qa => qa.Mutex != null)
+                .GroupBy(qa => new { qa.Mutex, qa.Context.id }))
+            {
+                var last = ExecutingActions.Concat(ActionQueue)
+                    .LastOrDefault(action => action.Mutex == group.Key.Mutex && action.Context.id == group.Key.id);
+                if (last != null)
+                {
+                    if (group.Any(action => action.ShouldReleaseMutex))
+                        last.ShouldReleaseMutex = true;
+                }
+                else if (group.Any(action => action.ShouldReleaseMutex || action.Context.Trigger.Sequential))
+                    group.Key.Mutex.Release(group.First().Context);
             }
         }
 
@@ -79,24 +151,37 @@ namespace Triggernometry.Core
             var instances = new List<ActionInstance>();
             foreach (ActionBase action in actions)
             {
-                if (!action.Enabled) continue;
+                if (!action.Enabled)
+                    continue;
                 if (!sequential || instances.Count == 0)
                     startingFrom = startingFrom.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.ExecDelay));
                 var instance = new ActionInstance(startingFrom, 0, mtx, action, ctx, false) { LoopParent = loopParent };
-                if (sequential && instances.Count > 0) instances[instances.Count - 1].NextAction = instance;
+                if (sequential && instances.Count > 0)
+                    instances[instances.Count - 1].NextAction = instance;
                 instances.Add(instance);
             }
-            if (instances.Count == 0) return null;
+            if (instances.Count == 0)
+                return null;
 
             ActionInstance lastQueued = null;
             lock (ActionQueue)
             {
+                if (loopParent?.IsCancelled == true)
+                    return null;
+                foreach (ActionInstance action in instances)
+                    action.InheritCancellation(loopParent);
                 try
                 {
                     foreach (ActionInstance action in instances)
                     {
-                        if (QueueAction(action)) lastQueued = action;
-                        if (sequential) break;
+                        if (!action.PrepareToQueue())
+                            continue;
+                        if (sequential && action != instances[0])
+                            action.ExecuteAt = DateTime.Now.AddMilliseconds(ctx.EvaluateNumericExpression(logger, this, action.Action.ExecDelay));
+                        if (QueueAction(action))
+                            lastQueued = action;
+                        if (sequential)
+                            break;
                     }
                 }
                 finally
@@ -105,10 +190,9 @@ namespace Triggernometry.Core
                     {
                         // Transfer ownership before the worker can consume any of the new actions.
                         lastQueued.ShouldReleaseMutex = loopParent?.ShouldReleaseMutex ?? true;
-                        if (loopParent != null) 
-                            loopParent.ShouldReleaseMutex = false;
                         if (loopParent != null)
                         {
+                            loopParent.ShouldReleaseMutex = false;
                             var index = sequential ? instances.Count - 1 : instances.IndexOf(lastQueued);
                             instances[index].IsLoopTail = true;
                         }
@@ -122,7 +206,8 @@ namespace Triggernometry.Core
         public void QueueAction(Context ctx, Trigger trig, MutexInfo mutex, ActionBase action, DateTime when, bool releaseMutex)
         {
             var instance = new ActionInstance(when, 0, mutex, action, ctx, releaseMutex);
-            if (!QueueAction(instance, trig) && releaseMutex && mutex != null) mutex.Release(ctx);
+            if (!QueueAction(instance, trig) && releaseMutex && mutex != null)
+                mutex.Release(ctx);
         }
 
         /// <summary>Queues an instance without releasing a rejected continuation's mutex.</summary>
@@ -133,6 +218,8 @@ namespace Triggernometry.Core
             trig = trig ?? ctx.Trigger;
             lock (ActionQueue)
             {
+                if (!instance.PrepareToQueue())
+                    return false;
                 var logLevel = action.GetDebugLevel(ctx);
                 bool shouldLogVerbose = logLevel >= DebugLevelEnum.Verbose;
                 bool shouldLogInfo = logLevel >= DebugLevelEnum.Info;
@@ -140,7 +227,7 @@ namespace Triggernometry.Core
                 bool removedQueuedDuplicate = false;
                 if (canReplaceQueued)
                 {
-                    int removedCount = CancelQueuedActions(a => a.Action.Id == action.Id);
+                    int removedCount = CancelQueuedActions(a => a.Action.Id == action.Id, queuedOnly: true);
                     removedQueuedDuplicate = removedCount > 0;
                     if (removedQueuedDuplicate && shouldLogVerbose)
                     {
@@ -160,17 +247,7 @@ namespace Triggernometry.Core
                 instance.QueueSequence = curOrdinal++;
                 if (shouldLogInfo)
                     action.AddToLog(ctx, DebugLevelEnum.Info, I18n.Translate("internal/Plugin/actionqueued", "Queuing trigger '{0}' action '{1}' to {2} slot {3}", trig?.LogName ?? "(null)", action.Describe(), FormatDateTime(instance.ExecuteAt), instance.QueueSequence));
-                Context tagContext = instance.LoopContext ?? ctx;
-                var actionTag = tagContext.EvaluateStringExpression(null, tagContext, action.Tag);
-                if (!string.IsNullOrWhiteSpace(actionTag))
-                {
-                    instance.ParsedTag = actionTag;
-                }
-                else
-                {
-                    var triggerTag = tagContext.EvaluateStringExpression(null, tagContext, tagContext.Trigger?.Tag);
-                    if (!string.IsNullOrWhiteSpace(triggerTag)) instance.ParsedTag = triggerTag;
-                }
+                instance.ParseTag();
                 int index = ActionQueue.BinarySearch(instance);
                 ActionQueue.Insert(index < 0 ? ~index : index, instance);
                 ActionUpdateEvent.Set();
@@ -193,7 +270,8 @@ namespace Triggernometry.Core
         {
             // 初始化尚未完成时，也必须能响应插件退出。
             while (!ReadyForOperation())
-                if (ExitEvent.WaitOne(100)) return;
+                if (ExitEvent.WaitOne(100))
+                    return;
             RunStartupTriggers();
 
             int timeout = Timeout.Infinite;
@@ -201,7 +279,8 @@ namespace Triggernometry.Core
             while (true)
             {
                 int waitResult = WaitHandle.WaitAny(waitHandles, timeout);
-                if (waitResult == 0) return;
+                if (waitResult == 0)
+                    return;
 
                 ExecuteNextQueuedAction();
 
@@ -213,7 +292,8 @@ namespace Triggernometry.Core
         /// <summary>Fires the configured startup trigger or the direct children of its folder.</summary>
         private void RunStartupTriggers()
         {
-            if (Config.StartupTriggerId == Guid.Empty) return;
+            if (Config.StartupTriggerId == Guid.Empty)
+                return;
 
             var logEvent = new LogEvent { Text = "", ZoneName = "", Timestamp = DateTime.Now };
             switch (Config.StartupTriggerType)
@@ -226,7 +306,8 @@ namespace Triggernometry.Core
 
                 case Configuration.StartupTriggerTypeEnum.Folder:
                     Folder folder = GetFolderById(Config.StartupTriggerId, null);
-                    if (folder == null) return;
+                    if (folder == null)
+                        return;
                     foreach (Trigger child in folder.Triggers)
                         TestTrigger(child, logEvent, ActionTriggerOperation.ForceEnum.SkipAll);
                     break;
@@ -239,7 +320,8 @@ namespace Triggernometry.Core
             ActionInstance instance;
             lock (ActionQueue)
             {
-                if (ActionQueue.Count == 0) return;
+                if (ActionQueue.Count == 0)
+                    return;
                 if (!QueueProcessing)
                     return;
                 instance = ActionQueue[0];
@@ -261,7 +343,8 @@ namespace Triggernometry.Core
             {
                 if (!QueueProcessing)
                     return Timeout.Infinite;
-                if (ActionQueue.Count == 0) return Timeout.Infinite;
+                if (ActionQueue.Count == 0)
+                    return Timeout.Infinite;
                 double remainingMilliseconds = (ActionQueue[0].ExecuteAt - DateTime.Now).TotalMilliseconds;
                 return (int)Math.Min(int.MaxValue, Math.Max(0, Math.Ceiling(remainingMilliseconds)));
             }

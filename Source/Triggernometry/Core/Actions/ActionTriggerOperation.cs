@@ -435,7 +435,7 @@ namespace Triggernometry.Core.Actions
                             var tag = ctx.EvaluateStringExpression(ExpressionLogger, null, TagRegex);
                             var regex = new Regex(tag);
                             var removedCount = plug.CancelQueuedActions(
-                                _qa => regex.IsMatch(_qa?.ParsedTag ?? "")
+                                instance => regex.IsMatch(instance?.ParsedTag ?? ""), requiresTag: true
                             );
                             plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcanceltag",
@@ -461,7 +461,7 @@ namespace Triggernometry.Core.Actions
                             var tag = ctx.EvaluateStringExpression(ExpressionLogger, null, TagRegex);
                             var regex = new Regex(tag);
                             var removedCount = plug.CancelQueuedActions(
-                                _qa => trigFilter(_qa) && regex.IsMatch(_qa?.ParsedTag ?? "")
+                                a => trigFilter(a) && regex.IsMatch(a?.ParsedTag ?? ""), requiresTag: true
                             );
                             plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcanceltrigtag",
