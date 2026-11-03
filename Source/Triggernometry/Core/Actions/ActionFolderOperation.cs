@@ -133,13 +133,16 @@ namespace Triggernometry.Core.Actions
                 var triggersInFolders = new HashSet<Trigger>();
                 void CollectTriggers(Folder folder)
                 {
+                    if (folder == null) return;
                     if (regex.IsMatch(folder.Name ?? ""))
                         triggersInFolders.UnionWith(folder.RecursiveGetTriggers());
                     else
                         foreach (Folder child in folder.Folders)
                             CollectTriggers(child);
                 }
-                CollectTriggers(ctx.Trigger?.Repo?.Root ?? plug.Config.Root);
+                CollectTriggers(plug.Config.Root);
+                foreach (Repository repository in plug.Config.RepositoryRoot.Repositories)
+                    CollectTriggers(repository.Root);
                 int removed = plug.CancelQueuedActions(
                     action => action.Context?.Trigger != null && triggersInFolders.Contains(action.Context.Trigger));
                 AddToLog(ctx, RealPlugin.DebugLevelEnum.Verbose, I18n.Translate("internal/Action/cancelfoldersregex",
