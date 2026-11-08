@@ -139,7 +139,7 @@ namespace Triggernometry.Core
                 if (shouldLogCaptures)
                 {
                     Plugin.FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnumgroup",
-                        "Trigger '{0}' numbered group {1}: {2}", trigger.LogName, idx, capturedValue));
+                        "Trigger '{0}' numbered group {1}: {2}", trigger.LogName, idx, capturedValue), trigger);
                 }
             }
 
@@ -153,7 +153,7 @@ namespace Triggernometry.Core
                 if (shouldLogCaptures)
                 {
                     Plugin.FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/debugnamedgroup",
-                        "Trigger '{0}' named group '{1}': {2}", trigger.LogName, name, capturedValue));
+                        "Trigger '{0}' named group '{1}': {2}", trigger.LogName, name, capturedValue), trigger);
                 }
             }
         }

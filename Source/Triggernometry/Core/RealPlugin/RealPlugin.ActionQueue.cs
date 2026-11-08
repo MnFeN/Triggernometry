@@ -444,7 +444,7 @@ namespace Triggernometry.Core
                 {
                     if (ctx.Plugin != null)
                     {
-                        ctx.Plugin.FilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Plugin/mutexdelayed", "Context '{0}' has been waiting for mutex '{1}' on {2} for {3} ms, current owner is '{4}'", ctx.ToString(), Name, m.GetHashCode(), (DateTime.Now - start).TotalMilliseconds, ownername));
+                        ctx.Plugin.FilteredAddToLog(DebugLevelEnum.Warning, I18n.Translate("internal/Plugin/mutexdelayed", "Context '{0}' has been waiting for mutex '{1}' on {2} for {3} ms, current owner is '{4}'", ctx.ToString(), Name, m.GetHashCode(), (DateTime.Now - start).TotalMilliseconds, ownername), ctx.Trigger);
                     }
                 }
                 System.Diagnostics.Debug.WriteLine("### {0} - Acquisition {1} pending stage 2 for context: {2}", Name, m.GetHashCode(), ctx.ToString());

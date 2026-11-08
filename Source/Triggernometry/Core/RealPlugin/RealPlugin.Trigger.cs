@@ -145,7 +145,7 @@ namespace Triggernometry.Core
                 if (!activeTriggers.Contains(t))
                 {
                     FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigaddbook",
-                        "Trigger '{0}' added to bookkeeping", t.LogName));
+                        "Trigger '{0}' added to bookkeeping", t.LogName), t);
                     activeTriggers.Add(t);
                 }
             }
@@ -162,7 +162,7 @@ namespace Triggernometry.Core
                     if (activeTriggers.Contains(t))
                     {
                         FilteredAddToLog(DebugLevelEnum.Verbose, I18n.Translate("internal/Plugin/trigrembook",
-                            "Trigger '{0}' removed from bookkeeping", t.LogName));
+                            "Trigger '{0}' removed from bookkeeping", t.LogName), t);
                         activeTriggers.Remove(t);
                     }
                 }

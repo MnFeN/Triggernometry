@@ -483,7 +483,7 @@ namespace Triggernometry.Core
             {
                 return;
             }
-            Instance.UnfilteredAddToLog(level, message, this);
+            Instance.UnfilteredAddToLog(level, message, ctx?.Trigger ?? ParentTrigger, this);
         }
 
         #endregion

@@ -444,7 +444,7 @@ namespace Triggernometry.Core.Actions
                         plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                             "internal/Action/trigcancelinvocation",
                             "{0} action(s) from the current trigger invocation cancelled",
-                            removedCount));
+                            removedCount), ctx.Trigger, this);
                     }
                     break;
                 case OperationEnum.CancelAllTrigger:
@@ -460,7 +460,7 @@ namespace Triggernometry.Core.Actions
                             plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcanceltag",
                                 "{0} queued action(s) with tags matching '{1}' cancelled",
-                                removedCount, tag));
+                                removedCount, tag), ctx.Trigger, this);
                         }
                         else
                         {
@@ -468,7 +468,7 @@ namespace Triggernometry.Core.Actions
                             plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcancelall",
                                 "All {0} queued action(s) cancelled",
-                                removedCount));
+                                removedCount), ctx.Trigger, this);
                         }
                     }
                     break;
@@ -486,7 +486,7 @@ namespace Triggernometry.Core.Actions
                             plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcanceltrigtag",
                                 "{0} queued action(s) from trigger '{1}' with tags matching '{2}' cancelled",
-                                removedCount, t.LogName, tag));
+                                removedCount, t.LogName, tag), ctx.Trigger, this);
                         }
                         else
                         {
@@ -494,7 +494,7 @@ namespace Triggernometry.Core.Actions
                             plug.UnfilteredAddToLog(DebugLevelEnum.Info, I18n.Translate(
                                 "internal/Action/trigcanceltrig",
                                 "{0} queued action(s) from trigger '{1}' cancelled",
-                                removedCount, t.LogName));
+                                removedCount, t.LogName), ctx.Trigger, this);
                         }
                     }
                     break;

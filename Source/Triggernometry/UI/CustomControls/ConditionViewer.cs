@@ -958,7 +958,7 @@ namespace Triggernometry.UI.CustomControls
             }
             catch (Exception ex)
             {
-                Plugin.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ConditionViewer/copyfail", "Tree copy failed due to exception: {0}", ex.Message));
+                Plugin.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ConditionViewer/copyfail", "Tree copy failed due to exception: {0}", ex.Message), Trigger);
             }
         }
 
@@ -1065,7 +1065,7 @@ namespace Triggernometry.UI.CustomControls
             }
             catch (Exception ex)
             {
-                Plugin.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ConditionViewer/pastefail", "Tree paste failed due to exception: {0}", ex.Message));
+                Plugin.FilteredAddToLog(RealPlugin.DebugLevelEnum.Error, I18n.Translate("internal/ConditionViewer/pastefail", "Tree paste failed due to exception: {0}", ex.Message), Trigger);
             }
         }
 
